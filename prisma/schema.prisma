@@ -1,0 +1,597 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Contact form submissions
+model Contact {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  subject     String?
+  service     String?  // 'web', 'revops', 'analytics', etc.
+  budget      String?  // Budget range
+  message     String
+  source      String?  // Where the contact came from (form variant, page, etc.)
+  status      ContactStatus @default(NEW)
+  
+  // Metadata
+  ipAddress   String?
+  userAgent   String?
+  referrer    String?
+  utm_source  String?
+  utm_medium  String?
+  utm_campaign String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  responses   ContactResponse[]
+  
+  @@map("contacts")
+}
+
+enum ContactStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
+  UNRESPONSIVE
+}
+
+// Admin responses to contacts
+model ContactResponse {
+  id        String   @id @default(cuid())
+  contactId String
+  message   String
+  sentAt    DateTime @default(now())
+  method    ResponseMethod @default(EMAIL)
+  
+  // Relations
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  
+  @@map("contact_responses")
+}
+
+enum ResponseMethod {
+  EMAIL
+  PHONE
+  SMS
+  MEETING
+}
+
+// Newsletter subscriptions
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  interests   String[] // Array of interest categories
+  status      SubscriptionStatus @default(ACTIVE)
+  source      String?  // Where they subscribed from
+  
+  // Double opt-in
+  verified    Boolean  @default(false)
+  verifyToken String?  @unique
+  
+  // Metadata
+  ipAddress   String?
+  userAgent   String?
+  referrer    String?
+  utm_source  String?
+  utm_medium  String?
+  utm_campaign String?
+  
+  // Timestamps
+  subscribedAt DateTime @default(now())
+  verifiedAt   DateTime?
+  unsubscribedAt DateTime?
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  emailSends  EmailSend[]
+  
+  @@map("newsletter_subscribers")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+  COMPLAINED
+}
+
+// Lead magnet downloads
+model LeadMagnet {
+  id          String   @id @default(cuid())
+  name        String   @unique // Internal identifier
+  title       String   // Display title
+  description String
+  fileName    String   // PDF/resource filename
+  thumbnailUrl String?
+  isActive    Boolean  @default(true)
+  
+  // Analytics
+  downloadCount Int    @default(0)
+  viewCount     Int    @default(0)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  downloads   LeadMagnetDownload[]
+  
+  @@map("lead_magnets")
+}
+
+// Lead magnet download tracking
+model LeadMagnetDownload {
+  id            String   @id @default(cuid())
+  leadMagnetId  String
+  name          String
+  email         String
+  company       String?
+  
+  // Metadata
+  ipAddress     String?
+  userAgent     String?
+  referrer      String?
+  utm_source    String?
+  utm_medium    String?
+  utm_campaign  String?
+  
+  // Timestamps
+  downloadedAt  DateTime @default(now())
+  
+  // Relations
+  leadMagnet    LeadMagnet @relation(fields: [leadMagnetId], references: [id], onDelete: Cascade)
+  
+  @@map("lead_magnet_downloads")
+}
+
+// Email sending tracking
+model EmailSend {
+  id              String   @id @default(cuid())
+  subscriberId    String?  // For newsletter emails
+  contactId       String?  // For contact form responses
+  to              String   // Email address
+  subject         String
+  template        String   // Template identifier
+  status          EmailStatus @default(PENDING)
+  
+  // External IDs
+  resendId        String?  // Resend message ID
+  resendBatchId   String?  // For batch sends
+  
+  // Delivery tracking
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  openedAt        DateTime?
+  clickedAt       DateTime?
+  bouncedAt       DateTime?
+  complainedAt    DateTime?
+  
+  // Error tracking
+  errorMessage    String?
+  retryCount      Int      @default(0)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  subscriber      NewsletterSubscriber? @relation(fields: [subscriberId], references: [id], onDelete: SetNull)
+  
+  @@map("email_sends")
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  COMPLAINED
+  FAILED
+}
+
+// Email sequences for automation
+model EmailSequence {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  trigger     SequenceTrigger
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  steps       EmailSequenceStep[]
+  enrollments SequenceEnrollment[]
+  
+  @@map("email_sequences")
+}
+
+enum SequenceTrigger {
+  CONTACT_FORM_SUBMIT
+  NEWSLETTER_SIGNUP
+  LEAD_MAGNET_DOWNLOAD
+  MANUAL
+}
+
+// Individual steps in email sequences
+model EmailSequenceStep {
+  id           String   @id @default(cuid())
+  sequenceId   String
+  stepNumber   Int      // Order in sequence
+  delayDays    Int      @default(0) // Days after previous step
+  delayHours   Int      @default(0) // Hours after previous step
+  
+  subject      String
+  template     String   // Template identifier
+  isActive     Boolean  @default(true)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  sequence     EmailSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+  sends        SequenceStepSend[]
+  
+  @@unique([sequenceId, stepNumber])
+  @@map("email_sequence_steps")
+}
+
+// Track sequence enrollments
+model SequenceEnrollment {
+  id           String   @id @default(cuid())
+  sequenceId   String
+  email        String
+  contactId    String?  // If from contact form
+  subscriberId String?  // If from newsletter
+  status       EnrollmentStatus @default(ACTIVE)
+  
+  // Progress tracking
+  currentStep  Int      @default(1)
+  completedAt  DateTime?
+  pausedAt     DateTime?
+  
+  // Timestamps
+  enrolledAt   DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  sequence     EmailSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+  stepSends    SequenceStepSend[]
+  
+  @@unique([sequenceId, email])
+  @@map("sequence_enrollments")
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+// Track individual step sends in sequences
+model SequenceStepSend {
+  id           String   @id @default(cuid())
+  enrollmentId String
+  stepId       String
+  
+  status       EmailStatus @default(PENDING)
+  scheduledFor DateTime
+  sentAt       DateTime?
+  
+  // Error tracking
+  errorMessage String?
+  retryCount   Int      @default(0)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  enrollment   SequenceEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  step         EmailSequenceStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  
+  @@unique([enrollmentId, stepId])
+  @@map("sequence_step_sends")
+}
+
+// Page analytics and tracking
+model PageView {
+  id          String   @id @default(cuid())
+  page        String   // Page path
+  title       String?  // Page title
+  referrer    String?
+  
+  // User tracking (anonymous)
+  sessionId   String
+  userId      String?  // If user is identified
+  
+  // Metadata
+  ipAddress   String?
+  userAgent   String?
+  country     String?
+  city        String?
+  device      String?
+  browser     String?
+  os          String?
+  
+  // UTM tracking
+  utm_source    String?
+  utm_medium    String?
+  utm_campaign  String?
+  utm_term      String?
+  utm_content   String?
+  
+  // Timestamps
+  viewedAt    DateTime @default(now())
+  duration    Int?     // Time spent on page in seconds
+  
+  @@map("page_views")
+}
+
+// Custom events tracking
+model Event {
+  id          String   @id @default(cuid())
+  name        String   // Event name (form_submit, link_click, etc.)
+  category    String?  // Event category
+  action      String?  // Event action
+  label       String?  // Event label
+  value       Int?     // Event value
+  
+  // User tracking
+  sessionId   String
+  userId      String?
+  
+  // Context
+  page        String?  // Page where event occurred
+  metadata    Json?    // Additional event data
+  
+  // Timestamps
+  occurredAt  DateTime @default(now())
+  
+  @@map("events")
+}
+
+// System admin users (simple auth for admin dashboard)
+model AdminUser {
+  id          String   @id @default(cuid())
+  username    String   @unique
+  email       String   @unique
+  passwordHash String
+  role        AdminRole @default(ADMIN)
+  isActive    Boolean  @default(true)
+  
+  // Session management
+  lastLoginAt DateTime?
+  loginCount  Int      @default(0)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("admin_users")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+// Blog posts for content management
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  content     String   // Markdown content
+  authorName  String
+  authorEmail String?
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  keywords        String[] // Array of keywords
+  
+  // Media
+  featuredImage   String?
+  gallery         String[] // Array of image URLs
+  
+  // Organization
+  categories      String[] // Array of categories
+  tags           String[]  // Array of tags
+  
+  // Publishing
+  status         PostStatus @default(DRAFT)
+  publishedAt    DateTime?
+  
+  // Analytics
+  viewCount      Int @default(0)
+  shareCount     Int @default(0)
+  likeCount      Int @default(0)
+  
+  // Reading time estimation
+  readTimeMinutes Int @default(5)
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@map("blog_posts")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Services offered by the business
+model Service {
+  id              String   @id @default(cuid())
+  slug            String   @unique // URL-friendly identifier
+  name            String   // Display name
+  description     String   // Full description
+  shortDescription String? // Brief summary
+  
+  // Pricing
+  startingPrice   Decimal? // Starting price
+  currency        String   @default("USD")
+  priceUnit       String   @default("project") // 'project', 'month', 'hour'
+  
+  // Features and benefits
+  features        String[] // Array of features
+  benefits        String[] // Array of benefits
+  deliverables    String[] // What client gets
+  
+  // Media
+  icon            String?  // Icon identifier or URL
+  featuredImage   String?  // Hero image
+  gallery         String[] // Additional images
+  
+  // Organization
+  category        String?  // Service category
+  tags           String[]  // Array of tags
+  
+  // Display
+  featured        Boolean  @default(false)
+  displayOrder    Int      @default(0)
+  isActive        Boolean  @default(true)
+  
+  // Metadata
+  estimatedTimeline String? // "2-3 weeks"
+  targetAudience    String? // Who this service is for
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("services")
+}
+
+// Client testimonials
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String   // Client name
+  role        String   // Job title
+  company     String   // Company name
+  content     String   // Testimonial text
+  rating      Int      @default(5) // 1-5 star rating
+  
+  // Media
+  avatar      String?  // Profile image URL
+  companyLogo String?  // Company logo URL
+  
+  // Context
+  serviceUsed String?  // Which service this relates to
+  projectType String?  // Type of project
+  
+  // Organization
+  featured    Boolean  @default(false)
+  displayOrder Int     @default(0)
+  isActive    Boolean  @default(true)
+  
+  // Verification
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
+  
+  // Contact info (private)
+  email       String?
+  linkedIn    String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("testimonials")
+}
+
+// Case studies showcasing work
+model CaseStudy {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  description String   // Brief overview
+  content     String   // Full case study content (Markdown)
+  
+  // Client information
+  clientName     String
+  clientIndustry String?
+  clientSize     String? // "startup", "small", "medium", "large"
+  clientWebsite  String?
+  clientLogo     String?
+  
+  // Project details
+  challenge      String   // What problem was solved
+  solution       String   // How it was solved
+  timeline       String?  // How long it took
+  teamSize       Int?     // Number of people involved
+  
+  // Services and technologies
+  servicesUsed   String[] // Array of service IDs or names
+  technologies   String[] // Array of technologies used
+  
+  // Results and metrics
+  results        Json     // Structured results data
+  metrics        Json     // Key performance metrics
+  
+  // Media
+  featuredImage  String?  // Hero image
+  beforeImage    String?  // Before screenshot
+  afterImage     String?  // After screenshot
+  gallery        String[] // Additional images
+  videoUrl       String?  // Demo or testimonial video
+  
+  // Organization
+  category       String?  // Case study category
+  tags          String[]  // Array of tags
+  featured      Boolean   @default(false)
+  displayOrder  Int       @default(0)
+  
+  // Publishing
+  status        PostStatus @default(DRAFT)
+  publishedAt   DateTime?
+  
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  
+  // Analytics
+  viewCount      Int @default(0)
+  shareCount     Int @default(0)
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@map("case_studies")
+}
