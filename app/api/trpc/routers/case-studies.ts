@@ -5,9 +5,9 @@
  */
 
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc-unified'
 import { TRPCError } from '@trpc/server'
-import { PostStatus } from '@prisma/client'
+import { PostStatus, Prisma } from '@prisma/client'
 
 export const caseStudiesRouter = createTRPCRouter({
   // Public procedures - accessible to all users
@@ -24,10 +24,11 @@ export const caseStudiesRouter = createTRPCRouter({
       featured: z.boolean().optional(),
       clientIndustry: z.string().optional(),
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const { limit, offset, category, serviceUsed, featured, clientIndustry } = input
 
-      const where: any = {
+      const where: Record<string, unknown> = {
         status: PostStatus.PUBLISHED,
         publishedAt: { not: null },
       }
@@ -104,7 +105,8 @@ export const caseStudiesRouter = createTRPCRouter({
       slug: z.string(),
       incrementView: z.boolean().default(false),
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const caseStudy = await ctx.db.caseStudy.findUnique({
         where: { 
           slug: input.slug,
@@ -137,7 +139,8 @@ export const caseStudiesRouter = createTRPCRouter({
     .input(z.object({
       limit: z.number().min(1).max(10).default(3),
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const caseStudies = await ctx.db.caseStudy.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
@@ -171,7 +174,8 @@ export const caseStudiesRouter = createTRPCRouter({
       serviceUsed: z.string(),
       limit: z.number().min(1).max(20).default(5),
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const caseStudies = await ctx.db.caseStudy.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
@@ -204,7 +208,8 @@ export const caseStudiesRouter = createTRPCRouter({
    * Get all industries represented in case studies
    */
   getIndustries: publicProcedure
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx: ctxPromise }) => {
+      const ctx = await ctxPromise
       const caseStudies = await ctx.db.caseStudy.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
@@ -224,7 +229,8 @@ export const caseStudiesRouter = createTRPCRouter({
    * Get all categories used in case studies
    */
   getCategories: publicProcedure
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx: ctxPromise }) => {
+      const ctx = await ctxPromise
       const caseStudies = await ctx.db.caseStudy.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
@@ -253,10 +259,11 @@ export const caseStudiesRouter = createTRPCRouter({
       search: z.string().optional(),
       clientIndustry: z.string().optional(),
     }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const { limit, offset, status, search, clientIndustry } = input
 
-      const where: any = {}
+      const where: Record<string, unknown> = {}
 
       if (status) {
         where.status = status
@@ -268,9 +275,9 @@ export const caseStudiesRouter = createTRPCRouter({
 
       if (search) {
         where.OR = [
-          { title: { contains: search, mode: 'insensitive' } },
-          { clientName: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
+          { title: { contains: search, mode: 'insensitive' as Prisma.QueryMode } },
+          { clientName: { contains: search, mode: 'insensitive' as Prisma.QueryMode } },
+          { description: { contains: search, mode: 'insensitive' as Prisma.QueryMode } },
         ]
       }
 
@@ -332,18 +339,49 @@ export const caseStudiesRouter = createTRPCRouter({
       metaTitle: z.string().max(60).optional(),
       metaDescription: z.string().max(160).optional(),
     }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx: ctxPromise, input }) => {
       try {
+        const ctx = await ctxPromise
         const caseStudy = await ctx.db.caseStudy.create({
           data: {
-            ...input,
+            slug: input.slug,
+            title: input.title,
+            subtitle: input.subtitle,
+            description: input.description,
+            content: input.content,
+            clientName: input.clientName,
+            clientIndustry: input.clientIndustry,
+            clientSize: input.clientSize,
+            clientWebsite: input.clientWebsite,
+            clientLogo: input.clientLogo,
+            challenge: input.challenge,
+            solution: input.solution,
+            timeline: input.timeline,
+            teamSize: input.teamSize,
+            servicesUsed: input.servicesUsed,
+            technologies: input.technologies,
+            results: input.results,
+            metrics: input.metrics,
+            featuredImage: input.featuredImage,
+            beforeImage: input.beforeImage,
+            afterImage: input.afterImage,
+            gallery: input.gallery,
+            videoUrl: input.videoUrl,
+            category: input.category,
+            tags: input.tags,
+            featured: input.featured,
+            displayOrder: input.displayOrder,
+            status: input.status,
+            metaTitle: input.metaTitle,
+            metaDescription: input.metaDescription,
             publishedAt: input.status === PostStatus.PUBLISHED ? new Date() : null,
           },
         })
 
         return caseStudy
-      } catch (error: any) {
-        if (error.code === 'P2002') {
+      } catch (error: unknown) {
+        const prismaError = error as { code?: string };
+        if (prismaError.code === 'P2002') {
           throw new TRPCError({
             code: 'CONFLICT',
             message: 'A case study with this slug already exists',
@@ -393,12 +431,13 @@ export const caseStudiesRouter = createTRPCRouter({
       metaTitle: z.string().max(60).optional(),
       metaDescription: z.string().max(160).optional(),
     }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx: ctxPromise, input }) => {
+      const ctx = await ctxPromise
       const { id, status, ...updateData } = input
 
       try {
         // Handle publishing logic
-        const updatePayload: any = { ...updateData }
+        const updatePayload: Record<string, unknown> = { ...updateData }
         if (status) {
           updatePayload.status = status
           if (status === PostStatus.PUBLISHED) {
@@ -419,14 +458,15 @@ export const caseStudiesRouter = createTRPCRouter({
         })
 
         return caseStudy
-      } catch (error: any) {
-        if (error.code === 'P2002') {
+      } catch (error: unknown) {
+        const prismaError = error as { code?: string };
+        if (prismaError.code === 'P2002') {
           throw new TRPCError({
             code: 'CONFLICT',
             message: 'A case study with this slug already exists',
           })
         }
-        if (error.code === 'P2025') {
+        if (prismaError.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Case study not found',
@@ -446,15 +486,17 @@ export const caseStudiesRouter = createTRPCRouter({
     .input(z.object({
       id: z.string(),
     }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx: ctxPromise, input }) => {
       try {
+        const ctx = await ctxPromise
         await ctx.db.caseStudy.delete({
           where: { id: input.id },
         })
 
         return { success: true }
-      } catch (error: any) {
-        if (error.code === 'P2025') {
+      } catch (error: unknown) {
+        const prismaError = error as { code?: string };
+        if (prismaError.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Case study not found',
@@ -474,8 +516,9 @@ export const caseStudiesRouter = createTRPCRouter({
     .input(z.object({
       caseStudyIds: z.array(z.string()),
     }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx: ctxPromise, input }) => {
       try {
+        const ctx = await ctxPromise
         // Update display order for each case study
         await Promise.all(
           input.caseStudyIds.map((caseStudyId, index) =>
@@ -499,7 +542,8 @@ export const caseStudiesRouter = createTRPCRouter({
    * Get case study analytics
    */
   getAnalytics: protectedProcedure
-    .query(async ({ ctx }) => {
+    .query(async ({ ctx: ctxPromise }) => {
+      const ctx = await ctxPromise
       const [
         totalCaseStudies, 
         publishedCaseStudies, 
@@ -527,13 +571,20 @@ export const caseStudiesRouter = createTRPCRouter({
         }),
       ])
 
+      // Cast the results to correct types to handle Prisma response types
+      const viewsSum = (totalViews as unknown as { _sum: { viewCount: number | null } })._sum;
+      const industries = (industryBreakdown as unknown as Array<{ 
+        clientIndustry: string | null; 
+        _count: number;
+      }>);
+      
       return {
         totalCaseStudies,
         publishedCaseStudies,
         draftCaseStudies,
         featuredCaseStudies,
-        totalViews: totalViews._sum.viewCount || 0,
-        industryBreakdown: industryBreakdown.map(item => ({
+        totalViews: viewsSum.viewCount || 0,
+        industryBreakdown: industries.map(item => ({
           industry: item.clientIndustry || 'Other',
           count: item._count,
         })),

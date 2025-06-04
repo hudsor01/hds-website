@@ -96,7 +96,7 @@ export default function TermsPage() {
           <p>
             We may update these terms from time to time. We will notify you of
             any changes by posting the new terms on this page and updating the
-            "Last updated" date.
+            &quot;Last updated&quot; date.
           </p>
 
           <h2>11. Contact Information</h2>

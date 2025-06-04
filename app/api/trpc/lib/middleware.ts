@@ -101,7 +101,7 @@ export const errorMiddleware = t.middleware(async ({ path, type, next }) => {
 export const rateLimitMiddleware = (options?: {
   windowMs?: number
   max?: number
-  keyGenerator?: (ctx: any) => string
+  keyGenerator?: (ctx: Record<string, unknown>) => string
 }) => {
   const {
     windowMs = 60 * 1000, // 1 minute

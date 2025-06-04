@@ -12,7 +12,7 @@ async function getUserProfile(userId: string) {
   }
 }
 
-async function getRecommendedServices(category: string) {
+async function getRecommendedServices(_category: string) {
   await new Promise(resolve => setTimeout(resolve, 100))
   // This would filter services based on user preference
   return [

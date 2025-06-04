@@ -6,11 +6,8 @@ interface FormState {
   isSubmitting: boolean
   submitStatus: 'idle' | 'loading' | 'success' | 'error'
   submitMessage: string | null
-  setSubmitting: (_isSubmitting: boolean) => void
-  setSubmitStatus: (
-    _status: 'idle' | 'loading' | 'success' | 'error',
-    _message?: string
-  ) => void
+  setSubmitting: () => void
+  setSubmitStatus: ( ) => void
   resetForm: () => void
 }
 
@@ -20,8 +17,8 @@ export const useFormStore = create<FormState>()(
       isSubmitting: false,
       submitStatus: 'idle',
       submitMessage: null,
-      setSubmitting: isSubmitting => set({ isSubmitting }),
-      setSubmitStatus: (status, message = undefined) =>
+      setSubmitting: (isSubmitting: boolean) => set({ isSubmitting }),
+      setSubmitStatus: (status: 'idle' | 'loading' | 'success' | 'error', message: string | null = null) =>
         set({ submitStatus: status, submitMessage: message ?? null }),
       resetForm: () =>
         set({ isSubmitting: false, submitStatus: 'idle', submitMessage: null }),

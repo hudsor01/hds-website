@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { m } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -10,6 +10,10 @@ import {
 import { ServiceCard } from '@/components/service-card'
 import { AnimatedSection } from '@/components/sections/section'
 import { gradients } from '@/lib/design-system'
+import type {
+  ServicesSectionProps,
+  ServiceItem,
+} from '@/types/service-types'
 
 // Animation variants for container and items
 const containerVariants = {
@@ -34,10 +38,7 @@ const itemVariants = {
   },
 }
 
-import {
-  ServicesSectionProps,
-  ServiceItem,
-} from '@/types/service-types'
+
 
 export function ServicesSection({
   variant = 'default',

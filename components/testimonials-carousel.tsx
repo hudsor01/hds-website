@@ -127,7 +127,7 @@ export function TestimonialsCarousel({
   autoPlayInterval = 5000,
   className,
 }: TestimonialsCarouselProps) {
-  const [api, setApi] = useState<any>()
+  const [api, setApi] = useState<unknown>()
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
 

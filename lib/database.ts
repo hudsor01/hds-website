@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { env } from './env'
 
 // Prevent multiple instances during development
@@ -37,7 +37,7 @@ export async function disconnectDatabase() {
 export const dbUtils = {
   // Get analytics data
   async getPageViews(startDate?: Date, endDate?: Date) {
-    const where = startDate && endDate ? {
+    const where: Prisma.PageViewWhereInput = startDate && endDate ? {
       viewedAt: {
         gte: startDate,
         lte: endDate,
@@ -104,6 +104,3 @@ export type LeadMagnet = Prisma.LeadMagnetGetPayload<{}>
 export type LeadMagnetDownload = Prisma.LeadMagnetDownloadGetPayload<{}>
 export type PageView = Prisma.PageViewGetPayload<{}>
 export type Event = Prisma.EventGetPayload<{}>
-
-// Import Prisma types
-import { Prisma } from '@prisma/client'

@@ -14,29 +14,29 @@ const CONTACT_IMAGE = 'https://images.unsplash.com/photo-1560472355-536de3962603
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen fade-in">
       {/* Hero Section */}
-      <section className="section-padding business-gradient-bg">
-        <div className="container">
+      <section className="section-padding bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container logical-padding">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="space-y-8">
+            <div className="space-y-8 slide-in-left">
               <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-100 text-brand-800 rounded-full text-sm font-medium">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-100 text-brand-800 rounded-full text-sm font-medium card-entrance">
                   <MessageSquare className="w-4 h-4" />
                   Free Consultation Available
                 </div>
-                <h1 className="hero-text text-foreground">
-                  Let's Transform Your 
-                  <span className="brand-text-gradient"> Business Together</span>
+                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight hero-title">
+                  Let&apos;s Transform Your 
+                  <span className="text-brand-600"> Business Together</span>
                 </h1>
                 <p className="lead-text text-xl">
                   Ready to automate your revenue operations or build a website that converts? 
-                  We'd love to discuss how our enterprise experience can help your small business grow.
+                  We&apos;d love to discuss how our enterprise experience can help your small business grow.
                 </p>
               </div>
               
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="premium-card">
+                <div className="premium-card card-entrance card-lift scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
                       <Clock className="w-5 h-5 text-brand-600" />
@@ -48,7 +48,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 
-                <div className="premium-card">
+                <div className="premium-card card-entrance card-lift scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-success-100 rounded-full flex items-center justify-center">
                       <CheckCircle className="w-5 h-5 text-success-600" />
@@ -83,17 +83,17 @@ export default function ContactPage() {
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Contact Information */}
-            <div className="space-y-8">
+            <div className="space-y-8 slide-in-right">
               <div className="space-y-6">
-                <h2 className="section-title text-foreground">Get in Touch</h2>
+                <h2 className="section-title text-foreground hero-title">Get in Touch</h2>
                 <p className="lead-text">
                   We work with small businesses in Dallas-Fort Worth to implement enterprise-level 
-                  revenue operations and build websites that drive growth. Let's discuss your project.
+                  revenue operations and build websites that drive growth. Let&apos;s discuss your project.
                 </p>
               </div>
 
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
+              <div className="space-y-6 scroll-reveal">
+                <div className="flex items-start gap-4 card-entrance">
                   <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Phone className="w-6 h-6 text-brand-600" />
                   </div>
@@ -104,7 +104,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 card-entrance">
                   <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Mail className="w-6 h-6 text-accent-600" />
                   </div>
@@ -120,7 +120,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 card-entrance">
                   <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-6 h-6 text-purple-600" />
                   </div>
@@ -131,7 +131,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-4 card-entrance">
                   <div className="w-12 h-12 bg-success-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Calendar className="w-6 h-6 text-success-600" />
                   </div>
@@ -149,7 +149,7 @@ export default function ContactPage() {
               </div>
 
               {/* Service Areas */}
-              <div className="p-6 bg-brand-50 rounded-xl border border-brand-200">
+              <div className="p-6 bg-brand-50 rounded-xl border border-brand-200 card-lift scroll-reveal">
                 <h3 className="font-semibold text-brand-900 mb-4">Service Areas</h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="text-brand-700">• Dallas</div>
@@ -168,12 +168,12 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div className="premium-card">
+            <div className="premium-card card-entrance card-lift">
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">Send us a Message</h3>
                   <p className="text-neutral-600">
-                    Fill out the form below and we'll get back to you within 24 hours.
+                    Fill out the form below and we&apos;ll get back to you within 24 hours.
                   </p>
                 </div>
 
@@ -186,7 +186,7 @@ export default function ContactPage() {
                       <input
                         type="text"
                         required
-                        className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition"
+                        className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition"
                         placeholder="John"
                       />
                     </div>
@@ -197,7 +197,7 @@ export default function ContactPage() {
                       <input
                         type="text"
                         required
-                        className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition"
+                        className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition"
                         placeholder="Smith"
                       />
                     </div>
@@ -210,7 +210,7 @@ export default function ContactPage() {
                     <input
                       type="email"
                       required
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition"
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition"
                       placeholder="john@company.com"
                     />
                   </div>
@@ -221,7 +221,7 @@ export default function ContactPage() {
                     </label>
                     <input
                       type="tel"
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition"
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition"
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -230,7 +230,7 @@ export default function ContactPage() {
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Service Interest
                     </label>
-                    <select className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition">
+                    <select className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition">
                       <option value="">Select a service</option>
                       <option value="revenue-ops">Revenue Operations</option>
                       <option value="web-development">Web Development</option>
@@ -243,7 +243,7 @@ export default function ContactPage() {
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Project Budget
                     </label>
-                    <select className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition">
+                    <select className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition">
                       <option value="">Select budget range</option>
                       <option value="under-1000">Under $1,000</option>
                       <option value="1000-2500">$1,000 - $2,500</option>
@@ -259,14 +259,14 @@ export default function ContactPage() {
                     <textarea
                       required
                       rows={4}
-                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 smooth-transition resize-none"
+                      className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus-ring smooth-transition resize-none"
                       placeholder="Tell us about your project and how we can help..."
                     ></textarea>
                   </div>
 
                   <button
                     type="submit"
-                    className="premium-button bg-brand-600 text-white hover:bg-brand-700 hover-lift w-full py-4 text-lg"
+                    className="premium-button bg-brand-600 text-white hover:bg-brand-700 button-press w-full py-4 text-lg"
                   >
                     Send Message
                   </button>
@@ -282,18 +282,18 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-padding bg-surface">
+      <section className="section-padding bg-surface fade-in">
         <div className="container">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="section-title text-foreground">Frequently Asked Questions</h2>
+            <h2 className="section-title text-foreground hero-title">Frequently Asked Questions</h2>
             <p className="lead-text max-w-2xl mx-auto">
               Quick answers to common questions about our services and process.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto features-grid">
             <div className="space-y-6">
-              <div className="premium-card">
+              <div className="premium-card card-entrance card-lift scroll-reveal">
                 <h3 className="font-semibold text-foreground mb-2">How much does a website cost?</h3>
                 <p className="text-neutral-600 text-sm">
                   Our websites start at $799 for a basic 5-page site. Revenue operations 
@@ -301,7 +301,7 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              <div className="premium-card">
+              <div className="premium-card card-entrance card-lift scroll-reveal">
                 <h3 className="font-semibold text-foreground mb-2">How long does a project take?</h3>
                 <p className="text-neutral-600 text-sm">
                   Most websites are completed in 2-3 weeks. Revenue operations implementation 
@@ -309,7 +309,7 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              <div className="premium-card">
+              <div className="premium-card card-entrance card-lift scroll-reveal">
                 <h3 className="font-semibold text-foreground mb-2">Do you offer payment plans?</h3>
                 <p className="text-neutral-600 text-sm">
                   Yes! We offer flexible payment options including 50% upfront and 50% on 
@@ -319,15 +319,15 @@ export default function ContactPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="premium-card">
-                <h3 className="font-semibold text-foreground mb-2">What's included in RevOps?</h3>
+              <div className="premium-card card-entrance card-lift scroll-reveal">
+                <h3 className="font-semibold text-foreground mb-2">What&apos;s included in RevOps?</h3>
                 <p className="text-neutral-600 text-sm">
                   CRM setup, sales pipeline automation, email sequences, reporting dashboards, 
                   training, and 3 months of support. Everything you need to automate your sales process.
                 </p>
               </div>
 
-              <div className="premium-card">
+              <div className="premium-card card-entrance card-lift scroll-reveal">
                 <h3 className="font-semibold text-foreground mb-2">Do you provide ongoing support?</h3>
                 <p className="text-neutral-600 text-sm">
                   All projects include support during implementation. We also offer ongoing 
@@ -335,7 +335,7 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              <div className="premium-card">
+              <div className="premium-card card-entrance card-lift scroll-reveal">
                 <h3 className="font-semibold text-foreground mb-2">Can you help with content?</h3>
                 <p className="text-neutral-600 text-sm">
                   Absolutely! We can help write website copy, create email sequences, and 
@@ -348,31 +348,31 @@ export default function ContactPage() {
       </section>
 
       {/* Trust Section */}
-      <section className="section-padding">
+      <section className="section-padding fade-in">
         <div className="container">
           <div className="text-center space-y-8">
-            <h2 className="section-title text-foreground">Why Dallas-Fort Worth Businesses Choose Us</h2>
+            <h2 className="section-title text-foreground hero-title">Why Dallas-Fort Worth Businesses Choose Us</h2>
             
-            <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center space-y-2">
+            <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto features-grid">
+              <div className="text-center space-y-2 card-entrance scroll-reveal">
                 <div className="text-4xl font-bold text-brand-600">10+</div>
                 <div className="text-sm font-medium text-foreground">Years Experience</div>
                 <div className="text-xs text-neutral-600">Enterprise background</div>
               </div>
               
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-2 card-entrance scroll-reveal">
                 <div className="text-4xl font-bold text-brand-600">100+</div>
                 <div className="text-sm font-medium text-foreground">Happy Clients</div>
                 <div className="text-xs text-neutral-600">Small businesses helped</div>
               </div>
               
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-2 card-entrance scroll-reveal">
                 <div className="text-4xl font-bold text-brand-600">40%</div>
                 <div className="text-sm font-medium text-foreground">Revenue Increase</div>
                 <div className="text-xs text-neutral-600">Average client growth</div>
               </div>
               
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-2 card-entrance scroll-reveal">
                 <div className="text-4xl font-bold text-brand-600">24hr</div>
                 <div className="text-sm font-medium text-foreground">Response Time</div>
                 <div className="text-xs text-neutral-600">Guaranteed communication</div>
@@ -382,7 +382,7 @@ export default function ContactPage() {
             <div className="pt-8">
               <Link 
                 href="/" 
-                className="premium-button bg-brand-600 text-white hover:bg-brand-700 hover-lift"
+                className="premium-button bg-brand-600 text-white hover:bg-brand-700 button-press card-entrance"
               >
                 Learn More About Our Services
               </Link>

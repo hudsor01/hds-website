@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { cache } from 'react'
 
 /**
@@ -82,7 +82,7 @@ export const generateSiteMetadata = cache((options: {
 
     // Open Graph
     openGraph: {
-      type,
+      type: type === 'service' ? 'website' : type,
       locale: 'en_US',
       url: canonicalUrl || siteConfig.url,
       title: fullTitle,

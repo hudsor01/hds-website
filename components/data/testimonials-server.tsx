@@ -1,6 +1,13 @@
 import { Suspense, use } from 'react'
 import { AnimatedTestimonials } from '@/components/aceternity/animated-testimonials'
 
+interface Testimonial {
+  quote: string
+  name: string
+  designation: string
+  src: string
+}
+
 // Mock API function - replace with your actual tRPC call
 async function fetchTestimonials() {
   // Simulate network delay
@@ -35,7 +42,7 @@ async function fetchTestimonials() {
 }
 
 // React 19 Server Component using use() hook
-function TestimonialsData({ testimonialsPromise }: { testimonialsPromise: Promise<any[]> }) {
+function TestimonialsData({ testimonialsPromise }: { testimonialsPromise: Promise<Testimonial[]> }) {
   const testimonials = use(testimonialsPromise)
   
   return <AnimatedTestimonials testimonials={testimonials} autoplay={true} />

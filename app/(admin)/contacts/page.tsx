@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { MoreHorizontal, Reply, Archive, Star, Download, Search, Filter, RefreshCw, Mail, Phone } from 'lucide-react'
+import { MoreHorizontal, Reply, Star, Download, Search, RefreshCw, Mail, Phone } from 'lucide-react'
 import { api } from '@/lib/trpc/client'
 import { ContactStatus } from '@prisma/client'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -70,7 +70,7 @@ export default function ContactsPage() {
   const { toast } = useToast()
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<ContactFilters>({})
-  const [selectedContact, setSelectedContact] = useState<string | null>(null)
+  const [_selectedContact, setSelectedContact] = useState<string | null>(null)
 
   // Fetch contacts with real-time updates
   const {
@@ -133,7 +133,7 @@ export default function ContactsPage() {
   const exportContacts = async () => {
     try {
       // Get all contacts for export (without pagination)
-      const exportData = await api.admin.getContacts.fetch({
+      const exportData = await api.admin.getContacts.query({
         page: 1,
         limit: 1000, // Large limit to get all contacts
         ...filters,

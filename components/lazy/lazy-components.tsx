@@ -13,12 +13,7 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { ServicesSectionProps } from '@/types/service-types'
-import type { TechStackSectionProps } from '@/components/sections/tech-stack-section'
-import type { PricingSectionProps } from '@/components/sections/pricing-section'
-import type { TestimonialsSectionProps } from '@/components/sections/testimonials-section'
-import type { LeadMagnetSectionProps } from '@/components/sections/lead-magnet-section'
-import type { ContactCTAProps } from '@/components/sections/contact-cta'
+// Removed unused type imports
 
 // Loading components for better UX
 const AnimationSkeleton = () => (
@@ -179,7 +174,7 @@ export const LazyNewsletterForm = dynamic(
 /**
  * Lazy load component only when it comes into viewport
  */
-export function lazyLoadOnIntersection<T extends Record<string, any>>(
+export function lazyLoadOnIntersection<T extends Record<string, unknown>>(
   importFunc: () => Promise<{ default: React.ComponentType<T> }>,
   options?: {
     rootMargin?: string
@@ -196,7 +191,7 @@ export function lazyLoadOnIntersection<T extends Record<string, any>>(
 /**
  * Lazy load component with custom loading state
  */
-export function lazyLoadWithFallback<T extends Record<string, any>>(
+export function lazyLoadWithFallback<T extends Record<string, unknown>>(
   importFunc: () => Promise<{ default: React.ComponentType<T> }>,
   LoadingComponent: React.ComponentType,
   enableSSR = true,

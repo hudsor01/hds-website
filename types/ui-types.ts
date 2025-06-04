@@ -5,7 +5,7 @@
  * Organized by component categories for better maintainability.
  */
 
-import type { ReactNode, ReactElement, ComponentProps } from 'react'
+import type { ReactNode, ReactElement, ComponentProps, JSX, ErrorInfo } from 'react'
 import { AnimationType, Size, Variant, ContainerWidth, ColorTheme } from './enum-types'
 
 // ============= Base Component Types =============
@@ -22,6 +22,7 @@ export interface BaseComponentProps {
   'aria-labelledby'?: string
   'aria-describedby'?: string
 }
+
 
 /**
  * Props for components that support variants
@@ -371,12 +372,16 @@ export interface CardProps extends BaseComponentProps, AnimationProps {
 /**
  * Animated card properties
  */
-export interface AnimatedCardProps extends CardProps {
-  hoverScale?: number
-  hoverRotate?: number
-  hoverLift?: boolean
-  glowEffect?: boolean
-  parallax?: boolean
+export interface AnimatedCardProps {
+  children: ReactNode
+  className?: string
+  whileHover?: Record<string, unknown>
+  onClick?: () => void
+  delay?: number
+  elevation?: 'none' | 'low' | 'medium' | 'high'
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  animation?: boolean
+  interactionEffect?: 'lift' | 'scale' | 'glow' | 'none'
 }
 
 // ============= Modal/Dialog Component Types =============
@@ -487,7 +492,7 @@ export interface TableColumn<T = any> {
   sortable?: boolean
   width?: string
   align?: 'left' | 'center' | 'right'
-  render?: (value: any, row: T, index: number) => ReactNode
+  render?: (value: Record<string, unknown>, row: T, index: number) => ReactNode
   className?: string
 }
 
@@ -665,4 +670,24 @@ export interface ProgressProps extends BaseComponentProps {
   label?: string
   animated?: boolean
   striped?: boolean
+}
+
+// ============= Error Boundary Component Types =============
+
+/**
+ * Base error boundary properties
+ */
+export interface BaseErrorBoundaryProps {
+  children: ReactNode
+  fallback?: ReactNode
+  onError?: (errorToReport: Error, errorInfoToReport: ErrorInfo) => void
+  className?: string
+}
+
+/**
+ * Base error boundary state
+ */
+export interface BaseErrorBoundaryState {
+  hasError: boolean
+  error: Error | null
 }

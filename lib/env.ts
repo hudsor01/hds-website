@@ -7,15 +7,18 @@ import { z } from 'zod'
 
 // Environment-specific validation schemas
 const serverEnvSchema = z.object({
-  // Core Application Environment
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+// Core Application Environment
+NODE_ENV: z
+.enum(['development', 'production', 'test'])
+.default('development'),
 
-  // Required Server-side Variables
-  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required for email functionality'),
-  RESEND_FROM_EMAIL: z.string().email('RESEND_FROM_EMAIL must be a valid email').optional(),
-  CONTACT_EMAIL: z.string().email('CONTACT_EMAIL must be a valid email').optional(),
+// Required Server-side Variables
+RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required for email functionality'),
+RESEND_FROM_EMAIL: z.string().email('RESEND_FROM_EMAIL must be a valid email').optional(),
+CONTACT_EMAIL: z.string().email('CONTACT_EMAIL must be a valid email').optional(),
+
+// Clerk Authentication (Server-side)
+CLERK_SECRET_KEY: z.string().min(1, 'CLERK_SECRET_KEY is required for Clerk authentication'),
   
   // Security & Authentication (Next.js 15 security patterns)
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters for security')
@@ -27,7 +30,7 @@ const serverEnvSchema = z.object({
     .max(50, 'ADMIN_USERNAME must be less than 50 characters')
     .refine(
       (val) => val !== 'admin' || process.env.NODE_ENV === 'development',
-      'ADMIN_USERNAME cannot be \'admin\' in production for security',
+      'ADMIN_USERNAME cannot be "admin" in production for security',
     ),
   // Production should use ADMIN_PASSWORD_HASH instead of plain password
   ADMIN_PASSWORD: z.string().min(8, 'ADMIN_PASSWORD must be at least 8 characters')
@@ -48,6 +51,9 @@ const serverEnvSchema = z.object({
   // Supabase Configuration (Optional)
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required if using Supabase admin features').optional(),
   
+  // Cal.com Integration
+  CAL_COM_API_KEY: z.string().optional(),
+  
   // Third-party Service Keys (Server-side only)
   STRIPE_SECRET_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
@@ -55,12 +61,19 @@ const serverEnvSchema = z.object({
 })
 
 const clientEnvSchema = z.object({
-  // Client-side Environment Variables (NEXT_PUBLIC_ prefix)
-  NEXT_PUBLIC_APP_URL: z.string().url('NEXT_PUBLIC_APP_URL must be a valid URL').default('http://localhost:3000'),
-  
-  // Supabase Client Configuration
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL').optional(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required if using Supabase').optional(),
+// Client-side Environment Variables (NEXT_PUBLIC_ prefix)
+NEXT_PUBLIC_APP_URL: z.string().url('NEXT_PUBLIC_APP_URL must be a valid URL').default('http://localhost:3000'),
+
+// Supabase Client Configuration
+NEXT_PUBLIC_SUPABASE_URL: z.string().url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL').optional(),
+NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required if using Supabase').optional(),
+
+// Clerk Authentication (Client-side)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1, 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is required for Clerk'),
+NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().default('/auth/sign-in'),
+NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().default('/auth/sign-up'),
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().default('/dashboard'),
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().default('/dashboard'),
 
   // Analytics Configuration
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().regex(/^G-[A-Z0-9]+$/, 'Invalid Google Analytics Measurement ID format').optional(),
@@ -145,16 +158,21 @@ export const validateEnv = () => {
 
 // Helper function to get required environment variables
 export const getRequiredEnvVars = (): string[] => {
-  const required = [
-    'NODE_ENV (development|production|test)',
-    'RESEND_API_KEY (for email functionality)',
-    'JWT_SECRET (minimum 32 characters)',
-    'ADMIN_USERNAME (minimum 3 characters, not \'admin\' in production)',
-    'ADMIN_PASSWORD (8+ chars with complexity) OR ADMIN_PASSWORD_HASH (for production)',
-    'DATABASE_URL (database connection)',
-    'NEXT_PUBLIC_APP_URL (application URL)',
-  ]
-
+const required = [
+'NODE_ENV (development|production|test)',
+'RESEND_API_KEY (for email functionality)',
+'JWT_SECRET (minimum 32 characters)',
+'ADMIN_USERNAME (minimum 3 characters, not "admin" in production)',
+'ADMIN_PASSWORD (8+ chars with complexity) OR ADMIN_PASSWORD_HASH (for production)',
+'DATABASE_URL (database connection)',
+'DIRECT_URL (direct database connection for Prisma)',
+'NEXT_PUBLIC_APP_URL (application URL)',
+'NEXT_PUBLIC_SUPABASE_URL (Supabase project URL)',
+'NEXT_PUBLIC_SUPABASE_ANON_KEY (Supabase anonymous key)',
+'SUPABASE_SERVICE_ROLE_KEY (Supabase service role key)',
+'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY (Clerk publishable key)',
+'CLERK_SECRET_KEY (Clerk secret key)',
+]
   return required
 }
 
@@ -194,14 +212,20 @@ export const envUtils = {
   getAppUrl: (): string => process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   
   /**
-   * Validate critical environment variables on startup (Next.js 15 security pattern)
-   */
+  * Validate critical environment variables on startup (Next.js 15 security pattern)
+  */
   validateCriticalEnvVars: (): boolean => {
-    const critical = [
-      'RESEND_API_KEY',
-      'JWT_SECRET',
-      'DATABASE_URL',
-    ]
+  const critical = [
+  'RESEND_API_KEY',
+  'JWT_SECRET',
+  'DATABASE_URL',
+  'DIRECT_URL',
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+  'CLERK_SECRET_KEY',
+  ]
     
     // Additional production security checks
     if (envUtils.isProduction()) {
@@ -209,7 +233,7 @@ export const envUtils = {
       
       // Ensure production doesn't use weak defaults
       if (process.env.ADMIN_USERNAME === 'admin') {
-        console.error('❌ ADMIN_USERNAME cannot be \'admin\' in production')
+        console.error('❌ ADMIN_USERNAME cannot be "admin" in production')
         return false
       }
       

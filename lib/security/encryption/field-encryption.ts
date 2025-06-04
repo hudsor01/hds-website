@@ -18,6 +18,7 @@
 import { createCipheriv, createDecipheriv, randomBytes, pbkdf2Sync, createHash } from 'crypto'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
+import type { Dict } from '@/types/utility-types'
 
 // Encryption configuration
 const ENCRYPTION_CONFIG = {
@@ -44,7 +45,7 @@ function getEncryptionConfig() {
       ENCRYPTION_SALT: process.env.ENCRYPTION_SALT,
     })
     return config
-  } catch (error) {
+  } catch (_error) {
     if (process.env.NODE_ENV === 'production') {
       throw new Error('Field encryption configuration is invalid in production')
     }
@@ -194,7 +195,11 @@ function generateDeterministicIv(value: string, key: Buffer): Buffer {
   const hash = createHash('sha256')
   hash.update(key)
   hash.update(value)
-  return hash.digest().slice(0, ENCRYPTION_CONFIG.deterministicIvLength)
+  // Use Buffer.subarray instead of slice for newer Node.js, fallback to slice for compatibility
+  const buf = hash.digest()
+  return typeof buf.subarray === 'function'
+    ? buf.subarray(0, ENCRYPTION_CONFIG.deterministicIvLength)
+    : buf.slice(0, ENCRYPTION_CONFIG.deterministicIvLength)
 }
 
 /**
@@ -284,11 +289,22 @@ export function hashEmail(email: string): string {
   return hash.digest('hex')
 }
 
+// Type for Prisma middleware params
+type PrismaMiddlewareParams = {
+  action: string
+  model?: string
+  args?: {
+    data?: Dict<unknown>
+    where?: Dict<unknown>
+    [key: string]: unknown
+  }
+}
+
 /**
  * Prisma middleware for automatic field encryption/decryption
  */
 export function createEncryptionMiddleware() {
-  return async (params: any, next: any) => {
+  return async (params: unknown, next: unknown) => {
     // Fields to encrypt
     const encryptedFields = {
       Contact: ['email', 'phone', 'name', 'ipAddress'],
@@ -297,62 +313,78 @@ export function createEncryptionMiddleware() {
       AdminUser: ['email'],
       PageView: ['ipAddress'],
     }
-    
+
+    // Type guard for params
+    function isPrismaParams(obj: unknown): obj is PrismaMiddlewareParams {
+      return (
+        !!obj &&
+        typeof obj === 'object' &&
+        'action' in obj &&
+        typeof (obj as Dict<unknown>).action === 'string'
+      )
+    }
+
+    if (!isPrismaParams(params)) {
+      return typeof next === 'function' ? next(params) : undefined
+    }
+
     const model = params.model
     const fields = encryptedFields[model as keyof typeof encryptedFields]
-    
+
     if (!fields) {
-      return next(params)
+      return typeof next === 'function' ? next(params) : undefined
     }
-    
+
     // Encrypt on create/update
     if (params.action === 'create' || params.action === 'update') {
-      const data = params.args.data
-      for (const field of fields) {
-        if (data && data[field]) {
-          switch (field) {
-            case 'email':
-              data[field] = encryptEmail(data[field])
-              break
-            case 'phone':
-              data[field] = encryptPhone(data[field])
-              break
-            case 'name':
-              data[field] = encryptName(data[field])
-              break
-            case 'ipAddress':
-              data[field] = encryptIpAddress(data[field])
-              break
-            default:
-              data[field] = encryptField(data[field])
+      const data = params.args?.data as Dict<unknown> | undefined
+      if (data) {
+        for (const field of fields) {
+          if (field in data && data[field] && typeof data[field] === 'string') {
+            switch (field) {
+              case 'email':
+                data[field] = encryptEmail(data[field] as string)
+                break
+              case 'phone':
+                data[field] = encryptPhone(data[field] as string)
+                break
+              case 'name':
+                data[field] = encryptName(data[field] as string)
+                break
+              case 'ipAddress':
+                data[field] = encryptIpAddress(data[field] as string)
+                break
+              default:
+                data[field] = encryptField(data[field] as string)
+            }
           }
         }
       }
     }
-    
+
     // Handle queries with encrypted fields
     if (params.action === 'findFirst' || params.action === 'findUnique') {
-      const where = params.args.where
+      const where = params.args?.where as Dict<unknown> | undefined
       if (where) {
         // Convert plain text searches to encrypted searches
-        if (where.email) {
+        if ('email' in where && where.email && typeof where.email === 'string') {
           where.email = encryptEmail(where.email)
         }
-        if (where.phone) {
+        if ('phone' in where && where.phone && typeof where.phone === 'string') {
           where.phone = encryptPhone(where.phone)
         }
       }
     }
-    
-    const result = await next(params)
-    
+
+    const result = await (typeof next === 'function' ? next(params) : undefined)
+
     // Decrypt on read
     if (result) {
-      const decrypt = (obj: any) => {
+      const decrypt = (obj: Dict<unknown>) => {
         if (!obj || typeof obj !== 'object') return
-        
+
         for (const field of fields) {
-          if (obj[field] && typeof obj[field] === 'string') {
+          if (field in obj && obj[field] && typeof obj[field] === 'string') {
             try {
               switch (field) {
                 case 'email':
@@ -370,21 +402,21 @@ export function createEncryptionMiddleware() {
                 default:
                   obj[field] = decryptField(obj[field])
               }
-            } catch (error) {
+            } catch (_error) {
               // Log but don't fail - field might not be encrypted
               logger.debug('Field decryption skipped', { field, model })
             }
           }
         }
       }
-      
+
       if (Array.isArray(result)) {
         result.forEach(decrypt)
       } else {
         decrypt(result)
       }
     }
-    
+
     return result
   }
 }
@@ -393,36 +425,41 @@ export function createEncryptionMiddleware() {
  * Utility to migrate unencrypted data
  */
 export async function migrateUnencryptedData(
-  prisma: any,
+  prisma: Record<string, { findMany: (...args: unknown[]) => Promise<unknown[]>; update: (...args: unknown[]) => Promise<unknown> }>,
   model: string,
   fields: string[],
   batchSize = 100,
 ): Promise<void> {
   logger.info(`Starting encryption migration for ${model}`, { fields })
-  
+
   let processed = 0
   let hasMore = true
-  
+
   while (hasMore) {
-    const records = await prisma[model].findMany({
+    const modelHandler = prisma[model]
+    if (!modelHandler) {
+      throw new Error(`Model "${model}" not found in Prisma client`)
+    }
+    
+    const records: Array<Dict<unknown>> = await modelHandler.findMany({
       take: batchSize,
       skip: processed,
     })
-    
+
     if (records.length === 0) {
       hasMore = false
       break
     }
-    
+
     for (const record of records) {
-      const updates: any = {}
+      const updates: Dict<unknown> = {}
       let needsUpdate = false
-      
+
       for (const field of fields) {
-        if (record[field] && typeof record[field] === 'string') {
+        if (field in record && record[field] && typeof record[field] === 'string') {
           // Check if already encrypted
           try {
-            JSON.parse(record[field])
+            JSON.parse(record[field] as string)
             // If parseable as JSON, assume it's already encrypted
             continue
           } catch {
@@ -430,36 +467,36 @@ export async function migrateUnencryptedData(
             needsUpdate = true
             switch (field) {
               case 'email':
-                updates[field] = encryptEmail(record[field])
+                updates[field] = encryptEmail(record[field] as string)
                 break
               case 'phone':
-                updates[field] = encryptPhone(record[field])
+                updates[field] = encryptPhone(record[field] as string)
                 break
               case 'name':
-                updates[field] = encryptName(record[field])
+                updates[field] = encryptName(record[field] as string)
                 break
               case 'ipAddress':
-                updates[field] = encryptIpAddress(record[field])
+                updates[field] = encryptIpAddress(record[field] as string)
                 break
               default:
-                updates[field] = encryptField(record[field])
+                updates[field] = encryptField(record[field] as string)
             }
           }
         }
       }
-      
+
       if (needsUpdate) {
-        await prisma[model].update({
+        await modelHandler.update({
           where: { id: record.id },
           data: updates,
         })
       }
     }
-    
+
     processed += records.length
     logger.info(`Migrated ${processed} ${model} records`)
   }
-  
+
   logger.info(`Completed encryption migration for ${model}`, { total: processed })
 }
 

@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { Resend } from 'resend'
-import { createTRPCRouter, publicProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure } from '../lib/trpc-unified'
 import { newsletterSchema } from '@/lib/validation/form-schemas'
 import { env } from '@/lib/env'
 import { logger, emailLogger } from '@/lib/logger'

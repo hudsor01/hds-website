@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import { TrendingUp, Code, BarChart3, DollarSign } from 'lucide-react'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { AnimatedText } from '@/components/animated/animated-text'
+import { TrendingUp, Code, BarChart3, DollarSign, CheckCircle, Phone } from 'lucide-react'
+import Link from 'next/link'
 import { getServices } from '@/lib/data-fetchers'
 
 export const metadata: Metadata = {
@@ -93,139 +92,202 @@ export default async function ServicesPage() {
   
   // Use database services if available, otherwise use fallback
   const services = dbServices.length > 0 ? dbServices : fallbackServices
-  return (
-    <main className='py-12'>
-      <div className='mx-auto max-w-7xl px-6 lg:px-8'>
-        <div className='mx-auto max-w-2xl text-center'>
-          <AnimatedText
-            as='h1'
-            text='Services for Small Businesses'
-            className='text-4xl font-bold tracking-tight text-white sm:text-6xl'
-            delay={0}
-          />
-          <AnimatedText
-            as='p'
-            text='Leveraging 10 years of revenue operations experience to help small
-            businesses automate, grow, and succeed with modern technology.'
-            className='mt-6 text-lg leading-8 text-gray-300'
-            delay={0.2}
-          />
-          <AnimatedText
-            as='p'
-            text='Serving Dallas-Fort Worth and remotely nationwide'
-            className='mt-4 text-sm text-blue-400'
-            delay={0.4}
-          />
-        </div>
 
-        <div className='mx-auto mt-16 max-w-7xl sm:mt-20 lg:mt-24'>
-          <div className='grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-2'>
+  return (
+    <main className="min-h-screen fade-in">
+      {/* Hero Section */}
+      <section className="section-padding bg-gradient-to-br from-brand-50 via-white to-purple-50">
+        <div className="container logical-padding">
+          <div className="text-center space-y-8 max-w-4xl mx-auto">
+            <div className="space-y-6 slide-in-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-100 text-brand-800 rounded-full text-sm font-medium card-entrance">
+                <TrendingUp className="w-4 h-4" />
+                Professional Services
+              </div>
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight hero-title">
+                Services for
+                <span className="text-brand-600"> Small Businesses</span>
+              </h1>
+              <p className="lead-text text-xl max-w-3xl mx-auto">
+                Leveraging 10 years of revenue operations experience to help small
+                businesses automate, grow, and succeed with modern technology.
+              </p>
+              <p className="text-brand-600 font-medium">
+                Serving Dallas-Fort Worth and remotely nationwide
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Grid */}
+      <section className="section-padding">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => {
               const Icon = iconMap[service.id as keyof typeof iconMap] || Code
               return (
-                <AnimatedCard
+                <div
                   key={service.id}
-                  delay={0.6 + index * 0.1}
-                  className='relative rounded-2xl bg-gray-800/50 p-8 backdrop-blur-lg'
+                  className={`premium-card card-entrance card-lift scroll-reveal ${
+                    service.featured ? 'ring-2 ring-brand-500 ring-offset-2' : ''
+                  }`}
                 >
-                  <div className='flex items-center gap-x-4'>
-                    <Icon
-                      className='h-10 w-10 text-blue-400'
-                      aria-hidden='true'
-                    />
-                    <h2 className='text-xl font-semibold leading-7 text-white'>
-                      {service.title}
-                    </h2>
-                  </div>
-
-                  <p className='mt-4 text-base leading-7 text-gray-300'>
-                    {service.description}
-                  </p>
-
-                  <div className='mt-6'>
-                    <h3 className='text-sm font-semibold text-white'>
-                      What&apos;s Included:
-                    </h3>
-                    <ul className='mt-3 space-y-2' role='list'>
-                      {(service.features || []).map((feature, idx) => (
-                        <li key={`${service.id}-feature-${idx}`} className='flex items-start'>
-                          <svg
-                            className='mt-1 h-5 w-5 flex-shrink-0 text-blue-400'
-                            viewBox='0 0 20 20'
-                            fill='currentColor'
-                            aria-hidden='true'
-                          >
-                            <path
-                              fillRule='evenodd'
-                              d='M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                          <span className='ml-2 text-sm text-gray-300'>
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
                   {service.featured && (
-                    <div className='mt-6'>
-                      <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10'>
+                    <div className="absolute -top-3 left-6">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-brand-600 text-white text-sm font-medium rounded-full shadow-lg">
+                        <TrendingUp className="w-3 h-3" />
                         Featured Service
                       </span>
                     </div>
                   )}
 
-                  <div className='mt-6 flex items-center justify-between'>
-                    <div>
-                      <p className='text-2xl font-bold text-white'>
-                        {service.price}
-                      </p>
-                      <p className='text-sm text-gray-400'>
-                        Starting price
-                      </p>
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-6 h-6 text-brand-600" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1">
+                        <h2 className="text-xl font-semibold text-foreground">
+                          {service.title}
+                        </h2>
+                        <p className="text-neutral-600 mt-2">
+                          {service.description}
+                        </p>
+                      </div>
                     </div>
-                    <a
-                      href={service.href}
-                      className='rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors'
-                    >
-                      Learn More
-                    </a>
+
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground mb-3">
+                        What&apos;s Included:
+                      </h3>
+                      <ul className="space-y-2">
+                        {(service.features || []).map((feature, idx) => (
+                          <li key={`${service.id}-feature-${idx}`} className="flex items-start gap-2">
+                            <CheckCircle className="w-4 h-4 text-success-600 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-neutral-600">
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-200">
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">
+                          {service.price}
+                        </p>
+                        <p className="text-sm text-neutral-500">
+                          Starting price
+                        </p>
+                      </div>
+                      <Link
+                        href={service.href}
+                        className="premium-button bg-brand-600 text-white hover:bg-brand-700 button-press"
+                      >
+                        Learn More
+                      </Link>
+                    </div>
                   </div>
-                </AnimatedCard>
+                </div>
               )
             })}
           </div>
         </div>
+      </section>
 
-        <AnimatedCard
-          delay={1.2}
-          className='mt-16 text-center'
-        >
-          <h2 className='text-2xl font-bold text-white'>
-            Not Sure Which Service You Need?
-          </h2>
-          <p className='mt-4 text-lg text-gray-300'>
-            Let&apos;s have a conversation about your business goals. I&apos;ll
-            recommend the best solution for your needs.
-          </p>
-          <div className='mt-8 flex justify-center gap-4'>
-            <a
-              href='/contact'
-              className='inline-flex items-center justify-center rounded-md bg-blue-600 px-8 py-3 text-base font-medium text-white hover:bg-blue-700 transition-colors'
-            >
-              Schedule a Free Consultation
-            </a>
-            <a
-              href='tel:+1234567890'
-              className='inline-flex items-center justify-center rounded-md border border-gray-300 bg-transparent px-8 py-3 text-base font-medium text-white hover:bg-gray-800 transition-colors'
-            >
-              Call Now
-            </a>
+      {/* Process Section */}
+      <section className="section-padding bg-surface">
+        <div className="container">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="section-title text-foreground hero-title">How We Work Together</h2>
+            <p className="lead-text max-w-2xl mx-auto">
+              A simple, straightforward process focused on your success
+            </p>
           </div>
-        </AnimatedCard>
-      </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto features-grid">
+            <div className="premium-card text-center space-y-4 card-entrance card-lift scroll-reveal">
+              <div className="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center mx-auto text-lg font-bold">
+                1
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Discovery Call</h3>
+              <p className="text-neutral-600 text-sm">
+                We&apos;ll discuss your business goals, current challenges, and ideal outcomes
+                in a 30-minute consultation.
+              </p>
+            </div>
+
+            <div className="premium-card text-center space-y-4 card-entrance card-lift scroll-reveal">
+              <div className="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center mx-auto text-lg font-bold">
+                2
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Custom Proposal</h3>
+              <p className="text-neutral-600 text-sm">
+                I&apos;ll create a detailed proposal outlining the solution, timeline,
+                and transparent pricing for your project.
+              </p>
+            </div>
+
+            <div className="premium-card text-center space-y-4 card-entrance card-lift scroll-reveal">
+              <div className="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center mx-auto text-lg font-bold">
+                3
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">Implementation</h3>
+              <p className="text-neutral-600 text-sm">
+                I&apos;ll execute the solution with regular updates and collaborate closely
+                with you throughout the process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="section-padding">
+        <div className="container">
+          <div className="premium-card text-center space-y-6 max-w-4xl mx-auto card-entrance slide-in-left">
+            <h2 className="text-3xl font-bold text-foreground">
+              Not Sure Which Service You Need?
+            </h2>
+            <p className="text-neutral-600 text-lg max-w-2xl mx-auto">
+              Let&apos;s have a conversation about your business goals. I&apos;ll
+              recommend the best solution for your needs and budget.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contact"
+                className="premium-button bg-brand-600 text-white hover:bg-brand-700 button-press"
+              >
+                Schedule a Free Consultation
+              </Link>
+              <Link
+                href="tel:+1234567890"
+                className="premium-button bg-transparent text-brand-600 border-2 border-brand-600 hover:bg-brand-50 button-press flex items-center gap-2"
+              >
+                <Phone className="w-4 h-4" />
+                Call Now
+              </Link>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-6 pt-8 border-t border-neutral-200">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-brand-600">24hr</div>
+                <div className="text-sm text-neutral-600">Response Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-brand-600">100%</div>
+                <div className="text-sm text-neutral-600">Satisfaction Guarantee</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-brand-600">Free</div>
+                <div className="text-sm text-neutral-600">Initial Consultation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   )
 }

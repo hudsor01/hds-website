@@ -1,7 +1,8 @@
 import { env } from '@/lib/env'
 import { logger } from '@/lib/logger'
 import { signJWT, verifyJWT } from './jwt'
-import type { JWTPayload } from './jwt'
+import type { JWTPayload as _JWTPayload } from './jwt'
+import type { AdminTokenPayload, AuthError } from '@/types/auth-types'
 import bcrypt from 'bcrypt'
 import { z } from 'zod'
 
@@ -27,20 +28,7 @@ const ADMIN_CONFIG = {
 // Rate limiting store (in production, use Redis or database)
 const loginAttempts = new Map<string, { count: number; lockoutUntil?: number }>()
 
-export interface AdminUser {
-  id: string
-  username: string
-  role: 'admin'
-  iat?: number
-  exp?: number
-}
-
-export type AuthenticationResult = AdminUser | null
-
-export type LoginAttempt = {
-  count: number
-  lockoutUntil?: number
-}
+// Types imported from @/types/auth-types
 
 function isLockedOut(identifier: string): boolean {
   const attempts = loginAttempts.get(identifier)
@@ -130,7 +118,7 @@ export async function authenticateAdmin(
 /**
  * Verify admin token with enhanced JWT security (Next.js 15 pattern)
  */
-export async function verifyAdminToken(token: string): Promise<AdminUser | null> {
+export async function verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
   try {
     const payload = await verifyJWT(token)
     
@@ -142,6 +130,7 @@ export async function verifyAdminToken(token: string): Promise<AdminUser | null>
     return {
       id: payload.userId,
       username: payload.username,
+      email: payload.email || payload.username, // fallback for compatibility
       role: 'admin',
       iat: payload.iat,
       exp: payload.exp,
@@ -157,7 +146,7 @@ export async function verifyAdminToken(token: string): Promise<AdminUser | null>
 /**
  * Check if user has admin role
  */
-export function isAdmin(user: AdminUser | null): user is AdminUser {
+export function isAdmin(user: AdminTokenPayload | null): user is AdminTokenPayload {
   return user !== null && user.role === 'admin'
 }
 
@@ -186,7 +175,7 @@ export async function generatePasswordHash(plainPassword: string): Promise<strin
  * Next.js 15 App Router authentication middleware pattern
  * Enhanced for both Bearer token and cookie authentication
  */
-export async function requireAdmin(request: Request): Promise<AdminUser> {
+export async function requireAdmin(request: Request): Promise<AdminTokenPayload> {
   const authHeader = request.headers.get('authorization')
   const cookieHeader = request.headers.get('cookie')
   
@@ -215,13 +204,7 @@ export async function requireAdmin(request: Request): Promise<AdminUser> {
   return admin
 }
 
-/**
- * React 19 useActionState compatible error type
- */
-export type AuthError = {
-  message: string
-  field?: string
-}
+// AuthError type imported from @/types/auth-types
 
 /**
  * React 19 Server Action for admin login

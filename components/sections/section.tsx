@@ -3,7 +3,7 @@
 import React from 'react'
 import { m } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { SectionProps, AnimatedSectionProps } from '@/types/component-types'
+import type { SectionProps, AnimatedSectionProps } from '@/types/component-types'
 import { animations, transitions } from '@/lib/design-system'
 import { useScrollAnimation } from '@/hooks/use-animation-hooks'
 

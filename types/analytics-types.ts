@@ -125,7 +125,7 @@ export interface AnalyticsConfig {
 export interface AnalyticsProvider {
   name: 'google-analytics' | 'plausible' | 'mixpanel' | 'amplitude' | 'custom'
   enabled: boolean
-  config: Record<string, any>
+  config: Record<string, unknown>
   trackingId?: string
   apiKey?: string
   endpoints?: {
@@ -152,7 +152,7 @@ export interface AnalyticsContext {
   user?: {
     id?: string
     anonymousId?: string
-    traits?: Record<string, any>
+    traits?: Record<string, unknown>
   }
   device: {
     type: 'desktop' | 'mobile' | 'tablet'
@@ -199,8 +199,8 @@ export interface UserInteraction {
   position?: { x: number; y: number }
   timestamp: Date
   duration?: number
-  value?: any
-  metadata?: Record<string, any>
+  value?: Record<string, unknown>
+  metadata?: Record<string, unknown>
 }
 
 /**
@@ -261,7 +261,7 @@ export interface JourneyStep {
   action?: string
   timestamp: Date
   duration: number
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // ============= Performance Analytics =============
@@ -330,7 +330,7 @@ export interface FunnelStep {
   conversionRate: number
   dropoffRate: number
   averageTime: number
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 /**
@@ -386,6 +386,19 @@ export interface ABTestVariant {
   pValue?: number
 }
 
+// ============= Analytics Store =============
+
+/**
+ * Analytics store interface for Zustand
+ */
+export interface AnalyticsStore {
+  hasConsent: boolean
+  sessionId: string | null
+  setConsent: (newConsent: boolean) => void
+  setSessionId: (newSessionId: string | null) => void
+  reset: () => void
+}
+
 // ============= Analytics Hooks & Utilities =============
 
 /**
@@ -409,7 +422,7 @@ export interface TrackEventOptions {
   action?: string
   label?: string
   value?: number
-  data?: Record<string, any>
+  data?: Record<string, unknown>
   immediate?: boolean
 }
 
@@ -420,13 +433,13 @@ export interface UseAnalyticsReturn {
   trackEvent: (options: TrackEventOptions) => void
   trackPageView: (data?: Partial<PageView>) => void
   trackConversion: (data: ConversionEvent) => void
-  identify: (userId: string, traits?: Record<string, any>) => void
-  group: (groupId: string, traits?: Record<string, any>) => void
+  identify: (userId: string, traits?: Record<string, unknown>) => void
+  group: (groupId: string, traits?: Record<string, unknown>) => void
   alias: (newId: string, previousId?: string) => void
   reset: () => void
   getSessionId: () => string
   getUserId: () => string | undefined
-  setUserProperties: (properties: Record<string, any>) => void
+  setUserProperties: (properties: Record<string, unknown>) => void
 }
 
 // ============= Real-time Analytics =============
@@ -506,7 +519,7 @@ export interface AnalyticsDashboardWidget {
   config: {
     metric?: string
     timeRange?: string
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
     chartType?: 'line' | 'bar' | 'pie' | 'area'
     groupBy?: string
   }
@@ -538,11 +551,32 @@ export interface DashboardFilter {
   name: string
   type: 'select' | 'date' | 'text' | 'number'
   options?: string[]
-  defaultValue?: any
+  defaultValue?: Record<string, unknown>
   required?: boolean
 }
 
 // ============= Export Legacy Types =============
+
+// ============= Error Tracking Types =============
+
+/**
+ * Error context for logging and tracking
+ */
+export interface ErrorContext {
+  userId?: string
+  sessionId?: string
+  requestId?: string
+  url?: string
+  method?: string
+  statusCode?: number
+  userAgent?: string
+  ipAddress?: string
+  component?: string
+  route?: string
+  buildVersion?: string
+  timestamp?: string
+  extra?: Record<string, unknown>
+}
 
 // Legacy exports for backward compatibility
 export interface UsePageAnalyticsOptions {
@@ -551,11 +585,3 @@ export interface UsePageAnalyticsOptions {
   trackEvents?: boolean
 }
 
-export interface TrackEventOptions {
-  name: string
-  category?: string
-  action?: string
-  label?: string
-  value?: number
-  data?: Record<string, any>
-}

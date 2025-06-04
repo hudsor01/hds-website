@@ -13,9 +13,9 @@ export type EmailPayload = z.infer<typeof emailSchema>
  */
 export interface EmailResult {
   success: boolean
-  response?: any
+  response?: Record<string, unknown>
   error?: string
-  details?: any
+  details?: Record<string, unknown>
 }
 
 /**

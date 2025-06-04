@@ -47,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     let body: unknown
     try {
       body = await request.json()
-    } catch (error) {
+    } catch (_error) {
       logger.warn('Invalid JSON in login request', { clientIP })
       return NextResponse.json(
         { error: 'Invalid request body' },

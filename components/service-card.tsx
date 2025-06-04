@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { ServiceCardProps } from '@/types/service-types'
+import type { ServiceCardProps } from '@/types/service-types'
 
 export function ServiceCard({
   title,

@@ -18,7 +18,7 @@ export default function ContactError({ error, reset }: ContactErrorProps) {
     
     // Track error for analytics
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'exception', {
+      ;(window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `Contact page error: ${error.message}`,
         fatal: false,
       })
@@ -33,7 +33,7 @@ export default function ContactError({ error, reset }: ContactErrorProps) {
           Contact Page Error
         </h1>
         <p className="text-gray-600 mb-8">
-          We're having trouble loading the contact form, but don't worry - you can still reach us!
+          We&apos;re having trouble loading the contact form, but don&apos;t worry - you can still reach us!
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -109,7 +109,7 @@ export default function ContactError({ error, reset }: ContactErrorProps) {
             Quick Email Template:
           </h3>
           <p className="text-sm text-blue-700">
-            "Hi, I'm interested in learning more about your services. I was trying to use your contact form but encountered an issue. Please get in touch with me at [your email] to discuss my project."
+            &quot;Hi, I&apos;m interested in learning more about your services. I was trying to use your contact form but encountered an issue. Please get in touch with me at [your email] to discuss my project.&quot;
           </p>
         </div>
 

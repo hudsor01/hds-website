@@ -1,7 +1,7 @@
 'use client'
 
-import { InputHTMLAttributes, ReactNode } from 'react'
-import {
+import type { InputHTMLAttributes, ReactNode } from 'react'
+import type {
   FieldValues,
   UseFormReturn,
   FieldPath,

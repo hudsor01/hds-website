@@ -5,8 +5,8 @@ import { devtools } from 'zustand/middleware'
 interface NavigationState {
   isMobileMenuOpen: boolean
   isScrolled: boolean
-  setMobileMenuOpen: (_open: boolean) => void
-  setScrolled: (_scrolled: boolean) => void
+  setMobileMenuOpen: () => void
+  setScrolled: () => void
 }
 
 export const useNavigationStore = create<NavigationState>()(
@@ -14,8 +14,8 @@ export const useNavigationStore = create<NavigationState>()(
     set => ({
       isMobileMenuOpen: false,
       isScrolled: false,
-      setMobileMenuOpen: open => set({ isMobileMenuOpen: open }),
-      setScrolled: scrolled => set({ isScrolled: scrolled }),
+      setMobileMenuOpen: (open: boolean) => set({ isMobileMenuOpen: open }),
+      setScrolled: (scrolled: boolean) => set({ isScrolled: scrolled }),
     }),
     {
       name: 'navigation-store',

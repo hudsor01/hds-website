@@ -1,5 +1,17 @@
 import { logger } from './logger'
 
+// Define window interfaces for external services
+interface WindowWithSentry extends Window {
+  Sentry: {
+    captureException: (error: Error, context?: Record<string, unknown>) => void
+  }
+}
+
+interface WindowWithAnalytics extends Window {
+  gtag: (...args: unknown[]) => void
+  plausible: (event: string, options?: Record<string, unknown>) => void
+}
+
 export interface ErrorContext {
   userId?: string
   sessionId?: string
@@ -181,7 +193,7 @@ class ErrorTrackingService {
   private sendToExternalService(errorReport: ErrorReport) {
     // Example for Sentry integration
     if (typeof window !== 'undefined' && 'Sentry' in window) {
-      ;(window as any).Sentry.captureException(errorReport.error, {
+      ;(window as WindowWithSentry).Sentry.captureException(errorReport.error, {
         tags: {
           severity: errorReport.severity,
           category: errorReport.category,
@@ -203,7 +215,7 @@ class ErrorTrackingService {
   private trackInAnalytics(errorReport: ErrorReport) {
     // Google Analytics 4
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'exception', {
+      ;(window as WindowWithAnalytics).gtag('event', 'exception', {
         description: errorReport.error.message,
         fatal: errorReport.severity === 'critical',
         custom_map: {
@@ -216,7 +228,7 @@ class ErrorTrackingService {
 
     // Plausible Analytics (if using)
     if (typeof window !== 'undefined' && 'plausible' in window) {
-      ;(window as any).plausible('Error', {
+      ;(window as WindowWithAnalytics).plausible('Error', {
         props: {
           category: errorReport.category,
           severity: errorReport.severity,
@@ -251,7 +263,7 @@ export const errorTracker = new ErrorTrackingService()
  * Error boundary handler that integrates with tracking
  */
 export function createErrorBoundaryHandler(componentName: string) {
-  return (error: Error, errorInfo: any) => {
+  return (error: Error, _errorInfo: unknown) => {
     errorTracker.reportComponentError(error, componentName)
   }
 }
@@ -299,7 +311,7 @@ export function setupGlobalErrorHandling() {
   window.addEventListener('error', (event) => {
     if (event.target !== window) {
       errorTracker.reportError(
-        new Error(`Resource Load Error: ${(event.target as any)?.src || 'unknown'}`),
+        new Error(`Resource Load Error: ${(event.target as HTMLElement & { src?: string })?.src || 'unknown'}`),
         { component: 'resource', route: 'resource_load' },
       )
     }

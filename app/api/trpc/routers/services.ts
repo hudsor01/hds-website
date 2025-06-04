@@ -5,8 +5,9 @@
  */
 
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc-unified'
 import { TRPCError } from '@trpc/server'
+import { Prisma } from '@prisma/client'
 
 export const servicesRouter = createTRPCRouter({
   // Public procedures - accessible to all users
@@ -23,7 +24,7 @@ export const servicesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { category, featured, limit } = input
 
-      const where: any = {
+      const where: Prisma.ServiceWhereInput = {
         isActive: true,
       }
 
@@ -161,7 +162,7 @@ export const servicesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { limit, offset, isActive, category, search } = input
 
-      const where: any = {}
+      const where: Prisma.ServiceWhereInput = {}
 
       if (isActive !== undefined) {
         where.isActive = isActive
@@ -232,12 +233,12 @@ export const servicesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const service = await ctx.db.service.create({
-          data: input,
+          data: input as Prisma.ServiceCreateInput,
         })
 
         return service
-      } catch (error: any) {
-        if (error.code === 'P2002') {
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error && error.code === 'P2002') {
           throw new TRPCError({
             code: 'CONFLICT',
             message: 'A service with this slug already exists',
@@ -289,18 +290,20 @@ export const servicesRouter = createTRPCRouter({
         })
 
         return service
-      } catch (error: any) {
-        if (error.code === 'P2002') {
-          throw new TRPCError({
-            code: 'CONFLICT',
-            message: 'A service with this slug already exists',
-          })
-        }
-        if (error.code === 'P2025') {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Service not found',
-          })
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error) {
+          if (error.code === 'P2002') {
+            throw new TRPCError({
+              code: 'CONFLICT',
+              message: 'A service with this slug already exists',
+            })
+          }
+          if (error.code === 'P2025') {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Service not found',
+            })
+          }
         }
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -323,8 +326,8 @@ export const servicesRouter = createTRPCRouter({
         })
 
         return { success: true }
-      } catch (error: any) {
-        if (error.code === 'P2025') {
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error && error.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Service not found',

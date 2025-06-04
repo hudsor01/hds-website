@@ -5,11 +5,19 @@ import { Suspense } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
+// Define the shape of streamed data items
+interface StreamedDataItem {
+  id?: string | number
+  title: string
+  description: string
+  price?: string
+}
+
 // Client component that uses the `use` hook to stream data
 function ClientDataContent({ 
   dataPromise, 
 }: { 
-  dataPromise: Promise<any[]> 
+  dataPromise: Promise<StreamedDataItem[]> 
 }) {
   // Use the `use` hook to read the promise
   const data = use(dataPromise)
@@ -63,7 +71,7 @@ export function ClientDataStream({
   title = 'Data Stream',
   description = 'Streaming data to the client component',
 }: { 
-  dataPromise: Promise<any[]>
+  dataPromise: Promise<StreamedDataItem[]>
   title?: string
   description?: string
 }) {
@@ -87,13 +95,13 @@ export function ClientDataStream({
 // Example usage component (would be imported in a page)
 export function ClientDataStreamExample() {
   // Don't await the promise - pass it to the client component
-  const dataPromise = fetch('/api/data').then(res => res.json())
+  const dataPromise = fetch('/api/data').then(res => res.json()) as Promise<StreamedDataItem[]>
 
   return (
     <ClientDataStream 
       dataPromise={dataPromise}
       title='Live Data Feed'
-      description='This data is streamed directly to the client using React's use hook'
+      description="This data is streamed directly to the client using React's use hook"
     />
   )
 }

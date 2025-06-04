@@ -75,14 +75,24 @@ async function reportErrorToService(
   }
 }
 
-// Base Error Boundary Props Interface
+// Error callback interfaces following React 19 patterns
+interface ErrorFallbackProps {
+error: Error
+errorInfo: React.ErrorInfo | null
+reset: () => void
+}
+
+interface ErrorHandlerProps {
+error: Error
+errorInfo?: React.ErrorInfo
+}
+
+// Base Error Boundary Props Interface following React 19 patterns
 interface BaseErrorBoundaryProps {
-  children: ReactNode
-  // eslint-disable-next-line no-unused-vars
-  fallback?: (error: Error, errorInfo: React.ErrorInfo | null, reset: () => void) => ReactNode
-  // eslint-disable-next-line no-unused-vars
-  onError?: (error: Error, errorInfo?: React.ErrorInfo) => void
-  isolate?: boolean
+children: ReactNode
+fallback?: (_errorProps: ErrorFallbackProps) => ReactNode
+onError?: (_errorProps: ErrorHandlerProps) => void
+isolate?: boolean
 }
 
 // Base Error Boundary Class Component
@@ -99,7 +109,7 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, ErrorBo
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     const newState = handleBoundaryError(error, errorInfo, this.state.retryCount)
     this.setState(newState)
-    this.props.onError?.(error, errorInfo)
+    this.props.onError?.({ error, errorInfo })
   }
 
   reset = () => {
@@ -109,7 +119,11 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, ErrorBo
   render() {
     if (this.state.hasError && this.state.error) {
       if (this.props.fallback) {
-        return this.props.fallback(this.state.error, this.state.errorInfo, this.reset)
+        return this.props.fallback({
+          error: this.state.error,
+          errorInfo: this.state.errorInfo,
+          reset: this.reset,
+        })
       }
 
       return (
@@ -272,9 +286,9 @@ function DefaultErrorFallback({
 export function AppErrorBoundary({ children }: { children: ReactNode }) {
   return (
     <BaseErrorBoundary
-      onError={(error, errorInfo) => {
-        // Global error tracking
-        console.error('App Error Boundary caught error:', error, errorInfo)
+      onError={({ error, errorInfo }) => {
+      // Global error tracking
+      console.error('App Error Boundary caught error:', error, errorInfo)
       }}
     >
       {children}
@@ -286,7 +300,7 @@ export function AppErrorBoundary({ children }: { children: ReactNode }) {
 export function RouteErrorBoundary({ children }: { children: ReactNode }) {
   return (
     <BaseErrorBoundary
-      fallback={(error, errorInfo, reset) => (
+      fallback={({ error, errorInfo, reset }) => (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <DefaultErrorFallback
             error={error}
@@ -313,7 +327,7 @@ export function SectionErrorBoundary({
   return (
     <BaseErrorBoundary
       isolate
-      fallback={(error, errorInfo, reset) => (
+      fallback={({ reset }) => (
         <Card className="w-full bg-destructive/5 border-destructive/20">
           <CardHeader>
             <CardTitle className="text-sm flex items-center gap-2">
@@ -332,7 +346,7 @@ export function SectionErrorBoundary({
           </CardContent>
         </Card>
       )}
-      onError={(error) => {
+      onError={({ error }) => {
         console.error(`Section error in ${sectionName}:`, error)
       }}
     >
@@ -352,7 +366,7 @@ export function FormErrorBoundary({
   return (
     <BaseErrorBoundary
       isolate
-      fallback={(error, errorInfo, reset) => (
+      fallback={({ error, reset }) => (
         <Alert variant="destructive">
           <AlertTriangle className="w-4 h-4" />
           <AlertDescription>
@@ -382,7 +396,7 @@ export function FormErrorBoundary({
 export function AdminErrorBoundary({ children }: { children: ReactNode }) {
   return (
     <BaseErrorBoundary
-      fallback={(error, errorInfo, reset) => (
+      fallback={({ error, errorInfo, reset }) => (
         <div className="min-h-screen flex items-center justify-center bg-background p-6">
           <Card className="w-full max-w-2xl">
             <CardHeader className="text-center">
@@ -476,4 +490,23 @@ export function useAsyncError() {
   }
 
   return handleAsyncError
+}
+
+// Legacy error boundary class for backward compatibility
+export class ErrorBoundary extends BaseErrorBoundary {
+// Keep the exact same API as the original for backward compatibility
+constructor(props: {
+children: ReactNode
+fallback?: ReactNode
+onError?: (_errorToReport: Error, _errorInfoToReport: React.ErrorInfo) => void
+variant?: 'simple' | 'detailed'
+className?: string
+darkMode?: boolean
+}) {
+super({
+children: props.children,
+fallback: props.fallback ? () => props.fallback! : undefined,
+onError: props.onError ? ({ error, errorInfo }) => props.onError!(error, errorInfo!) : undefined,
+})
+}
 }

@@ -57,7 +57,7 @@ export interface Permission {
 export interface PermissionCondition {
   field: string
   operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'contains'
-  value: any
+  value: Record<string, unknown>
 }
 
 /**
@@ -267,7 +267,7 @@ export interface OAuthProfile {
   lastName?: string
   avatar?: string
   provider: string
-  raw: Record<string, any>
+  raw: Record<string, unknown>
 }
 
 /**
@@ -279,8 +279,8 @@ export interface SSOConfig {
   type: 'saml' | 'oidc'
   isEnabled: boolean
   domains: string[]
-  configuration: Record<string, any>
-  metadata?: Record<string, any>
+  configuration: Record<string, unknown>
+  metadata?: Record<string, unknown>
 }
 
 // ============= Security & Audit =============
@@ -296,7 +296,7 @@ export interface SecurityEvent {
   ipAddress?: string
   userAgent?: string
   timestamp: Date
-  details: Record<string, any>
+  details: Record<string, unknown>
   riskLevel: 'low' | 'medium' | 'high' | 'critical'
   status: 'success' | 'failure' | 'suspicious'
 }
@@ -348,7 +348,19 @@ export interface AuthRateLimit {
 // ============= Admin & Management =============
 
 /**
- * Admin user with elevated permissions
+ * Admin authentication token payload (used in JWT claims)
+ */
+export interface AdminTokenPayload {
+  id: string
+  username: string
+  email: string
+  role: 'admin'
+  iat?: number
+  exp?: number
+}
+
+/**
+ * Admin user with elevated permissions (full admin profile)
  */
 export interface AdminUser extends User {
   adminLevel: 'super' | 'admin' | 'moderator'
@@ -360,6 +372,27 @@ export interface AdminUser extends User {
 }
 
 /**
+ * Authentication result type
+ */
+export type AuthenticationResult = AdminTokenPayload | null
+
+/**
+ * Login attempt tracking
+ */
+export interface LoginAttempt {
+  count: number
+  lockoutUntil?: number
+}
+
+/**
+ * React 19 useActionState compatible error type
+ */
+export interface AuthError {
+  message: string
+  field?: string
+}
+
+/**
  * User management operations
  */
 export interface UserManagementAction {
@@ -368,7 +401,7 @@ export interface UserManagementAction {
   performedBy: string
   reason?: string
   timestamp: Date
-  changes?: Record<string, { from: any; to: any }>
+  changes?: Record<string, { from: Record<string, unknown>; to: Record<string, unknown> }>
 }
 
 /**

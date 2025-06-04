@@ -36,7 +36,7 @@ export const imageConfig = {
   minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
   dangerouslyAllowSVG: true,
   contentDispositionType: 'attachment' as const,
-  contentSecurityPolicy: 'default-src 'self'; script-src 'none'; sandbox;',
+  contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 }
 
 // Standard image sizes for responsive design

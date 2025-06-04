@@ -16,7 +16,7 @@ import { z } from 'zod'
 import { 
   LoginFormSchema, 
   SignupFormSchema, 
-  FormState,
+  type FormState,
   authenticateUser,
   createSession,
   deleteSession,
@@ -108,7 +108,7 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
       }
     }
 
-    const { username, email, password } = validatedFields.data
+    const { username: _username, email: _email, password: _password } = validatedFields.data
 
     // 2. Check if user already exists
     // In a real application, you would check your database
@@ -218,7 +218,7 @@ export async function updateProfile(state: FormState, formData: FormData): Promi
       }
     }
 
-    const { username, email } = validatedFields.data
+    const { username: _username, email: _email } = validatedFields.data
 
     // 3. Update user in database
     // await db.update(users)
@@ -290,7 +290,7 @@ export async function changePassword(state: FormState, formData: FormData): Prom
       }
     }
 
-    const { currentPassword, newPassword } = validatedFields.data
+    const { currentPassword: _currentPassword, newPassword: _newPassword } = validatedFields.data
 
     // 3. Verify current password
     // const dbUser = await db.query.users.findFirst({
@@ -378,7 +378,7 @@ export async function createUser(state: FormState, formData: FormData): Promise<
       }
     }
 
-    const { username, email, password, role } = validatedFields.data
+    const { username: _username, email: _email, password: _password, role } = validatedFields.data
 
     // 3. Create user in database
     // const hashedPassword = await bcrypt.hash(password, 10)
@@ -430,11 +430,11 @@ export async function createUser(state: FormState, formData: FormData): Promise<
 /**
  * Validate session and refresh if needed (utility action)
  */
-export async function validateSession(): Promise<{ valid: boolean; user?: any }> {
+export async function validateSession(): Promise<{ valid: boolean; user?: Record<string, unknown> }> {
   try {
     const user = await authorizeServerAction()
     return { valid: true, user }
-  } catch (error) {
+  } catch (_error) {
     return { valid: false }
   }
 }

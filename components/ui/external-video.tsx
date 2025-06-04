@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ExternalVideoConfig, videoUtils } from '@/lib/video/video-config'
-import { Play, Volume2, VolumeX, Maximize, Settings } from 'lucide-react'
+import { type ExternalVideoConfig, videoUtils } from '@/lib/video/video-config'
+import { Play } from 'lucide-react'
 
 export interface ExternalVideoProps {
   config: ExternalVideoConfig
@@ -210,6 +210,7 @@ function VideoPlaceholder({
     >
       {/* Thumbnail */}
       {thumbnailUrl && !thumbnailError ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
         <img
           src={thumbnailUrl}
           alt={title || `${platform} video thumbnail`}
@@ -363,7 +364,12 @@ export interface VideoGridProps {
   columns?: number
   gap?: number
   aspectRatio?: string
-  onVideoSelect?: (video: any) => void
+  onVideoSelect?: (video: {
+    id: string
+    platform: 'youtube' | 'vimeo'
+    title?: string
+    thumbnail?: string
+  }) => void
 }
 
 export function VideoGrid({

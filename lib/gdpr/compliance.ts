@@ -15,35 +15,17 @@
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
 import { 
-  decryptEmail, 
-  decryptName, 
-  decryptPhone, 
-  decryptIpAddress, 
+decryptEmail, 
+decryptName, 
+decryptPhone, 
+decryptIpAddress, 
 } from '@/lib/security/encryption/field-encryption'
 import { logger } from '@/lib/logger'
-import { monitoring, MonitoringEvent } from '@/lib/monitoring'
+import { AppMonitoring } from '@/lib/monitoring/app-monitoring'
+import { GDPRRequestType, GDPRRequestStatus } from '@/types/enum-types'
 
-/**
- * GDPR request types
- */
-export enum GDPRRequestType {
-  DATA_ACCESS = 'data_access',
-  DATA_PORTABILITY = 'data_portability',
-  DATA_ERASURE = 'data_erasure',
-  DATA_RECTIFICATION = 'data_rectification',
-  CONSENT_WITHDRAWAL = 'consent_withdrawal',
-  PROCESSING_RESTRICTION = 'processing_restriction',
-}
-
-/**
- * GDPR request status
- */
-export enum GDPRRequestStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  REJECTED = 'rejected',
-}
+// Re-export for component usage
+export { GDPRRequestType, GDPRRequestStatus }
 
 /**
  * GDPR request schema
@@ -114,7 +96,7 @@ export class GDPRComplianceService {
       })
       
       // Track event
-      monitoring.trackEvent(MonitoringEvent.FORM_SUBMISSION, {
+      AppMonitoring.trackEvent('form_submission', {
         type: 'gdpr_request',
         requestType: validated.type,
       })
@@ -150,7 +132,7 @@ export class GDPRComplianceService {
   /**
    * Create GDPR request record
    */
-  private async createGDPRRequest(data: any) {
+  private async createGDPRRequest(data: z.infer<typeof GDPRRequestSchema>) {
     // In a real implementation, create a GDPRRequest model in Prisma
     return {
       id: crypto.randomUUID(),
@@ -256,7 +238,7 @@ export class GDPRComplianceService {
       })
       
       // Track deletion event
-      monitoring.trackEvent(MonitoringEvent.FORM_SUBMISSION, {
+      AppMonitoring.trackEvent('form_submission', {
         type: 'gdpr_data_deletion',
         email: email.substring(0, 3) + '***', // Partial email for privacy
       })
@@ -347,7 +329,7 @@ export class GDPRComplianceService {
   /**
    * Extract consent history from events
    */
-  private extractConsentHistory(events: any[]): UserDataExport['consentHistory'] {
+  private extractConsentHistory(events: Record<string, unknown>[]): UserDataExport['consentHistory'] {
     return events
       .filter(event => event.category === 'consent')
       .map(event => ({
@@ -361,7 +343,7 @@ export class GDPRComplianceService {
   /**
    * Extract data processing activities
    */
-  private extractProcessingActivities(events: any[]): UserDataExport['dataProcessingActivities'] {
+  private extractProcessingActivities(events: Record<string, unknown>[]): UserDataExport['dataProcessingActivities'] {
     const activities = [
       { type: 'form_submission', purpose: 'Process contact requests' },
       { type: 'newsletter_signup', purpose: 'Send marketing communications' },

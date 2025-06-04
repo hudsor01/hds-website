@@ -21,7 +21,7 @@ export default function PrivacyPage() {
 
           <h2>1. Introduction</h2>
           <p>
-            Hudson Digital Solutions ("we," "our," or "us") respects your
+            Hudson Digital Solutions (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) respects your
             privacy and is committed to protecting your personal data. This
             privacy policy explains how we collect, use, and safeguard your
             information when you visit our website or use our services.
@@ -105,7 +105,7 @@ export default function PrivacyPage() {
           <p>
             We may update this privacy policy from time to time. We will notify
             you of any changes by posting the new privacy policy on this page
-            and updating the "Last updated" date.
+            and updating the &quot;Last updated&quot; date.
           </p>
         </div>
       </div>

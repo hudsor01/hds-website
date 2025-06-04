@@ -20,7 +20,7 @@ const gdprRequestSchema = z.object({
   message: z.string().optional(),
 })
 
-type GDPRRequestForm = z.infer<typeof gdprRequestSchema>
+type GDPRRequestFormData = z.infer<typeof gdprRequestSchema>
 
 export function GDPRRequestForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -34,14 +34,14 @@ export function GDPRRequestForm() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<GDPRRequestForm>({
-    resolver: zodResolver(gdprRequestSchema),
+  } = useForm<GDPRRequestFormData>({
+  resolver: zodResolver(gdprRequestSchema),
     defaultValues: {
       type: GDPRRequestType.DATA_ACCESS,
     },
   })
 
-  const onSubmit = async (data: GDPRRequestForm) => {
+  const onSubmit = async (data: GDPRRequestFormData) => {
     setIsSubmitting(true)
     setSubmitResult(null)
 
@@ -66,11 +66,11 @@ export function GDPRRequestForm() {
           message: result.error || 'Failed to submit request. Please try again.',
         })
       }
-    } catch (error) {
-      setSubmitResult({
-        success: false,
-        message: 'An error occurred. Please try again later.',
-      })
+    } catch {
+    setSubmitResult({
+    success: false,
+    message: 'An error occurred. Please try again later.',
+    })
     } finally {
       setIsSubmitting(false)
     }

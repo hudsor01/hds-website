@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 import type { FieldValues, UseFormReturn } from 'react-hook-form'
+import type { Variant } from '@/types/enum-types'
 import { Form } from '@/components/ui/form'
 import {
   Card,
@@ -13,9 +14,9 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
-interface BaseFormProps<T extends FieldValues> {
+export interface BaseFormProps<T extends FieldValues> {
   form: UseFormReturn<T>
-  onSubmit: (_values: T) => Promise<void> | void
+  onSubmit: (formData: T) => Promise<void> | void
   children: ReactNode
   className?: string
   title?: string
@@ -24,7 +25,7 @@ interface BaseFormProps<T extends FieldValues> {
   isCard?: boolean
   loadingMessage?: string
   successMessage?: string
-  variant?: 'default' | 'filled' | 'outline' | 'ghost'
+  variant?: Variant | 'filled'
   darkMode?: boolean
 }
 

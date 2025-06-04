@@ -1,4 +1,4 @@
-import { inter, playfairDisplay, jetbrainsMono, fontClasses } from '@/lib/fonts/font-config'
+import { inter, playfairDisplay, jetbrainsMono, fontClasses as _fontClasses } from '@/lib/fonts/font-config'
 
 /**
  * Font Showcase Component

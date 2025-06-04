@@ -12,7 +12,7 @@ import {
 import { useFormSubmission } from '@/hooks/use-form-submission'
 import {
   newsletterSchema,
-  NewsletterFormValues,
+  type NewsletterFormValues,
 } from '@/lib/validation/form-schemas'
 import { cn } from '@/lib/utils'
 import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
@@ -20,7 +20,7 @@ import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
 export interface NewsletterFormProps {
   className?: string
   onSuccess?: () => void
-  onError?: (_error: Error) => void
+  onError?: () => void
   includeName?: boolean
   submitEndpoint?: string
   useTrpc?: boolean
@@ -59,7 +59,7 @@ export function NewsletterForm({
   const handleFormError = (error: Error) => {
     // Track form errors specifically
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'form_error', {
+      ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'form_error', {
         form_name: 'newsletter_form',
         error_message: error.message,
       })

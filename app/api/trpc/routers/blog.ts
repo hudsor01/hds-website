@@ -5,7 +5,7 @@
  */
 
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc-unified'
 import { TRPCError } from '@trpc/server'
 import { PostStatus } from '@prisma/client'
 
@@ -29,7 +29,7 @@ export const blogRouter = createTRPCRouter({
       const { limit, offset, category, tag, search, orderBy, orderDir } = input
 
       // Build where clause for filtering
-      const where: any = {
+      const where: Record<string, unknown> = {
         status: PostStatus.PUBLISHED,
         publishedAt: { not: null },
       }
@@ -130,7 +130,7 @@ export const blogRouter = createTRPCRouter({
       const posts = await ctx.db.blogPost.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
-          categories: { not: { equals: [] } },
+          categories: { isEmpty: false },
         },
         select: { categories: true },
       })
@@ -156,7 +156,7 @@ export const blogRouter = createTRPCRouter({
       const posts = await ctx.db.blogPost.findMany({
         where: { 
           status: PostStatus.PUBLISHED,
-          tags: { not: { equals: [] } },
+          tags: { isEmpty: false },
         },
         select: { tags: true },
       })
@@ -223,7 +223,7 @@ export const blogRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { limit, offset, status, search } = input
 
-      const where: any = {}
+      const where: Record<string, unknown> = {}
 
       if (status) {
         where.status = status
@@ -249,8 +249,8 @@ export const blogRouter = createTRPCRouter({
         posts,
         pagination: {
           total,
-          pages: Math.ceil(total / limit),
-          currentPage: Math.floor(offset / limit) + 1,
+          pages: Math.ceil(Number(total) / Number(limit)),
+          currentPage: Math.floor(Number(offset) / Number(limit)) + 1,
         },
       }
     }),
@@ -280,13 +280,27 @@ export const blogRouter = createTRPCRouter({
       try {
         const post = await ctx.db.blogPost.create({
           data: {
-            ...input,
+            title: input.title,
+            slug: input.slug,
+            excerpt: input.excerpt,
+            content: input.content,
+            authorName: input.authorName,
+            authorEmail: input.authorEmail,
+            metaTitle: input.metaTitle,
+            metaDescription: input.metaDescription,
+            keywords: input.keywords,
+            featuredImage: input.featuredImage,
+            gallery: input.gallery,
+            categories: input.categories,
+            tags: input.tags,
+            status: input.status,
+            readTimeMinutes: input.readTimeMinutes,
             publishedAt: input.status === PostStatus.PUBLISHED ? new Date() : null,
           },
         })
 
         return post
-      } catch (error: any) {
+      } catch (error: Record<string, unknown>) {
         if (error.code === 'P2002') {
           throw new TRPCError({
             code: 'CONFLICT',
@@ -327,7 +341,7 @@ export const blogRouter = createTRPCRouter({
 
       try {
         // Handle publishing logic
-        const updatePayload: any = { ...updateData }
+        const updatePayload: Record<string, unknown> = { ...updateData }
         if (status) {
           updatePayload.status = status
           if (status === PostStatus.PUBLISHED) {
@@ -348,7 +362,7 @@ export const blogRouter = createTRPCRouter({
         })
 
         return post
-      } catch (error: any) {
+      } catch (error: Record<string, unknown>) {
         if (error.code === 'P2002') {
           throw new TRPCError({
             code: 'CONFLICT',
@@ -382,7 +396,7 @@ export const blogRouter = createTRPCRouter({
         })
 
         return { success: true }
-      } catch (error: any) {
+      } catch (error: Record<string, unknown>) {
         if (error.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',

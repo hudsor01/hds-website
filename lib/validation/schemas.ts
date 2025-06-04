@@ -7,7 +7,7 @@
 
 import { z } from 'zod'
 import {
-  contactFormSchema,
+  contactFormFullSchema,
   newsletterSchema,
   leadMagnetSchema,
 } from '@/types/form-types'
@@ -30,7 +30,7 @@ import {
 // Re-export the schemas from the types directory
 export {
   // Form schemas
-  contactFormSchema,
+  contactFormFullSchema,
   newsletterSchema,
   leadMagnetSchema,
 

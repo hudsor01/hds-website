@@ -8,7 +8,7 @@ import { getAllSequences, getSequencesByTrigger } from './templates'
  */
 function replaceDynamicFields(
   template: string,
-  data: Record<string, any>,
+  data: Record<string, unknown>,
 ): string {
   let result = template
 
@@ -113,7 +113,7 @@ export async function sendSequenceEmail(
  */
 export async function triggerSequence(
   triggerType: string,
-  userData: Record<string, any>,
+  userData: Record<string, unknown>,
   resourceId?: string,
 ): Promise<void> {
   // Find matching sequences

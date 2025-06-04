@@ -113,7 +113,7 @@ export default function LeadsPage() {
   const exportLeads = async () => {
     try {
       // Get all leads for export (without pagination)
-      const exportData = await api.admin.getLeads.fetch({
+      const exportData = await api.admin.getLeads.query({
         page: 1,
         limit: 1000, // Large limit to get all leads
         ...(filters.status && { status: filters.status }),
@@ -412,31 +412,31 @@ export default function LeadsPage() {
                           <DropdownMenuContent align='end'>
                             <DropdownMenuItem
                               onClick={() => handleStatusUpdate(lead.id, 'CONTACTED')}
-                              disabled={updateStatusMutation.isLoading}
+                              disabled={updateStatusMutation.isPending}
                             >
                               Mark as Contacted
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleStatusUpdate(lead.id, 'QUALIFIED')}
-                              disabled={updateStatusMutation.isLoading}
+                              disabled={updateStatusMutation.isPending}
                             >
                               Mark as Qualified
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleStatusUpdate(lead.id, 'PROPOSAL_SENT')}
-                              disabled={updateStatusMutation.isLoading}
+                              disabled={updateStatusMutation.isPending}
                             >
                               Mark as Proposal Sent
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleStatusUpdate(lead.id, 'WON')}
-                              disabled={updateStatusMutation.isLoading}
+                              disabled={updateStatusMutation.isPending}
                             >
                               Mark as Won
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleStatusUpdate(lead.id, 'LOST')}
-                              disabled={updateStatusMutation.isLoading}
+                              disabled={updateStatusMutation.isPending}
                             >
                               Mark as Lost
                             </DropdownMenuItem>

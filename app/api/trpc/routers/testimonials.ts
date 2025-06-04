@@ -5,8 +5,9 @@
  */
 
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure, protectedProcedure } from '../lib/trpc-unified'
 import { TRPCError } from '@trpc/server'
+import { Prisma } from '@prisma/client'
 
 export const testimonialsRouter = createTRPCRouter({
   // Public procedures - accessible to all users
@@ -24,7 +25,7 @@ export const testimonialsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { serviceUsed, featured, limit, verified } = input
 
-      const where: any = {
+      const where: Prisma.TestimonialWhereInput = {
         isActive: true,
       }
 
@@ -188,7 +189,7 @@ export const testimonialsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { limit, offset, isActive, verified, serviceUsed, search } = input
 
-      const where: any = {}
+      const where: Prisma.TestimonialWhereInput = {}
 
       if (isActive !== undefined) {
         where.isActive = isActive
@@ -256,7 +257,23 @@ export const testimonialsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const testimonial = await ctx.db.testimonial.create({
-          data: input,
+          data: {
+            name: input.name,
+            role: input.role,
+            company: input.company,
+            content: input.content,
+            rating: input.rating,
+            avatar: input.avatar,
+            companyLogo: input.companyLogo,
+            serviceUsed: input.serviceUsed,
+            projectType: input.projectType,
+            featured: input.featured,
+            displayOrder: input.displayOrder,
+            isActive: input.isActive,
+            verified: input.verified,
+            email: input.email,
+            linkedIn: input.linkedIn,
+          },
         })
 
         return testimonial
@@ -294,7 +311,7 @@ export const testimonialsRouter = createTRPCRouter({
       const { id, verified, ...updateData } = input
 
       try {
-        const updatePayload: any = { ...updateData }
+        const updatePayload: Prisma.TestimonialUpdateInput = { ...updateData }
         
         // Handle verification
         if (verified !== undefined) {
@@ -312,8 +329,8 @@ export const testimonialsRouter = createTRPCRouter({
         })
 
         return testimonial
-      } catch (error: any) {
-        if (error.code === 'P2025') {
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error && error.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Testimonial not found',
@@ -340,8 +357,8 @@ export const testimonialsRouter = createTRPCRouter({
         })
 
         return { success: true }
-      } catch (error: any) {
-        if (error.code === 'P2025') {
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error && error.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Testimonial not found',
@@ -373,8 +390,8 @@ export const testimonialsRouter = createTRPCRouter({
         })
 
         return testimonial
-      } catch (error: any) {
-        if (error.code === 'P2025') {
+      } catch (error: unknown) {
+        if (error instanceof Error && 'code' in error && error.code === 'P2025') {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Testimonial not found',

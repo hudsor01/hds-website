@@ -10,7 +10,8 @@
  * - Error recovery and retry mechanisms
  */
 
-import { logger } from '@/lib/logger'
+import { logger } from '../../lib/logger'
+import type { ErrorContext } from '../../types/analytics-types'
 
 // Error types and interfaces
 export interface BaseError {
@@ -20,7 +21,7 @@ export interface BaseError {
   timestamp: Date
   requestId?: string
   userId?: string
-  metadata?: Record<string, any>
+  metadata?: ErrorContext
 }
 
 export interface ValidationError extends BaseError {
@@ -125,7 +126,7 @@ export const ErrorFactory = {
 }
 
 // Error handling utilities for Server Actions
-export interface ActionResult<T = any> {
+export interface ActionResult<T = unknown> {
   success: boolean
   data?: T
   error?: AppError
@@ -290,7 +291,7 @@ export async function reportErrorToService(
     // In production, you would send to your error monitoring service
     // Examples: Sentry, DataDog, Rollbar, etc.
     
-    const errorReport = {
+    const _errorReport = {
       message: error.message,
       stack: error.stack,
       componentStack: errorInfo?.componentStack,
@@ -417,8 +418,12 @@ export function setupGlobalErrorHandlers(): void {
 
     process.on('unhandledRejection', (reason) => {
       logger.error('Unhandled promise rejection', {
-        reason: reason instanceof Error ? reason.message : String(reason),
-        stack: reason instanceof Error ? reason.stack : undefined,
+        reason: typeof reason === 'object' && reason !== null && 'message' in reason
+          ? (reason as Error).message 
+          : String(reason),
+        stack: typeof reason === 'object' && reason !== null && 'stack' in reason
+          ? (reason as Error).stack 
+          : undefined,
       })
     })
   }
@@ -465,7 +470,7 @@ export function generateErrorMetrics(errors: AppError[]): ErrorMetrics {
 
   errors.forEach(error => {
     const errorHour = error.timestamp.getHours().toString().padStart(2, '0')
-    if (metrics.errorsByTimeframe.hasOwnProperty(errorHour)) {
+    if (Object.prototype.hasOwnProperty.call(metrics.errorsByTimeframe, errorHour)) {
       metrics.errorsByTimeframe[errorHour]++
     }
   })
@@ -501,5 +506,4 @@ export function logErrorInDevelopment(error: AppError, context?: string): void {
   }
 }
 
-// Export types and utilities
-export type { AppError, ActionResult, ErrorBoundaryState, RetryConfig, ErrorMetrics }
+// These types are already exported above, no need to re-export

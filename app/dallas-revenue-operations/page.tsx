@@ -212,7 +212,7 @@ export default function DallasRevenueOperationsPage() {
               <div className="p-6 bg-brand-50 rounded-xl border border-brand-200">
                 <h4 className="font-semibold text-brand-900 mb-2">Dallas Business Success Story</h4>
                 <p className="text-brand-700 mb-4">
-                  "Hudson Digital transformed our Dallas consulting firm's sales process. Revenue increased 45% in 4 months, and we've eliminated 20 hours of manual work per week."
+                  &quot;Hudson Digital transformed our Dallas consulting firm&apos;s sales process. Revenue increased 45% in 4 months, and we&apos;ve eliminated 20 hours of manual work per week.&quot;
                 </p>
                 <div className="text-sm text-brand-600 font-medium">
                   - Michael Roberts, Roberts Consulting (Dallas, TX)

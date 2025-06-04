@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, lazy, ComponentType } from 'react'
+import React, { Suspense, lazy, type ComponentType } from 'react'
 import { useLazyLoad } from '@/hooks/use-intersection-observer'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -71,7 +71,7 @@ export function withLazyLoading<P extends object>(
     displayName,
   } = options || {}
 
-  const LazyComponent = React.forwardRef<any, P>((props, ref) => {
+  const LazyComponent = React.forwardRef<HTMLElement, P>((props, ref) => {
     const { ref: intersectionRef, shouldLoad } = useLazyLoad({
       threshold,
       rootMargin,
@@ -102,7 +102,7 @@ export function withLazyLoading<P extends object>(
 /**
  * Hook for creating lazy-loaded components with dynamic imports
  */
-export function useLazyComponent<T extends ComponentType<any>>(
+export function useLazyComponent<T extends ComponentType<Record<string, unknown>>>(
   importFunc: () => Promise<{ default: T }>,
   options?: {
     threshold?: number
@@ -150,6 +150,7 @@ export function LazyImage({
   return (
     <div ref={ref} className={className}>
       {shouldLoad ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
         <img
           src={src}
           alt={alt}
@@ -159,6 +160,7 @@ export function LazyImage({
           loading='lazy'
         />
       ) : (
+        /* eslint-disable-next-line @next/next/no-img-element */
         <img
           src={placeholder}
           alt='Loading...'

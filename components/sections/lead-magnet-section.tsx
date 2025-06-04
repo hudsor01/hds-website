@@ -13,7 +13,7 @@ import {
 import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card'
 import {
   LeadMagnetForm,
-  LeadMagnetResource,
+  type LeadMagnetResource,
 } from '@/components/forms/lead-magnet-form'
 import { Section } from './section'
 
@@ -91,11 +91,11 @@ export function LeadMagnetSection({
 
   // Convert to the form resource format by adding the actual icon component
   const selectedFormResource: LeadMagnetResource = {
-    id: selectedResource.id,
-    title: selectedResource.title,
-    description: selectedResource.description,
-    fileName: selectedResource.fileName,
-    thumbnailUrl: selectedResource.thumbnailUrl,
+    id: selectedResource?.id ?? '',
+    title: selectedResource?.title ?? '',
+    description: selectedResource?.description ?? '',
+    fileName: selectedResource?.fileName ?? '',
+    thumbnailUrl: selectedResource?.thumbnailUrl,
   }
 
   return (

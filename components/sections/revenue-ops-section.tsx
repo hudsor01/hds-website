@@ -58,7 +58,7 @@ export function RevenueOpsSection({
   subtitle = 'I spent 10 years as head of operations at Thryv, managing partner and franchise organizations. Now I bring those enterprise-level strategies to small businesses.',
   features = defaultFeatures,
   ctaTitle = 'Real Experience. Real Results.',
-  ctaDescription = 'At Thryv, I managed revenue operations for hundreds of partners and franchises. I've seen what works and what doesn't. Let me implement the same winning strategies for your business.',
+  ctaDescription = 'At Thryv, I managed revenue operations for hundreds of partners and franchises. I\'ve seen what works and what doesn\'t. Let me implement the same winning strategies for your business.',
   ctaPricing = 'Starting at just $1,499 for complete revenue operations setup',
   ctaButtonText = 'Get Started with RevOps',
   ctaButtonLink = '/contact',

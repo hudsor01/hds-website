@@ -6,12 +6,38 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { parseCSPViolation, type CSPViolation } from '@/lib/security/csp-enhanced'
+
+interface CSPViolation {
+  'csp-report': {
+    'document-uri': string
+    'referrer': string
+    'violated-directive': string
+    'effective-directive': string
+    'original-policy': string
+    'blocked-uri': string
+    'line-number': number
+    'column-number': number
+    'source-file': string
+  }
+}
+
+interface ParsedCSPViolation {
+  documentUri: string
+  referrer: string
+  violatedDirective: string
+  effectiveDirective: string
+  originalPolicy: string
+  blockedUri: string
+  lineNumber: number
+  columnNumber: number
+  sourceFile: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+}
 
 interface CSPViolationLog {
   id: string
   timestamp: string
-  violation: ReturnType<typeof parseCSPViolation>
+  violation: ParsedCSPViolation
   userAgent: string
   ip: string
   referer?: string
@@ -21,6 +47,39 @@ interface CSPViolationLog {
 // In-memory storage for development/testing
 // In production, you'd want to use a proper database or logging service
 const violationLogs: CSPViolationLog[] = []
+
+/**
+ * Parse and enrich CSP violation data
+ */
+function parseCSPViolation(violation: CSPViolation): ParsedCSPViolation {
+  const report = violation['csp-report']
+  
+  // Determine severity based on violation type
+  let severity: ParsedCSPViolation['severity'] = 'medium'
+  
+  if (report['violated-directive'].includes('script-src')) {
+    severity = 'high' // Script violations are serious
+  } else if (report['violated-directive'].includes('object-src') || 
+             report['violated-directive'].includes('base-uri')) {
+    severity = 'critical' // These can be very dangerous
+  } else if (report['violated-directive'].includes('img-src') || 
+             report['violated-directive'].includes('style-src')) {
+    severity = 'low' // Usually cosmetic issues
+  }
+  
+  return {
+    documentUri: report['document-uri'],
+    referrer: report['referrer'],
+    violatedDirective: report['violated-directive'],
+    effectiveDirective: report['effective-directive'],
+    originalPolicy: report['original-policy'],
+    blockedUri: report['blocked-uri'],
+    lineNumber: report['line-number'],
+    columnNumber: report['column-number'],
+    sourceFile: report['source-file'],
+    severity,
+  }
+}
 
 /**
  * Handle CSP violation reports
@@ -233,7 +292,7 @@ function generateDailyTrends(logs: CSPViolationLog[]) {
   // Count violations by day
   logs.forEach(log => {
     const dateKey = log.timestamp.split('T')[0]
-    if (trends.hasOwnProperty(dateKey)) {
+    if (Object.prototype.hasOwnProperty.call(trends, dateKey)) {
       trends[dateKey]++
     }
   })
@@ -261,7 +320,7 @@ function generateHourlyTrends(logs: CSPViolationLog[]) {
   // Count violations by hour
   logs.forEach(log => {
     const hour = new Date(log.timestamp).getHours().toString().padStart(2, '0')
-    if (trends.hasOwnProperty(hour)) {
+    if (Object.prototype.hasOwnProperty.call(trends, hour)) {
       trends[hour]++
     }
   })

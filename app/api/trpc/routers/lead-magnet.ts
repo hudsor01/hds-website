@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { Resend } from 'resend'
-import { createTRPCRouter, publicProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure } from '../lib/trpc-unified'
 import { leadMagnetSchema } from '@/lib/validation/form-schemas'
 import { triggerSequence } from '@/lib/email/sequences/engine'
 import { env } from '@/lib/env'

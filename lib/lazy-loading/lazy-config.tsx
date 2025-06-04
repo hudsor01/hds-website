@@ -4,7 +4,7 @@
  */
 
 import dynamic from 'next/dynamic'
-import { ComponentType, ReactNode } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 
 // Lazy loading configuration options
 export interface LazyLoadingOptions {
@@ -100,7 +100,7 @@ export const defaultErrorComponents = {
 }
 
 // Lazy loading helper functions
-export function createLazyComponent<T extends ComponentType<any>>(
+export function createLazyComponent<T extends ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadingOptions = {},
 ) {
@@ -111,7 +111,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
   })
 }
 
-export function createClientOnlyComponent<T extends ComponentType<any>>(
+export function createClientOnlyComponent<T extends ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: Omit<LazyLoadingOptions, 'ssr'> = {},
 ) {
@@ -122,7 +122,28 @@ export function createClientOnlyComponent<T extends ComponentType<any>>(
   })
 }
 
-export function createLazyModal<T extends ComponentType<any>>(
+export function createLazyNamedComponent<T extends ComponentType<Record<string, unknown>>>(
+  importFn: () => Promise<Record<string, ComponentType<Record<string, unknown>>>>,
+  exportName: string,
+  options: LazyLoadingOptions = {},
+) {
+  const wrappedImportFn = async () => {
+    const moduleExports = await importFn()
+    const component = moduleExports[exportName]
+    if (!component) {
+      throw new Error(`Export '${exportName}' not found in module`)
+    }
+    return { default: component as T }
+  }
+  
+  return dynamic(wrappedImportFn, {
+    ssr: options.ssr ?? true,
+    loading: options.loading || defaultLoadingComponents.spinner,
+    ...options,
+  })
+}
+
+export function createLazyModal<T extends ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadingOptions = {},
 ) {
@@ -139,7 +160,7 @@ export function createLazyModal<T extends ComponentType<any>>(
   })
 }
 
-export function createLazyChart<T extends ComponentType<any>>(
+export function createLazyChart<T extends ComponentType<Record<string, unknown>>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyLoadingOptions = {},
 ) {
@@ -184,18 +205,15 @@ export const lazyPerformance = {
 // Common lazy-loaded components configuration
 export const commonLazyComponents = {
   // Admin components (heavy, rarely used)
-  AdminDashboard: () => createLazyComponent(() => import('@/components/admin/AdminDashboard')),
-  DataTable: () => createLazyComponent(() => import('@/components/admin/dashboard-01/data-table')),
+  DataTable: () => createLazyNamedComponent(() => import('@/components/admin/data-table'), 'DataTable'),
+  AdminCharts: () => createLazyNamedComponent(() => import('@/components/admin/charts/chart-area-interactive'), 'ChartAreaInteractive'),
   
-  // Charts and visualizations
-  AnalyticsChart: () => createLazyChart(() => import('@/components/analytics/chart')),
+  // Charts and visualizations (using existing admin charts)
+  AnalyticsChart: () => createLazyNamedComponent(() => import('@/components/admin/charts/chart-line-interactive'), 'ChartLineInteractive'),
   
-  // Modals and overlays
-  ContactModal: () => createLazyModal(() => import('@/components/modals/contact-modal')),
-  
-  // Client-only components
-  ThemeSwitcher: () => createClientOnlyComponent(() => import('@/components/theme/theme-switcher')),
+  // Contact form components as modal alternatives
+  ContactForm: () => createLazyNamedComponent(() => import('@/components/forms/contact-form'), 'ContactForm'),
   
   // Heavy third-party integrations
-  CalendarWidget: () => createClientOnlyComponent(() => import('@/components/booking/cal-com-widget')),
+  CalendarWidget: () => createLazyNamedComponent(() => import('@/components/booking/cal-com-widget'), 'CalComWidget'),
 }

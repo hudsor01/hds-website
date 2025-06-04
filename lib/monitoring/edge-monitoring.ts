@@ -54,7 +54,7 @@ export class EdgeMonitoring {
   }
 
   // Monitor security events
-  static trackSecurityEvent(type: 'csrf' | 'xss' | 'injection' | 'spam', details: any) {
+  static trackSecurityEvent(type: 'csrf' | 'xss' | 'injection' | 'spam', details: unknown) {
     const event = {
       type: 'security_event',
       securityType: type,

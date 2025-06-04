@@ -12,16 +12,7 @@
  */
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
-
-/**
- * Cookie categories
- */
-export enum CookieCategory {
-  NECESSARY = 'necessary',
-  FUNCTIONAL = 'functional',
-  ANALYTICS = 'analytics',
-  MARKETING = 'marketing',
-}
+import { CookieCategory } from '@/types/enum-types'
 
 /**
  * Cookie consent preferences
@@ -246,8 +237,8 @@ export class CookieConsentManager {
     if (typeof window === 'undefined') return
     
     // Enable GA tracking
-    window.gtag = window.gtag || function() {
-      (window.dataLayer = window.dataLayer || []).push(arguments)
+    window.gtag = window.gtag || function(...args: unknown[]) {
+      (window.dataLayer = window.dataLayer || []).push(...args)
     }
     
     window.gtag('consent', 'update', {
@@ -270,8 +261,8 @@ export class CookieConsentManager {
     if (typeof window === 'undefined') return
     
     // Disable GA tracking
-    window.gtag = window.gtag || function() {
-      (window.dataLayer = window.dataLayer || []).push(arguments)
+    window.gtag = window.gtag || function(...args: unknown[]) {
+      (window.dataLayer = window.dataLayer || []).push(...args)
     }
     
     window.gtag('consent', 'update', {
@@ -288,8 +279,8 @@ export class CookieConsentManager {
   private static enableMarketingScripts(): void {
     if (typeof window === 'undefined') return
     
-    window.gtag = window.gtag || function() {
-      (window.dataLayer = window.dataLayer || []).push(arguments)
+    window.gtag = window.gtag || function(...args: unknown[]) {
+      (window.dataLayer = window.dataLayer || []).push(...args)
     }
     
     window.gtag('consent', 'update', {
@@ -305,8 +296,8 @@ export class CookieConsentManager {
   private static disableMarketingScripts(): void {
     if (typeof window === 'undefined') return
     
-    window.gtag = window.gtag || function() {
-      (window.dataLayer = window.dataLayer || []).push(arguments)
+    window.gtag = window.gtag || function(...args: unknown[]) {
+      (window.dataLayer = window.dataLayer || []).push(...args)
     }
     
     window.gtag('consent', 'update', {
@@ -392,9 +383,9 @@ export function useCookieConsent() {
       setConsent(event.detail)
     }
     
-    window.addEventListener('cookie-consent-updated', handleUpdate as any)
+    window.addEventListener('cookie-consent-updated', handleUpdate as EventListener)
     return () => {
-      window.removeEventListener('cookie-consent-updated', handleUpdate as any)
+    window.removeEventListener('cookie-consent-updated', handleUpdate as EventListener)
     }
   }, [])
   

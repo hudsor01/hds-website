@@ -1,19 +1,27 @@
 'use client'
 
 import { useState } from 'react'
+import type { HTTPMethod } from '@/types/enum-types'
+import type { ApiResponse } from '@/types/api-types'
 import { useToast } from '@/components/ui/use-toast'
 
-interface FormSubmissionOptions<T> {
+export interface FormSubmissionOptions<T = Record<string, unknown>> {
   endpoint?: string
   useTrpc?: boolean
-  onSuccess?: (data: any) => void
+  onSuccess?: (data: Record<string, unknown>) => void
   onError?: (error: Error) => void
   successMessage?: string
   errorMessage?: string
   toastEnabled?: boolean
   redirectUrl?: string
-  method?: 'POST' | 'PUT' | 'PATCH'
-  transform?: (data: T) => any
+  method?: HTTPMethod
+  transform?: (data: T) => Record<string, unknown>
+}
+
+export interface FormSubmissionResult<T = Record<string, unknown>> {
+  success: boolean
+  data?: T
+  error?: Error
 }
 
 /**
@@ -21,7 +29,7 @@ interface FormSubmissionOptions<T> {
  * This hook provides a consistent way to submit forms with various API methods
  * and handle success/error states.
  */
-export function useFormSubmission<T = any>(
+export function useFormSubmission<T = Record<string, unknown>>(
   options: FormSubmissionOptions<T> = {},
 ) {
   const {
@@ -41,7 +49,7 @@ export function useFormSubmission<T = any>(
   const [formError, setFormError] = useState<string | null>(null)
   const { toast } = useToast()
 
-  const submit = async (data: T, additionalData: Record<string, any> = {}) => {
+  const submit = async (data: T, additionalData: Record<string, unknown> = {}) => {
     setIsSubmitting(true)
     setFormError(null)
 
@@ -50,7 +58,7 @@ export function useFormSubmission<T = any>(
       const transformedData = transform ? transform(data) : data
       const submitData = { ...transformedData, ...additionalData }
 
-      let response: any
+      let response: Record<string, unknown>
 
       // Use tRPC or fetch based on options
       if (useTrpc) {
@@ -67,7 +75,7 @@ export function useFormSubmission<T = any>(
         }
 
         // Get the router and procedure
-        // @ts-ignore - Dynamic access
+        // @ts-expect-error - Dynamic access
         response = await api[router][procedure].mutate(submitData)
 
         if (response && !response.success) {
@@ -105,7 +113,7 @@ export function useFormSubmission<T = any>(
         onSuccess(response)
       }
 
-      return { success: true, data: response }
+      return { success: true, data: response } as FormSubmissionResult<Record<string, unknown>>
     } catch (error) {
       console.error('Form submission error:', error)
 
@@ -129,7 +137,7 @@ export function useFormSubmission<T = any>(
       return {
         success: false,
         error: error instanceof Error ? error : new Error(errorMessage),
-      }
+      } as FormSubmissionResult<Record<string, unknown>>
     } finally {
       setIsSubmitting(false)
     }

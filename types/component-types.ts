@@ -7,21 +7,7 @@
 
 import type { ReactNode, ReactElement } from 'react'
 
-// Re-export commonly used types from the new organized structure
-export type { 
-  SectionProps,
-  AnimatedSectionProps,
-  HeroProps,
-  BaseHeroProps,
-  SimpleHeroProps,
-  DefaultHeroProps,
-  AnimatedHeroProps,
-  TitleSectionProps,
-  AnimatedProps,
-  StatItem,
-  FeatureBadge,
-  CtaLink,
-} from './ui-types'
+// Legacy component types - interfaces defined below
 
 // Legacy types maintained for backward compatibility
 export type HeroVariant = 'default' | 'simple' | 'animated'

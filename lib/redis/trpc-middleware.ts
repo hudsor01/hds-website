@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server'
 import { initTRPC } from '@trpc/server'
-import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { checkRateLimit, extractIPAddress } from '@/lib/redis/rate-limiter'
 import type { RateLimitConfig, RateLimitContext } from '@/types/rate-limit-types'
 import { RATE_LIMIT_PRESETS } from '@/types/rate-limit-types'
@@ -175,7 +174,7 @@ export const newsletterRateLimit = createRateLimitMiddleware({
 export const analyticsRateLimit = createRateLimitMiddleware({
   ...RATE_LIMIT_PRESETS.ANALYTICS,
   message: 'Analytics tracking rate limit exceeded.',
-  skip: (context) => 
+  skip: () => 
     // Skip rate limiting for analytics in development
      process.env.NODE_ENV === 'development'
   ,
@@ -202,13 +201,12 @@ export const dynamicRateLimit = createRateLimitMiddleware({
   windowMs: 60 * 1000, // 1 minute
   keyGenerator: (context) => {
     // Different limits based on user authentication status
-    const baseLimit = context.userId ? 100 : 30 // Higher limits for authenticated users
     const identifier = context.userId || context.ip || 'anonymous'
     return `dynamic:${identifier}:${Math.floor(Date.now() / 60000)}`
   },
   skip: (context) => 
     // Skip rate limiting for admin users
-     (context as any).user?.role === 'admin'
+    context.user?.role === 'admin'
   ,
 })
 

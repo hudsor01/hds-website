@@ -17,12 +17,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { 
-  FadeIn, 
-  SlideIn, 
-  ScaleIn, 
-  AnimatedText,
-  StaggerContainer,
-  MotionDiv, 
+FadeIn, 
+SlideIn, 
+ScaleIn, 
+AnimatedText,
+StaggerContainer,
 } from '@/components/animated/motion-wrapper'
 
 const newsletterSchema = z.object({
@@ -120,7 +119,7 @@ export function Footer() {
               specialize in revenue operations, web development, and data analytics
               for small businesses in Dallas-Fort Worth.
             </AnimatedText>
-            <StaggerContainer className='flex space-x-6' staggerDelay={0.1}>
+            <StaggerContainer className='flex space-x-6 logical-margin' staggerDelay={0.1}>
               {navigation.social.map((item, index) => (
                 <ScaleIn key={item.name} delay={0.2 + index * 0.1}>
                   <a
@@ -140,7 +139,7 @@ export function Footer() {
               ))}
             </StaggerContainer>
           </FadeIn>
-          <SlideIn direction='up' delay={0.3} className='mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0'>
+          <SlideIn direction='up' delay={0.3} className='mt-16 dynamic-grid xl:col-span-2 xl:mt-0'>
             <div className='md:grid md:grid-cols-2 md:gap-8'>
               <div>
                 <h3 className='text-sm font-semibold leading-6 text-foreground'>

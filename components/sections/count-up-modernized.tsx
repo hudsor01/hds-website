@@ -120,11 +120,11 @@ export const StatsGrid = memo(function StatsGrid({
           </p>
         </div>
         
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto'>
+        <div className='features-grid gap-8 max-w-6xl mx-auto container'>
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className='text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300'
+              className='stats-card text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300 scroll-fade-in'
             >
               <div className='text-4xl md:text-5xl font-bold text-blue-600 mb-2'>
                 <CountUpModernized

@@ -9,7 +9,7 @@ export const nameSchema = z
   .string()
   .min(2, { message: 'Name must be at least 2 characters' })
   .max(100, { message: 'Name cannot exceed 100 characters' })
-  .refine(value => /^[a-zA-Z\s\-'\.]+$/.test(value), {
+  .refine(value => /^[a-zA-Z\s\-'.]+$/.test(value), {
     message:
       'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
   })
@@ -29,7 +29,7 @@ export const phoneSchema = z
   .string()
   .min(7, { message: 'Phone number must be at least 7 characters' })
   .max(20, { message: 'Phone number cannot exceed 20 characters' })
-  .refine(value => /^[\d\+\-\(\)\s\.]+$/.test(value), {
+  .refine(value => /^[\d+\-()\\s.]+$/.test(value), {
     message:
       'Phone number can only contain digits, spaces, and the characters: + - ( )',
   })

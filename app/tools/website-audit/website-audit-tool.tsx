@@ -337,7 +337,7 @@ export function WebsiteAuditTool() {
           <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-lg p-8 text-white text-center">
             <h3 className="text-2xl font-semibold mb-4">Ready to Fix These Issues?</h3>
             <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              Our web development experts can help you implement these recommendations and improve your website's performance, SEO, and user experience.
+              Our web development experts can help you implement these recommendations and improve your website&apos;s performance, SEO, and user experience.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

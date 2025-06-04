@@ -12,7 +12,7 @@ import { HTTPMethod, HTTPStatusCode, Status } from './enum-types'
 /**
  * Standard API response wrapper
  */
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
@@ -26,7 +26,7 @@ export interface ApiResponse<T = any> {
 export interface ApiError {
   code: string
   message: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
   field?: string // For validation errors
   timestamp: Date
   requestId?: string
@@ -75,7 +75,7 @@ export interface PaginationParams {
   sort?: string
   order?: 'asc' | 'desc'
   search?: string
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
 }
 
 // ============= HTTP Request/Response Types =============
@@ -87,8 +87,8 @@ export interface HttpRequest {
   method: HTTPMethod
   url: string
   headers?: Record<string, string>
-  params?: Record<string, any>
-  body?: any
+  params?: Record<string, unknown>
+  body?: Record<string, unknown>
   timeout?: number
   retries?: number
   authentication?: {
@@ -100,7 +100,7 @@ export interface HttpRequest {
 /**
  * HTTP response information
  */
-export interface HttpResponse<T = any> {
+export interface HttpResponse<T = unknown> {
   status: HTTPStatusCode
   statusText: string
   headers: Record<string, string>
@@ -133,8 +133,8 @@ export interface ApiClientConfig {
  * tRPC context for procedures
  */
 export interface TRPCContext {
-  req?: any
-  res?: any
+  req?: Record<string, unknown>
+  res?: Record<string, unknown>
   user?: {
     id: string
     email: string
@@ -158,7 +158,7 @@ export interface TRPCContext {
  */
 export interface TRPCProcedureMetadata {
   procedure: string
-  input?: any
+  input?: Record<string, unknown>
   duration: number
   success: boolean
   error?: string
@@ -211,7 +211,7 @@ export interface WebhookDelivery {
   id: string
   webhookId: string
   event: string
-  payload: Record<string, any>
+  payload: Record<string, unknown>
   attempt: number
   status: 'pending' | 'success' | 'failed' | 'retry'
   statusCode?: number
@@ -229,7 +229,7 @@ export interface ServiceIntegration {
   name: string
   provider: 'stripe' | 'hubspot' | 'salesforce' | 'mailchimp' | 'zapier' | 'slack'
   isActive: boolean
-  configuration: Record<string, any>
+  configuration: Record<string, unknown>
   credentials: {
     type: 'oauth' | 'api-key' | 'basic'
     data: Record<string, string>
@@ -303,7 +303,7 @@ export interface PasswordResetRequest {
  */
 export interface AnalyticsEventRequest {
   event: string
-  properties?: Record<string, any>
+  properties?: Record<string, unknown>
   userId?: string
   sessionId?: string
   timestamp?: Date
@@ -338,7 +338,7 @@ export interface AnalyticsQuery {
   startDate: Date
   endDate: Date
   groupBy?: 'day' | 'week' | 'month'
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
   segments?: string[]
 }
 
@@ -376,7 +376,7 @@ export interface AnalyticsDataPoint {
  */
 export interface FormSubmissionRequest {
   formId: string
-  fields: Record<string, any>
+  fields: Record<string, unknown>
   metadata?: {
     userAgent?: string
     ip?: string
@@ -415,7 +415,7 @@ export interface FormValidationError {
   field: string
   code: string
   message: string
-  value?: any
+  value?: Record<string, unknown>
 }
 
 // ============= File API Types =============
@@ -429,7 +429,7 @@ export interface FileUploadRequest {
   contentType: string
   folder?: string
   isPublic?: boolean
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 /**
@@ -458,7 +458,7 @@ export interface FileInfo {
   folder?: string
   uploadedBy?: string
   uploadedAt: Date
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // ============= Async Operation Types =============
@@ -471,7 +471,7 @@ export interface OperationStatus {
   status: Status
   progress?: number
   message?: string
-  result?: any
+  result?: Record<string, unknown>
   error?: ApiError
   startedAt: Date
   completedAt?: Date
@@ -481,17 +481,17 @@ export interface OperationStatus {
 /**
  * Batch operation request
  */
-export interface BatchRequest<T = any> {
+export interface BatchRequest<T = unknown> {
   operations: T[]
   parallel?: boolean
   continueOnError?: boolean
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 /**
  * Batch operation response
  */
-export interface BatchResponse<T = any> {
+export interface BatchResponse<T = unknown> {
   batchId: string
   total: number
   successful: number
@@ -506,7 +506,7 @@ export interface BatchResponse<T = any> {
 /**
  * Individual batch result
  */
-export interface BatchResult<T = any> {
+export interface BatchResult<T = unknown> {
   index: number
   status: 'success' | 'error'
   data?: T

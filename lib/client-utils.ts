@@ -1,12 +1,17 @@
 import 'client-only'
+import type {
+  GeolocationPositionType,
+  ScrollBehaviorType,
+  DeviceInfo,
+  PagePerformanceMetrics,
+} from '@/types/utility-types'
 
 /**
- * Client-only utilities
- * This file contains functions that should only run in the browser
- */
-
+* Client-only utilities
+* This file contains functions that should only run in the browser
+*/
 // Browser API utilities
-export function getDeviceInfo() {
+export function getDeviceInfo(): DeviceInfo | null {
   if (typeof window === 'undefined') return null
   
   return {
@@ -61,8 +66,8 @@ export function getSessionStorage(key: string): string | null {
 }
 
 // Geolocation utilities
-export function getCurrentLocation(): Promise<GeolocationPosition> {
-  return new Promise((resolve, reject) => {
+export function getCurrentPosition(): Promise<GeolocationPositionType> {
+return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
       reject(new Error('Geolocation is not supported'))
       return
@@ -85,7 +90,7 @@ export async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 // Performance measurement utilities
-export function measurePagePerformance() {
+export function measurePagePerformance(): PagePerformanceMetrics | null {
   if (typeof window === 'undefined') return null
   
   const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
@@ -99,7 +104,7 @@ export function measurePagePerformance() {
 }
 
 // Analytics utilities (client-side)
-export function trackClientEvent(event: string, properties: Record<string, any>) {
+export function trackClientEvent(event: string, properties: Record<string, unknown>) {
   // Client-side analytics tracking
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', event, properties)
@@ -112,11 +117,11 @@ export function trackClientEvent(event: string, properties: Record<string, any>)
 }
 
 // DOM utilities
-export function scrollToElement(elementId: string, behavior: ScrollBehavior = 'smooth') {
-  const element = document.getElementById(elementId)
-  if (element) {
-    element.scrollIntoView({ behavior })
-  }
+export function smoothScrollTo(elementId: string, behavior: ScrollBehaviorType = 'smooth') {
+const element = document.getElementById(elementId)
+if (element) {
+element.scrollIntoView({ behavior })
+}
 }
 
 export function focusElement(elementId: string) {

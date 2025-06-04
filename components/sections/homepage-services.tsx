@@ -76,7 +76,7 @@ export async function HomepageServices() {
           </p>
         </div>
         
-        <div className='grid lg:grid-cols-3 gap-8'>
+        <div className='features-grid gap-8 container'>
           {services.map((service, index) => {
             const Icon = iconMap[service.id as keyof typeof iconMap] || BarChart3
             const gradientColors = [
@@ -94,7 +94,7 @@ export async function HomepageServices() {
             return (
               <Card 
                 key={service.id}
-                className={`bg-gradient-to-br ${gradientColors[index]} border-2 transition-all duration-300 hover:shadow-xl ${service.featured ? 'ring-2 ring-blue-500' : ''}`}
+                className={`service-card bg-gradient-to-br ${gradientColors[index]} border-2 transition-all duration-300 hover:shadow-xl scroll-reveal ${service.featured ? 'ring-2 ring-blue-500' : ''}`}
               >
                 <CardContent className='p-8'>
                   <div className='text-center mb-6'>

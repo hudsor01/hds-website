@@ -1,191 +1,82 @@
-// Custom console logger with formatting for development and production
-// Uses Next.js built-in logging capabilities
-
-// Define log levels
-const LOG_LEVELS = {
-  fatal: 60,
-  error: 50,
-  warn: 40,
-  info: 30,
-  debug: 20,
-  trace: 10,
-} as const
-
-type LogLevel = keyof typeof LOG_LEVELS
-
-// Determine environment and log level
-const isDevelopment = process.env.NODE_ENV === 'development'
-const logLevel = (process.env.LOG_LEVEL as LogLevel) || (isDevelopment ? 'debug' : 'info')
-
-// Color codes for console output
-const colors = {
-  fatal: '\x1b[41m', // Red background
-  error: '\x1b[31m', // Red
-  warn: '\x1b[33m',  // Yellow
-  info: '\x1b[36m',  // Cyan
-  debug: '\x1b[35m', // Magenta
-  trace: '\x1b[37m', // White
-  reset: '\x1b[0m',  // Reset
-} as const
-
-// Format timestamp
-function getTimestamp(): string {
-  return new Date().toISOString()
+// Simple console logger wrapper
+// Simple log function that accepts anything
+function log(level: string, ...args: unknown[]): void {
+  const timestamp = new Date().toISOString()
+  const prefix = `[${level.toUpperCase()}] ${timestamp}`
+  console.log(prefix, ...args)
 }
 
-// Check if log level should be output
-function shouldLog(level: LogLevel): boolean {
-  return LOG_LEVELS[level] >= LOG_LEVELS[logLevel]
-}
-
-// Base logger function
-function log(level: LogLevel, message: string, data?: Record<string, any>): void {
-  if (!shouldLog(level)) return
-
-  const timestamp = getTimestamp()
-  const color = colors[level]
-  const reset = colors.reset
-  
-  const prefix = isDevelopment 
-    ? `${color}[${level.toUpperCase()}]${reset} ${timestamp}`
-    : `[${level.toUpperCase()}] ${timestamp}`
-
-  if (data) {
-    const dataStr = isDevelopment 
-      ? JSON.stringify(data, null, 2)
-      : JSON.stringify(data)
-    console.log(`${prefix} ${message}`, dataStr)
-  } else {
-    console.log(`${prefix} ${message}`)
-  }
-}
-
-// Create logger instance with different methods
+// Export simple logger functions
 export const logger = {
-  fatal: (message: string, data?: Record<string, any>) => log('fatal', message, data),
-  error: (message: string, data?: Record<string, any>) => log('error', message, data),
-  warn: (message: string, data?: Record<string, any>) => log('warn', message, data),
-  info: (message: string, data?: Record<string, any>) => log('info', message, data),
-  debug: (message: string, data?: Record<string, any>) => log('debug', message, data),
-  trace: (message: string, data?: Record<string, any>) => log('trace', message, data),
+  fatal: (...args: unknown[]) => log('fatal', ...args),
+  error: (...args: unknown[]) => log('error', ...args),
+  warn: (...args: unknown[]) => log('warn', ...args),
+  info: (...args: unknown[]) => log('info', ...args),
+  debug: (...args: unknown[]) => log('debug', ...args),
+  trace: (...args: unknown[]) => log('trace', ...args),
 }
 
-// Create child loggers for different components
-function createChildLogger(component: string) {
-  return {
-    fatal: (message: string, data?: Record<string, any>) => 
-      log('fatal', `[${component}] ${message}`, data),
-    error: (message: string, data?: Record<string, any>) => 
-      log('error', `[${component}] ${message}`, data),
-    warn: (message: string, data?: Record<string, any>) => 
-      log('warn', `[${component}] ${message}`, data),
-    info: (message: string, data?: Record<string, any>) => 
-      log('info', `[${component}] ${message}`, data),
-    debug: (message: string, data?: Record<string, any>) => 
-      log('debug', `[${component}] ${message}`, data),
-    trace: (message: string, data?: Record<string, any>) => 
-      log('trace', `[${component}] ${message}`, data),
-  }
+// Child loggers
+export const apiLogger = {
+  fatal: (...args: unknown[]) => log('fatal', '[api]', ...args),
+  error: (...args: unknown[]) => log('error', '[api]', ...args),
+  warn: (...args: unknown[]) => log('warn', '[api]', ...args),
+  info: (...args: unknown[]) => log('info', '[api]', ...args),
+  debug: (...args: unknown[]) => log('debug', '[api]', ...args),
+  trace: (...args: unknown[]) => log('trace', '[api]', ...args),
 }
 
-export const apiLogger = createChildLogger('api')
-export const authLogger = createChildLogger('auth')
-export const emailLogger = createChildLogger('email')
-export const performanceLogger = createChildLogger('performance')
-
-// Utility function for logging errors with context
-export function logError(error: unknown, context?: Record<string, any>) {
-  if (error instanceof Error) {
-    logger.error('Error occurred', {
-      type: error.constructor.name,
-      message: error.message,
-      stack: isDevelopment ? error.stack : undefined,
-      ...context,
-    })
-  } else {
-    logger.error('Unknown error occurred', {
-      type: 'Unknown',
-      message: String(error),
-      ...context,
-    })
-  }
+export const authLogger = {
+  fatal: (...args: unknown[]) => log('fatal', '[auth]', ...args),
+  error: (...args: unknown[]) => log('error', '[auth]', ...args),
+  warn: (...args: unknown[]) => log('warn', '[auth]', ...args),
+  info: (...args: unknown[]) => log('info', '[auth]', ...args),
+  debug: (...args: unknown[]) => log('debug', '[auth]', ...args),
+  trace: (...args: unknown[]) => log('trace', '[auth]', ...args),
 }
 
-// Utility function for logging API requests
-export function logApiRequest(
-  method: string,
-  path: string,
-  statusCode: number,
-  duration: number,
-  error?: Error,
-) {
-  const logData = {
-    method,
-    path,
-    statusCode,
-    duration: `${duration}ms`,
-    category: 'http-request',
-  }
-
-  if (error) {
-    apiLogger.error('API request failed', {
-      ...logData,
-      error: {
-        type: error.constructor.name,
-        message: error.message,
-        stack: isDevelopment ? error.stack : undefined,
-      },
-    })
-  } else if (statusCode >= 400) {
-    apiLogger.warn('API request warning', logData)
-  } else {
-    apiLogger.info('API request completed', logData)
-  }
+export const emailLogger = {
+  fatal: (...args: unknown[]) => log('fatal', '[email]', ...args),
+  error: (...args: unknown[]) => log('error', '[email]', ...args),
+  warn: (...args: unknown[]) => log('warn', '[email]', ...args),
+  info: (...args: unknown[]) => log('info', '[email]', ...args),
+  debug: (...args: unknown[]) => log('debug', '[email]', ...args),
+  trace: (...args: unknown[]) => log('trace', '[email]', ...args),
 }
 
-// Performance logging utility
-export function logPerformance(
-  operation: string,
-  duration: number,
-  metadata?: Record<string, any>,
-) {
-  performanceLogger.info('Performance metric', {
-    operation,
-    duration: `${duration}ms`,
-    category: 'performance',
-    ...metadata,
-  })
+export const performanceLogger = {
+  fatal: (...args: unknown[]) => log('fatal', '[performance]', ...args),
+  error: (...args: unknown[]) => log('error', '[performance]', ...args),
+  warn: (...args: unknown[]) => log('warn', '[performance]', ...args),
+  info: (...args: unknown[]) => log('info', '[performance]', ...args),
+  debug: (...args: unknown[]) => log('debug', '[performance]', ...args),
+  trace: (...args: unknown[]) => log('trace', '[performance]', ...args),
 }
 
-// Async operation wrapper with automatic logging
-export async function withLogging<T>(
-  operation: string,
-  fn: () => Promise<T>,
-  metadata?: Record<string, any>,
-): Promise<T> {
+// Utility functions
+export function logError(error: unknown, context?: unknown) {
+  logger.error('Error occurred:', error, context)
+}
+
+export function logApiRequest(method: string, path: string, statusCode: number, duration: number, error?: unknown) {
+  apiLogger.info(`${method} ${path} ${statusCode} ${duration}ms`, error)
+}
+
+export function logPerformance(operation: string, duration: number, metadata?: unknown) {
+  performanceLogger.info(`${operation} ${duration}ms`, metadata)
+}
+
+export async function withLogging<T>(operation: string, fn: () => Promise<T>, metadata?: unknown): Promise<T> {
   const start = Date.now()
-
   try {
     logger.debug(`Starting operation: ${operation}`, metadata)
     const result = await fn()
     const duration = Date.now() - start
-
-    logger.info(`Operation completed: ${operation}`, {
-      duration: `${duration}ms`,
-      ...metadata,
-    })
-
+    logger.info(`Operation completed: ${operation} ${duration}ms`, metadata)
     return result
   } catch (error) {
     const duration = Date.now() - start
-
-    logError(error, {
-      operation,
-      phase: 'error',
-      duration: `${duration}ms`,
-      ...metadata,
-    })
-
+    logError(error, { operation, duration: `${duration}ms`, ...(metadata as Record<string, unknown> || {}) })
     throw error
   }
 }

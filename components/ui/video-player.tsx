@@ -1,8 +1,28 @@
 'use client'
 
-import { forwardRef, useRef, useEffect, useState, useCallback } from 'react'
+import { forwardRef, useRef, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { VideoPlayerOptions, VideoFormat, VideoSubtitle, videoUtils } from '@/lib/video/video-config'
+import type { VideoPlayerOptions, VideoFormat, VideoSubtitle } from '@/lib/video/video-config'
+import { videoUtils } from '@/lib/video/video-config'
+
+// Define video metadata type
+interface VideoMetadata {
+  duration: number
+  width: number
+  height: number
+  aspectRatio: number
+}
+
+// Define video performance metrics type
+interface VideoPerformanceMetrics {
+  loadStart: number
+  loadEnd: number
+  firstFrame: number
+  buffering: number
+  stalls: number
+  loadTime: number
+  timeToFirstFrame: number
+}
 
 export interface VideoPlayerProps extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'children'> {
   sources: VideoFormat[]
@@ -10,8 +30,8 @@ export interface VideoPlayerProps extends Omit<React.VideoHTMLAttributes<HTMLVid
   options?: VideoPlayerOptions
   poster?: string
   fallbackContent?: React.ReactNode
-  onLoadMetadata?: (metadata: { duration: number; width: number; height: number; aspectRatio: number }) => void
-  onPerformanceData?: (metrics: any) => void
+  onLoadMetadata?: (metadata: VideoMetadata) => void
+  onPerformanceData?: (metrics: VideoPerformanceMetrics) => void
   generateThumbnail?: boolean
   thumbnailTime?: number
   responsive?: boolean
@@ -40,9 +60,9 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
   ) => {
     const internalRef = useRef<HTMLVideoElement>(null)
     const videoRef = (ref as React.RefObject<HTMLVideoElement>) || internalRef
-    const [metadata, setMetadata] = useState<any>(null)
+    const [metadata, setMetadata] = useState<VideoMetadata | null>(null)
     const [thumbnailUrl, setThumbnailUrl] = useState<string>('')
-    const [performanceMonitor, setPerformanceMonitor] = useState<any>(null)
+    const [_performanceMonitor, setPerformanceMonitor] = useState<ReturnType<typeof videoUtils.monitorVideoPerformance> | null>(null)
 
     // Extract video metadata when loaded
     useEffect(() => {
@@ -149,7 +169,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
               <a 
                 href={sources[0]?.src} 
                 className='text-primary hover:underline'
-                download
+                download={true}
               >
                 download the video
               </a>{' '}
@@ -228,7 +248,9 @@ export function AutoPlayVideo({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsIntersecting(entry.isIntersecting)
+        if (entry) {
+          setIsIntersecting(entry.isIntersecting)
+        }
       },
       {
         threshold: intersectionThreshold,
@@ -324,7 +346,7 @@ export function LazyVideo({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry && entry.isIntersecting) {
           setIsVisible(true)
           observer.disconnect()
         }

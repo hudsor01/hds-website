@@ -1,22 +1,17 @@
 'use client'
 
-import React, { useTransition, useOptimistic, memo, startTransition, useActionState } from 'react'
+import React, { memo, useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { submitContactForm } from '@/lib/actions/email-actions'
 import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
 import { HoneypotField, TimingHoneypot } from '@/components/security/honeypot-field'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, Send, CheckCircle, AlertCircle } from 'lucide-react'
-
-// React 19 optimistic action types
-interface OptimisticSubmission {
-  id: string
-  name: string
-  email: string
-  message: string
-  timestamp: Date
-  status: 'pending' | 'success' | 'error'
-}
+import type { ContactFormProps } from '@/types/form-types'
 
 // React 19 optimized submit button with useFormStatus
 function SubmitButton() {
@@ -47,7 +42,7 @@ function SubmitButton() {
 const FormFeedback = memo(function FormFeedback({ 
   state, 
 }: { 
-  state: any 
+  state: { success?: boolean; message?: string; error?: string } | null 
 }) {
   if (!state) return null
 
@@ -91,35 +86,17 @@ const FormFeedback = memo(function FormFeedback({
   return null
 })
 
-export interface ContactFormProps {
-  className?: string
-  onSuccess?: () => void
-  onError?: (_error: Error) => void
-  includeFields?: Array<'phone' | 'company' | 'subject' | 'service' | 'budget'>
-  submitEndpoint?: string
-  useTrpc?: boolean
-  title?: string
-  description?: string
-  successMessage?: string
-  darkMode?: boolean
-  variant?: 'simple' | 'detailed'
-}
+// ContactFormProps imported from @/types/form-types
 
 /**
  * React 19 modernized contact form with useActionState and Resend integration
  */
 export const ContactForm = memo(function ContactForm({
-  className,
-  onSuccess,
-  onError,
-  includeFields = ['phone'],
-  submitEndpoint,
-  useTrpc,
-  title,
-  description,
-  successMessage,
-  darkMode = false,
-  variant = 'simple',
+className,
+onSuccess,
+onError,
+includeFields = ['phone'],
+variant = 'simple',
 }: ContactFormProps) {
   const isDetailed = variant === 'detailed'
   
@@ -155,94 +132,78 @@ export const ContactForm = memo(function ContactForm({
           
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div className='space-y-2'>
-              <label htmlFor='name' className='block text-sm font-medium text-gray-700'>
-                Name *
-              </label>
-              <input
+              <Label htmlFor='name'>Name *</Label>
+              <Input
                 type='text'
                 name='name'
                 id='name'
                 required
                 placeholder='John Doe'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
               />
             </div>
 
             <div className='space-y-2'>
-              <label htmlFor='email' className='block text-sm font-medium text-gray-700'>
-                Email *
-              </label>
-              <input
+              <Label htmlFor='email'>Email *</Label>
+              <Input
                 type='email'
                 name='email'
                 id='email'
                 required
                 placeholder='john@example.com'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
               />
             </div>
           </div>
 
           {includeFields.includes('phone') && (
             <div className='space-y-2'>
-              <label htmlFor='phone' className='block text-sm font-medium text-gray-700'>
-                Phone (Optional)
-              </label>
-              <input
+              <Label htmlFor='phone'>Phone (Optional)</Label>
+              <Input
                 type='tel'
                 name='phone'
                 id='phone'
                 placeholder='(555) 123-4567'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
               />
             </div>
           )}
 
           {isDetailed && includeFields.includes('company') && (
             <div className='space-y-2'>
-              <label htmlFor='company' className='block text-sm font-medium text-gray-700'>
-                Company (Optional)
-              </label>
-              <input
+              <Label htmlFor='company'>Company (Optional)</Label>
+              <Input
                 type='text'
                 name='company'
                 id='company'
                 placeholder='Acme Corp'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
               />
             </div>
           )}
 
           {isDetailed && includeFields.includes('service') && (
             <div className='space-y-2'>
-              <label htmlFor='service' className='block text-sm font-medium text-gray-700'>
-                Service of Interest
-              </label>
-              <select
-                name='service'
-                id='service'
-                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-              >
-                <option value=''>Select a service</option>
-                <option value='web'>Web Development</option>
-                <option value='revops'>Revenue Operations</option>
-                <option value='analytics'>Data Analytics</option>
-                <option value='strategy'>Business Strategy</option>
-              </select>
+              <Label htmlFor='service'>Service of Interest</Label>
+              <Select name='service'>
+                <SelectTrigger id='service'>
+                  <SelectValue placeholder='Select a service' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='web'>Web Development</SelectItem>
+                  <SelectItem value='revops'>Revenue Operations</SelectItem>
+                  <SelectItem value='analytics'>Data Analytics</SelectItem>
+                  <SelectItem value='strategy'>Business Strategy</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           )}
 
           <div className='space-y-2'>
-            <label htmlFor='message' className='block text-sm font-medium text-gray-700'>
-              Message *
-            </label>
-            <textarea
+            <Label htmlFor='message'>Message *</Label>
+            <Textarea
               name='message'
               id='message'
               rows={4}
               required
               placeholder='Tell us about your project...'
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical'
+              className='resize-vertical'
             />
           </div>
 

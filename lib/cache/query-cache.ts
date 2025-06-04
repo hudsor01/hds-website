@@ -13,9 +13,10 @@ export const queryClientConfig = {
       gcTime: 30 * 60 * 1000, // 30 minutes (renamed from cacheTime in v5)
       
       // Retry configuration
-      retry: (failureCount: number, error: any) => {
+      retry: (failureCount: number, error: unknown) => {
         // Don't retry on 4xx errors except 408, 429
-        if (error?.status >= 400 && error?.status < 500 && ![408, 429].includes(error.status)) {
+        const err = error as { status?: number }
+        if (err?.status && err.status >= 400 && err.status < 500 && ![408, 429].includes(err.status)) {
           return false
         }
         
@@ -36,9 +37,10 @@ export const queryClientConfig = {
     },
     mutations: {
       // Retry configuration for mutations
-      retry: (failureCount: number, error: any) => {
+      retry: (failureCount: number, error: unknown) => {
         // Don't retry client errors
-        if (error?.status >= 400 && error?.status < 500) {
+        const err = error as { status?: number }
+        if (err?.status && err.status >= 400 && err.status < 500) {
           return false
         }
         
@@ -135,7 +137,7 @@ export class CacheManager {
   }
   
   // Remove specific queries
-  removeQueries(queryKey: unknown[]) {
+  removeQueries(queryKey: readonly unknown[]) {
     return this.queryClient.removeQueries({ queryKey })
   }
 }

@@ -1,8 +1,8 @@
 /**
  * Admin Layout
  * 
- * Minimal layout for dashboard-01 block implementation
- * The dashboard-01 block provides its own complete layout structure
+ * Minimal layout for admin dashboard implementation
+ * The admin dashboard provides its own complete layout structure
  */
 
 import React from 'react'

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Resend } from 'resend'
 import { ContactNotificationTemplate } from '@/components/emails/contact-notification'
 import { ContactConfirmationTemplate } from '@/components/emails/contact-confirmation'
@@ -60,7 +61,7 @@ export class ResendEmailService {
         react: ContactNotificationTemplate({
           ...data,
           timestamp,
-        }),
+        }) as React.ReactElement,
         tags: [
           { name: 'category', value: 'contact-notification' },
           { name: 'source', value: 'website' },
@@ -96,7 +97,7 @@ export class ResendEmailService {
         react: ContactConfirmationTemplate({
           name: data.name,
           message: data.message,
-        }),
+        }) as React.ReactElement,
         tags: [
           { name: 'category', value: 'contact-confirmation' },
           { name: 'source', value: 'website' },
@@ -132,7 +133,7 @@ export class ResendEmailService {
         react: NewsletterWelcomeTemplate({
           email: data.email,
           firstName: data.firstName,
-        }),
+        }) as React.ReactElement,
         tags: [
           { name: 'category', value: 'newsletter-welcome' },
           { name: 'source', value: 'website' },

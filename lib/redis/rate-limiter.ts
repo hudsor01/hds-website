@@ -3,7 +3,6 @@ import type {
   RateLimitContext, 
   RateLimitResult, 
   RateLimitStorage,
-  RateLimitStrategy, 
 } from '@/types/rate-limit-types'
 import { getRedisClient, isRedisAvailable } from './config'
 import { logger } from '@/lib/logger'
@@ -29,7 +28,7 @@ import { logger } from '@/lib/logger'
  */
 class InMemoryRateLimitStorage implements RateLimitStorage {
   private store = new Map<string, { count: number; resetTime: number }>()
-  private cleanupInterval: NodeJS.Timeout
+  private cleanupInterval: globalThis.NodeJS.Timeout
 
   constructor() {
     // Clean up expired entries every 5 minutes
@@ -347,7 +346,7 @@ export class RateLimiter {
           windowMs: 60000,
         }
 
-        const result = await this.checkRateLimit(testContext, testConfig)
+        await this.checkRateLimit(testContext, testConfig)
         
         return {
           status: 'healthy',
@@ -422,7 +421,8 @@ export const extractIPAddress = (req: Request): string => {
   if (xRealIP) return xRealIP
   if (xForwardedFor) {
     // x-forwarded-for can contain multiple IPs, take the first one
-    return xForwardedFor.split(',')[0].trim()
+    const firstIP = xForwardedFor.split(',')[0]
+    return firstIP ? firstIP.trim() : 'unknown'
   }
   
   return 'unknown'

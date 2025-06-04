@@ -45,3 +45,15 @@ export interface ServicesSectionProps {
   ctaButtonText?: string
   bgColor?: string
 }
+
+/**
+ * Service update data for batch operations
+ */
+export interface ServiceUpdate {
+  id: string
+  title?: string
+  description?: string
+  price?: string
+  featured?: boolean
+  isActive?: boolean
+}

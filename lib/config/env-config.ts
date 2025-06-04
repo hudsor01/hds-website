@@ -207,7 +207,7 @@ export const envDebug = {
   /**
    * Generate environment report
    */
-  generateEnvReport: (): Record<string, any> => ({
+  generateEnvReport: (): Record<string, unknown> => ({
       nodeEnv: process.env.NODE_ENV,
       runtime: runtimeEnv.isEdgeRuntime() ? 'edge' : 'nodejs',
       platform: runtimeEnv.getDeploymentPlatform(),

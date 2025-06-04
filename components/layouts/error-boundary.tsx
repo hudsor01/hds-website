@@ -7,12 +7,12 @@ import { logger } from '@/lib/logger'
 import { Button } from '@/components/ui/button'
 
 interface Props {
-  children: ReactNode
-  fallback?: ReactNode
-  onError?: (error: Error, errorInfo: ErrorInfo) => void
-  variant?: 'simple' | 'detailed'
-  className?: string
-  darkMode?: boolean
+children: ReactNode
+fallback?: ReactNode
+onError?: (_errorToReport: Error, _errorInfoToReport: ErrorInfo) => void
+variant?: 'simple' | 'detailed'
+className?: string
+darkMode?: boolean
 }
 
 interface State {

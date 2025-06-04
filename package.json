@@ -11,6 +11,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
+    "type-check:pretty": "tsc --noEmit --pretty",
     "analyze": "ANALYZE=true next build",
     "analyze:server": "BUNDLE_ANALYZE=server next build",
     "analyze:browser": "BUNDLE_ANALYZE=browser next build",
@@ -29,6 +31,7 @@
     "setup:encryption": "node scripts/setup-encryption.mjs",
     "gdpr:cleanup": "node scripts/data-retention-cleanup.mjs",
     "gdpr:cleanup:dry": "DRY_RUN=true node scripts/data-retention-cleanup.mjs",
+    "generate:password-hash": "node scripts/generate-password-hash.js",
     "perf": "node scripts/performance-monitor.js",
     "perf:watch": "chokidar 'components/**/*' 'lib/**/*' 'app/**/*' -c 'npm run perf'",
     "build:perf": "npm run perf && npm run bundle-report",
@@ -44,6 +47,7 @@
     ]
   },
   "dependencies": {
+    "@calcom/atoms": "^1.0.102-booker",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.8.2",
@@ -71,7 +75,6 @@
     "@trpc/client": "^11.1.3",
     "@trpc/react-query": "^11.1.3",
     "@trpc/server": "^11.1.3",
-    "@types/bcrypt": "^5.0.2",
     "@upstash/redis": "^1.32.0",
     "@vercel/otel": "^1.12.0",
     "bcrypt": "^6.0.0",
@@ -81,6 +84,7 @@
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.15.0",
+    "isomorphic-dompurify": "^2.25.0",
     "jose": "^6.0.11",
     "lucide-react": "^0.511.0",
     "next": "^15.3.2",
@@ -125,7 +129,8 @@
     "@eslint/js": "^9.27.0",
     "@next/bundle-analyzer": "^15.3.2",
     "@tailwindcss/postcss": "^4.1.7",
-    "@types/node": "^22.15.23",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.15.24",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.27.0",
@@ -136,6 +141,7 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0",
     "webpack-bundle-analyzer": "^4.10.2"
   }
 }

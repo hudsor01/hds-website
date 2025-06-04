@@ -1,27 +1,25 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
+import type { AnalyticsStore } from '@/types/analytics-types'
 
-// Analytics State
-interface AnalyticsState {
-  hasConsent: boolean
-  pageViews: number
-  sessionId: string | null
-  setConsent: (_consent: boolean) => void
-  incrementPageViews: () => void
-  setSessionId: (_id: string) => void
-}
-
-export const useAnalyticsStore = create<AnalyticsState>()(
+export const useAnalyticsStore = create<AnalyticsStore>()(
   devtools(
     persist(
-      set => ({
+      (set) => ({
         hasConsent: false,
-        pageViews: 0,
         sessionId: null,
-        setConsent: consent => set({ hasConsent: consent }),
-        incrementPageViews: () =>
-          set(state => ({ pageViews: state.pageViews + 1 })),
-        setSessionId: id => set({ sessionId: id }),
+        setConsent: (newConsent) => {
+          set({ hasConsent: newConsent })
+        },
+        setSessionId: (newSessionId) => {
+          set({ sessionId: newSessionId })
+        },
+        reset: () => {
+          set({
+            hasConsent: false,
+            sessionId: null,
+          })
+        },
       }),
       {
         name: 'analytics-store',

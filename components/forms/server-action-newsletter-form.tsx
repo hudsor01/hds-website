@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label'
 type FormState = {
   success?: boolean
   message?: string
-  errors?: any[]
+  errors?: string[]
 }
 
 const initialState: FormState = {}
@@ -39,7 +39,7 @@ export function ServerActionNewsletterForm({ source = 'website' }: { source?: st
             Successfully Subscribed!
           </h3>
           <p className='text-green-700'>
-            Thank you for subscribing to our newsletter. You'll receive our latest insights and updates.
+            Thank you for subscribing to our newsletter. You&apos;ll receive our latest insights and updates.
           </p>
         </div>
       </div>

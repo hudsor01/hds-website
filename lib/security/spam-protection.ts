@@ -68,7 +68,7 @@ export const spamProtectionSchema = z.object({
         const domainParts = domain.split('.')
         if (domainParts.length >= 2) {
           const domainName = domainParts[0]
-          if (domainName.length > 3) return true
+          if (domainName && domainName.length > 3) return true
         }
         
         // Allow common email providers
@@ -258,7 +258,7 @@ export class ContentAnalyzer {
 
     // Business domains are generally lower risk
     const domainParts = domain.split('.')
-    if (domainParts.length >= 2 && domainParts[0].length > 5) {
+    if (domainParts.length >= 2 && domainParts[0] && domainParts[0].length > 5) {
       return { isValid: true, risk: 'low' }
     }
 
@@ -318,8 +318,10 @@ export interface SpamProtectionContext {
 /**
  * Enhanced spam protection that considers Clerk authentication
  */
+export type SpamProtectionData = z.infer<typeof spamProtectionSchema>
+
 export function validateWithClerkContext(
-  data: any,
+  data: Partial<SpamProtectionData>,
   context: SpamProtectionContext,
 ): { 
   isValid: boolean
@@ -412,11 +414,4 @@ export function validateWithClerkContext(
 
 export type {
   RateLimitEntry,
-  SpamProtectionContext,
-}
-
-export {
-  RateLimiter,
-  ContentAnalyzer,
-  IPProtection,
 }

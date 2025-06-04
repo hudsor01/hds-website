@@ -72,7 +72,7 @@ async function DashboardContent() {
         <div className='space-y-4'>
           {testimonials.slice(0, 2).map((testimonial) => (
             <div key={testimonial.id} className='bg-card p-4 rounded-lg border'>
-              <p className='text-sm mb-2'>'{testimonial.content}'</p>
+              <p className='text-sm mb-2'>&apos;{testimonial.content}&apos;</p>
               <p className='text-xs text-muted-foreground'>
                 — {testimonial.name}, {testimonial.role} at {testimonial.company}
               </p>
@@ -96,8 +96,8 @@ async function DashboardContentSafe() {
 
   // Extract successful results and handle failures
   const services = results[0].status === 'fulfilled' ? results[0].value : []
-  const caseStudies = results[1].status === 'fulfilled' ? results[1].value : []
-  const testimonials = results[2].status === 'fulfilled' ? results[2].value : []
+  const _caseStudies = results[1].status === 'fulfilled' ? results[1].value : []
+  const _testimonials = results[2].status === 'fulfilled' ? results[2].value : []
   const analytics = results[3].status === 'fulfilled' ? results[3].value : {
     totalLeads: 0,
     conversionRate: 0,

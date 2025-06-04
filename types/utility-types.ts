@@ -44,16 +44,17 @@ export type NestedKeyOf<T> = {
 
 /**
  * Get value type by nested key path
+ * Simplified version to avoid complex recursive type constraints
  */
-export type NestedValueOf<T, K extends NestedKeyOf<T>> = K extends `${infer K1}.${infer K2}`
-  ? K1 extends keyof T
-    ? K2 extends NestedKeyOf<T[K1]>
-      ? NestedValueOf<T[K1], K2>
+export type NestedValueOf<T, K> = K extends keyof T 
+  ? T[K]
+  : K extends `${infer K1}.${infer K2}`
+    ? K1 extends keyof T
+      ? T[K1] extends Record<string, unknown>
+        ? NestedValueOf<T[K1], K2>
+        : never
       : never
     : never
-  : K extends keyof T
-  ? T[K]
-  : never
 
 /**
  * Non-empty array type
@@ -82,7 +83,7 @@ export type TupleToUnion<T extends readonly unknown[]> = T[number]
 /**
  * Get function parameters as object
  */
-export type FunctionParams<T extends (...args: any[]) => any> = T extends (
+export type FunctionParams<T extends (...args: Record<string, unknown>[]) => any> = T extends (
   ...args: infer P
 ) => any
   ? P
@@ -91,8 +92,8 @@ export type FunctionParams<T extends (...args: any[]) => any> = T extends (
 /**
  * Get function return type
  */
-export type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
-  ...args: any
+export type AsyncReturnType<T extends (...args: any[]) => Promise<any>> = T extends (
+  ...args: any[]
 ) => Promise<infer R>
   ? R
   : any
@@ -394,7 +395,7 @@ export type FilterOperator =
 export type FilterCondition<T> = {
   field: keyof T
   operator: FilterOperator
-  value: any
+  value: Record<string, unknown>
 }
 
 /**
@@ -433,7 +434,7 @@ export type StateSlice<T> = T & {
 export type Action<T extends string = string, P = any> = {
   type: T
   payload?: P
-  meta?: any
+  meta?: Record<string, unknown>
   error?: boolean
 }
 
@@ -471,7 +472,7 @@ export type PolymorphicProps<E extends React.ElementType, P = {}> = P &
 /**
  * Component variant props
  */
-export type VariantProps<T extends Record<string, any>> = {
+export type VariantProps<T extends Record<string, unknown>> = {
   [K in keyof T]?: keyof T[K]
 }
 
@@ -479,8 +480,8 @@ export type VariantProps<T extends Record<string, any>> = {
  * Style props for styled components
  */
 export type StyledProps = {
-  css?: any
-  sx?: any
+  css?: Record<string, unknown>
+  sx?: Record<string, unknown>
   className?: string
   style?: React.CSSProperties
 }
@@ -513,6 +514,64 @@ export type Option<T> =
   | { some: true; value: T }
   | { some: false }
 
+// ============= Browser & Client Utility Types =============
+
+/**
+ * Geolocation position type
+ */
+export interface GeolocationPositionType {
+  coords: {
+    latitude: number
+    longitude: number
+    accuracy: number
+    altitude?: number | null
+    altitudeAccuracy?: number | null
+    heading?: number | null
+    speed?: number | null
+  }
+  timestamp: number
+}
+
+/**
+ * Scroll behavior type
+ */
+export type ScrollBehaviorType = 'auto' | 'smooth' | 'instant'
+
+/**
+ * Device information
+ */
+export interface DeviceInfo {
+  userAgent: string
+  language: string
+  platform: string
+  cookieEnabled: boolean
+  onLine: boolean
+  screen: {
+    width: number
+    height: number
+    colorDepth: number
+  }
+  viewport: {
+    width: number
+    height: number
+  }
+}
+
+/**
+ * Page performance metrics
+ */
+export interface PagePerformanceMetrics {
+  domContentLoaded: number
+  loadComplete: number
+  firstPaint: number
+  firstContentfulPaint: number
+}
+
+/**
+ * Log level type
+ */
+export type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
+
 // ============= Event Utility Types =============
 
 /**
@@ -532,7 +591,7 @@ export type EventHandler<T = any> = (event: CustomEvent<T>) => void
 /**
  * Event emitter type
  */
-export type EventEmitter<T extends Record<string, any> = Record<string, any>> = {
+export type EventEmitter<T extends Record<string, unknown> = Record<string, unknown>> = {
   on<K extends keyof T>(event: K, handler: EventHandler<T[K]>): void
   off<K extends keyof T>(event: K, handler: EventHandler<T[K]>): void
   emit<K extends keyof T>(event: K, detail: T[K]): void
