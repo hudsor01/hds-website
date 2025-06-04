@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
 
 export interface UseIntersectionObserverProps {
   threshold?: number | number[]
@@ -19,32 +19,32 @@ export function useIntersectionObserver({
   boolean,
   IntersectionObserverEntry | undefined
 ] {
-  const elementRef = useRef<Element>(null)
-  const [entry, setEntry] = useState<IntersectionObserverEntry>()
-  const [isIntersecting, setIsIntersecting] = useState(initialIsIntersecting)
+  const elementRef = useRef<Element>(null);
+  const [entry, setEntry] = useState<IntersectionObserverEntry>();
+  const [isIntersecting, setIsIntersecting] = useState(initialIsIntersecting);
 
-  const frozen = entry?.isIntersecting && freezeOnceVisible
+  const frozen = entry?.isIntersecting && freezeOnceVisible;
 
   const updateEntry = ([entry]: IntersectionObserverEntry[]): void => {
-    setEntry(entry)
-    setIsIntersecting(entry.isIntersecting)
-  }
+    setEntry(entry);
+    setIsIntersecting(entry.isIntersecting);
+  };
 
   useEffect(() => {
-    const node = elementRef?.current
-    const hasIOSupport = !!window.IntersectionObserver
+    const node = elementRef?.current;
+    const hasIOSupport = !!window.IntersectionObserver;
 
-    if (!hasIOSupport || frozen || !node) return
+    if (!hasIOSupport || frozen || !node) return;
 
-    const observerParams = { threshold, root, rootMargin }
-    const observer = new IntersectionObserver(updateEntry, observerParams)
+    const observerParams = { threshold, root, rootMargin };
+    const observer = new IntersectionObserver(updateEntry, observerParams);
 
-    observer.observe(node)
+    observer.observe(node);
 
-    return () => observer.disconnect()
-  }, [elementRef, threshold, root, rootMargin, frozen])
+    return () => observer.disconnect();
+  }, [elementRef, threshold, root, rootMargin, frozen]);
 
-  return [elementRef, isIntersecting, entry]
+  return [elementRef, isIntersecting, entry];
 }
 
 /**
@@ -55,14 +55,14 @@ export function useLazyLoad(options?: UseIntersectionObserverProps) {
     freezeOnceVisible: true,
     threshold: 0.1,
     ...options,
-  })
+  });
 
   return {
     ref,
     isVisible: isIntersecting,
     entry,
     shouldLoad: isIntersecting,
-  }
+  };
 }
 
 /**
@@ -74,14 +74,14 @@ export function useAnimationTrigger(options?: UseIntersectionObserverProps) {
     threshold: 0.2,
     rootMargin: '-10px',
     ...options,
-  })
+  });
 
   return {
     ref,
     isVisible: isIntersecting,
     entry,
     shouldAnimate: isIntersecting,
-  }
+  };
 }
 
 /**
@@ -93,12 +93,12 @@ export function usePreload(options?: UseIntersectionObserverProps) {
     threshold: 0,
     rootMargin: '100px', // Preload 100px before visible
     ...options,
-  })
+  });
 
   return {
     ref,
     isVisible: isIntersecting,
     entry,
     shouldPreload: isIntersecting,
-  }
+  };
 }

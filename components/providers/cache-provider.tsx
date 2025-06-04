@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { registerServiceWorker } from '@/lib/cache/service-worker'
+import { useEffect } from 'react';
+import { registerServiceWorker } from '@/lib/cache/service-worker';
 
 /**
  * Cache Provider Component
@@ -11,9 +11,9 @@ import { registerServiceWorker } from '@/lib/cache/service-worker'
 export function CacheProvider() {
   useEffect(() => {
     // Register service worker for caching in production
-    registerServiceWorker()
-  }, [])
+    registerServiceWorker();
+  }, []);
 
   // This component doesn't render anything
-  return null
+  return null;
 }

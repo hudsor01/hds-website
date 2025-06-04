@@ -1,32 +1,32 @@
-'use client'
+'use client';
 
-import React, { Component, type ReactNode } from 'react'
-import type { ErrorInfo } from 'react'
-import { logger } from '@/lib/logger'
+import React, { Component, type ReactNode } from 'react';
+import type { ErrorInfo } from 'react';
+import { logger } from '@/lib/logger';
 import { 
   PageErrorFallback, 
   FormErrorFallback, 
   SectionErrorFallback, 
   ApiErrorFallback,
-} from './error-fallbacks'
-import type { BaseErrorBoundaryProps, BaseErrorBoundaryState } from '@/types/ui-types'
+} from './error-fallbacks';
+import type { BaseErrorBoundaryProps, BaseErrorBoundaryState } from '@/types/ui-types';
 
 /**
  * Base error boundary class with common functionality
  */
 abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseErrorBoundaryState> {
   constructor(props: BaseErrorBoundaryProps) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error: Error): BaseErrorBoundaryState {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error with context
-    const context = this.getErrorContext()
+    const context = this.getErrorContext();
     
     if (typeof logger !== 'undefined') {
       logger.error(`Error in ${context}`, {
@@ -34,14 +34,14 @@ abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseE
         stack: error.stack,
         componentStack: errorInfo.componentStack,
         context,
-      })
+      });
     } else {
-      console.error(`Error in ${context}:`, error, errorInfo)
+      console.error(`Error in ${context}:`, error, errorInfo);
     }
 
     // Call the optional onError callback
     if (this.props.onError) {
-    this.props.onError(error, errorInfo)
+    this.props.onError(error, errorInfo);
     }
 
     // Track error for analytics (if tracking is set up)
@@ -49,13 +49,13 @@ abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseE
       ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'exception', {
         description: `${context}: ${error.message}`,
         fatal: false,
-      })
+      });
     }
   }
 
   reset = () => {
-    this.setState({ hasError: false, error: null })
-  }
+    this.setState({ hasError: false, error: null });
+  };
 
   // Abstract method to be implemented by subclasses
   abstract getErrorContext(): string
@@ -64,12 +64,12 @@ abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseE
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback
+        return this.props.fallback;
       }
-      return this.renderFallback()
+      return this.renderFallback();
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -78,7 +78,7 @@ abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseE
  */
 export class PageErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Page'
+    return 'Page';
   }
 
   renderFallback() {
@@ -88,7 +88,7 @@ export class PageErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
@@ -97,7 +97,7 @@ export class PageErrorBoundary extends BaseErrorBoundary {
  */
 export class FormErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Form'
+    return 'Form';
   }
 
   renderFallback() {
@@ -107,7 +107,7 @@ export class FormErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
@@ -116,7 +116,7 @@ export class FormErrorBoundary extends BaseErrorBoundary {
  */
 export class SectionErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Section'
+    return 'Section';
   }
 
   renderFallback() {
@@ -126,7 +126,7 @@ export class SectionErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
@@ -135,7 +135,7 @@ export class SectionErrorBoundary extends BaseErrorBoundary {
  */
 export class ApiErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'API'
+    return 'API';
   }
 
   renderFallback() {
@@ -145,7 +145,7 @@ export class ApiErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
@@ -154,7 +154,7 @@ export class ApiErrorBoundary extends BaseErrorBoundary {
  */
 export class ServicesErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Services Page'
+    return 'Services Page';
   }
 
   renderFallback() {
@@ -164,13 +164,13 @@ export class ServicesErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
 export class ContactErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Contact Page'
+    return 'Contact Page';
   }
 
   renderFallback() {
@@ -180,13 +180,13 @@ export class ContactErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
 export class BlogErrorBoundary extends BaseErrorBoundary {
   getErrorContext() {
-    return 'Blog Page'
+    return 'Blog Page';
   }
 
   renderFallback() {
@@ -196,7 +196,7 @@ export class BlogErrorBoundary extends BaseErrorBoundary {
         reset={this.reset}
         className={this.props.className}
       />
-    )
+    );
   }
 }
 
@@ -212,12 +212,12 @@ export function withErrorBoundary<P extends object>(
     <ErrorBoundaryComponent {...errorBoundaryProps}>
       <WrappedComponent {...props} />
     </ErrorBoundaryComponent>
-  )
+  );
 
   WithErrorBoundaryComponent.displayName = 
-    `withErrorBoundary(${WrappedComponent.displayName || WrappedComponent.name})`
+    `withErrorBoundary(${WrappedComponent.displayName || WrappedComponent.name})`;
 
-  return WithErrorBoundaryComponent
+  return WithErrorBoundaryComponent;
 }
 
 /**
@@ -226,6 +226,6 @@ export function withErrorBoundary<P extends object>(
 export function useErrorHandler() {
   return (error: Error) => {
     // This would typically trigger a parent error boundary
-    throw error
-  }
+    throw error;
+  };
 }

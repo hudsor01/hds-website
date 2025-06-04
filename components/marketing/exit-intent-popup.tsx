@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { X, Download, Gift } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react';
+import { X, Download, Gift } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ExitIntentPopupProps {
   title?: string
@@ -23,68 +23,68 @@ leadMagnetDescription = '5 essential templates and guides to automate your busin
 onClose,
 onSubmit,
 }: ExitIntentPopupProps) {
-const [isVisible, setIsVisible] = useState(false)
-const [emailAddress, setEmailAddress] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [hasBeenShown, setHasBeenShown] = useState(false)
+const [isVisible, setIsVisible] = useState(false);
+const [emailAddress, setEmailAddress] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasBeenShown, setHasBeenShown] = useState(false);
 
   useEffect(() => {
     // Check if popup has already been shown in this session
-    const popupShown = sessionStorage.getItem('exitIntentShown')
+    const popupShown = sessionStorage.getItem('exitIntentShown');
     if (popupShown) {
-      setHasBeenShown(true)
-      return
+      setHasBeenShown(true);
+      return;
     }
 
-    let isExiting = false
+    let isExiting = false;
 
     const handleMouseLeave = (e: MouseEvent) => {
       // Only trigger if mouse is leaving through the top of the viewport
       if (e.clientY <= 0 && !isExiting && !hasBeenShown) {
-        isExiting = true
-        setIsVisible(true)
-        setHasBeenShown(true)
-        sessionStorage.setItem('exitIntentShown', 'true')
+        isExiting = true;
+        setIsVisible(true);
+        setHasBeenShown(true);
+        sessionStorage.setItem('exitIntentShown', 'true');
       }
-    }
+    };
 
     // Add event listener after a short delay to avoid immediate triggering
     const timer = setTimeout(() => {
-      document.addEventListener('mouseleave', handleMouseLeave)
-    }, 3000)
+      document.addEventListener('mouseleave', handleMouseLeave);
+    }, 3000);
 
     return () => {
-      clearTimeout(timer)
-      document.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [hasBeenShown])
+      clearTimeout(timer);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [hasBeenShown]);
 
   const handleClose = () => {
-    setIsVisible(false)
-    onClose?.()
-  }
+    setIsVisible(false);
+    onClose?.();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!emailAddress) return
+    e.preventDefault();
+    if (!emailAddress) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      onSubmit?.(emailAddress)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      onSubmit?.(emailAddress);
       
       // Close popup after successful submission
       setTimeout(() => {
-        setIsVisible(false)
-      }, 2000)
+        setIsVisible(false);
+      }, 2000);
     } catch (error) {
-      console.error('Error submitting email:', error)
+      console.error('Error submitting email:', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <AnimatePresence>
@@ -182,21 +182,21 @@ const [emailAddress, setEmailAddress] = useState('')
           </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
 
 // Hook to easily add exit intent to any page
 export function useExitIntent() {
-  const [showPopup, setShowPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleClose = () => {
-    setShowPopup(false)
-  }
+    setShowPopup(false);
+  };
 
   const handleSubmit = (email: string) => {
-    console.log('Email submitted:', email)
+    console.log('Email submitted:', email);
     // Handle email submission here
-  }
+  };
 
   return {
     showPopup,
@@ -209,5 +209,5 @@ export function useExitIntent() {
         onSubmit={handleSubmit}
       />
     ),
-  }
+  };
 }

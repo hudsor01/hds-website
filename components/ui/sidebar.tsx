@@ -4,15 +4,15 @@
  * Based on shadcn/ui sidebar component patterns
  */
 
-'use client'
+'use client';
 
-import * as React from 'react'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
-const SIDEBAR_COOKIE_NAME = 'sidebar:state'
-const _SIDEBAR_KEYBOARD_SHORTCUT = 'b'
-const SIDEBAR_WIDTH = '16rem'
-const SIDEBAR_WIDTH_MOBILE = '18rem'
+const SIDEBAR_COOKIE_NAME = 'sidebar:state';
+const _SIDEBAR_KEYBOARD_SHORTCUT = 'b';
+const SIDEBAR_WIDTH = '16rem';
+const SIDEBAR_WIDTH_MOBILE = '18rem';
 
 type SidebarContext = {
   state: 'expanded' | 'collapsed'
@@ -24,14 +24,14 @@ type SidebarContext = {
   toggleSidebar: () => void
 }
 
-const SidebarContext = React.createContext<SidebarContext | null>(null)
+const SidebarContext = React.createContext<SidebarContext | null>(null);
 
 export function useSidebar() {
-  const context = React.useContext(SidebarContext)
+  const context = React.useContext(SidebarContext);
   if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider.')
+    throw new Error('useSidebar must be used within a SidebarProvider.');
   }
-  return context
+  return context;
 }
 
 interface SidebarProviderProps extends React.ComponentProps<'div'> {
@@ -49,35 +49,35 @@ export function SidebarProvider({
   children,
   ...props
 }: SidebarProviderProps) {
-  const [_open, _setOpen] = React.useState(defaultOpen)
-  const [openMobile, setOpenMobile] = React.useState(false)
-  const [isMobile, setIsMobile] = React.useState(false)
+  const [_open, _setOpen] = React.useState(defaultOpen);
+  const [openMobile, setOpenMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
 
-  const open = openProp ?? _open
+  const open = openProp ?? _open;
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === 'function' ? value(open) : value
+      const openState = typeof value === 'function' ? value(open) : value;
       if (setOpenProp) {
-        setOpenProp(openState)
+        setOpenProp(openState);
       } else {
-        _setOpen(openState)
+        _setOpen(openState);
       }
 
       // This is not synced to the server, so we store it in a cookie.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${60 * 60 * 24 * 7}`
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${60 * 60 * 24 * 7}`;
     },
     [setOpenProp, open],
-  )
+  );
 
   // Handle mobile detection
   React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-  const toggleSidebar = React.useCallback(() => isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open), [isMobile, setOpen, setOpenMobile])
+  const toggleSidebar = React.useCallback(() => isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open), [isMobile, setOpen, setOpenMobile]);
 
   const contextValue = React.useMemo<SidebarContext>(
     () => ({
@@ -90,7 +90,7 @@ export function SidebarProvider({
       toggleSidebar,
     }),
     [open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
-  )
+  );
 
   return (
     <SidebarContext.Provider value={contextValue}>
@@ -108,7 +108,7 @@ export function SidebarProvider({
         {children}
       </div>
     </SidebarContext.Provider>
-  )
+  );
 }
 
 interface SidebarProps extends React.ComponentProps<'div'> {
@@ -125,7 +125,7 @@ export function Sidebar({
   children,
   ...props
 }: SidebarProps) {
-  const { state, openMobile, setOpenMobile } = useSidebar()
+  const { state, openMobile, setOpenMobile } = useSidebar();
 
   if (collapsible === 'none') {
     return (
@@ -138,7 +138,7 @@ export function Sidebar({
       >
         {children}
       </div>
-    )
+    );
   }
 
   return (
@@ -179,7 +179,7 @@ export function Sidebar({
         {children}
       </div>
     </>
-  )
+  );
 }
 
 export function SidebarInset({
@@ -195,7 +195,7 @@ export function SidebarInset({
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarTrigger({
@@ -203,14 +203,14 @@ export function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<'button'>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = useSidebar();
 
   return (
     <button
       type='button'
       onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
+        onClick?.(event);
+        toggleSidebar();
       }}
       className={cn(
         'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-7 w-7',
@@ -235,7 +235,7 @@ export function SidebarTrigger({
       </svg>
       <span className='sr-only'>Toggle Sidebar</span>
     </button>
-  )
+  );
 }
 
 export function SidebarHeader({
@@ -247,7 +247,7 @@ export function SidebarHeader({
       className={cn('flex flex-col gap-2 p-2', className)}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarFooter({
@@ -259,7 +259,7 @@ export function SidebarFooter({
       className={cn('flex flex-col gap-2 p-2', className)}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarContent({
@@ -274,7 +274,7 @@ export function SidebarContent({
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarGroup({
@@ -286,7 +286,7 @@ export function SidebarGroup({
       className={cn('relative flex w-full min-w-0 flex-col p-2', className)}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarGroupLabel({
@@ -301,14 +301,14 @@ export function SidebarGroupLabel({
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarGroupContent({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  return <div className={cn('w-full text-sm', className)} {...props} />
+  return <div className={cn('w-full text-sm', className)} {...props} />;
 }
 
 export function SidebarMenu({
@@ -320,7 +320,7 @@ export function SidebarMenu({
       className={cn('flex w-full min-w-0 flex-col gap-1', className)}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarMenuItem({
@@ -329,7 +329,7 @@ export function SidebarMenuItem({
 }: React.ComponentProps<'li'>) {
   return (
     <li className={cn('group/menu-item relative', className)} {...props} />
-  )
+  );
 }
 
 export function SidebarMenuButton({
@@ -341,7 +341,7 @@ export function SidebarMenuButton({
   size?: 'default' | 'sm' | 'lg'
   asChild?: boolean
 }) {
-  const Comp = asChild ? 'div' : 'button'
+  const Comp = asChild ? 'div' : 'button';
 
   return (
     <Comp
@@ -353,7 +353,7 @@ export function SidebarMenuButton({
       )}
       {...props}
     />
-  )
+  );
 }
 
 export function SidebarSeparator({
@@ -365,5 +365,5 @@ export function SidebarSeparator({
       className={cn('mx-2 h-px bg-sidebar-border', className)}
       {...props}
     />
-  )
+  );
 }

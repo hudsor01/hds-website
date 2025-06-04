@@ -5,9 +5,9 @@
  * Provides booking management and analytics integration
  */
 
-import { createClient } from '@supabase/supabase-js'
-import { env } from '../env'
-import type { ErrorContext } from '../../types/analytics-types'
+import { createClient } from '@supabase/supabase-js';
+import { env } from '../env';
+import type { ErrorContext } from '../../types/analytics-types';
 
 // Cal.com API types
 export interface CalBooking {
@@ -61,15 +61,15 @@ export interface SupabaseBooking {
 
 // Cal.com API client
 class CalComAPI {
-  private apiKey: string
-  private baseURL = 'https://api.cal.com/v1'
+  private apiKey: string;
+  private baseURL = 'https://api.cal.com/v1';
 
   constructor(apiKey: string) {
-    this.apiKey = apiKey
+    this.apiKey = apiKey;
   }
 
   private async request(endpoint: string, options: RequestInit = {}): Promise<unknown> {
-    const url = `${this.baseURL}${endpoint}`
+    const url = `${this.baseURL}${endpoint}`;
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -77,13 +77,13 @@ class CalComAPI {
         'Content-Type': 'application/json',
         ...options.headers,
       },
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`Cal.com API error: ${response.status} ${response.statusText}`)
+      throw new Error(`Cal.com API error: ${response.status} ${response.statusText}`);
     }
 
-    return response.json()
+    return response.json();
   }
 
   async getBookings(params?: { 
@@ -92,72 +92,72 @@ class CalComAPI {
     endTime?: string
     limit?: number
   }) {
-    const searchParams = new URLSearchParams()
-    if (params?.status) searchParams.append('status', params.status)
-    if (params?.startTime) searchParams.append('startTime', params.startTime)
-    if (params?.endTime) searchParams.append('endTime', params.endTime)
-    if (params?.limit) searchParams.append('limit', params.limit.toString())
+    const searchParams = new URLSearchParams();
+    if (params?.status) searchParams.append('status', params.status);
+    if (params?.startTime) searchParams.append('startTime', params.startTime);
+    if (params?.endTime) searchParams.append('endTime', params.endTime);
+    if (params?.limit) searchParams.append('limit', params.limit.toString());
 
-    const query = searchParams.toString()
-    return this.request(`/bookings${query ? `?${query}` : ''}`)
+    const query = searchParams.toString();
+    return this.request(`/bookings${query ? `?${query}` : ''}`);
   }
 
   async getBooking(id: number) {
-    return this.request(`/bookings/${id}`)
+    return this.request(`/bookings/${id}`);
   }
 
   async createBooking(bookingData: unknown) {
     return this.request('/bookings', {
       method: 'POST',
       body: JSON.stringify(bookingData),
-    })
+    });
   }
 
   async updateBooking(id: number, bookingData: unknown) {
     return this.request(`/bookings/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(bookingData),
-    })
+    });
   }
 
   async cancelBooking(id: number, reason?: string) {
     return this.request(`/bookings/${id}/cancel`, {
       method: 'POST',
       body: JSON.stringify({ reason }),
-    })
+    });
   }
 }
 
 // Supabase client for Cal.com integration
 function createCalSupabaseClient() {
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Supabase configuration required for Cal.com integration')
+    throw new Error('Supabase configuration required for Cal.com integration');
   }
 
   return createClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.SUPABASE_SERVICE_ROLE_KEY,
-  )
+  );
 }
 
 // Cal.com + Supabase wrapper class
 export class CalSupabaseWrapper {
-  private calApi: CalComAPI
-  private supabase: ReturnType<typeof createCalSupabaseClient>
+  private calApi: CalComAPI;
+  private supabase: ReturnType<typeof createCalSupabaseClient>;
 
   constructor() {
     if (!env.CAL_COM_API_KEY) {
-      throw new Error('CAL_COM_API_KEY environment variable is required')
+      throw new Error('CAL_COM_API_KEY environment variable is required');
     }
 
-    this.calApi = new CalComAPI(env.CAL_COM_API_KEY)
-    this.supabase = createCalSupabaseClient()
+    this.calApi = new CalComAPI(env.CAL_COM_API_KEY);
+    this.supabase = createCalSupabaseClient();
   }
 
   // Sync Cal.com booking to Supabase
   async syncBookingToSupabase(calBooking: CalBooking): Promise<SupabaseBooking | null> {
     try {
-      const attendee = calBooking.attendees[0] // Primary attendee
+      const attendee = calBooking.attendees[0]; // Primary attendee
       
       const supabaseBooking = {
         cal_booking_id: calBooking.id,
@@ -175,7 +175,7 @@ export class CalSupabaseWrapper {
         location: calBooking.location,
         metadata: calBooking.metadata,
         updated_at: new Date().toISOString(),
-      }
+      };
 
       const { data, error } = await this.supabase
         .from('bookings')
@@ -184,17 +184,17 @@ export class CalSupabaseWrapper {
           ignoreDuplicates: false, 
         })
         .select()
-        .single()
+        .single();
 
       if (error) {
-        console.error('Error syncing booking to Supabase:', error)
-        return null
+        console.error('Error syncing booking to Supabase:', error);
+        return null;
       }
 
-      return data
+      return data;
     } catch (error) {
-      console.error('Error in syncBookingToSupabase:', error)
-      return null
+      console.error('Error in syncBookingToSupabase:', error);
+      return null;
     }
   }
 
@@ -209,32 +209,32 @@ export class CalSupabaseWrapper {
       let query = this.supabase
         .from('bookings')
         .select('*')
-        .order('start_time', { ascending: true })
+        .order('start_time', { ascending: true });
 
       if (filters?.status) {
-        query = query.eq('status', filters.status)
+        query = query.eq('status', filters.status);
       }
       if (filters?.startDate) {
-        query = query.gte('start_time', filters.startDate)
+        query = query.gte('start_time', filters.startDate);
       }
       if (filters?.endDate) {
-        query = query.lte('start_time', filters.endDate)
+        query = query.lte('start_time', filters.endDate);
       }
       if (filters?.attendeeEmail) {
-        query = query.eq('attendee_email', filters.attendeeEmail)
+        query = query.eq('attendee_email', filters.attendeeEmail);
       }
 
-      const { data, error } = await query
+      const { data, error } = await query;
 
       if (error) {
-        console.error('Error fetching bookings from Supabase:', error)
-        return []
+        console.error('Error fetching bookings from Supabase:', error);
+        return [];
       }
 
-      return data || []
+      return data || [];
     } catch (error) {
-      console.error('Error in getBookingsFromSupabase:', error)
-      return []
+      console.error('Error in getBookingsFromSupabase:', error);
+      return [];
     }
   }
 
@@ -245,24 +245,24 @@ export class CalSupabaseWrapper {
     limit?: number 
   }) {
     try {
-      const response = await this.calApi.getBookings(params)
-      const bookings = response.bookings || []
+      const response = await this.calApi.getBookings(params);
+      const bookings = response.bookings || [];
 
       const syncPromises = bookings.map((booking: CalBooking) => 
         this.syncBookingToSupabase(booking),
-      )
+      );
 
-      const results = await Promise.allSettled(syncPromises)
+      const results = await Promise.allSettled(syncPromises);
       
-      const successful = results.filter((r) => r.status === 'fulfilled').length
-      const failed = results.filter((r) => r.status === 'rejected').length
+      const successful = results.filter((r) => r.status === 'fulfilled').length;
+      const failed = results.filter((r) => r.status === 'rejected').length;
 
-      console.log(`Synced ${successful} bookings, ${failed} failed`)
+      console.log(`Synced ${successful} bookings, ${failed} failed`);
       
-      return { successful, failed, total: bookings.length }
+      return { successful, failed, total: bookings.length };
     } catch (error) {
-      console.error('Error in syncAllBookings:', error)
-      throw error
+      console.error('Error in syncAllBookings:', error);
+      throw error;
     }
   }
 
@@ -270,37 +270,37 @@ export class CalSupabaseWrapper {
   async handleWebhook(event: unknown) {
     try {
       if (!event || typeof event !== 'object' || !('type' in event) || !('data' in event)) {
-        throw new Error('Invalid webhook event format')
+        throw new Error('Invalid webhook event format');
       }
       
-      const { type, data } = event as { type: string; data: Record<string, unknown> }
+      const { type, data } = event as { type: string; data: Record<string, unknown> };
 
       switch (type) {
         case 'BOOKING_CREATED':
         case 'BOOKING_RESCHEDULED':
         case 'BOOKING_PAID':
-          await this.syncBookingToSupabase(data as unknown as CalBooking)
-          break
+          await this.syncBookingToSupabase(data as unknown as CalBooking);
+          break;
 
         case 'BOOKING_CANCELLED':
-          await this.handleBookingCancellation(data as unknown as CalBooking)
-          break
+          await this.handleBookingCancellation(data as unknown as CalBooking);
+          break;
 
         case 'BOOKING_REQUESTED':
-          await this.handleBookingRequest(data as unknown as CalBooking)
-          break
+          await this.handleBookingRequest(data as unknown as CalBooking);
+          break;
 
         default:
-          console.log('Unhandled webhook event:', type)
+          console.log('Unhandled webhook event:', type);
       }
 
-      return { success: true }
+      return { success: true };
     } catch (error) {
-      console.error('Error handling Cal.com webhook:', error)
+      console.error('Error handling Cal.com webhook:', error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error occurred', 
-      }
+      };
     }
   }
 
@@ -312,10 +312,10 @@ export class CalSupabaseWrapper {
         status: 'CANCELLED',
         updated_at: new Date().toISOString(),
       })
-      .eq('cal_booking_id', bookingData.id)
+      .eq('cal_booking_id', bookingData.id);
 
     if (error) {
-      console.error('Error updating cancelled booking:', error)
+      console.error('Error updating cancelled booking:', error);
     }
   }
 
@@ -324,7 +324,7 @@ export class CalSupabaseWrapper {
     await this.syncBookingToSupabase({
       ...bookingData,
       status: 'PENDING',
-    })
+    });
   }
 
   // Get booking analytics
@@ -332,27 +332,27 @@ export class CalSupabaseWrapper {
     try {
       let query = this.supabase
         .from('bookings')
-        .select('status, start_time, attendee_email')
+        .select('status, start_time, attendee_email');
 
       if (startDate) {
-        query = query.gte('start_time', startDate)
+        query = query.gte('start_time', startDate);
       }
       if (endDate) {
-        query = query.lte('start_time', endDate)
+        query = query.lte('start_time', endDate);
       }
 
-      const { data, error } = await query
+      const { data, error } = await query;
 
       if (error) {
-        console.error('Error fetching booking analytics:', error)
-        return null
+        console.error('Error fetching booking analytics:', error);
+        return null;
       }
 
-      const total = data?.length || 0
-      const confirmed = data?.filter(b => b.status === 'ACCEPTED').length || 0
-      const pending = data?.filter(b => b.status === 'PENDING').length || 0
-      const cancelled = data?.filter(b => b.status === 'CANCELLED').length || 0
-      const uniqueAttendees = new Set(data?.map(b => b.attendee_email)).size
+      const total = data?.length || 0;
+      const confirmed = data?.filter(b => b.status === 'ACCEPTED').length || 0;
+      const pending = data?.filter(b => b.status === 'PENDING').length || 0;
+      const cancelled = data?.filter(b => b.status === 'CANCELLED').length || 0;
+      const uniqueAttendees = new Set(data?.map(b => b.attendee_email)).size;
 
       return {
         total,
@@ -361,27 +361,27 @@ export class CalSupabaseWrapper {
         cancelled,
         uniqueAttendees,
         confirmationRate: total > 0 ? (confirmed / total) * 100 : 0,
-      }
+      };
     } catch (error) {
-      console.error('Error in getBookingAnalytics:', error)
-      return null
+      console.error('Error in getBookingAnalytics:', error);
+      return null;
     }
   }
 }
 
 // Singleton instance
-export const calSupabase = new CalSupabaseWrapper()
+export const calSupabase = new CalSupabaseWrapper();
 
 // Webhook handler for Next.js API routes
 export async function handleCalWebhook(req: Request) {
   try {
-    const body = await req.json()
-    return await calSupabase.handleWebhook(body)
+    const body = await req.json();
+    return await calSupabase.handleWebhook(body);
   } catch (error) {
-    console.error('Error in Cal.com webhook handler:', error)
+    console.error('Error in Cal.com webhook handler:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error occurred', 
-    }
+    };
   }
 }

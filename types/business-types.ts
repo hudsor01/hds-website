@@ -4,8 +4,8 @@
  * Types related to business logic, services, and core business concepts.
  */
 
-import type { ReactNode } from 'react'
-import { ServiceType, BudgetRange, LeadSource, ContentType, FileType } from './enum-types'
+import type { ReactNode } from 'react';
+import { ServiceType, BudgetRange, LeadSource, ContentType, FileType } from './enum-types';
 
 // ============= Service Types =============
 

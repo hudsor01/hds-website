@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useEffect, useState, useCallback } from 'react'
-import { Clock, Video, MapPin, Loader2 } from 'lucide-react'
-import { calConfig, isCalLoaded, waitForCal } from '@/lib/integrations/cal-config'
-import type { CalComWidgetProps, CalComButtonProps } from '@/types/cal-types'
+import { useEffect, useState, useCallback } from 'react';
+import { Clock, Video, MapPin, Loader2 } from 'lucide-react';
+import { calConfig, isCalLoaded, waitForCal } from '@/lib/integrations/cal-config';
+import type { CalComWidgetProps, CalComButtonProps } from '@/types/cal-types';
 
 /**
  * Cal.com inline embed widget component
@@ -24,126 +24,126 @@ export function CalComWidget({
   onDimensionChanged,
   onAllEvents,
 }: CalComWidgetProps) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const setupEventListeners = useCallback(() => {
-    if (!isCalLoaded()) return
+    if (!isCalLoaded()) return;
 
     // Set up all Cal.com embed event listeners
     if (onEventTypeSelected) {
       window.Cal!('on', {
         action: 'eventTypeSelected',
         callback: onEventTypeSelected,
-      })
+      });
     }
 
     if (onBookingSuccessful) {
       window.Cal!('on', {
         action: 'bookingSuccessful',
         callback: onBookingSuccessful,
-      })
+      });
     }
 
     if (onLinkReady) {
       window.Cal!('on', {
         action: 'linkReady',
         callback: onLinkReady,
-      })
+      });
     }
 
     if (onLinkFailed) {
       window.Cal!('on', {
         action: 'linkFailed',
         callback: onLinkFailed,
-      })
+      });
     }
 
     if (onDimensionChanged) {
       window.Cal!('on', {
         action: '__dimensionChanged',
         callback: onDimensionChanged,
-      })
+      });
     }
 
     if (onAllEvents) {
       window.Cal!('on', {
         action: '*',
         callback: onAllEvents,
-      })
+      });
     }
-  }, [onEventTypeSelected, onBookingSuccessful, onLinkReady, onLinkFailed, onDimensionChanged, onAllEvents])
+  }, [onEventTypeSelected, onBookingSuccessful, onLinkReady, onLinkFailed, onDimensionChanged, onAllEvents]);
 
   const loadCalScript = useCallback(async () => {
     try {
       // Check if script is already loaded
       if (isCalLoaded()) {
-        setupEventListeners()
-        setIsLoading(false)
-        onReady?.()
-        return
+        setupEventListeners();
+        setIsLoading(false);
+        onReady?.();
+        return;
       }
 
       // Check if script element already exists
-      const existingScript = document.querySelector(`script[src="${calConfig.embedScriptUrl}"]`)
+      const existingScript = document.querySelector(`script[src="${calConfig.embedScriptUrl}"]`);
       if (existingScript) {
-        await waitForCal()
-        setupEventListeners()
-        setIsLoading(false)
-        onReady?.()
-        return
+        await waitForCal();
+        setupEventListeners();
+        setIsLoading(false);
+        onReady?.();
+        return;
       }
 
       // Load the script
-      const script = document.createElement('script')
-      script.src = calConfig.embedScriptUrl
-      script.async = true
+      const script = document.createElement('script');
+      script.src = calConfig.embedScriptUrl;
+      script.async = true;
       
       script.onload = async () => {
         try {
-          await waitForCal()
-          setupEventListeners()
-          setIsLoading(false)
-          onReady?.()
+          await waitForCal();
+          setupEventListeners();
+          setIsLoading(false);
+          onReady?.();
         } catch (err) {
-          const error = err instanceof Error ? err : new Error('Failed to initialize Cal.com')
-          setError(error)
-          setIsLoading(false)
-          onError?.(error)
+          const error = err instanceof Error ? err : new Error('Failed to initialize Cal.com');
+          setError(error);
+          setIsLoading(false);
+          onError?.(error);
         }
-      }
+      };
 
       script.onerror = () => {
-        const error = new Error('Failed to load Cal.com script')
-        setError(error)
-        setIsLoading(false)
-        onError?.(error)
-      }
+        const error = new Error('Failed to load Cal.com script');
+        setError(error);
+        setIsLoading(false);
+        onError?.(error);
+      };
 
-      document.head.appendChild(script)
+      document.head.appendChild(script);
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unexpected error loading Cal.com')
-      setError(error)
-      setIsLoading(false)
-      onError?.(error)
+      const error = err instanceof Error ? err : new Error('Unexpected error loading Cal.com');
+      setError(error);
+      setIsLoading(false);
+      onError?.(error);
     }
-  }, [onReady, onError, setupEventListeners])
+  }, [onReady, onError, setupEventListeners]);
 
   useEffect(() => {
-    loadCalScript()
+    loadCalScript();
 
     return () => {
       // Cleanup is handled by Cal.com itself
       // Script remains in DOM for performance as recommended by Cal.com
-    }
-  }, [loadCalScript])
+    };
+  }, [loadCalScript]);
 
   const embedConfig = {
     ...calConfig.defaultEmbedConfig,
     hideEventTypeDetails,
     layout,
     theme,
-  }
+  };
 
   if (error) {
     return (
@@ -153,9 +153,9 @@ export function CalComWidget({
           <p className="text-sm text-red-600 mb-4">{error.message}</p>
           <button
             onClick={() => {
-              setError(null)
-              setIsLoading(true)
-              loadCalScript()
+              setError(null);
+              setIsLoading(true);
+              loadCalScript();
             }}
             className="px-4 py-2 bg-red-100 text-red-800 rounded hover:bg-red-200 transition-colors"
           >
@@ -163,7 +163,7 @@ export function CalComWidget({
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -188,7 +188,7 @@ export function CalComWidget({
         aria-label="Booking calendar"
       />
     </div>
-  )
+  );
 }
 
 /**
@@ -203,69 +203,69 @@ export function CalComButton({
   onBookingSuccess,
   onBookingError,
 }: CalComButtonProps) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const loadCalScript = useCallback(async () => {
     try {
       if (isCalLoaded()) {
-        setIsLoading(false)
-        return
+        setIsLoading(false);
+        return;
       }
 
-      const existingScript = document.querySelector(`script[src="${calConfig.embedScriptUrl}"]`)
+      const existingScript = document.querySelector(`script[src="${calConfig.embedScriptUrl}"]`);
       if (existingScript) {
-        await waitForCal()
-        setIsLoading(false)
-        return
+        await waitForCal();
+        setIsLoading(false);
+        return;
       }
 
-      const script = document.createElement('script')
-      script.src = calConfig.embedScriptUrl
-      script.async = true
+      const script = document.createElement('script');
+      script.src = calConfig.embedScriptUrl;
+      script.async = true;
       
       script.onload = async () => {
         try {
-          await waitForCal()
-          setIsLoading(false)
+          await waitForCal();
+          setIsLoading(false);
         } catch (err) {
-          const error = err instanceof Error ? err : new Error('Failed to initialize Cal.com')
-          setError(error)
-          setIsLoading(false)
-          onBookingError?.(error)
+          const error = err instanceof Error ? err : new Error('Failed to initialize Cal.com');
+          setError(error);
+          setIsLoading(false);
+          onBookingError?.(error);
         }
-      }
+      };
 
       script.onerror = () => {
-        const error = new Error('Failed to load Cal.com script')
-        setError(error)
-        setIsLoading(false)
-        onBookingError?.(error)
-      }
+        const error = new Error('Failed to load Cal.com script');
+        setError(error);
+        setIsLoading(false);
+        onBookingError?.(error);
+      };
 
-      document.head.appendChild(script)
+      document.head.appendChild(script);
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unexpected error loading Cal.com')
-      setError(error)
-      setIsLoading(false)
-      onBookingError?.(error)
+      const error = err instanceof Error ? err : new Error('Unexpected error loading Cal.com');
+      setError(error);
+      setIsLoading(false);
+      onBookingError?.(error);
     }
-  }, [onBookingError])
+  }, [onBookingError]);
 
   useEffect(() => {
-    loadCalScript()
-  }, [loadCalScript])
+    loadCalScript();
+  }, [loadCalScript]);
 
   const handleClick = useCallback(() => {
     if (error) {
-      onBookingError?.(error)
-      return
+      onBookingError?.(error);
+      return;
     }
 
     if (!isCalLoaded()) {
-      const loadError = new Error('Cal.com is not available')
-      onBookingError?.(loadError)
-      return
+      const loadError = new Error('Cal.com is not available');
+      onBookingError?.(loadError);
+      return;
     }
 
     try {
@@ -279,15 +279,15 @@ export function CalComButton({
             brandColor: calConfig.defaultBrandColor,
           },
         },
-      })
-      onBookingSuccess?.({})
+      });
+      onBookingSuccess?.({});
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to open booking modal')
-      onBookingError?.(error)
+      const error = err instanceof Error ? err : new Error('Failed to open booking modal');
+      onBookingError?.(error);
     }
-  }, [calLink, theme, error, onBookingSuccess, onBookingError])
+  }, [calLink, theme, error, onBookingSuccess, onBookingError]);
 
-  const isDisabled = isLoading || error !== null
+  const isDisabled = isLoading || error !== null;
 
   return (
     <>
@@ -313,7 +313,7 @@ export function CalComButton({
       
       <div id="cal-booking-modal" aria-live="polite" />
     </>
-  )
+  );
 }
 
 /**
@@ -370,25 +370,25 @@ export function ConsultationBooking() {
           onReady={() => console.log('Cal.com booking calendar ready')}
           onError={(error) => console.error('Cal.com error:', error)}
           onEventTypeSelected={(event) => {
-            console.log('Event type selected:', event.detail.data)
+            console.log('Event type selected:', event.detail.data);
             // Could track analytics here
           }}
           onBookingSuccessful={(event) => {
-            console.log('Booking successful:', event.detail.data)
+            console.log('Booking successful:', event.detail.data);
             // Could trigger success analytics or redirects here
           }}
           onLinkReady={(event) => {
-            console.log('Cal.com embed ready:', event.detail.data)
+            console.log('Cal.com embed ready:', event.detail.data);
           }}
           onLinkFailed={(event) => {
-            console.error('Cal.com embed failed:', event.detail.data)
+            console.error('Cal.com embed failed:', event.detail.data);
           }}
           onDimensionChanged={(event) => {
-            console.log('Embed dimensions changed:', event.detail.data)
+            console.log('Embed dimensions changed:', event.detail.data);
             // Could adjust container sizing here
           }}
           onAllEvents={(event) => {
-            console.log('Cal.com event:', event.detail.type, event.detail.data)
+            console.log('Cal.com event:', event.detail.type, event.detail.data);
             // Could send all events to analytics
           }}
         />
@@ -415,5 +415,5 @@ export function ConsultationBooking() {
         </div>
       </div>
     </div>
-  )
+  );
 }

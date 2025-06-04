@@ -1,16 +1,16 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import { MapPin, Phone, Mail, Clock, Calendar, CheckCircle, MessageSquare } from 'lucide-react'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { MapPin, Phone, Mail, Clock, Calendar, CheckCircle, MessageSquare } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Hudson Digital Solutions',
   description:
     'Get in touch with Hudson Digital Solutions for revenue operations and web development services in Dallas-Fort Worth.',
-}
+};
 
 // High-quality contact page image
-const CONTACT_IMAGE = 'https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2026&q=80'
+const CONTACT_IMAGE = 'https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2026&q=80';
 
 export default function ContactPage() {
   return (
@@ -391,5 +391,5 @@ export default function ContactPage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

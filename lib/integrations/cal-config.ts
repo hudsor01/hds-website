@@ -3,7 +3,7 @@
  * Centralized configuration for Cal.com integration with Atoms API support
  */
 
-import type { CalProviderConfig } from '@/types/cal-types'
+import type { CalProviderConfig } from '@/types/cal-types';
 
 export const calConfig = {
   // Default Cal.com username/event - can be overridden via props
@@ -74,7 +74,7 @@ export const calConfig = {
       calEventTypeId: 3,
     },
   },
-} as const
+} as const;
 
 /**
  * Cal.com Atoms CalProvider configuration
@@ -90,13 +90,13 @@ export const calProviderConfig: CalProviderConfig = {
   autoUpdateTimezone: true,
   language: 'en',
   organizationId: process.env.CAL_ORGANIZATION_ID,
-}
+};
 
 /**
  * Utility to check if Cal.com script is loaded
  */
 export function isCalLoaded(): boolean {
-  return typeof window !== 'undefined' && typeof window.Cal === 'function'
+  return typeof window !== 'undefined' && typeof window.Cal === 'function';
 }
 
 /**
@@ -105,19 +105,19 @@ export function isCalLoaded(): boolean {
 export function waitForCal(timeout = 5000): Promise<void> {
   return new Promise((resolve, reject) => {
     if (isCalLoaded()) {
-      resolve()
-      return
+      resolve();
+      return;
     }
 
-    const startTime = Date.now()
+    const startTime = Date.now();
     const checkInterval = setInterval(() => {
       if (isCalLoaded()) {
-        clearInterval(checkInterval)
-        resolve()
+        clearInterval(checkInterval);
+        resolve();
       } else if (Date.now() - startTime > timeout) {
-        clearInterval(checkInterval)
-        reject(new Error('Cal.com script failed to load within timeout'))
+        clearInterval(checkInterval);
+        reject(new Error('Cal.com script failed to load within timeout'));
       }
-    }, 100)
-  })
+    }, 100);
+  });
 }

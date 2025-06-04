@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+import { m } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 // Types
 export interface ContactInfo {
@@ -122,5 +122,5 @@ export function ContactCTA({
         </div>
       </div>
     </section>
-  )
+  );
 }

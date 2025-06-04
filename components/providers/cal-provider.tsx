@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Cal.com Atoms CalProvider Wrapper
@@ -7,10 +7,10 @@
  * This replaces the legacy embed script approach with better integration
  */
 
-import { CalProvider } from '@calcom/atoms'
-import '@calcom/atoms/globals.min.css'
-import { calProviderConfig } from '@/lib/integrations/cal-config'
-import { logger } from '@/lib/logger'
+import { CalProvider } from '@calcom/atoms';
+import '@calcom/atoms/globals.min.css';
+import { calProviderConfig } from '@/lib/integrations/cal-config';
+import { logger } from '@/lib/logger';
 
 interface CalProviderWrapperProps {
   children: React.ReactNode
@@ -21,16 +21,16 @@ export function CalProviderWrapper({ children }: CalProviderWrapperProps) {
   const hasRequiredConfig = Boolean(
     calProviderConfig.clientId && 
     calProviderConfig.options.apiUrl,
-  )
+  );
 
   if (!hasRequiredConfig) {
     // In development, warn about missing configuration
     if (process.env.NODE_ENV === 'development') {
-      logger.warn('Cal.com CalProvider not configured. Set CAL_OAUTH_CLIENT_ID environment variable.')
+      logger.warn('Cal.com CalProvider not configured. Set CAL_OAUTH_CLIENT_ID environment variable.');
     }
     
     // Render children without CalProvider for graceful degradation
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   return (
@@ -44,7 +44,7 @@ export function CalProviderWrapper({ children }: CalProviderWrapperProps) {
     >
       {children}
     </CalProvider>
-  )
+  );
 }
 
 /**
@@ -58,5 +58,5 @@ export function useCalProviderStatus() {
     ),
     hasAccessToken: Boolean(calProviderConfig.accessToken),
     organizationId: calProviderConfig.organizationId,
-  }
+  };
 }

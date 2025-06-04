@@ -28,12 +28,12 @@ class PerformanceMonitor {
       pageCount: 0,
       chunkCount: 0,
       largestChunks: [],
-      recommendations: []
+      recommendations: [],
     };
     
     this.performance = {
       score: 0,
-      grade: 'F'
+      grade: 'F',
     };
   }
 
@@ -98,7 +98,7 @@ class PerformanceMonitor {
       execSync('npm run build', { 
         cwd: projectRoot, 
         stdio: 'pipe',
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
       
       this.metrics.buildTime = Date.now() - startTime;
@@ -120,7 +120,7 @@ class PerformanceMonitor {
       execSync('npm run build', { 
         cwd: projectRoot, 
         stdio: 'pipe',
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
       
       this.metrics.buildTime = Date.now() - startTime;
@@ -180,7 +180,7 @@ class PerformanceMonitor {
             const stats = await fs.stat(filePath);
             chunks.push({
               name: file,
-              size: stats.size / 1024 // Convert to KB
+              size: stats.size / 1024, // Convert to KB
             });
           }
         }
@@ -264,7 +264,7 @@ class PerformanceMonitor {
       recommendations.push({
         type: 'Build Performance',
         message: 'Build time is over 2 minutes',
-        action: 'Consider optimizing dependencies and build configuration'
+        action: 'Consider optimizing dependencies and build configuration',
       });
     }
     
@@ -273,7 +273,7 @@ class PerformanceMonitor {
       recommendations.push({
         type: 'Bundle Size',
         message: 'Bundle size is over 500KB',
-        action: 'Consider code splitting and tree shaking'
+        action: 'Consider code splitting and tree shaking',
       });
     }
     
@@ -282,7 +282,7 @@ class PerformanceMonitor {
       recommendations.push({
         type: 'First Load JS',
         message: 'First load JS is over 250KB',
-        action: 'Consider lazy loading and dynamic imports'
+        action: 'Consider lazy loading and dynamic imports',
       });
     }
     
@@ -292,7 +292,7 @@ class PerformanceMonitor {
       recommendations.push({
         type: 'Large Chunks',
         message: `Found ${largeChunks.length} chunks over 100KB`,
-        action: 'Consider splitting large chunks with dynamic imports'
+        action: 'Consider splitting large chunks with dynamic imports',
       });
     }
     
@@ -346,13 +346,13 @@ class PerformanceMonitor {
     const metricsData = {
       timestamp: new Date().toISOString(),
       performance: this.performance,
-      metrics: this.metrics
+      metrics: this.metrics,
     };
     
     // Save current metrics
     await fs.writeFile(
       path.join(projectRoot, 'performance-metrics.json'),
-      JSON.stringify(metricsData, null, 2)
+      JSON.stringify(metricsData, null, 2),
     );
     
     // Append to history

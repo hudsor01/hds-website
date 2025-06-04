@@ -43,7 +43,7 @@ export const floatingAnimations = {
       ease: 'easeInOut',
     },
   },
-}
+};
 
 // Card animations
 export const cardAnimations = {
@@ -74,7 +74,7 @@ export const cardAnimations = {
     y: 0,
     scale: 1,
   },
-}
+};
 
 // Gradient background animations
 export const gradientAnimations = {
@@ -102,4 +102,4 @@ export const gradientAnimations = {
       damping: 30,
     },
   }),
-}
+};

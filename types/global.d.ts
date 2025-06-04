@@ -13,7 +13,7 @@ declare global {
     info(message?: any, ...optionalParams: any[]): void;
     debug(message?: any, ...optionalParams: any[]): void;
     trace(message?: any, ...optionalParams: any[]): void;
-  }
+  };
 
   interface Window {
     // Google Analytics
@@ -137,14 +137,14 @@ declare global {
 
 // Augment module types
 declare module '*.svg' {
-  const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>
-  export default content
+  const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
+  export default content;
 }
 
 declare module '*.css' {
-  const content: { [className: string]: string }
-  export default content
+  const content: { [className: string]: string };
+  export default content;
 }
 
 // Make TypeScript treat this file as a module
-export {}
+export {};

@@ -1,20 +1,20 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowRight, CheckCircle, TrendingUp, Users, Zap, BarChart3, Clock, Award, Star, Play, Shield, Target, DollarSign, Phone, Mail, MapPin, ChevronRight, ExternalLink } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { HomepageServices } from '@/components/sections/homepage-services'
-import { HeroHighlight, Highlight } from '@/components/aceternity/hero-highlight'
-import { TestimonialsSection } from '@/components/sections/testimonials-section'
-import { StatsGrid, defaultBusinessStats } from '@/components/sections/count-up-modernized'
-import { ContactForm } from '@/components/forms/contact-form'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle, TrendingUp, Users, Zap, BarChart3, Clock, Award, Star, Play, Shield, Target, DollarSign, Phone, Mail, MapPin, ChevronRight, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { HomepageServices } from '@/components/sections/homepage-services';
+import { HeroHighlight, Highlight } from '@/components/aceternity/hero-highlight';
+import { TestimonialsSection } from '@/components/sections/testimonials-section';
+import { StatsGrid, defaultBusinessStats } from '@/components/sections/count-up-modernized';
+import { ContactForm } from '@/components/forms/contact-form';
 
 export const metadata: Metadata = {
   title: 'Hudson Digital Solutions | Revenue Operations & Business Automation Experts',
   description: '10 years of enterprise RevOps experience from Thryv. Transform your business with proven automation, CRM systems, and growth strategies for small businesses in Dallas-Fort Worth.',
   keywords: 'revenue operations, business automation, CRM systems, web development, data analytics, Dallas Fort Worth, small business growth, sales automation',
-}
+};
 
 export default function HomePage() {
   return (
@@ -578,5 +578,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

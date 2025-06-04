@@ -5,7 +5,7 @@
  * and booking management systems.
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // ============= Cal.com Event Types =============
 
@@ -357,7 +357,7 @@ export const calConfigSchema = z.object({
     customInputs: z.record(z.any()).optional(),
   }).optional(),
   debug: z.boolean().optional(),
-})
+});
 
 /**
  * Booking service validation schema
@@ -374,7 +374,7 @@ export const bookingServiceSchema = z.object({
   features: z.array(z.string()).optional(),
   eventTypeId: z.number().positive().optional(),
   calendarId: z.string().optional(),
-})
+});
 
 // ============= Type Exports =============
 
@@ -382,4 +382,4 @@ export type CalConfigInput = z.infer<typeof calConfigSchema>
 export type BookingServiceInput = z.infer<typeof bookingServiceSchema>
 
 // Re-export commonly used types from cal-types for convenience
-export type { CalService, CalBookingState } from '@/types/cal-types'
+export type { CalService, CalBookingState } from '@/types/cal-types';

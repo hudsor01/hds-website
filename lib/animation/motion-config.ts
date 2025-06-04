@@ -3,7 +3,7 @@
  * Professional animation system for Hudson Digital Solutions
  */
 
-import type { Variants, Transition } from 'framer-motion'
+import type { Variants, Transition } from 'framer-motion';
 
 // Animation Timing Constants
 export const MOTION_TIMING = {
@@ -11,7 +11,7 @@ export const MOTION_TIMING = {
   normal: 0.4,
   slow: 0.6,
   verySlow: 0.8,
-} as const
+} as const;
 
 // Easing Curves - Professional and smooth
 export const MOTION_EASING = {
@@ -19,24 +19,24 @@ export const MOTION_EASING = {
   bounce: [0.68, -0.55, 0.265, 1.55],
   sharp: [0.4, 0, 0.2, 1],
   ease: [0.4, 0, 0.6, 1],
-} as const
+} as const;
 
 // Base Transitions
 export const baseTransition: Transition = {
   duration: MOTION_TIMING.normal,
   ease: MOTION_EASING.smooth,
-}
+};
 
 export const springTransition: Transition = {
   type: 'spring',
   stiffness: 300,
   damping: 30,
-}
+};
 
 export const slowTransition: Transition = {
   duration: MOTION_TIMING.slow,
   ease: MOTION_EASING.ease,
-}
+};
 
 // Page Animation Variants
 export const pageVariants: Variants = {
@@ -57,7 +57,7 @@ export const pageVariants: Variants = {
     y: -20,
     transition: baseTransition,
   },
-}
+};
 
 // Container Animation Variants
 export const containerVariants: Variants = {
@@ -71,7 +71,7 @@ export const containerVariants: Variants = {
       delayChildren: 0.1,
     },
   },
-}
+};
 
 // Fade In Variants
 export const fadeInVariants: Variants = {
@@ -84,7 +84,7 @@ export const fadeInVariants: Variants = {
     y: 0,
     transition: baseTransition,
   },
-}
+};
 
 // Slide In Variants - separate variants for each direction
 export const slideInVariants = {
@@ -132,7 +132,7 @@ export const slideInVariants = {
       transition: baseTransition,
     },
   } as Variants,
-}
+};
 
 // Scale Animation Variants
 export const scaleVariants: Variants = {
@@ -152,7 +152,7 @@ export const scaleVariants: Variants = {
   tap: {
     scale: 0.95,
   },
-}
+};
 
 // Card Animation Variants
 export const cardVariants: Variants = {
@@ -175,7 +175,7 @@ export const cardVariants: Variants = {
     rotateX: 5,
     transition: { duration: MOTION_TIMING.fast },
   },
-}
+};
 
 // Hero Animation Variants
 export const heroVariants: Variants = {
@@ -191,7 +191,7 @@ export const heroVariants: Variants = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 // Text Animation Variants
 export const textVariants: Variants = {
@@ -204,7 +204,7 @@ export const textVariants: Variants = {
     y: 0,
     transition: baseTransition,
   },
-}
+};
 
 // Stagger Animation Variants
 export const staggerVariants: Variants = {
@@ -218,7 +218,7 @@ export const staggerVariants: Variants = {
       delayChildren: 0.2,
     },
   },
-}
+};
 
 // Navigation Animation Variants
 export const navVariants: Variants = {
@@ -234,7 +234,7 @@ export const navVariants: Variants = {
       staggerChildren: 0.05,
     },
   },
-}
+};
 
 // Button Animation Variants
 export const buttonVariants: Variants = {
@@ -254,7 +254,7 @@ export const buttonVariants: Variants = {
   tap: {
     scale: 0.95,
   },
-}
+};
 
 // Form Animation Variants
 export const formVariants: Variants = {
@@ -270,7 +270,7 @@ export const formVariants: Variants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 // Modal Animation Variants
 export const modalVariants: Variants = {
@@ -291,7 +291,7 @@ export const modalVariants: Variants = {
     y: 50,
     transition: baseTransition,
   },
-}
+};
 
 // Loading Animation Variants
 export const loadingVariants: Variants = {
@@ -306,7 +306,7 @@ export const loadingVariants: Variants = {
       repeatType: 'reverse',
     },
   },
-}
+};
 
 // Floating Animation for decorative elements
 export const floatingVariants: Variants = {
@@ -318,7 +318,7 @@ export const floatingVariants: Variants = {
       ease: 'easeInOut',
     },
   },
-}
+};
 
 // Parallax-style variants
 export const parallaxVariants: Variants = {
@@ -334,4 +334,4 @@ export const parallaxVariants: Variants = {
       ease: MOTION_EASING.ease,
     },
   },
-}
+};

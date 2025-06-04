@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { TrendingUp } from 'lucide-react'
-import { RadialBar, RadialBarChart } from 'recharts'
+import { TrendingUp } from 'lucide-react';
+import { RadialBar, RadialBarChart } from 'recharts';
 
 import {
   Card,
@@ -10,15 +10,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from '@/components/ui/chart';
 
-export const description = 'A radial chart showing project completion rates'
+export const description = 'A radial chart showing project completion rates';
 
 const completionData = [
   { category: 'web_dev', completed: 85, fill: 'var(--color-web_dev)' },
@@ -26,7 +26,7 @@ const completionData = [
   { category: 'revops', completed: 78, fill: 'var(--color-revops)' },
   { category: 'consulting', completed: 89, fill: 'var(--color-consulting)' },
   { category: 'maintenance', completed: 95, fill: 'var(--color-maintenance)' },
-]
+];
 
 const chartConfig = {
   completed: {
@@ -52,12 +52,12 @@ const chartConfig = {
     label: 'Maintenance',
     color: 'var(--chart-5)',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartRadialSimple() {
   const averageCompletion = Math.round(
     completionData.reduce((acc, curr) => acc + curr.completed, 0) / completionData.length,
-  )
+  );
 
   return (
     <Card className='flex flex-col'>
@@ -88,5 +88,5 @@ export function ChartRadialSimple() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

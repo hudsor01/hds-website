@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { Star, Quote } from 'lucide-react'
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { Star, Quote } from 'lucide-react';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel'
+} from '@/components/ui/carousel';
 
 // Interface for testimonial data
 interface Testimonial {
@@ -66,7 +66,7 @@ const testimonials: Testimonial[] = [
     image: '/images/default-avatar.jpg',
     rating: 5,
   },
-]
+];
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
@@ -113,7 +113,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 interface TestimonialsCarouselProps {
@@ -127,31 +127,31 @@ export function TestimonialsCarousel({
   autoPlayInterval = 5000,
   className,
 }: TestimonialsCarouselProps) {
-  const [api, setApi] = useState<unknown>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
+  const [api, setApi] = useState<unknown>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!api) return
+    if (!api) return;
 
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
 
     api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
 
   // Auto-play functionality
   useEffect(() => {
     if (autoPlay && api) {
       const interval = setInterval(() => {
-        api.scrollNext()
-      }, autoPlayInterval)
+        api.scrollNext();
+      }, autoPlayInterval);
 
-      return () => clearInterval(interval)
+      return () => clearInterval(interval);
     }
-  }, [api, autoPlay, autoPlayInterval])
+  }, [api, autoPlay, autoPlayInterval]);
 
   return (
     <section
@@ -207,5 +207,5 @@ export function TestimonialsCarousel({
         </Carousel>
       </div>
     </section>
-  )
+  );
 }

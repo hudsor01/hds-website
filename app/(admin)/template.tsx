@@ -5,26 +5,26 @@
  * Includes theme provider and provider setup
  */
 
-'use client'
+'use client';
 
-import React, { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
-import { ThemeProvider } from 'next-themes'
+import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { ThemeProvider } from 'next-themes';
 
 interface AdminTemplateProps {
   children: React.ReactNode
 }
 
 export default function AdminTemplate({ children }: AdminTemplateProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
     // This effect runs on every route change within the admin section
     if (typeof window !== 'undefined') {
-      console.log(`Admin page view: ${pathname}`)
-      window.scrollTo(0, 0)
+      console.log(`Admin page view: ${pathname}`);
+      window.scrollTo(0, 0);
     }
-  }, [pathname])
+  }, [pathname]);
 
   return (
     <ThemeProvider
@@ -37,5 +37,5 @@ export default function AdminTemplate({ children }: AdminTemplateProps) {
         {children}
       </div>
     </ThemeProvider>
-  )
+  );
 }

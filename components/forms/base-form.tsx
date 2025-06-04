@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import type { ReactNode } from 'react'
-import type { FieldValues, UseFormReturn } from 'react-hook-form'
-import type { Variant } from '@/types/enum-types'
-import { Form } from '@/components/ui/form'
+import type { ReactNode } from 'react';
+import type { FieldValues, UseFormReturn } from 'react-hook-form';
+import type { Variant } from '@/types/enum-types';
+import { Form } from '@/components/ui/form';
 import {
   Card,
   CardHeader,
@@ -11,8 +11,8 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export interface BaseFormProps<T extends FieldValues> {
   form: UseFormReturn<T>
@@ -61,24 +61,24 @@ export function BaseForm<T extends FieldValues>({
         ? 'border-gray-600 bg-transparent'
         : 'border-gray-200 bg-transparent',
       ghost: 'border-transparent bg-transparent',
-    }
+    };
 
     // Text colors based on dark mode
-    const textStyles = darkMode ? 'text-white' : 'text-gray-900'
+    const textStyles = darkMode ? 'text-white' : 'text-gray-900';
 
     // Input styles based on dark mode
     const inputStyles = darkMode
       ? 'bg-gray-700 border-gray-600 text-white'
-      : 'bg-white border-gray-200 text-gray-900'
+      : 'bg-white border-gray-200 text-gray-900';
 
     return {
       container: cn('rounded-lg', variantStyles[variant]),
       text: textStyles,
       input: inputStyles,
-    }
-  }
+    };
+  };
 
-  const styles = getStyles()
+  const styles = getStyles();
 
   // Render as Card if isCard is true
   if (isCard) {
@@ -99,7 +99,7 @@ export function BaseForm<T extends FieldValues>({
         </CardContent>
         {footer && <CardFooter>{footer}</CardFooter>}
       </Card>
-    )
+    );
   }
 
   // Render as regular div if isCard is false
@@ -122,5 +122,5 @@ export function BaseForm<T extends FieldValues>({
       </Form>
       {footer && <div className='pt-4'>{footer}</div>}
     </div>
-  )
+  );
 }

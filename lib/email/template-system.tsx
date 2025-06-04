@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import type { ReactNode } from 'react'
+import type { ReactNode } from 'react';
 
 // ====== Common Types =======
 
@@ -85,11 +85,11 @@ export function EmailLayout({
   accentColor = '#2563eb',
   children,
 }: LayoutProps) {
-  const year = new Date().getFullYear()
-  const footerDefaultText = `© ${year} Hudson Digital Solutions. All rights reserved.`
+  const year = new Date().getFullYear();
+  const footerDefaultText = `© ${year} Hudson Digital Solutions. All rights reserved.`;
   
   // Ensure accentColor is recognized as used (it's used in template HTML below)
-  void accentColor
+  void accentColor;
 
   // Generate HTML for components
   const html = `
@@ -172,9 +172,9 @@ export function EmailLayout({
         </table>
       </body>
     </html>
-  `
+  `;
 
-  return html
+  return html;
 }
 
 /**
@@ -186,14 +186,14 @@ export function Heading({
   align = 'left',
   color,
 }: HeadingProps) {
-  const fontSize = level === 1 ? '28px' : level === 2 ? '22px' : '18px'
-  const marginBottom = level === 1 ? '25px' : '20px'
-  const fontWeight = level === 3 ? '600' : '700'
+  const fontSize = level === 1 ? '28px' : level === 2 ? '22px' : '18px';
+  const marginBottom = level === 1 ? '25px' : '20px';
+  const fontWeight = level === 3 ? '600' : '700';
 
-  const styleAttr = `font-size: ${fontSize}; font-weight: ${fontWeight}; margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};${color ? ` color: ${color};` : ''}`
+  const styleAttr = `font-size: ${fontSize}; font-weight: ${fontWeight}; margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};${color ? ` color: ${color};` : ''}`;
 
-  const tag = `h${level}`
-  return `<${tag} style="${styleAttr}">${children}</${tag}>`
+  const tag = `h${level}`;
+  return `<${tag} style="${styleAttr}">${children}</${tag}>`;
 }
 
 /**
@@ -208,7 +208,7 @@ export function Paragraph({
   align?: 'left' | 'center' | 'right'
   marginBottom?: string
 }) {
-  return `<p style="margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};">${children}</p>`
+  return `<p style="margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};">${children}</p>`;
 }
 
 /**
@@ -235,7 +235,7 @@ export function Button({
         </td>
       </tr>
     </table>
-  `
+  `;
 }
 
 /**
@@ -254,7 +254,7 @@ export function Section({
     <div style='background-color: ${backgroundColor}; padding: ${padding}; margin-top: ${marginTop}; margin-bottom: ${marginBottom}; border: ${border}; border-radius: ${borderRadius};'>
       ${children}
     </div>
-  `
+  `;
 }
 
 /**
@@ -264,7 +264,7 @@ export function Divider({
   color = '#e5e7eb',
   margin = '25px 0',
 }: DividerProps) {
-  return `<hr style="border: 0; border-top: 1px solid ${color}; margin: ${margin};"/>`
+  return `<hr style="border: 0; border-top: 1px solid ${color}; margin: ${margin};"/>`;
 }
 
 /**
@@ -280,7 +280,7 @@ export function Image({
   border,
   borderRadius,
 }: ImageProps) {
-  const styleAttr = `max-width: ${maxWidth}; height: auto;${width ? ` width: ${typeof width === 'number' ? `${width}px` : width};` : ''}${height ? ` height: ${typeof height === 'number' ? `${height}px` : height};` : ''}${border ? ` border: ${border};` : ''}${borderRadius ? ` border-radius: ${borderRadius};` : ''}`
+  const styleAttr = `max-width: ${maxWidth}; height: auto;${width ? ` width: ${typeof width === 'number' ? `${width}px` : width};` : ''}${height ? ` height: ${typeof height === 'number' ? `${height}px` : height};` : ''}${border ? ` border: ${border};` : ''}${borderRadius ? ` border-radius: ${borderRadius};` : ''}`;
 
   return `
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
@@ -290,7 +290,7 @@ export function Image({
         </td>
       </tr>
     </table>
-  `
+  `;
 }
 
 /**
@@ -307,8 +307,8 @@ export function List({
 }) {
   const listItems = items
     .map(item => `<li style="margin-bottom: ${spacing};">${item}</li>`)
-    .join('')
-  return `<${type} style="padding-left: 20px; margin-bottom: 20px;">${listItems}</${type}>`
+    .join('');
+  return `<${type} style="padding-left: 20px; margin-bottom: 20px;">${listItems}</${type}>`;
 }
 
 /**
@@ -327,7 +327,7 @@ export function Blockquote({
     <blockquote style="margin: 20px 0; padding: 15px; background-color: ${backgroundColor}; border-left: 4px solid ${borderColor}">
       ${children}
     </blockquote>
-  `
+  `;
 }
 
 /**
@@ -351,7 +351,7 @@ export function TwoColumns({
         </td>
       </tr>
     </table>
-  `
+  `;
 }
 
 // ====== Pre-built Email Templates =======
@@ -391,7 +391,7 @@ export function SimpleMessage({
     ${imageUrl ? Image({ src: imageUrl, alt: imageAlt || heading }) : ''}
     ${Paragraph({ children: message })}
     ${buttonText && buttonUrl ? Button({ href: buttonUrl, color: accentColor, children: buttonText }) : ''}
-  `
+  `;
 
   return EmailLayout({
     title,
@@ -401,7 +401,7 @@ export function SimpleMessage({
     logoUrl,
     accentColor,
     children: content,
-  })
+  });
 }
 
 /**
@@ -432,7 +432,7 @@ export function ContactFormConfirmation({
     })}
     ${Paragraph({ children: 'We typically respond within 1 business day.' })}
     ${Paragraph({ children: 'Best regards,<br>The Hudson Digital Solutions Team' })}
-  `
+  `;
 
   return EmailLayout({
     title: 'Thank you for your message',
@@ -441,7 +441,7 @@ export function ContactFormConfirmation({
     logoUrl,
     accentColor,
     children: content,
-  })
+  });
 }
 
 /**
@@ -458,7 +458,7 @@ export function NewsletterWelcome({
   logoUrl?: string
   accentColor?: string
 }) {
-  const greeting = name ? `Hi ${name},` : 'Hello,'
+  const greeting = name ? `Hi ${name},` : 'Hello,';
 
   const content = `
     ${Heading({ children: 'Welcome to Our Newsletter!', level: 1, color: accentColor })}
@@ -479,7 +479,7 @@ export function NewsletterWelcome({
       children: 'Explore Our Resources',
       color: accentColor,
     })}
-  `
+  `;
 
   return EmailLayout({
     title: 'Welcome to the Hudson Digital Solutions Newsletter',
@@ -488,7 +488,7 @@ export function NewsletterWelcome({
     logoUrl,
     accentColor,
     children: content,
-  })
+  });
 }
 
 /**
@@ -509,7 +509,7 @@ export function LeadMagnetDelivery({
   logoUrl?: string
   accentColor?: string
 }) {
-  const greeting = name ? `Hi ${name},` : 'Hello,'
+  const greeting = name ? `Hi ${name},` : 'Hello,';
 
   const content = `
     ${Heading({ children: `Your ${resourceName} is Ready!`, level: 1, color: accentColor })}
@@ -534,7 +534,7 @@ export function LeadMagnetDelivery({
       children: 'Contact Us',
       color: accentColor,
     })}
-  `
+  `;
 
   return EmailLayout({
     title: `Your Requested Resource: ${resourceName}`,
@@ -543,7 +543,7 @@ export function LeadMagnetDelivery({
     logoUrl,
     accentColor,
     children: content,
-  })
+  });
 }
 
 /**
@@ -554,12 +554,12 @@ export function renderEmailTemplate(
   dynamicFields: Record<string, string> = {},
 ): string {
   // Replace dynamic fields in template
-  let renderedTemplate = template
+  let renderedTemplate = template;
 
   for (const [key, value] of Object.entries(dynamicFields)) {
-    const regex = new RegExp(`{${key}}`, 'g')
-    renderedTemplate = renderedTemplate.replace(regex, value)
+    const regex = new RegExp(`{${key}}`, 'g');
+    renderedTemplate = renderedTemplate.replace(regex, value);
   }
 
-  return renderedTemplate
+  return renderedTemplate;
 }

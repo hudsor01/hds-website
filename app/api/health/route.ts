@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { headers } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 interface HealthCheck {
   name: string
@@ -18,13 +18,13 @@ interface HealthResponse {
   checks: HealthCheck[]
 }
 
-const startTime = Date.now()
+const startTime = Date.now();
 
 export async function GET(_request: NextRequest) {
-  const headersList = await headers()
-  const host = headersList.get('host')
+  const headersList = await headers();
+  const host = headersList.get('host');
 
-  const checks: HealthCheck[] = []
+  const checks: HealthCheck[] = [];
 
   // Check application health
   checks.push({
@@ -35,32 +35,32 @@ export async function GET(_request: NextRequest) {
       nodeVersion: process.version,
       nextVersion: process.env.NEXT_RUNTIME,
     },
-  })
+  });
 
   // Check environment variables
-  const envCheck = checkEnvironmentVariables()
-  checks.push(envCheck)
+  const envCheck = checkEnvironmentVariables();
+  checks.push(envCheck);
 
   // Check email service
-  const emailCheck = await checkEmailService()
-  checks.push(emailCheck)
+  const emailCheck = await checkEmailService();
+  checks.push(emailCheck);
 
   // Check external APIs
-  const apiCheck = await checkExternalAPIs()
-  checks.push(apiCheck)
+  const apiCheck = await checkExternalAPIs();
+  checks.push(apiCheck);
 
   // Check memory usage
-  const memoryCheck = checkMemoryUsage()
-  checks.push(memoryCheck)
+  const memoryCheck = checkMemoryUsage();
+  checks.push(memoryCheck);
 
   // Determine overall health status
-  const statuses = checks.map(check => check.status)
-  let overallStatus: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
+  const statuses = checks.map(check => check.status);
+  let overallStatus: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
 
   if (statuses.includes('unhealthy')) {
-    overallStatus = 'unhealthy'
+    overallStatus = 'unhealthy';
   } else if (statuses.includes('degraded')) {
-    overallStatus = 'degraded'
+    overallStatus = 'degraded';
   }
 
   const response: HealthResponse = {
@@ -70,7 +70,7 @@ export async function GET(_request: NextRequest) {
     environment: process.env.NODE_ENV || 'development',
     uptime: Date.now() - startTime,
     checks,
-  }
+  };
 
   return NextResponse.json(response, {
     status: overallStatus === 'healthy' ? 200 : 503,
@@ -78,20 +78,20 @@ export async function GET(_request: NextRequest) {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       'X-Health-Status': overallStatus,
     },
-  })
+  });
 }
 
 function checkEnvironmentVariables(): HealthCheck {
-  const requiredEnvVars = ['RESEND_API_KEY']
+  const requiredEnvVars = ['RESEND_API_KEY'];
 
-  const missingVars = requiredEnvVars.filter(varName => !process.env[varName])
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
   if (missingVars.length > 0) {
     return {
       name: 'environment',
       status: 'unhealthy',
       error: `Missing required environment variables: ${missingVars.join(', ')}`,
-    }
+    };
   }
 
   return {
@@ -100,11 +100,11 @@ function checkEnvironmentVariables(): HealthCheck {
     details: {
       requiredVarsPresent: true,
     },
-  }
+  };
 }
 
 async function checkEmailService(): Promise<HealthCheck> {
-  const start = Date.now()
+  const start = Date.now();
 
   try {
     // Check if Resend API key is valid by making a simple API call
@@ -114,9 +114,9 @@ async function checkEmailService(): Promise<HealthCheck> {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-    })
+    });
 
-    const responseTime = Date.now() - start
+    const responseTime = Date.now() - start;
 
     if (response.ok) {
       return {
@@ -127,7 +127,7 @@ async function checkEmailService(): Promise<HealthCheck> {
           provider: 'Resend',
           apiStatus: response.status,
         },
-      }
+      };
     } else {
       return {
         name: 'email_service',
@@ -138,7 +138,7 @@ async function checkEmailService(): Promise<HealthCheck> {
           provider: 'Resend',
           apiStatus: response.status,
         },
-      }
+      };
     }
   } catch (error) {
     return {
@@ -146,12 +146,12 @@ async function checkEmailService(): Promise<HealthCheck> {
       status: 'unhealthy',
       responseTime: Date.now() - start,
       error: error instanceof Error ? error.message : 'Unknown error',
-    }
+    };
   }
 }
 
 async function checkExternalAPIs(): Promise<HealthCheck> {
-  const start = Date.now()
+  const start = Date.now();
 
   try {
     // Check if Resend is reachable (our primary email service)
@@ -161,9 +161,9 @@ async function checkExternalAPIs(): Promise<HealthCheck> {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-    })
+    });
 
-    const responseTime = Date.now() - start
+    const responseTime = Date.now() - start;
 
     if (response.status === 200 || response.status === 401) {
       // 401 means API key issue but service is reachable
@@ -174,7 +174,7 @@ async function checkExternalAPIs(): Promise<HealthCheck> {
         details: {
           resend: 'reachable',
         },
-      }
+      };
     } else {
       return {
         name: 'external_apis',
@@ -183,7 +183,7 @@ async function checkExternalAPIs(): Promise<HealthCheck> {
         details: {
           resend: `unexpected status ${response.status}`,
         },
-      }
+      };
     }
   } catch (error) {
     return {
@@ -191,28 +191,28 @@ async function checkExternalAPIs(): Promise<HealthCheck> {
       status: 'unhealthy',
       responseTime: Date.now() - start,
       error: error instanceof Error ? error.message : 'Unknown error',
-    }
+    };
   }
 }
 
 function checkMemoryUsage(): HealthCheck {
-  const used = process.memoryUsage()
-  const totalHeap = used.heapTotal
-  const usedHeap = used.heapUsed
-  const externalMemory = used.external
-  const rss = used.rss
+  const used = process.memoryUsage();
+  const totalHeap = used.heapTotal;
+  const usedHeap = used.heapUsed;
+  const externalMemory = used.external;
+  const rss = used.rss;
 
-  const heapUsagePercent = (usedHeap / totalHeap) * 100
+  const heapUsagePercent = (usedHeap / totalHeap) * 100;
 
   // Set thresholds
-  const warningThreshold = 80
-  const criticalThreshold = 95
+  const warningThreshold = 80;
+  const criticalThreshold = 95;
 
-  let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
+  let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
   if (heapUsagePercent >= criticalThreshold) {
-    status = 'unhealthy'
+    status = 'unhealthy';
   } else if (heapUsagePercent >= warningThreshold) {
-    status = 'degraded'
+    status = 'degraded';
   }
 
   return {
@@ -225,5 +225,5 @@ function checkMemoryUsage(): HealthCheck {
       external: `${Math.round(externalMemory / 1024 / 1024)}MB`,
       rss: `${Math.round(rss / 1024 / 1024)}MB`,
     },
-  }
+  };
 }

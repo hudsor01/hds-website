@@ -1,24 +1,24 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Download, CheckCircle, Loader2 } from 'lucide-react'
-import Image from 'next/image'
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Download, CheckCircle, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 
-import { Button } from '@/components/ui/button'
-import { BaseForm } from '@/components/forms/base-form'
+import { Button } from '@/components/ui/button';
+import { BaseForm } from '@/components/forms/base-form';
 import {
   TextField,
   FormRow,
-} from '@/components/forms/form-fields'
-import { useFormSubmission } from '@/hooks/use-form-submission'
+} from '@/components/forms/form-fields';
+import { useFormSubmission } from '@/hooks/use-form-submission';
 import {
   leadMagnetSchema,
   type LeadMagnetFormValues,
-} from '@/lib/validation/form-schemas'
-import { cn } from '@/lib/utils'
-import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
+} from '@/lib/validation/form-schemas';
+import { cn } from '@/lib/utils';
+import { FormErrorBoundary } from '@/components/error/route-error-boundaries';
 
 export type LeadMagnetResource = {
   id: string
@@ -67,14 +67,14 @@ export function LeadMagnetForm({
       ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'form_error', {
         form_name: 'lead_magnet_form',
         error_message: error.message,
-      })
+      });
     }
     
     // Call the original onError if provided
     if (onError) {
-      onError(error)
+      onError(error);
     }
-  }
+  };
   // Use the form submission hook
   const {
     submit,
@@ -87,7 +87,7 @@ export function LeadMagnetForm({
     successMessage,
     onSuccess,
     onError,
-  })
+  });
 
   // Create form with react-hook-form
   const form = useForm<LeadMagnetFormValues>({
@@ -97,7 +97,7 @@ export function LeadMagnetForm({
       email: '',
       company: '',
     },
-  })
+  });
 
   // Handle form submission
   const onSubmit = async (data: LeadMagnetFormValues) => {
@@ -105,12 +105,12 @@ export function LeadMagnetForm({
     await submit({
       ...data,
       resourceId: resource.id,
-    })
-  }
+    });
+  };
 
   // If form is submitted, show download button
   if (isSubmitted) {
-    const downloadUrl = `/resources/${resource.fileName}`
+    const downloadUrl = `/resources/${resource.fileName}`;
 
     return (
       <FormErrorBoundary
@@ -169,7 +169,7 @@ export function LeadMagnetForm({
         </div>
         </div>
       </FormErrorBoundary>
-    )
+    );
   }
 
   // Render the form
@@ -293,5 +293,5 @@ export function LeadMagnetForm({
       </p>
       </BaseForm>
     </FormErrorBoundary>
-  )
+  );
 }

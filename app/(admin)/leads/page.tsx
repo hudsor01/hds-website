@@ -5,17 +5,17 @@
  * Following shadcn/ui data table patterns with real tRPC integration
  */
 
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Skeleton } from '@/components/ui/skeleton'
-import { toast } from '@/components/ui/use-toast'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from '@/components/ui/use-toast';
 import { 
   Plus, 
   Download, 
@@ -28,9 +28,9 @@ import {
   ChevronLeft,
   ChevronRight,
   MoreHorizontal,
-} from 'lucide-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { api } from '@/lib/trpc/client'
+} from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { api } from '@/lib/trpc/client';
 
 type LeadStatus = 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'PROPOSAL_SENT' | 'WON' | 'LOST' | 'UNRESPONSIVE'
 
@@ -42,22 +42,22 @@ const statusColors: Record<LeadStatus, string> = {
   WON: 'bg-emerald-100 text-emerald-800',
   LOST: 'bg-red-100 text-red-800',
   UNRESPONSIVE: 'bg-gray-100 text-gray-800',
-}
+};
 
 const serviceOptions = [
   { value: 'web', label: 'Web Development' },
   { value: 'revops', label: 'Revenue Operations' },
   { value: 'analytics', label: 'Data Analytics' },
   { value: 'consulting', label: 'Consulting' },
-]
+];
 
 export default function LeadsPage() {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
     status: '' as LeadStatus | '',
     service: '',
     search: '',
-  })
+  });
 
   // Fetch leads data
   const { data: leadsData, isLoading: leadsLoading, refetch: refetchLeads } = api.admin.getLeads.useQuery({
@@ -66,49 +66,49 @@ export default function LeadsPage() {
     ...(filters.status && { status: filters.status }),
     ...(filters.service && { service: filters.service }),
     ...(filters.search && { search: filters.search }),
-  })
+  });
 
   // Fetch lead analytics
-  const { data: analytics, isLoading: analyticsLoading } = api.admin.getLeadAnalytics.useQuery({})
+  const { data: analytics, isLoading: analyticsLoading } = api.admin.getLeadAnalytics.useQuery({});
 
   // Update lead status mutation
   const updateStatusMutation = api.admin.updateLeadStatus.useMutation({
     onSuccess: () => {
-      toast({ title: 'Success', description: 'Lead status updated successfully' })
-      refetchLeads()
+      toast({ title: 'Success', description: 'Lead status updated successfully' });
+      refetchLeads();
     },
     onError: (error) => {
       toast({ 
         title: 'Error', 
         description: error.message || 'Failed to update lead status',
         variant: 'destructive',
-      })
+      });
     },
-  })
+  });
 
   const handleStatusUpdate = (leadId: string, newStatus: LeadStatus) => {
-    updateStatusMutation.mutate({ id: leadId, status: newStatus })
-  }
+    updateStatusMutation.mutate({ id: leadId, status: newStatus });
+  };
 
   const handleFilterChange = (key: string, value: string) => {
-    setFilters(prev => ({ ...prev, [key]: value }))
-    setPage(1) // Reset to first page when filtering
-  }
+    setFilters(prev => ({ ...prev, [key]: value }));
+    setPage(1); // Reset to first page when filtering
+  };
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   const formatCurrency = (value: string) => {
-    if (value.startsWith('$')) return value
-    return `$${value}`
-  }
+    if (value.startsWith('$')) return value;
+    return `$${value}`;
+  };
 
   const formatDate = (date: string | Date) => new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    })
+    });
 
   const exportLeads = async () => {
     try {
@@ -119,19 +119,19 @@ export default function LeadsPage() {
         ...(filters.status && { status: filters.status }),
         ...(filters.service && { service: filters.service }),
         ...(filters.search && { search: filters.search }),
-      })
+      });
 
       if (!exportData?.leads.length) {
         toast({
           title: 'No Data to Export',
           description: 'No leads found matching current filters.',
           variant: 'destructive',
-        })
-        return
+        });
+        return;
       }
 
       // Prepare CSV data
-      const headers = ['Name', 'Email', 'Company', 'Phone', 'Service', 'Budget', 'Status', 'Message', 'Source', 'Created Date']
+      const headers = ['Name', 'Email', 'Company', 'Phone', 'Service', 'Budget', 'Status', 'Message', 'Source', 'Created Date'];
       const csvData = exportData.leads.map(lead => [
         lead.name,
         lead.email,
@@ -143,7 +143,7 @@ export default function LeadsPage() {
         lead.message.replace(/[\r\n]+/g, ' '), // Remove line breaks for CSV
         lead.source || '',
         formatDate(lead.createdAt),
-      ])
+      ]);
 
       // Create CSV content
       const csvContent = [
@@ -153,32 +153,32 @@ export default function LeadsPage() {
             ? `'${field.replace(/'/g, '\'\'')}'` 
             : field,
         ).join(',')),
-      ].join('\n')
+      ].join('\n');
 
       // Download CSV file
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `leads-export-${new Date().toISOString().split('T')[0]}.csv`)
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `leads-export-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
       toast({
         title: 'Export Complete',
         description: `Successfully exported ${exportData.leads.length} leads.`,
-      })
+      });
     } catch (error) {
-      console.error('Export failed:', error)
+      console.error('Export failed:', error);
       toast({
         title: 'Export Failed',
         description: 'Failed to export leads. Please try again.',
         variant: 'destructive',
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
@@ -340,8 +340,8 @@ export default function LeadsPage() {
               <Button
                 variant='outline'
                 onClick={() => {
-                  setFilters({ status: '', service: '', search: '' })
-                  setPage(1)
+                  setFilters({ status: '', service: '', search: '' });
+                  setPage(1);
                 }}
               >
                 Clear Filters
@@ -486,5 +486,5 @@ export default function LeadsPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

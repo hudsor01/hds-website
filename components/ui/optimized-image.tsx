@@ -1,6 +1,6 @@
-import Image, { type ImageProps } from 'next/image'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import Image, { type ImageProps } from 'next/image';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'alt'> {
   src: string
@@ -20,21 +20,21 @@ export function OptimizedImage({
   className,
   ...props
 }: OptimizedImageProps) {
-  const [imageSrc, setImageSrc] = useState(src)
-  const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
+  const [imageSrc, setImageSrc] = useState(src);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   const handleLoad = () => {
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   const handleError = () => {
-    setHasError(true)
-    setIsLoading(false)
+    setHasError(true);
+    setIsLoading(false);
     if (fallbackSrc && imageSrc !== fallbackSrc) {
-      setImageSrc(fallbackSrc)
+      setImageSrc(fallbackSrc);
     }
-  }
+  };
 
   return (
     <div 
@@ -69,7 +69,7 @@ export function OptimizedImage({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Avatar Image Component
@@ -87,7 +87,7 @@ export function AvatarImage({
     md: 'w-12 h-12',
     lg: 'w-16 h-16',
     xl: 'w-24 h-24',
-  }
+  };
 
   return (
     <OptimizedImage
@@ -100,7 +100,7 @@ export function AvatarImage({
       fallbackSrc='/images/default-avatar.jpg'
       {...props}
     />
-  )
+  );
 }
 
 // Hero Image Component
@@ -123,7 +123,7 @@ export function HeroImage({
       )}
       {...props}
     />
-  )
+  );
 }
 
 // Gallery Image Component
@@ -155,7 +155,7 @@ export function GalleryImage({
         </figcaption>
       )}
     </figure>
-  )
+  );
 }
 
 // Logo Image Component
@@ -181,7 +181,7 @@ export function LogoImage({
       )}
       {...props}
     />
-  )
+  );
 }
 
 // Portfolio/Project Image Component
@@ -219,5 +219,5 @@ export function ProjectImage({
         </div>
       )}
     </div>
-  )
+  );
 }

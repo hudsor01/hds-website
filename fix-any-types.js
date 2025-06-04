@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
-const path = require('path')
+const fs = require('fs');
+const path = require('path');
 
 // Files with any types that need fixing
 const files = [
@@ -33,7 +33,7 @@ const files = [
   './lib/server-utils.ts',
   './lib/store/navigation-store.ts',
   './lib/store/ui-store.ts',
-]
+];
 
 // Common replacements
 const replacements = [
@@ -64,32 +64,32 @@ const replacements = [
   { from: /: any;/g, to: ': unknown;' },
   { from: /: any\)/g, to: ': unknown)' },
   { from: /: any,/g, to: ': unknown,' },
-]
+];
 
 files.forEach(filePath => {
   try {
     if (!fs.existsSync(filePath)) {
-      console.log(`File not found: ${filePath}`)
-      return
+      console.log(`File not found: ${filePath}`);
+      return;
     }
     
-    let content = fs.readFileSync(filePath, 'utf8')
-    let modified = false
+    let content = fs.readFileSync(filePath, 'utf8');
+    let modified = false;
     
     replacements.forEach(({ from, to }) => {
       if (content.match(from)) {
-        content = content.replace(from, to)
-        modified = true
+        content = content.replace(from, to);
+        modified = true;
       }
-    })
+    });
     
     if (modified) {
-      fs.writeFileSync(filePath, content)
-      console.log(`Fixed any types in: ${filePath}`)
+      fs.writeFileSync(filePath, content);
+      console.log(`Fixed any types in: ${filePath}`);
     }
   } catch (error) {
-    console.error(`Error processing ${filePath}:`, error.message)
+    console.error(`Error processing ${filePath}:`, error.message);
   }
-})
+});
 
-console.log('Batch any type fixes completed!')
+console.log('Batch any type fixes completed!');

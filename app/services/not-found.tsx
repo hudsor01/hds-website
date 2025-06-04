@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { ArrowLeft, Home, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { NotFoundErrorFallback } from '@/components/error/error-fallbacks'
+import Link from 'next/link';
+import { ArrowLeft, Home, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { NotFoundErrorFallback } from '@/components/error/error-fallbacks';
 
 export default function ServicesNotFound() {
   return (
@@ -52,5 +52,5 @@ export default function ServicesNotFound() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { env } from '@/lib/env'
-import { logger } from '@/lib/logger'
-import { signJWT, verifyJWT } from './jwt'
-import type { JWTPayload as _JWTPayload } from './jwt'
-import type { AdminTokenPayload, AuthError } from '@/types/auth-types'
-import bcrypt from 'bcrypt'
-import { z } from 'zod'
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logger';
+import { signJWT, verifyJWT } from './jwt';
+import type { JWTPayload as _JWTPayload } from './jwt';
+import type { AdminTokenPayload, AuthError } from '@/types/auth-types';
+import bcrypt from 'bcrypt';
+import { z } from 'zod';
 
 // React 19/Next.js 15 authentication patterns with enhanced security
 
@@ -12,7 +12,7 @@ import { z } from 'zod'
 const AdminCredentialsSchema = z.object({
   username: z.string().min(3).max(50).trim(),
   password: z.string().min(8),
-})
+});
 
 // Admin configuration with secure password hashing
 const ADMIN_CONFIG = {
@@ -23,37 +23,37 @@ const ADMIN_CONFIG = {
   maxLoginAttempts: 5,
   lockoutDuration: 15 * 60 * 1000, // 15 minutes
   sessionDuration: 2 * 60 * 60, // 2 hours (reduced from 24h)
-}
+};
 
 // Rate limiting store (in production, use Redis or database)
-const loginAttempts = new Map<string, { count: number; lockoutUntil?: number }>()
+const loginAttempts = new Map<string, { count: number; lockoutUntil?: number }>();
 
 // Types imported from @/types/auth-types
 
 function isLockedOut(identifier: string): boolean {
-  const attempts = loginAttempts.get(identifier)
-  if (!attempts?.lockoutUntil) return false
+  const attempts = loginAttempts.get(identifier);
+  if (!attempts?.lockoutUntil) return false;
   
   if (Date.now() > attempts.lockoutUntil) {
-    loginAttempts.delete(identifier)
-    return false
+    loginAttempts.delete(identifier);
+    return false;
   }
-  return true
+  return true;
 }
 
 function recordFailedAttempt(identifier: string): void {
-  const attempts = loginAttempts.get(identifier) || { count: 0 }
-  attempts.count += 1
+  const attempts = loginAttempts.get(identifier) || { count: 0 };
+  attempts.count += 1;
   
   if (attempts.count >= ADMIN_CONFIG.maxLoginAttempts) {
-    attempts.lockoutUntil = Date.now() + ADMIN_CONFIG.lockoutDuration
+    attempts.lockoutUntil = Date.now() + ADMIN_CONFIG.lockoutDuration;
   }
   
-  loginAttempts.set(identifier, attempts)
+  loginAttempts.set(identifier, attempts);
 }
 
 function clearFailedAttempts(identifier: string): void {
-  loginAttempts.delete(identifier)
+  loginAttempts.delete(identifier);
 }
 
 /**
@@ -66,52 +66,52 @@ export async function authenticateAdmin(
   clientIp?: string,
 ): Promise<boolean> {
   // Rate limiting check (Next.js 15 security pattern)
-  const identifier = clientIp || username
+  const identifier = clientIp || username;
   if (isLockedOut(identifier)) {
-    logger.warn('Admin login blocked due to rate limiting', { identifier })
-    throw new Error('Account temporarily locked due to too many failed attempts')
+    logger.warn('Admin login blocked due to rate limiting', { identifier });
+    throw new Error('Account temporarily locked due to too many failed attempts');
   }
 
   try {
     // Input validation using Zod (React 19/Next.js 15 pattern)
-    const validation = AdminCredentialsSchema.safeParse({ username, password })
+    const validation = AdminCredentialsSchema.safeParse({ username, password });
     if (!validation.success) {
-      recordFailedAttempt(identifier)
-      logger.warn('Invalid admin credentials format', { username })
-      return false
+      recordFailedAttempt(identifier);
+      logger.warn('Invalid admin credentials format', { username });
+      return false;
     }
 
     // Constant-time comparison to prevent timing attacks
-    const isUsernameValid = username === ADMIN_CONFIG.username
+    const isUsernameValid = username === ADMIN_CONFIG.username;
     
     // Use bcrypt for secure password comparison (Next.js 15 authentication pattern)
-    let isPasswordValid = false
+    let isPasswordValid = false;
     if (ADMIN_CONFIG.passwordHash) {
-      isPasswordValid = await bcrypt.compare(password, ADMIN_CONFIG.passwordHash)
+      isPasswordValid = await bcrypt.compare(password, ADMIN_CONFIG.passwordHash);
     } else {
       // Fallback for development - hash the plain password
-      console.warn('WARNING: Using plain text password in development. Set ADMIN_PASSWORD_HASH in production.')
-      isPasswordValid = password === env.ADMIN_PASSWORD
+      console.warn('WARNING: Using plain text password in development. Set ADMIN_PASSWORD_HASH in production.');
+      isPasswordValid = password === env.ADMIN_PASSWORD;
     }
     
     if (!isUsernameValid || !isPasswordValid) {
-      recordFailedAttempt(identifier)
-      logger.warn('Failed admin login attempt', { username, identifier })
-      return false
+      recordFailedAttempt(identifier);
+      logger.warn('Failed admin login attempt', { username, identifier });
+      return false;
     }
     
     // Clear failed attempts on successful login
-    clearFailedAttempts(identifier)
-    logger.info('Admin login successful', { username })
-    return true
+    clearFailedAttempts(identifier);
+    logger.info('Admin login successful', { username });
+    return true;
     
   } catch (error) {
-    recordFailedAttempt(identifier)
+    recordFailedAttempt(identifier);
     logger.error('Admin authentication error', {
       error: error instanceof Error ? error.message : 'Unknown error',
       username,
-    })
-    return false
+    });
+    return false;
   }
 }
 
@@ -120,11 +120,11 @@ export async function authenticateAdmin(
  */
 export async function verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
   try {
-    const payload = await verifyJWT(token)
+    const payload = await verifyJWT(token);
     
     // Validate required claims (Next.js 15 JWT security pattern)
     if (!payload || payload.role !== 'admin' || !payload.userId) {
-      return null
+      return null;
     }
 
     return {
@@ -134,12 +134,12 @@ export async function verifyAdminToken(token: string): Promise<AdminTokenPayload
       role: 'admin',
       iat: payload.iat,
       exp: payload.exp,
-    }
+    };
   } catch (error) {
     logger.warn('Invalid admin token verification', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
-    return null
+    });
+    return null;
   }
 }
 
@@ -147,7 +147,7 @@ export async function verifyAdminToken(token: string): Promise<AdminTokenPayload
  * Check if user has admin role
  */
 export function isAdmin(user: AdminTokenPayload | null): user is AdminTokenPayload {
-  return user !== null && user.role === 'admin'
+  return user !== null && user.role === 'admin';
 }
 
 /**
@@ -159,7 +159,7 @@ export async function createAdminSession(username: string): Promise<string> {
     userId: ADMIN_CONFIG.id,
     username,
     role: 'admin',
-  })
+  });
 }
 
 /**
@@ -167,8 +167,8 @@ export async function createAdminSession(username: string): Promise<string> {
  * Use this to generate ADMIN_PASSWORD_HASH for production
  */
 export async function generatePasswordHash(plainPassword: string): Promise<string> {
-  const saltRounds = 12 // Recommended for production security
-  return await bcrypt.hash(plainPassword, saltRounds)
+  const saltRounds = 12; // Recommended for production security
+  return await bcrypt.hash(plainPassword, saltRounds);
 }
 
 /**
@@ -176,32 +176,32 @@ export async function generatePasswordHash(plainPassword: string): Promise<strin
  * Enhanced for both Bearer token and cookie authentication
  */
 export async function requireAdmin(request: Request): Promise<AdminTokenPayload> {
-  const authHeader = request.headers.get('authorization')
-  const cookieHeader = request.headers.get('cookie')
+  const authHeader = request.headers.get('authorization');
+  const cookieHeader = request.headers.get('cookie');
   
-  let token: string | null = null
+  let token: string | null = null;
   
   // Support both Bearer token and cookie authentication
   if (authHeader?.startsWith('Bearer ')) {
-    token = authHeader.substring(7)
+    token = authHeader.substring(7);
   } else if (cookieHeader?.includes('admin-token')) {
     // Extract from cookie for browser requests
-    const cookies = cookieHeader.split(';')
-    const adminCookie = cookies.find(c => c.trim().startsWith('admin-token='))
-    token = adminCookie?.split('=')[1] || null
+    const cookies = cookieHeader.split(';');
+    const adminCookie = cookies.find(c => c.trim().startsWith('admin-token='));
+    token = adminCookie?.split('=')[1] || null;
   }
   
   if (!token) {
-    throw new Error('Missing authentication token')
+    throw new Error('Missing authentication token');
   }
   
-  const admin = await verifyAdminToken(token)
+  const admin = await verifyAdminToken(token);
   
   if (!admin) {
-    throw new Error('Invalid or expired token')
+    throw new Error('Invalid or expired token');
   }
   
-  return admin
+  return admin;
 }
 
 // AuthError type imported from @/types/auth-types
@@ -215,26 +215,26 @@ export async function loginAction(
   formData: FormData,
 ): Promise<AuthError | null> {
   try {
-    const username = formData.get('username') as string
-    const password = formData.get('password') as string
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
     
     if (!username || !password) {
-      return { message: 'Username and password are required' }
+      return { message: 'Username and password are required' };
     }
     
-    const isValid = await authenticateAdmin(username, password)
+    const isValid = await authenticateAdmin(username, password);
     
     if (!isValid) {
-      return { message: 'Invalid credentials' }
+      return { message: 'Invalid credentials' };
     }
     
     // Create session token
-    await createAdminSession(username)
+    await createAdminSession(username);
     
-    return null // Success
+    return null; // Success
   } catch (error) {
     return { 
       message: error instanceof Error ? error.message : 'Authentication failed', 
-    }
+    };
   }
 }

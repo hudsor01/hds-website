@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 // Global UI State
 export interface UIState {
@@ -26,4 +26,4 @@ export const useUIStore = create<UIState>()(
       name: 'ui-store',
     },
   ),
-)
+);

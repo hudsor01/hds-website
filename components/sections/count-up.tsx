@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 /**
  * A simple counter animation component
@@ -14,28 +14,28 @@ export function CountUp({
   end: number
   suffix?: string
 }) {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let current = 0
-    const increment = end / 50
+    let current = 0;
+    const increment = end / 50;
     const timer = setInterval(() => {
-      current += increment
+      current += increment;
       if (current >= end) {
-        setCount(end)
-        clearInterval(timer)
+        setCount(end);
+        clearInterval(timer);
       } else {
-        setCount(Math.floor(current))
+        setCount(Math.floor(current));
       }
-    }, 30)
+    }, 30);
 
-    return () => clearInterval(timer)
-  }, [end])
+    return () => clearInterval(timer);
+  }, [end]);
 
   return (
     <>
       {count}
       {suffix}
     </>
-  )
+  );
 }

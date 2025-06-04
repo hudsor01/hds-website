@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Calculator, Search, ArrowRight, Wrench } from 'lucide-react'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Calculator, Search, ArrowRight, Wrench } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Free Business Tools | Hudson Digital Solutions',
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'Free Business Tools | Hudson Digital Solutions',
     description: 'Free ROI calculator and website audit tools for business improvement.',
   },
-}
+};
 
 interface ToolsLayoutProps {
   children: React.ReactNode
@@ -30,7 +30,7 @@ export default function ToolsLayout({ children }: ToolsLayoutProps) {
       icon: Search,
       description: 'Free analysis of your website performance and SEO',
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,7 +61,7 @@ export default function ToolsLayout({ children }: ToolsLayoutProps) {
           {/* Tools Quick Navigation */}
           <div className="mt-6 flex flex-wrap gap-2">
             {tools.map((tool) => {
-              const Icon = tool.icon
+              const Icon = tool.icon;
               return (
                 <Button
                   key={tool.href}
@@ -74,7 +74,7 @@ export default function ToolsLayout({ children }: ToolsLayoutProps) {
                     {tool.name}
                   </Link>
                 </Button>
-              )
+              );
             })}
           </div>
         </div>
@@ -114,5 +114,5 @@ export default function ToolsLayout({ children }: ToolsLayoutProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import {
   TrendingUp,
   CheckCircle,
@@ -6,15 +6,15 @@ import {
   DollarSign,
   Users,
   Zap,
-} from 'lucide-react'
-import { AnimatedSection } from '@/components/sections/section'
+} from 'lucide-react';
+import { AnimatedSection } from '@/components/sections/section';
 import {
   AnimatedText,
   AnimatedHeading,
-} from '@/components/animated/animated-text'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { LeadMagnetSection } from '@/components/sections/lead-magnet-section'
-import { TestimonialsSection } from '@/components/sections/testimonials-section'
+} from '@/components/animated/animated-text';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { LeadMagnetSection } from '@/components/sections/lead-magnet-section';
+import { TestimonialsSection } from '@/components/sections/testimonials-section';
 
 export const metadata: Metadata = {
   title: 'Revenue Operations & Automation | Hudson Digital Solutions',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
 const features = [
   {
@@ -63,14 +63,14 @@ const features = [
     description:
       'Get real-time insights into your revenue performance and forecast accurately.',
   },
-]
+];
 
 const results = [
   { metric: '40%', description: 'Average increase in sales productivity' },
   { metric: '2x', description: 'Lead conversion improvement' },
   { metric: '60%', description: 'Less time on administrative tasks' },
   { metric: '94%', description: 'Data accuracy improvement' },
-]
+];
 
 const process = [
   {
@@ -97,7 +97,7 @@ const process = [
     description:
       'Train your team and provide ongoing support to ensure successful adoption.',
   },
-]
+];
 
 export default function RevenueOperationsPage() {
   return (
@@ -419,5 +419,5 @@ export default function RevenueOperationsPage() {
         </div>
       </AnimatedSection>
     </main>
-  )
+  );
 }

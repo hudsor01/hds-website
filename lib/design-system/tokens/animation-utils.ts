@@ -5,7 +5,7 @@
  * to support the main animation system.
  */
 
-import type { Variants } from 'framer-motion'
+import type { Variants } from 'framer-motion';
 
 // Helper functions for animation
 export const withDelay = (animation: Variants, delay: number): Variants => ({
@@ -19,7 +19,7 @@ export const withDelay = (animation: Variants, delay: number): Variants => ({
       delay,
     },
   },
-})
+});
 
 /**
  * Animation settings for reduced motion preferences
@@ -35,4 +35,4 @@ export const reducedMotionAnimations = {
       },
     },
   },
-}
+};

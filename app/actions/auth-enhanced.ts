@@ -9,10 +9,10 @@
  * - useActionState integration
  */
 
-'use server'
+'use server';
 
-import { redirect } from 'next/navigation'
-import { z } from 'zod'
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 import { 
   LoginFormSchema, 
   SignupFormSchema, 
@@ -22,8 +22,8 @@ import {
   deleteSession,
   requireAuth,
   authorizeServerAction,
-} from '@/lib/auth/auth-enhanced'
-import { logger } from '@/lib/logger'
+} from '@/lib/auth/auth-enhanced';
+import { logger } from '@/lib/logger';
 
 /**
  * Login Server Action with comprehensive validation and error handling
@@ -34,57 +34,57 @@ export async function login(state: FormState, formData: FormData): Promise<FormS
     const validatedFields = LoginFormSchema.safeParse({
       username: formData.get('username'),
       password: formData.get('password'),
-    })
+    });
 
     // If validation fails, return early with errors
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
-      }
+      };
     }
 
-    const { username, password } = validatedFields.data
+    const { username, password } = validatedFields.data;
 
     // 2. Authenticate user
-    const user = await authenticateUser(username, password)
+    const user = await authenticateUser(username, password);
 
     if (!user) {
       return {
         errors: {
           _form: ['Invalid username or password. Please try again.'],
         },
-      }
+      };
     }
 
     // 3. Create session
     await createSession(user, {
       loginTime: new Date().toISOString(),
       userAgent: 'server-action', // In a real app, you'd get this from headers
-    })
+    });
 
     logger.info('User login successful', {
       userId: user.id,
       username: user.username,
       role: user.role,
-    })
+    });
 
     // 4. Redirect to appropriate dashboard
     if (user.role === 'admin') {
-      redirect('/admin')
+      redirect('/admin');
     } else {
-      redirect('/dashboard')
+      redirect('/dashboard');
     }
   } catch (error) {
     logger.error('Login action failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
       username: formData.get('username'),
-    })
+    });
 
     return {
       errors: {
         _form: ['An unexpected error occurred. Please try again.'],
       },
-    }
+    };
   }
 }
 
@@ -99,16 +99,16 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
       email: formData.get('email'),
       password: formData.get('password'),
       confirmPassword: formData.get('confirmPassword'),
-    })
+    });
 
     // If validation fails, return early with errors
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
-      }
+      };
     }
 
-    const { username: _username, email: _email, password: _password } = validatedFields.data
+    const { username: _username, email: _email, password: _password } = validatedFields.data;
 
     // 2. Check if user already exists
     // In a real application, you would check your database
@@ -151,7 +151,7 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
     // For now, return success message since we don't have user registration
     return {
       message: 'Account creation is not currently available. Please contact an administrator.',
-    }
+    };
 
     // 4. Create session and redirect
     // await createSession(user)
@@ -161,13 +161,13 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
       error: error instanceof Error ? error.message : 'Unknown error',
       username: formData.get('username'),
       email: formData.get('email'),
-    })
+    });
 
     return {
       errors: {
         _form: ['An unexpected error occurred. Please try again.'],
       },
-    }
+    };
   }
 }
 
@@ -177,20 +177,20 @@ export async function signup(state: FormState, formData: FormData): Promise<Form
 export async function logout(): Promise<void> {
   try {
     // Verify user is authenticated before logout
-    await requireAuth()
+    await requireAuth();
     
     // Delete session
-    await deleteSession()
+    await deleteSession();
     
-    logger.info('User logout successful')
+    logger.info('User logout successful');
   } catch (error) {
     logger.error('Logout action failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    });
   }
   
   // Always redirect to login page, even if there was an error
-  redirect('/admin/auth/login')
+  redirect('/admin/auth/login');
 }
 
 /**
@@ -199,26 +199,26 @@ export async function logout(): Promise<void> {
 export async function updateProfile(state: FormState, formData: FormData): Promise<FormState> {
   try {
     // 1. Verify authentication
-    const user = await authorizeServerAction()
+    const user = await authorizeServerAction();
 
     // 2. Validate form fields
     const UpdateProfileSchema = z.object({
       username: z.string().min(3).max(50).trim(),
       email: z.string().email().trim().optional(),
-    })
+    });
 
     const validatedFields = UpdateProfileSchema.safeParse({
       username: formData.get('username'),
       email: formData.get('email') || undefined,
-    })
+    });
 
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
-      }
+      };
     }
 
-    const { username: _username, email: _email } = validatedFields.data
+    const { username: _username, email: _email } = validatedFields.data;
 
     // 3. Update user in database
     // await db.update(users)
@@ -232,25 +232,25 @@ export async function updateProfile(state: FormState, formData: FormData): Promi
     logger.info('Profile updated successfully', {
       userId: user.id,
       username,
-    })
+    });
 
     return {
       message: 'Profile updated successfully.',
-    }
+    };
   } catch (error) {
     logger.error('Update profile action failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    });
 
     if (error instanceof Error && error.message === 'Authentication required') {
-      redirect('/admin/auth/login')
+      redirect('/admin/auth/login');
     }
 
     return {
       errors: {
         _form: ['An unexpected error occurred. Please try again.'],
       },
-    }
+    };
   }
 }
 
@@ -260,7 +260,7 @@ export async function updateProfile(state: FormState, formData: FormData): Promi
 export async function changePassword(state: FormState, formData: FormData): Promise<FormState> {
   try {
     // 1. Verify authentication
-    const user = await authorizeServerAction()
+    const user = await authorizeServerAction();
 
     // 2. Validate form fields
     const ChangePasswordSchema = z.object({
@@ -276,21 +276,21 @@ export async function changePassword(state: FormState, formData: FormData): Prom
     }).refine((data) => data.newPassword === data.confirmPassword, {
       message: "New passwords don't match",
       path: ['confirmPassword'],
-    })
+    });
 
     const validatedFields = ChangePasswordSchema.safeParse({
       currentPassword: formData.get('currentPassword'),
       newPassword: formData.get('newPassword'),
       confirmPassword: formData.get('confirmPassword'),
-    })
+    });
 
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
-      }
+      };
     }
 
-    const { currentPassword: _currentPassword, newPassword: _newPassword } = validatedFields.data
+    const { currentPassword: _currentPassword, newPassword: _newPassword } = validatedFields.data;
 
     // 3. Verify current password
     // const dbUser = await db.query.users.findFirst({
@@ -327,25 +327,25 @@ export async function changePassword(state: FormState, formData: FormData): Prom
 
     logger.info('Password changed successfully', {
       userId: user.id,
-    })
+    });
 
     return {
       message: 'Password changed successfully.',
-    }
+    };
   } catch (error) {
     logger.error('Change password action failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    });
 
     if (error instanceof Error && error.message === 'Authentication required') {
-      redirect('/admin/auth/login')
+      redirect('/admin/auth/login');
     }
 
     return {
       errors: {
         _form: ['An unexpected error occurred. Please try again.'],
       },
-    }
+    };
   }
 }
 
@@ -355,7 +355,7 @@ export async function changePassword(state: FormState, formData: FormData): Prom
 export async function createUser(state: FormState, formData: FormData): Promise<FormState> {
   try {
     // 1. Verify admin authentication
-    const user = await authorizeServerAction(['admin'])
+    const user = await authorizeServerAction(['admin']);
 
     // 2. Validate form fields
     const CreateUserSchema = z.object({
@@ -363,22 +363,22 @@ export async function createUser(state: FormState, formData: FormData): Promise<
       email: z.string().email().trim(),
       password: z.string().min(8).trim(),
       role: z.enum(['user', 'admin']),
-    })
+    });
 
     const validatedFields = CreateUserSchema.safeParse({
       username: formData.get('username'),
       email: formData.get('email'),
       password: formData.get('password'),
       role: formData.get('role'),
-    })
+    });
 
     if (!validatedFields.success) {
       return {
         errors: validatedFields.error.flatten().fieldErrors,
-      }
+      };
     }
 
-    const { username: _username, email: _email, password: _password, role } = validatedFields.data
+    const { username: _username, email: _email, password: _password, role } = validatedFields.data;
 
     // 3. Create user in database
     // const hashedPassword = await bcrypt.hash(password, 10)
@@ -397,18 +397,18 @@ export async function createUser(state: FormState, formData: FormData): Promise<
       adminId: user.id,
       newUsername: username,
       newUserRole: role,
-    })
+    });
 
     return {
       message: `User "${username}" created successfully.`,
-    }
+    };
   } catch (error) {
     logger.error('Create user action failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    });
 
     if (error instanceof Error && error.message === 'Authentication required') {
-      redirect('/admin/auth/login')
+      redirect('/admin/auth/login');
     }
 
     if (error instanceof Error && error.message === 'Insufficient permissions') {
@@ -416,14 +416,14 @@ export async function createUser(state: FormState, formData: FormData): Promise<
         errors: {
           _form: ['You do not have permission to create users.'],
         },
-      }
+      };
     }
 
     return {
       errors: {
         _form: ['An unexpected error occurred. Please try again.'],
       },
-    }
+    };
   }
 }
 
@@ -432,9 +432,9 @@ export async function createUser(state: FormState, formData: FormData): Promise<
  */
 export async function validateSession(): Promise<{ valid: boolean; user?: Record<string, unknown> }> {
   try {
-    const user = await authorizeServerAction()
-    return { valid: true, user }
+    const user = await authorizeServerAction();
+    return { valid: true, user };
   } catch (_error) {
-    return { valid: false }
+    return { valid: false };
   }
 }

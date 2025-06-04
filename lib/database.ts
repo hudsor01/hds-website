@@ -1,36 +1,36 @@
-import { PrismaClient, Prisma } from '@prisma/client'
-import { env } from './env'
+import { PrismaClient, Prisma } from '@prisma/client';
+import { env } from './env';
 
 // Prevent multiple instances during development
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
-}
+};
 
 export const db = globalForPrisma.prisma ?? 
   new PrismaClient({
     log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     errorFormat: 'pretty',
-  })
+  });
 
-if (env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+if (env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
 
 // Connection health check
 export async function checkDatabaseConnection() {
   try {
-    await db.$connect()
-    return { connected: true, error: null }
+    await db.$connect();
+    return { connected: true, error: null };
   } catch (error) {
-    console.error('Database connection failed:', error)
+    console.error('Database connection failed:', error);
     return { 
       connected: false, 
       error: error instanceof Error ? error.message : 'Unknown error', 
-    }
+    };
   }
 }
 
 // Graceful shutdown
 export async function disconnectDatabase() {
-  await db.$disconnect()
+  await db.$disconnect();
 }
 
 // Database utilities
@@ -42,13 +42,13 @@ export const dbUtils = {
         gte: startDate,
         lte: endDate,
       },
-    } : {}
+    } : {};
 
     return await db.pageView.findMany({
       where,
       orderBy: { viewedAt: 'desc' },
       take: 100,
-    })
+    });
   },
 
   // Get recent contacts
@@ -62,7 +62,7 @@ export const dbUtils = {
           take: 1,
         },
       },
-    })
+    });
   },
 
   // Get newsletter stats
@@ -79,9 +79,9 @@ export const dbUtils = {
           },
         },
       }),
-    ])
+    ]);
 
-    return { total, active, recentSignups }
+    return { total, active, recentSignups };
   },
 
   // Get lead magnet stats
@@ -93,9 +93,9 @@ export const dbUtils = {
         },
       },
       orderBy: { downloadCount: 'desc' },
-    })
+    });
   },
-}
+};
 
 // Type exports for convenience
 export type Contact = Prisma.ContactGetPayload<{}>

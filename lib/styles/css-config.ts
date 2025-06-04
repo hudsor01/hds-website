@@ -16,7 +16,7 @@ export const cssNaming = {
   
   // Feature-specific modules
   feature: (featureName: string) => `${featureName}.module.css`,
-} as const
+} as const;
 
 // CSS import order configuration (for predictable CSS ordering)
 export const cssImportOrder = {
@@ -53,7 +53,7 @@ export const cssImportOrder = {
     './page.module.css',
     './section.module.css',
   ],
-} as const
+} as const;
 
 // CSS optimization configuration
 export const cssOptimization = {
@@ -74,7 +74,7 @@ export const cssOptimization = {
     autoprefixer: true,
     purgeCSS: true,
   },
-} as const
+} as const;
 
 // CSS chunking strategy
 export const cssChunking = {
@@ -101,7 +101,7 @@ export const cssChunking = {
     contact: ['forms', 'validation', 'maps'],
     blog: ['typography', 'syntax-highlighting', 'comments'],
   },
-} as const
+} as const;
 
 // CSS Module composition patterns
 export const cssComposition = {
@@ -122,7 +122,7 @@ export const cssComposition = {
     compose: ['reset', 'typography', 'focus'],
     variants: ['default', 'error', 'success'],
   },
-} as const
+} as const;
 
 // Responsive design breakpoints (matching Tailwind CSS v4)
 export const breakpoints = {
@@ -132,7 +132,7 @@ export const breakpoints = {
   lg: '64rem',    // 1024px
   xl: '80rem',    // 1280px
   '2xl': '96rem', // 1536px
-} as const
+} as const;
 
 // CSS custom properties organization
 export const customProperties = {
@@ -188,7 +188,7 @@ export const customProperties = {
     easing: '--easing',
     delay: '--delay',
   },
-} as const
+} as const;
 
 // Performance optimization strategies
 export const performanceStrategies = {
@@ -212,7 +212,7 @@ export const performanceStrategies = {
     shortTerm: ['page.css', 'component.css'],
     noCache: ['development.css', 'debug.css'],
   },
-} as const
+} as const;
 
 // CSS organization best practices
 export const bestPractices = {
@@ -250,7 +250,7 @@ export const bestPractices = {
     'Group media queries at component level',
     'Use CSS-in-JS for dynamic styles only',
   ],
-} as const
+} as const;
 
 // Debugging and development helpers
 export const developmentHelpers = {
@@ -279,7 +279,7 @@ export const developmentHelpers = {
     excludeFiles: ['node_modules/**/*.css'],
     hmr: true,
   },
-} as const
+} as const;
 
 // Type definitions for better TypeScript support
 export type CSSModuleName = keyof typeof cssNaming
@@ -294,10 +294,10 @@ export const cssHelpers = {
   
   // Generate responsive CSS
   responsive: (styles: Record<BreakpointKey, string>) => Object.entries(styles).map(([breakpoint, style]) => {
-      const minWidth = breakpoints[breakpoint as BreakpointKey]
-      return `@media (min-width: ${minWidth}) { ${style} }`
+      const minWidth = breakpoints[breakpoint as BreakpointKey];
+      return `@media (min-width: ${minWidth}) { ${style} }`;
     }).join('\n'),
   
   // Generate CSS custom property
   customProperty: (category: keyof typeof customProperties) => `var(${customProperties[category]})`,
-}
+};

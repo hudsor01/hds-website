@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Root Error Boundary for Next.js 15
@@ -7,11 +7,11 @@
  * This file is automatically used by Next.js as an error boundary for the app directory.
  */
 
-import { useEffect } from 'react'
-import { AlertTriangle, RefreshCw, Home, Bug, HelpCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useEffect } from 'react';
+import { AlertTriangle, RefreshCw, Home, Bug, HelpCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ErrorProps {
   error: Error & { digest?: string }
@@ -19,24 +19,24 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  const errorId = error.digest || crypto.randomUUID()
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const errorId = error.digest || crypto.randomUUID();
 
   useEffect(() => {
     // Log the error to error reporting service
-    console.error('Application error:', error)
+    console.error('Application error:', error);
 
     // In production, you might want to send this to your monitoring service
     if (process.env.NODE_ENV === 'production') {
       // Example: Send to error monitoring service
       // reportError(error, { errorId, page: window.location.pathname })
     }
-  }, [error])
+  }, [error]);
 
   const handleReportIssue = () => {
     // You can implement issue reporting here
     // For example, open a support email or redirect to a feedback form
-    const subject = encodeURIComponent('Application Error Report')
+    const subject = encodeURIComponent('Application Error Report');
     const body = encodeURIComponent(`
 Error ID: ${errorId}
 Page: ${window.location.pathname}
@@ -46,10 +46,10 @@ Timestamp: ${new Date().toISOString()}
 
 Additional details:
 Please describe what you were doing when this error occurred.
-    `)
+    `);
     
-    window.open(`mailto:support@hudsonds.com?subject=${subject}&body=${body}`)
-  }
+    window.open(`mailto:support@hudsonds.com?subject=${subject}&body=${body}`);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
@@ -159,5 +159,5 @@ Please describe what you were doing when this error occurred.
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

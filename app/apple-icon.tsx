@@ -1,11 +1,11 @@
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from 'next/og';
 
 // Route segment config
 export const size = {
   width: 180,
   height: 180,
-}
-export const contentType = 'image/png'
+};
+export const contentType = 'image/png';
 
 // Image generation
 export default function AppleIcon() {
@@ -32,5 +32,5 @@ export default function AppleIcon() {
     {
       ...size,
     },
-  )
+  );
 }

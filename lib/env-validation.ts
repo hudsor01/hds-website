@@ -5,7 +5,7 @@
  * at build/runtime. Uses Zod for type-safe validation.
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // Define the schema for our environment variables
 const envSchema = z.object({
@@ -62,7 +62,7 @@ const envSchema = z.object({
   // Public URLs
   NEXT_PUBLIC_APP_URL: z.string().url(),
   NEXT_PUBLIC_API_URL: z.string().url().optional(),
-})
+});
 
 // Extend the schema for production-specific requirements
 const productionEnvSchema = envSchema.extend({
@@ -75,7 +75,7 @@ const productionEnvSchema = envSchema.extend({
 }).omit({
   // Remove development-only variables
   ADMIN_PASSWORD: true,
-})
+});
 
 // Type for our validated environment
 export type Env = z.infer<typeof envSchema>
@@ -86,42 +86,42 @@ export type ProductionEnv = z.infer<typeof productionEnvSchema>
  * Throws an error if validation fails
  */
 export function validateEnv(): Env | ProductionEnv {
-  const isProduction = process.env.NODE_ENV === 'production'
-  const schema = isProduction ? productionEnvSchema : envSchema
+  const isProduction = process.env.NODE_ENV === 'production';
+  const schema = isProduction ? productionEnvSchema : envSchema;
   
   try {
-    const env = schema.parse(process.env)
+    const env = schema.parse(process.env);
     
     // Additional validation logic
     if (isProduction) {
       // Ensure we're not using default secrets in production
       if (env.NEXTAUTH_SECRET === 'development-secret') {
-        throw new Error('Default NEXTAUTH_SECRET detected in production')
+        throw new Error('Default NEXTAUTH_SECRET detected in production');
       }
       if (env.JWT_SECRET === 'development-secret') {
-        throw new Error('Default JWT_SECRET detected in production')
+        throw new Error('Default JWT_SECRET detected in production');
       }
     }
     
-    return env
+    return env;
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessage = `Environment validation failed:\n${error.errors
         .map(err => `  - ${err.path.join('.')}: ${err.message}`)
-        .join('\n')}`
+        .join('\n')}`;
       
-      console.error('❌ Environment Validation Error')
-      console.error(errorMessage)
-      console.error('\nPlease check your .env file and ensure all required variables are set.')
+      console.error('❌ Environment Validation Error');
+      console.error(errorMessage);
+      console.error('\nPlease check your .env file and ensure all required variables are set.');
       
       // In development, provide helpful hints
       if (process.env.NODE_ENV !== 'production') {
-        console.error('\n💡 Hint: Copy .env.example to .env.local and fill in the values')
+        console.error('\n💡 Hint: Copy .env.example to .env.local and fill in the values');
       }
       
-      throw new Error(errorMessage)
+      throw new Error(errorMessage);
     }
-    throw error
+    throw error;
   }
 }
 
@@ -129,38 +129,38 @@ export function validateEnv(): Env | ProductionEnv {
  * Get a typed, validated environment variable
  */
 export function getEnv<K extends keyof Env>(key: K): Env[K] {
-  const env = validateEnv()
-  return env[key]
+  const env = validateEnv();
+  return env[key];
 }
 
 /**
  * Check if a feature flag is enabled
  */
 export function isFeatureEnabled(feature: 'analytics' | 'rateLimiting' | 'errorTracking'): boolean {
-  const env = validateEnv()
+  const env = validateEnv();
   switch (feature) {
     case 'analytics':
-      return env.ENABLE_ANALYTICS
+      return env.ENABLE_ANALYTICS;
     case 'rateLimiting':
-      return env.ENABLE_RATE_LIMITING
+      return env.ENABLE_RATE_LIMITING;
     case 'errorTracking':
-      return env.ENABLE_ERROR_TRACKING
+      return env.ENABLE_ERROR_TRACKING;
     default:
-      return false
+      return false;
   }
 }
 
 // Export the validated environment (singleton pattern)
-let cachedEnv: Env | ProductionEnv | undefined
+let cachedEnv: Env | ProductionEnv | undefined;
 
 export function env(): Env | ProductionEnv {
   if (!cachedEnv) {
-    cachedEnv = validateEnv()
+    cachedEnv = validateEnv();
   }
-  return cachedEnv
+  return cachedEnv;
 }
 
 // Validate on module load in production
 if (process.env.NODE_ENV === 'production') {
-  validateEnv()
+  validateEnv();
 }

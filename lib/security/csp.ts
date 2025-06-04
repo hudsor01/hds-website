@@ -116,7 +116,7 @@ export const defaultCSPConfig: CSPConfig = {
     allowUnsafeInline: true,
     disableCSP: false,
   },
-}
+};
 
 /**
  * Generate a cryptographically secure nonce for CSP
@@ -124,17 +124,17 @@ export const defaultCSPConfig: CSPConfig = {
  */
 export function generateNonce(): CSPNonce {
   // Use Web Crypto API for Edge Runtime compatibility
-  const array = new Uint8Array(16)
-  crypto.getRandomValues(array)
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
   
   // Convert to base64 without using Buffer (Edge Runtime compatible)
-  const nonce = btoa(String.fromCharCode(...array))
+  const nonce = btoa(String.fromCharCode(...array));
   
   return {
     value: nonce,
     timestamp: Date.now(),
     requestId: crypto.randomUUID(),
-  }
+  };
 }
 
 /**
@@ -144,152 +144,152 @@ export function generateCSPHeader(
   nonce?: string,
   config: CSPConfig = defaultCSPConfig,
 ): string {
-  const isDevelopment = process.env.NODE_ENV === 'development'
+  const isDevelopment = process.env.NODE_ENV === 'development';
   
   // Skip CSP in development if disabled
   if (isDevelopment && config.development?.disableCSP) {
-    return ''
+    return '';
   }
 
-  const directives: string[] = []
+  const directives: string[] = [];
 
   // Default source - strict self-only policy
-  directives.push("default-src 'self'")
+  directives.push("default-src 'self'");
 
   // Script source policy with nonce and strict-dynamic
-  const scriptSources = ["'self'"]
+  const scriptSources = ["'self'"];
   if (nonce && config.enableNonce) {
-    scriptSources.push(`'nonce-${nonce}'`)
+    scriptSources.push(`'nonce-${nonce}'`);
   }
   if (config.strictDynamic) {
-    scriptSources.push("'strict-dynamic'")
+    scriptSources.push("'strict-dynamic'");
   }
   if (config.allowInlineScripts || (isDevelopment && config.development?.allowUnsafeInline)) {
-    scriptSources.push("'unsafe-inline'")
+    scriptSources.push("'unsafe-inline'");
   }
   if (isDevelopment && config.development?.allowUnsafeEval) {
-    scriptSources.push("'unsafe-eval'")
+    scriptSources.push("'unsafe-eval'");
   }
   // Allow Next.js development scripts
   if (isDevelopment) {
-    scriptSources.push('http://localhost:3000', 'https://localhost:3000')
+    scriptSources.push('http://localhost:3000', 'https://localhost:3000');
   }
   if (config.trustedDomains?.scripts) {
-    scriptSources.push(...config.trustedDomains.scripts)
+    scriptSources.push(...config.trustedDomains.scripts);
   }
-  directives.push(`script-src ${scriptSources.join(' ')}`)
+  directives.push(`script-src ${scriptSources.join(' ')}`);
 
   // Style source policy
-  const styleSources = ["'self'"]
+  const styleSources = ["'self'"];
   if (nonce && config.enableNonce) {
-    styleSources.push(`'nonce-${nonce}'`)
+    styleSources.push(`'nonce-${nonce}'`);
   }
   if (config.allowInlineStyles || (isDevelopment && config.development?.allowUnsafeInline)) {
-    styleSources.push("'unsafe-inline'")
+    styleSources.push("'unsafe-inline'");
   }
   // Allow Next.js development styles
   if (isDevelopment) {
-    styleSources.push('http://localhost:3000', 'https://localhost:3000')
+    styleSources.push('http://localhost:3000', 'https://localhost:3000');
   }
   if (config.trustedDomains?.styles) {
-    styleSources.push(...config.trustedDomains.styles)
+    styleSources.push(...config.trustedDomains.styles);
   }
-  directives.push(`style-src ${styleSources.join(' ')}`)
+  directives.push(`style-src ${styleSources.join(' ')}`);
 
   // Image source policy
-  const imgSources = ["'self'"]
+  const imgSources = ["'self'"];
   if (config.trustedDomains?.images) {
-    imgSources.push(...config.trustedDomains.images)
+    imgSources.push(...config.trustedDomains.images);
   }
-  directives.push(`img-src ${imgSources.join(' ')}`)
+  directives.push(`img-src ${imgSources.join(' ')}`);
 
   // Font source policy
-  const fontSources = ["'self'"]
+  const fontSources = ["'self'"];
   if (config.trustedDomains?.fonts) {
-    fontSources.push(...config.trustedDomains.fonts)
+    fontSources.push(...config.trustedDomains.fonts);
   }
-  directives.push(`font-src ${fontSources.join(' ')}`)
+  directives.push(`font-src ${fontSources.join(' ')}`);
 
   // Connect source policy (for XHR, WebSocket, EventSource)
-  const connectSources = ["'self'"]
+  const connectSources = ["'self'"];
   // Allow Next.js development connections (HMR, etc.)
   if (isDevelopment) {
-    connectSources.push('http://localhost:3000', 'https://localhost:3000', 'ws://localhost:3000', 'wss://localhost:3000')
+    connectSources.push('http://localhost:3000', 'https://localhost:3000', 'ws://localhost:3000', 'wss://localhost:3000');
   }
   if (config.trustedDomains?.connect) {
-    connectSources.push(...config.trustedDomains.connect)
+    connectSources.push(...config.trustedDomains.connect);
   }
-  directives.push(`connect-src ${connectSources.join(' ')}`)
+  directives.push(`connect-src ${connectSources.join(' ')}`);
 
   // Media source policy
-  const mediaSources = ["'self'"]
+  const mediaSources = ["'self'"];
   if (config.trustedDomains?.media) {
-    mediaSources.push(...config.trustedDomains.media)
+    mediaSources.push(...config.trustedDomains.media);
   }
-  directives.push(`media-src ${mediaSources.join(' ')}`)
+  directives.push(`media-src ${mediaSources.join(' ')}`);
 
   // Frame source policy
   if (config.trustedDomains?.frames && config.trustedDomains.frames.length > 0) {
-    directives.push(`frame-src ${config.trustedDomains.frames.join(' ')}`)
+    directives.push(`frame-src ${config.trustedDomains.frames.join(' ')}`);
   } else {
-    directives.push("frame-src 'none'")
+    directives.push("frame-src 'none'");
   }
 
   // Object source policy - always none for security
-  directives.push("object-src 'none'")
+  directives.push("object-src 'none'");
 
   // Worker source policy
-  directives.push("worker-src 'self'")
+  directives.push("worker-src 'self'");
 
   // Base URI policy
-  directives.push("base-uri 'self'")
+  directives.push("base-uri 'self'");
 
   // Form action policy
-  directives.push("form-action 'self'")
+  directives.push("form-action 'self'");
 
   // Frame ancestors policy - prevent clickjacking
-  directives.push("frame-ancestors 'none'")
+  directives.push("frame-ancestors 'none'");
 
   // Upgrade insecure requests in production
   if (config.upgradeInsecureRequests && !isDevelopment) {
-    directives.push('upgrade-insecure-requests')
+    directives.push('upgrade-insecure-requests');
   }
 
   // CSP violation reporting
   if (config.enableReporting && config.reportUri) {
-    directives.push(`report-uri ${config.reportUri}`)
+    directives.push(`report-uri ${config.reportUri}`);
   }
 
   // Join directives and clean up whitespace
-  return directives.join('; ').replace(/\s{2,}/g, ' ').trim()
+  return directives.join('; ').replace(/\s{2,}/g, ' ').trim();
 }
 
 /**
  * Generate comprehensive security headers following Next.js best practices
  */
 export function generateSecurityHeaders(nonce?: string, config: CSPConfig = defaultCSPConfig) {
-  const headers: Record<string, string> = {}
+  const headers: Record<string, string> = {};
 
   // Content Security Policy
-  const cspValue = generateCSPHeader(nonce, config)
+  const cspValue = generateCSPHeader(nonce, config);
   if (cspValue) {
-    headers['Content-Security-Policy'] = cspValue
+    headers['Content-Security-Policy'] = cspValue;
   }
 
   // Strict Transport Security
-  headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+  headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload';
 
   // X-Frame-Options (backup for frame-ancestors CSP directive)
-  headers['X-Frame-Options'] = 'DENY'
+  headers['X-Frame-Options'] = 'DENY';
 
   // X-Content-Type-Options
-  headers['X-Content-Type-Options'] = 'nosniff'
+  headers['X-Content-Type-Options'] = 'nosniff';
 
   // X-XSS-Protection (legacy browsers)
-  headers['X-XSS-Protection'] = '1; mode=block'
+  headers['X-XSS-Protection'] = '1; mode=block';
 
   // Referrer Policy
-  headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+  headers['Referrer-Policy'] = 'strict-origin-when-cross-origin';
 
   // Permissions Policy (Feature Policy)
   headers['Permissions-Policy'] = [
@@ -307,71 +307,71 @@ export function generateSecurityHeaders(nonce?: string, config: CSPConfig = defa
     'payment=()',
     'picture-in-picture=()',
     'usb=()',
-  ].join(', ')
+  ].join(', ');
 
   // Cross-Origin policies
-  headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
-  headers['Cross-Origin-Opener-Policy'] = 'same-origin'
-  headers['Cross-Origin-Resource-Policy'] = 'same-origin'
+  headers['Cross-Origin-Embedder-Policy'] = 'require-corp';
+  headers['Cross-Origin-Opener-Policy'] = 'same-origin';
+  headers['Cross-Origin-Resource-Policy'] = 'same-origin';
 
   // DNS Prefetch Control
-  headers['X-DNS-Prefetch-Control'] = 'on'
+  headers['X-DNS-Prefetch-Control'] = 'on';
 
-  return headers
+  return headers;
 }
 
 /**
  * Validate CSP configuration for common issues
  */
 export function validateCSPConfig(config: CSPConfig): { valid: boolean; warnings: string[]; errors: string[] } {
-  const warnings: string[] = []
-  const errors: string[] = []
+  const warnings: string[] = [];
+  const errors: string[] = [];
 
   // Check for unsafe practices
   if (config.allowInlineScripts) {
-    warnings.push('Allowing inline scripts reduces security. Consider using nonces instead.')
+    warnings.push('Allowing inline scripts reduces security. Consider using nonces instead.');
   }
 
   if (config.allowInlineStyles) {
-    warnings.push('Allowing inline styles reduces security. Consider using nonces instead.')
+    warnings.push('Allowing inline styles reduces security. Consider using nonces instead.');
   }
 
   // Check for development settings in production
   if (process.env.NODE_ENV === 'production') {
     if (config.development?.allowUnsafeEval) {
-      errors.push('unsafe-eval should not be allowed in production')
+      errors.push('unsafe-eval should not be allowed in production');
     }
     if (config.development?.allowUnsafeInline) {
-      warnings.push('unsafe-inline in production reduces security')
+      warnings.push('unsafe-inline in production reduces security');
     }
     if (config.development?.disableCSP) {
-      errors.push('CSP should not be disabled in production')
+      errors.push('CSP should not be disabled in production');
     }
   }
 
   // Check for required domains
   if (!config.trustedDomains?.scripts?.includes('https://www.googletagmanager.com') && 
       config.trustedDomains?.scripts?.some(src => src.includes('gtag'))) {
-    warnings.push('Google Analytics domains may be incomplete')
+    warnings.push('Google Analytics domains may be incomplete');
   }
 
   // Check reporting configuration
   if (config.enableReporting && !config.reportUri) {
-    warnings.push('CSP reporting is enabled but no report URI is configured')
+    warnings.push('CSP reporting is enabled but no report URI is configured');
   }
 
   return {
     valid: errors.length === 0,
     warnings,
     errors,
-  }
+  };
 }
 
 /**
  * Parse CSP violation reports for monitoring and analysis
  */
 export function parseCSPViolation(violation: CSPViolation) {
-  const report = violation['csp-report']
+  const report = violation['csp-report'];
   
   return {
     documentUri: report['document-uri'],
@@ -385,14 +385,14 @@ export function parseCSPViolation(violation: CSPViolation) {
     scriptSample: report['script-sample'],
     timestamp: new Date().toISOString(),
     severity: determineViolationSeverity(report['violated-directive']),
-  }
+  };
 }
 
 function determineViolationSeverity(directive: string): 'low' | 'medium' | 'high' | 'critical' {
-  if (directive.includes('script-src')) return 'critical'
-  if (directive.includes('object-src') || directive.includes('frame-src')) return 'high'
-  if (directive.includes('style-src') || directive.includes('img-src')) return 'medium'
-  return 'low'
+  if (directive.includes('script-src')) return 'critical';
+  if (directive.includes('object-src') || directive.includes('frame-src')) return 'high';
+  if (directive.includes('style-src') || directive.includes('img-src')) return 'medium';
+  return 'low';
 }
 
 /**
@@ -469,7 +469,7 @@ export const cspPresets = {
       disableCSP: false,
     },
   } as CSPConfig,
-} as const
+} as const;
 
 /**
  * Utility functions for CSP management
@@ -479,17 +479,17 @@ export const cspUtils = {
    * Get appropriate CSP preset based on environment
    */
   getPresetForEnvironment: (): CSPConfig => {
-    const env = process.env.NODE_ENV
+    const env = process.env.NODE_ENV;
     
     switch (env) {
       case 'production':
-        return cspPresets.strict
+        return cspPresets.strict;
       case 'development':
-        return cspPresets.balanced
+        return cspPresets.balanced;
       case 'test':
-        return cspPresets.testing
+        return cspPresets.testing;
       default:
-        return cspPresets.balanced
+        return cspPresets.balanced;
     }
   },
 
@@ -513,16 +513,16 @@ export const cspUtils = {
    * Convert CSP string back to config object (for debugging)
    */
   parseCSPHeader: (cspHeader: string): Record<string, string[]> => {
-    const directives: Record<string, string[]> = {}
+    const directives: Record<string, string[]> = {};
     
     cspHeader.split(';').forEach(directive => {
-      const [name, ...values] = directive.trim().split(' ')
+      const [name, ...values] = directive.trim().split(' ');
       if (name && values.length > 0) {
-        directives[name] = values
+        directives[name] = values;
       }
-    })
+    });
     
-    return directives
+    return directives;
   },
 
   /**
@@ -537,14 +537,14 @@ export const cspUtils = {
       upgradeInsecure: cspHeader.includes('upgrade-insecure-requests'),
       objectSrc: cspHeader.includes("object-src 'none'"),
       baseSrc: cspHeader.includes("base-uri 'self'"),
-    }
+    };
     
     return {
       ...tests,
       securityScore: Object.values(tests).filter(Boolean).length / Object.keys(tests).length,
-    }
+    };
   },
-}
+};
 
 
 /**
@@ -578,32 +578,32 @@ export const rateLimitConfig = {
     maxRequests: 1000, // 1000 requests per minute
     skipSuccessfulRequests: false,
   },
-}
+};
 
 /**
  * Get rate limit configuration for a specific path (Next.js 15 pattern)
  */
 export function getRateLimitConfig(pathname: string) {
   if (pathname.includes('/api/auth') || pathname.includes('/admin')) {
-    return rateLimitConfig.auth
+    return rateLimitConfig.auth;
   }
   
   if (pathname.includes('/api/contact') || pathname.includes('/api/lead-magnet')) {
-    return rateLimitConfig.contact
+    return rateLimitConfig.contact;
   }
   
   if (pathname.startsWith('/api/')) {
-    return rateLimitConfig.api
+    return rateLimitConfig.api;
   }
   
-  return rateLimitConfig.general
+  return rateLimitConfig.general;
 }
 
 /**
  * Security headers for API routes (Next.js 15 App Router pattern)
  */
 export function getAPISecurityHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {}
+  const headers: Record<string, string> = {};
   
   const securityHeaders = [
     {
@@ -646,17 +646,17 @@ export function getAPISecurityHeaders(): Record<string, string> {
       key: 'Cross-Origin-Resource-Policy',
       value: 'same-origin',
     },
-  ]
+  ];
   
   securityHeaders.forEach(header => {
-    headers[header.key] = header.value
-  })
+    headers[header.key] = header.value;
+  });
   
   // Additional headers for API routes
-  headers['Cache-Control'] = 'no-store, max-age=0'
-  headers['Pragma'] = 'no-cache'
+  headers['Cache-Control'] = 'no-store, max-age=0';
+  headers['Pragma'] = 'no-cache';
   
-  return headers
+  return headers;
 }
 
 
@@ -664,21 +664,21 @@ export function getAPISecurityHeaders(): Record<string, string> {
  * Helper to get nonce from request headers (for React components)
  */
 export function getNonceFromHeaders(headers: Headers): string | null {
-  return headers.get('x-nonce')
+  return headers.get('x-nonce');
 }
 
 /**
  * Create nonce-aware script tag for inline scripts (React 19 pattern)
  */
 export function createNonceScript(content: string, nonce: string): string {
-  return `<script nonce="${nonce}">${content}</script>`
+  return `<script nonce="${nonce}">${content}</script>`;
 }
 
 /**
  * Create nonce-aware style tag for inline styles (React 19 pattern)
  */
 export function createNonceStyle(content: string, nonce: string): string {
-  return `<style nonce="${nonce}">${content}</style>`
+  return `<style nonce="${nonce}">${content}</style>`;
 }
 
 /**
@@ -686,7 +686,7 @@ export function createNonceStyle(content: string, nonce: string): string {
  * @deprecated Use generateCSPHeader instead
  */
 export function getCSPHeader(nonce: string): string {
-  return generateCSPHeader(nonce)
+  return generateCSPHeader(nonce);
 }
 
 /**
@@ -733,4 +733,4 @@ export const securityHeaders = [
     key: 'Cross-Origin-Resource-Policy',
     value: 'same-origin',
   },
-]
+];

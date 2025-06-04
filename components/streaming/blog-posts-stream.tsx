@@ -1,8 +1,8 @@
-import { Suspense } from 'react'
-import { getBlogPosts, preloadBlogPosts } from '@/lib/data-fetchers'
-import { BlogPostsSkeleton } from './blog-posts-skeleton'
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Suspense } from 'react';
+import { getBlogPosts, preloadBlogPosts } from '@/lib/data-fetchers';
+import { BlogPostsSkeleton } from './blog-posts-skeleton';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface BlogPostsStreamProps {
   limit?: number
@@ -11,7 +11,7 @@ interface BlogPostsStreamProps {
 // Server Component that fetches data
 async function BlogPostsContent({ limit }: { limit?: number }) {
   // Data is cached and will be reused if called multiple times
-  const posts = await getBlogPosts(limit)
+  const posts = await getBlogPosts(limit);
 
   return (
     <div className='grid gap-6 md:grid-cols-2'>
@@ -39,13 +39,13 @@ async function BlogPostsContent({ limit }: { limit?: number }) {
         </Card>
       ))}
     </div>
-  )
+  );
 }
 
 // Main component that implements streaming
 export function BlogPostsStream({ limit }: BlogPostsStreamProps) {
   // Preload data for better performance
-  preloadBlogPosts(limit)
+  preloadBlogPosts(limit);
 
   return (
     <div>
@@ -62,5 +62,5 @@ export function BlogPostsStream({ limit }: BlogPostsStreamProps) {
         <BlogPostsContent limit={limit} />
       </Suspense>
     </div>
-  )
+  );
 }

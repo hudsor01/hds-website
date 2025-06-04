@@ -29,7 +29,7 @@ export const supportedLibraries = {
   
   // Recommended approach for this project
   recommended: 'vanilla-extract', // Works well with Tailwind CSS
-} as const
+} as const;
 
 // CSS-in-JS configuration patterns
 export const cssInJsPatterns = {
@@ -86,7 +86,7 @@ export const cssInJsPatterns = {
       'More complex setup',
     ],
   },
-} as const
+} as const;
 
 // Performance considerations for CSS-in-JS
 export const performanceGuidelines = {
@@ -111,7 +111,7 @@ export const performanceGuidelines = {
       'Cache styled components when possible',
     ],
   },
-} as const
+} as const;
 
 // CSS-in-JS integration strategies
 export const integrationStrategies = {
@@ -148,7 +148,7 @@ export const integrationStrategies = {
       'Media queries',
     ],
   },
-} as const
+} as const;
 
 // Runtime CSS injection utilities (for Client Components only)
 export const runtimeStyles = {
@@ -156,36 +156,36 @@ export const runtimeStyles = {
    * Inject theme-dependent styles at runtime
    */
   injectThemeStyles: (theme: Record<string, string>) => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
 
-    const styleId = 'dynamic-theme-styles'
-    let styleElement = document.getElementById(styleId) as HTMLStyleElement
+    const styleId = 'dynamic-theme-styles';
+    let styleElement = document.getElementById(styleId) as HTMLStyleElement;
     
     if (!styleElement) {
-      styleElement = document.createElement('style')
-      styleElement.id = styleId
-      document.head.appendChild(styleElement)
+      styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
     }
 
     const css = Object.entries(theme)
       .map(([key, value]) => `--theme-${key}: ${value};`)
-      .join(' ')
+      .join(' ');
 
-    styleElement.textContent = `:root { ${css} }`
+    styleElement.textContent = `:root { ${css} }`;
   },
 
   /**
    * Remove runtime-injected styles
    */
   removeRuntimeStyles: (styleId: string) => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
-    const element = document.getElementById(styleId)
+    const element = document.getElementById(styleId);
     if (element) {
-      element.remove()
+      element.remove();
     }
   },
-}
+};
 
 // Type-safe style utilities for CSS-in-JS
 export const styleUtils = {
@@ -196,13 +196,13 @@ export const styleUtils = {
       .map(([breakpoint, css]) => {
         const cssString = Object.entries(css)
           .map(([prop, value]) => `${prop}: ${value};`)
-          .join(' ')
+          .join(' ');
         
         if (breakpoint === 'base') {
-          return cssString
+          return cssString;
         }
         
-        return `@media (min-width: ${breakpoint}) { ${cssString} }`
+        return `@media (min-width: ${breakpoint}) { ${cssString} }`;
       })
       .join(' '),
 
@@ -221,14 +221,14 @@ export const styleUtils = {
       .map(([percentage, styles]) => {
         const cssString = Object.entries(styles)
           .map(([prop, value]) => `${prop}: ${value};`)
-          .join(' ')
-        return `${percentage} { ${cssString} }`
+          .join(' ');
+        return `${percentage} { ${cssString} }`;
       })
-      .join(' ')
+      .join(' ');
 
-    return `@keyframes ${name} { ${keyframeString} }`
+    return `@keyframes ${name} { ${keyframeString} }`;
   },
-}
+};
 
 // Development utilities for CSS-in-JS debugging
 export const devUtils = {
@@ -236,36 +236,36 @@ export const devUtils = {
    * Log CSS-in-JS performance metrics
    */
   logPerformanceMetrics: () => {
-    if (process.env.NODE_ENV !== 'development') return
+    if (process.env.NODE_ENV !== 'development') return;
 
     // Measure style injection time
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.name.includes('style')) {
-          console.log(`CSS-in-JS metric: ${entry.name} - ${entry.duration}ms`)
+          console.log(`CSS-in-JS metric: ${entry.name} - ${entry.duration}ms`);
         }
       }
-    })
+    });
 
-    observer.observe({ entryTypes: ['measure'] })
+    observer.observe({ entryTypes: ['measure'] });
   },
 
   /**
    * Analyze CSS-in-JS bundle impact
    */
   analyzeBundleImpact: () => {
-    if (typeof window === 'undefined' || process.env.NODE_ENV !== 'development') return
+    if (typeof window === 'undefined' || process.env.NODE_ENV !== 'development') return;
 
-    const stylesheets = Array.from(document.styleSheets)
+    const stylesheets = Array.from(document.styleSheets);
     const totalRules = stylesheets.reduce((acc, sheet) => {
       try {
-        return acc + (sheet.cssRules?.length || 0)
+        return acc + (sheet.cssRules?.length || 0);
       } catch {
-        return acc
+        return acc;
       }
-    }, 0)
+    }, 0);
 
-    console.log(`Total CSS rules: ${totalRules}`)
-    console.log(`Stylesheets: ${stylesheets.length}`)
+    console.log(`Total CSS rules: ${totalRules}`);
+    console.log(`Stylesheets: ${stylesheets.length}`);
   },
-}
+};

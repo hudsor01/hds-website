@@ -1,6 +1,6 @@
-import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
-import type { AnalyticsStore } from '@/types/analytics-types'
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import type { AnalyticsStore } from '@/types/analytics-types';
 
 export const useAnalyticsStore = create<AnalyticsStore>()(
   devtools(
@@ -9,16 +9,16 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
         hasConsent: false,
         sessionId: null,
         setConsent: (newConsent) => {
-          set({ hasConsent: newConsent })
+          set({ hasConsent: newConsent });
         },
         setSessionId: (newSessionId) => {
-          set({ sessionId: newSessionId })
+          set({ sessionId: newSessionId });
         },
         reset: () => {
           set({
             hasConsent: false,
             sessionId: null,
-          })
+          });
         },
       }),
       {
@@ -29,4 +29,4 @@ export const useAnalyticsStore = create<AnalyticsStore>()(
       name: 'analytics-store',
     },
   ),
-)
+);

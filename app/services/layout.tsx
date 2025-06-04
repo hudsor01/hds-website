@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ArrowRight, BarChart3, Code, Zap } from 'lucide-react'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, BarChart3, Code, Zap } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Services | Hudson Digital Solutions',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Services | Hudson Digital Solutions',
     description: 'Revenue operations, web development, and data analytics services for small business growth.',
   },
-}
+};
 
 interface ServicesLayoutProps {
   children: React.ReactNode
@@ -43,7 +43,7 @@ export default function ServicesLayout({ children }: ServicesLayoutProps) {
       price: '$599',
       popular: false,
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +69,7 @@ export default function ServicesLayout({ children }: ServicesLayoutProps) {
           {/* Services Quick Navigation */}
           <div className="mt-6 flex flex-wrap gap-2">
             {services.map((service) => {
-              const Icon = service.icon
+              const Icon = service.icon;
               return (
                 <Button
                   key={service.href}
@@ -94,7 +94,7 @@ export default function ServicesLayout({ children }: ServicesLayoutProps) {
                     )}
                   </Link>
                 </Button>
-              )
+              );
             })}
           </div>
         </div>
@@ -105,5 +105,5 @@ export default function ServicesLayout({ children }: ServicesLayoutProps) {
         {children}
       </main>
     </div>
-  )
+  );
 }

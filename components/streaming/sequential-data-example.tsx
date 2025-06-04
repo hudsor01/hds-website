@@ -1,19 +1,19 @@
-import { Suspense } from 'react'
-import { preloadServices } from '@/lib/data-fetchers'
+import { Suspense } from 'react';
+import { preloadServices } from '@/lib/data-fetchers';
 
 // Mock functions for sequential dependency example
 async function getUserProfile(userId: string) {
-  await new Promise(resolve => setTimeout(resolve, 150))
+  await new Promise(resolve => setTimeout(resolve, 150));
   return {
     id: userId,
     name: 'John Doe',
     preferredServiceCategory: 'revenue-operations',
     company: 'Tech Startup Inc.',
-  }
+  };
 }
 
 async function getRecommendedServices(_category: string) {
-  await new Promise(resolve => setTimeout(resolve, 100))
+  await new Promise(resolve => setTimeout(resolve, 100));
   // This would filter services based on user preference
   return [
     {
@@ -30,17 +30,17 @@ async function getRecommendedServices(_category: string) {
       price: '$599',
       recommended: true,
     },
-  ]
+  ];
 }
 
 // Sequential data fetching component (dependent data)
 async function UserRecommendations({ userId }: { userId: string }) {
   // First, fetch user profile
-  const userProfile = await getUserProfile(userId)
+  const userProfile = await getUserProfile(userId);
   
   // Then fetch recommended services based on user preference
   // This depends on the result of the first fetch
-  const recommendedServices = await getRecommendedServices(userProfile.preferredServiceCategory)
+  const recommendedServices = await getRecommendedServices(userProfile.preferredServiceCategory);
 
   return (
     <div className='space-y-6'>
@@ -73,7 +73,7 @@ async function UserRecommendations({ userId }: { userId: string }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // Loading state for sequential data
@@ -107,13 +107,13 @@ function UserRecommendationsSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // Main component demonstrating sequential data fetching
 export function SequentialDataExample({ userId }: { userId: string }) {
   // Preload some data that might be needed later
-  preloadServices()
+  preloadServices();
 
   return (
     <div>
@@ -129,5 +129,5 @@ export function SequentialDataExample({ userId }: { userId: string }) {
         <UserRecommendations userId={userId} />
       </Suspense>
     </div>
-  )
+  );
 }

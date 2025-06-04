@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { CartesianGrid, Line, LineChart, XAxis } from 'recharts'
+import * as React from 'react';
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
 
 import {
   Card,
@@ -9,15 +9,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from '@/components/ui/chart';
 
-export const description = 'An interactive line chart showing revenue trends'
+export const description = 'An interactive line chart showing revenue trends';
 
 const revenueData = [
   { date: '2024-10-01', services: 22200, products: 15000 },
@@ -50,7 +50,7 @@ const revenueData = [
   { date: '2024-12-03', services: 38800, products: 30000 },
   { date: '2024-12-04', services: 34900, products: 21000 },
   { date: '2024-12-05', services: 44800, products: 49000 },
-]
+];
 
 const chartConfig = {
   revenue: {
@@ -64,11 +64,11 @@ const chartConfig = {
     label: 'Products',
     color: 'var(--chart-2)',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartLineInteractive() {
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>('services')
+    React.useState<keyof typeof chartConfig>('services');
 
   const total = React.useMemo(
     () => ({
@@ -76,7 +76,7 @@ export function ChartLineInteractive() {
       products: revenueData.reduce((acc, curr) => acc + curr.products, 0),
     }),
     [],
-  )
+  );
 
   return (
     <Card>
@@ -89,7 +89,7 @@ export function ChartLineInteractive() {
         </div>
         <div className='flex'>
           {['services', 'products'].map((key) => {
-            const chart = key as keyof typeof chartConfig
+            const chart = key as keyof typeof chartConfig;
             return (
               <button
                 key={chart}
@@ -104,7 +104,7 @@ export function ChartLineInteractive() {
                   ${(total[key as keyof typeof total] / 1000).toFixed(0)}k
                 </span>
               </button>
-            )
+            );
           })}
         </div>
       </CardHeader>
@@ -129,11 +129,11 @@ export function ChartLineInteractive() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value)
+                const date = new Date(value);
                 return date.toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
-                })
+                });
               }}
             />
             <ChartTooltip
@@ -161,5 +161,5 @@ export function ChartLineInteractive() {
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

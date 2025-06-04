@@ -1,7 +1,7 @@
 // Email sequence execution engine
-import type { EmailSequence, EmailStep, SequenceSubscriber } from './types'
-import { sendEmail } from '../resend'
-import { getAllSequences, getSequencesByTrigger } from './templates'
+import type { EmailSequence, EmailStep, SequenceSubscriber } from './types';
+import { sendEmail } from '../resend';
+import { getAllSequences, getSequencesByTrigger } from './templates';
 
 /**
  * Replace dynamic fields in email template with subscriber data
@@ -10,15 +10,15 @@ function replaceDynamicFields(
   template: string,
   data: Record<string, unknown>,
 ): string {
-  let result = template
+  let result = template;
 
   // Replace {fieldName} with actual values
   Object.keys(data).forEach(key => {
-    const regex = new RegExp(`\\{${key}\\}`, 'g')
-    result = result.replace(regex, data[key] || '')
-  })
+    const regex = new RegExp(`\\{${key}\\}`, 'g');
+    result = result.replace(regex, data[key] || '');
+  });
 
-  return result
+  return result;
 }
 
 /**
@@ -28,23 +28,23 @@ function shouldSkipEmail(
   step: EmailStep,
   subscriber: SequenceSubscriber,
 ): boolean {
-  if (!step.skipIf || step.skipIf.length === 0) return false
+  if (!step.skipIf || step.skipIf.length === 0) return false;
 
   return step.skipIf.some(condition => {
     switch (condition.type) {
       case 'has_responded':
         // Check if subscriber has responded (would need integration with email tracking)
-        return subscriber.userData.hasResponded === true
+        return subscriber.userData.hasResponded === true;
       case 'has_purchased':
         // Check if subscriber has made a purchase
-        return subscriber.userData.hasPurchased === true
+        return subscriber.userData.hasPurchased === true;
       case 'has_scheduled_call':
         // Check if subscriber has scheduled a call
-        return subscriber.userData.hasScheduledCall === true
+        return subscriber.userData.hasScheduledCall === true;
       default:
-        return false
+        return false;
     }
-  })
+  });
 }
 
 /**
@@ -54,27 +54,27 @@ export function getNextEmailStep(
   sequence: EmailSequence,
   subscriber: SequenceSubscriber,
 ): EmailStep | null {
-  const triggeredDate = new Date(subscriber.triggeredAt)
-  const currentDate = new Date()
+  const triggeredDate = new Date(subscriber.triggeredAt);
+  const currentDate = new Date();
   const daysSinceTrigger = Math.floor(
     (currentDate.getTime() - triggeredDate.getTime()) / (1000 * 60 * 60 * 24),
-  )
+  );
 
   // Find the next email that hasn't been sent yet
   for (const step of sequence.emails) {
     // Skip if already sent
-    if (subscriber.completedSteps.includes(step.id)) continue
+    if (subscriber.completedSteps.includes(step.id)) continue;
 
     // Skip if not enough days have passed
-    if (daysSinceTrigger < step.delayDays) continue
+    if (daysSinceTrigger < step.delayDays) continue;
 
     // Skip if conditions are met
-    if (shouldSkipEmail(step, subscriber)) continue
+    if (shouldSkipEmail(step, subscriber)) continue;
 
-    return step
+    return step;
   }
 
-  return null
+  return null;
 }
 
 /**
@@ -86,11 +86,11 @@ export async function sendSequenceEmail(
 ): Promise<boolean> {
   try {
     // Replace dynamic fields in the email
-    const html = replaceDynamicFields(step.template.html, subscriber.userData)
+    const html = replaceDynamicFields(step.template.html, subscriber.userData);
 
     const text = step.template.text
       ? replaceDynamicFields(step.template.text, subscriber.userData)
-      : undefined
+      : undefined;
 
     // Send the email
     const result = await sendEmail({
@@ -99,12 +99,12 @@ export async function sendSequenceEmail(
       subject: step.subject,
       html,
       text,
-    })
+    });
 
-    return result.success
+    return result.success;
   } catch (error) {
-    console.error('Error sending sequence email:', error)
-    return false
+    console.error('Error sending sequence email:', error);
+    return false;
   }
 }
 
@@ -117,11 +117,11 @@ export async function triggerSequence(
   resourceId?: string,
 ): Promise<void> {
   // Find matching sequences
-  const sequences = getSequencesByTrigger(triggerType, resourceId)
+  const sequences = getSequencesByTrigger(triggerType, resourceId);
 
   if (sequences.length === 0) {
-    console.log(`No sequences found for trigger: ${triggerType}`)
-    return
+    console.log(`No sequences found for trigger: ${triggerType}`);
+    return;
   }
 
   // Create subscriber records for each sequence
@@ -137,19 +137,19 @@ export async function triggerSequence(
           userData.firstName || userData.name?.split(' ')[0] || 'there',
         ...userData,
       },
-    }
+    };
 
     // Send the first email if it has 0 delay
-    const firstStep = sequence.emails.find(e => e.delayDays === 0)
+    const firstStep = sequence.emails.find(e => e.delayDays === 0);
     if (firstStep) {
-      const sent = await sendSequenceEmail(firstStep, subscriber)
+      const sent = await sendSequenceEmail(firstStep, subscriber);
       if (sent) {
-        subscriber.completedSteps.push(firstStep.id)
+        subscriber.completedSteps.push(firstStep.id);
       }
     }
 
     // TODO: Store subscriber in database for future processing
-    console.log(`Triggered sequence: ${sequence.id} for ${subscriber.email}`)
+    console.log(`Triggered sequence: ${sequence.id} for ${subscriber.email}`);
   }
 }
 
@@ -159,31 +159,31 @@ export async function triggerSequence(
  */
 export async function processEmailSequences(): Promise<void> {
   // TODO: Fetch all active subscribers from database
-  const subscribers: SequenceSubscriber[] = [] // This would come from DB
+  const subscribers: SequenceSubscriber[] = []; // This would come from DB
 
   for (const subscriber of subscribers) {
-    if (subscriber.status !== 'active') continue
+    if (subscriber.status !== 'active') continue;
 
     // Get the sequence
-    const sequence = getAllSequences().find(s => s.id === subscriber.sequenceId)
-    if (!sequence) continue
+    const sequence = getAllSequences().find(s => s.id === subscriber.sequenceId);
+    if (!sequence) continue;
 
     // Get the next email to send
-    const nextStep = getNextEmailStep(sequence, subscriber)
+    const nextStep = getNextEmailStep(sequence, subscriber);
     if (!nextStep) {
       // No more emails to send, mark as completed
-      subscriber.status = 'completed'
+      subscriber.status = 'completed';
       // TODO: Update in database
-      continue
+      continue;
     }
 
     // Send the email
-    const sent = await sendSequenceEmail(nextStep, subscriber)
+    const sent = await sendSequenceEmail(nextStep, subscriber);
 
     if (sent) {
-      subscriber.completedSteps.push(nextStep.id)
+      subscriber.completedSteps.push(nextStep.id);
       // TODO: Update in database
-      console.log(`Sent email ${nextStep.id} to ${subscriber.email}`)
+      console.log(`Sent email ${nextStep.id} to ${subscriber.email}`);
     }
   }
 }

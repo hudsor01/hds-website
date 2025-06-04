@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 interface ContactConfirmationProps {
   name: string
@@ -226,4 +226,4 @@ export const ContactConfirmationTemplate: React.FC<Readonly<ContactConfirmationP
       </p>
     </div>
   </div>
-)
+);

@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { downloadLeadMagnet } from '@/lib/actions/server-actions'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { useActionState } from 'react';
+import { downloadLeadMagnet } from '@/lib/actions/server-actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select } from '@/components/ui/select';
 
 /**
  * Lead magnet download form using Server Actions
@@ -18,7 +18,7 @@ type FormState = {
   errors?: Array<{ path: string[]; message: string }>
 }
 
-const initialState: FormState = {}
+const initialState: FormState = {};
 
 const leadMagnetResources = [
   { id: 'website-checklist', name: 'Website Performance Checklist' },
@@ -26,7 +26,7 @@ const leadMagnetResources = [
   { id: 'roi-calculator-template', name: 'ROI Calculator Template' },
   { id: 'digital-strategy-guide', name: 'Digital Strategy Guide' },
   { id: 'contact-form-templates', name: 'Contact Form Templates' },
-]
+];
 
 export function ServerActionLeadMagnetForm({ 
   defaultResource,
@@ -38,7 +38,7 @@ export function ServerActionLeadMagnetForm({
   const [state, formAction, isPending] = useActionState(
     async (prevState: FormState, formData: FormData) => await downloadLeadMagnet(formData),
     initialState,
-  )
+  );
 
   return (
     <div className='max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg'>
@@ -156,7 +156,7 @@ export function ServerActionLeadMagnetForm({
         </div>
       </form>
     </div>
-  )
+  );
 }
 
 // Helper function to get field-specific errors
@@ -164,5 +164,5 @@ function getFieldError(
   fieldName: string,
   errors?: Array<{ path: string[]; message: string }>,
 ): string | undefined {
-  return errors?.find(error => error.path.includes(fieldName))?.message
+  return errors?.find(error => error.path.includes(fieldName))?.message;
 }

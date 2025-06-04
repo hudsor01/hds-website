@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   createContext,
@@ -6,8 +6,8 @@ import {
   useState,
   useEffect,
   type ReactNode,
-} from 'react'
-import { LazyMotion, domAnimation } from 'framer-motion'
+} from 'react';
+import { LazyMotion, domAnimation } from 'framer-motion';
 
 interface AnimationContextType {
   animationsEnabled: boolean
@@ -25,7 +25,7 @@ const AnimationContext = createContext<AnimationContextType>({
   enableAnimations: () => {},
   disableAnimations: () => {},
   setAnimationSpeed: () => {},
-})
+});
 
 /**
  * Animation Provider for global animation settings
@@ -35,47 +35,47 @@ const AnimationContext = createContext<AnimationContextType>({
  */
 export function AnimationProvider({ children }: { children: ReactNode }) {
   // Animation state
-  const [animationsEnabled, setAnimationsEnabled] = useState(true)
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState<
     'slow' | 'normal' | 'fast'
-  >('normal')
-  const [reduceMotion, setReduceMotion] = useState(false)
+  >('normal');
+  const [reduceMotion, setReduceMotion] = useState(false);
 
   // Check for prefers-reduced-motion on mount
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduceMotion(mediaQuery.matches)
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduceMotion(mediaQuery.matches);
 
     // Listen for changes to the prefers-reduced-motion media query
     const handleChange = (e: MediaQueryListEvent) => {
-      setReduceMotion(e.matches)
-    }
+      setReduceMotion(e.matches);
+    };
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   // Disable animations when reduceMotion is true
   useEffect(() => {
     if (reduceMotion) {
-      setAnimationsEnabled(false)
+      setAnimationsEnabled(false);
     }
-  }, [reduceMotion])
+  }, [reduceMotion]);
 
   // Functions to control animations
   const enableAnimations = () => {
     if (!reduceMotion) {
-      setAnimationsEnabled(true)
+      setAnimationsEnabled(true);
     }
-  }
+  };
 
   const disableAnimations = () => {
-    setAnimationsEnabled(false)
-  }
+    setAnimationsEnabled(false);
+  };
 
   const handleSetAnimationSpeed = (speed: 'slow' | 'normal' | 'fast') => {
-    setAnimationSpeed(speed)
-  }
+    setAnimationSpeed(speed);
+  };
 
   const value = {
     animationsEnabled,
@@ -84,7 +84,7 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
     enableAnimations,
     disableAnimations,
     setAnimationSpeed: handleSetAnimationSpeed,
-  }
+  };
 
   return (
     <LazyMotion features={domAnimation} strict>
@@ -92,20 +92,20 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
         {children}
       </AnimationContext.Provider>
     </LazyMotion>
-  )
+  );
 }
 
 /**
  * Custom hook to access animation settings
  */
 export function useAnimation() {
-  const context = useContext(AnimationContext)
+  const context = useContext(AnimationContext);
 
   if (context === undefined) {
-    throw new Error('useAnimation must be used within an AnimationProvider')
+    throw new Error('useAnimation must be used within an AnimationProvider');
   }
 
-  return context
+  return context;
 }
 
 /**
@@ -117,14 +117,14 @@ export function useAnimation() {
  * - fast: 0.67x (33% faster)
  */
 export function useAnimationSpeed() {
-  const { animationSpeed } = useAnimation()
+  const { animationSpeed } = useAnimation();
 
   switch (animationSpeed) {
     case 'slow':
-      return 1.5
+      return 1.5;
     case 'fast':
-      return 0.67
+      return 0.67;
     default:
-      return 1
+      return 1;
   }
 }

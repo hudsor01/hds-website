@@ -1,5 +1,5 @@
-'use client'
-import React from 'react'
+'use client';
+import React from 'react';
 
 export function GridBackground({
   children,
@@ -18,7 +18,7 @@ export function GridBackground({
         {children}
       </div>
     </div>
-  )
+  );
 }
 
 export function DotBackground({
@@ -38,5 +38,5 @@ export function DotBackground({
         {children}
       </div>
     </div>
-  )
+  );
 }

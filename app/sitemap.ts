@@ -1,8 +1,8 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || 'https://hudsondigitalsolutions.com'
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://hudsondigitalsolutions.com';
 
   return [
     // Core Pages
@@ -144,5 +144,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
-  ]
+  ];
 }

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 
 /**
  * Cache control configurations for different types of content
@@ -38,7 +38,7 @@ export const CACHE_CONFIGS = {
     staleWhileRevalidate: 0,
     mustRevalidate: true,
   },
-} as const
+} as const;
 
 export type CacheConfig = keyof typeof CACHE_CONFIGS
 
@@ -46,63 +46,63 @@ export type CacheConfig = keyof typeof CACHE_CONFIGS
  * Generate cache control header value
  */
 export function generateCacheControl(config: CacheConfig): string {
-  const settings = CACHE_CONFIGS[config]
+  const settings = CACHE_CONFIGS[config];
   
-  const directives: string[] = []
+  const directives: string[] = [];
   
   if (settings.maxAge === 0) {
-    directives.push('no-cache', 'no-store', 'must-revalidate')
+    directives.push('no-cache', 'no-store', 'must-revalidate');
   } else {
-    directives.push(`max-age=${settings.maxAge}`)
+    directives.push(`max-age=${settings.maxAge}`);
     
     if (settings.staleWhileRevalidate > 0) {
-      directives.push(`s-maxage=${settings.maxAge}`)
-      directives.push(`stale-while-revalidate=${settings.staleWhileRevalidate}`)
+      directives.push(`s-maxage=${settings.maxAge}`);
+      directives.push(`stale-while-revalidate=${settings.staleWhileRevalidate}`);
     }
     
     if (settings.mustRevalidate) {
-      directives.push('must-revalidate')
+      directives.push('must-revalidate');
     }
     
     // Add public for cacheable content
-    directives.push('public')
+    directives.push('public');
   }
   
-  return directives.join(', ')
+  return directives.join(', ');
 }
 
 /**
  * Add cache headers to a response
  */
 export function addCacheHeaders(response: NextResponse, config: CacheConfig): NextResponse {
-  const cacheControl = generateCacheControl(config)
+  const cacheControl = generateCacheControl(config);
   
-  response.headers.set('Cache-Control', cacheControl)
+  response.headers.set('Cache-Control', cacheControl);
   
   // Add additional caching headers
   if (config !== 'NO_CACHE') {
     // Add ETag for cache validation
-    const etag = `'${Date.now()}'`
-    response.headers.set('ETag', etag)
+    const etag = `'${Date.now()}'`;
+    response.headers.set('ETag', etag);
     
     // Add Vary header for content negotiation
-    response.headers.set('Vary', 'Accept-Encoding, Accept')
+    response.headers.set('Vary', 'Accept-Encoding, Accept');
   }
   
-  return response
+  return response;
 }
 
 /**
  * Set cache headers for API responses
  */
 export function setCacheHeaders(headers: Headers, config: CacheConfig): void {
-  const cacheControl = generateCacheControl(config)
-  headers.set('Cache-Control', cacheControl)
+  const cacheControl = generateCacheControl(config);
+  headers.set('Cache-Control', cacheControl);
   
   if (config !== 'NO_CACHE') {
-    const etag = `'${Date.now()}'`
-    headers.set('ETag', etag)
-    headers.set('Vary', 'Accept-Encoding, Accept')
+    const etag = `'${Date.now()}'`;
+    headers.set('ETag', etag);
+    headers.set('Vary', 'Accept-Encoding, Accept');
   }
 }
 
@@ -112,32 +112,32 @@ export function setCacheHeaders(headers: Headers, config: CacheConfig): void {
 export function getCacheConfigForPath(pathname: string): CacheConfig {
   // Static assets
   if (pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|otf|eot)$/i)) {
-    return 'STATIC_ASSETS'
+    return 'STATIC_ASSETS';
   }
   
   // CSS and JS files
   if (pathname.match(/\.(css|js)$/i)) {
-    return 'STATIC_ASSETS'
+    return 'STATIC_ASSETS';
   }
   
   // API routes
   if (pathname.startsWith('/api/')) {
     // Authentication endpoints should not be cached
     if (pathname.includes('/auth/') || pathname.includes('/contact/') || pathname.includes('/newsletter/')) {
-      return 'NO_CACHE'
+      return 'NO_CACHE';
     }
     
     // Analytics and lead magnet downloads can be cached briefly
     if (pathname.includes('/analytics/') || pathname.includes('/lead-magnet/')) {
-      return 'API_DYNAMIC'
+      return 'API_DYNAMIC';
     }
     
     // Other API endpoints
-    return 'API_STABLE'
+    return 'API_STABLE';
   }
   
   // Regular pages
-  return 'PAGES'
+  return 'PAGES';
 }
 
 /**
@@ -145,21 +145,21 @@ export function getCacheConfigForPath(pathname: string): CacheConfig {
  */
 export function shouldCache(request: Request): boolean {
   // Don't cache authenticated requests
-  const authHeader = request.headers.get('authorization')
+  const authHeader = request.headers.get('authorization');
   if (authHeader) {
-    return false
+    return false;
   }
   
   // Don't cache POST, PUT, DELETE requests
   if (request.method !== 'GET' && request.method !== 'HEAD') {
-    return false
+    return false;
   }
   
   // Don't cache requests with cache-control: no-cache
-  const cacheControl = request.headers.get('cache-control')
+  const cacheControl = request.headers.get('cache-control');
   if (cacheControl?.includes('no-cache')) {
-    return false
+    return false;
   }
   
-  return true
+  return true;
 }

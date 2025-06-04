@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { PlusCircle, Inbox } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import React from 'react';
+import { PlusCircle, Inbox } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@/components/ui/tooltip';
 
 interface NavItem {
   title: string
@@ -71,5 +71,5 @@ export function NavMain({ items }: { items: NavItem[] }) {
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }

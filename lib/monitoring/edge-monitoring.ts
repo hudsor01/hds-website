@@ -8,10 +8,10 @@ export class EdgeMonitoring {
       duration,
       success,
       timestamp: new Date().toISOString(),
-    }
+    };
 
     // Edge runtime logging
-    console.log('⚡ Edge function executed:', event)
+    console.log('⚡ Edge function executed:', event);
 
     // In production, you might want to send this to your monitoring service
     // via fetch() to an analytics endpoint
@@ -25,16 +25,16 @@ export class EdgeMonitoring {
       duration,
       statusCode,
       timestamp: new Date().toISOString(),
-    }
+    };
 
     // Log slow middleware execution
     if (duration > 100) {
-      console.warn('⚠️ Slow middleware execution:', event)
+      console.warn('⚠️ Slow middleware execution:', event);
     }
 
     // Log errors
     if (statusCode >= 400) {
-      console.error('❌ Middleware error:', event)
+      console.error('❌ Middleware error:', event);
     }
   }
 
@@ -46,10 +46,10 @@ export class EdgeMonitoring {
       path,
       limited,
       timestamp: new Date().toISOString(),
-    }
+    };
 
     if (limited) {
-      console.warn('⚠️ Rate limit triggered:', event)
+      console.warn('⚠️ Rate limit triggered:', event);
     }
   }
 
@@ -60,9 +60,9 @@ export class EdgeMonitoring {
       securityType: type,
       details,
       timestamp: new Date().toISOString(),
-    }
+    };
 
-    console.warn('🔒 Security event detected:', event)
+    console.warn('🔒 Security event detected:', event);
   }
 
   // Track API route performance
@@ -74,23 +74,23 @@ export class EdgeMonitoring {
       duration,
       statusCode,
       timestamp: new Date().toISOString(),
-    }
+    };
 
     // Log slow API routes
     if (duration > 1000) {
-      console.warn('⚠️ Slow API route:', event)
+      console.warn('⚠️ Slow API route:', event);
     }
 
     // Log API errors
     if (statusCode >= 400) {
-      console.error('❌ API route error:', event)
+      console.error('❌ API route error:', event);
     }
   }
 }
 
 // Export convenience functions
-export const trackEdgeFunction = EdgeMonitoring.trackEdgeFunction.bind(EdgeMonitoring)
-export const trackMiddleware = EdgeMonitoring.trackMiddleware.bind(EdgeMonitoring)
-export const trackRateLimit = EdgeMonitoring.trackRateLimit.bind(EdgeMonitoring)
-export const trackSecurityEvent = EdgeMonitoring.trackSecurityEvent.bind(EdgeMonitoring)
-export const trackApiRoute = EdgeMonitoring.trackApiRoute.bind(EdgeMonitoring)
+export const trackEdgeFunction = EdgeMonitoring.trackEdgeFunction.bind(EdgeMonitoring);
+export const trackMiddleware = EdgeMonitoring.trackMiddleware.bind(EdgeMonitoring);
+export const trackRateLimit = EdgeMonitoring.trackRateLimit.bind(EdgeMonitoring);
+export const trackSecurityEvent = EdgeMonitoring.trackSecurityEvent.bind(EdgeMonitoring);
+export const trackApiRoute = EdgeMonitoring.trackApiRoute.bind(EdgeMonitoring);

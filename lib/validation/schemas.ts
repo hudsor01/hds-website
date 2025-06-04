@@ -5,12 +5,12 @@
  * @deprecated Use the schemas from the types directory instead.
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 import {
   contactFormFullSchema,
   newsletterSchema,
   leadMagnetSchema,
-} from '@/types/form-types'
+} from '@/types/form-types';
 
 import {
   nameSchema,
@@ -25,7 +25,7 @@ import {
   csrfTokenSchema,
   captchaTokenSchema,
   nonceSchema,
-} from '@/types/validation-schemas'
+} from '@/types/validation-schemas';
 
 // Re-export the schemas from the types directory
 export {
@@ -49,13 +49,13 @@ export {
   csrfTokenSchema,
   captchaTokenSchema,
   nonceSchema,
-}
+};
 
 // Additional composite schemas
 export const authSchema = {
   email: emailSchema,
   password: passwordSchema,
-}
+};
 
 export const userProfileSchema = {
   name: nameSchema,
@@ -66,7 +66,7 @@ export const userProfileSchema = {
     .max(500, { message: 'Bio cannot exceed 500 characters' })
     .optional(),
   website: urlSchema.optional(),
-}
+};
 
 // Enums
 export const serviceEnum = z.enum([
@@ -75,9 +75,9 @@ export const serviceEnum = z.enum([
   'data-analytics',
   'business-strategy',
   'other',
-])
+]);
 
-export const budgetEnum = z.enum(['<10k', '10k-50k', '50k-100k', '>100k'])
+export const budgetEnum = z.enum(['<10k', '10k-50k', '50k-100k', '>100k']);
 
 export const serviceInquirySchema = {
   name: nameSchema,
@@ -87,7 +87,7 @@ export const serviceInquirySchema = {
   message: messageSchema,
   service: serviceEnum,
   budget: budgetEnum.optional(),
-}
+};
 
 export const commentSchema = {
   name: nameSchema,
@@ -95,4 +95,4 @@ export const commentSchema = {
   comment: messageSchema.max(1000, {
     message: 'Comment cannot exceed 1000 characters',
   }),
-}
+};

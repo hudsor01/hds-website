@@ -1,7 +1,7 @@
 /**
  * Type helper utilities for working with API data and endpoints
  */
-import type { ZodType, ZodTypeDef } from 'zod'
+import type { ZodType, ZodTypeDef } from 'zod';
 
 /**
  * Helper type that makes all properties optional
@@ -18,7 +18,7 @@ export type DeepPartial<T> = T extends object
  * Useful for creating mock data with proper types
  */
 export function createTypedResponse<T>(data: T): T {
-  return data
+  return data;
 }
 
 /**
@@ -29,7 +29,7 @@ export function validateWithSchema<Output, Def extends ZodTypeDef, Input>(
   schema: ZodType<Output, Def, Input>,
   data: unknown,
 ): Output {
-  return schema.parse(data)
+  return schema.parse(data);
 }
 
 /**
@@ -55,7 +55,7 @@ export type FromIndexSignature<T extends Record<string, unknown>> = {
  * Useful for converting API responses to properly typed objects
  */
 export function transformTypedRecord<T>(record: Record<string, unknown>): T {
-  return record as unknown as T
+  return record as unknown as T;
 }
 
 /**
@@ -110,40 +110,40 @@ export type NullableKeys<T> = {
  * Helper to ensure exhaustive checks in switch statements
  */
 export function assertNever(value: never): never {
-  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`)
+  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
 }
 
 /**
  * Type guard to check if a value is defined
  */
 export function isDefined<T>(value: T | undefined | null): value is T {
-  return value !== undefined && value !== null
+  return value !== undefined && value !== null;
 }
 
 /**
  * Type guard to check if a value is a string
  */
 export function isString(value: unknown): value is string {
-  return typeof value === 'string'
+  return typeof value === 'string';
 }
 
 /**
  * Type guard to check if a value is a number
  */
 export function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && !isNaN(value)
+  return typeof value === 'number' && !isNaN(value);
 }
 
 /**
  * Type guard to check if a value is an object
  */
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**
  * Type guard to check if a value is an array
  */
 export function isArray<T = unknown>(value: unknown): value is T[] {
-  return Array.isArray(value)
+  return Array.isArray(value);
 }

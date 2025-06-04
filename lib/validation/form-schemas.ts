@@ -30,7 +30,7 @@ export {
   type ROICalculatorFormData,
   type WebsiteAuditFormData,
   type BookingFormData,
-} from '@/types/form-types'
+} from '@/types/form-types';
 
 // Legacy type aliases for backward compatibility
 export type ContactFormValues = import('@/types/form-types').ContactFormData

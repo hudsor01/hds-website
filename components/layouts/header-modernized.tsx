@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import React, { memo, useTransition, startTransition, useDeferredValue } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { m, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import { useNavigationStore } from '@/lib/store/navigation-store'
+import React, { memo, useTransition, startTransition, useDeferredValue } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { m, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import { useNavigationStore } from '@/lib/store/navigation-store';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -15,7 +15,7 @@ const navigation = [
   { name: 'Blog', href: '/blog' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
-]
+];
 
 /**
  * React 19 modernized navigation item with optimized event handlers
@@ -29,16 +29,16 @@ const NavigationItem = memo(function NavigationItem({
   pathname: string
   onNavigate?: () => void
 }) {
-  const [isPending] = useTransition()
+  const [isPending] = useTransition();
   
   const handleClick = () => {
     // Use startTransition for navigation state updates
     startTransition(() => {
       if (onNavigate) {
-        onNavigate()
+        onNavigate();
       }
-    })
-  }
+    });
+  };
 
   return (
     <m.div
@@ -68,8 +68,8 @@ const NavigationItem = memo(function NavigationItem({
         />
       </Link>
     </m.div>
-  )
-})
+  );
+});
 
 /**
  * React 19 modernized mobile menu with performance optimizations
@@ -83,17 +83,17 @@ const MobileMenu = memo(function MobileMenu({
   pathname: string
   onClose: () => void
 }) {
-const [isPending] = useTransition()
+const [isPending] = useTransition();
   
   const handleItemClick = () => {
     startTransition(() => {
-      onClose()
-    })
-  }
+      onClose();
+    });
+  };
 
   const handleCloseClick = () => {
-  onClose()
-  }
+  onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -176,8 +176,8 @@ const [isPending] = useTransition()
         </>
       )}
     </AnimatePresence>
-  )
-})
+  );
+});
 
 /**
  * React 19 modernized header component with performance optimizations
@@ -190,46 +190,46 @@ const [isPending] = useTransition()
  * - Optimized event handlers
  */
 export const HeaderModernized = memo(function HeaderModernized() {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const { isMobileMenuOpen, isScrolled, setMobileMenuOpen, setScrolled } =
-    useNavigationStore()
+    useNavigationStore();
   
-  const [isPending, startMenuTransition] = useTransition()
+  const [isPending, startMenuTransition] = useTransition();
   
   // Defer scroll state for smoother performance
-  const deferredScrolled = useDeferredValue(isScrolled)
+  const deferredScrolled = useDeferredValue(isScrolled);
 
   // React 19 optimized scroll handler with startTransition
   const handleScroll = React.useCallback(() => {
     startTransition(() => {
-      setScrolled(window.scrollY > 10)
-    })
-  }, [setScrolled])
+      setScrolled(window.scrollY > 10);
+    });
+  }, [setScrolled]);
 
   // React 19 optimized menu toggle with useTransition
   const handleMenuToggle = (open: boolean) => {
     startMenuTransition(() => {
-      setMobileMenuOpen(open)
-    })
-  }
+      setMobileMenuOpen(open);
+    });
+  };
 
   // Use native event listener with React 19 patterns
   React.useEffect(() => {
-    let ticking = false
+    let ticking = false;
     
     const optimizedScrollHandler = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          handleScroll()
-          ticking = false
-        })
-        ticking = true
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
       }
-    }
+    };
 
-    window.addEventListener('scroll', optimizedScrollHandler, { passive: true })
-    return () => window.removeEventListener('scroll', optimizedScrollHandler)
-  }, [handleScroll])
+    window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+    return () => window.removeEventListener('scroll', optimizedScrollHandler);
+  }, [handleScroll]);
 
   return (
     <m.header
@@ -301,8 +301,8 @@ export const HeaderModernized = memo(function HeaderModernized() {
         onClose={() => handleMenuToggle(false)}
       />
     </m.header>
-  )
-})
+  );
+});
 
 // Export with display name for better debugging
-HeaderModernized.displayName = 'HeaderModernized'
+HeaderModernized.displayName = 'HeaderModernized';

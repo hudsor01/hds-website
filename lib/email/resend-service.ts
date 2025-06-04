@@ -1,18 +1,18 @@
-import React from 'react'
-import { Resend } from 'resend'
-import { ContactNotificationTemplate } from '@/components/emails/contact-notification'
-import { ContactConfirmationTemplate } from '@/components/emails/contact-confirmation'
-import { NewsletterWelcomeTemplate } from '@/components/emails/newsletter-welcome'
+import React from 'react';
+import { Resend } from 'resend';
+import { ContactNotificationTemplate } from '@/components/emails/contact-notification';
+import { ContactConfirmationTemplate } from '@/components/emails/contact-confirmation';
+import { NewsletterWelcomeTemplate } from '@/components/emails/newsletter-welcome';
 
 // Initialize Resend with error handling
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Email configuration
 const EMAIL_CONFIG = {
   from: process.env.RESEND_FROM_EMAIL || 'noreply@hudsondigitalsolutions.com',
   adminEmail: process.env.CONTACT_EMAIL || 'contact@hudsondigitalsolutions.com',
   replyTo: process.env.CONTACT_EMAIL || 'contact@hudsondigitalsolutions.com',
-} as const
+} as const;
 
 // Types
 interface ContactEmailData {
@@ -51,7 +51,7 @@ export class ResendEmailService {
         hour: '2-digit',
         minute: '2-digit',
         timeZoneName: 'short',
-      })
+      });
 
       const { data: result, error } = await resend.emails.send({
         from: EMAIL_CONFIG.from,
@@ -67,20 +67,20 @@ export class ResendEmailService {
           { name: 'source', value: 'website' },
           { name: 'priority', value: 'high' },
         ],
-      })
+      });
 
       if (error) {
-        console.error('Failed to send contact notification:', error)
-        return { success: false, error: error.message }
+        console.error('Failed to send contact notification:', error);
+        return { success: false, error: error.message };
       }
 
-      return { success: true, messageId: result?.id }
+      return { success: true, messageId: result?.id };
     } catch (error) {
-      console.error('Contact notification email error:', error)
+      console.error('Contact notification email error:', error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error',
-      }
+      };
     }
   }
 
@@ -103,20 +103,20 @@ export class ResendEmailService {
           { name: 'source', value: 'website' },
           { name: 'priority', value: 'normal' },
         ],
-      })
+      });
 
       if (error) {
-        console.error('Failed to send contact confirmation:', error)
-        return { success: false, error: error.message }
+        console.error('Failed to send contact confirmation:', error);
+        return { success: false, error: error.message };
       }
 
-      return { success: true, messageId: result?.id }
+      return { success: true, messageId: result?.id };
     } catch (error) {
-      console.error('Contact confirmation email error:', error)
+      console.error('Contact confirmation email error:', error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error',
-      }
+      };
     }
   }
 
@@ -139,20 +139,20 @@ export class ResendEmailService {
           { name: 'source', value: 'website' },
           { name: 'priority', value: 'normal' },
         ],
-      })
+      });
 
       if (error) {
-        console.error('Failed to send newsletter welcome:', error)
-        return { success: false, error: error.message }
+        console.error('Failed to send newsletter welcome:', error);
+        return { success: false, error: error.message };
       }
 
-      return { success: true, messageId: result?.id }
+      return { success: true, messageId: result?.id };
     } catch (error) {
-      console.error('Newsletter welcome email error:', error)
+      console.error('Newsletter welcome email error:', error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error',
-      }
+      };
     }
   }
 
@@ -166,49 +166,49 @@ export class ResendEmailService {
     const [notificationResult, confirmationResult] = await Promise.all([
       this.sendContactNotification(data),
       this.sendContactConfirmation(data),
-    ])
+    ]);
 
     return {
       notificationResult,
       confirmationResult,
-    }
+    };
   }
 
   /**
    * Validate email configuration
    */
   static validateConfig(): { isValid: boolean; errors: string[] } {
-    const errors: string[] = []
+    const errors: string[] = [];
     
     if (!process.env.RESEND_API_KEY) {
-      errors.push('RESEND_API_KEY environment variable is required')
+      errors.push('RESEND_API_KEY environment variable is required');
     }
     
     if (!process.env.RESEND_FROM_EMAIL) {
-      errors.push('RESEND_FROM_EMAIL environment variable is required')
+      errors.push('RESEND_FROM_EMAIL environment variable is required');
     }
     
     if (!process.env.CONTACT_EMAIL) {
-      errors.push('CONTACT_EMAIL environment variable is required')
+      errors.push('CONTACT_EMAIL environment variable is required');
     }
 
     return {
       isValid: errors.length === 0,
       errors,
-    }
+    };
   }
 
   /**
    * Test email configuration by sending a test email
    */
   static async testConfiguration(): Promise<EmailResult> {
-    const validation = this.validateConfig()
+    const validation = this.validateConfig();
     
     if (!validation.isValid) {
       return {
         success: false,
         error: `Configuration errors: ${validation.errors.join(', ')}`,
-      }
+      };
     }
 
     try {
@@ -229,27 +229,27 @@ export class ResendEmailService {
           { name: 'category', value: 'configuration-test' },
           { name: 'environment', value: process.env.NODE_ENV || 'unknown' },
         ],
-      })
+      });
 
       if (error) {
-        return { success: false, error: error.message }
+        return { success: false, error: error.message };
       }
 
-      return { success: true, messageId: result?.id }
+      return { success: true, messageId: result?.id };
     } catch (error) {
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error',
-      }
+      };
     }
   }
 }
 
 // Export individual functions for backwards compatibility
-export const sendContactNotification = ResendEmailService.sendContactNotification.bind(ResendEmailService)
-export const sendContactConfirmation = ResendEmailService.sendContactConfirmation.bind(ResendEmailService)
-export const sendNewsletterWelcome = ResendEmailService.sendNewsletterWelcome.bind(ResendEmailService)
-export const sendContactEmails = ResendEmailService.sendContactEmails.bind(ResendEmailService)
+export const sendContactNotification = ResendEmailService.sendContactNotification.bind(ResendEmailService);
+export const sendContactConfirmation = ResendEmailService.sendContactConfirmation.bind(ResendEmailService);
+export const sendNewsletterWelcome = ResendEmailService.sendNewsletterWelcome.bind(ResendEmailService);
+export const sendContactEmails = ResendEmailService.sendContactEmails.bind(ResendEmailService);
 
 // Export types
-export type { ContactEmailData, NewsletterEmailData, EmailResult }
+export type { ContactEmailData, NewsletterEmailData, EmailResult };

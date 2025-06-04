@@ -5,7 +5,7 @@
  * and container variants for text-based components.
  */
 
-import { transitions } from './animation-tokens'
+import { transitions } from './animation-tokens';
 
 // Text-specific animation variants
 export const textAnimations = {
@@ -42,14 +42,14 @@ export const textAnimations = {
       },
     },
   },
-}
+};
 
 // Stagger configurations for lists and grids
 export const staggerConfigs = {
   fast: 0.05,
   default: 0.1,
   slow: 0.2,
-}
+};
 
 // Container variants for staggered children
 export const containerVariants = {
@@ -100,4 +100,4 @@ export const containerVariants = {
       },
     },
   },
-}
+};

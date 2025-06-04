@@ -1,12 +1,12 @@
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from 'next/og';
 
 // Image metadata
 export const size = {
   width: 1200,
   height: 630,
-}
+};
 
-export const contentType = 'image/png'
+export const contentType = 'image/png';
 
 // Service data (in a real app, this would come from a database or CMS)
 const servicesData = {
@@ -25,7 +25,7 @@ const servicesData = {
     description: 'Transform data into insights',
     color: '#8B5CF6',
   },
-}
+};
 
 // Dynamic OG image generation for services
 export default async function ServiceOGImage({ 
@@ -33,12 +33,12 @@ export default async function ServiceOGImage({
 }: { 
   params: Promise<{ service: string }> 
 }) {
-  const { service } = await params
+  const { service } = await params;
   const serviceData = servicesData[service as keyof typeof servicesData] || {
     title: 'Our Services',
     description: 'Professional business solutions',
     color: '#1F2937',
-  }
+  };
 
   return new ImageResponse(
     (
@@ -198,5 +198,5 @@ export default async function ServiceOGImage({
     {
       ...size,
     },
-  )
+  );
 }

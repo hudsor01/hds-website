@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import React, { useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { m, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
-import { useNavigationStore } from '@/lib/store/navigation-store'
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { m, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import { useNavigationStore } from '@/lib/store/navigation-store';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -15,21 +15,21 @@ const navigation = [
   { name: 'Blog', href: '/blog' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
-]
+];
 
 export function Header() {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const { isMobileMenuOpen, isScrolled, setMobileMenuOpen, setScrolled } =
-    useNavigationStore()
+    useNavigationStore();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10)
-    }
+      setScrolled(window.scrollY > 10);
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [setScrolled])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [setScrolled]);
 
   return (
     <m.header
@@ -195,5 +195,5 @@ export function Header() {
         )}
       </AnimatePresence>
     </m.header>
-  )
+  );
 }

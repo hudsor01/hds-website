@@ -1,48 +1,48 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Cookie, X, Settings, Shield } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Switch } from '@/components/ui/switch'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CookieCategory } from '@/types/enum-types'
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Cookie, X, Settings, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CookieCategory } from '@/types/enum-types';
 import { 
 COOKIE_DEFINITIONS,
 useCookieConsent,
 type CookieConsent,
-} from '@/lib/cookies/consent-manager'
+} from '@/lib/cookies/consent-manager';
 
 /**
  * Cookie consent banner component
  */
 export function CookieConsentBanner() {
-  const [showBanner, setShowBanner] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
-  const { consent, updateConsent, acceptAll, rejectAll, isRequired } = useCookieConsent()
+  const [showBanner, setShowBanner] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const { consent, updateConsent, acceptAll, rejectAll, isRequired } = useCookieConsent();
 
   useEffect(() => {
     // Show banner if consent is required
     if (isRequired) {
-      setTimeout(() => setShowBanner(true), 1000) // Delay for better UX
+      setTimeout(() => setShowBanner(true), 1000); // Delay for better UX
     }
-  }, [isRequired])
+  }, [isRequired]);
 
   const handleAcceptAll = () => {
-    acceptAll()
-    setShowBanner(false)
-  }
+    acceptAll();
+    setShowBanner(false);
+  };
 
   const handleRejectAll = () => {
-    rejectAll()
-    setShowBanner(false)
-  }
+    rejectAll();
+    setShowBanner(false);
+  };
 
   const handleSaveSettings = () => {
-    setShowSettings(false)
-    setShowBanner(false)
-  }
+    setShowSettings(false);
+    setShowBanner(false);
+  };
 
   return (
     <>
@@ -146,7 +146,7 @@ export function CookieConsentBanner() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 /**
@@ -161,9 +161,9 @@ consent: CookieConsent
 updateConsent: (consent: CookieConsent) => void
 onSave: () => void
 }) {
-const [localConsent, setLocalConsent] = useState(consent)
+const [localConsent, setLocalConsent] = useState(consent);
 // Avoid unused variable warning
-void consent
+void consent;
 
   const categories = [
     {
@@ -190,19 +190,19 @@ void consent
       description: 'These cookies are used to deliver personalized advertisements.',
       required: false,
     },
-  ]
+  ];
 
   const handleToggle = (category: CookieCategory, enabled: boolean) => {
     setLocalConsent({
       ...localConsent,
       [category]: enabled,
-    })
-  }
+    });
+  };
 
   const handleSave = () => {
-    updateConsent(localConsent)
-    onSave()
-  }
+    updateConsent(localConsent);
+    onSave();
+  };
 
   return (
     <div className='space-y-6'>
@@ -245,9 +245,9 @@ void consent
             {categories.map((category) => {
               const cookies = COOKIE_DEFINITIONS.filter(
                 (cookie) => cookie.category === category.id,
-              )
+              );
               
-              if (cookies.length === 0) return null
+              if (cookies.length === 0) return null;
 
               return (
                 <div key={category.id}>
@@ -275,7 +275,7 @@ void consent
                     ))}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </TabsContent>
@@ -292,7 +292,7 @@ void consent
               functional: true,
               analytics: true,
               marketing: true,
-            })
+            });
           }}
           variant='outline'
         >
@@ -300,15 +300,15 @@ void consent
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 /**
  * Cookie settings link for footer/privacy policy
  */
 export function CookieSettingsLink() {
-  const [showSettings, setShowSettings] = useState(false)
-  const { consent, updateConsent } = useCookieConsent()
+  const [showSettings, setShowSettings] = useState(false);
+  const { consent, updateConsent } = useCookieConsent();
 
   return (
     <>
@@ -363,5 +363,5 @@ export function CookieSettingsLink() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import * as React from 'react'
+import * as React from 'react';
 import {
   ChartColumnIncreasingIcon,
   ChartPieIcon,
@@ -12,12 +12,12 @@ import {
   HouseIcon,
   FileIcon,
   FileTextIcon,
-} from 'lucide-react'
+} from 'lucide-react';
 
-import { NavDocuments } from '@/components/admin/nav-documents'
-import { NavMain } from '@/components/admin/nav-main'
-import { NavSecondary } from '@/components/admin/nav-secondary'
-import { NavUser } from '@/components/admin/nav-user'
+import { NavDocuments } from '@/components/admin/nav-documents';
+import { NavMain } from '@/components/admin/nav-main';
+import { NavSecondary } from '@/components/admin/nav-secondary';
+import { NavUser } from '@/components/admin/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +26,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 const data = {
   user: {
@@ -95,7 +95,7 @@ const data = {
       icon: FileTextIcon,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -126,5 +126,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

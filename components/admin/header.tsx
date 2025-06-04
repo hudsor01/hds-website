@@ -4,12 +4,12 @@
  * Admin dashboard header with breadcrumbs and trigger following shadcn/ui patterns
  */
 
-'use client'
+'use client';
 
-import * as React from 'react'
-import { usePathname } from 'next/navigation'
-import { Moon, Sun } from 'lucide-react'
-import { useTheme } from 'next-themes'
+import * as React from 'react';
+import { usePathname } from 'next/navigation';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,18 +17,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Separator } from '@/components/ui/separator'
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
 import {
   SidebarTrigger,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 interface BreadcrumbSegment {
   title: string
@@ -43,32 +43,32 @@ const routeTitles: Record<string, string> = {
   '/admin/contacts': 'Contact Submissions',
   '/admin/analytics': 'Analytics',
   '/admin/settings': 'Settings',
-}
+};
 
 function generateBreadcrumbs(pathname: string): BreadcrumbSegment[] {
-  const segments = pathname.split('/').filter(Boolean)
-  const breadcrumbs: BreadcrumbSegment[] = []
+  const segments = pathname.split('/').filter(Boolean);
+  const breadcrumbs: BreadcrumbSegment[] = [];
 
   // Build the path incrementally
-  let currentPath = ''
+  let currentPath = '';
   
   for (let i = 0; i < segments.length; i++) {
-    currentPath += `/${segments[i]}`
-    const isCurrentPage = i === segments.length - 1
-    const title = routeTitles[currentPath] || segments[i]
+    currentPath += `/${segments[i]}`;
+    const isCurrentPage = i === segments.length - 1;
+    const title = routeTitles[currentPath] || segments[i];
     
     breadcrumbs.push({
       title,
       href: isCurrentPage ? undefined : currentPath,
       isCurrentPage,
-    })
+    });
   }
 
-  return breadcrumbs
+  return breadcrumbs;
 }
 
 function ThemeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -91,12 +91,12 @@ function ThemeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 export function SiteHeader() {
-  const pathname = usePathname()
-  const breadcrumbs = generateBreadcrumbs(pathname)
+  const pathname = usePathname();
+  const breadcrumbs = generateBreadcrumbs(pathname);
 
   return (
     <header className='flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-white/95 backdrop-blur-md border-b border-gray-200 fade-in'>
@@ -126,5 +126,5 @@ export function SiteHeader() {
         <ThemeToggle />
       </div>
     </header>
-  )
+  );
 }

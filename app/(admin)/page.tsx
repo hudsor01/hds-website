@@ -5,22 +5,22 @@
  * extracted from the official GitHub repository
  */
 
-import React from 'react'
-import { AppSidebar } from '@/components/admin/sidebar'
-import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive'
-import { ChartBarInteractive } from '@/components/admin/charts/chart-bar-interactive'
-import { ChartPieInteractive } from '@/components/admin/charts/chart-pie-interactive'
-import { ChartLineInteractive } from '@/components/admin/charts/chart-line-interactive'
-import { ChartRadialSimple } from '@/components/admin/charts/chart-radial-simple'
-import { DataTable } from '@/components/admin/data-table'
-import { SectionCards } from '@/components/admin/cards'
-import { SiteHeader } from '@/components/admin/header'
+import React from 'react';
+import { AppSidebar } from '@/components/admin/sidebar';
+import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive';
+import { ChartBarInteractive } from '@/components/admin/charts/chart-bar-interactive';
+import { ChartPieInteractive } from '@/components/admin/charts/chart-pie-interactive';
+import { ChartLineInteractive } from '@/components/admin/charts/chart-line-interactive';
+import { ChartRadialSimple } from '@/components/admin/charts/chart-radial-simple';
+import { DataTable } from '@/components/admin/data-table';
+import { SectionCards } from '@/components/admin/cards';
+import { SiteHeader } from '@/components/admin/header';
 import {
   SidebarInset,
   SidebarProvider,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
-import data from '@/components/admin/data.json'
+import data from '@/components/admin/data.json';
 
 export default function AdminDashboard() {
   return (
@@ -67,5 +67,5 @@ export default function AdminDashboard() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

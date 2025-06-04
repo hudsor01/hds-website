@@ -25,12 +25,12 @@ class BundleAnalyzer {
         totalSize: 0,
         firstLoadJS: 0,
         totalChunks: 0,
-        totalPages: 0
+        totalPages: 0,
       },
       chunks: [],
       pages: [],
       assets: [],
-      warnings: []
+      warnings: [],
     };
   }
 
@@ -150,7 +150,7 @@ class BundleAnalyzer {
             path: path.relative(projectRoot, itemPath),
             size: stats.size,
             category,
-            extension: path.extname(item)
+            extension: path.extname(item),
           });
         }
       }
@@ -175,7 +175,7 @@ class BundleAnalyzer {
             name: item,
             path: path.relative(projectRoot, itemPath),
             size: stats.size,
-            type: 'pages-router'
+            type: 'pages-router',
           });
         }
       }
@@ -200,7 +200,7 @@ class BundleAnalyzer {
             name: item,
             path: path.relative(projectRoot, itemPath),
             size: stats.size,
-            type: 'app-router'
+            type: 'app-router',
           });
         }
       }
@@ -226,7 +226,7 @@ class BundleAnalyzer {
             path: path.relative(projectRoot, itemPath),
             size: stats.size,
             type: this.getChunkType(item),
-            isFirstLoad: this.isFirstLoadChunk(item)
+            isFirstLoad: this.isFirstLoadChunk(item),
           };
           
           this.analysis.chunks.push(chunk);
@@ -271,9 +271,7 @@ class BundleAnalyzer {
     console.log('📊 Calculating summary...');
     
     // Total size from all assets
-    this.analysis.summary.totalSize = this.analysis.assets.reduce((total, asset) => {
-      return total + asset.size;
-    }, 0) / 1024; // Convert to KB
+    this.analysis.summary.totalSize = this.analysis.assets.reduce((total, asset) => total + asset.size, 0) / 1024; // Convert to KB
     
     // First load JS size
     this.analysis.summary.firstLoadJS = this.analysis.chunks
@@ -298,7 +296,7 @@ class BundleAnalyzer {
       warnings.push({
         type: 'bundle-size',
         message: `Large bundle size: ${this.analysis.summary.totalSize.toFixed(1)}KB`,
-        severity: 'high'
+        severity: 'high',
       });
     }
     
@@ -307,7 +305,7 @@ class BundleAnalyzer {
       warnings.push({
         type: 'first-load',
         message: `Large first load JS: ${this.analysis.summary.firstLoadJS.toFixed(1)}KB`,
-        severity: 'medium'
+        severity: 'medium',
       });
     }
     
@@ -320,8 +318,8 @@ class BundleAnalyzer {
         severity: 'medium',
         chunks: largeChunks.map(chunk => ({
           name: chunk.name,
-          size: (chunk.size / 1024).toFixed(1) + 'KB'
-        }))
+          size: (chunk.size / 1024).toFixed(1) + 'KB',
+        })),
       });
     }
     
@@ -330,7 +328,7 @@ class BundleAnalyzer {
       warnings.push({
         type: 'chunk-count',
         message: `Many chunks: ${this.analysis.summary.totalChunks}`,
-        severity: 'low'
+        severity: 'low',
       });
     }
     
@@ -371,12 +369,12 @@ class BundleAnalyzer {
     
     const analysisData = {
       timestamp: new Date().toISOString(),
-      ...this.analysis
+      ...this.analysis,
     };
     
     await fs.writeFile(
       path.join(projectRoot, 'bundle-analysis.json'),
-      JSON.stringify(analysisData, null, 2)
+      JSON.stringify(analysisData, null, 2),
     );
     
     console.log('✅ Analysis saved to bundle-analysis.json');

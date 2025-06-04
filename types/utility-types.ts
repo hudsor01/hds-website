@@ -5,7 +5,7 @@
  * These types provide common patterns and transformations.
  */
 
-import React from 'react'
+import React from 'react';
 
 // ============= Generic Utility Types =============
 

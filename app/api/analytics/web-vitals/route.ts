@@ -5,8 +5,8 @@
  * Simplified implementation without external dependencies
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@/lib/logger'
+import { NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 interface WebVitalPayload {
   name: string
@@ -24,14 +24,14 @@ interface WebVitalPayload {
 // Store web vital metric
 export async function POST(request: NextRequest) {
   try {
-    const payload: WebVitalPayload = await request.json()
+    const payload: WebVitalPayload = await request.json();
 
     // Validate payload
     if (!payload.name || typeof payload.value !== 'number') {
       return NextResponse.json(
         { error: 'Invalid payload' },
         { status: 400 },
-      )
+      );
     }
 
     // Log web vitals metrics for monitoring
@@ -43,16 +43,16 @@ export async function POST(request: NextRequest) {
       sessionId: payload.sessionId,
       userAgent: payload.userAgent,
       timestamp: payload.timestamp,
-    })
+    });
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
 
   } catch (error) {
-    logger.error('Web vitals API error:', error)
+    logger.error('Web vitals API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
-    )
+    );
   }
 }
 
@@ -64,12 +64,12 @@ export async function GET() {
     return NextResponse.json({
       message: 'Web vitals analytics endpoint',
       note: 'Database integration pending',
-    })
+    });
   } catch (error) {
-    logger.error('Web vitals GET API error:', error)
+    logger.error('Web vitals GET API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
-    )
+    );
   }
 }

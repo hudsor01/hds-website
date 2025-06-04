@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { m } from 'framer-motion'
+import React, { useState } from 'react';
+import { m } from 'framer-motion';
 import {
   Download,
   FileText,
@@ -9,13 +9,13 @@ import {
   Search,
   BookOpen,
   FileSpreadsheet,
-} from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card'
+} from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import {
   LeadMagnetForm,
   type LeadMagnetResource,
-} from '@/components/forms/lead-magnet-form'
-import { Section } from './section'
+} from '@/components/forms/lead-magnet-form';
+import { Section } from './section';
 
 // Default icon mapping
 const iconMap = {
@@ -25,7 +25,7 @@ const iconMap = {
   Download,
   BookOpen,
   FileSpreadsheet,
-}
+};
 
 export interface LeadMagnetSectionProps {
   title?: string
@@ -69,7 +69,7 @@ const defaultResources = [
     description: 'Get found on Google with these simple tips',
     fileName: 'seo-basics-cheatsheet.pdf',
   },
-]
+];
 
 export function LeadMagnetSection({
   title = 'Free Resources for Small Businesses',
@@ -87,7 +87,7 @@ export function LeadMagnetSection({
   useTrpc = true,
   darkMode = false,
 }: LeadMagnetSectionProps) {
-  const [selectedResource, setSelectedResource] = useState(resources[0])
+  const [selectedResource, setSelectedResource] = useState(resources[0]);
 
   // Convert to the form resource format by adding the actual icon component
   const selectedFormResource: LeadMagnetResource = {
@@ -96,7 +96,7 @@ export function LeadMagnetSection({
     description: selectedResource?.description ?? '',
     fileName: selectedResource?.fileName ?? '',
     thumbnailUrl: selectedResource?.thumbnailUrl,
-  }
+  };
 
   return (
     <Section
@@ -110,7 +110,7 @@ export function LeadMagnetSection({
     >
       <div className='grid md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto'>
         {resources.map((resource, index) => {
-          const IconComponent = iconMap[resource.icon]
+          const IconComponent = iconMap[resource.icon];
           return (
             <m.div
               key={resource.id}
@@ -136,7 +136,7 @@ export function LeadMagnetSection({
                 </CardHeader>
               </Card>
             </m.div>
-          )
+          );
         })}
       </div>
 
@@ -158,5 +158,5 @@ export function LeadMagnetSection({
         />
       </m.div>
     </Section>
-  )
+  );
 }

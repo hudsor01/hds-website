@@ -5,14 +5,14 @@
  * following Next.js 15 and React 19 patterns.
  */
 
-import { z } from 'zod'
-import { db as prisma } from '../database'
+import { z } from 'zod';
+import { db as prisma } from '../database';
 import type { 
   BookingEvent, 
   BookingAnalyticsData, 
   BookingFunnelMetrics,
   BookingConversionData,
-} from '../../types/analytics-types'
+} from '../../types/analytics-types';
 
 // Booking event schemas for validation
 export const bookingEventSchema = z.object({
@@ -40,7 +40,7 @@ export const bookingEventSchema = z.object({
   campaign: z.string().optional(),
   referrer: z.string().optional(),
   timestamp: z.date().optional(),
-})
+});
 
 export const bookingAnalyticsConfigSchema = z.object({
   enableTracking: z.boolean().default(true),
@@ -48,26 +48,26 @@ export const bookingAnalyticsConfigSchema = z.object({
   enableFunnelAnalysis: z.boolean().default(true),
   retentionDays: z.number().default(90),
   batchSize: z.number().default(100),
-})
+});
 
 /**
  * Booking Analytics Service
  */
 export class BookingAnalyticsService {
-  private config: z.infer<typeof bookingAnalyticsConfigSchema>
+  private config: z.infer<typeof bookingAnalyticsConfigSchema>;
 
   constructor(config?: Partial<z.infer<typeof bookingAnalyticsConfigSchema>>) {
-    this.config = bookingAnalyticsConfigSchema.parse(config || {})
+    this.config = bookingAnalyticsConfigSchema.parse(config || {});
   }
 
   /**
    * Track a booking event
    */
   async trackEvent(event: BookingEvent): Promise<void> {
-    if (!this.config.enableTracking) return
+    if (!this.config.enableTracking) return;
 
     try {
-      const validatedEvent = bookingEventSchema.parse(event)
+      const validatedEvent = bookingEventSchema.parse(event);
       
       await prisma.bookingAnalyticsEvent.create({
         data: {
@@ -82,9 +82,9 @@ export class BookingAnalyticsService {
           referrer: validatedEvent.referrer,
           timestamp: validatedEvent.timestamp || new Date(),
         },
-      })
+      });
     } catch (error) {
-      console.error('Error tracking booking event:', error)
+      console.error('Error tracking booking event:', error);
       // Don't throw - analytics shouldn't break the booking flow
     }
   }
@@ -104,7 +104,7 @@ export class BookingAnalyticsService {
         funnelStep: step,
         ...properties,
       },
-    })
+    });
   }
 
   /**
@@ -126,7 +126,7 @@ export class BookingAnalyticsService {
           equals: serviceId,
         },
       }),
-    }
+    };
 
     // Get event counts by type
     const eventCounts = await prisma.bookingAnalyticsEvent.groupBy({
@@ -135,13 +135,13 @@ export class BookingAnalyticsService {
       _count: {
         id: true,
       },
-    })
+    });
 
     // Get booking metrics
-    const bookingMetrics = await this.getBookingMetrics(startDate, endDate, serviceId)
+    const bookingMetrics = await this.getBookingMetrics(startDate, endDate, serviceId);
 
     // Get conversion funnel
-    const conversionFunnel = await this.getConversionFunnel(startDate, endDate, serviceId)
+    const conversionFunnel = await this.getConversionFunnel(startDate, endDate, serviceId);
 
     // Get top sources
     const topSources = await prisma.bookingAnalyticsEvent.groupBy({
@@ -159,14 +159,14 @@ export class BookingAnalyticsService {
         },
       },
       take: 10,
-    })
+    });
 
     return {
       dateRange: { startDate, endDate },
       totalEvents: eventCounts.reduce((sum, event) => sum + event._count.id, 0),
       eventCounts: eventCounts.reduce((acc, event) => {
-        acc[event.eventType] = event._count.id
-        return acc
+        acc[event.eventType] = event._count.id;
+        return acc;
       }, {} as Record<string, number>),
       bookingMetrics,
       conversionFunnel,
@@ -174,7 +174,7 @@ export class BookingAnalyticsService {
         source: source.source || 'direct',
         count: source._count.id,
       })),
-    }
+    };
   }
 
   /**
@@ -191,7 +191,7 @@ export class BookingAnalyticsService {
         lte: endDate,
       },
       ...(serviceId && { serviceId }),
-    }
+    };
 
     // Get booking counts by status
     const bookingsByStatus = await prisma.booking.groupBy({
@@ -200,7 +200,7 @@ export class BookingAnalyticsService {
       _count: {
         id: true,
       },
-    })
+    });
 
     // Get booking trends (daily counts)
     const bookingTrends = await prisma.$queryRaw<Array<{
@@ -216,7 +216,7 @@ export class BookingAnalyticsService {
         ${serviceId ? prisma.$queryRaw`AND "serviceId" = ${serviceId}` : prisma.$queryRaw``}
       GROUP BY DATE_TRUNC('day', "createdAt")
       ORDER BY date
-    `
+    `;
 
     // Calculate revenue metrics
     const revenueMetrics = await prisma.payment.aggregate({
@@ -241,13 +241,13 @@ export class BookingAnalyticsService {
       _avg: {
         amount: true,
       },
-    })
+    });
 
     return {
       totalBookings: bookingsByStatus.reduce((sum, status) => sum + status._count.id, 0),
       bookingsByStatus: bookingsByStatus.reduce((acc, status) => {
-        acc[status.status] = status._count.id
-        return acc
+        acc[status.status] = status._count.id;
+        return acc;
       }, {} as Record<string, number>),
       bookingTrends: bookingTrends.map((trend) => ({
         date: trend.date.toISOString().split('T')[0],
@@ -258,7 +258,7 @@ export class BookingAnalyticsService {
         count: revenueMetrics._count.id,
         average: Number(revenueMetrics._avg.amount || 0),
       },
-    }
+    };
   }
 
   /**
@@ -280,7 +280,7 @@ export class BookingAnalyticsService {
           equals: serviceId,
         },
       }),
-    }
+    };
 
     // Get unique sessions for each funnel step
     const funnelSteps = [
@@ -289,9 +289,9 @@ export class BookingAnalyticsService {
       'booking_form_filled',
       'booking_submitted',
       'booking_confirmed',
-    ]
+    ];
 
-    const funnelData: Record<string, number> = {}
+    const funnelData: Record<string, number> = {};
     
     for (const step of funnelSteps) {
       const uniqueSessions = await prisma.bookingAnalyticsEvent.findMany({
@@ -303,20 +303,20 @@ export class BookingAnalyticsService {
           sessionId: true,
         },
         distinct: ['sessionId'],
-      })
+      });
       
-      funnelData[step] = uniqueSessions.filter((s) => s.sessionId).length
+      funnelData[step] = uniqueSessions.filter((s) => s.sessionId).length;
     }
 
     // Calculate conversion rates
-    const pageViews = funnelData.booking_page_view || 0
-    const conversions: Record<string, number> = {}
+    const pageViews = funnelData.booking_page_view || 0;
+    const conversions: Record<string, number> = {};
     
     funnelSteps.forEach((step) => {
       if (pageViews > 0) {
-        conversions[step] = ((funnelData[step] || 0) / pageViews) * 100
+        conversions[step] = ((funnelData[step] || 0) / pageViews) * 100;
       }
-    })
+    });
 
     return {
       funnelSteps: funnelData,
@@ -324,7 +324,7 @@ export class BookingAnalyticsService {
       totalSessions: pageViews,
       completedBookings: funnelData.booking_confirmed || 0,
       overallConversionRate: pageViews > 0 ? ((funnelData.booking_confirmed || 0) / pageViews) * 100 : 0,
-    }
+    };
   }
 
   /**
@@ -362,14 +362,14 @@ export class BookingAnalyticsService {
           },
         },
       },
-    })
+    });
 
     return services.map((service) => {
-      const totalBookings = service.bookings.length
-      const completedBookings = service.bookings.filter((b) => b.status === 'COMPLETED').length
+      const totalBookings = service.bookings.length;
+      const completedBookings = service.bookings.filter((b) => b.status === 'COMPLETED').length;
       const revenue = service.bookings.reduce((sum, booking) => 
         sum + booking.payments.reduce((paymentSum, payment) => 
-          paymentSum + Number(payment.amount), 0), 0)
+          paymentSum + Number(payment.amount), 0), 0);
 
       return {
         serviceId: service.id,
@@ -378,16 +378,16 @@ export class BookingAnalyticsService {
         completedBookings,
         revenue,
         conversionRate: totalBookings > 0 ? (completedBookings / totalBookings) * 100 : 0,
-      }
-    })
+      };
+    });
   }
 
   /**
    * Clean up old analytics data
    */
   async cleanupOldData(): Promise<void> {
-    const cutoffDate = new Date()
-    cutoffDate.setDate(cutoffDate.getDate() - this.config.retentionDays)
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - this.config.retentionDays);
 
     await prisma.bookingAnalyticsEvent.deleteMany({
       where: {
@@ -395,12 +395,12 @@ export class BookingAnalyticsService {
           lt: cutoffDate,
         },
       },
-    })
+    });
   }
 }
 
 // Export singleton instance
-export const bookingAnalytics = new BookingAnalyticsService()
+export const bookingAnalytics = new BookingAnalyticsService();
 
 // Helper functions for easy tracking
 export async function trackBookingPageView(sessionId: string, serviceId?: string, source?: string) {
@@ -409,7 +409,7 @@ export async function trackBookingPageView(sessionId: string, serviceId?: string
     sessionId,
     properties: { serviceId },
     source,
-  })
+  });
 }
 
 export async function trackBookingStarted(sessionId: string, serviceId: string) {
@@ -417,7 +417,7 @@ export async function trackBookingStarted(sessionId: string, serviceId: string) 
     eventType: 'booking_started',
     sessionId,
     properties: { serviceId },
-  })
+  });
 }
 
 export async function trackBookingSubmitted(sessionId: string, bookingId: string, serviceId: string) {
@@ -426,7 +426,7 @@ export async function trackBookingSubmitted(sessionId: string, bookingId: string
     sessionId,
     bookingId,
     properties: { serviceId },
-  })
+  });
 }
 
 export async function trackBookingConfirmed(sessionId: string, bookingId: string, serviceId: string) {
@@ -435,7 +435,7 @@ export async function trackBookingConfirmed(sessionId: string, bookingId: string
     sessionId,
     bookingId,
     properties: { serviceId },
-  })
+  });
 }
 
 export async function trackPaymentStarted(sessionId: string, bookingId: string, amount: number) {
@@ -444,7 +444,7 @@ export async function trackPaymentStarted(sessionId: string, bookingId: string, 
     sessionId,
     bookingId,
     properties: { amount },
-  })
+  });
 }
 
 export async function trackPaymentCompleted(sessionId: string, bookingId: string, amount: number, paymentId: string) {
@@ -453,5 +453,5 @@ export async function trackPaymentCompleted(sessionId: string, bookingId: string
     sessionId,
     bookingId,
     properties: { amount, paymentId },
-  })
+  });
 }

@@ -5,11 +5,11 @@
  * using React Table with shadcn/ui components
  */
 
-'use client'
+'use client';
 
-import { type ColumnDef } from '@tanstack/react-table'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { type ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -17,12 +17,12 @@ import {
   DropdownMenuLabel, 
   DropdownMenuSeparator, 
   DropdownMenuTrigger, 
-} from '@/components/ui/dropdown-menu'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowUpDown, MoreHorizontal, Mail, Phone, ExternalLink } from 'lucide-react'
+} from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowUpDown, MoreHorizontal, Mail, Phone, ExternalLink } from 'lucide-react';
 
-import type { Lead } from '@/types/admin-types'
-import { LeadStatus, LeadSource } from '@/types/enum-types'
+import type { Lead } from '@/types/admin-types';
+import { LeadStatus, LeadSource } from '@/types/enum-types';
 
 // Using Lead type from admin-types.ts
 
@@ -37,10 +37,10 @@ function StatusBadge({ status }: { status: Lead['status'] }) {
     [LeadStatus.CLOSED_WON]: { label: 'Won', variant: 'default' as const },
     [LeadStatus.CLOSED_LOST]: { label: 'Lost', variant: 'secondary' as const },
     [LeadStatus.UNQUALIFIED]: { label: 'Unqualified', variant: 'secondary' as const },
-  }
+  };
   
-  const config = statusConfig[status]
-  return <Badge variant={config.variant}>{config.label}</Badge>
+  const config = statusConfig[status];
+  return <Badge variant={config.variant}>{config.label}</Badge>;
 }
 
 // Source badge component
@@ -54,10 +54,10 @@ function SourceBadge({ source }: { source: Lead['source'] }) {
     [LeadSource.EMAIL]: { label: 'Email', variant: 'destructive' as const },
     [LeadSource.PARTNERSHIP]: { label: 'Partnership', variant: 'secondary' as const },
     [LeadSource.OTHER]: { label: 'Other', variant: 'secondary' as const },
-  }
+  };
   
-  const config = sourceConfig[source]
-  return <Badge variant={config.variant}>{config.label}</Badge>
+  const config = sourceConfig[source];
+  return <Badge variant={config.variant}>{config.label}</Badge>;
 }
 
 // Column definitions
@@ -119,12 +119,12 @@ export const columns: ColumnDef<Lead>[] = [
     accessorKey: 'company',
     header: 'Company',
     cell: ({ row }) => {
-      const company = row.getValue('company') as string
+      const company = row.getValue('company') as string;
       return company ? (
         <div className="text-sm">{company}</div>
       ) : (
         <span className="text-muted-foreground text-sm">—</span>
-      )
+      );
     },
   },
   {
@@ -143,12 +143,12 @@ export const columns: ColumnDef<Lead>[] = [
     accessorKey: 'service',
     header: 'Service',
     cell: ({ row }) => {
-      const service = row.getValue('service') as string
+      const service = row.getValue('service') as string;
       return service ? (
         <div className="text-sm">{service}</div>
       ) : (
         <span className="text-muted-foreground text-sm">—</span>
-      )
+      );
     },
   },
   {
@@ -163,31 +163,31 @@ export const columns: ColumnDef<Lead>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const value = row.getValue('value') as number
+      const value = row.getValue('value') as number;
       return (
         <div className="text-right font-medium">
           ${value.toLocaleString()}
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: 'lastContact',
     header: 'Last Contact',
     cell: ({ row }) => {
-      const date = new Date(row.getValue('lastContact'))
+      const date = new Date(row.getValue('lastContact'));
       return (
         <div className="text-sm text-muted-foreground">
           {date.toLocaleDateString()}
         </div>
-      )
+      );
     },
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const lead = row.original
+      const lead = row.original;
 
       return (
         <DropdownMenu>
@@ -223,7 +223,7 @@ export const columns: ColumnDef<Lead>[] = [
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

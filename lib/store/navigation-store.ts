@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 // Navigation State
 interface NavigationState {
@@ -21,4 +21,4 @@ export const useNavigationStore = create<NavigationState>()(
       name: 'navigation-store',
     },
   ),
-)
+);

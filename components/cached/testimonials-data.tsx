@@ -1,13 +1,13 @@
 // Note: 'use cache' directive requires Next.js canary version
 // For stable Next.js 15, we'll use React.cache() as an alternative
 
-import { unstable_cache } from 'next/cache'
+import { unstable_cache } from 'next/cache';
 
 // Cached testimonials data fetcher using unstable_cache
 export const getTestimonialsData = unstable_cache(
   async () => {
   // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 800))
+  await new Promise(resolve => setTimeout(resolve, 800));
   
   return [
     {
@@ -60,18 +60,18 @@ export const getTestimonialsData = unstable_cache(
       image: '/images/testimonials/lisa-park.jpg',
       date: '2024-10-05',
     },
-  ]
+  ];
   },
   ['testimonials'], // cache key
   {
     revalidate: 3600, // revalidate every hour
     tags: ['testimonials', 'user-content'],
   },
-)
+);
 
 // Cached component that uses the data
 export default async function TestimonialsData() {
-  const testimonials = await getTestimonialsData()
+  const testimonials = await getTestimonialsData();
   
   return (
     <div className='space-y-6'>
@@ -128,5 +128,5 @@ export default async function TestimonialsData() {
         ))}
       </div>
     </div>
-  )
+  );
 }

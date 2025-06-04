@@ -1,6 +1,6 @@
-import 'server-only'
-import { cache } from 'react'
-import { db } from './database'
+import 'server-only';
+import { cache } from 'react';
+import { db } from './database';
 
 // Fallback data for when database is not available
 function getFallbackServices(category?: string) {
@@ -86,17 +86,17 @@ function getFallbackServices(category?: string) {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-  ]
+  ];
 
   if (category) {
     return fallbackServices.filter(service => 
       service.slug.includes(category.toLowerCase()) ||
       service.name.toLowerCase().includes(category.toLowerCase()) ||
       service.description.toLowerCase().includes(category.toLowerCase()),
-    )
+    );
   }
 
-  return fallbackServices
+  return fallbackServices;
 }
 
 /**
@@ -109,32 +109,32 @@ function getFallbackServices(category?: string) {
 
 // Preload functions for data prefetching
 export const preloadServices = (category?: string) => {
-  void getServices(category)
-}
+  void getServices(category);
+};
 
 export const preloadCaseStudies = () => {
-  void getCaseStudies()
-}
+  void getCaseStudies();
+};
 
 export const preloadTestimonials = () => {
-  void getTestimonials()
-}
+  void getTestimonials();
+};
 
 export const preloadBlogPosts = (limit?: number) => {
-  void getBlogPosts(limit)
-}
+  void getBlogPosts(limit);
+};
 
 export const preloadAnalyticsData = () => {
-  void getAnalyticsData()
-}
+  void getAnalyticsData();
+};
 
 // Cached data fetchers with real Prisma queries
 export const getServices = cache(async (category?: string) => {
   try {
     // Check if database connection is available
     if (!db) {
-      console.warn('Database not available, returning fallback data')
-      return getFallbackServices(category)
+      console.warn('Database not available, returning fallback data');
+      return getFallbackServices(category);
     }
 
     const whereCondition = {
@@ -146,7 +146,7 @@ export const getServices = cache(async (category?: string) => {
           { description: { contains: category, mode: 'insensitive' } },
         ],
       }),
-    }
+    };
 
     // Use correct Prisma model: 'service' (not 'services')
     const services = await db.service.findMany({
@@ -168,7 +168,7 @@ export const getServices = cache(async (category?: string) => {
         createdAt: true,
         updatedAt: true,
       },
-    })
+    });
 
     // Add explicit type for 'service'
     return services.map((service: typeof services[number]) => ({
@@ -179,11 +179,11 @@ export const getServices = cache(async (category?: string) => {
       featured: service.featured,
       href: `/services/${service.slug}`,
       features: service.features || [],
-    }))
+    }));
   } catch (error) {
-    console.error('Error fetching services:', error)
+    console.error('Error fetching services:', error);
     // Return fallback data to prevent page crashes
-    console.warn('Using fallback services data due to database error')
+    console.warn('Using fallback services data due to database error');
     return getFallbackServices(category).map(service => ({
       id: service.slug,
       title: service.name,
@@ -192,9 +192,9 @@ export const getServices = cache(async (category?: string) => {
       featured: service.featured,
       href: `/services/${service.slug}`,
       features: service.features || [],
-    }))
+    }));
   }
-})
+});
 
 export const getCaseStudies = cache(async () => {
   try {
@@ -218,7 +218,7 @@ export const getCaseStudies = cache(async () => {
         featured: true,
         publishedAt: true,
       },
-    })
+    });
 
     // Add explicit type for 'study'
     return caseStudies.map((study: typeof caseStudies[number]) => ({
@@ -228,9 +228,9 @@ export const getCaseStudies = cache(async () => {
       metrics: study.metrics ? (study.metrics as Record<string, string>) : {},
       image: study.featuredImage || '/images/placeholder.svg',
       href: `/case-studies/${study.slug}`,
-    }))
+    }));
   } catch (error) {
-    console.error('Error fetching case studies:', error)
+    console.error('Error fetching case studies:', error);
     // Return fallback data
     return [
       {
@@ -245,9 +245,9 @@ export const getCaseStudies = cache(async () => {
         image: '/images/portfolio-salesforce-dedup.svg',
         href: '/case-studies/spotio-deduplication',
       },
-    ]
+    ];
   }
-})
+});
 
 export const getTestimonials = cache(async () => {
   try {
@@ -273,7 +273,7 @@ export const getTestimonials = cache(async () => {
         featured: true,
         createdAt: true,
       },
-    })
+    });
 
     // Add explicit type for 'testimonial'
     return testimonials.map((testimonial: typeof testimonials[number]) => ({
@@ -284,9 +284,9 @@ export const getTestimonials = cache(async () => {
       content: testimonial.content,
       rating: testimonial.rating,
       image: testimonial.avatar || '/images/default-avatar.jpg',
-    }))
+    }));
   } catch (error) {
-    console.error('Error fetching testimonials:', error)
+    console.error('Error fetching testimonials:', error);
     // Return fallback data
     return [
       {
@@ -298,9 +298,9 @@ export const getTestimonials = cache(async () => {
         rating: 5,
         image: '/images/testimonials/sarah-johnson.jpg',
       },
-    ]
+    ];
   }
-})
+});
 
 export const getBlogPosts = cache(async (limit?: number) => {
   try {
@@ -329,7 +329,7 @@ export const getBlogPosts = cache(async (limit?: number) => {
         viewCount: true,
       },
       ...(limit && { take: limit }),
-    })
+    });
 
     // Add explicit type for 'post'
     return posts.map((post: typeof posts[number]) => ({
@@ -341,9 +341,9 @@ export const getBlogPosts = cache(async (limit?: number) => {
       readTime: post.readingTime ? `${post.readingTime} min read` : '5 min read',
       href: `/blog/${post.slug}`,
       image: post.featuredImage || '/images/placeholder.svg',
-    }))
+    }));
   } catch (error) {
-    console.error('Error fetching blog posts:', error)
+    console.error('Error fetching blog posts:', error);
     // Return fallback data
     return [
       {
@@ -356,9 +356,9 @@ export const getBlogPosts = cache(async (limit?: number) => {
         href: '/blog/revenue-operations-basics',
         image: '/images/blog/revops-basics.jpg',
       },
-    ]
+    ];
   }
-})
+});
 
 // Real analytics data fetcher using actual database queries
 export const getAnalyticsData = cache(async () => {
@@ -394,12 +394,12 @@ export const getAnalyticsData = cache(async () => {
           verified: true,
         },
       }),
-    ])
+    ]);
 
     // Calculate conversion rate (leads / contacts)
-    const contactsCount = await totalContacts
-    const leadsCount = await totalLeads
-    const conversionRate = contactsCount > 0 ? ((leadsCount / contactsCount) * 100) : 0
+    const contactsCount = await totalContacts;
+    const leadsCount = await totalLeads;
+    const conversionRate = contactsCount > 0 ? ((leadsCount / contactsCount) * 100) : 0;
 
     // Calculate growth rate (comparing last 30 days to previous 30 days)
     const previousMonthContacts = await db.contact.count({
@@ -409,14 +409,14 @@ export const getAnalyticsData = cache(async () => {
           lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),   // 30 days ago
         },
       },
-    })
+    });
 
-    const previousMonthContactsCount = await previousMonthContacts
-    const recentContactsCount = await recentContacts
+    const previousMonthContactsCount = await previousMonthContacts;
+    const recentContactsCount = await recentContacts;
     
     const revenueGrowth = previousMonthContactsCount > 0 
       ? (((recentContactsCount - previousMonthContactsCount) / previousMonthContactsCount) * 100)
-      : 0
+      : 0;
 
     return {
       totalLeads,
@@ -428,9 +428,9 @@ export const getAnalyticsData = cache(async () => {
       recentContacts,
       recentLeads,
       newsletterSubscribers: newsletterStats,
-    }
+    };
   } catch (error) {
-    console.error('Error fetching analytics data:', error)
+    console.error('Error fetching analytics data:', error);
     // Return fallback data
     return {
       totalLeads: 0,
@@ -442,37 +442,37 @@ export const getAnalyticsData = cache(async () => {
       recentContacts: 0,
       recentLeads: 0,
       newsletterSubscribers: 0,
-    }
+    };
   }
-})
+});
 
 // Additional utility functions for specific data needs
 export const getFeaturedServices = cache(async (limit = 3) => {
   try {
-    const services = await getServices()
+    const services = await getServices();
     // Add explicit type for 'service'
-    return services.filter((service: typeof services[number]) => service.featured).slice(0, limit)
+    return services.filter((service: typeof services[number]) => service.featured).slice(0, limit);
   } catch (error) {
-    console.error('Error fetching featured services:', error)
-    return []
+    console.error('Error fetching featured services:', error);
+    return [];
   }
-})
+});
 
 export const getFeaturedTestimonials = cache(async (limit?: number) => {
-  const count = limit ?? 3
+  const count = limit ?? 3;
   try {
-    const testimonials = await getTestimonials()
-    return testimonials.slice(0, count)
+    const testimonials = await getTestimonials();
+    return testimonials.slice(0, count);
   } catch (error) {
-    console.error('Error fetching featured testimonials:', error)
-    return []
+    console.error('Error fetching featured testimonials:', error);
+    return [];
   }
-})
+});
 
 export const getLatestBlogPosts = cache(async (limit?: number) => {
-  const count = limit ?? 2
-  return getBlogPosts(count)
-})
+  const count = limit ?? 2;
+  return getBlogPosts(count);
+});
 
 // Type exports for TypeScript support
 export type ServiceData = Awaited<ReturnType<typeof getServices>>[0]

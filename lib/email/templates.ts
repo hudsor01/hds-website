@@ -60,7 +60,7 @@ export function contactFormTemplate(data: ContactFormData): string {
         </div>
       </body>
     </html>
-  `
+  `;
 }
 
 /**
@@ -81,14 +81,14 @@ Message:
 ${data.message}
 
 This email was sent from the contact form on hudsondigitalsolutions.com
-  `.trim()
+  `.trim();
 }
 
 /**
  * Generates HTML template for newsletter welcome email
  */
 export function newsletterWelcomeTemplate(data: NewsletterSignupData): string {
-  const greeting = data.firstName ? `Hi ${data.firstName},` : 'Hello,'
+  const greeting = data.firstName ? `Hi ${data.firstName},` : 'Hello,';
 
   return `
     <!DOCTYPE html>
@@ -127,14 +127,14 @@ export function newsletterWelcomeTemplate(data: NewsletterSignupData): string {
         </div>
       </body>
     </html>
-  `
+  `;
 }
 
 /**
  * Generates HTML template for lead magnet delivery emails
  */
 export function leadMagnetTemplate(data: LeadMagnetData): string {
-  const greeting = data.firstName ? `Hi ${data.firstName},` : 'Hello,'
+  const greeting = data.firstName ? `Hi ${data.firstName},` : 'Hello,';
 
   return `
     <!DOCTYPE html>
@@ -172,5 +172,5 @@ export function leadMagnetTemplate(data: LeadMagnetData): string {
         </div>
       </body>
     </html>
-  `
+  `;
 }

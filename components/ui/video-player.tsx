@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { forwardRef, useRef, useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
-import type { VideoPlayerOptions, VideoFormat, VideoSubtitle } from '@/lib/video/video-config'
-import { videoUtils } from '@/lib/video/video-config'
+import { forwardRef, useRef, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import type { VideoPlayerOptions, VideoFormat, VideoSubtitle } from '@/lib/video/video-config';
+import { videoUtils } from '@/lib/video/video-config';
 
 // Define video metadata type
 interface VideoMetadata {
@@ -58,55 +58,55 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
     },
     ref,
   ) => {
-    const internalRef = useRef<HTMLVideoElement>(null)
-    const videoRef = (ref as React.RefObject<HTMLVideoElement>) || internalRef
-    const [metadata, setMetadata] = useState<VideoMetadata | null>(null)
-    const [thumbnailUrl, setThumbnailUrl] = useState<string>('')
-    const [_performanceMonitor, setPerformanceMonitor] = useState<ReturnType<typeof videoUtils.monitorVideoPerformance> | null>(null)
+    const internalRef = useRef<HTMLVideoElement>(null);
+    const videoRef = (ref as React.RefObject<HTMLVideoElement>) || internalRef;
+    const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
+    const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
+    const [_performanceMonitor, setPerformanceMonitor] = useState<ReturnType<typeof videoUtils.monitorVideoPerformance> | null>(null);
 
     // Extract video metadata when loaded
     useEffect(() => {
-      const video = videoRef.current
-      if (!video) return
+      const video = videoRef.current;
+      if (!video) return;
 
       const handleLoadedMetadata = async () => {
         try {
-          const videoMetadata = await videoUtils.extractVideoMetadata(video)
-          setMetadata(videoMetadata)
-          onLoadMetadata?.(videoMetadata)
+          const videoMetadata = await videoUtils.extractVideoMetadata(video);
+          setMetadata(videoMetadata);
+          onLoadMetadata?.(videoMetadata);
 
           // Generate thumbnail if requested
           if (generateThumbnail) {
-            const thumbnail = await videoUtils.generateThumbnail(video, thumbnailTime)
-            setThumbnailUrl(thumbnail)
+            const thumbnail = await videoUtils.generateThumbnail(video, thumbnailTime);
+            setThumbnailUrl(thumbnail);
           }
         } catch (error) {
-          console.error('Failed to extract video metadata:', error)
+          console.error('Failed to extract video metadata:', error);
         }
-      }
+      };
 
-      video.addEventListener('loadedmetadata', handleLoadedMetadata)
-      return () => video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-    }, [videoRef, onLoadMetadata, generateThumbnail, thumbnailTime])
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      return () => video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    }, [videoRef, onLoadMetadata, generateThumbnail, thumbnailTime]);
 
     // Set up performance monitoring
     useEffect(() => {
-      const video = videoRef.current
-      if (!video || !onPerformanceData) return
+      const video = videoRef.current;
+      if (!video || !onPerformanceData) return;
 
-      const monitor = videoUtils.monitorVideoPerformance(video)
-      setPerformanceMonitor(monitor)
+      const monitor = videoUtils.monitorVideoPerformance(video);
+      setPerformanceMonitor(monitor);
 
       const interval = setInterval(() => {
-        const metrics = monitor.getMetrics()
-        onPerformanceData(metrics)
-      }, 5000)
+        const metrics = monitor.getMetrics();
+        onPerformanceData(metrics);
+      }, 5000);
 
       return () => {
-        clearInterval(interval)
-        monitor.reset()
-      }
-    }, [videoRef, onPerformanceData])
+        clearInterval(interval);
+        monitor.reset();
+      };
+    }, [videoRef, onPerformanceData]);
 
     // Generate responsive styles
     const videoStyles = responsive && aspectRatio 
@@ -116,14 +116,14 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
           height: 'auto',
           ...style,
         }
-      : style
+      : style;
 
     const containerStyles = responsive
       ? {
           width: '100%',
           maxWidth: '100%',
         }
-      : {}
+      : {};
 
     return (
       <div style={containerStyles} className={cn('relative', className)}>
@@ -194,11 +194,11 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
           </div>
         )}
       </div>
-    )
+    );
   },
-)
+);
 
-VideoPlayer.displayName = 'VideoPlayer'
+VideoPlayer.displayName = 'VideoPlayer';
 
 // Specialized video player components
 
@@ -217,7 +217,7 @@ export function ResponsiveVideo({
       : aspectRatio === '1:1' ? 1
       : aspectRatio === '21:9' ? 21/9
       : 16/9
-    : aspectRatio
+    : aspectRatio;
 
   return (
     <VideoPlayer
@@ -226,7 +226,7 @@ export function ResponsiveVideo({
       className={cn('rounded-lg overflow-hidden', className)}
       {...props}
     />
-  )
+  );
 }
 
 export interface AutoPlayVideoProps extends VideoPlayerProps {
@@ -239,39 +239,39 @@ export function AutoPlayVideo({
   rootMargin = '0px',
   ...props 
 }: AutoPlayVideoProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isIntersecting, setIsIntersecting] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+    const video = videoRef.current;
+    if (!video) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry) {
-          setIsIntersecting(entry.isIntersecting)
+          setIsIntersecting(entry.isIntersecting);
         }
       },
       {
         threshold: intersectionThreshold,
         rootMargin,
       },
-    )
+    );
 
-    observer.observe(video)
-    return () => observer.disconnect()
-  }, [intersectionThreshold, rootMargin])
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [intersectionThreshold, rootMargin]);
 
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+    const video = videoRef.current;
+    if (!video) return;
 
     if (isIntersecting) {
-      video.play().catch(console.error)
+      video.play().catch(console.error);
     } else {
-      video.pause()
+      video.pause();
     }
-  }, [isIntersecting])
+  }, [isIntersecting]);
 
   return (
     <VideoPlayer
@@ -283,7 +283,7 @@ export function AutoPlayVideo({
       }}
       {...props}
     />
-  )
+  );
 }
 
 export interface HeroVideoProps extends VideoPlayerProps {
@@ -322,7 +322,7 @@ export function HeroVideo({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export interface LazyVideoProps extends VideoPlayerProps {
@@ -337,29 +337,29 @@ export function LazyVideo({
   rootMargin = '50px',
   ...props
 }: LazyVideoProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    const container = containerRef.current;
+    if (!container) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry && entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+          setIsVisible(true);
+          observer.disconnect();
         }
       },
       {
         threshold,
         rootMargin,
       },
-    )
+    );
 
-    observer.observe(container)
-    return () => observer.disconnect()
-  }, [threshold, rootMargin])
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin]);
 
   return (
     <div ref={containerRef} className={props.className}>
@@ -373,5 +373,5 @@ export function LazyVideo({
         )
       )}
     </div>
-  )
+  );
 }

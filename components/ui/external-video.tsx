@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useState, useRef } from 'react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { type ExternalVideoConfig, videoUtils } from '@/lib/video/video-config'
-import { Play } from 'lucide-react'
+import { useState, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { type ExternalVideoConfig, videoUtils } from '@/lib/video/video-config';
+import { Play } from 'lucide-react';
 
 export interface ExternalVideoProps {
   config: ExternalVideoConfig
@@ -35,27 +35,27 @@ export function ExternalVideo({
   onLoad,
   onError,
 }: ExternalVideoProps) {
-  const [isLoaded, setIsLoaded] = useState(!lazy)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const [isLoaded, setIsLoaded] = useState(!lazy);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   
   const handleLoadVideo = () => {
-    setIsLoading(true)
-    setIsLoaded(true)
-  }
+    setIsLoading(true);
+    setIsLoaded(true);
+  };
 
   const handleIframeLoad = () => {
-    setIsLoading(false)
-    onLoad?.()
-  }
+    setIsLoading(false);
+    onLoad?.();
+  };
 
   const handleIframeError = () => {
-    const errorMsg = `Failed to load ${config.platform} video`
-    setError(errorMsg)
-    setIsLoading(false)
-    onError?.(new Error(errorMsg))
-  }
+    const errorMsg = `Failed to load ${config.platform} video`;
+    setError(errorMsg);
+    setIsLoading(false);
+    onError?.(new Error(errorMsg));
+  };
 
   // Generate embed URL based on platform
   const getEmbedUrl = () => {
@@ -65,21 +65,21 @@ export function ExternalVideo({
           return videoUtils.generateYouTubeUrl(config.videoId, {
             ...config.parameters,
             privacyEnhanced: privacy,
-          })
+          });
         case 'vimeo':
-          return videoUtils.generateVimeoUrl(config.videoId, config.parameters)
+          return videoUtils.generateVimeoUrl(config.videoId, config.parameters);
         case 'custom':
-          return config.embedUrl || ''
+          return config.embedUrl || '';
         default:
-          throw new Error(`Unsupported platform: ${config.platform}`)
+          throw new Error(`Unsupported platform: ${config.platform}`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate embed URL')
-      return ''
+      setError(err instanceof Error ? err.message : 'Failed to generate embed URL');
+      return '';
     }
-  }
+  };
 
-  const embedUrl = getEmbedUrl()
+  const embedUrl = getEmbedUrl();
 
   if (error) {
     return (
@@ -92,8 +92,8 @@ export function ExternalVideo({
               variant='outline' 
               size='sm' 
               onClick={() => {
-                setError(null)
-                setIsLoaded(false)
+                setError(null);
+                setIsLoaded(false);
               }}
             >
               Retry
@@ -101,7 +101,7 @@ export function ExternalVideo({
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (!isLoaded) {
@@ -117,7 +117,7 @@ export function ExternalVideo({
         onPlay={handleLoadVideo}
         isLoading={isLoading}
       />
-    )
+    );
   }
 
   return (
@@ -154,7 +154,7 @@ export function ExternalVideo({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 interface VideoPlaceholderProps {
@@ -180,24 +180,24 @@ function VideoPlaceholder({
   onPlay,
   isLoading,
 }: VideoPlaceholderProps) {
-  const [thumbnailError, setThumbnailError] = useState(false)
+  const [thumbnailError, setThumbnailError] = useState(false);
   
   // Generate thumbnail URLs for different platforms
   const getThumbnailUrl = () => {
-    if (customThumbnail) return customThumbnail
+    if (customThumbnail) return customThumbnail;
     
     switch (platform) {
       case 'youtube':
-        return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+        return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       case 'vimeo':
         // Note: Vimeo thumbnails require API call in real implementation
-        return `/api/vimeo/${videoId}/thumbnail`
+        return `/api/vimeo/${videoId}/thumbnail`;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
-  const thumbnailUrl = getThumbnailUrl()
+  const thumbnailUrl = getThumbnailUrl();
 
   return (
     <div 
@@ -271,7 +271,7 @@ function VideoPlaceholder({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Specialized external video components
@@ -313,9 +313,9 @@ export function YouTubeVideo({
       controls: controls ? 1 : 0,
       loop: loop ? 1 : 0,
     },
-  }
+  };
 
-  return <ExternalVideo config={config} {...props} />
+  return <ExternalVideo config={config} {...props} />;
 }
 
 export interface VimeoVideoProps extends Omit<ExternalVideoProps, 'config'> {
@@ -349,9 +349,9 @@ export function VimeoVideo({
       portrait: showPortrait ? 1 : 0,
       color: color?.replace('#', ''),
     },
-  }
+  };
 
-  return <ExternalVideo config={config} {...props} />
+  return <ExternalVideo config={config} {...props} />;
 }
 
 export interface VideoGridProps {
@@ -410,5 +410,5 @@ export function VideoGrid({
         </div>
       ))}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 import {
   SidebarGroup,
@@ -6,7 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/sidebar';
 
 interface DocumentItem {
   name: string
@@ -31,5 +31,5 @@ export function NavDocuments({ items }: { items: DocumentItem[] }) {
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

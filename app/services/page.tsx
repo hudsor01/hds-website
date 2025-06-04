@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import { TrendingUp, Code, BarChart3, DollarSign, CheckCircle, Phone } from 'lucide-react'
-import Link from 'next/link'
-import { getServices } from '@/lib/data-fetchers'
+import type { Metadata } from 'next';
+import { TrendingUp, Code, BarChart3, DollarSign, CheckCircle, Phone } from 'lucide-react';
+import Link from 'next/link';
+import { getServices } from '@/lib/data-fetchers';
 
 export const metadata: Metadata = {
   title: 'Services | Hudson Digital Solutions - Revenue Operations & Web Development',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
 // Icon mapping for services
 const iconMap = {
@@ -31,7 +31,7 @@ const iconMap = {
   'web-development': Code,
   'data-analytics': BarChart3,
   'monthly-support': DollarSign,
-}
+};
 
 // Fallback services for when database is not available
 const fallbackServices = [
@@ -83,15 +83,15 @@ const fallbackServices = [
       'Automated reporting systems',
     ],
   },
-]
+];
 
 // Server Component - Fetch data from database
 export default async function ServicesPage() {
   // Fetch services from database
-  const dbServices = await getServices()
+  const dbServices = await getServices();
   
   // Use database services if available, otherwise use fallback
-  const services = dbServices.length > 0 ? dbServices : fallbackServices
+  const services = dbServices.length > 0 ? dbServices : fallbackServices;
 
   return (
     <main className="min-h-screen fade-in">
@@ -125,7 +125,7 @@ export default async function ServicesPage() {
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {services.map((service, index) => {
-              const Icon = iconMap[service.id as keyof typeof iconMap] || Code
+              const Icon = iconMap[service.id as keyof typeof iconMap] || Code;
               return (
                 <div
                   key={service.id}
@@ -191,7 +191,7 @@ export default async function ServicesPage() {
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -289,5 +289,5 @@ export default async function ServicesPage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

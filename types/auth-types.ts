@@ -4,7 +4,7 @@
  * Type definitions for user authentication, sessions, and access control.
  */
 
-import { Environment } from './enum-types'
+import { Environment } from './enum-types';
 
 // ============= User & Authentication =============
 

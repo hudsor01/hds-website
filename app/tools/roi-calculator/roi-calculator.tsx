@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Calculator, TrendingUp, DollarSign, Clock, Users, BarChart3 } from 'lucide-react'
-import Link from 'next/link'
+import { useState, useEffect } from 'react';
+import { Calculator, TrendingUp, DollarSign, Clock, Users, BarChart3 } from 'lucide-react';
+import Link from 'next/link';
 
 interface ROIMetrics {
   currentRevenue: number
@@ -32,7 +32,7 @@ export function ROICalculator() {
     salesCycleWeeks: 4,
     manualHoursPerWeek: 20,
     hourlyRate: 50,
-  })
+  });
 
   const [results, setResults] = useState<ROIResults>({
     projectedRevenue: 0,
@@ -41,13 +41,13 @@ export function ROICalculator() {
     costSavings: 0,
     totalROI: 0,
     paybackMonths: 0,
-  })
+  });
 
-  const [investmentAmount] = useState(2500) // Average investment for RevOps setup
+  const [investmentAmount] = useState(2500); // Average investment for RevOps setup
 
   useEffect(() => {
-    calculateROI()
-  }, [metrics])
+    calculateROI();
+  }, [metrics]);
 
   const calculateROI = () => {
     const {
@@ -58,27 +58,27 @@ export function ROICalculator() {
       salesCycleWeeks,
       manualHoursPerWeek,
       hourlyRate,
-    } = metrics
+    } = metrics;
 
     // Revenue calculations with RevOps improvements
-    const improvedConversionRate = conversionRate * 1.4 // 40% improvement
-    const improvedLeads = currentLeads * 1.25 // 25% more leads through automation
-    const improvedSalesCycle = salesCycleWeeks * 0.75 // 25% faster sales cycle
+    const improvedConversionRate = conversionRate * 1.4; // 40% improvement
+    const improvedLeads = currentLeads * 1.25; // 25% more leads through automation
+    const improvedSalesCycle = salesCycleWeeks * 0.75; // 25% faster sales cycle
 
-    const currentMonthlyDeals = (currentLeads * (conversionRate / 100)) / (salesCycleWeeks / 4.33)
-    const improvedMonthlyDeals = (improvedLeads * (improvedConversionRate / 100)) / (improvedSalesCycle / 4.33)
+    const currentMonthlyDeals = (currentLeads * (conversionRate / 100)) / (salesCycleWeeks / 4.33);
+    const improvedMonthlyDeals = (improvedLeads * (improvedConversionRate / 100)) / (improvedSalesCycle / 4.33);
 
-    const projectedRevenue = improvedMonthlyDeals * avgDealSize * 12
-    const revenueIncrease = projectedRevenue - currentRevenue
+    const projectedRevenue = improvedMonthlyDeals * avgDealSize * 12;
+    const revenueIncrease = projectedRevenue - currentRevenue;
 
     // Time and cost savings
-    const timeSavingsHours = manualHoursPerWeek * 0.6 * 52 // 60% time savings annually
-    const costSavings = timeSavingsHours * hourlyRate
+    const timeSavingsHours = manualHoursPerWeek * 0.6 * 52; // 60% time savings annually
+    const costSavings = timeSavingsHours * hourlyRate;
 
     // Total ROI calculation
-    const totalBenefit = revenueIncrease + costSavings
-    const totalROI = ((totalBenefit - investmentAmount) / investmentAmount) * 100
-    const paybackMonths = investmentAmount / (totalBenefit / 12)
+    const totalBenefit = revenueIncrease + costSavings;
+    const totalROI = ((totalBenefit - investmentAmount) / investmentAmount) * 100;
+    const paybackMonths = investmentAmount / (totalBenefit / 12);
 
     setResults({
       projectedRevenue,
@@ -87,24 +87,24 @@ export function ROICalculator() {
       costSavings,
       totalROI,
       paybackMonths,
-    })
-  }
+    });
+  };
 
   const handleInputChange = (field: keyof ROIMetrics, value: number) => {
     setMetrics(prev => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
   const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount)
+    }).format(amount);
 
-  const formatNumber = (num: number) => new Intl.NumberFormat('en-US').format(Math.round(num))
+  const formatNumber = (num: number) => new Intl.NumberFormat('en-US').format(Math.round(num));
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -352,5 +352,5 @@ export function ROICalculator() {
         </div>
       </div>
     </div>
-  )
+  );
 }

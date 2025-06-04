@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Re-export of the unified animation hooks
@@ -17,4 +17,4 @@ export {
   useViewportSize,
   useStaggerAnimation,
   useScrollLinkedAnimation,
-} from './use-animation-hooks'
+} from './use-animation-hooks';

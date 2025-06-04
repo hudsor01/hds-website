@@ -5,8 +5,8 @@
  * Organized by component categories for better maintainability.
  */
 
-import type { ReactNode, ReactElement, ComponentProps, JSX, ErrorInfo } from 'react'
-import { AnimationType, Size, Variant, ContainerWidth, ColorTheme } from './enum-types'
+import type { ReactNode, ReactElement, ComponentProps, JSX, ErrorInfo } from 'react';
+import { AnimationType, Size, Variant, ContainerWidth, ColorTheme } from './enum-types';
 
 // ============= Base Component Types =============
 

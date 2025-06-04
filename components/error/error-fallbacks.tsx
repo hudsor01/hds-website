@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React from 'react'
-import Link from 'next/link'
-import { AlertCircle, RefreshCw, Home, Mail, ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import React from 'react';
+import Link from 'next/link';
+import { AlertCircle, RefreshCw, Home, Mail, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface BaseErrorFallbackProps {
   error?: Error | null
@@ -36,7 +36,7 @@ export function GenericErrorFallback({ error, reset, className = '' }: BaseError
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 /**
@@ -65,7 +65,7 @@ export function FormErrorFallback({ error, reset, className = '' }: BaseErrorFal
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -117,14 +117,14 @@ export function PageErrorFallback({ error, reset, className = '' }: BaseErrorFal
         )}
       </div>
     </div>
-  )
+  );
 }
 
 /**
  * API/Network error fallback
  */
 export function ApiErrorFallback({ error, reset, className = '' }: BaseErrorFallbackProps) {
-  const isNetworkError = error?.message?.includes('fetch') || error?.message?.includes('network')
+  const isNetworkError = error?.message?.includes('fetch') || error?.message?.includes('network');
   
   return (
     <div className={`rounded-lg border border-orange-200 bg-orange-50 p-4 ${className}`}>
@@ -167,7 +167,7 @@ export function ApiErrorFallback({ error, reset, className = '' }: BaseErrorFall
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -190,7 +190,7 @@ export function SectionErrorFallback({ reset, className = '' }: BaseErrorFallbac
         </Button>
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -210,7 +210,7 @@ export function InlineErrorFallback({ reset, className = '' }: BaseErrorFallback
         </button>
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -241,5 +241,5 @@ export function NotFoundErrorFallback({ className = '' }: { className?: string }
         </div>
       </div>
     </div>
-  )
+  );
 }

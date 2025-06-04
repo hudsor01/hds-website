@@ -1,4 +1,4 @@
-import 'server-only'
+import 'server-only';
 
 /**
  * Server-only utilities
@@ -13,20 +13,20 @@ export async function getSecureData(id: string) {
       'Authorization': `Bearer ${process.env.API_SECRET}`,
       'Content-Type': 'application/json',
     },
-  })
+  });
   
   if (!response.ok) {
-    throw new Error('Failed to fetch secure data')
+    throw new Error('Failed to fetch secure data');
   }
   
-  return response.json()
+  return response.json();
 }
 
 // Server-side analytics tracking
 export function trackServerEvent(event: string, data: Record<string, unknown>) {
   // This could send to server-side analytics services
   if (process.env.NODE_ENV === 'production') {
-    console.log(`Server event: ${event}`, data)
+    console.log(`Server event: ${event}`, data);
     // Example: Send to server-side analytics
     // analytics.track(event, data)
   }
@@ -38,13 +38,13 @@ export async function processEmailQueue() {
   return {
     processed: 0,
     errors: 0,
-  }
+  };
 }
 
 // Admin utilities that require server-side validation
 export function validateAdminAccess(token: string): boolean {
   // Server-only admin validation
-  return process.env.ADMIN_SECRET === token
+  return process.env.ADMIN_SECRET === token;
 }
 
 // Database connection utilities
@@ -52,5 +52,5 @@ export function getDatabaseConfig() {
   return {
     url: process.env.DATABASE_URL,
     ssl: process.env.NODE_ENV === 'production',
-  }
+  };
 }

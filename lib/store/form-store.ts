@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 // Form State for Contact and other forms
 interface FormState {
@@ -27,4 +27,4 @@ export const useFormStore = create<FormState>()(
       name: 'form-store',
     },
   ),
-)
+);

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 interface NewsletterWelcomeProps {
   email: string
@@ -346,4 +346,4 @@ export const NewsletterWelcomeTemplate: React.FC<Readonly<NewsletterWelcomeProps
       </p>
     </div>
   </div>
-)
+);

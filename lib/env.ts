@@ -3,7 +3,7 @@
  * Production-ready environment validation with type safety and runtime checks
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 // Environment-specific validation schemas
 const serverEnvSchema = z.object({
@@ -58,7 +58,7 @@ CLERK_SECRET_KEY: z.string().min(1, 'CLERK_SECRET_KEY is required for Clerk auth
   STRIPE_SECRET_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
-})
+});
 
 const clientEnvSchema = z.object({
 // Client-side Environment Variables (NEXT_PUBLIC_ prefix)
@@ -84,77 +84,77 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().default('/dashboard'),
   NEXT_PUBLIC_ENABLE_ANALYTICS: z.string().transform(val => val === 'true').default('false'),
   NEXT_PUBLIC_ENABLE_ERROR_REPORTING: z.string().transform(val => val === 'true').default('false'),
   NEXT_PUBLIC_MAINTENANCE_MODE: z.string().transform(val => val === 'true').default('false'),
-})
+});
 
 // Combined schema for full validation
-const envSchema = serverEnvSchema.merge(clientEnvSchema)
+const envSchema = serverEnvSchema.merge(clientEnvSchema);
 
 // Environment validation functions
 const validateServerEnv = () => {
   try {
-    return serverEnvSchema.parse(process.env)
+    return serverEnvSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const message = error.errors
         .map(err => `${err.path.join('.')}: ${err.message}`)
-        .join('\n')
+        .join('\n');
 
       throw new Error(
         `❌ Invalid server environment variables:\n${message}\n\n💡 Please check your .env files and ensure all required variables are set.`,
-      )
+      );
     }
-    throw error
+    throw error;
   }
-}
+};
 
 const validateClientEnv = () => {
   try {
-    return clientEnvSchema.parse(process.env)
+    return clientEnvSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const message = error.errors
         .map(err => `${err.path.join('.')}: ${err.message}`)
-        .join('\n')
+        .join('\n');
 
       throw new Error(
         `❌ Invalid client environment variables:\n${message}\n\n💡 Remember: Client variables must be prefixed with NEXT_PUBLIC_`,
-      )
+      );
     }
-    throw error
+    throw error;
   }
-}
+};
 
 // Runtime environment variable access
 export const getServerEnv = () => {
   if (typeof window !== 'undefined') {
-    throw new Error('❌ Server environment variables cannot be accessed on the client side')
+    throw new Error('❌ Server environment variables cannot be accessed on the client side');
   }
-  return validateServerEnv()
-}
+  return validateServerEnv();
+};
 
-export const getClientEnv = () => validateClientEnv()
+export const getClientEnv = () => validateClientEnv();
 
 // Full environment validation (server-side only)
 export const validateEnv = () => {
   if (typeof window !== 'undefined') {
-    throw new Error('❌ Full environment validation must run on the server side')
+    throw new Error('❌ Full environment validation must run on the server side');
   }
   
   try {
-    return envSchema.parse(process.env)
+    return envSchema.parse(process.env);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const message = error.errors
         .map(err => `${err.path.join('.')}: ${err.message}`)
-        .join('\n')
+        .join('\n');
 
       throw new Error(
         `❌ Environment validation failed:\n${message}\n\n📋 Required environment variables:\n${getRequiredEnvVars().join('\n')}`,
-      )
+      );
     }
-    throw error
+    throw error;
   }
-}
+};
 
 // Helper function to get required environment variables
 export const getRequiredEnvVars = (): string[] => {
@@ -172,9 +172,9 @@ const required = [
 'SUPABASE_SERVICE_ROLE_KEY (Supabase service role key)',
 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY (Clerk publishable key)',
 'CLERK_SECRET_KEY (Clerk secret key)',
-]
-  return required
-}
+];
+  return required;
+};
 
 // Environment variable utilities
 export const envUtils = {
@@ -202,8 +202,8 @@ export const envUtils = {
    * Check if a feature flag is enabled
    */
   isFeatureEnabled: (feature: string): boolean => {
-    const value = process.env[`NEXT_PUBLIC_ENABLE_${feature.toUpperCase()}`]
-    return value === 'true'
+    const value = process.env[`NEXT_PUBLIC_ENABLE_${feature.toUpperCase()}`];
+    return value === 'true';
   },
   
   /**
@@ -225,39 +225,39 @@ export const envUtils = {
   'SUPABASE_SERVICE_ROLE_KEY',
   'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
   'CLERK_SECRET_KEY',
-  ]
+  ];
     
     // Additional production security checks
     if (envUtils.isProduction()) {
-      critical.push('ADMIN_PASSWORD_HASH')
+      critical.push('ADMIN_PASSWORD_HASH');
       
       // Ensure production doesn't use weak defaults
       if (process.env.ADMIN_USERNAME === 'admin') {
-        console.error('❌ ADMIN_USERNAME cannot be "admin" in production')
-        return false
+        console.error('❌ ADMIN_USERNAME cannot be "admin" in production');
+        return false;
       }
       
       if (process.env.JWT_SECRET === 'your-secret-key' || process.env.JWT_SECRET === 'change-this-secret') {
-        console.error('❌ JWT_SECRET cannot use default values in production')
-        return false
+        console.error('❌ JWT_SECRET cannot use default values in production');
+        return false;
       }
       
       if (!process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD) {
-        console.error('❌ Production must use ADMIN_PASSWORD_HASH instead of plain ADMIN_PASSWORD')
-        return false
+        console.error('❌ Production must use ADMIN_PASSWORD_HASH instead of plain ADMIN_PASSWORD');
+        return false;
       }
     }
     
-    const missing = critical.filter(key => !process.env[key])
+    const missing = critical.filter(key => !process.env[key]);
     
     if (missing.length > 0) {
-      console.error(`❌ Missing critical environment variables: ${missing.join(', ')}`)
-      return false
+      console.error(`❌ Missing critical environment variables: ${missing.join(', ')}`);
+      return false;
     }
     
-    return true
+    return true;
   },
-}
+};
 
 // Development environment helpers
 export const devUtils = {
@@ -265,46 +265,46 @@ export const devUtils = {
    * Log environment status in development
    */
   logEnvStatus: () => {
-    if (process.env.NODE_ENV !== 'development') return
+    if (process.env.NODE_ENV !== 'development') return;
     
-    console.log('🌍 Environment Status:')
-    console.log(`  • NODE_ENV: ${process.env.NODE_ENV}`)
-    console.log(`  • App URL: ${envUtils.getAppUrl()}`)
-    console.log(`  • Analytics: ${envUtils.isFeatureEnabled('analytics') ? '✅' : '❌'}`)
-    console.log(`  • Error Reporting: ${envUtils.isFeatureEnabled('error_reporting') ? '✅' : '❌'}`)
-    console.log(`  • Maintenance Mode: ${envUtils.isFeatureEnabled('maintenance') ? '🚧' : '✅'}`)
+    console.log('🌍 Environment Status:');
+    console.log(`  • NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`  • App URL: ${envUtils.getAppUrl()}`);
+    console.log(`  • Analytics: ${envUtils.isFeatureEnabled('analytics') ? '✅' : '❌'}`);
+    console.log(`  • Error Reporting: ${envUtils.isFeatureEnabled('error_reporting') ? '✅' : '❌'}`);
+    console.log(`  • Maintenance Mode: ${envUtils.isFeatureEnabled('maintenance') ? '🚧' : '✅'}`);
   },
   
   /**
    * Validate all environment variables in development
    */
   validateDevEnv: () => {
-    if (process.env.NODE_ENV !== 'development') return
+    if (process.env.NODE_ENV !== 'development') return;
     
     try {
-      validateEnv()
-      console.log('✅ All environment variables are valid')
+      validateEnv();
+      console.log('✅ All environment variables are valid');
     } catch (error) {
-      console.error(error)
-      throw new Error('Environment validation failed - please check your .env files')
+      console.error(error);
+      throw new Error('Environment validation failed - please check your .env files');
     }
   },
-}
+};
 
 // Export validated environment variables (server-side only)
-let _env: z.infer<typeof envSchema> | null = null
+let _env: z.infer<typeof envSchema> | null = null;
 
 export const env = (() => {
   if (typeof window !== 'undefined') {
-    throw new Error('❌ Environment variables should not be imported on the client side. Use getClientEnv() instead.')
+    throw new Error('❌ Environment variables should not be imported on the client side. Use getClientEnv() instead.');
   }
   
   if (!_env) {
-    _env = validateEnv()
+    _env = validateEnv();
   }
   
-  return _env
-})()
+  return _env;
+})();
 
 // Type exports
 export type ServerEnv = z.infer<typeof serverEnvSchema>

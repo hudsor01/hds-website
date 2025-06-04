@@ -1,33 +1,33 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { GDPRRequestType } from '@/lib/gdpr/compliance'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Textarea } from '@/components/ui/textarea'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Shield, Download, Trash2, UserX, FileText, Lock } from 'lucide-react'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { GDPRRequestType } from '@/lib/gdpr/compliance';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Shield, Download, Trash2, UserX, FileText, Lock } from 'lucide-react';
 
 const gdprRequestSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   type: z.nativeEnum(GDPRRequestType),
   message: z.string().optional(),
-})
+});
 
 type GDPRRequestFormData = z.infer<typeof gdprRequestSchema>
 
 export function GDPRRequestForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{
     success: boolean
     message: string
-  } | null>(null)
+  } | null>(null);
 
   const {
     register,
@@ -39,42 +39,42 @@ export function GDPRRequestForm() {
     defaultValues: {
       type: GDPRRequestType.DATA_ACCESS,
     },
-  })
+  });
 
   const onSubmit = async (data: GDPRRequestFormData) => {
-    setIsSubmitting(true)
-    setSubmitResult(null)
+    setIsSubmitting(true);
+    setSubmitResult(null);
 
     try {
       const response = await fetch('/api/gdpr/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (response.ok) {
         setSubmitResult({
           success: true,
           message: result.message || 'Your request has been submitted successfully.',
-        })
-        reset()
+        });
+        reset();
       } else {
         setSubmitResult({
           success: false,
           message: result.error || 'Failed to submit request. Please try again.',
-        })
+        });
       }
     } catch {
     setSubmitResult({
     success: false,
     message: 'An error occurred. Please try again later.',
-    })
+    });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const requestTypes = [
     {
@@ -101,7 +101,7 @@ export function GDPRRequestForm() {
       description: 'Stop all marketing communications and data processing',
       icon: UserX,
     },
-  ]
+  ];
 
   return (
     <Card className='max-w-2xl mx-auto'>
@@ -135,11 +135,11 @@ export function GDPRRequestForm() {
             <RadioGroup
               defaultValue={GDPRRequestType.DATA_ACCESS}
               onValueChange={(value) => {
-                register('type').onChange({ target: { value } })
+                register('type').onChange({ target: { value } });
               }}
             >
               {requestTypes.map((type) => {
-                const Icon = type.icon
+                const Icon = type.icon;
                 return (
                   <div key={type.value} className='flex items-start space-x-3'>
                     <RadioGroupItem
@@ -160,7 +160,7 @@ export function GDPRRequestForm() {
                       </div>
                     </Label>
                   </div>
-                )
+                );
               })}
             </RadioGroup>
           </div>
@@ -201,5 +201,5 @@ export function GDPRRequestForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

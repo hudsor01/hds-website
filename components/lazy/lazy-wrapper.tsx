@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import React, { Suspense, lazy, type ComponentType } from 'react'
-import { useLazyLoad } from '@/hooks/use-intersection-observer'
-import { Skeleton } from '@/components/ui/skeleton'
+import React, { Suspense, lazy, type ComponentType } from 'react';
+import { useLazyLoad } from '@/hooks/use-intersection-observer';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface LazyWrapperProps {
   children: React.ReactNode
@@ -28,7 +28,7 @@ export function LazyWrapper({
   const { ref, shouldLoad } = useLazyLoad({
     threshold,
     rootMargin,
-  })
+  });
 
   const defaultFallback = (
     <div 
@@ -37,7 +37,7 @@ export function LazyWrapper({
     >
       <Skeleton className='h-32 w-full rounded-lg' />
     </div>
-  )
+  );
 
   return (
     <div ref={ref} className={className} style={{ minHeight }}>
@@ -49,7 +49,7 @@ export function LazyWrapper({
         fallback || defaultFallback
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -69,19 +69,19 @@ export function withLazyLoading<P extends object>(
     threshold = 0.1,
     rootMargin = '50px',
     displayName,
-  } = options || {}
+  } = options || {};
 
   const LazyComponent = React.forwardRef<HTMLElement, P>((props, ref) => {
     const { ref: intersectionRef, shouldLoad } = useLazyLoad({
       threshold,
       rootMargin,
-    })
+    });
 
     const defaultFallback = Fallback ? <Fallback /> : (
       <div className='flex items-center justify-center min-h-[200px]'>
         <Skeleton className='h-32 w-full rounded-lg' />
       </div>
-    )
+    );
 
     return (
       <div ref={intersectionRef}>
@@ -91,12 +91,12 @@ export function withLazyLoading<P extends object>(
           defaultFallback
         )}
       </div>
-    )
-  })
+    );
+  });
 
-  LazyComponent.displayName = displayName || `LazyLoaded(${Component.displayName || Component.name || 'Component'})`
+  LazyComponent.displayName = displayName || `LazyLoaded(${Component.displayName || Component.name || 'Component'})`;
 
-  return LazyComponent
+  return LazyComponent;
 }
 
 /**
@@ -109,16 +109,16 @@ export function useLazyComponent<T extends ComponentType<Record<string, unknown>
     rootMargin?: string
   },
 ) {
-  const { threshold = 0.1, rootMargin = '50px' } = options || {}
-  const { ref, shouldLoad } = useLazyLoad({ threshold, rootMargin })
+  const { threshold = 0.1, rootMargin = '50px' } = options || {};
+  const { ref, shouldLoad } = useLazyLoad({ threshold, rootMargin });
 
-  const LazyComponent = shouldLoad ? lazy(importFunc) : null
+  const LazyComponent = shouldLoad ? lazy(importFunc) : null;
 
   return {
     ref,
     LazyComponent,
     shouldLoad,
-  }
+  };
 }
 
 /**
@@ -145,7 +145,7 @@ export function LazyImage({
   onLoad,
   onError,
 }: LazyImageProps) {
-  const { ref, shouldLoad } = useLazyLoad({ threshold, rootMargin })
+  const { ref, shouldLoad } = useLazyLoad({ threshold, rootMargin });
 
   return (
     <div ref={ref} className={className}>
@@ -168,5 +168,5 @@ export function LazyImage({
         />
       )}
     </div>
-  )
+  );
 }

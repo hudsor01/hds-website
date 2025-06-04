@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import type {
   FieldValues,
   UseFormReturn,
   FieldPath,
-} from 'react-hook-form'
+} from 'react-hook-form';
 import {
   FormControl,
   FormDescription,
@@ -13,18 +13,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 // Base props for all form fields
 interface BaseFieldProps<T extends FieldValues, K extends FieldPath<T>> {
@@ -64,7 +64,7 @@ export function TextField<T extends FieldValues, K extends FieldPath<T>>({
   type = 'text',
   ...props
 }: TextFieldProps<T, K>) {
-  const inputClass = darkMode ? 'bg-gray-800 border-gray-700' : ''
+  const inputClass = darkMode ? 'bg-gray-800 border-gray-700' : '';
 
   return (
     <FormField
@@ -92,7 +92,7 @@ export function TextField<T extends FieldValues, K extends FieldPath<T>>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 // Textarea field props
@@ -119,7 +119,7 @@ export function TextareaField<T extends FieldValues, K extends FieldPath<T>>({
   placeholder,
   rows = 4,
 }: TextareaFieldProps<T, K>) {
-  const textareaClass = darkMode ? 'bg-gray-800 border-gray-700' : ''
+  const textareaClass = darkMode ? 'bg-gray-800 border-gray-700' : '';
 
   return (
     <FormField
@@ -146,7 +146,7 @@ export function TextareaField<T extends FieldValues, K extends FieldPath<T>>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 // Select field props
@@ -173,7 +173,7 @@ export function SelectField<T extends FieldValues, K extends FieldPath<T>>({
   placeholder = 'Select an option',
   options,
 }: SelectFieldProps<T, K>) {
-  const selectClass = darkMode ? 'bg-gray-800 border-gray-700' : ''
+  const selectClass = darkMode ? 'bg-gray-800 border-gray-700' : '';
 
   return (
     <FormField
@@ -206,7 +206,7 @@ export function SelectField<T extends FieldValues, K extends FieldPath<T>>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 // Checkbox field props
@@ -262,7 +262,7 @@ export function CheckboxField<T extends FieldValues, K extends FieldPath<T>>({
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 // Form row component props
@@ -290,5 +290,5 @@ export function FormRow({ children, className, columns = 2 }: FormRowProps) {
     >
       {children}
     </div>
-  )
+  );
 }

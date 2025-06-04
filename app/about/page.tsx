@@ -1,6 +1,6 @@
-import type { Metadata } from 'next'
-import { CheckCircle, Users, Target, DollarSign } from 'lucide-react'
-import Link from 'next/link'
+import type { Metadata } from 'next';
+import { CheckCircle, Users, Target, DollarSign } from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About | Hudson Digital Solutions - Revenue Operations Expert',
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
 const stats = [
   { id: 1, name: 'Years at Thryv', value: '10', icon: CheckCircle },
   { id: 2, name: 'Small Businesses Helped', value: '5+', icon: Users },
   { id: 3, name: 'Revenue Operations', value: 'Expert', icon: Target },
   { id: 4, name: 'Affordable Solutions', value: '100%', icon: DollarSign },
-]
+];
 
 const timeline = [
   {
@@ -56,7 +56,7 @@ const timeline = [
     description:
       'Helping Dallas-Fort Worth small businesses automate operations and build their digital presence.',
   },
-]
+];
 
 export default function AboutPage() {
   return (
@@ -89,7 +89,7 @@ export default function AboutPage() {
         <div className="container">
           <div className="features-grid max-w-4xl mx-auto">
             {stats.map((stat, _index) => {
-              const Icon = stat.icon
+              const Icon = stat.icon;
               return (
                 <div
                   key={stat.id}
@@ -101,7 +101,7 @@ export default function AboutPage() {
                   </div>
                   <dd className="text-4xl font-bold text-brand-600">{stat.value}</dd>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -239,5 +239,5 @@ export default function AboutPage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

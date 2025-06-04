@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import { Check } from 'lucide-react'
-import { Button } from '../ui/button'
-import Link from 'next/link'
+import { m } from 'framer-motion';
+import { Check } from 'lucide-react';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 // Types
 export interface PricingPlan {
@@ -89,7 +89,7 @@ const defaultPlans: PricingPlan[] = [
     buttonText: 'Get Started',
     buttonLink: '/contact',
   },
-]
+];
 
 export function PricingSection({
   title = 'Simple, Transparent Pricing',
@@ -215,5 +215,5 @@ export function PricingSection({
         )}
       </div>
     </section>
-  )
+  );
 }

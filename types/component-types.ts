@@ -5,7 +5,7 @@
  * This file is maintained for backward compatibility only.
  */
 
-import type { ReactNode, ReactElement } from 'react'
+import type { ReactNode, ReactElement } from 'react';
 
 // Legacy component types - interfaces defined below
 

@@ -1,14 +1,14 @@
-import { Suspense } from 'react'
-import { getServices, getCaseStudies, getTestimonials, getAnalyticsData } from '@/lib/data-fetchers'
-import { DashboardSkeleton } from './dashboard-skeleton'
+import { Suspense } from 'react';
+import { getServices, getCaseStudies, getTestimonials, getAnalyticsData } from '@/lib/data-fetchers';
+import { DashboardSkeleton } from './dashboard-skeleton';
 
 // Server Component that fetches all data in parallel
 async function DashboardContent() {
   // Initiate all data fetching in parallel (don't await individually)
-  const servicesPromise = getServices()
-  const caseStudiesPromise = getCaseStudies()
-  const testimonialsPromise = getTestimonials()
-  const analyticsPromise = getAnalyticsData()
+  const servicesPromise = getServices();
+  const caseStudiesPromise = getCaseStudies();
+  const testimonialsPromise = getTestimonials();
+  const analyticsPromise = getAnalyticsData();
 
   // Wait for all promises to resolve in parallel
   const [services, caseStudies, testimonials, analytics] = await Promise.all([
@@ -16,7 +16,7 @@ async function DashboardContent() {
     caseStudiesPromise,
     testimonialsPromise,
     analyticsPromise,
-  ])
+  ]);
 
   return (
     <div className='space-y-8'>
@@ -81,7 +81,7 @@ async function DashboardContent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Alternative version with error handling using Promise.allSettled
@@ -92,25 +92,25 @@ async function DashboardContentSafe() {
     getCaseStudies(),
     getTestimonials(),
     getAnalyticsData(),
-  ])
+  ]);
 
   // Extract successful results and handle failures
-  const services = results[0].status === 'fulfilled' ? results[0].value : []
-  const _caseStudies = results[1].status === 'fulfilled' ? results[1].value : []
-  const _testimonials = results[2].status === 'fulfilled' ? results[2].value : []
+  const services = results[0].status === 'fulfilled' ? results[0].value : [];
+  const _caseStudies = results[1].status === 'fulfilled' ? results[1].value : [];
+  const _testimonials = results[2].status === 'fulfilled' ? results[2].value : [];
   const analytics = results[3].status === 'fulfilled' ? results[3].value : {
     totalLeads: 0,
     conversionRate: 0,
     revenueGrowth: 0,
     clientSatisfaction: 0,
-  }
+  };
 
   // Log any failures for debugging
   results.forEach((result, index) => {
     if (result.status === 'rejected') {
-      console.error(`Data fetch ${index} failed:`, result.reason)
+      console.error(`Data fetch ${index} failed:`, result.reason);
     }
-  })
+  });
 
   return (
     <div className='space-y-8'>
@@ -148,7 +148,7 @@ async function DashboardContentSafe() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Main dashboard component with streaming
@@ -166,5 +166,5 @@ export function DashboardDataParallel({ safe = false }: { safe?: boolean }) {
         {safe ? <DashboardContentSafe /> : <DashboardContent />}
       </Suspense>
     </div>
-  )
+  );
 }

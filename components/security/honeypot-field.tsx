@@ -5,8 +5,8 @@
  * This is a simple but effective spam prevention technique.
  */
 
-import React, { useState, useEffect } from 'react'
-import type { BaseComponentProps } from '@/types/ui-types'
+import React, { useState, useEffect } from 'react';
+import type { BaseComponentProps } from '@/types/ui-types';
 
 export interface HoneypotFieldProps extends BaseComponentProps {
   name?: string
@@ -51,7 +51,7 @@ export function HoneypotField({
         }}
       />
     </div>
-  )
+  );
 }
 
 /**
@@ -67,17 +67,17 @@ export function TimingHoneypot({
   minTime = 3000, // 3 seconds minimum
   onValidationChange, 
 }: TimingHoneypotProps) {
-  const [startTime] = useState(Date.now())
-  const [_isValid, setIsValid] = useState(false)
+  const [startTime] = useState(Date.now());
+  const [_isValid, setIsValid] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsValid(true)
-      onValidationChange?.(true)
-    }, minTime)
+      setIsValid(true);
+      onValidationChange?.(true);
+    }, minTime);
 
-    return () => clearTimeout(timer)
-  }, [minTime, onValidationChange])
+    return () => clearTimeout(timer);
+  }, [minTime, onValidationChange]);
 
   // Hidden field to track timing
   return (
@@ -87,7 +87,7 @@ export function TimingHoneypot({
       value={startTime.toString()}
       readOnly
     />
-  )
+  );
 }
 
-export default HoneypotField
+export default HoneypotField;

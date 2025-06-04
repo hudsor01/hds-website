@@ -1,9 +1,9 @@
-import { TRPCError } from '@trpc/server'
-import { checkRateLimit, extractIPAddress } from './rate-limiter'
-import type { RateLimitConfig, RateLimitContext } from '@/types/rate-limit-types'
-import { RATE_LIMIT_PRESETS } from '@/types/rate-limit-types'
-import { logger } from '@/lib/logger'
-import { getRedisStatus } from './config'
+import { TRPCError } from '@trpc/server';
+import { checkRateLimit, extractIPAddress } from './rate-limiter';
+import type { RateLimitConfig, RateLimitContext } from '@/types/rate-limit-types';
+import { RATE_LIMIT_PRESETS } from '@/types/rate-limit-types';
+import { logger } from '@/lib/logger';
+import { getRedisStatus } from './config';
 
 /**
  * Production-Ready Redis Rate Limiting Integration
@@ -116,29 +116,29 @@ export const PRODUCTION_RATE_LIMITS = {
     skipInDevelopment: true,
     alertThreshold: 0.95,
   } as ProductionRateLimitConfig,
-} as const
+} as const;
 
 /**
  * Enhanced rate limiter with production features
  */
 export class ProductionRateLimiter {
   constructor() {
-    this.logSystemStatus()
+    this.logSystemStatus();
   }
 
   private async logSystemStatus(): Promise<void> {
-    const status = getRedisStatus()
+    const status = getRedisStatus();
     
     if (status.fallbackMode) {
       logger.warn('Production rate limiter using fallback mode', {
         redisStatus: status,
         impact: 'Rate limiting will not work across multiple serverless functions',
         recommendation: 'Configure Redis for production deployment',
-      })
+      });
     } else {
       logger.info('Production rate limiter initialized with Redis', {
         redisStatus: status,
-      })
+      });
     }
   }
 
@@ -158,8 +158,8 @@ export class ProductionRateLimiter {
       logger.debug('Rate limiting skipped in development', {
         path: context.path,
         config: config,
-      })
-      return
+      });
+      return;
     }
 
     // Apply production multiplier
@@ -168,10 +168,10 @@ export class ProductionRateLimiter {
       maxRequests: Math.floor(
         config.maxRequests * (config.productionMultiplier || 1),
       ),
-    }
+    };
 
     try {
-      const result = await checkRateLimit(context, adjustedConfig)
+      const result = await checkRateLimit(context, adjustedConfig);
 
       if (!result.allowed) {
         // Log rate limit violation
@@ -183,7 +183,7 @@ export class ProductionRateLimiter {
           limit: result.limit,
           retryAfter: result.retryAfter,
           severity: 'high',
-        })
+        });
 
         // Throw tRPC error with detailed information
         throw new TRPCError({
@@ -196,11 +196,11 @@ export class ProductionRateLimiter {
             resetTime: result.resetTime,
             retryAfter: Math.ceil(result.retryAfter),
           },
-        })
+        });
       }
 
       // Check if we're approaching the limit for monitoring
-      const usagePercent = result.count / result.limit
+      const usagePercent = result.count / result.limit;
       if (
         config.alertThreshold &&
         usagePercent >= config.alertThreshold
@@ -214,7 +214,7 @@ export class ProductionRateLimiter {
           usagePercent: Math.round(usagePercent * 100),
           threshold: Math.round(config.alertThreshold * 100),
           severity: 'medium',
-        })
+        });
       }
 
       // Debug logging in development
@@ -224,11 +224,11 @@ export class ProductionRateLimiter {
           count: result.count,
           limit: result.limit,
           remaining: result.limit - result.count,
-        })
+        });
       }
     } catch (error) {
       if (error instanceof TRPCError) {
-        throw error
+        throw error;
       }
 
       // Log unexpected errors
@@ -238,14 +238,14 @@ export class ProductionRateLimiter {
         userId: context.userId,
         error: error instanceof Error ? error.message : 'Unknown error',
         severity: 'critical',
-      })
+      });
 
       // Fail open for unexpected errors to avoid blocking legitimate users
       logger.warn('Rate limiter failing open due to error', {
         path: context.path,
         decision: 'allow_request',
         reason: 'unexpected_error',
-      })
+      });
     }
   }
 
@@ -255,21 +255,21 @@ export class ProductionRateLimiter {
   createMiddleware(config: ProductionRateLimitConfig) {
     return async ({ ctx, path, next }: { ctx: Record<string, unknown>; path: string; next: () => Promise<unknown> }) => {
       // Extract context information
-      const ip = extractIPAddress(ctx.req)
-      const userId = ctx.user?.id
+      const ip = extractIPAddress(ctx.req);
+      const userId = ctx.user?.id;
 
       const rateLimitContext: RateLimitContext = {
         req: ctx.req,
         ip,
         userId,
         path,
-      }
+      };
 
       // Check rate limit
-      await this.checkRateLimit(rateLimitContext, config)
+      await this.checkRateLimit(rateLimitContext, config);
 
-      return next()
-    }
+      return next();
+    };
   }
 
   /**
@@ -283,7 +283,7 @@ export class ProductionRateLimiter {
       lastError?: string
     }
   }> {
-    const redisStatus = getRedisStatus()
+    const redisStatus = getRedisStatus();
     
     return {
       status: redisStatus.connected ? 'healthy' : 'degraded',
@@ -292,33 +292,33 @@ export class ProductionRateLimiter {
         fallbackMode: redisStatus.fallbackMode,
         lastError: redisStatus.error || undefined,
       },
-    }
+    };
   }
 }
 
 // Singleton instance
-const productionRateLimiter = new ProductionRateLimiter()
+const productionRateLimiter = new ProductionRateLimiter();
 
 /**
  * Production-ready rate limiting middlewares
  */
-export const createProductionRateLimit = (config: ProductionRateLimitConfig) => productionRateLimiter.createMiddleware(config)
+export const createProductionRateLimit = (config: ProductionRateLimitConfig) => productionRateLimiter.createMiddleware(config);
 
 // Pre-configured production middlewares
-export const apiRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.API_GENERAL)
-export const contactFormRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.CONTACT_FORM)
-export const newsletterRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.NEWSLETTER)
-export const bookingRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.BOOKING)
-export const authLoginRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.AUTH_LOGIN)
-export const authRegisterRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.AUTH_REGISTER)
-export const passwordResetRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.PASSWORD_RESET)
-export const adminRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.ADMIN_OPERATIONS)
-export const fileUploadRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.FILE_UPLOAD)
-export const analyticsRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.ANALYTICS)
+export const apiRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.API_GENERAL);
+export const contactFormRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.CONTACT_FORM);
+export const newsletterRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.NEWSLETTER);
+export const bookingRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.BOOKING);
+export const authLoginRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.AUTH_LOGIN);
+export const authRegisterRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.AUTH_REGISTER);
+export const passwordResetRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.PASSWORD_RESET);
+export const adminRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.ADMIN_OPERATIONS);
+export const fileUploadRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.FILE_UPLOAD);
+export const analyticsRateLimit = createProductionRateLimit(PRODUCTION_RATE_LIMITS.ANALYTICS);
 
 /**
  * Health check endpoint for monitoring
  */
-export const rateLimitHealthCheck = async () => productionRateLimiter.healthCheck()
+export const rateLimitHealthCheck = async () => productionRateLimiter.healthCheck();
 
-export { productionRateLimiter }
+export { productionRateLimiter };

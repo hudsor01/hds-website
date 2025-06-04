@@ -5,8 +5,8 @@
  * and other security vulnerabilities.
  */
 
-import { z } from 'zod'
-import DOMPurify from 'isomorphic-dompurify'
+import { z } from 'zod';
+import DOMPurify from 'isomorphic-dompurify';
 
 /**
  * HTML sanitization options
@@ -24,7 +24,7 @@ interface SanitizeOptions {
 const DEFAULT_ALLOWED_TAGS = [
   'p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
   'ul', 'ol', 'li', 'blockquote', 'a', 'code', 'pre',
-]
+];
 
 /**
  * Default allowed attributes
@@ -32,7 +32,7 @@ const DEFAULT_ALLOWED_TAGS = [
 const DEFAULT_ALLOWED_ATTRIBUTES = {
   a: ['href', 'title', 'target', 'rel'],
   '*': ['class'],
-}
+};
 
 /**
  * Sanitize HTML content
@@ -46,7 +46,7 @@ export function sanitizeHtml(
     allowedAttributes = DEFAULT_ALLOWED_ATTRIBUTES,
     allowedSchemes = ['http', 'https', 'mailto'],
     stripEmpty = true,
-  } = options
+  } = options;
 
   // Configure DOMPurify
   const clean = DOMPurify.sanitize(input, {
@@ -59,34 +59,34 @@ export function sanitizeHtml(
     RETURN_DOM: false,
     RETURN_DOM_FRAGMENT: false,
     RETURN_DOM_IMPORT: false,
-  })
+  });
 
   // Strip empty tags if requested
   if (stripEmpty) {
-    return clean.replace(/<(\w+)(?:\s[^>]*)?>[\s]*<\/\1>/g, '')
+    return clean.replace(/<(\w+)(?:\s[^>]*)?>[\s]*<\/\1>/g, '');
   }
 
-  return clean
+  return clean;
 }
 
 /**
  * Sanitize plain text (removes all HTML)
  */
 export function sanitizeText(input: string): string {
-  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] })
+  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] });
 }
 
 /**
  * Sanitize and validate email
  */
 export function sanitizeEmail(email: string): string {
-  const trimmed = email.trim().toLowerCase()
-  const emailSchema = z.string().email()
+  const trimmed = email.trim().toLowerCase();
+  const emailSchema = z.string().email();
   
   try {
-    return emailSchema.parse(trimmed)
+    return emailSchema.parse(trimmed);
   } catch {
-    throw new Error('Invalid email format')
+    throw new Error('Invalid email format');
   }
 }
 
@@ -94,26 +94,26 @@ export function sanitizeEmail(email: string): string {
  * Sanitize URL
  */
 export function sanitizeUrl(url: string, allowedProtocols = ['http', 'https']): string {
-  const trimmed = url.trim()
+  const trimmed = url.trim();
   
   // Check protocol
-  const protocolMatch = trimmed.match(/^(\w+):/)
+  const protocolMatch = trimmed.match(/^(\w+):/);
   if (protocolMatch && !allowedProtocols.includes(protocolMatch[1])) {
-    throw new Error(`Invalid URL protocol. Allowed: ${allowedProtocols.join(', ')}`)
+    throw new Error(`Invalid URL protocol. Allowed: ${allowedProtocols.join(', ')}`);
   }
   
   // Validate URL format
   try {
-    const urlObj = new URL(trimmed)
+    const urlObj = new URL(trimmed);
     
     // Additional security checks
     if (urlObj.hostname === 'localhost' || urlObj.hostname === '127.0.0.1') {
-      throw new Error('Local URLs are not allowed')
+      throw new Error('Local URLs are not allowed');
     }
     
-    return urlObj.href
+    return urlObj.href;
   } catch {
-    throw new Error('Invalid URL format')
+    throw new Error('Invalid URL format');
   }
 }
 
@@ -122,22 +122,22 @@ export function sanitizeUrl(url: string, allowedProtocols = ['http', 'https']): 
  */
 export function sanitizeFilename(filename: string): string {
   // Remove directory traversal attempts
-  let safe = filename.replace(/\.\./g, '')
+  let safe = filename.replace(/\.\./g, '');
   
   // Remove special characters except dots, dashes, and underscores
-  safe = safe.replace(/[^a-zA-Z0-9.\-_]/g, '_')
+  safe = safe.replace(/[^a-zA-Z0-9.\-_]/g, '_');
   
   // Remove multiple consecutive dots
-  safe = safe.replace(/\.{2,}/g, '.')
+  safe = safe.replace(/\.{2,}/g, '.');
   
   // Limit length
   if (safe.length > 255) {
-    const ext = safe.split('.').pop() || ''
-    const name = safe.substring(0, 255 - ext.length - 1)
-    safe = `${name}.${ext}`
+    const ext = safe.split('.').pop() || '';
+    const name = safe.substring(0, 255 - ext.length - 1);
+    safe = `${name}.${ext}`;
   }
   
-  return safe
+  return safe;
 }
 
 /**
@@ -145,11 +145,11 @@ export function sanitizeFilename(filename: string): string {
  */
 export function sanitizeJson(jsonString: string): Record<string, unknown> {
   try {
-    const parsed = JSON.parse(jsonString)
+    const parsed = JSON.parse(jsonString);
     // Re-stringify to ensure it's valid JSON and remove any code
-    return JSON.parse(JSON.stringify(parsed))
+    return JSON.parse(JSON.stringify(parsed));
   } catch {
-    throw new Error('Invalid JSON format')
+    throw new Error('Invalid JSON format');
   }
 }
 
@@ -158,33 +158,33 @@ export function sanitizeJson(jsonString: string): Record<string, unknown> {
  */
 export function sanitizePhone(phone: string): string {
   // Remove all non-numeric characters except + for international
-  const cleaned = phone.replace(/[^\d+]/g, '')
+  const cleaned = phone.replace(/[^\d+]/g, '');
   
   // Basic validation
   if (cleaned.length < 10 || cleaned.length > 15) {
-    throw new Error('Invalid phone number length')
+    throw new Error('Invalid phone number length');
   }
   
-  return cleaned
+  return cleaned;
 }
 
 /**
  * Sanitize and validate username
  */
 export function sanitizeUsername(username: string): string {
-  const trimmed = username.trim()
+  const trimmed = username.trim();
   
   // Check length
   if (trimmed.length < 3 || trimmed.length > 30) {
-    throw new Error('Username must be between 3 and 30 characters')
+    throw new Error('Username must be between 3 and 30 characters');
   }
   
   // Allow only alphanumeric, underscore, and dash
   if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
-    throw new Error('Username can only contain letters, numbers, underscores, and dashes')
+    throw new Error('Username can only contain letters, numbers, underscores, and dashes');
   }
   
-  return trimmed
+  return trimmed;
 }
 
 /**
@@ -193,26 +193,26 @@ export function sanitizeUsername(username: string): string {
 export function sanitizeSqlIdentifier(identifier: string): string {
   // Allow only alphanumeric and underscore
   if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(identifier)) {
-    throw new Error('Invalid SQL identifier')
+    throw new Error('Invalid SQL identifier');
   }
   
   // Check against common SQL keywords
-  const sqlKeywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER']
+  const sqlKeywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER'];
   if (sqlKeywords.includes(identifier.toUpperCase())) {
-    throw new Error('SQL keyword cannot be used as identifier')
+    throw new Error('SQL keyword cannot be used as identifier');
   }
   
-  return identifier
+  return identifier;
 }
 
 /**
  * Sanitize search query
  */
 export function sanitizeSearchQuery(query: string): string {
-  let sanitized = query.trim()
+  let sanitized = query.trim();
   
   // Remove SQL injection attempts
-  sanitized = sanitized.replace(/['";\\]/g, '')
+  sanitized = sanitized.replace(/['";\\]/g, '');
   
   // Remove common SQL keywords
   const dangerousPatterns = [
@@ -220,18 +220,18 @@ export function sanitizeSearchQuery(query: string): string {
     /--/g,
     /\/\*/g,
     /\*\//g,
-  ]
+  ];
   
   dangerousPatterns.forEach(pattern => {
-    sanitized = sanitized.replace(pattern, '')
-  })
+    sanitized = sanitized.replace(pattern, '');
+  });
   
   // Limit length
   if (sanitized.length > 200) {
-    sanitized = sanitized.substring(0, 200)
+    sanitized = sanitized.substring(0, 200);
   }
   
-  return sanitized
+  return sanitized;
 }
 
 /**
@@ -241,19 +241,19 @@ export function createSanitizedFormSchema<T extends z.ZodRawShape>(
   shape: T,
   sanitizers?: Partial<Record<keyof T, (value: unknown) => unknown>>,
 ) {
-  const transformedShape: Record<string, unknown> = {}
+  const transformedShape: Record<string, unknown> = {};
   
   Object.entries(shape).forEach(([key, schema]) => {
-    const sanitizer = sanitizers?.[key as keyof T]
+    const sanitizer = sanitizers?.[key as keyof T];
     
     if (sanitizer && schema instanceof z.ZodString) {
-      transformedShape[key] = schema.transform(sanitizer)
+      transformedShape[key] = schema.transform(sanitizer);
     } else {
-      transformedShape[key] = schema
+      transformedShape[key] = schema;
     }
-  })
+  });
   
-  return z.object(transformedShape)
+  return z.object(transformedShape);
 }
 
 /**
@@ -267,54 +267,54 @@ export function sanitizeObject(
     sanitizers?: Record<string, (value: unknown) => unknown>
   } = {},
 ): Record<string, unknown> {
-  const { maxDepth = 10, allowedKeys, sanitizers = {} } = options
+  const { maxDepth = 10, allowedKeys, sanitizers = {} } = options;
   
   function sanitizeRecursive(value: Record<string, unknown>, depth: number): Record<string, unknown> {
     if (depth > maxDepth) {
-      throw new Error('Maximum object depth exceeded')
+      throw new Error('Maximum object depth exceeded');
     }
     
     if (value === null || value === undefined) {
-      return value
+      return value;
     }
     
     if (typeof value === 'string') {
-      return sanitizeText(value)
+      return sanitizeText(value);
     }
     
     if (typeof value === 'number' || typeof value === 'boolean') {
-      return value
+      return value;
     }
     
     if (Array.isArray(value)) {
-      return value.map(item => sanitizeRecursive(item, depth + 1))
+      return value.map(item => sanitizeRecursive(item, depth + 1));
     }
     
     if (typeof value === 'object') {
-      const sanitized: Record<string, unknown> = {}
+      const sanitized: Record<string, unknown> = {};
       
       Object.entries(value).forEach(([key, val]) => {
         // Check if key is allowed
         if (allowedKeys && !allowedKeys.includes(key)) {
-          return
+          return;
         }
         
         // Apply custom sanitizer if available
         if (sanitizers[key]) {
-          sanitized[key] = sanitizers[key](val)
+          sanitized[key] = sanitizers[key](val);
         } else {
-          sanitized[key] = sanitizeRecursive(val, depth + 1)
+          sanitized[key] = sanitizeRecursive(val, depth + 1);
         }
-      })
+      });
       
-      return sanitized
+      return sanitized;
     }
     
     // For other types, convert to string and sanitize
-    return sanitizeText(String(value))
+    return sanitizeText(String(value));
   }
   
-  return sanitizeRecursive(obj, 0)
+  return sanitizeRecursive(obj, 0);
 }
 
 /**
@@ -329,7 +329,7 @@ export const commonSanitizers = {
   username: (value: string) => sanitizeUsername(value),
   filename: (value: string) => sanitizeFilename(value),
   search: (value: string) => sanitizeSearchQuery(value),
-}
+};
 
 /**
  * Middleware to sanitize request body
@@ -339,16 +339,16 @@ export function sanitizeRequestBody(
   schema?: z.ZodSchema,
 ): Record<string, unknown> {
   if (!body || typeof body !== 'object') {
-    throw new Error('Invalid request body')
+    throw new Error('Invalid request body');
   }
   
   // If schema provided, use it for validation and sanitization
   if (schema) {
-    return schema.parse(body)
+    return schema.parse(body);
   }
   
   // Otherwise, do generic sanitization
-  return sanitizeObject(body as Record<string, unknown>)
+  return sanitizeObject(body as Record<string, unknown>);
 }
 
 /**
@@ -363,7 +363,7 @@ export function preventXss(content: string): string {
     '"': '&quot;',
     "'": '&#x27;',
     '/': '&#x2F;',
-  }
+  };
   
-  return content.replace(/[&<>"'/]/g, char => escapeMap[char])
+  return content.replace(/[&<>"'/]/g, char => escapeMap[char]);
 }

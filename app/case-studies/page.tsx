@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import { Building2 } from 'lucide-react'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { AnimatedText } from '@/components/animated/animated-text'
+import type { Metadata } from 'next';
+import { Building2 } from 'lucide-react';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { AnimatedText } from '@/components/animated/animated-text';
 
 export const metadata: Metadata = {
   title: 'Case Studies | Hudson Digital Solutions - Real Results',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "See how we've helped businesses optimize their operations and grow revenue. Real projects, real results.",
   keywords:
     'case studies, small business success stories, revenue operations results',
-}
+};
 
 const caseStudies = [
   {
@@ -63,7 +63,7 @@ const caseStudies = [
       'Finally we can see our entire sales pipeline and nothing falls through the cracks.',
     technologies: ['HubSpot', 'Zapier', 'Custom Dashboards'],
   },
-]
+];
 
 // Server Component - Static content rendered on server
 export default function CaseStudiesPage() {
@@ -214,5 +214,5 @@ export default function CaseStudiesPage() {
         </AnimatedCard>
       </div>
     </main>
-  )
+  );
 }

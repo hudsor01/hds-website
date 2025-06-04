@@ -1,9 +1,9 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Calendar, Clock, ArrowRight } from 'lucide-react'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { AnimatedText } from '@/components/animated/animated-text'
-import { getBlogPosts } from '@/lib/data-fetchers'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { AnimatedText } from '@/components/animated/animated-text';
+import { getBlogPosts } from '@/lib/data-fetchers';
 
 export const metadata: Metadata = {
   title: 'Blog | Hudson Digital Solutions - Revenue Operations Insights',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Learn from my 10 years of revenue operations experience at Thryv. Tips, guides, and insights for small businesses.',
   keywords:
     'revenue operations blog, sales automation tips, small business growth, Dallas Fort Worth',
-}
+};
 
 // Fallback blog posts for when database is not available
 const fallbackBlogPosts = [
@@ -51,15 +51,15 @@ const fallbackBlogPosts = [
     href: '/blog/data-driven-decisions',
     image: '/images/blog/data-decisions.jpg',
   },
-]
+];
 
 // Server Component - Fetch data from database
 export default async function BlogPage() {
   // Fetch blog posts from database
-  const dbBlogPosts = await getBlogPosts()
+  const dbBlogPosts = await getBlogPosts();
   
   // Use database posts if available, otherwise use fallback
-  const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : fallbackBlogPosts
+  const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : fallbackBlogPosts;
   return (
     <main className="py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -153,5 +153,5 @@ export default async function BlogPage() {
         </AnimatedCard>
       </div>
     </main>
-  )
+  );
 }

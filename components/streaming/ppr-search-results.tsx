@@ -8,13 +8,13 @@ export async function SearchResults({
   searchParams: Promise<{ q?: string; sort?: string; limit?: string }> 
 }) {
   // Accessing searchParams makes this component dynamic
-  const params = await searchParams
-  const query = params.q || ''
-  const sort = params.sort || 'relevance'
-  const limit = parseInt(params.limit || '10')
+  const params = await searchParams;
+  const query = params.q || '';
+  const sort = params.sort || 'relevance';
+  const limit = parseInt(params.limit || '10');
 
   // Simulate search API call
-  await new Promise(resolve => setTimeout(resolve, 500))
+  await new Promise(resolve => setTimeout(resolve, 500));
 
   // Mock search results
   const results = Array.from({ length: Math.min(limit, 8) }, (_, i) => ({
@@ -23,13 +23,13 @@ export async function SearchResults({
     description: `This is a description for search result ${i + 1}. It contains relevant information about the query.`,
     url: `/results/${i + 1}`,
     relevance: Math.random(),
-  }))
+  }));
 
   // Sort results based on parameter
   if (sort === 'date') {
-    results.sort((a, b) => b.id - a.id)
+    results.sort((a, b) => b.id - a.id);
   } else if (sort === 'relevance') {
-    results.sort((a, b) => b.relevance - a.relevance)
+    results.sort((a, b) => b.relevance - a.relevance);
   }
 
   return (
@@ -79,7 +79,7 @@ export async function SearchResults({
         This content was rendered dynamically based on searchParams
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -111,5 +111,5 @@ export function SearchResultsSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { logger } from './logger'
+import { logger } from './logger';
 
 // Define window interfaces for external services
 interface WindowWithSentry extends Window {
@@ -34,12 +34,12 @@ export interface ErrorReport {
  * Error tracking service for comprehensive error monitoring
  */
 class ErrorTrackingService {
-  private sessionId: string
-  private buildVersion: string
+  private sessionId: string;
+  private buildVersion: string;
 
   constructor() {
-    this.sessionId = this.generateSessionId()
-    this.buildVersion = process.env.NEXT_PUBLIC_BUILD_VERSION || 'unknown'
+    this.sessionId = this.generateSessionId();
+    this.buildVersion = process.env.NEXT_PUBLIC_BUILD_VERSION || 'unknown';
   }
 
   /**
@@ -53,24 +53,24 @@ class ErrorTrackingService {
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       timestamp: new Date().toISOString(),
       buildVersion: this.buildVersion,
-    }
+    };
 
     const errorReport: ErrorReport = {
       error,
       context: fullContext,
       severity: this.determineSeverity(error),
       category: this.categorizeError(error),
-    }
+    };
 
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.group('🚨 Error Report')
-      console.error('Error:', error.message)
-      console.error('Stack:', error.stack)
-      console.log('Context:', fullContext)
-      console.log('Category:', errorReport.category)
-      console.log('Severity:', errorReport.severity)
-      console.groupEnd()
+      console.group('🚨 Error Report');
+      console.error('Error:', error.message);
+      console.error('Stack:', error.stack);
+      console.log('Context:', fullContext);
+      console.log('Category:', errorReport.category);
+      console.log('Severity:', errorReport.severity);
+      console.groupEnd();
     }
 
     // Log through our logger service
@@ -80,15 +80,15 @@ class ErrorTrackingService {
       ...fullContext,
       category: errorReport.category,
       severity: errorReport.severity,
-    })
+    });
 
     // Send to external error tracking (Sentry, LogRocket, etc.)
-    this.sendToExternalService(errorReport)
+    this.sendToExternalService(errorReport);
 
     // Track in analytics
-    this.trackInAnalytics(errorReport)
+    this.trackInAnalytics(errorReport);
 
-    return errorReport
+    return errorReport;
   }
 
   /**
@@ -98,7 +98,7 @@ class ErrorTrackingService {
     return this.reportError(error, {
       component: `form:${formName}`,
       route: `form_field:${fieldName || 'unknown'}`,
-    })
+    });
   }
 
   /**
@@ -108,7 +108,7 @@ class ErrorTrackingService {
     return this.reportError(error, {
       component: 'api',
       route: `${method} ${endpoint}`,
-    })
+    });
   }
 
   /**
@@ -117,7 +117,7 @@ class ErrorTrackingService {
   reportComponentError(error: Error, componentName: string) {
     return this.reportError(error, {
       component: componentName,
-    })
+    });
   }
 
   /**
@@ -130,7 +130,7 @@ class ErrorTrackingService {
       error.message.includes('SecurityError') ||
       error.message.includes('CSRF')
     ) {
-      return 'critical'
+      return 'critical';
     }
 
     // High severity - API failures, form submission failures
@@ -139,7 +139,7 @@ class ErrorTrackingService {
       error.message.includes('network') ||
       error.message.includes('submission')
     ) {
-      return 'high'
+      return 'high';
     }
 
     // Medium severity - UI component errors
@@ -147,33 +147,33 @@ class ErrorTrackingService {
       error.message.includes('component') ||
       error.message.includes('render')
     ) {
-      return 'medium'
+      return 'medium';
     }
 
     // Low severity - validation, minor UI issues
-    return 'low'
+    return 'low';
   }
 
   /**
    * Categorize errors for better organization
    */
   private categorizeError(error: Error): ErrorReport['category'] {
-    const message = error.message.toLowerCase()
+    const message = error.message.toLowerCase();
 
     if (message.includes('fetch') || message.includes('network')) {
-      return 'network'
+      return 'network';
     }
 
     if (message.includes('validation') || message.includes('invalid')) {
-      return 'validation'
+      return 'validation';
     }
 
     if (message.includes('auth') || message.includes('permission')) {
-      return 'auth'
+      return 'auth';
     }
 
     if (message.includes('api') || message.includes('trpc')) {
-      return 'api'
+      return 'api';
     }
 
     if (
@@ -181,10 +181,10 @@ class ErrorTrackingService {
       message.includes('render') ||
       message.includes('react')
     ) {
-      return 'ui'
+      return 'ui';
     }
 
-    return 'unknown'
+    return 'unknown';
   }
 
   /**
@@ -202,7 +202,7 @@ class ErrorTrackingService {
         contexts: {
           error_context: errorReport.context,
         },
-      })
+      });
     }
 
     // Example for other services (LogRocket, Bugsnag, etc.)
@@ -223,7 +223,7 @@ class ErrorTrackingService {
           severity: errorReport.severity,
           component: errorReport.context.component,
         },
-      })
+      });
     }
 
     // Plausible Analytics (if using)
@@ -234,7 +234,7 @@ class ErrorTrackingService {
           severity: errorReport.severity,
           message: errorReport.error.message.substring(0, 100), // Truncate long messages
         },
-      })
+      });
     }
   }
 
@@ -242,7 +242,7 @@ class ErrorTrackingService {
    * Generate a unique session ID
    */
   private generateSessionId(): string {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
@@ -252,49 +252,49 @@ class ErrorTrackingService {
     return {
       sessionId: this.sessionId,
       buildVersion: this.buildVersion,
-    }
+    };
   }
 }
 
 // Create singleton instance
-export const errorTracker = new ErrorTrackingService()
+export const errorTracker = new ErrorTrackingService();
 
 /**
  * Error boundary handler that integrates with tracking
  */
 export function createErrorBoundaryHandler(componentName: string) {
   return (error: Error, _errorInfo: unknown) => {
-    errorTracker.reportComponentError(error, componentName)
-  }
+    errorTracker.reportComponentError(error, componentName);
+  };
 }
 
 /**
  * Async error handler for promises and async operations
  */
 export function handleAsyncError(error: Error, context?: Partial<ErrorContext>) {
-  errorTracker.reportError(error, context)
+  errorTracker.reportError(error, context);
 }
 
 /**
  * Form error handler
  */
 export function handleFormError(error: Error, formName: string, fieldName?: string) {
-  errorTracker.reportFormError(error, formName, fieldName)
+  errorTracker.reportFormError(error, formName, fieldName);
 }
 
 /**
  * Global error handler setup
  */
 export function setupGlobalErrorHandling() {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined') return;
 
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
     errorTracker.reportError(
       new Error(`Unhandled Promise Rejection: ${event.reason}`),
       { component: 'global', route: 'unhandled_promise' },
-    )
-  })
+    );
+  });
 
   // Handle global JavaScript errors
   window.addEventListener('error', (event) => {
@@ -304,8 +304,8 @@ export function setupGlobalErrorHandling() {
         component: 'global',
         route: event.filename || 'unknown',
       },
-    )
-  })
+    );
+  });
 
   // Handle resource loading errors
   window.addEventListener('error', (event) => {
@@ -313,7 +313,7 @@ export function setupGlobalErrorHandling() {
       errorTracker.reportError(
         new Error(`Resource Load Error: ${(event.target as HTMLElement & { src?: string })?.src || 'unknown'}`),
         { component: 'resource', route: 'resource_load' },
-      )
+      );
     }
-  }, true)
+  }, true);
 }

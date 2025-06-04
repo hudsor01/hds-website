@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import {
   BarChart3,
   TrendingUp,
@@ -6,15 +6,15 @@ import {
   Activity,
   Eye,
   Target,
-} from 'lucide-react'
-import { AnimatedSection } from '@/components/sections/section'
+} from 'lucide-react';
+import { AnimatedSection } from '@/components/sections/section';
 import {
   AnimatedText,
   AnimatedHeading,
-} from '@/components/animated/animated-text'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { LeadMagnetSection } from '@/components/sections/lead-magnet-section'
-import Image from 'next/image'
+} from '@/components/animated/animated-text';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { LeadMagnetSection } from '@/components/sections/lead-magnet-section';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Data Analytics & Visualization | Hudson Digital Solutions',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
 const features = [
   {
@@ -61,7 +61,7 @@ const features = [
     title: 'KPI Tracking',
     description: 'Monitor key performance indicators with automated alerts.',
   },
-]
+];
 
 const benefits = [
   {
@@ -87,7 +87,7 @@ const benefits = [
       'Data-driven businesses grow 23% faster than their competitors.',
     icon: '💰',
   },
-]
+];
 
 const dashboardTypes = [
   {
@@ -130,7 +130,7 @@ const dashboardTypes = [
       'Strategic goals',
     ],
   },
-]
+];
 
 export default function DataAnalyticsPage() {
   return (
@@ -506,5 +506,5 @@ export default function DataAnalyticsPage() {
         </div>
       </AnimatedSection>
     </main>
-  )
+  );
 }

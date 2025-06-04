@@ -1,30 +1,30 @@
-import { SignJWT, jwtVerify, type JWTPayload as JoseJWTPayload } from 'jose'
-import { env } from '@/lib/env'
+import { SignJWT, jwtVerify, type JWTPayload as JoseJWTPayload } from 'jose';
+import { env } from '@/lib/env';
 
 // Next.js 15 JWT security patterns with proper configuration
 
 // Validate JWT secret exists and meets minimum requirements
 function validateJWTSecret(): Uint8Array {
-  const secretValue = env.JWT_SECRET
+  const secretValue = env.JWT_SECRET;
   
   if (!secretValue) {
-    throw new Error('JWT_SECRET environment variable is required')
+    throw new Error('JWT_SECRET environment variable is required');
   }
   
   if (secretValue.length < 32) {
-    throw new Error('JWT_SECRET must be at least 32 characters long for security')
+    throw new Error('JWT_SECRET must be at least 32 characters long for security');
   }
   
   // Ensure we're not using the default/fallback secret
   if (secretValue === 'your-secret-key' || secretValue === 'change-this-secret') {
-    throw new Error('JWT_SECRET cannot use default/placeholder values in production')
+    throw new Error('JWT_SECRET cannot use default/placeholder values in production');
   }
   
-  return new TextEncoder().encode(secretValue)
+  return new TextEncoder().encode(secretValue);
 }
 
 // Secure JWT secret with validation
-const secret = validateJWTSecret()
+const secret = validateJWTSecret();
 
 // JWT configuration following Next.js 15 security patterns
 const JWT_CONFIG = {
@@ -33,7 +33,7 @@ const JWT_CONFIG = {
   audience: 'admin-panel',
   expirationTime: '2h', // Reduced from 7d to 2h for security
   clockTolerance: '30s', // Allow 30 seconds clock skew
-}
+};
 
 export interface JWTPayload extends JoseJWTPayload {
   userId: string
@@ -51,7 +51,7 @@ export interface JWTPayload extends JoseJWTPayload {
  */
 export async function signJWT(payload: Omit<JWTPayload, 'sub' | 'iss' | 'aud' | 'iat' | 'exp'>): Promise<string> {
   try {
-    const now = Math.floor(Date.now() / 1000)
+    const now = Math.floor(Date.now() / 1000);
     
     return await new SignJWT({
       ...payload,
@@ -66,9 +66,9 @@ export async function signJWT(payload: Omit<JWTPayload, 'sub' | 'iss' | 'aud' | 
       .setIssuedAt(now)
       .setExpirationTime(JWT_CONFIG.expirationTime)
       .setNotBefore(now) // Token valid from now
-      .sign(secret)
+      .sign(secret);
   } catch (error) {
-    throw new Error(`Failed to sign JWT: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    throw new Error(`Failed to sign JWT: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
@@ -82,7 +82,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
       issuer: JWT_CONFIG.issuer,
       audience: JWT_CONFIG.audience,
       clockTolerance: JWT_CONFIG.clockTolerance,
-    })
+    });
     
     // Validate payload structure and required claims
     if (
@@ -93,33 +93,33 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
       !payload.iat ||
       !payload.exp
     ) {
-      console.warn('JWT payload missing required claims')
-      return null
+      console.warn('JWT payload missing required claims');
+      return null;
     }
     
     // Validate role is one of allowed values
     if (payload.role !== 'admin' && payload.role !== 'user') {
-      console.warn('JWT payload contains invalid role')
-      return null
+      console.warn('JWT payload contains invalid role');
+      return null;
     }
     
-    return payload as JWTPayload
+    return payload as JWTPayload;
   } catch (error) {
     // Log specific JWT errors for security monitoring
     if (error instanceof Error) {
       if (error.message.includes('expired')) {
-        console.warn('JWT token expired')
+        console.warn('JWT token expired');
       } else if (error.message.includes('invalid')) {
-        console.warn('JWT token invalid')
+        console.warn('JWT token invalid');
       } else if (error.message.includes('audience')) {
-        console.warn('JWT audience mismatch')
+        console.warn('JWT audience mismatch');
       } else if (error.message.includes('issuer')) {
-        console.warn('JWT issuer mismatch')
+        console.warn('JWT issuer mismatch');
       } else {
-        console.warn('JWT verification failed:', error.message)
+        console.warn('JWT verification failed:', error.message);
       }
     }
-    return null
+    return null;
   }
 }
 
@@ -128,21 +128,21 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
  */
 export function extractTokenFromHeader(authHeader: string | null): string | null {
   if (!authHeader) {
-    return null
+    return null;
   }
   
   if (!authHeader.startsWith('Bearer ')) {
-    return null
+    return null;
   }
   
-  const token = authHeader.substring(7).trim()
+  const token = authHeader.substring(7).trim();
   
   // Basic token format validation
   if (!token || token.split('.').length !== 3) {
-    return null
+    return null;
   }
   
-  return token
+  return token;
 }
 
 /**
@@ -150,30 +150,30 @@ export function extractTokenFromHeader(authHeader: string | null): string | null
  */
 export function extractTokenFromCookies(cookieHeader: string | null): string | null {
   if (!cookieHeader) {
-    return null
+    return null;
   }
   
   try {
     const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=')
+      const [key, value] = cookie.trim().split('=');
       if (key && value) {
-        acc[key] = decodeURIComponent(value)
+        acc[key] = decodeURIComponent(value);
       }
-      return acc
-    }, {} as Record<string, string>)
+      return acc;
+    }, {} as Record<string, string>);
     
     // Support multiple cookie names for different auth tokens
-    const token = cookies['admin-token'] || cookies['auth_token'] || cookies['session_token']
+    const token = cookies['admin-token'] || cookies['auth_token'] || cookies['session_token'];
     
     // Basic token format validation
     if (token && token.split('.').length === 3) {
-      return token
+      return token;
     }
     
-    return null
+    return null;
   } catch (error) {
-    console.warn('Failed to parse auth cookie:', error instanceof Error ? error.message : 'Unknown error')
-    return null
+    console.warn('Failed to parse auth cookie:', error instanceof Error ? error.message : 'Unknown error');
+    return null;
   }
 }
 
@@ -182,21 +182,21 @@ export function extractTokenFromCookies(cookieHeader: string | null): string | n
  */
 export function validateJWTConfiguration(): boolean {
   try {
-    validateJWTSecret()
+    validateJWTSecret();
     
     // Validate other configuration
     if (!JWT_CONFIG.issuer) {
-      throw new Error('JWT issuer not configured')
+      throw new Error('JWT issuer not configured');
     }
     
     if (!JWT_CONFIG.audience) {
-      throw new Error('JWT audience not configured')
+      throw new Error('JWT audience not configured');
     }
     
-    return true
+    return true;
   } catch (error) {
-    console.error('JWT configuration validation failed:', error instanceof Error ? error.message : 'Unknown error')
-    return false
+    console.error('JWT configuration validation failed:', error instanceof Error ? error.message : 'Unknown error');
+    return false;
   }
 }
 
@@ -204,8 +204,8 @@ export function validateJWTConfiguration(): boolean {
  * Get token expiration time for cookie setting
  */
 export function getTokenExpirationTime(): Date {
-  const expirationMs = 2 * 60 * 60 * 1000 // 2 hours in milliseconds
-  return new Date(Date.now() + expirationMs)
+  const expirationMs = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+  return new Date(Date.now() + expirationMs);
 }
 
 /**
@@ -218,8 +218,8 @@ export function createSecureCookieOptions() {
     sameSite: 'strict' as const,
     maxAge: 2 * 60 * 60, // 2 hours in seconds
     path: '/',
-  }
+  };
 }
 
 // Export JWT configuration for other modules
-export { JWT_CONFIG }
+export { JWT_CONFIG };

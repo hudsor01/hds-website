@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState, useCallback } from 'react'
-import Image from 'next/image'
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 
 type Testimonial = {
   quote: string;
@@ -19,26 +19,26 @@ export const AnimatedTestimonials = ({
   testimonials: Testimonial[];
   autoplay?: boolean;
 }) => {
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(0);
 
   const handleNext = useCallback(() => {
-    setActive((prev) => (prev + 1) % testimonials.length)
-  }, [testimonials.length])
+    setActive((prev) => (prev + 1) % testimonials.length);
+  }, [testimonials.length]);
 
   const handlePrev = () => {
-    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }
+    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
-  const isActive = (index: number) => index === active
+  const isActive = (index: number) => index === active;
 
   useEffect(() => {
     if (autoplay) {
-      const interval = setInterval(handleNext, 5000)
-      return () => clearInterval(interval)
+      const interval = setInterval(handleNext, 5000);
+      return () => clearInterval(interval);
     }
-  }, [autoplay, handleNext])
+  }, [autoplay, handleNext]);
 
-  const randomRotateY = () => Math.floor(Math.random() * 21) - 10
+  const randomRotateY = () => Math.floor(Math.random() * 21) - 10;
   
   return (
     <div className='mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12'>
@@ -159,5 +159,5 @@ export const AnimatedTestimonials = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
