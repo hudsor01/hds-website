@@ -48,7 +48,7 @@ export default tseslint.config(
         varsIgnorePattern: '^_',
         caughtErrorsIgnorePattern: '^_',
       }],
-      semi: ['error', 'never'],
+      semi: ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
       'arrow-body-style': ['error', 'as-needed'],
       'object-curly-spacing': ['error', 'always'],
