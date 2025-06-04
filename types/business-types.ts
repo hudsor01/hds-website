@@ -103,7 +103,7 @@ export interface Lead {
   createdAt: Date
   assignedTo?: string
   nextFollowUp?: Date
-  customFields?: Record<string, any>
+  customFields?: Record<string, unknown>
 }
 
 /**

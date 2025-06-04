@@ -6,7 +6,7 @@ interface HealthCheck {
   status: 'healthy' | 'degraded' | 'unhealthy'
   responseTime?: number
   error?: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
 interface HealthResponse {
@@ -20,7 +20,7 @@ interface HealthResponse {
 
 const startTime = Date.now()
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const headersList = await headers()
   const host = headersList.get('host')
 

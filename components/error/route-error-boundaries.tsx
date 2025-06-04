@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Component, ReactNode } from 'react'
+import React, { Component, type ReactNode } from 'react'
 import type { ErrorInfo } from 'react'
 import { logger } from '@/lib/logger'
 import { 
@@ -8,20 +8,8 @@ import {
   FormErrorFallback, 
   SectionErrorFallback, 
   ApiErrorFallback,
-  GenericErrorFallback, 
 } from './error-fallbacks'
-
-interface BaseErrorBoundaryProps {
-  children: ReactNode
-  fallback?: ReactNode
-  onError?: (error: Error, errorInfo: ErrorInfo) => void
-  className?: string
-}
-
-interface BaseErrorBoundaryState {
-  hasError: boolean
-  error: Error | null
-}
+import type { BaseErrorBoundaryProps, BaseErrorBoundaryState } from '@/types/ui-types'
 
 /**
  * Base error boundary class with common functionality
@@ -53,12 +41,12 @@ abstract class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, BaseE
 
     // Call the optional onError callback
     if (this.props.onError) {
-      this.props.onError(error, errorInfo)
+    this.props.onError(error, errorInfo)
     }
 
     // Track error for analytics (if tracking is set up)
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'exception', {
+      ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'exception', {
         description: `${context}: ${error.message}`,
         fatal: false,
       })
@@ -236,7 +224,7 @@ export function withErrorBoundary<P extends object>(
  * Hook for error boundary integration (for functional components)
  */
 export function useErrorHandler() {
-  return (error: Error, errorInfo?: ErrorInfo) => {
+  return (error: Error) => {
     // This would typically trigger a parent error boundary
     throw error
   }

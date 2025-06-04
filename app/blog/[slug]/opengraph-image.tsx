@@ -13,7 +13,7 @@ export const contentType = 'image/png'
 const getBlogPost = cache(async (slug: string) => {
   // In a real app, this would fetch from your CMS or database
   // For demo purposes, we'll return mock data based on slug
-  const mockPosts: Record<string, any> = {
+  const mockPosts: Record<string, unknown> = {
     'revenue-operations-guide': {
       title: 'Complete Guide to Revenue Operations',
       description: 'Master the fundamentals of RevOps',

@@ -2,20 +2,22 @@ import { initTRPC } from '@trpc/server'
 import { type FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { ZodError } from 'zod'
 import superjson from 'superjson'
+import type { User, AdminTokenPayload } from '@/types/auth-types'
+import { db } from '@/lib/database'
 import {
-  errorMiddleware,
-  performanceMiddleware,
-  validationMiddleware,
+errorMiddleware,
+performanceMiddleware,
+validationMiddleware,
+rateLimitMiddleware,
+authMiddleware,
+adminMiddleware,
 } from './middleware'
 
 // Define the context type
 export type TRPCContext = {
   req: Request
-  user?: {
-    id: string
-    email: string
-    role: string
-  } | null
+  user?: User | AdminTokenPayload | null
+  db: typeof db
 }
 
 /**
@@ -31,6 +33,7 @@ export const createTRPCContext = async (
   return {
     req,
     user: null, // Populate this with authenticated user data if available
+    db,
   }
 }
 
@@ -93,24 +96,12 @@ export const protectedProcedure = t.procedure
  * These procedures are protected behind admin authentication
  */
 export const adminProcedure = t.procedure
-  .use(errorMiddleware)
-  .use(performanceMiddleware)
-  .use(validationMiddleware)
-  .use(async ({ ctx, next }) => {
-    // Check if user is authenticated and is an admin
-    if (!ctx.user) {
-      throw new Error('You must be logged in to access this resource')
-    }
+.use(errorMiddleware)
+.use(performanceMiddleware)
+.use(validationMiddleware)
+.use(adminMiddleware)
 
-    if (ctx.user.role !== 'admin') {
-      throw new Error('You must be an admin to access this resource')
-    }
-
-    return next({
-      ctx: {
-        ...ctx,
-        // Pass authenticated admin user to the next middleware/resolver
-        user: ctx.user,
-      },
-    })
-  })
+/**
+* Export middleware for use in routers
+*/
+export { rateLimitMiddleware } from './middleware'

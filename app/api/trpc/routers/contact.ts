@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server'
 import { Resend } from 'resend'
-import { createTRPCRouter, publicProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure } from '../lib/trpc-unified'
 import { contactFormFullSchema } from '@/lib/validation/form-schemas'
 import { triggerSequence } from '@/lib/email/sequences/engine'
 import { env } from '@/lib/env'
 import { logger, emailLogger } from '@/lib/logger'
-import { sanitizeFormInput } from '@/lib/security/sanitization'
+import { sanitizeHtml, sanitizeEmail, sanitizeText, sanitizePhone, commonSanitizers } from '@/lib/security/input-sanitization'
 import { db } from '@/lib/database'
 import { z } from 'zod'
 
@@ -27,11 +27,20 @@ export const contactRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const startTime = Date.now()
 
-      let sanitizedInput: any = null
+      const sanitizedInput: Record<string, unknown> = null
 
       try {
         // Sanitize input data
-        sanitizedInput = sanitizeFormInput(input)
+        const sanitizedInput = {
+          name: commonSanitizers.name(input.name),
+          email: commonSanitizers.email(input.email),
+          phone: input.phone ? commonSanitizers.phone(input.phone) : undefined,
+          company: input.company ? sanitizeText(input.company) : undefined,
+          subject: input.subject ? sanitizeText(input.subject) : undefined,
+          service: input.service ? sanitizeText(input.service) : undefined,
+          budget: input.budget ? sanitizeText(input.budget) : undefined,
+          message: commonSanitizers.message(input.message),
+        }
 
         // Log the request
         logger.info('Contact form submission', {

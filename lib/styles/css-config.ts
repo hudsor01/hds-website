@@ -299,5 +299,5 @@ export const cssHelpers = {
     }).join('\n'),
   
   // Generate CSS custom property
-  customProperty: (category: keyof typeof customProperties, key: string) => `var(${customProperties[category]})`,
+  customProperty: (category: keyof typeof customProperties) => `var(${customProperties[category]})`,
 }

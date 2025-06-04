@@ -7,7 +7,7 @@ import { headers } from 'next/headers'
 import { monitorEmailDelivery } from '@/lib/monitoring/email-monitoring'
 
 // Server Action result types
-type ActionResult<T = any> = {
+type ActionResult<T = unknown> = {
   success: boolean
   message: string
   data?: T
@@ -18,7 +18,7 @@ type ActionResult<T = any> = {
  * Server Action: Handle contact form submission with Resend integration
  */
 export async function submitContactForm(
-  prevState: any,
+  prevState: unknown,
   formData: FormData,
 ): Promise<ActionResult> {
   try {
@@ -117,7 +117,7 @@ const NewsletterFormSchema = z.object({
  * Server Action: Handle newsletter subscription with Resend integration
  */
 export async function subscribeToNewsletter(
-  prevState: any,
+  prevState: unknown,
   formData: FormData,
 ): Promise<ActionResult> {
   try {
@@ -183,7 +183,7 @@ export async function subscribeToNewsletter(
  * Server Action: Send lead magnet email (for downloads, assessments, etc.)
  */
 export async function sendLeadMagnetEmail(
-  prevState: any,
+  prevState: unknown,
   formData: FormData,
 ): Promise<ActionResult> {
   try {

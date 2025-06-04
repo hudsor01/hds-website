@@ -17,7 +17,7 @@ export default function BlogError({ error, reset }: BlogErrorProps) {
     
     // Track error for analytics
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'exception', {
+      ;(window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `Blog page error: ${error.message}`,
         fatal: false,
       })
@@ -32,7 +32,7 @@ export default function BlogError({ error, reset }: BlogErrorProps) {
           Blog Page Error
         </h1>
         <p className="text-gray-600 mb-8">
-          We're having trouble loading our blog content. This might be a temporary issue with our content management system.
+          We&apos;re having trouble loading our blog content. This might be a temporary issue with our content management system.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -64,7 +64,7 @@ export default function BlogError({ error, reset }: BlogErrorProps) {
         {/* Alternative content suggestions */}
         <div className="p-4 bg-gray-50 rounded-lg">
           <h3 className="text-sm font-medium text-gray-700 mb-3">
-            While you're here, check out:
+            While you&apos;re here, check out:
           </h3>
           <div className="flex flex-wrap gap-2 justify-center">
             <Button variant="ghost" size="sm" asChild>

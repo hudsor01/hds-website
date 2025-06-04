@@ -14,7 +14,7 @@ export const withDelay = (animation: Variants, delay: number): Variants => ({
     ...(typeof animation.animate === 'object' ? animation.animate : {}),
     transition: {
       ...(typeof animation.animate === 'object' && animation.animate && 'transition' in animation.animate 
-        ? animation.animate.transition as Record<string, any> 
+        ? animation.animate.transition as Record<string, unknown> 
         : {}),
       delay,
     },

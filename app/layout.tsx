@@ -10,9 +10,9 @@ import { TRPCProvider } from '@/lib/trpc/provider'
 import { Toaster } from '@/components/ui/toaster'
 import { GradientBackground } from '@/components/animated/gradient-background'
 import { CacheProvider } from '@/components/providers/cache-provider'
-import { AnimationProvider } from '@/components/providers/animation-provider'
 import { ErrorProvider } from '@/components/providers/error-provider'
 import { CookieConsentBanner } from '@/components/gdpr/cookie-consent-banner'
+import { CalProviderWrapper } from '@/components/providers/cal-provider'
 import { 
   inter, 
   fontVariables,
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body
         className={cn(
-          'min-h-screen bg-background text-foreground antialiased flex flex-col',
+          'min-h-screen bg-background text-foreground antialiased flex flex-col fade-in',
           'font-sans', // Use Tailwind font family class
           inter.className,
         )}
@@ -66,7 +66,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* Provider wrapper - Only what needs client state */}
         <ErrorProvider>
           <TRPCProvider>
-            <AnimationProvider>
+            <CalProviderWrapper>
               <ErrorBoundary>
                 {/* Cache management */}
                 <CacheProvider />
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <Header />
                 
                 {/* Main content area with proper spacing */}
-                <main className="flex-1 pt-16">
+                <main className="flex-1 pt-16 logical-padding">
                   {children}
                 </main>
                 
@@ -95,7 +95,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               </div>
               
               </ErrorBoundary>
-            </AnimationProvider>
+            </CalProviderWrapper>
           </TRPCProvider>
       </ErrorProvider>
       </body>

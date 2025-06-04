@@ -15,8 +15,9 @@
 import { Redis } from '@upstash/redis'
 import { cookies } from 'next/headers'
 import { logger } from '@/lib/logger'
-import { getSession, deleteSession, SessionPayload } from '@/lib/auth/auth-enhanced'
+import { getSession as _getSession, deleteSession as _deleteSession, type SessionPayload } from '@/lib/auth/auth-enhanced'
 import { decrypt } from '@/lib/auth/jwt'
+import { RevocationReason } from '@/types/enum-types'
 
 // Redis client for session management
 const redis = new Redis({
@@ -58,18 +59,7 @@ export interface DeviceInfo {
   fingerprint?: string
 }
 
-/**
- * Session revocation reasons
- */
-export enum RevocationReason {
-  USER_LOGOUT = 'user_logout',
-  ADMIN_FORCE_LOGOUT = 'admin_force_logout',
-  PASSWORD_CHANGED = 'password_changed',
-  SECURITY_CONCERN = 'security_concern',
-  SESSION_EXPIRED = 'session_expired',
-  MAX_DEVICES_EXCEEDED = 'max_devices_exceeded',
-  SUSPICIOUS_ACTIVITY = 'suspicious_activity',
-}
+
 
 /**
  * Parse user agent to extract device information
@@ -365,7 +355,7 @@ export async function updateSessionActivity(sessionId: string): Promise<void> {
 /**
  * Middleware to check session validity
  */
-export async function validateSession(request: Request): Promise<{
+export async function validateSession(_request: Request): Promise<{
   valid: boolean
   sessionId?: string
   reason?: string

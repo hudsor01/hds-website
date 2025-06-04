@@ -6,7 +6,8 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
-import { env } from '@/lib/env'
+import { env } from '../env'
+import type { ErrorContext } from '../../types/analytics-types'
 
 // Cal.com API types
 export interface CalBooking {
@@ -20,7 +21,7 @@ export interface CalBooking {
   organizer: CalOrganizer
   status: 'ACCEPTED' | 'PENDING' | 'CANCELLED'
   location?: string
-  metadata?: Record<string, any>
+  metadata?: ErrorContext
   created: string
   updated: string
 }
@@ -53,7 +54,7 @@ export interface SupabaseBooking {
   organizer_name: string
   status: string
   location?: string
-  metadata?: Record<string, any>
+  metadata?: ErrorContext
   created_at: string
   updated_at: string
 }
@@ -67,7 +68,7 @@ class CalComAPI {
     this.apiKey = apiKey
   }
 
-  private async makeRequest(endpoint: string, options: RequestInit = {}) {
+  private async request(endpoint: string, options: RequestInit = {}): Promise<unknown> {
     const url = `${this.baseURL}${endpoint}`
     const response = await fetch(url, {
       ...options,
@@ -98,29 +99,29 @@ class CalComAPI {
     if (params?.limit) searchParams.append('limit', params.limit.toString())
 
     const query = searchParams.toString()
-    return this.makeRequest(`/bookings${query ? `?${query}` : ''}`)
+    return this.request(`/bookings${query ? `?${query}` : ''}`)
   }
 
   async getBooking(id: number) {
-    return this.makeRequest(`/bookings/${id}`)
+    return this.request(`/bookings/${id}`)
   }
 
-  async createBooking(bookingData: any) {
-    return this.makeRequest('/bookings', {
+  async createBooking(bookingData: unknown) {
+    return this.request('/bookings', {
       method: 'POST',
       body: JSON.stringify(bookingData),
     })
   }
 
-  async updateBooking(id: number, bookingData: any) {
-    return this.makeRequest(`/bookings/${id}`, {
+  async updateBooking(id: number, bookingData: unknown) {
+    return this.request(`/bookings/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(bookingData),
     })
   }
 
   async cancelBooking(id: number, reason?: string) {
-    return this.makeRequest(`/bookings/${id}/cancel`, {
+    return this.request(`/bookings/${id}/cancel`, {
       method: 'POST',
       body: JSON.stringify({ reason }),
     })
@@ -145,11 +146,11 @@ export class CalSupabaseWrapper {
   private supabase: ReturnType<typeof createCalSupabaseClient>
 
   constructor() {
-    if (!process.env.CAL_COM_API_KEY) {
+    if (!env.CAL_COM_API_KEY) {
       throw new Error('CAL_COM_API_KEY environment variable is required')
     }
 
-    this.calApi = new CalComAPI(process.env.CAL_COM_API_KEY)
+    this.calApi = new CalComAPI(env.CAL_COM_API_KEY)
     this.supabase = createCalSupabaseClient()
   }
 
@@ -253,8 +254,8 @@ export class CalSupabaseWrapper {
 
       const results = await Promise.allSettled(syncPromises)
       
-      const successful = results.filter(r => r.status === 'fulfilled').length
-      const failed = results.filter(r => r.status === 'rejected').length
+      const successful = results.filter((r) => r.status === 'fulfilled').length
+      const failed = results.filter((r) => r.status === 'rejected').length
 
       console.log(`Synced ${successful} bookings, ${failed} failed`)
       
@@ -266,23 +267,27 @@ export class CalSupabaseWrapper {
   }
 
   // Handle Cal.com webhook events
-  async handleWebhook(event: any) {
+  async handleWebhook(event: unknown) {
     try {
-      const { type, data } = event
+      if (!event || typeof event !== 'object' || !('type' in event) || !('data' in event)) {
+        throw new Error('Invalid webhook event format')
+      }
+      
+      const { type, data } = event as { type: string; data: Record<string, unknown> }
 
       switch (type) {
         case 'BOOKING_CREATED':
         case 'BOOKING_RESCHEDULED':
         case 'BOOKING_PAID':
-          await this.syncBookingToSupabase(data)
+          await this.syncBookingToSupabase(data as unknown as CalBooking)
           break
 
         case 'BOOKING_CANCELLED':
-          await this.handleBookingCancellation(data)
+          await this.handleBookingCancellation(data as unknown as CalBooking)
           break
 
         case 'BOOKING_REQUESTED':
-          await this.handleBookingRequest(data)
+          await this.handleBookingRequest(data as unknown as CalBooking)
           break
 
         default:
@@ -292,7 +297,10 @@ export class CalSupabaseWrapper {
       return { success: true }
     } catch (error) {
       console.error('Error handling Cal.com webhook:', error)
-      return { success: false, error: error.message }
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error occurred', 
+      }
     }
   }
 
@@ -371,6 +379,9 @@ export async function handleCalWebhook(req: Request) {
     return await calSupabase.handleWebhook(body)
   } catch (error) {
     console.error('Error in Cal.com webhook handler:', error)
-    return { success: false, error: error.message }
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error occurred', 
+    }
   }
 }

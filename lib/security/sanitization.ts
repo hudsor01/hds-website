@@ -105,8 +105,8 @@ export function sanitizeMessage(message: string): string {
 }
 
 // Sanitize user input for forms with proper validation
-export function sanitizeFormInput<T extends Record<string, any>>(data: T): T {
-  const sanitized = { ...data } as Record<string, any>
+export function sanitizeFormInput<T extends Record<string, unknown>>(data: T): T {
+  const sanitized = { ...data } as Record<string, unknown>
 
   for (const [key, value] of Object.entries(sanitized)) {
     if (typeof value === 'string' && value.length > 0) {

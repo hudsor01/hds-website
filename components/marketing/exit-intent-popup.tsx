@@ -11,20 +11,20 @@ interface ExitIntentPopupProps {
   leadMagnetTitle?: string
   leadMagnetDescription?: string
   onClose?: () => void
-  onSubmit?: (email: string) => void
+  onSubmit?: (_email: string) => void
 }
 
 export function ExitIntentPopup({
-  title = 'Wait! Don\\'t Miss Out on These Free Resources',
-  subtitle = 'Get our exclusive small business automation toolkit before you go',
-  ctaText = 'Get Free Resources',
-  leadMagnetTitle = 'Small Business Automation Toolkit',
-  leadMagnetDescription = '5 essential templates and guides to automate your business operations',
-  onClose,
-  onSubmit,
+title = "Wait! Don't Miss Out on These Free Resources",
+subtitle = 'Get our exclusive small business automation toolkit before you go',
+ctaText = 'Get Free Resources',
+leadMagnetTitle = 'Small Business Automation Toolkit',
+leadMagnetDescription = '5 essential templates and guides to automate your business operations',
+onClose,
+onSubmit,
 }: ExitIntentPopupProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [email, setEmail] = useState('')
+const [isVisible, setIsVisible] = useState(false)
+const [emailAddress, setEmailAddress] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [hasBeenShown, setHasBeenShown] = useState(false)
 
@@ -66,14 +66,14 @@ export function ExitIntentPopup({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!emailAddress) return
 
     setIsSubmitting(true)
     
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
-      onSubmit?.(email)
+      onSubmit?.(emailAddress)
       
       // Close popup after successful submission
       setTimeout(() => {
@@ -89,7 +89,7 @@ export function ExitIntentPopup({
   return (
     <AnimatePresence>
       {isVisible && (
-        <m.div
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -103,7 +103,7 @@ export function ExitIntentPopup({
           />
           
           {/* Popup */}
-          <m.div
+          <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -147,8 +147,8 @@ export function ExitIntentPopup({
                 <div>
                   <input
                     type='email'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={emailAddress}
+                    onChange={(e) => setEmailAddress(e.target.value)}
                     placeholder='Enter your email address'
                     className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                     required
@@ -157,7 +157,7 @@ export function ExitIntentPopup({
 
                 <button
                   type='submit'
-                  disabled={isSubmitting || !email}
+                  disabled={isSubmitting || !emailAddress}
                   className='w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2'
                 >
                   {isSubmitting ? (
@@ -178,8 +178,8 @@ export function ExitIntentPopup({
                 We respect your privacy. Unsubscribe at any time.
               </p>
             </div>
-          </m.div>
-        </m.div>
+          </motion.div>
+          </motion.div>
       )}
     </AnimatePresence>
   )

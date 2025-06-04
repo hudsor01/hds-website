@@ -70,10 +70,9 @@ const nextConfig = {
 
   // TypeScript configuration
   typescript: {
-    // Enable type checking as part of the build process
-    ignoreBuildErrors: false,
+  // Enable type checking as part of the build process
+  ignoreBuildErrors: false,
   },
-
   // Performance optimizations
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
 
@@ -86,10 +85,9 @@ const nextConfig = {
 
   // Enable modern JavaScript features
   eslint: {
-    ignoreDuringBuilds: false,
-    dirs: ['pages', 'components', 'lib', 'src'],
+  ignoreDuringBuilds: false,
+  dirs: ['pages', 'components', 'lib', 'src'],
   },
-
   // Headers for static assets and caching
   async headers() {
     return [

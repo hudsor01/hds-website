@@ -132,7 +132,7 @@ export function shouldLazyLoad(componentName: string): boolean {
   const { COMPONENT_CATEGORIES } = LAZY_LOADING_CONFIG
   
   // Critical components should never be lazy loaded
-  if (COMPONENT_CATEGORIES.CRITICAL.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.CRITICAL as readonly string[]).includes(componentName)) {
     return false
   }
 
@@ -146,23 +146,23 @@ export function shouldLazyLoad(componentName: string): boolean {
 export function getComponentPriority(componentName: string): number {
   const { COMPONENT_CATEGORIES, PRIORITY } = LAZY_LOADING_CONFIG
 
-  if (COMPONENT_CATEGORIES.CRITICAL.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.CRITICAL as readonly string[]).includes(componentName)) {
     return PRIORITY.CRITICAL
   }
   
-  if (COMPONENT_CATEGORIES.HIGH_PRIORITY.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.HIGH_PRIORITY as readonly string[]).includes(componentName)) {
     return PRIORITY.HIGH
   }
   
-  if (COMPONENT_CATEGORIES.MEDIUM_PRIORITY.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.MEDIUM_PRIORITY as readonly string[]).includes(componentName)) {
     return PRIORITY.MEDIUM
   }
   
-  if (COMPONENT_CATEGORIES.LOW_PRIORITY.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.LOW_PRIORITY as readonly string[]).includes(componentName)) {
     return PRIORITY.LOW
   }
   
-  if (COMPONENT_CATEGORIES.DEFERRED.includes(componentName)) {
+  if ((COMPONENT_CATEGORIES.DEFERRED as readonly string[]).includes(componentName)) {
     return PRIORITY.DEFER
   }
 

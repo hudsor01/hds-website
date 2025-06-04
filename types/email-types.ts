@@ -52,9 +52,9 @@ export interface EmailTag {
 export interface EmailResult {
   success: boolean
   messageId?: string
-  response?: any
+  response?: Record<string, unknown>
   error?: string
-  details?: any
+  details?: Record<string, unknown>
   timestamp: Date
 }
 
@@ -66,7 +66,7 @@ export interface EmailDeliveryStatus {
   email: string
   status: 'sent' | 'delivered' | 'opened' | 'clicked' | 'bounced' | 'complained' | 'failed'
   timestamp: Date
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
 // ============= Email Templates =============
@@ -101,7 +101,7 @@ export interface TemplateVariable {
   name: string
   type: 'string' | 'number' | 'boolean' | 'date' | 'url' | 'email'
   required: boolean
-  defaultValue?: any
+  defaultValue?: Record<string, unknown>
   description?: string
   validation?: z.ZodSchema
 }
@@ -110,7 +110,7 @@ export interface TemplateVariable {
  * Template rendering context
  */
 export interface TemplateContext {
-  variables: Record<string, any>
+  variables: Record<string, unknown>
   user?: {
     email: string
     firstName?: string
@@ -159,7 +159,7 @@ export interface EmailTrigger {
 export interface TriggerCondition {
   field: string
   operator: 'equals' | 'contains' | 'starts_with' | 'ends_with' | 'greater_than' | 'less_than'
-  value: any
+  value: Record<string, unknown>
 }
 
 /**
@@ -191,7 +191,7 @@ export interface StepCondition {
  */
 export interface StepAction {
   type: 'add_tag' | 'remove_tag' | 'update_field' | 'trigger_webhook' | 'move_to_sequence'
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>
 }
 
 /**
@@ -205,7 +205,7 @@ export interface SequenceSubscriber {
   currentStep: number
   completedSteps: string[] // IDs of completed email steps
   status: SequenceStatus
-  userData: Record<string, any> // Dynamic data for template replacement
+  userData: Record<string, unknown> // Dynamic data for template replacement
   pausedAt?: Date
   pauseReason?: string
   completedAt?: Date
@@ -389,7 +389,7 @@ export interface EmailAutomationRule {
  */
 export interface AutomationAction {
   type: 'send_email' | 'add_to_sequence' | 'add_tag' | 'update_field' | 'send_webhook'
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>
   delay?: number // Minutes to wait before executing
 }
 
@@ -401,7 +401,7 @@ export interface EmailWebhookPayload {
   messageId: string
   email: string
   timestamp: Date
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 }
 
 // ============= Email Configuration =============
@@ -443,5 +443,5 @@ export interface EmailPreferences {
   timezone?: string
   unsubscribedAt?: Date
   unsubscribeReason?: string
-  preferences?: Record<string, any>
+  preferences?: Record<string, unknown>
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { gdprService, GDPRRequestType } from '@/lib/gdpr/compliance'
+import { gdprService } from '@/lib/gdpr/compliance'
 import { logger } from '@/lib/logger'
 
 /**

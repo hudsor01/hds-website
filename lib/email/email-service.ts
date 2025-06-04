@@ -2,7 +2,7 @@
 
 import { Resend } from 'resend'
 import { z } from 'zod'
-import { logger } from '@/lib/logger'
+import { logger } from '../logger'
 
 // Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -84,6 +84,11 @@ interface EmailError {
 }
 
 export type EmailResult = EmailSuccess | EmailError
+
+// Type guard for EmailError
+export function isEmailError(result: EmailResult): result is EmailError {
+  return !result.success
+}
 
 /**
  * Core email sending function
@@ -213,7 +218,7 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
       replyTo: data.email,
     })
     
-    if (!adminResult.success) {
+    if (isEmailError(adminResult)) {
       throw new Error(`Failed to send admin email: ${adminResult.error}`)
     }
     
@@ -238,7 +243,7 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
       html: userHtml,
     })
     
-    if (!userResult.success) {
+    if (isEmailError(userResult)) {
       logger.warn('Failed to send user confirmation email', {
         error: userResult.error,
         email: data.email,
@@ -303,7 +308,7 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
       html: adminHtml,
     })
     
-    if (!adminResult.success) {
+    if (isEmailError(adminResult)) {
       throw new Error(`Failed to send admin notification: ${adminResult.error}`)
     }
     
@@ -329,7 +334,7 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
       html: userHtml,
     })
     
-    if (!userResult.success) {
+    if (isEmailError(userResult)) {
       logger.warn('Failed to send newsletter welcome email', {
         error: userResult.error,
         email: data.email,
@@ -417,7 +422,7 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
       html: adminHtml,
     })
     
-    if (!adminResult.success) {
+    if (isEmailError(adminResult)) {
       throw new Error(`Failed to send admin notification: ${adminResult.error}`)
     }
     
@@ -447,7 +452,7 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
       html: userHtml,
     })
     
-    if (!userResult.success) {
+    if (isEmailError(userResult)) {
       logger.warn('Failed to send lead magnet email', {
         error: userResult.error,
         email: data.email,

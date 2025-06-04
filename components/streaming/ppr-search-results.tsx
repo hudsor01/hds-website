@@ -46,7 +46,7 @@ export async function SearchResults({
       {query && (
         <div className='mb-4 p-3 bg-blue-50 rounded-md'>
           <p className='text-blue-800 text-sm'>
-            Showing results for: <strong>'{query}'</strong>
+            Showing results for: <strong>&apos;{query}&apos;</strong>
           </p>
           <p className='text-blue-600 text-xs mt-1'>
             Sorted by: {sort} | Limit: {limit}

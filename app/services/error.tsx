@@ -17,7 +17,7 @@ export default function ServicesError({ error, reset }: ServicesErrorProps) {
     
     // Track error for analytics
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'exception', {
+      ;(window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `Services page error: ${error.message}`,
         fatal: false,
       })
@@ -32,7 +32,7 @@ export default function ServicesError({ error, reset }: ServicesErrorProps) {
           Services Page Error
         </h1>
         <p className="text-gray-600 mb-8">
-          We're having trouble loading our services information. This might be a temporary issue.
+          We&apos;re having trouble loading our services information. This might be a temporary issue.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

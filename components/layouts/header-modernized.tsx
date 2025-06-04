@@ -29,9 +29,9 @@ const NavigationItem = memo(function NavigationItem({
   pathname: string
   onNavigate?: () => void
 }) {
-  const [isPending, startNavigationTransition] = useTransition()
+  const [isPending] = useTransition()
   
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     // Use startTransition for navigation state updates
     startTransition(() => {
       if (onNavigate) {
@@ -83,7 +83,7 @@ const MobileMenu = memo(function MobileMenu({
   pathname: string
   onClose: () => void
 }) {
-  const [isPending, startCloseTransition] = useTransition()
+const [isPending] = useTransition()
   
   const handleItemClick = () => {
     startTransition(() => {
@@ -92,9 +92,7 @@ const MobileMenu = memo(function MobileMenu({
   }
 
   const handleCloseClick = () => {
-    startCloseTransition(() => {
-      onClose()
-    })
+  onClose()
   }
 
   return (
@@ -202,11 +200,11 @@ export const HeaderModernized = memo(function HeaderModernized() {
   const deferredScrolled = useDeferredValue(isScrolled)
 
   // React 19 optimized scroll handler with startTransition
-  const handleScroll = () => {
+  const handleScroll = React.useCallback(() => {
     startTransition(() => {
       setScrolled(window.scrollY > 10)
     })
-  }
+  }, [setScrolled])
 
   // React 19 optimized menu toggle with useTransition
   const handleMenuToggle = (open: boolean) => {
@@ -231,7 +229,7 @@ export const HeaderModernized = memo(function HeaderModernized() {
 
     window.addEventListener('scroll', optimizedScrollHandler, { passive: true })
     return () => window.removeEventListener('scroll', optimizedScrollHandler)
-  }, [setScrolled])
+  }, [handleScroll])
 
   return (
     <m.header

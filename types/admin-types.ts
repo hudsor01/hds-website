@@ -6,55 +6,20 @@
  */
 
 import { z } from 'zod'
-import { LeadSource, BudgetRange, ServiceType, Status, FormStatus } from './enum-types'
-import { ContactFormData, NewsletterFormData, LeadMagnetFormData } from './form-types'
-import { ApiResponse } from './api-types'
-
-// ============= Admin Status Enums =============
-
-/**
- * Lead status progression
- */
-export enum LeadStatus {
-  NEW = 'new',
-  CONTACTED = 'contacted',
-  QUALIFIED = 'qualified',
-  PROPOSAL_SENT = 'proposal-sent',
-  NEGOTIATING = 'negotiating',
-  WON = 'won',
-  LOST = 'lost',
-  UNQUALIFIED = 'unqualified'
-}
-
-/**
- * Customer status
- */
-export enum CustomerStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  ONBOARDING = 'onboarding',
-  CHURNED = 'churned'
-}
-
-/**
- * Contact status for customer management
- */
-export enum ContactStatus {
-  PENDING = 'pending',
-  RESPONDED = 'responded',
-  CLOSED = 'closed',
-  SPAM = 'spam'
-}
-
-/**
- * Priority levels for leads and tasks
- */
-export enum Priority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  URGENT = 'urgent'
-}
+import { 
+LeadSource, 
+BudgetRange, 
+ServiceType, 
+Status, 
+FormStatus,
+LeadStatus,
+CustomerStatus,
+ContactStatus,
+Priority,
+AdminPermission,
+} from './enum-types'
+import type { ContactFormData, NewsletterFormData, LeadMagnetFormData } from './form-types'
+import type { ApiResponse } from './api-types'
 
 // ============= Core Admin Data Types =============
 
@@ -76,7 +41,7 @@ export interface Lead {
   score: number // Lead scoring 0-100
   assignedTo?: string
   tags: string[]
-  customFields: Record<string, any>
+  customFields: Record<string, unknown>
   
   // Interaction tracking
   lastContactDate?: Date
@@ -129,7 +94,7 @@ export interface Customer {
   
   // Tags and custom fields
   tags: string[]
-  customFields: Record<string, any>
+  customFields: Record<string, unknown>
   
   // Metadata
   createdAt: Date
@@ -271,7 +236,7 @@ export interface DataTableColumn<T> {
   width?: number
   minWidth?: number
   maxWidth?: number
-  cell?: (value: any, row: T) => React.ReactNode
+  cell?: (value: Record<string, unknown>, row: T) => React.ReactNode
   headerCell?: () => React.ReactNode
   className?: string
   headerClassName?: string
@@ -295,7 +260,7 @@ export interface DataTableConfig<T> {
     column: keyof T
     direction: 'asc' | 'desc'
   }
-  filtering?: Record<string, any>
+  filtering?: Record<string, unknown>
   selection?: {
     enabled: boolean
     selectedRows: string[]
@@ -445,7 +410,7 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
 export interface BulkOperationRequest {
   ids: string[]
   operation: 'delete' | 'update' | 'assign' | 'tag'
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 }
 
 /**
@@ -486,37 +451,6 @@ export interface AdminBreadcrumb {
 }
 
 // ============= Admin Permission Types =============
-
-/**
- * Admin user permissions
- */
-export enum AdminPermission {
-  // Lead management
-  LEADS_VIEW = 'leads:view',
-  LEADS_CREATE = 'leads:create',
-  LEADS_EDIT = 'leads:edit',
-  LEADS_DELETE = 'leads:delete',
-  LEADS_ASSIGN = 'leads:assign',
-  
-  // Customer management
-  CUSTOMERS_VIEW = 'customers:view',
-  CUSTOMERS_CREATE = 'customers:create',
-  CUSTOMERS_EDIT = 'customers:edit',
-  CUSTOMERS_DELETE = 'customers:delete',
-  
-  // Contact management
-  CONTACTS_VIEW = 'contacts:view',
-  CONTACTS_RESPOND = 'contacts:respond',
-  CONTACTS_DELETE = 'contacts:delete',
-  
-  // Analytics
-  ANALYTICS_VIEW = 'analytics:view',
-  ANALYTICS_EXPORT = 'analytics:export',
-  
-  // Admin settings
-  ADMIN_SETTINGS = 'admin:settings',
-  USER_MANAGEMENT = 'admin:users',
-}
 
 /**
  * Admin user role

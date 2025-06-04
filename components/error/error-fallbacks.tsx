@@ -173,7 +173,7 @@ export function ApiErrorFallback({ error, reset, className = '' }: BaseErrorFall
 /**
  * Section-specific error fallback (for page sections)
  */
-export function SectionErrorFallback({ error, reset, className = '' }: BaseErrorFallbackProps) {
+export function SectionErrorFallback({ reset, className = '' }: BaseErrorFallbackProps) {
   return (
     <div className={`py-8 px-4 text-center ${className}`}>
       <AlertCircle className='mx-auto h-8 w-8 text-red-400 mb-4' />
@@ -181,7 +181,7 @@ export function SectionErrorFallback({ error, reset, className = '' }: BaseError
         Section Unavailable
       </h3>
       <p className='text-gray-600 mb-4 max-w-md mx-auto'>
-        This section couldn't load properly. You can continue browsing other parts of the site.
+        This section couldn&apos;t load properly. You can continue browsing other parts of the site.
       </p>
       {reset && (
         <Button variant='outline' size='sm' onClick={reset}>
@@ -196,7 +196,7 @@ export function SectionErrorFallback({ error, reset, className = '' }: BaseError
 /**
  * Minimal inline error fallback
  */
-export function InlineErrorFallback({ error, reset, className = '' }: BaseErrorFallbackProps) {
+export function InlineErrorFallback({ reset, className = '' }: BaseErrorFallbackProps) {
   return (
     <div className={`inline-flex items-center gap-2 text-sm text-red-600 ${className}`}>
       <AlertCircle className='h-4 w-4' />
@@ -225,7 +225,7 @@ export function NotFoundErrorFallback({ className = '' }: { className?: string }
           Page Not Found
         </h2>
         <p className='text-gray-600 mb-8 max-w-md'>
-          The page you're looking for doesn't exist or may have been moved.
+          The page you&apos;re looking for doesn&apos;t exist or may have been moved.
         </p>
         <div className='flex flex-col sm:flex-row gap-4 justify-center'>
           <Button onClick={() => window.history.back()}>

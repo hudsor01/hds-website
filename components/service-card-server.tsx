@@ -11,11 +11,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ServiceCardProps } from '@/types/service-types'
+import { type ServiceCardProps } from '@/types/service-types'
 
-interface ServiceCardServerProps extends ServiceCardProps {
-  // Server component version - no animations
-}
+type ServiceCardServerProps = ServiceCardProps
 
 export function ServiceCardServer({
   title,
@@ -24,7 +22,7 @@ export function ServiceCardServer({
   href,
   className,
   featured = false,
-  variant = 'default',
+  variant: _variant = 'default',
   price,
   features,
 }: ServiceCardServerProps) {

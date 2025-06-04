@@ -14,11 +14,6 @@ import { logger } from '@/lib/logger'
  * - Fallback: In-memory rate limiting as backup
  */
 
-interface RedisConfig {
-  url: string
-  token: string
-}
-
 class RedisManager {
   private redis: Redis | null = null
   private isInitialized = false

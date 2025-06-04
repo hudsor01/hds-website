@@ -38,6 +38,7 @@ model Contact {
   
   // Relations
   responses   ContactResponse[]
+  bookings    ContactBooking[]
   
   @@map("contacts")
 }
@@ -490,9 +491,39 @@ model Service {
   metaTitle       String?
   metaDescription String?
   
+  // ============= Cal.com Booking Integration Fields =============
+  
+  // Booking-specific fields
+  duration          Int?     // Consultation duration in minutes
+  price             Decimal? // Booking price (can override startingPrice)
+  bookingCurrency   String?  // Booking currency (can override currency)
+  calEventTypeId    Int?     // Reference to Cal.com event type
+  
+  // Service configuration for bookings
+  bufferTime        Int?     // minutes between bookings
+  maxAdvanceBooking Int?     // days in advance bookings allowed
+  minAdvanceBooking Int?     // hours minimum advance booking
+  maxPerDay         Int?     // max bookings per day
+  
+  // Meeting settings
+  defaultMeetingType MeetingType? // Default meeting type for this service
+  allowedMeetingTypes MeetingType[] // Allowed meeting types
+  requiresApproval   Boolean @default(false) // Does booking need approval
+  
+  // Custom fields for booking forms
+  customFields      Json?    // Custom form fields for this service
+  
+  // Analytics for bookings
+  totalBookings     Int @default(0)
+  completedBookings Int @default(0)
+  totalRevenue      Decimal @default(0)
+  
   // Timestamps
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  // Relations
+  bookings        Booking[] // Bookings for this service
   
   @@map("services")
 }
@@ -594,4 +625,227 @@ model CaseStudy {
   updatedAt      DateTime @updatedAt
   
   @@map("case_studies")
+}
+
+// ============= Cal.com Booking System =============
+
+// Booking model for Cal.com integration
+model Booking {
+  id              String   @id @default(cuid())
+  calBookingId    Int      @unique
+  calBookingUid   String   @unique
+  title           String
+  description     String?
+  startTime       DateTime
+  endTime         DateTime
+  timeZone        String
+  status          BookingStatus @default(PENDING)
+  meetingType     MeetingType @default(VIDEO)
+  meetingUrl      String?
+  location        String?
+  
+  // Attendee information
+  attendeeEmail   String
+  attendeeName    String
+  attendeePhone   String?
+  attendeeTimeZone String?
+  
+  // Host information
+  hostId          String?
+  hostEmail       String?
+  hostName        String?
+  
+  // Service information
+  serviceId       String?
+  serviceName     String?
+  servicePrice    Decimal?
+  serviceCurrency String?
+  
+  // Payment information
+  isPaid          Boolean @default(false)
+  paymentId       String?
+  paymentStatus   String?
+  paymentAmount   Decimal?
+  
+  // Booking metadata
+  source          BookingSource @default(WEBSITE)
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+  referralCode    String?
+  
+  // Custom fields and responses
+  customFields    Json?
+  attendeeResponses Json?
+  internalNotes   String?
+  
+  // Booking management
+  confirmationSent Boolean @default(false)
+  remindersSent   Int @default(0)
+  followUpSent    Boolean @default(false)
+  feedbackCollected Boolean @default(false)
+  
+  // Timestamps
+  bookedAt        DateTime @default(now())
+  confirmedAt     DateTime?
+  cancelledAt     DateTime?
+  rescheduledAt   DateTime?
+  completedAt     DateTime?
+  noShowAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  service         Service? @relation(fields: [serviceId], references: [id])
+  payments        Payment[]
+  reminders       BookingReminder[]
+  feedbacks       BookingFeedback[]
+  contactBookings ContactBooking[]
+  
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  AWAITING_HOST
+  PENDING
+  CANCELLED
+  ACCEPTED
+  REJECTED
+  RESCHEDULED
+  NO_SHOW
+  COMPLETED
+}
+
+enum MeetingType {
+  VIDEO
+  PHONE
+  IN_PERSON
+  HYBRID
+}
+
+enum BookingSource {
+  WEBSITE
+  DIRECT_LINK
+  EMAIL
+  SOCIAL
+  REFERRAL
+  OTHER
+}
+
+
+// Payment model for paid bookings
+model Payment {
+  id              String   @id @default(cuid())
+  bookingId       String
+  paymentProvider String   // 'stripe', 'paypal', etc.
+  paymentIntentId String?
+  amount          Decimal
+  currency        String
+  status          PaymentStatus @default(PENDING)
+  
+  // Payment metadata
+  paymentMethod   String?  // 'card', 'bank_transfer', etc.
+  last4           String?  // Last 4 digits of card
+  receiptUrl      String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  paidAt          DateTime?
+  refundedAt      DateTime?
+  
+  // Relations
+  booking         Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+// Booking reminders
+model BookingReminder {
+  id         String   @id @default(cuid())
+  bookingId  String
+  type       ReminderType
+  sentAt     DateTime @default(now())
+  method     ReminderMethod @default(EMAIL)
+  
+  // Relations
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@map("booking_reminders")
+}
+
+enum ReminderType {
+  BOOKING_CONFIRMATION
+  REMINDER_24H
+  REMINDER_1H
+  FOLLOW_UP
+  FEEDBACK_REQUEST
+}
+
+enum ReminderMethod {
+  EMAIL
+  SMS
+  PUSH
+}
+
+// Booking feedback
+model BookingFeedback {
+  id            String   @id @default(cuid())
+  bookingId     String
+  rating        Int      // 1-5 stars
+  comment       String?
+  wouldRecommend Boolean?
+  
+  // Specific feedback areas
+  satisfactionAreas Json? // JSON object with different satisfaction metrics
+  
+  createdAt     DateTime @default(now())
+  
+  // Relations
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@map("booking_feedbacks")
+}
+
+// Booking analytics for performance tracking
+model BookingAnalyticsEvent {
+  id           String   @id @default(cuid())
+  eventType    String   // 'page_view', 'booking_started', 'booking_completed', etc.
+  sessionId    String?
+  userId       String?
+  bookingId    String?
+  
+  // Event data
+  properties   Json?
+  
+  // Attribution
+  source       String?
+  medium       String?
+  campaign     String?
+  referrer     String?
+  
+  // Timestamps
+  timestamp    DateTime @default(now())
+  
+  @@map("booking_analytics_events")
+}
+
+// Add booking relation to existing Contact model
+model ContactBooking {
+  id        String @id @default(cuid())
+  contactId String
+  bookingId String
+  
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@unique([contactId, bookingId])
+  @@map("contact_bookings")
 }

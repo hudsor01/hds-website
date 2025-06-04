@@ -1,26 +1,26 @@
 /**
  * Admin Dashboard Page
  * 
- * Implementing the exact Shadcn/UI dashboard-01 block pattern
+ * Implementing the Shadcn/UI admin dashboard pattern
  * extracted from the official GitHub repository
  */
 
 import React from 'react'
-import { AppSidebar } from '@/components/admin/dashboard-01/app-sidebar'
-import { ChartAreaInteractive } from '@/components/admin/dashboard-01/chart-area-interactive'
+import { AppSidebar } from '@/components/admin/sidebar'
+import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive'
 import { ChartBarInteractive } from '@/components/admin/charts/chart-bar-interactive'
 import { ChartPieInteractive } from '@/components/admin/charts/chart-pie-interactive'
 import { ChartLineInteractive } from '@/components/admin/charts/chart-line-interactive'
 import { ChartRadialSimple } from '@/components/admin/charts/chart-radial-simple'
-import { DataTable } from '@/components/admin/dashboard-01/data-table'
-import { SectionCards } from '@/components/admin/dashboard-01/section-cards'
-import { SiteHeader } from '@/components/admin/dashboard-01/site-header'
+import { DataTable } from '@/components/admin/data-table'
+import { SectionCards } from '@/components/admin/cards'
+import { SiteHeader } from '@/components/admin/header'
 import {
   SidebarInset,
   SidebarProvider,
 } from '@/components/ui/sidebar'
 
-import data from '@/components/admin/dashboard-01/data.json'
+import data from '@/components/admin/data.json'
 
 export default function AdminDashboard() {
   return (
@@ -33,9 +33,9 @@ export default function AdminDashboard() {
       }
     >
       <AppSidebar variant='inset' />
-      <SidebarInset>
+      <SidebarInset className="fade-in">
         <SiteHeader />
-        <div className='flex flex-1 flex-col'>
+        <div className='flex flex-1 flex-col logical-padding'>
           <div className='@container/main flex flex-1 flex-col gap-2'>
             <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
               <SectionCards />

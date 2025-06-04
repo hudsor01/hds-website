@@ -8,7 +8,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartAreaInteractive } from '@/components/admin/dashboard-01/chart-area-interactive'
+import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { CalendarDays, TrendingUp, Users, Eye, Download, BarChart3, Loader2 } from 'lucide-react'
@@ -16,9 +16,9 @@ import { api } from '@/lib/trpc/client'
 
 export default function AnalyticsPage() {
   // Fetch real analytics data
-  const { data: dashboardData, isLoading: isDashboardLoading } = api.admin.getDashboardAnalytics.useQuery()
-  const { data: contactAnalytics, isLoading: isContactLoading } = api.admin.getContactAnalytics.useQuery()
-  const { data: leadAnalytics, isLoading: isLeadLoading } = api.admin.getLeadAnalytics.useQuery()
+  const { data: dashboardData, isLoading: isDashboardLoading } = api.admin.getDashboardAnalytics.useQuery({})
+  const { data: contactAnalytics, isLoading: isContactLoading } = api.admin.getContactAnalytics.useQuery({})
+  const { data: _leadAnalytics, isLoading: isLeadLoading } = api.admin.getLeadAnalytics.useQuery({})
 
   const isLoading = isDashboardLoading || isContactLoading || isLeadLoading
 

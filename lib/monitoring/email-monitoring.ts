@@ -124,7 +124,7 @@ export class EmailMonitoring {
 
   // Get email stats
   static getEmailStats() {
-    const stats: Record<string, any> = {}
+    const stats: Record<string, unknown> = {}
     
     for (const [emailType, data] of this.emailCounts.entries()) {
       stats[emailType] = {

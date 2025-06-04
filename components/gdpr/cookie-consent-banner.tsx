@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Cookie, X, Check, Settings, Shield } from 'lucide-react'
+import { Cookie, X, Settings, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CookieCategory } from '@/types/enum-types'
 import { 
-  CookieConsentManager, 
-  CookieCategory, 
-  COOKIE_DEFINITIONS,
-  useCookieConsent, 
+COOKIE_DEFINITIONS,
+useCookieConsent,
+type CookieConsent,
 } from '@/lib/cookies/consent-manager'
 
 /**
@@ -66,7 +66,7 @@ export function CookieConsentBanner() {
                       <h3 className='text-lg font-semibold'>Cookie Preferences</h3>
                       <p className='text-sm text-muted-foreground mt-1'>
                         We use cookies to enhance your browsing experience, serve personalized content, 
-                        and analyze our traffic. By clicking 'Accept All', you consent to our use of cookies.
+                        and analyze our traffic. By clicking &apos;Accept All&apos;, you consent to our use of cookies.
                       </p>
                     </div>
                     <div className='flex flex-wrap gap-3'>
@@ -153,15 +153,17 @@ export function CookieConsentBanner() {
  * Cookie settings component
  */
 function CookieSettings({ 
-  consent, 
-  updateConsent, 
-  onSave, 
+consent, 
+updateConsent, 
+onSave, 
 }: {
-  consent: any
-  updateConsent: (consent: any) => void
-  onSave: () => void
+consent: CookieConsent
+updateConsent: (consent: CookieConsent) => void
+onSave: () => void
 }) {
-  const [localConsent, setLocalConsent] = useState(consent)
+const [localConsent, setLocalConsent] = useState(consent)
+// Avoid unused variable warning
+void consent
 
   const categories = [
     {

@@ -5,7 +5,7 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
+  type ReactNode,
 } from 'react'
 import { LazyMotion, domAnimation } from 'framer-motion'
 

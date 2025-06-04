@@ -15,7 +15,7 @@ import {
 import { useFormSubmission } from '@/hooks/use-form-submission'
 import {
   leadMagnetSchema,
-  LeadMagnetFormValues,
+  type LeadMagnetFormValues,
 } from '@/lib/validation/form-schemas'
 import { cn } from '@/lib/utils'
 import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
@@ -30,8 +30,8 @@ export type LeadMagnetResource = {
 
 export interface LeadMagnetFormProps {
   className?: string
-  onSuccess?: (_data: any) => void
-  onError?: (_error: Error) => void
+  onSuccess?: () => void
+  onError?: () => void
   submitEndpoint?: string
   useTrpc?: boolean
   title?: string
@@ -64,7 +64,7 @@ export function LeadMagnetForm({
   const handleFormError = (error: Error) => {
     // Track form errors specifically
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'form_error', {
+      ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'form_error', {
         form_name: 'lead_magnet_form',
         error_message: error.message,
       })

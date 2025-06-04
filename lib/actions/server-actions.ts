@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import type { ServiceUpdate } from '@/types/service-types'
 
 /**
  * Server Actions for data mutations
@@ -264,7 +265,7 @@ export async function batchUpdateServices(formData: FormData) {
   try {
     // Process multiple updates in parallel
     const results = await Promise.allSettled(
-      updates.map(async (update: any) => {
+      updates.map(async (update: ServiceUpdate) => {
         // TODO: Update each service in database
         await new Promise(resolve => setTimeout(resolve, 100))
         return { id: update.id, success: true }

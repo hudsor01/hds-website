@@ -29,7 +29,7 @@ export interface EmailTemplate {
 
 export interface SkipCondition {
   type: 'has_purchased' | 'has_scheduled_call' | 'has_responded'
-  value?: any
+  value?: Record<string, unknown>
 }
 
 export interface SequenceSubscriber {
@@ -38,5 +38,5 @@ export interface SequenceSubscriber {
   triggeredAt: Date
   completedSteps: string[] // IDs of completed email steps
   status: 'active' | 'completed' | 'unsubscribed' | 'paused'
-  userData: Record<string, any> // Dynamic data for template replacement
+  userData: Record<string, unknown> // Dynamic data for template replacement
 }

@@ -15,7 +15,7 @@ export async function ServicesSection() {
   const services = await getServices()
   
   // Add icons to services data
-  const servicesWithIcons = services.map(service => ({
+  const servicesWithIcons = services.map((service: { id: string }) => ({
     ...service,
     icon: iconMap[service.id as keyof typeof iconMap],
   }))

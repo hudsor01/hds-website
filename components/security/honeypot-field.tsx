@@ -5,9 +5,10 @@
  * This is a simple but effective spam prevention technique.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import type { BaseComponentProps } from '@/types/ui-types'
 
-interface HoneypotFieldProps {
+export interface HoneypotFieldProps extends BaseComponentProps {
   name?: string
   tabIndex?: number
   autoComplete?: string
@@ -50,6 +51,42 @@ export function HoneypotField({
         }}
       />
     </div>
+  )
+}
+
+/**
+ * Timing-based honeypot that tracks form fill time
+ * Bots typically fill forms very quickly
+ */
+export interface TimingHoneypotProps {
+  minTime?: number // Minimum time in milliseconds before form can be submitted
+  onValidationChange?: (isValid: boolean) => void
+}
+
+export function TimingHoneypot({ 
+  minTime = 3000, // 3 seconds minimum
+  onValidationChange, 
+}: TimingHoneypotProps) {
+  const [startTime] = useState(Date.now())
+  const [_isValid, setIsValid] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsValid(true)
+      onValidationChange?.(true)
+    }, minTime)
+
+    return () => clearTimeout(timer)
+  }, [minTime, onValidationChange])
+
+  // Hidden field to track timing
+  return (
+    <input
+      type="hidden"
+      name="form_start_time"
+      value={startTime.toString()}
+      readOnly
+    />
   )
 }
 

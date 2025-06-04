@@ -47,11 +47,14 @@ export class AppMonitoring {
 
     // Track to analytics if available
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      ;(window as any).gtag('event', 'form_submission', {
-        form_type: formType,
-        success,
-        duration,
-      })
+      const gtag = (window as Window & { gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void }).gtag
+      if (typeof gtag === 'function') {
+        gtag('event', 'form_submission', {
+          form_type: formType,
+          success,
+          duration,
+        })
+      }
     }
   }
 
@@ -73,6 +76,28 @@ export class AppMonitoring {
     // In production, send to monitoring service
     if (!success) {
       console.error(`❌ Email delivery failed: ${emailType}`, { messageId, error })
+    }
+  }
+
+  // Generic event tracking
+  static trackEvent(eventType: string, properties?: Record<string, unknown>) {
+    const event = {
+      type: eventType,
+      properties,
+      timestamp: new Date().toISOString(),
+    }
+
+    // In production, you would send this to your analytics service
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Event tracked:', event)
+    }
+
+    // Track to analytics if available
+    if (typeof window !== 'undefined' && 'gtag' in window) {
+      const gtag = (window as Window & { gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void }).gtag
+      if (typeof gtag === 'function') {
+        gtag('event', eventType, properties)
+      }
     }
   }
 

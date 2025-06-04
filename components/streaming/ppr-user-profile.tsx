@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
-import { Suspense } from 'react'
-
+import React from 'react'
 /**
  * User Profile component that demonstrates PPR dynamic rendering
  * Uses cookies API which makes it dynamic

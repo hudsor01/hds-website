@@ -94,11 +94,11 @@ export function EmailLayout({
   // Generate HTML for components
   const html = `
     <!DOCTYPE html>
-    <html lang='en'>
+    <html lang="en">
       <head>
-        <meta charset='utf-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>${title}</title>
         <style>
           @media only screen and (max-width: 620px) {
@@ -116,7 +116,7 @@ export function EmailLayout({
           }
         </style>
       </head>
-      <body style='font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: ${textColor}; margin: 0; padding: 0; background-color: ${backgroundColor === '#ffffff' ? '#f9fafb' : backgroundColor};'>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: ${textColor}; margin: 0; padding: 0; background-color: ${backgroundColor === '#ffffff' ? '#f9fafb' : backgroundColor};">
         <!-- Preheader text (for email clients) -->
         <div style='display: none; max-height: 0px; overflow: hidden;'>
           ${previewText}
@@ -124,17 +124,17 @@ export function EmailLayout({
           &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
         </div>
         
-        <table class='body' role='presentation' width='100%' cellspacing='0' cellpadding='0' border='0' align='center' style='max-width: 600px; margin: 20px auto; background-color: ${backgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);'>
+        <table class="body" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px; margin: 20px auto; background-color: ${backgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
           <tr>
             <td>
               <!-- Header -->
               ${
                 logoUrl
                   ? `
-              <table width='100%' style='border-bottom: 1px solid #e5e7eb; padding: 20px;'>
+              <table width="100%" style="border-bottom: 1px solid #e5e7eb; padding: 20px;">
                 <tr>
                   <td align='center'>
-                    <img src='${logoUrl}' alt='Hudson Digital Solutions' style='max-width: 200px; height: auto;'>
+                    <img src="${logoUrl}" alt="Hudson Digital Solutions" style="max-width: 200px; height: auto;">
                   </td>
                 </tr>
               </table>
@@ -143,7 +143,7 @@ export function EmailLayout({
               }
               
               <!-- Main Content -->
-              <table width='100%' style='padding: 20px 30px;'>
+              <table width="100%" style="padding: 20px 30px;">
                 <tr>
                   <td>
                     ${children}
@@ -152,7 +152,7 @@ export function EmailLayout({
               </table>
               
               <!-- Footer -->
-              <table width='100%' style='border-top: 1px solid #e5e7eb; padding: 20px; font-size: 12px; color: #6b7280; text-align: center;'>
+              <table width="100%" style="border-top: 1px solid #e5e7eb; padding: 20px; font-size: 12px; color: #6b7280; text-align: center;">
                 <tr>
                   <td>
                     <p>${footerText || footerDefaultText}</p>
@@ -160,7 +160,7 @@ export function EmailLayout({
                       unsubscribeEmail
                         ? `
                     <p>You're receiving this email because you've interacted with our website or services. 
-                    <a href='https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(unsubscribeEmail)}' style='color: #6b7280; text-decoration: underline;'>Unsubscribe</a></p>
+                    <a href="https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(unsubscribeEmail)}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a></p>
                     `
                         : ''
                     }
@@ -193,7 +193,7 @@ export function Heading({
   const styleAttr = `font-size: ${fontSize}; font-weight: ${fontWeight}; margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};${color ? ` color: ${color};` : ''}`
 
   const tag = `h${level}`
-  return `<${tag} style='${styleAttr}'>${children}</${tag}>`
+  return `<${tag} style="${styleAttr}">${children}</${tag}>`
 }
 
 /**
@@ -208,7 +208,7 @@ export function Paragraph({
   align?: 'left' | 'center' | 'right'
   marginBottom?: string
 }) {
-  return `<p style='margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};'>${children}</p>`
+  return `<p style="margin-top: 0; margin-bottom: ${marginBottom}; text-align: ${align};">${children}</p>`
 }
 
 /**
@@ -222,13 +222,13 @@ export function Button({
   fullWidth = false,
 }: ButtonProps) {
   return `
-    <table width='100%' border='0' cellspacing='0' cellpadding='0' style='margin-bottom: 20px;'>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
       <tr>
-        <td align='${align}'>
-          <table border='0' cellspacing='0' cellpadding='0'>
+        <td align="${align}">
+          <table border="0" cellspacing="0" cellpadding="0">
             <tr>
-              <td align='center' style='border-radius: 4px;' bgcolor='${color}'>
-                <a href='${href}' target='_blank' class='${fullWidth ? 'btn-full' : ''}' style='font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 4px; padding: 12px 24px; display: inline-block; font-weight: 500;'>${children}</a>
+              <td align="center" style="border-radius: 4px;" bgcolor="${color}">
+                <a href="${href}" target="_blank" class="${fullWidth ? 'btn-full' : ''}" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 4px; padding: 12px 24px; display: inline-block; font-weight: 500;">${children}</a>
               </td>
             </tr>
           </table>
@@ -264,7 +264,7 @@ export function Divider({
   color = '#e5e7eb',
   margin = '25px 0',
 }: DividerProps) {
-  return `<hr style='border: 0; border-top: 1px solid ${color}; margin: ${margin};'>`
+  return `<hr style="border: 0; border-top: 1px solid ${color}; margin: ${margin};"/>`
 }
 
 /**
@@ -283,10 +283,10 @@ export function Image({
   const styleAttr = `max-width: ${maxWidth}; height: auto;${width ? ` width: ${typeof width === 'number' ? `${width}px` : width};` : ''}${height ? ` height: ${typeof height === 'number' ? `${height}px` : height};` : ''}${border ? ` border: ${border};` : ''}${borderRadius ? ` border-radius: ${borderRadius};` : ''}`
 
   return `
-    <table width='100%' border='0' cellspacing='0' cellpadding='0' style='margin-bottom: 20px;'>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
       <tr>
-        <td align='${align}'>
-          <img src='${src}' alt='${alt}' style='${styleAttr}'>
+        <td align="${align}">
+          <img src="${src}" alt="${alt}" style="${styleAttr}"/>
         </td>
       </tr>
     </table>
@@ -306,9 +306,9 @@ export function List({
   spacing?: string
 }) {
   const listItems = items
-    .map(item => `<li style='margin-bottom: ${spacing};'>${item}</li>`)
+    .map(item => `<li style="margin-bottom: ${spacing};">${item}</li>`)
     .join('')
-  return `<${type} style='padding-left: 20px; margin-bottom: 20px;'>${listItems}</${type}>`
+  return `<${type} style="padding-left: 20px; margin-bottom: 20px;">${listItems}</${type}>`
 }
 
 /**
@@ -324,7 +324,7 @@ export function Blockquote({
   backgroundColor?: string
 }) {
   return `
-    <blockquote style='margin: 20px 0; padding: 15px; background-color: ${backgroundColor}; border-left: 4px solid ${borderColor};'>
+    <blockquote style="margin: 20px 0; padding: 15px; background-color: ${backgroundColor}; border-left: 4px solid ${borderColor}">
       ${children}
     </blockquote>
   `
@@ -341,12 +341,12 @@ export function TwoColumns({
   right: ReactNode
 }) {
   return `
-    <table width='100%' border='0' cellspacing='0' cellpadding='0' style='margin-bottom: 20px;'>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
       <tr>
-        <td valign='top' style='width: 50%; padding-right: 10px;'>
+        <td valign="top" style="width: 50%; padding-right: 10px;">
           ${left}
         </td>
-        <td valign='top' style='width: 50%; padding-left: 10px;'>
+        <td valign="top" style="width: 50%; padding-left: 10px;">
           ${right}
         </td>
       </tr>
@@ -421,10 +421,10 @@ export function ContactFormConfirmation({
   accentColor?: string
 }) {
   const content = `
-    ${Heading({ children: 'We've Received Your Message', level: 1, color: accentColor })}
+    ${Heading({ children: "We've Received Your Message", level: 1, color: accentColor })}
     ${Paragraph({ children: `Hi ${name},` })}
-    ${Paragraph({ children: 'Thank you for contacting Hudson Digital Solutions. We've received your message and will get back to you shortly.' })}
-    ${Paragraph({ children: 'Here's a copy of what you submitted:' })}
+    ${Paragraph({ children: "Thank you for contacting Hudson Digital Solutions. We've received your message and will get back to you shortly." })}
+    ${Paragraph({ children: "Here's a copy of what you submitted:" })}
     ${Section({
       children: `
         ${Paragraph({ children: message })}
@@ -436,7 +436,7 @@ export function ContactFormConfirmation({
 
   return EmailLayout({
     title: 'Thank you for your message',
-    previewText: 'We've received your message and will respond shortly',
+    previewText: "We've received your message and will respond shortly",
     unsubscribeEmail: email,
     logoUrl,
     accentColor,
@@ -463,8 +463,8 @@ export function NewsletterWelcome({
   const content = `
     ${Heading({ children: 'Welcome to Our Newsletter!', level: 1, color: accentColor })}
     ${Paragraph({ children: greeting })}
-    ${Paragraph({ children: 'Thank you for subscribing to the Hudson Digital Solutions newsletter. We're excited to share our latest insights, industry trends, and digital transformation strategies with you.' })}
-    ${Paragraph({ children: 'Here's what you can expect:' })}
+    ${Paragraph({ children: "Thank you for subscribing to the Hudson Digital Solutions newsletter. We're excited to share our latest insights, industry trends, and digital transformation strategies with you." })}
+    ${Paragraph({ children: "Here's what you can expect:" })}
     ${List({
       items: [
         'Monthly updates on emerging technologies',
@@ -473,7 +473,7 @@ export function NewsletterWelcome({
         'Exclusive offers and resources',
       ],
     })}
-    ${Paragraph({ children: 'If you have any questions or topics you'd like us to cover, feel free to reply to this email.' })}
+    ${Paragraph({ children: "If you have any questions or topics you'd like us to cover, feel free to reply to this email." })}
     ${Button({
       href: 'https://hudsondigitalsolutions.com/resources',
       children: 'Explore Our Resources',
@@ -527,7 +527,7 @@ export function LeadMagnetDelivery({
       `,
       backgroundColor: '#f3f4f6',
     })}
-    ${Paragraph({ children: 'We hope you find this resource valuable. If you have any questions or need further assistance, don't hesitate to contact our team.' })}
+    ${Paragraph({ children: "We hope you find this resource valuable. If you have any questions or need further assistance, don't hesitate to contact our team." })}
     ${Paragraph({ children: 'Want to learn more about how we can help your business thrive in the digital landscape?' })}
     ${Button({
       href: 'https://hudsondigitalsolutions.com/contact',

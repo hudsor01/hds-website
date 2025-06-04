@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createTRPCRouter, publicProcedure } from '../lib/trpc'
+import { createTRPCRouter, publicProcedure } from '../lib/trpc-unified'
 import { db } from '@/lib/database'
 import { logger } from '@/lib/logger'
 

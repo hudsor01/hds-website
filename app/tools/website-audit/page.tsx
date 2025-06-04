@@ -16,8 +16,8 @@ export default function WebsiteAuditPage() {
             Free Website Audit Tool
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Get a comprehensive analysis of your website's performance, SEO, and user experience. 
-            Receive actionable recommendations to improve your site's effectiveness.
+            Get a comprehensive analysis of your website&apos;s performance, SEO, and user experience. 
+            Receive actionable recommendations to improve your site&apos;s effectiveness.
           </p>
         </div>
         

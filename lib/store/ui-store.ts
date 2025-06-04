@@ -2,12 +2,12 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 // Global UI State
-interface UIState {
+export interface UIState {
   isLoading: boolean
   loadingMessage: string
   error: string | null
-  setLoading: (_loading: boolean, _message?: string) => void
-  setError: (_error: string | null) => void
+  setLoading: (loading: boolean, message?: string) => void
+  setError: (error: string | null | undefined) => void
   clearError: () => void
 }
 
@@ -17,9 +17,9 @@ export const useUIStore = create<UIState>()(
       isLoading: false,
       loadingMessage: '',
       error: null,
-      setLoading: (loading, message = '') =>
+      setLoading: (loading: boolean, message = '') =>
         set({ isLoading: loading, loadingMessage: message }),
-      setError: error => set({ error }),
+      setError: (error: string | null | undefined) => set({ error }),
       clearError: () => set({ error: null }),
     }),
     {

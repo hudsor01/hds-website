@@ -18,21 +18,21 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen fade-in">
       {/* HERO SECTION - Enhanced with Aceternity Hero Highlight */}
-      <HeroHighlight containerClassName="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-6 relative z-10">
+      <HeroHighlight containerClassName="min-h-screen bg-gradient-to-br from-brand-50 via-white to-purple-50">
+        <div className="container logical-padding relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - F-Pattern Content */}
             <div className="space-y-8">
               {/* Authority Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-100 text-brand-800 rounded-full text-sm font-medium card-entrance">
                 <Award className="w-4 h-4" />
                 10 Years Enterprise Experience
               </div>
               
               {/* Problem-Focused Headline with Aceternity Highlight */}
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight hero-title slide-in-left">
                 Stop Losing Revenue to{' '}
                 <Highlight className="text-black dark:text-white">
                   Manual Processes
@@ -40,35 +40,35 @@ export default function HomePage() {
               </h1>
               
               {/* Value Proposition */}
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="lead-text text-xl text-gray-700 leading-relaxed">
                 I bring 10 years of enterprise revenue operations expertise from Thryv directly to small businesses. Get the same powerful automation and CRM systems that Fortune 500 companies use—designed for your budget and scale.
               </p>
               
               {/* Social Proof Stats */}
-              <div className="flex items-center gap-8 pt-4">
+              <div className="flex items-center gap-8 pt-4 scroll-reveal">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">$2M+</div>
+                  <div className="text-3xl font-bold text-brand-600">$2M+</div>
                   <div className="text-sm text-gray-600">Revenue Generated</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">40%</div>
+                  <div className="text-3xl font-bold text-brand-600">40%</div>
                   <div className="text-sm text-gray-600">Avg Revenue Increase</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">98%</div>
+                  <div className="text-3xl font-bold text-brand-600">98%</div>
                   <div className="text-sm text-gray-600">Client Retention</div>
                 </div>
               </div>
               
               {/* Strategic CTA Buttons - Single Color System */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-lg shadow-lg">
+              <div className="flex flex-col sm:flex-row gap-4 fade-in">
+                <Button asChild className="premium-button bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 text-lg button-press">
                   <Link href="#revenue-assessment">
                     Get Free Revenue Assessment
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg rounded-lg">
+                <Button asChild variant="outline" className="premium-button border-2 border-brand-600 text-brand-600 hover:bg-brand-50 px-8 py-4 text-lg button-press">
                   <Link href="#case-studies">
                     View Success Stories
                   </Link>
@@ -89,7 +89,7 @@ export default function HomePage() {
             </div>
             
             {/* Right Column - Hero Visual */}
-            <div className="relative">
+            <div className="relative slide-in-right">
               <div className="relative bg-white rounded-2xl shadow-2xl p-8 border">
                 <h3 className="text-xl font-semibold mb-4 text-gray-900">Revenue Operations Dashboard</h3>
                 {/* Mock Dashboard */}
@@ -100,7 +100,7 @@ export default function HomePage() {
                       <div className="text-sm text-green-700">Revenue Growth</div>
                     </div>
                     <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                      <div className="text-2xl font-bold text-blue-600">85%</div>
+                      <div className="text-2xl font-bold text-brand-600">85%</div>
                       <div className="text-sm text-blue-700">Lead Conversion</div>
                     </div>
                   </div>
@@ -120,7 +120,7 @@ export default function HomePage() {
               </div>
               
               {/* Floating Testimonial */}
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border max-w-xs">
+              <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border max-w-xs scale-in">
                 <div className="flex items-center gap-3">
                   <Image
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
@@ -130,7 +130,7 @@ export default function HomePage() {
                     className="rounded-full"
                   />
                   <div>
-                    <div className="text-sm font-medium">"Doubled our lead conversion rate"</div>
+                    <div className="text-sm font-medium">&quot;Doubled our lead conversion rate&quot;</div>
                     <div className="text-xs text-gray-600">- Michael R., Business Owner</div>
                   </div>
                 </div>
@@ -141,24 +141,24 @@ export default function HomePage() {
       </HeroHighlight>
 
       {/* CASE STUDIES SECTION - Authority Building */}
-      <section id="case-studies" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6">
+      <section id="case-studies" className="section-padding bg-surface">
+        <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="section-title text-foreground hero-title mb-4">
               Real Results from Real Businesses
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="lead-text max-w-3xl mx-auto">
               See how enterprise-level revenue operations transformed these small businesses
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8 features-grid">
             {/* Case Study 1 - Spotio Deduplication */}
-            <Card className="bg-white hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="premium-card card-entrance card-lift scroll-reveal">
               <CardContent className="p-8">
                 <div className="mb-6">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <BarChart3 className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-4">
+                    <BarChart3 className="w-6 h-6 text-brand-600" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Spotio CRM Deduplication</h3>
                   <p className="text-gray-600 mb-4">Enterprise sales team had 50,000+ duplicate leads clogging their Salesforce instance.</p>
@@ -167,7 +167,7 @@ export default function HomePage() {
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Duplicate Leads Removed</span>
-                    <span className="font-bold text-blue-600">32,847</span>
+                    <span className="font-bold text-brand-600">32,847</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Data Quality Improvement</span>
@@ -189,7 +189,7 @@ export default function HomePage() {
             </Card>
             
             {/* Case Study 2 - Property Management */}
-            <Card className="bg-white hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="premium-card card-entrance card-lift scroll-reveal">
               <CardContent className="p-8">
                 <div className="mb-6">
                   <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
@@ -224,7 +224,7 @@ export default function HomePage() {
             </Card>
             
             {/* Case Study 3 - Tattoo Booking */}
-            <Card className="bg-white hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="premium-card card-entrance card-lift scroll-reveal">
               <CardContent className="p-8">
                 <div className="mb-6">
                   <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
@@ -280,32 +280,32 @@ export default function HomePage() {
       />
 
       {/* ABOUT/BIO SECTION - Personal Authority */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6">
+      <section className="section-padding bg-surface">
+        <div className="container">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
+            <div className="space-y-8 slide-in-left">
               <div>
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="section-title text-foreground hero-title mb-4">
                   Meet Richard Hudson
-                  <span className="block text-2xl text-blue-600 font-normal">Your Revenue Operations Expert</span>
+                  <span className="block text-2xl text-brand-600 font-normal">Your Revenue Operations Expert</span>
                 </h2>
-                <p className="text-xl text-gray-700 leading-relaxed">
+                <p className="lead-text text-xl text-gray-700 leading-relaxed">
                   I spent 10 years as head of operations at Thryv, managing partner and franchise organizations across multiple markets. Now I bring those enterprise-level strategies directly to small businesses who need them most.
                 </p>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
+              <div className="grid sm:grid-cols-2 gap-6 features-grid">
+                <div className="premium-card card-entrance scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
+                      <BarChart3 className="w-5 h-5 text-brand-600" />
                     </div>
                     <h3 className="font-semibold text-gray-900">Enterprise Experience</h3>
                   </div>
                   <p className="text-gray-600">Managed revenue operations for hundreds of Thryv partners and franchises across multiple markets.</p>
                 </div>
                 
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
+                <div className="premium-card card-entrance scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                       <TrendingUp className="w-5 h-5 text-green-600" />
@@ -315,7 +315,7 @@ export default function HomePage() {
                   <p className="text-gray-600">Implemented systems that reduced manual work by 60% and increased conversion rates by 40%.</p>
                 </div>
                 
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
+                <div className="premium-card card-entrance scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <Users className="w-5 h-5 text-purple-600" />
@@ -325,7 +325,7 @@ export default function HomePage() {
                   <p className="text-gray-600">Exclusively serving small businesses in Dallas-Fort Worth with personalized attention and local support.</p>
                 </div>
                 
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
+                <div className="premium-card card-entrance scroll-reveal">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
                       <Award className="w-5 h-5 text-yellow-600" />
@@ -339,7 +339,7 @@ export default function HomePage() {
               <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
                 <h4 className="font-semibold text-blue-900 mb-3">Why I Started Hudson Digital Solutions</h4>
                 <p className="text-blue-800">
-                  After seeing how powerful revenue operations could be at enterprise scale, I realized small businesses needed access to the same strategies and systems. That's why I created Hudson Digital Solutions—to bring Fortune 500-level automation and growth strategies to businesses that previously couldn't afford them.
+                  After seeing how powerful revenue operations could be at enterprise scale, I realized small businesses needed access to the same strategies and systems. That&apos;s why I created Hudson Digital Solutions—to bring Fortune 500-level automation and growth strategies to businesses that previously couldn&apos;t afford them.
                 </p>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
               {/* Credentials */}
               <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-lg p-4 border">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">10</div>
+                  <div className="text-2xl font-bold text-brand-600">10</div>
                   <div className="text-sm text-gray-600">Years Enterprise</div>
                   <div className="text-sm text-gray-600">Experience</div>
                 </div>
@@ -368,26 +368,26 @@ export default function HomePage() {
       </section>
 
       {/* REVENUE ASSESSMENT CTA SECTION */}
-      <section id="revenue-assessment" className="py-20 bg-gradient-to-br from-blue-600 to-purple-700 text-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+      <section id="revenue-assessment" className="section-padding bg-gradient-to-br from-brand-600 to-purple-700 text-white">
+        <div className="container">
+          <div className="max-w-4xl mx-auto text-center slide-in-left">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 hero-title">
               Get Your Free Revenue Assessment
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
               Discover exactly where your business is losing revenue and get a personalized roadmap to fix it. Based on my 10 years of enterprise RevOps experience.
             </p>
             
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div className="text-center">
+            <div className="grid md:grid-cols-3 gap-8 mb-12 features-grid">
+              <div className="text-center card-entrance scroll-reveal">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Target className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Revenue Leak Analysis</h3>
-                <p className="text-blue-100">Identify where you're losing potential revenue in your current processes.</p>
+                <p className="text-blue-100">Identify where you&apos;re losing potential revenue in your current processes.</p>
               </div>
               
-              <div className="text-center">
+              <div className="text-center card-entrance scroll-reveal">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BarChart3 className="w-8 h-8 text-white" />
                 </div>
@@ -395,7 +395,7 @@ export default function HomePage() {
                 <p className="text-blue-100">Discover which manual tasks are costing you time and money.</p>
               </div>
               
-              <div className="text-center">
+              <div className="text-center card-entrance scroll-reveal">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
@@ -405,7 +405,7 @@ export default function HomePage() {
             </div>
             
             <div className="bg-white/10 backdrop-blur rounded-2xl p-8 mb-8">
-              <h3 className="text-2xl font-bold mb-4">What You'll Receive:</h3>
+              <h3 className="text-2xl font-bold mb-4">What You&apos;ll Receive:</h3>
               <div className="grid md:grid-cols-2 gap-4 text-left">
                 <div className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
@@ -427,13 +427,13 @@ export default function HomePage() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg rounded-lg font-semibold">
+              <Button asChild size="lg" className="premium-button bg-white text-brand-600 hover:bg-gray-100 px-8 py-4 text-lg button-press font-semibold">
                 <Link href="/contact">
                   Schedule My Free Assessment
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg rounded-lg">
+              <Button asChild variant="outline" size="lg" className="premium-button border-2 border-white text-white hover:bg-white/10 px-8 py-4 text-lg button-press">
                 <Link href="tel:+1234567890">
                   Call Now: (234) 567-890
                   <Phone className="w-5 h-5 ml-2" />
@@ -449,23 +449,23 @@ export default function HomePage() {
       </section>
 
       {/* CONTACT SECTION - Multiple Contact Options */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6">
+      <section className="section-padding bg-white">
+        <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="section-title text-foreground hero-title mb-4">
               Ready to Transform Your Business?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="lead-text max-w-3xl mx-auto">
               Choose the best way to get started. All consultations include a personalized revenue optimization strategy.
             </p>
           </div>
           
           <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Phone Contact */}
-            <Card className="text-center hover:shadow-xl transition-all duration-300 border-2 hover:border-blue-300">
+            <Card className="premium-card text-center card-entrance card-lift scroll-reveal">
               <CardContent className="p-8">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Phone className="w-8 h-8 text-blue-600" />
+                <div className="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Phone className="w-8 h-8 text-brand-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-4">Call for Immediate Help</h3>
                 <p className="text-gray-600 mb-6">Speak directly with me about your revenue challenges.</p>
@@ -554,7 +554,7 @@ export default function HomePage() {
           {/* Location & Service Area */}
           <div className="text-center mt-16 bg-gray-50 rounded-2xl p-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <MapPin className="w-6 h-6 text-blue-600" />
+              <MapPin className="w-6 h-6 text-brand-600" />
               <h3 className="text-2xl font-semibold text-gray-900">Serving Dallas-Fort Worth</h3>
             </div>
             <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
@@ -577,6 +577,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

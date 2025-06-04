@@ -29,6 +29,12 @@ export interface RateLimitContext {
   ip?: string
   /** tRPC procedure path */
   path?: string
+  /** User information from authentication */
+  user?: {
+    id: string
+    email: string
+    role: string
+  }
 }
 
 export interface RateLimitResult {

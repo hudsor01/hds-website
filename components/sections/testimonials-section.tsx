@@ -107,7 +107,7 @@ export function TestimonialsSection({
   className = '',
   bgColor = 'bg-gradient-to-b from-white to-slate-50',
   showDivider = true,
-  columns = 3,
+  // columns = 3, // Unused parameter
   cardStyle = 'animated',
   useRealData = false,
 }: TestimonialsSectionProps) {
@@ -187,7 +187,7 @@ export function TestimonialsSection({
             <TestimonialsData testimonialsPromise={getTestimonials()} />
           </Suspense>
         ) : (
-          <div className={`grid md:grid-cols-${columns} gap-8 max-w-6xl mx-auto`}>
+          <div className={'testimonials-grid gap-8 max-w-6xl mx-auto container'}>
             {displayTestimonials.map((testimonial, index) => (
               <m.div
                 key={testimonial.name}
@@ -195,7 +195,7 @@ export function TestimonialsSection({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className={`bg-white p-8 rounded-lg ${
+                className={`testimonial-card bg-white p-8 rounded-lg scroll-reveal ${
                   cardStyle === 'minimal'
                     ? 'shadow-sm'
                     : 'border border-slate-200 hover:border-slate-300 hover:shadow-xl transition-all duration-300'

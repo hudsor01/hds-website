@@ -20,6 +20,7 @@ import { SignJWT, jwtVerify } from 'jose'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
 import { env } from '@/lib/env'
+import type { AnalyticsEvent as _AnalyticsEvent, ErrorContext } from '@/types/analytics-types'
 
 // Types and Schemas
 export interface SessionPayload {
@@ -28,7 +29,7 @@ export interface SessionPayload {
   role: 'admin' | 'user' | 'guest'
   expiresAt: Date
   sessionId?: string
-  metadata?: Record<string, any>
+  metadata?: ErrorContext
 }
 
 export interface User {
@@ -87,7 +88,7 @@ export const SignupFormSchema = z.object({
     .trim(),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords don't match',
+  message: 'Passwords don\'t match',
   path: ['confirmPassword'],
 })
 
@@ -127,7 +128,7 @@ const encodedKey = new TextEncoder().encode(secretKey)
  * Encrypt session payload into JWT token
  */
 export async function encrypt(payload: SessionPayload): Promise<string> {
-  return new SignJWT(payload as any)
+  return new SignJWT(payload as Record<string, unknown>)
     .setProtectedHeader({ alg: SESSION_CONFIG.algorithm })
     .setIssuedAt()
     .setExpirationTime(SESSION_CONFIG.expiresIn)
@@ -157,7 +158,7 @@ export async function decrypt(session: string | undefined = ''): Promise<Session
 /**
  * Create a new session and set secure cookie
  */
-export async function createSession(user: User, metadata?: Record<string, any>): Promise<void> {
+export async function createSession(user: User, metadata?: ErrorContext): Promise<void> {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
   
   const sessionPayload: SessionPayload = {

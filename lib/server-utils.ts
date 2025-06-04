@@ -23,7 +23,7 @@ export async function getSecureData(id: string) {
 }
 
 // Server-side analytics tracking
-export function trackServerEvent(event: string, data: Record<string, any>) {
+export function trackServerEvent(event: string, data: Record<string, unknown>) {
   // This could send to server-side analytics services
   if (process.env.NODE_ENV === 'production') {
     console.log(`Server event: ${event}`, data)

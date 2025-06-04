@@ -2,8 +2,10 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import { type FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { ZodError } from 'zod'
 import superjson from 'superjson'
-import { db, checkDatabaseConnection } from '@/lib/database'
-import { logger } from '@/lib/logger'
+import type { SuperJSONResult } from 'superjson/dist/types'
+import { db, checkDatabaseConnection } from '../../../../lib/database'
+import { logger } from '../../../../lib/logger'
+import type { Dict } from '../../../../types/utility-types'
 
 export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
   const { req } = opts
@@ -15,15 +17,46 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
   }
 }
 
+interface CustomDataTransformer {
+  serialize: (object: unknown) => { json: unknown; meta?: { [key: string]: unknown } };
+  deserialize: <T>(payload: { json: unknown; meta?: { [key: string]: unknown } }) => T;
+}
+
+const transformer: CustomDataTransformer = {
+  serialize: superjson.serialize,
+  deserialize: superjson.deserialize,
+}
+
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
+  transformer,
   errorFormatter({ shape, error }) {
+    let zodError = null
+    
+    if (error.cause) {
+      try {
+        // Check if error.cause has ZodError's shape
+        const cause = error.cause as unknown
+        if (
+          cause &&
+          typeof cause === 'object' &&
+          'issues' in cause
+        ) {
+          // First check if it's an array without using Array.isArray
+          const issues = (cause as { issues: unknown }).issues
+          if (issues && typeof issues === 'object' && 'length' in issues) {
+            zodError = (cause as ZodError).flatten()
+          }
+        }
+      } catch (_) {
+        // If any error occurs during check, zodError remains null
+      }
+    }
+    
     return {
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError,
       },
     }
   },
@@ -58,6 +91,14 @@ const databaseMiddleware = t.middleware(async ({ ctx, next }) => {
   }
 })
 
+// Auth middleware (simplified for now)
+const authMiddleware = t.middleware(async ({ ctx, next }) => 
+  // In a real app, you'd validate JWT tokens or session here
+  // For now, we'll just pass through
+   next({ ctx }),
+)
+
 export const createTRPCRouter = t.router
 export const publicProcedure = t.procedure.use(databaseMiddleware)
+export const protectedProcedure = t.procedure.use(databaseMiddleware).use(authMiddleware)
 export const publicProcedureUnsafe = t.procedure // For endpoints that don't need DB

@@ -7,7 +7,7 @@
 
 import { z } from 'zod'
 import { ServiceType, BudgetRange, FormStatus } from './enum-types'
-import { ApiResponse } from './api-types'
+import type { ApiResponse } from './api-types'
 
 // ============= Form Validation Schemas =============
 
@@ -227,7 +227,7 @@ export interface FormFieldConfig {
   autoComplete?: string
   className?: string
   help?: string
-  defaultValue?: any
+  defaultValue?: Record<string, unknown>
 }
 
 /**
@@ -275,10 +275,10 @@ export interface UseFormReturn<T> {
     noValidate: boolean
   }
   fieldProps: (name: keyof T) => FormFieldProps
-  handleChange: (name: keyof T, value: any) => void
+  handleChange: (name: keyof T, value: Record<string, unknown>) => void
   handleBlur: (name: keyof T) => void
   handleSubmit: (data: T) => Promise<void>
-  setFieldValue: (name: keyof T, value: any) => void
+  setFieldValue: (name: keyof T, value: Record<string, unknown>) => void
   setFieldError: (name: keyof T, error: string) => void
   setFieldTouched: (name: keyof T, touched?: boolean) => void
   validateField: (name: keyof T) => Promise<boolean>
@@ -296,8 +296,8 @@ export interface UseFormReturn<T> {
  */
 export interface FormFieldProps {
   name: string
-  value: any
-  onChange: (value: any) => void
+  value: Record<string, unknown>
+  onChange: (value: Record<string, unknown>) => void
   onBlur: () => void
   error?: string
   touched?: boolean
@@ -349,6 +349,17 @@ export interface FormActions<T = any> {
 }
 
 // ============= Form Components =============
+
+/**
+ * Contact form component props
+ */
+export interface ContactFormProps {
+  className?: string
+  onSuccess?: () => void
+  onError?: (errorToReport: Error) => void
+  includeFields?: Array<'phone' | 'company' | 'subject' | 'service' | 'budget'>
+  variant?: 'simple' | 'detailed'
+}
 
 /**
  * Base form component props
@@ -445,7 +456,7 @@ export interface DynamicFormField extends FormFieldConfig {
  */
 export interface FormFieldDependency {
   field: string
-  value: any
+  value: Record<string, unknown>
   operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than'
 }
 
@@ -455,7 +466,7 @@ export interface FormFieldDependency {
 export interface FormFieldCondition {
   field: string
   operator: 'show_if' | 'hide_if' | 'require_if' | 'disable_if'
-  value: any
+  value: Record<string, unknown>
 }
 
 /**
@@ -463,9 +474,9 @@ export interface FormFieldCondition {
  */
 export interface FormValidationRule {
   type: 'required' | 'min' | 'max' | 'pattern' | 'custom'
-  value?: any
+  value?: Record<string, unknown>
   message: string
-  validator?: (value: any, data: any) => boolean
+  validator?: (value: Record<string, unknown>, data: Record<string, unknown>) => boolean
 }
 
 // ============= Resource Definitions =============

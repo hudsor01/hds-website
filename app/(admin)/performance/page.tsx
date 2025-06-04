@@ -11,9 +11,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from '@/components/ui/use-toast'
 import { 
@@ -23,13 +21,10 @@ import {
   Clock, 
   Gauge, 
   TrendingUp, 
-  TrendingDown,
   AlertTriangle,
   CheckCircle,
   Download,
   RefreshCw,
-  Calendar,
-  Filter,
 } from 'lucide-react'
 import { api } from '@/lib/trpc/client'
 
@@ -94,7 +89,7 @@ function getRatingBadge(rating: string) {
   }
 }
 
-function calculatePerformanceScore(metrics: any): number {
+function calculatePerformanceScore(metrics: Record<string, unknown>): number {
   if (!metrics?.LCP || !metrics?.FID || !metrics?.CLS) return 0
   
   const lcpScore = getMetricRating('LCP', metrics.LCP.avg) === 'good' ? 100 : 
@@ -174,7 +169,7 @@ export default function PerformancePage() {
 
     const csvData = [
       ['Metric', 'Average', 'P95', 'Count', 'Rating'],
-      ...Object.entries(performanceData.metrics).map(([metric, data]: [string, any]) => [
+      ...Object.entries(performanceData.metrics).map(([metric, data]: [string, { avg?: number; p95?: number; count?: number }]) => [
         getMetricName(metric),
         data.avg?.toFixed(2) || '0',
         data.p95?.toFixed(2) || '0',
@@ -411,7 +406,7 @@ export default function PerformancePage() {
             </div>
           ) : performanceData?.metrics ? (
             <div className='grid gap-4 md:grid-cols-5'>
-              {Object.entries(performanceData.metrics).map(([metric, data]: [string, any]) => {
+              {Object.entries(performanceData.metrics).map(([metric, data]: [string, { avg?: number; p95?: number; count?: number }]) => {
                 const rating = getMetricRating(metric, data.avg || 0)
                 
                 return (
@@ -473,7 +468,7 @@ export default function PerformancePage() {
               </div>
             ) : performanceData?.pageBreakdown?.length ? (
               <div className='space-y-4'>
-                {performanceData.pageBreakdown.map((page: any, index: number) => (
+                {performanceData.pageBreakdown.map((page: Record<string, unknown>, index: number) => (
                   <div key={index} className='space-y-2'>
                     <div className='flex items-center justify-between'>
                       <span className='font-medium'>{page.page}</span>

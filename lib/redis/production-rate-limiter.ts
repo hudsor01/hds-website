@@ -253,7 +253,7 @@ export class ProductionRateLimiter {
    * Create a tRPC middleware with production rate limiting
    */
   createMiddleware(config: ProductionRateLimitConfig) {
-    return async ({ ctx, path, next }: any) => {
+    return async ({ ctx, path, next }: { ctx: Record<string, unknown>; path: string; next: () => Promise<unknown> }) => {
       // Extract context information
       const ip = extractIPAddress(ctx.req)
       const userId = ctx.user?.id
@@ -278,7 +278,7 @@ export class ProductionRateLimiter {
   async healthCheck(): Promise<{
     status: 'healthy' | 'degraded' | 'unhealthy'
     details: {
-      redis: any
+      redis: Record<string, unknown>
       fallbackMode: boolean
       lastError?: string
     }
@@ -290,7 +290,7 @@ export class ProductionRateLimiter {
       details: {
         redis: redisStatus,
         fallbackMode: redisStatus.fallbackMode,
-        lastError: redisStatus.error,
+        lastError: redisStatus.error || undefined,
       },
     }
   }

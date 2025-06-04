@@ -242,12 +242,173 @@ export enum Environment {
 }
 
 /**
- * Log levels for logging system
- */
+* Log levels for logging system
+*/
 export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
-  FATAL = 'fatal'
+DEBUG = 'debug',
+INFO = 'info',
+WARN = 'warn',
+ERROR = 'error',
+FATAL = 'fatal'
+}
+
+// ============= Monitoring & Security Enums =============
+
+/**
+* Error severity levels for monitoring
+*/
+export enum ErrorSeverity {
+LOW = 'low',
+MEDIUM = 'medium',
+HIGH = 'high',
+CRITICAL = 'critical'
+}
+
+/**
+* Monitoring event types
+*/
+export enum MonitoringEvent {
+USER_LOGIN = 'user_login',
+USER_LOGOUT = 'user_logout',
+USER_REGISTRATION = 'user_registration',
+PASSWORD_RESET = 'password_reset',
+FORM_SUBMISSION = 'form_submission',
+EMAIL_SENT = 'email_sent',
+EMAIL_FAILED = 'email_failed',
+ERROR_OCCURRED = 'error_occurred',
+PERFORMANCE_ISSUE = 'performance_issue',
+SECURITY_VIOLATION = 'security_violation',
+RATE_LIMIT_EXCEEDED = 'rate_limit_exceeded',
+ADMIN_ACCESS = 'admin_access',
+DATA_EXPORT = 'data_export',
+DATA_DELETION = 'data_deletion',
+SYSTEM_HEALTH_CHECK = 'system_health_check'
+}
+
+// ============= Admin & CRM Enums =============
+
+/**
+* Lead status for CRM tracking
+*/
+export enum LeadStatus {
+NEW = 'new',
+CONTACTED = 'contacted',
+QUALIFIED = 'qualified',
+PROPOSAL_SENT = 'proposal_sent',
+NEGOTIATING = 'negotiating',
+CLOSED_WON = 'closed_won',
+CLOSED_LOST = 'closed_lost',
+UNQUALIFIED = 'unqualified'
+}
+
+/**
+* Customer status tracking
+*/
+export enum CustomerStatus {
+ACTIVE = 'active',
+INACTIVE = 'inactive',
+PROSPECT = 'prospect',
+CHURNED = 'churned'
+}
+
+/**
+* Contact status for communication tracking
+*/
+export enum ContactStatus {
+PENDING = 'pending',
+RESPONDED = 'responded',
+CLOSED = 'closed',
+SPAM = 'spam'
+}
+
+/**
+* Priority levels for tasks and issues
+*/
+export enum Priority {
+LOW = 'low',
+MEDIUM = 'medium',
+HIGH = 'high',
+URGENT = 'urgent'
+}
+
+/**
+* Admin permissions for role-based access control
+*/
+export enum AdminPermission {
+VIEW_DASHBOARD = 'view_dashboard',
+MANAGE_USERS = 'manage_users',
+MANAGE_CONTENT = 'manage_content',
+MANAGE_ANALYTICS = 'manage_analytics',
+MANAGE_LEADS = 'manage_leads',
+MANAGE_CUSTOMERS = 'manage_customers',
+MANAGE_EMAILS = 'manage_emails',
+MANAGE_SETTINGS = 'manage_settings',
+VIEW_REPORTS = 'view_reports',
+EXPORT_DATA = 'export_data',
+DELETE_DATA = 'delete_data',
+MANAGE_INTEGRATIONS = 'manage_integrations',
+SYSTEM_ADMIN = 'system_admin',
+// Additional permissions for admin interface
+LEADS_VIEW = 'leads_view',
+LEADS_CREATE = 'leads_create',
+LEADS_EDIT = 'leads_edit',
+LEADS_ASSIGN = 'leads_assign',
+CUSTOMERS_VIEW = 'customers_view',
+CUSTOMERS_CREATE = 'customers_create',
+CUSTOMERS_EDIT = 'customers_edit',
+CONTACTS_VIEW = 'contacts_view',
+CONTACTS_RESPOND = 'contacts_respond',
+ANALYTICS_VIEW = 'analytics_view'
+}
+
+// ============= Privacy & GDPR Enums =============
+
+/**
+* Cookie categories for consent management
+*/
+export enum CookieCategory {
+NECESSARY = 'necessary',
+FUNCTIONAL = 'functional',
+ANALYTICS = 'analytics',
+MARKETING = 'marketing'
+}
+
+/**
+* GDPR request types
+*/
+export enum GDPRRequestType {
+DATA_ACCESS = 'data_access',
+DATA_PORTABILITY = 'data_portability',
+DATA_ERASURE = 'data_erasure',
+CONSENT_WITHDRAWAL = 'consent_withdrawal'
+}
+
+/**
+* GDPR request status tracking
+*/
+export enum GDPRRequestStatus {
+PENDING = 'pending',
+IN_PROGRESS = 'in_progress',
+COMPLETED = 'completed',
+REJECTED = 'rejected'
+}
+
+// ============= Authentication & Session Enums =============
+
+/**
+* Session revocation reasons
+*/
+export enum RevocationReason {
+USER_LOGOUT = 'user_logout',
+ADMIN_REVOCATION = 'admin_revocation',
+SECURITY_BREACH = 'security_breach',
+TOKEN_EXPIRED = 'token_expired',
+DEVICE_COMPROMISED = 'device_compromised',
+POLICY_VIOLATION = 'policy_violation',
+// Additional revocation reasons
+SESSION_EXPIRED = 'session_expired',
+MAX_DEVICES_EXCEEDED = 'max_devices_exceeded',
+ADMIN_FORCE_LOGOUT = 'admin_force_logout',
+PASSWORD_CHANGED = 'password_changed',
+SUSPICIOUS_ACTIVITY = 'suspicious_activity'
 }

@@ -10,7 +10,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state'
-const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
+const _SIDEBAR_KEYBOARD_SHORTCUT = 'b'
 const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 

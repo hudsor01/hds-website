@@ -12,7 +12,7 @@ export default function ServicesNotFound() {
           Service Not Found
         </h2>
         <p className='text-gray-600 mb-8 max-w-md'>
-          The service you're looking for doesn't exist or may have been moved.
+          The service you&apos;re looking for doesn&apos;t exist or may have been moved.
         </p>
         
         <div className='flex flex-col sm:flex-row gap-4 justify-center mb-8'>

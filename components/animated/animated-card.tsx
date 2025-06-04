@@ -1,7 +1,7 @@
 'use client'
 
 import { m } from 'framer-motion'
-import type { ReactNode } from 'react'
+
 import {
   hover,
   shadows,
@@ -10,18 +10,7 @@ import {
   transitions,
 } from '@/lib/design-system'
 import { cn } from '@/lib/utils'
-
-interface AnimatedCardProps {
-  children: ReactNode
-  className?: string
-  whileHover?: any
-  onClick?: () => void
-  delay?: number
-  elevation?: 'none' | 'low' | 'medium' | 'high'
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  animation?: boolean
-  interactionEffect?: 'lift' | 'scale' | 'glow' | 'none'
-}
+import type { AnimatedCardProps } from '@/types/ui-types'
 
 /**
  * Animated card component with hover and entrance effects

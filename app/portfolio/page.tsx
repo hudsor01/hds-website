@@ -200,7 +200,7 @@ export default function PortfolioPage() {
             Want Results Like These?
           </h2>
           <p className="mt-4 text-lg text-gray-300">
-            Let's discuss how I can help your business optimize operations and
+            Let&apos;s discuss how I can help your business optimize operations and
             grow revenue.
           </p>
           <div className="mt-8 flex justify-center gap-4">

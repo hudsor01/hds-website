@@ -1,6 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext, type ReactNode } from 'react'
+import type { AnalyticsEvent } from '@/types/analytics-types'
 
 /**
  * Client-only context providers
@@ -16,24 +17,24 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light')
+const [themeState, setThemeState] = React.useState<'light' | 'dark'>('light')
 
   React.useEffect(() => {
     // Check for saved theme preference or system preference
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     
-    setTheme(savedTheme || systemTheme)
+    setThemeState(savedTheme || systemTheme)
   }, [])
 
   const value = React.useMemo(() => ({
-    theme,
+  theme: themeState,
     setTheme: (newTheme: 'light' | 'dark') => {
-      setTheme(newTheme)
+    setThemeState(newTheme)
       localStorage.setItem('theme', newTheme)
       document.documentElement.classList.toggle('dark', newTheme === 'dark')
     },
-  }), [theme])
+  }), [themeState])
 
   return (
     <ThemeContext.Provider value={value}>
@@ -52,37 +53,37 @@ export function useTheme() {
 
 // Analytics context
 interface AnalyticsContextType {
-  track: (event: string, properties?: Record<string, any>) => void
-  identify: (userId: string, traits?: Record<string, any>) => void
+  track: (event: string, properties?: AnalyticsEvent) => void
+  identify: (userId: string, traits?: AnalyticsEvent) => void
 }
 
 const AnalyticsContext = createContext<AnalyticsContextType | undefined>(undefined)
 
 export function AnalyticsProvider({ children }: { children: ReactNode }) {
-  const track = React.useCallback((event: string, properties?: Record<string, any>) => {
+  const track = React.useCallback((eventName: string, eventProperties?: AnalyticsEvent) => {
     // Client-side analytics tracking
     if (typeof window !== 'undefined') {
       // Google Analytics
       if (window.gtag) {
-        window.gtag('event', event, properties)
+        window.gtag('event', eventName, eventProperties)
       }
       
       // PostHog
       if (window.posthog) {
-        window.posthog.capture(event, properties)
+        window.posthog.capture(eventName, eventProperties)
       }
       
-      console.log('Analytics event:', event, properties)
+      console.log('Analytics event:', eventName, eventProperties)
     }
   }, [])
 
-  const identify = React.useCallback((userId: string, traits?: Record<string, any>) => {
+  const identify = React.useCallback((userIdParam: string, userTraits?: AnalyticsEvent) => {
     if (typeof window !== 'undefined') {
       if (window.posthog) {
-        window.posthog.identify(userId, traits)
+        window.posthog.identify(userIdParam, userTraits)
       }
       
-      console.log('Analytics identify:', userId, traits)
+      console.log('Analytics identify:', userIdParam, userTraits)
     }
   }, [])
 
@@ -119,26 +120,26 @@ interface UserPreferencesContextType {
 const UserPreferencesContext = createContext<UserPreferencesContextType | undefined>(undefined)
 
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
-  const [preferences, setPreferences] = React.useState({
-    language: 'en',
-    currency: 'USD',
-    notifications: true,
-  })
+const [userPreferences, setUserPreferences] = React.useState({
+language: 'en',
+currency: 'USD',
+notifications: true,
+})
 
   React.useEffect(() => {
     // Load preferences from localStorage
     const saved = localStorage.getItem('userPreferences')
     if (saved) {
       try {
-        setPreferences(JSON.parse(saved))
+        setUserPreferences(JSON.parse(saved))
       } catch (error) {
         console.error('Error parsing user preferences:', error)
       }
     }
   }, [])
 
-  const updatePreferences = React.useCallback((newPreferences: Partial<typeof preferences>) => {
-    setPreferences(prev => {
+  const updatePreferences = React.useCallback((newPreferences: Partial<typeof userPreferences>) => {
+  setUserPreferences(prev => {
       const updated = { ...prev, ...newPreferences }
       localStorage.setItem('userPreferences', JSON.stringify(updated))
       return updated
@@ -146,9 +147,9 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = React.useMemo(() => ({
-    preferences,
+  preferences: userPreferences,
     updatePreferences,
-  }), [preferences, updatePreferences])
+  }), [userPreferences, updatePreferences])
 
   return (
     <UserPreferencesContext.Provider value={value}>

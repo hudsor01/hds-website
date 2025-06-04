@@ -74,7 +74,7 @@ export interface VideoAnalytics {
   trackCompletion?: boolean
   trackErrors?: boolean
   analyticsProvider?: 'google' | 'custom'
-  customTracker?: (event: string, data: any) => void
+  customTracker?: () => void
 }
 
 // Video hosting configurations
@@ -260,7 +260,7 @@ export const videoUtils = {
   generateResponsiveSizes: (breakpoints: Record<string, number>) => {
     const sizes = Object.entries(breakpoints)
       .sort(([, a], [, b]) => b - a)
-      .map(([name, width]) => `(max-width: ${width}px) ${width}px`)
+      .map(([width]) => `(max-width: ${width}px) ${width}px`)
       .join(', ')
     
     return `${sizes}, 100vw`
@@ -349,7 +349,9 @@ export const videoUtils = {
           })
         }, { once: true })
         
-        videoElement.addEventListener('error', reject, { once: true })
+        videoElement.addEventListener('error', (event) => {
+          reject(new Error(`Video metadata loading failed: ${event.type}`))
+        }, { once: true })
       }
     }),
 
@@ -382,7 +384,9 @@ export const videoUtils = {
         }, 'image/jpeg', 0.8)
       }, { once: true })
       
-      videoElement.addEventListener('error', reject, { once: true })
+      videoElement.addEventListener('error', (event) => {
+        reject(new Error(`Video thumbnail generation failed: ${event.type}`))
+      }, { once: true })
     }),
 
   /**

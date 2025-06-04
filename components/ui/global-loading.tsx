@@ -11,8 +11,8 @@ export function GlobalLoading() {
     const handleComplete = () => setIsLoading(false)
 
     // Listen for navigation events
-    const handleRouteChangeStart = () => handleStart()
-    const handleRouteChangeComplete = () => handleComplete()
+    const _handleRouteChangeStart = () => handleStart()
+    const _handleRouteChangeComplete = () => handleComplete()
 
     // Add event listeners for Next.js navigation
     const originalPushState = window.history.pushState

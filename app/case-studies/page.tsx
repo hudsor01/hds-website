@@ -195,7 +195,7 @@ export default function CaseStudiesPage() {
             Ready to Be Our Next Success Story?
           </h2>
           <p className="mt-4 text-lg text-gray-300">
-            Let's discuss how we can help your business achieve similar results.
+            Let&apos;s discuss how we can help your business achieve similar results.
           </p>
           <div className="mt-8 flex justify-center gap-4">
             <a
