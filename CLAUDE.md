@@ -38,29 +38,42 @@ npm run security:full        # Complete security check
 npm run production:validate  # Pre-deployment validation
 npm run production:build     # Validated production build
 npm run production:start     # Secure production start
+npm run validate:production  # NODE_ENV=production validation
 ```
 
 ### Development
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
+npm run dev                  # Start development server
+npm run build               # Build for production
+npm run start               # Start production server
 
 # Code Quality
-npm run lint         # Run ESLint checking
-npm run lint:fix     # Auto-fix linting issues
-npm run format       # Run Prettier formatting
-npm run type-check   # Run TypeScript type checking
+npm run lint                # Run ESLint checking
+npm run lint:fix            # Auto-fix linting issues
+npm run format              # Run Prettier formatting
+npm run type-check          # Run TypeScript type checking
+npm run type-check:watch    # Watch TypeScript for errors
+npm run type-check:pretty   # Pretty TypeScript output
 
 # Bundle Analysis
-npm run analyze      # Analyze bundle with Next.js analyzer
-npm run build:analyze # Build and generate bundle report
-npm run size-check   # Check bundle sizes against limits
-npm run optimize     # Full optimization check (perf + bundle + size)
+npm run analyze             # Analyze bundle with Next.js analyzer
+npm run analyze:server      # Server bundle analysis
+npm run analyze:browser     # Browser bundle analysis  
+npm run analyze:both        # Both server and browser
+npm run build:analyze       # Build and generate bundle report
+npm run size-check          # Check bundle sizes against limits
+npm run optimize            # Full optimization check (perf + bundle + size)
 
 # Performance Monitoring
-npm run perf         # Run performance monitor
-npm run perf:watch   # Watch files and run perf checks
+npm run perf                # Run performance monitor
+npm run perf:watch          # Watch files and run perf checks
+npm run build:perf          # Performance analysis with build
+
+# Utility Scripts
+npm run generate:password-hash  # Generate bcrypt password hash
+npm run setup:encryption        # Setup field encryption
+npm run gdpr:cleanup           # GDPR data retention cleanup
+npm run gdpr:cleanup:dry       # Dry run GDPR cleanup
 ```
 
 ## Core Development Principles
@@ -185,3 +198,49 @@ NEXT_PUBLIC_POSTHOG_HOST=    # PostHog host URL
 - **Error Handling**: Use standardized error handling patterns with security awareness
 - **Performance**: Monitor Core Web Vitals impact of all features
 - **Security**: Apply security-first development practices throughout
+
+## Database & Authentication
+
+### Supabase Integration
+- **Authentication**: Configured with Clerk wrapper for enhanced security
+- **Database**: PostgreSQL with Prisma ORM for type-safe queries
+- **Migration Pattern**: Use `npx prisma migrate dev` for schema changes
+- **Client Initialization**: Single Prisma client instance with proper cleanup in development
+
+### Key Database Tables
+- `newsletters` - Email subscription management
+- `contact_submissions` - Contact form data with security validation
+- `web_vitals` - Core Web Vitals performance tracking
+- `email_sequences` - Automated email campaign tracking
+
+## Middleware & Security Architecture
+
+### Next.js Middleware (`middleware.ts`)
+- **Security Headers**: 11 comprehensive security headers applied globally
+- **CORS Handling**: Selective CORS for public APIs vs protected routes
+- **CSP Generation**: Dynamic Content Security Policy with nonces
+- **Rate Limiting**: API endpoint rate limiting with proper headers
+- **Authentication Guard**: Protected routes for `/admin` and `/api/admin`
+
+### Protected Route Patterns
+```typescript
+// Protected paths requiring authentication
+const PROTECTED_PATHS = ['/api/admin', '/api/trpc', '/admin']
+
+// Public API paths allowing CORS
+const PUBLIC_API_PATHS = ['/api/analytics/web-vitals', '/api/csp-report']
+```
+
+## Performance & Bundle Configuration
+
+### Bundle Size Limits (via bundlesize)
+- **Page chunks**: 250kb maximum
+- **Framework chunks**: 100kb maximum  
+- **Main chunks**: 50kb maximum
+- **CSS files**: 50kb maximum
+
+### TypeScript Configuration
+- **Target**: ES2022 with strict type checking
+- **Module Resolution**: Bundler resolution with `@/*` path aliases
+- **Incremental Compilation**: Enabled for faster rebuilds
+- **Isolated Modules**: Enforced for better performance
