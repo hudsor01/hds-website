@@ -36,7 +36,7 @@ export const colors = {
     teal: '#14b8a6',
     pink: '#ec4899',
   },
-}
+};
 
 export const spacing = {
   xs: '0.5rem',
@@ -46,7 +46,7 @@ export const spacing = {
   xl: '3rem',
   '2xl': '4rem',
   '3xl': '6rem',
-}
+};
 
 export const typography = {
   fontSize: {
@@ -67,4 +67,4 @@ export const typography = {
     semibold: 600,
     bold: 700,
   },
-}
+};

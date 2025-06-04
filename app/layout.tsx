@@ -1,28 +1,28 @@
-import type { Metadata } from 'next'
-import type { ReactNode } from 'react'
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
 
-import { cn } from '@/lib/utils'
-import { Header } from '@/components/layouts/header'
-import { Footer } from '@/components/layouts/footer'
-import { ErrorBoundary } from '@/components/layouts/error-boundary'
-import { TRPCProvider } from '@/lib/trpc/provider'
-import { Toaster } from '@/components/ui/toaster'
-import { GradientBackground } from '@/components/animated/gradient-background'
-import { CacheProvider } from '@/components/providers/cache-provider'
-import { ErrorProvider } from '@/components/providers/error-provider'
-import { CookieConsentBanner } from '@/components/gdpr/cookie-consent-banner'
-import { CalProviderWrapper } from '@/components/providers/cal-provider'
+import { cn } from '@/lib/utils';
+import { Header } from '@/components/layouts/header';
+import { Footer } from '@/components/layouts/footer';
+import { ErrorBoundary } from '@/components/layouts/error-boundary';
+import { TRPCProvider } from '@/lib/trpc/provider';
+import { Toaster } from '@/components/ui/toaster';
+import { GradientBackground } from '@/components/animated/gradient-background';
+import { CacheProvider } from '@/components/providers/cache-provider';
+import { ErrorProvider } from '@/components/providers/error-provider';
+import { CookieConsentBanner } from '@/components/gdpr/cookie-consent-banner';
+import { CalProviderWrapper } from '@/components/providers/cal-provider';
 import { 
   inter, 
   fontVariables,
   fontPerformanceConfig, 
-} from '@/lib/fonts/font-config'
-import { generateSiteMetadata } from '@/lib/metadata/metadata-utils'
+} from '@/lib/fonts/font-config';
+import { generateSiteMetadata } from '@/lib/metadata/metadata-utils';
 
-import './globals.css'
+import './globals.css';
 
-export const metadata: Metadata = generateSiteMetadata()
+export const metadata: Metadata = generateSiteMetadata();
 
 interface RootLayoutProps {
   children: ReactNode
@@ -100,5 +100,5 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </ErrorProvider>
       </body>
     </html>
-  )
+  );
 }

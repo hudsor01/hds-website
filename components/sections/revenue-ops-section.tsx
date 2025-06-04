@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import { CheckCircle, TrendingUp, DollarSign, Users } from 'lucide-react'
-import Link from 'next/link'
-import type { FC, SVGProps } from 'react'
+import { m } from 'framer-motion';
+import { CheckCircle, TrendingUp, DollarSign, Users } from 'lucide-react';
+import Link from 'next/link';
+import type { FC, SVGProps } from 'react';
 
 // Types
 export interface RevOpsFeature {
@@ -51,7 +51,7 @@ const defaultFeatures: RevOpsFeature[] = [
     description:
       'Track leads from first touch to closed deal. Never lose another opportunity.',
   },
-]
+];
 
 export function RevenueOpsSection({
   title = 'Revenue Operations from Thryv Experience',
@@ -119,5 +119,5 @@ export function RevenueOpsSection({
         </m.div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { registerOTel } from '@vercel/otel'
+import { registerOTel } from '@vercel/otel';
 
 export async function register() {
   // Initialize OpenTelemetry if available
@@ -6,28 +6,28 @@ export async function register() {
     try {
       // Register OpenTelemetry for Node.js runtime
       if (process.env.VERCEL || process.env.ENABLE_OTEL) {
-        registerOTel('hudson-digital-solutions')
+        registerOTel('hudson-digital-solutions');
       }
 
       // Custom application monitoring setup
-      await import('./lib/monitoring/app-monitoring')
+      await import('./lib/monitoring/app-monitoring');
       
       // Email service monitoring
-      await import('./lib/monitoring/email-monitoring')
+      await import('./lib/monitoring/email-monitoring');
 
-      console.log('✅ Instrumentation initialized successfully')
+      console.log('✅ Instrumentation initialized successfully');
     } catch (error) {
-      console.error('❌ Failed to initialize instrumentation:', error)
+      console.error('❌ Failed to initialize instrumentation:', error);
     }
   }
 
   if (process.env.NEXT_RUNTIME === 'edge') {
     // Edge runtime specific monitoring
     try {
-      await import('./lib/monitoring/edge-monitoring')
-      console.log('✅ Edge runtime instrumentation initialized')
+      await import('./lib/monitoring/edge-monitoring');
+      console.log('✅ Edge runtime instrumentation initialized');
     } catch (error) {
-      console.error('❌ Failed to initialize edge instrumentation:', error)
+      console.error('❌ Failed to initialize edge instrumentation:', error);
     }
   }
 }

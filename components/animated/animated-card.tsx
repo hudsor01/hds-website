@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
+import { m } from 'framer-motion';
 
 import {
   hover,
@@ -8,9 +8,9 @@ import {
   borderRadius,
   cardAnimations,
   transitions,
-} from '@/lib/design-system'
-import { cn } from '@/lib/utils'
-import type { AnimatedCardProps } from '@/types/ui-types'
+} from '@/lib/design-system';
+import { cn } from '@/lib/utils';
+import type { AnimatedCardProps } from '@/types/ui-types';
 
 /**
  * Animated card component with hover and entrance effects
@@ -35,7 +35,7 @@ export function AnimatedCard({
     low: shadows.sm,
     medium: shadows.md,
     high: shadows.lg,
-  }
+  };
 
   // Map radius to border radius
   const radiusMap = {
@@ -45,7 +45,7 @@ export function AnimatedCard({
     lg: borderRadius.lg,
     xl: borderRadius.xl,
     full: borderRadius.full,
-  }
+  };
 
   // Map interaction effect to hover animation
   const interactionMap = {
@@ -53,10 +53,10 @@ export function AnimatedCard({
     scale: hover.scale,
     glow: hover.glow,
     none: {},
-  }
+  };
 
   // Use provided hover effect or default based on interactionEffect
-  const hoverEffect = whileHover || interactionMap[interactionEffect]
+  const hoverEffect = whileHover || interactionMap[interactionEffect];
 
   return (
     <m.div
@@ -74,5 +74,5 @@ export function AnimatedCard({
     >
       {children}
     </m.div>
-  )
+  );
 }

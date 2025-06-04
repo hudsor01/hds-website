@@ -11,7 +11,7 @@ export const clerkConfig = {
   signUpUrl: '/auth/sign-up',
   afterSignInUrl: '/dashboard',
   afterSignUpUrl: '/dashboard',
-}
+};
 
 export const clerkTheme = {
   variables: {
@@ -31,4 +31,4 @@ export const clerkTheme = {
     formFieldInput: 'border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent',
     footerActionLink: 'text-blue-600 hover:text-blue-700 font-medium',
   },
-}
+};

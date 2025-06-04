@@ -40,7 +40,7 @@ export const thirdPartyCategories = {
     performance: 'High impact, careful optimization needed',
     examples: ['Google AdSense', 'Amazon Associates'],
   },
-} as const
+} as const;
 
 // Google third-party integrations (using @next/third-parties)
 export const googleIntegrations = {
@@ -124,7 +124,7 @@ export const googleIntegrations = {
       style: {},
     },
   },
-} as const
+} as const;
 
 // Third-party loading strategies
 export const loadingStrategies = {
@@ -177,7 +177,7 @@ export const loadingStrategies = {
     implementation: 'Environment variables or user state',
     performance: 'Selective loading reduces bundle size',
   },
-} as const
+} as const;
 
 // Performance optimization techniques
 export const performanceOptimizations = {
@@ -249,7 +249,7 @@ export const performanceOptimizations = {
       benefit: 'Faster subsequent loads',
     },
   },
-} as const
+} as const;
 
 // Common third-party integrations configuration
 export const commonIntegrations = {
@@ -317,7 +317,7 @@ export const commonIntegrations = {
       coreWebVitalsImpact: 'high',
     },
   },
-} as const
+} as const;
 
 // Security considerations for third-party libraries
 export const securityConsiderations = {
@@ -371,7 +371,7 @@ export const securityConsiderations = {
       tools: ['Lighthouse', 'Web Vitals', 'Chrome DevTools'],
     },
   },
-} as const
+} as const;
 
 // Best practices for third-party integration
 export const bestPractices = {
@@ -418,4 +418,4 @@ export const bestPractices = {
     'Implement error boundaries for third-party components',
     'Use environment-specific configurations',
   ],
-} as const
+} as const;

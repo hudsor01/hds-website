@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Label, Pie, PieChart, Sector } from 'recharts'
-import type { PieSectorDataItem } from 'recharts/types/polar/Pie'
+import * as React from 'react';
+import { Label, Pie, PieChart, Sector } from 'recharts';
+import type { PieSectorDataItem } from 'recharts/types/polar/Pie';
 
 import {
   Card,
@@ -10,23 +10,23 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 import {
   type ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from '@/components/ui/chart';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/select';
 
-export const description = 'An interactive pie chart showing client acquisition channels'
+export const description = 'An interactive pie chart showing client acquisition channels';
 
 const clientData = [
   { channel: 'referrals', clients: 186, fill: 'var(--color-referrals)' },
@@ -34,7 +34,7 @@ const clientData = [
   { channel: 'social', clients: 237, fill: 'var(--color-social)' },
   { channel: 'email', clients: 173, fill: 'var(--color-email)' },
   { channel: 'direct', clients: 209, fill: 'var(--color-direct)' },
-]
+];
 
 const chartConfig = {
   clients: {
@@ -60,19 +60,19 @@ const chartConfig = {
     label: 'Direct Contact',
     color: 'var(--chart-5)',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function ChartPieInteractive() {
-  const id = 'pie-interactive'
+  const id = 'pie-interactive';
   const [activeChannel, setActiveChannel] = React.useState(
     clientData[0]?.channel ?? '',
-  )
+  );
 
   const activeIndex = React.useMemo(
     () => clientData.findIndex((item) => item.channel === activeChannel),
     [activeChannel],
-  )
-  const channels = React.useMemo(() => clientData.map((item) => item.channel), [])
+  );
+  const channels = React.useMemo(() => clientData.map((item) => item.channel), []);
 
   return (
     <Card data-chart={id} className='flex flex-col'>
@@ -91,10 +91,10 @@ export function ChartPieInteractive() {
           </SelectTrigger>
           <SelectContent align='end' className='rounded-xl'>
             {channels.map((key) => {
-              const config = chartConfig[key as keyof typeof chartConfig]
+              const config = chartConfig[key as keyof typeof chartConfig];
 
               if (!config) {
-                return null
+                return null;
               }
 
               return (
@@ -113,7 +113,7 @@ export function ChartPieInteractive() {
                     {config?.label}
                   </div>
                 </SelectItem>
-              )
+              );
             })}
           </SelectContent>
         </Select>
@@ -175,7 +175,7 @@ export function ChartPieInteractive() {
                           Clients
                         </tspan>
                       </text>
-                    )
+                    );
                   }
                 }}
               />
@@ -184,5 +184,5 @@ export function ChartPieInteractive() {
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

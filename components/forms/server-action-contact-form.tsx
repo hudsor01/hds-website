@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { submitContactForm } from '@/lib/actions/server-actions'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { useActionState } from 'react';
+import { submitContactForm } from '@/lib/actions/server-actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select } from '@/components/ui/select';
 
 /**
  * Contact form using Server Actions with useActionState
@@ -19,13 +19,13 @@ type FormState = {
   errors?: Array<{ field: string; message: string }>
 }
 
-const initialState: FormState = {}
+const initialState: FormState = {};
 
 export function ServerActionContactForm() {
   const [state, formAction, isPending] = useActionState(
     async (prevState: FormState, formData: FormData) => await submitContactForm(formData),
     initialState,
-  )
+  );
 
   return (
     <div className='max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg'>
@@ -136,7 +136,7 @@ export function ServerActionContactForm() {
         )}
       </form>
     </div>
-  )
+  );
 }
 
 // Helper function to get field-specific errors
@@ -144,5 +144,5 @@ function getFieldError(
   fieldName: string,
   errors?: Array<{ field: string; message: string }>,
 ): string | undefined {
-  return errors?.find(error => error.field === fieldName)?.message
+  return errors?.find(error => error.field === fieldName)?.message;
 }

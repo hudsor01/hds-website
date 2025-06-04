@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ToolsLoading() {
   return (
@@ -46,5 +46,5 @@ export default function ToolsLoading() {
         </div>
       </div>
     </div>
-  )
+  );
 }

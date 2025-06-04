@@ -4,17 +4,17 @@
  * Integrates with email sequences, CRM, and business logic
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { headers } from 'next/headers'
-import { z } from 'zod'
-import { logger } from '@/lib/logger'
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import { z } from 'zod';
+import { logger } from '@/lib/logger';
 import { 
   verifyWebhookSignature,
   processBookingCreated,
   processBookingCancelled,
   processBookingRescheduled,
-} from '@/lib/integrations/cal-webhook'
-import type { CalWebhookPayload } from '@/types/webhook-types'
+} from '@/lib/integrations/cal-webhook';
+import type { CalWebhookPayload } from '@/types/webhook-types';
 
 // Enhanced webhook payload validation schema
 const CalWebhookSchema = z.object({
@@ -65,71 +65,71 @@ const CalWebhookSchema = z.object({
     metadata: z.record(z.any()).optional(),
     responses: z.record(z.any()).optional(),
   }),
-})
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const headersList = await headers()
-    const signature = headersList.get('x-cal-signature') || headersList.get('x-webhook-signature')
-    const contentType = headersList.get('content-type')
+    const headersList = await headers();
+    const signature = headersList.get('x-cal-signature') || headersList.get('x-webhook-signature');
+    const contentType = headersList.get('content-type');
 
     // Validate content type
     if (!contentType?.includes('application/json')) {
-      logger.warn('Invalid content type for Cal.com webhook', { contentType })
+      logger.warn('Invalid content type for Cal.com webhook', { contentType });
       return NextResponse.json(
         { success: false, error: 'Invalid content type' },
         { status: 400 },
-      )
+      );
     }
 
     // Read and validate request body
-    let body: CalWebhookPayload
+    let body: CalWebhookPayload;
     try {
-      const rawBody = await request.text()
+      const rawBody = await request.text();
       
       // Verify webhook signature if secret is configured
-      const webhookSecret = process.env.CAL_WEBHOOK_SECRET || process.env.CAL_COM_WEBHOOK_SECRET
+      const webhookSecret = process.env.CAL_WEBHOOK_SECRET || process.env.CAL_COM_WEBHOOK_SECRET;
       if (webhookSecret && signature) {
-        const verification = verifyWebhookSignature(rawBody, signature, webhookSecret)
+        const verification = verifyWebhookSignature(rawBody, signature, webhookSecret);
         if (!verification.valid) {
           logger.warn('Cal.com webhook signature verification failed', {
             error: verification.error,
             signature: signature?.substring(0, 20) + '...',
-          })
+          });
           return NextResponse.json(
             { success: false, error: 'Invalid signature' },
             { status: 401 },
-          )
+          );
         }
       } else if (process.env.NODE_ENV === 'production') {
-        logger.warn('Cal.com webhook received without signature in production')
+        logger.warn('Cal.com webhook received without signature in production');
         // In production, we should require signatures, but for development flexibility
         // we'll allow it and just log a warning
       }
 
-      body = JSON.parse(rawBody)
+      body = JSON.parse(rawBody);
     } catch (parseError) {
-      logger.error('Failed to parse Cal.com webhook body', { parseError })
+      logger.error('Failed to parse Cal.com webhook body', { parseError });
       return NextResponse.json(
         { success: false, error: 'Invalid JSON payload' },
         { status: 400 },
-      )
+      );
     }
 
     // Validate payload schema
-    const validationResult = CalWebhookSchema.safeParse(body)
+    const validationResult = CalWebhookSchema.safeParse(body);
     if (!validationResult.success) {
       logger.error('Cal.com webhook payload validation failed', {
         errors: validationResult.error.errors,
         payload: body,
-      })
+      });
       return NextResponse.json(
         { success: false, error: 'Invalid payload format' },
         { status: 400 },
-      )
+      );
     }
 
-    const payload = validationResult.data
+    const payload = validationResult.data;
 
     logger.info('Received Cal.com webhook', {
       triggerEvent: payload.triggerEvent,
@@ -137,39 +137,39 @@ export async function POST(request: NextRequest) {
       bookingUid: payload.payload.uid,
       eventType: payload.payload.eventType?.title,
       attendeeEmail: payload.payload.attendees?.[0]?.email,
-    })
+    });
 
     // Process webhook based on event type
-    let result
+    let result;
     switch (payload.triggerEvent) {
       case 'BOOKING_CREATED':
-        result = await processBookingCreated(payload)
-        break
+        result = await processBookingCreated(payload);
+        break;
 
       case 'BOOKING_CANCELLED':
-        result = await processBookingCancelled(payload)
-        break
+        result = await processBookingCancelled(payload);
+        break;
 
       case 'BOOKING_RESCHEDULED':
-        result = await processBookingRescheduled(payload)
-        break
+        result = await processBookingRescheduled(payload);
+        break;
 
       case 'MEETING_STARTED':
         logger.info('Meeting started event received', {
           bookingId: payload.payload.id,
           eventType: payload.payload.eventType?.title,
-        })
-        result = { success: true }
-        break
+        });
+        result = { success: true };
+        break;
 
       case 'MEETING_ENDED':
         logger.info('Meeting ended event received', {
           bookingId: payload.payload.id,
           eventType: payload.payload.eventType?.title,
-        })
+        });
         // Could trigger follow-up email sequences here
-        result = { success: true }
-        break
+        result = { success: true };
+        break;
 
       case 'PAYMENT_INITIATED':
       case 'PAYMENT_COMPLETED':
@@ -180,55 +180,55 @@ export async function POST(request: NextRequest) {
           amount: payload.payload.payment?.amount,
           currency: payload.payload.payment?.currency,
           bookingId: payload.payload.id,
-        })
-        result = { success: true }
-        break
+        });
+        result = { success: true };
+        break;
 
       case 'FORM_SUBMITTED':
         logger.info('Form submitted event received', {
           bookingId: payload.payload.id,
           responses: payload.payload.responses,
-        })
-        result = { success: true }
-        break
+        });
+        result = { success: true };
+        break;
 
       case 'BOOKING_REQUESTED': // Legacy event name
         logger.info('Booking requested (pending approval)', {
           bookingId: payload.payload.id,
           eventType: payload.payload.eventType?.title,
-        })
-        result = { success: true }
-        break
+        });
+        result = { success: true };
+        break;
 
       default:
         logger.warn('Unhandled Cal.com webhook event', {
           triggerEvent: payload.triggerEvent,
-        })
-        result = { success: true } // Still return success to prevent retries
+        });
+        result = { success: true }; // Still return success to prevent retries
     }
 
     logger.info('Cal.com webhook processed successfully', {
       triggerEvent: payload.triggerEvent,
       bookingId: payload.payload.id,
       result,
-    })
+    });
 
     return NextResponse.json({
       success: true,
       message: `${payload.triggerEvent} processed successfully`,
       timestamp: new Date().toISOString(),
-    })
+    });
 
   } catch (error) {
     logger.error('Cal.com webhook processing failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
-    })
+    });
 
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 },
-    )
+    );
   }
 }
 
@@ -261,7 +261,7 @@ export async function GET() {
         'FORM_SUBMITTED',
       ],
     },
-  })
+  });
 }
 
 /**

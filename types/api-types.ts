@@ -5,7 +5,7 @@
  * Includes both REST and tRPC specific types.
  */
 
-import { HTTPMethod, HTTPStatusCode, Status } from './enum-types'
+import { HTTPMethod, HTTPStatusCode, Status } from './enum-types';
 
 // ============= Generic API Types =============
 

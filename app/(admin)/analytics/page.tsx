@@ -5,22 +5,22 @@
  * Following shadcn/ui dashboard patterns with interactive components
  */
 
-'use client'
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { CalendarDays, TrendingUp, Users, Eye, Download, BarChart3, Loader2 } from 'lucide-react'
-import { api } from '@/lib/trpc/client'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartAreaInteractive } from '@/components/admin/charts/chart-area-interactive';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { CalendarDays, TrendingUp, Users, Eye, Download, BarChart3, Loader2 } from 'lucide-react';
+import { api } from '@/lib/trpc/client';
 
 export default function AnalyticsPage() {
   // Fetch real analytics data
-  const { data: dashboardData, isLoading: isDashboardLoading } = api.admin.getDashboardAnalytics.useQuery({})
-  const { data: contactAnalytics, isLoading: isContactLoading } = api.admin.getContactAnalytics.useQuery({})
-  const { data: _leadAnalytics, isLoading: isLeadLoading } = api.admin.getLeadAnalytics.useQuery({})
+  const { data: dashboardData, isLoading: isDashboardLoading } = api.admin.getDashboardAnalytics.useQuery({});
+  const { data: contactAnalytics, isLoading: isContactLoading } = api.admin.getContactAnalytics.useQuery({});
+  const { data: _leadAnalytics, isLoading: isLeadLoading } = api.admin.getLeadAnalytics.useQuery({});
 
-  const isLoading = isDashboardLoading || isContactLoading || isLeadLoading
+  const isLoading = isDashboardLoading || isContactLoading || isLeadLoading;
 
   // Calculate metrics from real data
   const metrics = {
@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
     bounceRate: '32.4%', // This would come from web vitals data
     conversionRate: dashboardData?.recentLeads && dashboardData?.recentContacts ? 
       ((dashboardData.recentLeads.length / Math.max(dashboardData.recentContacts.length, 1)) * 100).toFixed(1) + '%' : '0%',
-  }
+  };
 
   // Calculate top pages from contact sources
   const topPages = contactAnalytics?.sourceBreakdown ? 
@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
       page: `/${source}`,
       views: count as number,
       change: '+12%', // This would be calculated from historical data
-    })).slice(0, 5) : []
+    })).slice(0, 5) : [];
 
   // Calculate traffic sources from lead and contact data
   const trafficSources = [
@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
     { source: 'Social Media', percentage: 18, visitors: metrics.uniqueVisitors * 0.18 },
     { source: 'Referrals', percentage: 8, visitors: metrics.uniqueVisitors * 0.08 },
     { source: 'Email', percentage: 4, visitors: metrics.uniqueVisitors * 0.04 },
-  ]
+  ];
 
   const handleExportReport = () => {
     // Real export functionality would be implemented here
@@ -56,16 +56,16 @@ export default function AnalyticsPage() {
       ['Unique Visitors', metrics.uniqueVisitors],
       ['Bounce Rate', metrics.bounceRate],
       ['Conversion Rate', metrics.conversionRate],
-    ]
+    ];
     
-    const csvContent = csvData.map(row => row.join(',')).join('\n')
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `analytics-report-${new Date().toISOString().split('T')[0]}.csv`
-    link.click()
-  }
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `analytics-report-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
 
   return (
     <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
@@ -341,5 +341,5 @@ export default function AnalyticsPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

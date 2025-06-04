@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle, Loader2 } from 'lucide-react'
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CheckCircle, Loader2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
   TextField,
-} from '@/components/forms/form-fields'
-import { useFormSubmission } from '@/hooks/use-form-submission'
+} from '@/components/forms/form-fields';
+import { useFormSubmission } from '@/hooks/use-form-submission';
 import {
   newsletterSchema,
   type NewsletterFormValues,
-} from '@/lib/validation/form-schemas'
-import { cn } from '@/lib/utils'
-import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
+} from '@/lib/validation/form-schemas';
+import { cn } from '@/lib/utils';
+import { FormErrorBoundary } from '@/components/error/route-error-boundaries';
 
 export interface NewsletterFormProps {
   className?: string
@@ -62,14 +62,14 @@ export function NewsletterForm({
       ;(window as { gtag: (command: string, eventName: string, parameters: Record<string, unknown>) => void }).gtag('event', 'form_error', {
         form_name: 'newsletter_form',
         error_message: error.message,
-      })
+      });
     }
     
     // Call the original onError if provided
     if (onError) {
-      onError(error)
+      onError(error);
     }
-  }
+  };
   // Use the form submission hook
   const {
     submit,
@@ -83,10 +83,10 @@ export function NewsletterForm({
     successMessage,
     onSuccess,
     onError,
-  })
+  });
 
   // Track selected interests
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([])
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   // Create form with react-hook-form
   const form = useForm<NewsletterFormValues>({
@@ -96,34 +96,34 @@ export function NewsletterForm({
       name: '',
       interests: [],
     },
-  })
+  });
 
   // Handle form submission
   const onSubmit = async (data: NewsletterFormValues) => {
     // Add selected interests if shown
     if (showInterests) {
-      data.interests = selectedInterests
+      data.interests = selectedInterests;
     }
 
     // Submit the form
-    await submit(data)
-  }
+    await submit(data);
+  };
 
   // Toggle interest selection
   const toggleInterest = (interest: string) => {
     if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter(i => i !== interest))
+      setSelectedInterests(selectedInterests.filter(i => i !== interest));
     } else {
-      setSelectedInterests([...selectedInterests, interest])
+      setSelectedInterests([...selectedInterests, interest]);
     }
-  }
+  };
 
   // Reset the form
   const resetForm = () => {
-    form.reset()
-    resetSubmission()
-    setSelectedInterests([])
-  }
+    form.reset();
+    resetSubmission();
+    setSelectedInterests([]);
+  };
 
   // Render success state
   if (isSubmitted) {
@@ -162,7 +162,7 @@ export function NewsletterForm({
         </div>
         </div>
       </FormErrorBoundary>
-    )
+    );
   }
 
   // Render compact version
@@ -216,7 +216,7 @@ export function NewsletterForm({
         </form>
         </div>
       </FormErrorBoundary>
-    )
+    );
   }
 
   // Render full version
@@ -333,5 +333,5 @@ export function NewsletterForm({
       </form>
       </div>
     </FormErrorBoundary>
-  )
+  );
 }

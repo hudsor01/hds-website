@@ -1,24 +1,24 @@
-import React from 'react'
-import { BarChart3, Code, Zap } from 'lucide-react'
-import { getServices } from '@/lib/data-fetchers'
-import { ServicesClient } from './services-client'
+import React from 'react';
+import { BarChart3, Code, Zap } from 'lucide-react';
+import { getServices } from '@/lib/data-fetchers';
+import { ServicesClient } from './services-client';
 
 // Icon mapping for services
 const iconMap = {
   'revenue-operations': BarChart3,
   'web-development': Code,
   'data-analytics': Zap,
-}
+};
 
 export async function ServicesSection() {
   // Fetch data on the server
-  const services = await getServices()
+  const services = await getServices();
   
   // Add icons to services data
   const servicesWithIcons = services.map((service: { id: string }) => ({
     ...service,
     icon: iconMap[service.id as keyof typeof iconMap],
-  }))
+  }));
 
   return (
     <section className='py-24 bg-background'>
@@ -37,5 +37,5 @@ export async function ServicesSection() {
         <ServicesClient services={servicesWithIcons} />
       </div>
     </section>
-  )
+  );
 }

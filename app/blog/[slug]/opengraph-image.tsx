@@ -1,13 +1,13 @@
-import { ImageResponse } from 'next/og'
-import { cache } from 'react'
+import { ImageResponse } from 'next/og';
+import { cache } from 'react';
 
 // Image metadata
 export const size = {
   width: 1200,
   height: 630,
-}
+};
 
-export const contentType = 'image/png'
+export const contentType = 'image/png';
 
 // Cached function to get blog post data
 const getBlogPost = cache(async (slug: string) => {
@@ -35,7 +35,7 @@ const getBlogPost = cache(async (slug: string) => {
       readTime: '15 min read',
       author: 'Dev Team',
     },
-  }
+  };
 
   return mockPosts[slug] || {
     title: 'Blog Post',
@@ -43,8 +43,8 @@ const getBlogPost = cache(async (slug: string) => {
     category: 'Business',
     readTime: '5 min read',
     author: 'Hudson Digital',
-  }
-})
+  };
+});
 
 // Dynamic OG image generation for blog posts
 export default async function BlogOGImage({ 
@@ -52,8 +52,8 @@ export default async function BlogOGImage({
 }: { 
   params: Promise<{ slug: string }> 
 }) {
-  const { slug } = await params
-  const post = await getBlogPost(slug)
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   // Category color mapping
   const categoryColors: Record<string, string> = {
@@ -61,9 +61,9 @@ export default async function BlogOGImage({
     'Data Analytics': '#8B5CF6',
     'Web Development': '#3B82F6',
     'Business': '#F59E0B',
-  }
+  };
 
-  const categoryColor = categoryColors[post.category] || '#6B7280'
+  const categoryColor = categoryColors[post.category] || '#6B7280';
 
   return new ImageResponse(
     (
@@ -271,5 +271,5 @@ export default async function BlogOGImage({
     {
       ...size,
     },
-  )
+  );
 }

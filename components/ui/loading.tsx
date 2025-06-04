@@ -1,6 +1,6 @@
-import React from 'react'
-import { Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React from 'react';
+import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type LoadingVariant = 'spinner' | 'skeleton' | 'dots' | 'pulse'
 type LoadingSize = 'sm' | 'md' | 'lg' | 'xl'
@@ -20,18 +20,18 @@ export function withLoading<P extends object>(
   loadingProps?: Omit<LoadingProps, 'children'>,
 ): React.FC<P & { isLoading: boolean; loadingProps?: LoadingProps }> {
   const WrappedComponent = ({ isLoading, loadingProps: componentLoadingProps, ...props }: P & { isLoading: boolean; loadingProps?: LoadingProps }) => {
-    const mergedLoadingProps = { ...loadingProps, ...componentLoadingProps }
+    const mergedLoadingProps = { ...loadingProps, ...componentLoadingProps };
 
     if (isLoading) {
-      return <Loading {...mergedLoadingProps} />
+      return <Loading {...mergedLoadingProps} />;
     }
 
-    return <Component {...(props as P)} />
-  }
+    return <Component {...(props as P)} />;
+  };
   
-  WrappedComponent.displayName = `withLoading(${Component.displayName || Component.name || 'Component'})`
+  WrappedComponent.displayName = `withLoading(${Component.displayName || Component.name || 'Component'})`;
   
-  return WrappedComponent
+  return WrappedComponent;
 }
 
 export function Loading({
@@ -62,14 +62,14 @@ export function Loading({
       lg: 'h-3 w-3',
       xl: 'h-4 w-4',
     },
-  }
+  };
 
   // Container classes based on fullScreen prop
   const containerClasses = cn(
     'flex flex-col items-center justify-center',
     fullScreen ? 'fixed inset-0 bg-background/80 backdrop-blur-sm z-50' : 'p-6',
     className,
-  )
+  );
 
   // Render loading spinner
   if (variant === 'spinner') {
@@ -81,7 +81,7 @@ export function Loading({
         {text && <p className='mt-4 text-muted-foreground'>{text}</p>}
         {children}
       </div>
-    )
+    );
   }
 
   // Render skeleton loading
@@ -102,7 +102,7 @@ export function Loading({
         {text && <p className='mt-4 text-muted-foreground'>{text}</p>}
         {children}
       </div>
-    )
+    );
   }
 
   // Render pulsing loading indicator
@@ -118,7 +118,7 @@ export function Loading({
         {text && <p className='mt-4 text-muted-foreground'>{text}</p>}
         {children}
       </div>
-    )
+    );
   }
 
   // Render dots loading indicator (default)
@@ -140,7 +140,7 @@ export function Loading({
       {text && <p className='mt-4 text-muted-foreground'>{text}</p>}
       {children}
     </div>
-  )
+  );
 }
 
 // Component-specific skeleton loaders
@@ -156,7 +156,7 @@ export function SkeletonCard({ className }: { className?: string }) {
         <div className='h-10 w-1/3 rounded bg-muted animate-pulse'></div>
       </div>
     </div>
-  )
+  );
 }
 
 export function SkeletonTable({
@@ -196,13 +196,13 @@ export function SkeletonTable({
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export function GlobalLoading({ isLoading }: { isLoading: boolean }) {
-  if (!isLoading) return null
+  if (!isLoading) return null;
 
   return (
     <Loading variant='spinner' size='lg' fullScreen={true} text='Loading...' />
-  )
+  );
 }

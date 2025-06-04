@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { AnimatedServiceCard } from '@/components/interactive/animated-service-card'
+import React from 'react';
+import { AnimatedServiceCard } from '@/components/interactive/animated-service-card';
 
 interface Service {
   id: string
@@ -35,5 +35,5 @@ export function ServicesClient({ services }: ServicesClientProps) {
         />
       ))}
     </div>
-  )
+  );
 }

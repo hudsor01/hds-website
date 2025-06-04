@@ -5,8 +5,8 @@
  * Includes page views, events, conversions, and business intelligence.
  */
 
-import { z } from 'zod'
-import { EventCategory, InteractionType } from './enum-types'
+import { z } from 'zod';
+import { EventCategory, InteractionType } from './enum-types';
 
 // ============= Core Analytics Schemas =============
 
@@ -49,7 +49,7 @@ export const pageViewSchema = z.object({
       timezone: z.string().optional(),
     })
     .optional(),
-})
+});
 
 /**
  * Event tracking schema
@@ -66,7 +66,7 @@ export const eventSchema = z.object({
   sessionId: z.string().optional(),
   userId: z.string().optional(),
   properties: z.record(z.any()).optional(),
-})
+});
 
 /**
  * Conversion tracking schema
@@ -85,7 +85,7 @@ export const conversionSchema = z.object({
   })).optional(),
   userId: z.string().optional(),
   sessionId: z.string().optional(),
-})
+});
 
 // ============= Type Exports =============
 

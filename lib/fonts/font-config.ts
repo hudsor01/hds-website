@@ -1,4 +1,4 @@
-import { Inter, JetBrains_Mono, Playfair_Display } from 'next/font/google'
+import { Inter, JetBrains_Mono, Playfair_Display } from 'next/font/google';
 
 /**
  * Next.js 15 Font Optimization Configuration
@@ -14,7 +14,7 @@ export const inter = Inter({
   weight: ['400', '500', '600', '700'],
   // Optimize for common character sets
   preload: true,
-})
+});
 
 // Secondary font - Playfair Display for headings
 export const playfairDisplay = Playfair_Display({
@@ -24,7 +24,7 @@ export const playfairDisplay = Playfair_Display({
   weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
   preload: true,
-})
+});
 
 // Monospace font - JetBrains Mono for code
 export const jetbrainsMono = JetBrains_Mono({
@@ -33,14 +33,14 @@ export const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   weight: ['400', '500', '600', '700'],
   preload: true,
-})
+});
 
 // Brand font - Using Playfair Display as brand font
 // TODO: Replace with custom brand fonts when available
-export const brandFont = playfairDisplay
+export const brandFont = playfairDisplay;
 
 // Font class combinations for easy usage
-export const fontVariables = `${inter.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable}`
+export const fontVariables = `${inter.variable} ${playfairDisplay.variable} ${jetbrainsMono.variable}`;
 
 // Export individual font classes
 export const fontClasses = {
@@ -48,7 +48,7 @@ export const fontClasses = {
   serif: playfairDisplay.className,
   mono: jetbrainsMono.className,
   brand: brandFont.className,
-}
+};
 
 // Font optimization utilities
 export const fontOptimization = {
@@ -66,14 +66,14 @@ export const fontOptimization = {
     lazy: 'optional', // Only load if quickly available
     fallback: 'fallback', // Use fallback if font takes too long
   },
-}
+};
 
 // Fallback font stacks (for CSS)
 export const fontStacks = {
   sans: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
   serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
   mono: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-}
+};
 
 // Performance-optimized font loading configuration
 export const fontPerformanceConfig = {
@@ -93,7 +93,7 @@ export const fontPerformanceConfig = {
     extended: ['latin', 'latin-ext'],
     multilingual: ['latin', 'latin-ext', 'cyrillic'],
   },
-}
+};
 
 // Type definitions for font usage
 export type FontWeight = '400' | '500' | '600' | '700'
@@ -133,4 +133,4 @@ export const fontUsageGuide = {
     'Test with different zoom levels',
     'Consider dyslexia-friendly fonts for body text',
   ],
-}
+};

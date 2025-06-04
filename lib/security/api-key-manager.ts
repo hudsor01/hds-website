@@ -4,9 +4,9 @@
  * Secure handling of API keys with encryption, rotation, and access control
  */
 
-import { env } from '@/lib/env'
-import { logger } from '@/lib/logger'
-import crypto from 'crypto'
+import { env } from '@/lib/env';
+import { logger } from '@/lib/logger';
+import crypto from 'crypto';
 
 /**
  * API key configuration
@@ -30,20 +30,20 @@ interface ApiKeyConfig {
  * Encrypted API key storage
  */
 class ApiKeyManager {
-  private encryptionKey: Buffer
-  private algorithm = 'aes-256-gcm'
-  private keys: Map<string, ApiKeyConfig> = new Map()
+  private encryptionKey: Buffer;
+  private algorithm = 'aes-256-gcm';
+  private keys: Map<string, ApiKeyConfig> = new Map();
 
   constructor() {
     // Get encryption key from environment
-    const key = env.ENCRYPTION_KEY || env.JWT_SECRET
+    const key = env.ENCRYPTION_KEY || env.JWT_SECRET;
     if (!key || key.length < 32) {
-      throw new Error('Encryption key must be at least 32 characters')
+      throw new Error('Encryption key must be at least 32 characters');
     }
-    this.encryptionKey = Buffer.from(key.slice(0, 32))
+    this.encryptionKey = Buffer.from(key.slice(0, 32));
     
     // Initialize API keys
-    this.initializeKeys()
+    this.initializeKeys();
   }
 
   /**
@@ -57,7 +57,7 @@ class ApiKeyManager {
         key: env.RESEND_API_KEY,
         encryptionRequired: true,
         rotationInterval: 90, // Rotate every 90 days
-      })
+      });
     }
 
     // Cal.com API key
@@ -67,7 +67,7 @@ class ApiKeyManager {
         key: env.CAL_COM_API_KEY,
         encryptionRequired: true,
         rotationInterval: 180,
-      })
+      });
     }
 
     // Add other API keys as needed
@@ -76,38 +76,38 @@ class ApiKeyManager {
       { name: 'openai', envKey: 'OPENAI_API_KEY' },
       { name: 'anthropic', envKey: 'ANTHROPIC_API_KEY' },
       { name: 'sentry', envKey: 'SENTRY_AUTH_TOKEN' },
-    ]
+    ];
 
     apiKeys.forEach(({ name, envKey }) => {
-      const key = process.env[envKey]
+      const key = process.env[envKey];
       if (key) {
         this.registerKey({
           name,
           key,
           encryptionRequired: true,
           rotationInterval: 90,
-        })
+        });
       }
-    })
+    });
   }
 
   /**
    * Encrypt API key
    */
   private encrypt(text: string): { encrypted: string; iv: string; tag: string } {
-    const iv = crypto.randomBytes(16)
-    const cipher = crypto.createCipheriv(this.algorithm, this.encryptionKey, iv)
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(this.algorithm, this.encryptionKey, iv);
     
-    let encrypted = cipher.update(text, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
     
-    const tag = cipher.getAuthTag()
+    const tag = cipher.getAuthTag();
     
     return {
       encrypted,
       iv: iv.toString('hex'),
       tag: tag.toString('hex'),
-    }
+    };
   }
 
   /**
@@ -118,14 +118,14 @@ class ApiKeyManager {
       this.algorithm,
       this.encryptionKey,
       Buffer.from(iv, 'hex'),
-    )
+    );
     
-    decipher.setAuthTag(Buffer.from(tag, 'hex'))
+    decipher.setAuthTag(Buffer.from(tag, 'hex'));
     
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
     
-    return decrypted
+    return decrypted;
   }
 
   /**
@@ -133,58 +133,58 @@ class ApiKeyManager {
    */
   registerKey(config: ApiKeyConfig): void {
     if (config.encryptionRequired) {
-      const { encrypted, iv, tag } = this.encrypt(config.key)
+      const { encrypted, iv, tag } = this.encrypt(config.key);
       this.keys.set(config.name, {
         ...config,
         key: `${encrypted}:${iv}:${tag}`,
-      })
+      });
     } else {
-      this.keys.set(config.name, config)
+      this.keys.set(config.name, config);
     }
     
     logger.info('API key registered', {
       name: config.name,
       encrypted: config.encryptionRequired,
-    })
+    });
   }
 
   /**
    * Get decrypted API key
    */
   getKey(name: string): string | null {
-    const config = this.keys.get(name)
+    const config = this.keys.get(name);
     if (!config) {
-      logger.warn('API key not found', { name })
-      return null
+      logger.warn('API key not found', { name });
+      return null;
     }
 
     // Check if rotation is needed
     if (config.rotationInterval && config.lastRotated) {
       const daysSinceRotation = Math.floor(
         (Date.now() - config.lastRotated.getTime()) / (1000 * 60 * 60 * 24),
-      )
+      );
       
       if (daysSinceRotation > config.rotationInterval) {
         logger.warn('API key rotation overdue', {
           name,
           daysSinceRotation,
           rotationInterval: config.rotationInterval,
-        })
+        });
       }
     }
 
     // Decrypt if encrypted
     if (config.encryptionRequired) {
       try {
-        const [encrypted, iv, tag] = config.key.split(':')
-        return this.decrypt(encrypted, iv, tag)
+        const [encrypted, iv, tag] = config.key.split(':');
+        return this.decrypt(encrypted, iv, tag);
       } catch (error) {
-        logger.error('Failed to decrypt API key', { name, error })
-        return null
+        logger.error('Failed to decrypt API key', { name, error });
+        return null;
       }
     }
 
-    return config.key
+    return config.key;
   }
 
   /**
@@ -194,41 +194,41 @@ class ApiKeyManager {
     name: string,
     request: Request,
   ): Promise<{ valid: boolean; reason?: string }> {
-    const config = this.keys.get(name)
+    const config = this.keys.get(name);
     if (!config) {
-      return { valid: false, reason: 'API key not found' }
+      return { valid: false, reason: 'API key not found' };
     }
 
     // Check allowed domains
     if (config.allowedDomains?.length) {
-      const origin = request.headers.get('origin')
+      const origin = request.headers.get('origin');
       if (!origin || !config.allowedDomains.includes(origin)) {
-        return { valid: false, reason: 'Domain not allowed' }
+        return { valid: false, reason: 'Domain not allowed' };
       }
     }
 
     // Check allowed IPs
     if (config.allowedIPs?.length) {
       const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
-                 request.headers.get('x-real-ip')
+                 request.headers.get('x-real-ip');
       if (!ip || !config.allowedIPs.includes(ip)) {
-        return { valid: false, reason: 'IP not allowed' }
+        return { valid: false, reason: 'IP not allowed' };
       }
     }
 
     // Rate limiting would go here (using Redis in production)
 
-    return { valid: true }
+    return { valid: true };
   }
 
   /**
    * Rotate API key (manual process - requires updating in external service)
    */
   markRotated(name: string): void {
-    const config = this.keys.get(name)
+    const config = this.keys.get(name);
     if (config) {
-      config.lastRotated = new Date()
-      logger.info('API key marked as rotated', { name })
+      config.lastRotated = new Date();
+      logger.info('API key marked as rotated', { name });
     }
   }
 
@@ -241,51 +241,51 @@ class ApiKeyManager {
     rotationDue?: boolean
     lastRotated?: Date
   } | null {
-    const config = this.keys.get(name)
-    if (!config) return null
+    const config = this.keys.get(name);
+    if (!config) return null;
 
     const status = {
       exists: true,
       encrypted: config.encryptionRequired,
       lastRotated: config.lastRotated,
       rotationDue: false,
-    }
+    };
 
     if (config.rotationInterval && config.lastRotated) {
       const daysSinceRotation = Math.floor(
         (Date.now() - config.lastRotated.getTime()) / (1000 * 60 * 60 * 24),
-      )
-      status.rotationDue = daysSinceRotation > config.rotationInterval
+      );
+      status.rotationDue = daysSinceRotation > config.rotationInterval;
     }
 
-    return status
+    return status;
   }
 
   /**
    * Get all key statuses for dashboard
    */
   getAllKeyStatuses(): Record<string, unknown> {
-    const statuses: Record<string, unknown> = {}
+    const statuses: Record<string, unknown> = {};
     
     this.keys.forEach((_, name) => {
-      statuses[name] = this.getKeyStatus(name)
-    })
+      statuses[name] = this.getKeyStatus(name);
+    });
     
-    return statuses
+    return statuses;
   }
 }
 
 // Singleton instance
-let apiKeyManager: ApiKeyManager | null = null
+let apiKeyManager: ApiKeyManager | null = null;
 
 /**
  * Get API key manager instance
  */
 export function getApiKeyManager(): ApiKeyManager {
   if (!apiKeyManager) {
-    apiKeyManager = new ApiKeyManager()
+    apiKeyManager = new ApiKeyManager();
   }
-  return apiKeyManager
+  return apiKeyManager;
 }
 
 /**
@@ -316,7 +316,7 @@ export const apiKeys = {
    * Get Sentry auth token
    */
   getSentryToken: () => getApiKeyManager().getKey('sentry'),
-}
+};
 
 /**
  * API key validation middleware
@@ -325,41 +325,41 @@ export async function validateApiKey(
   request: Request,
   keyName: string,
 ): Promise<{ valid: boolean; reason?: string }> {
-  const manager = getApiKeyManager()
-  return manager.validateUsage(keyName, request)
+  const manager = getApiKeyManager();
+  return manager.validateUsage(keyName, request);
 }
 
 /**
  * Secure API key header
  */
 export function createSecureHeaders(keyName: string): HeadersInit {
-  const key = getApiKeyManager().getKey(keyName)
+  const key = getApiKeyManager().getKey(keyName);
   if (!key) {
-    throw new Error(`API key not found: ${keyName}`)
+    throw new Error(`API key not found: ${keyName}`);
   }
   
   return {
     'Authorization': `Bearer ${key}`,
     'X-Api-Version': '1',
     'X-Request-ID': crypto.randomUUID(),
-  }
+  };
 }
 
 /**
  * API key rotation reminder
  */
 export function checkApiKeyRotation(): void {
-  const manager = getApiKeyManager()
-  const statuses = manager.getAllKeyStatuses()
+  const manager = getApiKeyManager();
+  const statuses = manager.getAllKeyStatuses();
   
   Object.entries(statuses).forEach(([name, status]) => {
     if (status?.rotationDue) {
       logger.warn('API key rotation due', {
         name,
         lastRotated: status.lastRotated,
-      })
+      });
     }
-  })
+  });
 }
 
 /**
@@ -368,6 +368,6 @@ export function checkApiKeyRotation(): void {
 if (env.NODE_ENV === 'production') {
   // Check rotation status daily
   setInterval(() => {
-    checkApiKeyRotation()
-  }, 24 * 60 * 60 * 1000)
+    checkApiKeyRotation();
+  }, 24 * 60 * 60 * 1000);
 }

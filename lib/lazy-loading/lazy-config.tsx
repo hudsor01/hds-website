@@ -3,8 +3,8 @@
  * Production-ready lazy loading patterns with performance optimization
  */
 
-import dynamic from 'next/dynamic'
-import type { ComponentType, ReactNode } from 'react'
+import dynamic from 'next/dynamic';
+import type { ComponentType, ReactNode } from 'react';
 
 // Lazy loading configuration options
 export interface LazyLoadingOptions {
@@ -61,7 +61,7 @@ export const defaultLoadingComponents = {
       <div className='h-10 bg-gray-200 rounded w-32'></div>
     </div>
   ),
-}
+};
 
 // Default error components
 export const defaultErrorComponents = {
@@ -97,7 +97,7 @@ export const defaultErrorComponents = {
       </button>
     </div>
   ),
-}
+};
 
 // Lazy loading helper functions
 export function createLazyComponent<T extends ComponentType<Record<string, unknown>>>(
@@ -108,7 +108,7 @@ export function createLazyComponent<T extends ComponentType<Record<string, unkno
     ssr: options.ssr ?? true,
     loading: options.loading || defaultLoadingComponents.spinner,
     ...options,
-  })
+  });
 }
 
 export function createClientOnlyComponent<T extends ComponentType<Record<string, unknown>>>(
@@ -119,7 +119,7 @@ export function createClientOnlyComponent<T extends ComponentType<Record<string,
     ssr: false,
     loading: options.loading || defaultLoadingComponents.spinner,
     ...options,
-  })
+  });
 }
 
 export function createLazyNamedComponent<T extends ComponentType<Record<string, unknown>>>(
@@ -128,19 +128,19 @@ export function createLazyNamedComponent<T extends ComponentType<Record<string, 
   options: LazyLoadingOptions = {},
 ) {
   const wrappedImportFn = async () => {
-    const moduleExports = await importFn()
-    const component = moduleExports[exportName]
+    const moduleExports = await importFn();
+    const component = moduleExports[exportName];
     if (!component) {
-      throw new Error(`Export '${exportName}' not found in module`)
+      throw new Error(`Export '${exportName}' not found in module`);
     }
-    return { default: component as T }
-  }
+    return { default: component as T };
+  };
   
   return dynamic(wrappedImportFn, {
     ssr: options.ssr ?? true,
     loading: options.loading || defaultLoadingComponents.spinner,
     ...options,
-  })
+  });
 }
 
 export function createLazyModal<T extends ComponentType<Record<string, unknown>>>(
@@ -157,7 +157,7 @@ export function createLazyModal<T extends ComponentType<Record<string, unknown>>
       </div>
     )),
     ...options,
-  })
+  });
 }
 
 export function createLazyChart<T extends ComponentType<Record<string, unknown>>>(
@@ -175,7 +175,7 @@ export function createLazyChart<T extends ComponentType<Record<string, unknown>>
       </div>
     )),
     ...options,
-  })
+  });
 }
 
 // Performance monitoring for lazy loading
@@ -184,23 +184,23 @@ export const lazyPerformance = {
    * Track lazy component loading time
    */
   trackLoadTime: (componentName: string) => {
-    const startTime = performance.now()
+    const startTime = performance.now();
     
     return {
       finish: () => {
-        const endTime = performance.now()
-        const loadTime = endTime - startTime
+        const endTime = performance.now();
+        const loadTime = endTime - startTime;
         
         if (process.env.NODE_ENV === 'development') {
-          console.log(`Lazy component '${componentName}' loaded in ${loadTime.toFixed(2)}ms`)
+          console.log(`Lazy component '${componentName}' loaded in ${loadTime.toFixed(2)}ms`);
         }
         
         // In production, you might want to send this to analytics
-        return loadTime
+        return loadTime;
       },
-    }
+    };
   },
-}
+};
 
 // Common lazy-loaded components configuration
 export const commonLazyComponents = {
@@ -216,4 +216,4 @@ export const commonLazyComponents = {
   
   // Heavy third-party integrations
   CalendarWidget: () => createLazyNamedComponent(() => import('@/components/booking/cal-com-widget'), 'CalComWidget'),
-}
+};

@@ -32,7 +32,7 @@ export const colors = {
     teal: '#14b8a6',
     pink: '#ec4899',
   },
-}
+};
 
 export const spacing = {
   xs: '0.5rem',
@@ -42,7 +42,7 @@ export const spacing = {
   xl: '3rem',
   '2xl': '4rem',
   '3xl': '6rem',
-}
+};
 
 export const typography = {
   fontSize: {
@@ -63,7 +63,7 @@ export const typography = {
     semibold: 600,
     bold: 700,
   },
-}
+};
 
 export const animations = {
   // Fade animations
@@ -123,14 +123,14 @@ export const animations = {
       },
     },
   },
-}
+};
 
 // Card-specific animations
 export const cardAnimations = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   tap: { scale: 0.98 },
-}
+};
 
 // Text-specific animations
 export const textAnimations = {
@@ -146,7 +146,7 @@ export const textAnimations = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: { opacity: 1, scale: 1 },
   },
-}
+};
 
 // Floating element animations
 export const floatingAnimations = {
@@ -177,7 +177,7 @@ export const floatingAnimations = {
       ease: 'easeInOut',
     },
   },
-}
+};
 
 export const transitions = {
   default: { duration: 0.3, ease: 'easeInOut' },
@@ -185,7 +185,7 @@ export const transitions = {
   slow: { duration: 0.5, ease: 'easeInOut' },
   spring: { type: 'spring', stiffness: 260, damping: 20 },
   smooth: { type: 'tween', ease: 'easeInOut', duration: 0.4 },
-}
+};
 
 export const shadows = {
   sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
@@ -194,7 +194,7 @@ export const shadows = {
   xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
   '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
   glow: '0 0 20px rgba(59, 130, 246, 0.5)',
-}
+};
 
 export const gradients = {
   primary: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
@@ -207,7 +207,7 @@ export const gradients = {
     radial-gradient(at 80% 50%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
     radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%)
   `,
-}
+};
 
 export const breakpoints = {
   sm: '640px',
@@ -215,7 +215,7 @@ export const breakpoints = {
   lg: '1024px',
   xl: '1280px',
   '2xl': '1536px',
-}
+};
 
 export const borderRadius = {
   sm: '0.25rem',
@@ -225,14 +225,14 @@ export const borderRadius = {
   '2xl': '1rem',
   '3xl': '1.5rem',
   full: '9999px',
-}
+};
 
 // Hover states
 export const hover = {
   scale: { scale: 1.05, transition: transitions.spring },
   glow: { boxShadow: shadows.glow, transition: transitions.default },
   lift: { y: -5, boxShadow: shadows.xl, transition: transitions.default },
-}
+};
 
 // Custom cursor animations
 export const cursor = {
@@ -240,4 +240,4 @@ export const cursor = {
   pointer: { cursor: 'pointer' },
   grab: { cursor: 'grab' },
   grabbing: { cursor: 'grabbing' },
-}
+};

@@ -3,7 +3,7 @@
  * Advanced environment management with load order and runtime checks
  */
 
-import { loadEnvConfig } from '@next/env'
+import { loadEnvConfig } from '@next/env';
 
 // Environment file load order (as per Next.js documentation)
 export const envLoadOrder = [
@@ -12,7 +12,7 @@ export const envLoadOrder = [
   '.env.local',              // (Not loaded when NODE_ENV is test)
   '.env.$(NODE_ENV)',        // .env.development, .env.production, .env.test
   '.env',
-] as const
+] as const;
 
 // Environment configuration for different deployment scenarios
 export const envConfigs = {
@@ -45,7 +45,7 @@ export const envConfigs = {
       sourceMap: true,
     },
   },
-} as const
+} as const;
 
 // Runtime environment detection
 export const runtimeEnv = {
@@ -68,15 +68,15 @@ export const runtimeEnv = {
    * Detect deployment platform
    */
   getDeploymentPlatform: () => {
-    if (process.env.VERCEL) return 'vercel'
-    if (process.env.NETLIFY) return 'netlify'
-    if (process.env.RAILWAY_ENVIRONMENT) return 'railway'
-    if (process.env.RENDER) return 'render'
-    if (process.env.FLY_APP_NAME) return 'fly'
-    if (process.env.DOCKER_CONTAINER) return 'docker'
-    return 'unknown'
+    if (process.env.VERCEL) return 'vercel';
+    if (process.env.NETLIFY) return 'netlify';
+    if (process.env.RAILWAY_ENVIRONMENT) return 'railway';
+    if (process.env.RENDER) return 'render';
+    if (process.env.FLY_APP_NAME) return 'fly';
+    if (process.env.DOCKER_CONTAINER) return 'docker';
+    return 'unknown';
   },
-}
+};
 
 // Environment variable reference utilities
 export const envReference = {
@@ -92,7 +92,7 @@ export const envReference = {
    * Escape dollar signs in environment variables
    */
   escapeDollarSigns: (value: string): string => value.replace(/\$/g, '\\$'),
-}
+};
 
 // Environment loading utilities
 export const envLoader = {
@@ -101,24 +101,24 @@ export const envLoader = {
    * Uses @next/env package for consistency with Next.js
    */
   loadForExternalTool: (projectDir?: string): void => {
-    const dir = projectDir || process.cwd()
-    loadEnvConfig(dir)
+    const dir = projectDir || process.cwd();
+    loadEnvConfig(dir);
   },
   
   /**
    * Load environment variables for testing
    */
   loadForTesting: (): void => {
-    const projectDir = process.cwd()
+    const projectDir = process.cwd();
     
     // Manually set NODE_ENV to test if not set
     if (!process.env.NODE_ENV) {
-      process.env.NODE_ENV = 'test'
+      process.env.NODE_ENV = 'test';
     }
     
-    loadEnvConfig(projectDir)
+    loadEnvConfig(projectDir);
   },
-}
+};
 
 // Environment validation for different contexts
 export const envValidation = {
@@ -126,41 +126,41 @@ export const envValidation = {
    * Validate browser environment variables (NEXT_PUBLIC_ only)
    */
   validateBrowserEnv: (): { valid: boolean; errors: string[] } => {
-    const errors: string[] = []
+    const errors: string[] = [];
     
     // Check for accidentally exposed server variables
     Object.keys(process.env).forEach(key => {
       if (key.startsWith('API_KEY') || key.startsWith('SECRET') || key.includes('PASSWORD')) {
         if (!key.startsWith('NEXT_PUBLIC_')) {
-          errors.push(`❌ Server variable '${key}' may be accidentally exposed to browser`)
+          errors.push(`❌ Server variable '${key}' may be accidentally exposed to browser`);
         }
       }
-    })
+    });
     
     return {
       valid: errors.length === 0,
       errors,
-    }
+    };
   },
   
   /**
    * Validate build-time vs runtime variables
    */
   validateBuildTimeVars: (): { buildTime: string[]; runtime: string[] } => {
-    const buildTime: string[] = []
-    const runtime: string[] = []
+    const buildTime: string[] = [];
+    const runtime: string[] = [];
     
     Object.keys(process.env).forEach(key => {
       if (key.startsWith('NEXT_PUBLIC_')) {
-        buildTime.push(key)
+        buildTime.push(key);
       } else {
-        runtime.push(key)
+        runtime.push(key);
       }
-    })
+    });
     
-    return { buildTime, runtime }
+    return { buildTime, runtime };
   },
-}
+};
 
 // Feature flag management
 export const featureFlags = {
@@ -168,9 +168,9 @@ export const featureFlags = {
    * Create a feature flag checker
    */
   createChecker: (prefix = 'NEXT_PUBLIC_ENABLE_') => (feature: string): boolean => {
-      const key = `${prefix}${feature.toUpperCase()}`
-      const value = process.env[key]
-      return value === 'true' || value === '1'
+      const key = `${prefix}${feature.toUpperCase()}`;
+      const value = process.env[key];
+      return value === 'true' || value === '1';
     },
   
   /**
@@ -179,7 +179,7 @@ export const featureFlags = {
   getEnabledFeatures: (prefix = 'NEXT_PUBLIC_ENABLE_'): string[] => Object.keys(process.env)
       .filter(key => key.startsWith(prefix) && (process.env[key] === 'true' || process.env[key] === '1'))
       .map(key => key.replace(prefix, '').toLowerCase()),
-}
+};
 
 // Environment debugging utilities
 export const envDebug = {
@@ -187,20 +187,20 @@ export const envDebug = {
    * Log environment configuration (development only)
    */
   logEnvConfig: (): void => {
-    if (process.env.NODE_ENV !== 'development') return
+    if (process.env.NODE_ENV !== 'development') return;
     
-    console.log('🔧 Environment Configuration Debug:')
-    console.log(`  • NODE_ENV: ${process.env.NODE_ENV}`)
-    console.log(`  • Runtime: ${runtimeEnv.isEdgeRuntime() ? 'Edge' : 'Node.js'}`)
-    console.log(`  • Platform: ${runtimeEnv.getDeploymentPlatform()}`)
+    console.log('🔧 Environment Configuration Debug:');
+    console.log(`  • NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`  • Runtime: ${runtimeEnv.isEdgeRuntime() ? 'Edge' : 'Node.js'}`);
+    console.log(`  • Platform: ${runtimeEnv.getDeploymentPlatform()}`);
     
-    const { buildTime, runtime } = envValidation.validateBuildTimeVars()
-    console.log(`  • Build-time vars: ${buildTime.length}`)
-    console.log(`  • Runtime vars: ${runtime.length}`)
+    const { buildTime, runtime } = envValidation.validateBuildTimeVars();
+    console.log(`  • Build-time vars: ${buildTime.length}`);
+    console.log(`  • Runtime vars: ${runtime.length}`);
     
-    const browserCheck = envValidation.validateBrowserEnv()
+    const browserCheck = envValidation.validateBrowserEnv();
     if (!browserCheck.valid) {
-      console.warn('⚠️  Browser environment warnings:', browserCheck.errors)
+      console.warn('⚠️  Browser environment warnings:', browserCheck.errors);
     }
   },
   
@@ -216,7 +216,7 @@ export const envDebug = {
       validation: envValidation.validateBrowserEnv(),
       varCounts: envValidation.validateBuildTimeVars(),
     }),
-}
+};
 
 // Multi-environment deployment utilities
 export const multiEnvUtils = {
@@ -237,8 +237,8 @@ export const multiEnvUtils = {
    */
   generateEnvFile: (vars: Record<string, string>, comments?: Record<string, string>): string => Object.entries(vars)
       .map(([key, value]) => {
-        const comment = comments?.[key] ? `# ${comments[key]}\n` : ''
-        return `${comment}${key}=${value}`
+        const comment = comments?.[key] ? `# ${comments[key]}\n` : '';
+        return `${comment}${key}=${value}`;
       })
       .join('\n\n'),
-}
+};

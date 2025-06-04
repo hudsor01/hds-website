@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import React, { memo, useActionState } from 'react'
-import { useFormStatus } from 'react-dom'
-import { submitContactForm } from '@/lib/actions/email-actions'
-import { FormErrorBoundary } from '@/components/error/route-error-boundaries'
-import { HoneypotField, TimingHoneypot } from '@/components/security/honeypot-field'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Send, CheckCircle, AlertCircle } from 'lucide-react'
-import type { ContactFormProps } from '@/types/form-types'
+import React, { memo, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { submitContactForm } from '@/lib/actions/email-actions';
+import { FormErrorBoundary } from '@/components/error/route-error-boundaries';
+import { HoneypotField, TimingHoneypot } from '@/components/security/honeypot-field';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Loader2, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import type { ContactFormProps } from '@/types/form-types';
 
 // React 19 optimized submit button with useFormStatus
 function SubmitButton() {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
   
   return (
     <Button 
@@ -35,7 +35,7 @@ function SubmitButton() {
         </>
       )}
     </Button>
-  )
+  );
 }
 
 // React 19 optimized feedback component
@@ -44,7 +44,7 @@ const FormFeedback = memo(function FormFeedback({
 }: { 
   state: { success?: boolean; message?: string; error?: string } | null 
 }) {
-  if (!state) return null
+  if (!state) return null;
 
   if (state.success) {
     return (
@@ -57,7 +57,7 @@ const FormFeedback = memo(function FormFeedback({
           {state.message}
         </p>
       </div>
-    )
+    );
   }
 
   if (!state.success && state.message) {
@@ -80,11 +80,11 @@ const FormFeedback = memo(function FormFeedback({
           </div>
         )}
       </div>
-    )
+    );
   }
 
-  return null
-})
+  return null;
+});
 
 // ContactFormProps imported from @/types/form-types
 
@@ -98,24 +98,24 @@ onError,
 includeFields = ['phone'],
 variant = 'simple',
 }: ContactFormProps) {
-  const isDetailed = variant === 'detailed'
+  const isDetailed = variant === 'detailed';
   
   // React 19 useActionState for Server Actions
-  const [state, formAction] = useActionState(submitContactForm, null)
+  const [state, formAction] = useActionState(submitContactForm, null);
 
   // Handle success callback
   React.useEffect(() => {
     if (state?.success && onSuccess) {
-      onSuccess()
+      onSuccess();
     }
-  }, [state?.success, onSuccess])
+  }, [state?.success, onSuccess]);
 
   // Handle error callback
   React.useEffect(() => {
     if (state && !state.success && state.message && onError) {
-      onError(new Error(state.message))
+      onError(new Error(state.message));
     }
-  }, [state, onError])
+  }, [state, onError]);
 
   return (
     <FormErrorBoundary
@@ -211,5 +211,5 @@ variant = 'simple',
         </form>
       </div>
     </FormErrorBoundary>
-  )
-})
+  );
+});

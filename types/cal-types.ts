@@ -6,7 +6,7 @@
  * Based on official Cal.com embed documentation and Atoms API.
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 
 export interface CalEmbedConfig {
   namespace?: string
@@ -354,7 +354,7 @@ export const bookingCreateSchema = z.object({
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),
   utmCampaign: z.string().optional(),
-})
+});
 
 /**
  * Booking update schema
@@ -365,7 +365,7 @@ export const bookingUpdateSchema = z.object({
   status: z.nativeEnum(BookingStatus).optional(),
   internalNotes: z.string().optional(),
   customFields: z.record(z.any()).optional(),
-})
+});
 
 // ============= Service Types =============
 

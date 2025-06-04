@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import { useMousePosition } from '@/hooks/use-animations'
-import { gradients } from '@/lib/design-system'
-import { gradientAnimations } from '@/lib/animation-config'
+import { m } from 'framer-motion';
+import { useMousePosition } from '@/hooks/use-animations';
+import { gradients } from '@/lib/design-system';
+import { gradientAnimations } from '@/lib/animation-config';
 
 interface GradientBackgroundProps {
   interactive?: boolean
@@ -26,7 +26,7 @@ export function GradientBackground({
   secondaryColor = 'purple',
   intensity = 'medium',
 }: GradientBackgroundProps) {
-  const mousePosition = useMousePosition()
+  const mousePosition = useMousePosition();
 
   // Configure gradient colors
   const colorMap = {
@@ -34,23 +34,23 @@ export function GradientBackground({
     purple: 'rgba(139, 92, 246, OPACITY)',
     teal: 'rgba(20, 184, 166, OPACITY)',
     pink: 'rgba(236, 72, 153, OPACITY)',
-  }
+  };
 
   // Configure opacity based on intensity
   const intensityMap = {
     low: 0.2,
     medium: 0.3,
     high: 0.5,
-  }
+  };
 
   const primaryGradient = colorMap[primaryColor].replace(
     'OPACITY',
     intensityMap[intensity].toString(),
-  )
+  );
   const secondaryGradient = colorMap[secondaryColor].replace(
     'OPACITY',
     intensityMap[intensity].toString(),
-  )
+  );
 
   // Background based on variant
   const backgroundStyle =
@@ -62,7 +62,7 @@ export function GradientBackground({
           }
         : {
             background: `radial-gradient(circle at center, ${primaryGradient} 0%, transparent 70%)`,
-          }
+          };
 
   return (
     <div className='fixed inset-0 -z-10 overflow-hidden'>
@@ -109,5 +109,5 @@ export function GradientBackground({
         />
       )}
     </div>
-  )
+  );
 }

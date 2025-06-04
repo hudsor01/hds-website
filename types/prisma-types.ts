@@ -354,7 +354,7 @@ export {
   ContactSubmissionStatus as PrismaContactSubmissionStatus,
   NewsletterStatus as PrismaNewsletterStatus,
   LeadManagementStatus as PrismaLeadManagementStatus,
-}
+};
 
 // Default export for PostStatus to maintain compatibility
-export default PostStatus
+export default PostStatus;

@@ -5,7 +5,7 @@
  * customer management, and dashboard analytics.
  */
 
-import { z } from 'zod'
+import { z } from 'zod';
 import { 
 LeadSource, 
 BudgetRange, 
@@ -17,9 +17,9 @@ CustomerStatus,
 ContactStatus,
 Priority,
 AdminPermission,
-} from './enum-types'
-import type { ContactFormData, NewsletterFormData, LeadMagnetFormData } from './form-types'
-import type { ApiResponse } from './api-types'
+} from './enum-types';
+import type { ContactFormData, NewsletterFormData, LeadMagnetFormData } from './form-types';
+import type { ApiResponse } from './api-types';
 
 // ============= Core Admin Data Types =============
 
@@ -304,7 +304,7 @@ export const leadFormSchema = z.object({
   customFields: z.record(z.any()).default({}),
   nextFollowUpDate: z.date().optional(),
   estimatedValue: z.number().positive().optional(),
-})
+});
 
 /**
  * Customer creation/edit form schema
@@ -325,7 +325,7 @@ export const customerFormSchema = z.object({
   tags: z.array(z.string()).default([]),
   customFields: z.record(z.any()).default({}),
   nextRenewalDate: z.date().optional(),
-})
+});
 
 export type LeadFormData = z.infer<typeof leadFormSchema>
 export type CustomerFormData = z.infer<typeof customerFormSchema>
@@ -514,7 +514,7 @@ export const DEFAULT_ADMIN_NAV: AdminNavItem[] = [
     href: '/admin/analytics',
     permissions: [AdminPermission.ANALYTICS_VIEW],
   },
-]
+];
 
 /**
  * Default admin roles
@@ -556,4 +556,4 @@ export const DEFAULT_ADMIN_ROLES: AdminRole[] = [
     ],
     isDefault: true,
   },
-]
+];

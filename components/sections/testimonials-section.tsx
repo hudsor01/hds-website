@@ -1,9 +1,9 @@
-import { m } from 'framer-motion'
-import Image from 'next/image'
-import { Star, Quote } from 'lucide-react'
-import { getTestimonials } from '@/lib/data-fetchers'
-import { Suspense, use } from 'react'
-import { AnimatedTestimonials } from '@/components/aceternity/animated-testimonials'
+import { m } from 'framer-motion';
+import Image from 'next/image';
+import { Star, Quote } from 'lucide-react';
+import { getTestimonials } from '@/lib/data-fetchers';
+import { Suspense, use } from 'react';
+import { AnimatedTestimonials } from '@/components/aceternity/animated-testimonials';
 
 // Types
 export interface Testimonial {
@@ -57,7 +57,7 @@ const defaultTestimonials: Testimonial[] = [
     rating: 5,
     image: '/images/default-avatar.jpg',
   },
-]
+];
 
 // Loading skeleton component
 function TestimonialsLoading() {
@@ -89,13 +89,13 @@ function TestimonialsLoading() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // Server Component for fetching testimonials with React 19 use() hook
 function TestimonialsData({ testimonialsPromise }: { testimonialsPromise: Promise<Testimonial[]> }) {
-  const testimonials = use(testimonialsPromise)
-  return <AnimatedTestimonials testimonials={testimonials} autoplay={true} />
+  const testimonials = use(testimonialsPromise);
+  return <AnimatedTestimonials testimonials={testimonials} autoplay={true} />;
 }
 
 // Main Server Component
@@ -112,7 +112,7 @@ export function TestimonialsSection({
   useRealData = false,
 }: TestimonialsSectionProps) {
   // Determine which testimonials to use
-  const displayTestimonials = testimonials || defaultTestimonials
+  const displayTestimonials = testimonials || defaultTestimonials;
 
   // If using animated Aceternity UI version
   if (cardStyle === 'animated') {
@@ -152,7 +152,7 @@ export function TestimonialsSection({
           )}
         </div>
       </section>
-    )
+    );
   }
   // Original variant with traditional card layout
   return (
@@ -254,5 +254,5 @@ export function TestimonialsSection({
         )}
       </div>
     </section>
-  )
+  );
 }

@@ -5,21 +5,21 @@
  * with comprehensive analytics, error handling, and accessibility.
  */
 
-'use client'
+'use client';
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react';
 // import { CalProvider } from '@calcom/atoms' // TODO: Add when Cal.com integration is active
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Clock, DollarSign, Users, Calendar, ExternalLink, RefreshCw } from 'lucide-react'
-import { trackBookingPageView, trackBookingStarted } from '@/lib/analytics/booking-analytics'
-import { useAnalyticsStore } from '@/lib/store/analytics-store'
-import type { CalService, CalBookingState, CalConfig } from '@/types/cal-types'
-import { cn } from '@/lib/utils'
-import type { CalEventType } from '@/types/booking-types'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Clock, DollarSign, Users, Calendar, ExternalLink, RefreshCw } from 'lucide-react';
+import { trackBookingPageView, trackBookingStarted } from '@/lib/analytics/booking-analytics';
+import { useAnalyticsStore } from '@/lib/store/analytics-store';
+import type { CalService, CalBookingState, CalConfig } from '@/types/cal-types';
+import { cn } from '@/lib/utils';
+import type { CalEventType } from '@/types/booking-types';
 
 interface CalBookingWidgetProps {
   /** Service configuration for the booking */
@@ -61,32 +61,32 @@ export function CalBookingWidget({
     isLoading: false,
     isBooked: false,
     retryCount: 0,
-  })
-  const [error, setError] = useState<string | null>(null)
-  const { sessionId } = useAnalyticsStore()
+  });
+  const [error, setError] = useState<string | null>(null);
+  const { sessionId } = useAnalyticsStore();
 
   // Track page view when component mounts
   useEffect(() => {
     if (enableAnalytics && sessionId) {
-      trackBookingPageView(sessionId, service?.id, 'booking_widget')
+      trackBookingPageView(sessionId, service?.id, 'booking_widget');
     }
-  }, [enableAnalytics, sessionId, service?.id])
+  }, [enableAnalytics, sessionId, service?.id]);
 
   // Handle booking start
   const handleBookingStart = useCallback(() => {
-    setBookingState(prev => ({ ...prev, isLoading: true, error: undefined }))
-    setError(null)
+    setBookingState(prev => ({ ...prev, isLoading: true, error: undefined }));
+    setError(null);
     
     if (enableAnalytics && sessionId && service?.id) {
-      trackBookingStarted(sessionId, service.id)
+      trackBookingStarted(sessionId, service.id);
     }
-  }, [enableAnalytics, sessionId, service?.id])
+  }, [enableAnalytics, sessionId, service?.id]);
 
   // Handle booking success
   const _handleBookingSuccess = useCallback((booking: CalEventType) => {
-    setBookingState(prev => ({ ...prev, isLoading: false, isBooked: true, bookingId: booking.id?.toString() }))
-    onBookingSuccess?.(booking)
-  }, [onBookingSuccess])
+    setBookingState(prev => ({ ...prev, isLoading: false, isBooked: true, bookingId: booking.id?.toString() }));
+    onBookingSuccess?.(booking);
+  }, [onBookingSuccess]);
 
   // Handle booking error
   const _handleBookingError = useCallback((error: Error) => {
@@ -96,10 +96,10 @@ export function CalBookingWidget({
       error: error.message,
       retryCount: prev.retryCount + 1,
       lastAttempt: new Date(),
-    }))
-    setError(error.message)
-    onBookingError?.(error)
-  }, [onBookingError])
+    }));
+    setError(error.message);
+    onBookingError?.(error);
+  }, [onBookingError]);
 
   // Retry booking
   const retryBooking = useCallback(() => {
@@ -110,24 +110,24 @@ export function CalBookingWidget({
         isLoading: false,
         error: undefined,
         lastAttempt: new Date(),
-      }))
-      setError(null)
+      }));
+      setError(null);
     }
-  }, [bookingState.retryCount])
+  }, [bookingState.retryCount]);
 
   // Format service duration
   const formatDuration = (minutes: number) => {
-    if (minutes < 60) return `${minutes} min`
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`
-  }
+    if (minutes < 60) return `${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+  };
 
   // Format service price
   const _formatPrice = (price: number, currency: string = 'USD') => new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-  }).format(price)
+  }).format(price);
 
   // Loading state
   if (bookingState.isLoading) {
@@ -149,7 +149,7 @@ export function CalBookingWidget({
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   // Error state
@@ -181,7 +181,7 @@ export function CalBookingWidget({
           )}
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -308,7 +308,7 @@ export function CalBookingWidget({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default CalBookingWidget
+export default CalBookingWidget;

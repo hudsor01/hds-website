@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { authenticateAdmin, createAdminSession } from '@/lib/auth/admin'
-import { getAPISecurityHeaders } from '@/lib/security/csp'
-import { z } from 'zod'
-import { logger } from '@/lib/logger'
+import { NextRequest, NextResponse } from 'next/server';
+import { authenticateAdmin, createAdminSession } from '@/lib/auth/admin';
+import { getAPISecurityHeaders } from '@/lib/security/csp';
+import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 // React 19/Next.js 15 Server Action security patterns for authentication
 
@@ -15,54 +15,54 @@ const LoginSchema = z.object({
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password is too long'),
-})
+});
 
 /**
  * Admin login endpoint with enhanced security (Next.js 15 App Router pattern)
  * Compatible with React 19 useActionState hook
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const startTime = Date.now()
+  const startTime = Date.now();
   
   try {
     // Get client IP for rate limiting and logging (Next.js 15 middleware integration)
     const clientIP = request.headers.get('x-client-ip') || 
                      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-                     'unknown'
+                     'unknown';
     
     // Validate Content-Type (Next.js 15 security pattern)
-    const contentType = request.headers.get('content-type')
+    const contentType = request.headers.get('content-type');
     if (!contentType?.includes('application/json')) {
-      logger.warn('Invalid content type for login attempt', { clientIP, contentType })
+      logger.warn('Invalid content type for login attempt', { clientIP, contentType });
       return NextResponse.json(
         { error: 'Invalid content type' },
         { 
           status: 400,
           headers: getAPISecurityHeaders(),
         },
-      )
+      );
     }
     
     // Parse and validate request body with error handling
-    let body: unknown
+    let body: unknown;
     try {
-      body = await request.json()
+      body = await request.json();
     } catch (_error) {
-      logger.warn('Invalid JSON in login request', { clientIP })
+      logger.warn('Invalid JSON in login request', { clientIP });
       return NextResponse.json(
         { error: 'Invalid request body' },
         { 
           status: 400,
           headers: getAPISecurityHeaders(),
         },
-      )
+      );
     }
     
     // Validate input using Zod (React 19/Next.js 15 validation pattern)
-    const validation = LoginSchema.safeParse(body)
+    const validation = LoginSchema.safeParse(body);
     if (!validation.success) {
-      const errors = validation.error.flatten().fieldErrors
-      logger.warn('Invalid login credentials format', { clientIP, errors })
+      const errors = validation.error.flatten().fieldErrors;
+      logger.warn('Invalid login credentials format', { clientIP, errors });
       
       return NextResponse.json(
         { 
@@ -73,13 +73,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           status: 400,
           headers: getAPISecurityHeaders(),
         },
-      )
+      );
     }
     
-    const { username, password } = validation.data
+    const { username, password } = validation.data;
     
     // Authenticate user with rate limiting and secure password comparison
-    const isAuthenticated = await authenticateAdmin(username, password, clientIP)
+    const isAuthenticated = await authenticateAdmin(username, password, clientIP);
     
     if (!isAuthenticated) {
       // Don't reveal whether username or password was wrong (security best practice)
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         username: username.substring(0, 3) + '***', // Partial username for logging
         clientIP,
         responseTime: Date.now() - startTime, 
-      })
+      });
       
       return NextResponse.json(
         { error: 'Invalid credentials' },
@@ -95,18 +95,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           status: 401,
           headers: getAPISecurityHeaders(),
         },
-      )
+      );
     }
     
     // Create secure session token using enhanced JWT
-    const token = await createAdminSession(username)
+    const token = await createAdminSession(username);
     
     // Log successful authentication
     logger.info('Admin login successful', { 
       username: username.substring(0, 3) + '***',
       clientIP,
       responseTime: Date.now() - startTime, 
-    })
+    });
     
     // Return success with secure cookie options (Next.js 15 security pattern)
     const response = NextResponse.json(
@@ -118,10 +118,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         status: 200,
         headers: getAPISecurityHeaders(),
       },
-    )
+    );
     
     // Set secure httpOnly cookie with enhanced security
-    const isProduction = process.env.NODE_ENV === 'production'
+    const isProduction = process.env.NODE_ENV === 'production';
     response.cookies.set('admin-token', token, {
       httpOnly: true,
       secure: isProduction, // HTTPS only in production
@@ -131,9 +131,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ...(isProduction && { 
         domain: new URL(process.env.NEXT_PUBLIC_APP_URL!).hostname, 
       }),
-    })
+    });
     
-    return response
+    return response;
     
   } catch (error) {
     // Comprehensive error logging with security context
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       stack: error instanceof Error ? error.stack : undefined,
       responseTime: Date.now() - startTime,
       clientIP: request.headers.get('x-client-ip') || 'unknown',
-    })
+    });
     
     // Generic error response to prevent information disclosure
     return NextResponse.json(
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         status: 500,
         headers: getAPISecurityHeaders(),
       },
-    )
+    );
   }
 }
 
@@ -160,9 +160,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
-    const clientIP = request.headers.get('x-client-ip') || 'unknown'
+    const clientIP = request.headers.get('x-client-ip') || 'unknown';
     
-    logger.info('Admin logout', { clientIP })
+    logger.info('Admin logout', { clientIP });
     
     // Clear the authentication cookie
     const response = NextResponse.json(
@@ -171,7 +171,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         status: 200,
         headers: getAPISecurityHeaders(),
       },
-    )
+    );
     
     // Clear the cookie by setting it to expire (Next.js 15 pattern)
     response.cookies.set('admin-token', '', {
@@ -180,14 +180,14 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
       sameSite: 'strict',
       maxAge: 0, // Expire immediately
       path: '/',
-    })
+    });
     
-    return response
+    return response;
     
   } catch (error) {
     logger.error('Admin logout error', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
+    });
     
     return NextResponse.json(
       { error: 'Logout failed' },
@@ -195,7 +195,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         status: 500,
         headers: getAPISecurityHeaders(),
       },
-    )
+    );
   }
 }
 
@@ -210,7 +210,7 @@ export async function GET() {
         ...getAPISecurityHeaders(),
       },
     },
-  )
+  );
 }
 
-export { GET as PUT, GET as PATCH, GET as HEAD, GET as OPTIONS }
+export { GET as PUT, GET as PATCH, GET as HEAD, GET as OPTIONS };

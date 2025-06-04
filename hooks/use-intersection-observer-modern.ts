@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface UseIntersectionObserverOptions {
   threshold?: number | number[]
@@ -20,47 +20,47 @@ export function useIntersectionObserver<T extends Element>({
   onIntersect,
   onLeave,
 }: UseIntersectionObserverOptions = {}) {
-  const [isIntersecting, setIsIntersecting] = useState(false)
-  const [hasIntersected, setHasIntersected] = useState(false)
-  const elementRef = useRef<T>(null)
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [hasIntersected, setHasIntersected] = useState(false);
+  const elementRef = useRef<T>(null);
 
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries
-      const isCurrentlyIntersecting = entry.isIntersecting
+      const [entry] = entries;
+      const isCurrentlyIntersecting = entry.isIntersecting;
 
-      setIsIntersecting(isCurrentlyIntersecting)
+      setIsIntersecting(isCurrentlyIntersecting);
 
       if (isCurrentlyIntersecting) {
-        setHasIntersected(true)
-        onIntersect?.(entry)
+        setHasIntersected(true);
+        onIntersect?.(entry);
       } else if (hasIntersected) {
-        onLeave?.(entry)
+        onLeave?.(entry);
       }
     },
     [onIntersect, onLeave, hasIntersected],
-  )
+  );
 
   useEffect(() => {
-    const element = elementRef.current
-    if (!element) return
+    const element = elementRef.current;
+    if (!element) return;
 
     const observer = new IntersectionObserver(handleIntersection, {
       threshold,
       root,
       rootMargin,
-    })
+    });
 
-    observer.observe(element)
+    observer.observe(element);
 
     return () => {
-      observer.disconnect()
-    }
-  }, [handleIntersection, threshold, root, rootMargin])
+      observer.disconnect();
+    };
+  }, [handleIntersection, threshold, root, rootMargin]);
 
   return {
     elementRef,
     isIntersecting,
     hasIntersected,
-  }
+  };
 }

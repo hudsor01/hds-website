@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Search, CheckCircle, AlertTriangle, XCircle, Globe, Zap, Shield, BarChart3 } from 'lucide-react'
-import Link from 'next/link'
+import { useState } from 'react';
+import { Search, CheckCircle, AlertTriangle, XCircle, Globe, Zap, Shield, BarChart3 } from 'lucide-react';
+import Link from 'next/link';
 
 interface AuditResults {
   url: string
@@ -30,18 +30,18 @@ interface AuditResults {
 }
 
 export function WebsiteAuditTool() {
-  const [url, setUrl] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [results, setResults] = useState<AuditResults | null>(null)
-  const [email, setEmail] = useState('')
+  const [url, setUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState<AuditResults | null>(null);
+  const [email, setEmail] = useState('');
 
   const handleAudit = async () => {
-    if (!url) return
+    if (!url) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     
     // Simulate audit process
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Mock audit results based on common issues
     const mockResults: AuditResults = {
@@ -106,29 +106,29 @@ export function WebsiteAuditTool() {
           'Regular security updates',
         ],
       },
-    }
+    };
 
-    setResults(mockResults)
-    setIsLoading(false)
-  }
+    setResults(mockResults);
+    setIsLoading(false);
+  };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-600'
-    if (score >= 70) return 'text-yellow-600'
-    return 'text-red-600'
-  }
+    if (score >= 90) return 'text-green-600';
+    if (score >= 70) return 'text-yellow-600';
+    return 'text-red-600';
+  };
 
   const getScoreBgColor = (score: number) => {
-    if (score >= 90) return 'bg-green-50 border-green-200'
-    if (score >= 70) return 'bg-yellow-50 border-yellow-200'
-    return 'bg-red-50 border-red-200'
-  }
+    if (score >= 90) return 'bg-green-50 border-green-200';
+    if (score >= 70) return 'bg-yellow-50 border-yellow-200';
+    return 'bg-red-50 border-red-200';
+  };
 
   const ScoreIcon = ({ score }: { score: number }) => {
-    if (score >= 90) return <CheckCircle className="w-5 h-5 text-green-600" />
-    if (score >= 70) return <AlertTriangle className="w-5 h-5 text-yellow-600" />
-    return <XCircle className="w-5 h-5 text-red-600" />
-  }
+    if (score >= 90) return <CheckCircle className="w-5 h-5 text-green-600" />;
+    if (score >= 70) return <AlertTriangle className="w-5 h-5 text-yellow-600" />;
+    return <XCircle className="w-5 h-5 text-red-600" />;
+  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -419,5 +419,5 @@ export function WebsiteAuditTool() {
         </div>
       )}
     </div>
-  )
+  );
 }

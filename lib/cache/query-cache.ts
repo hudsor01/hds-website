@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query'
+import { QueryClient } from '@tanstack/react-query';
 
 /**
  * Query cache configuration for React Query
@@ -15,13 +15,13 @@ export const queryClientConfig = {
       // Retry configuration
       retry: (failureCount: number, error: unknown) => {
         // Don't retry on 4xx errors except 408, 429
-        const err = error as { status?: number }
+        const err = error as { status?: number };
         if (err?.status && err.status >= 400 && err.status < 500 && ![408, 429].includes(err.status)) {
-          return false
+          return false;
         }
         
         // Retry up to 3 times for other errors
-        return failureCount < 3
+        return failureCount < 3;
       },
       
       // Retry delay with exponential backoff
@@ -39,26 +39,26 @@ export const queryClientConfig = {
       // Retry configuration for mutations
       retry: (failureCount: number, error: unknown) => {
         // Don't retry client errors
-        const err = error as { status?: number }
+        const err = error as { status?: number };
         if (err?.status && err.status >= 400 && err.status < 500) {
-          return false
+          return false;
         }
         
         // Retry server errors up to 2 times
-        return failureCount < 2
+        return failureCount < 2;
       },
       
       // Network mode for mutations
       networkMode: 'online',
     },
   },
-}
+};
 
 /**
  * Create a new QueryClient with optimized cache settings
  */
 export function createQueryClient(): QueryClient {
-  return new QueryClient(queryClientConfig)
+  return new QueryClient(queryClientConfig);
 }
 
 /**
@@ -98,7 +98,7 @@ export const queryKeys = {
     session: () => [...queryKeys.auth.all, 'session'] as const,
     user: () => [...queryKeys.auth.all, 'user'] as const,
   },
-} as const
+} as const;
 
 /**
  * Cache invalidation helpers
@@ -108,37 +108,37 @@ export class CacheManager {
   
   // Invalidate all contact-related queries
   invalidateContact() {
-    return this.queryClient.invalidateQueries({ queryKey: queryKeys.contact.all })
+    return this.queryClient.invalidateQueries({ queryKey: queryKeys.contact.all });
   }
   
   // Invalidate all newsletter-related queries
   invalidateNewsletter() {
-    return this.queryClient.invalidateQueries({ queryKey: queryKeys.newsletter.all })
+    return this.queryClient.invalidateQueries({ queryKey: queryKeys.newsletter.all });
   }
   
   // Invalidate all lead magnet-related queries
   invalidateLeadMagnet() {
-    return this.queryClient.invalidateQueries({ queryKey: queryKeys.leadMagnet.all })
+    return this.queryClient.invalidateQueries({ queryKey: queryKeys.leadMagnet.all });
   }
   
   // Invalidate all analytics queries
   invalidateAnalytics() {
-    return this.queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all })
+    return this.queryClient.invalidateQueries({ queryKey: queryKeys.analytics.all });
   }
   
   // Invalidate auth queries
   invalidateAuth() {
-    return this.queryClient.invalidateQueries({ queryKey: queryKeys.auth.all })
+    return this.queryClient.invalidateQueries({ queryKey: queryKeys.auth.all });
   }
   
   // Clear all cache
   clearAll() {
-    return this.queryClient.clear()
+    return this.queryClient.clear();
   }
   
   // Remove specific queries
   removeQueries(queryKey: readonly unknown[]) {
-    return this.queryClient.removeQueries({ queryKey })
+    return this.queryClient.removeQueries({ queryKey });
   }
 }
 
@@ -170,4 +170,4 @@ export const cacheStrategies = {
     gcTime: 1 * 60 * 1000, // 1 minute
     refetchInterval: 30 * 1000, // Refetch every 30 seconds
   },
-} as const
+} as const;

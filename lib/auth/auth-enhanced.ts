@@ -12,15 +12,15 @@
  * - Protection for Server Components, Actions, and Route Handlers
  */
 
-import 'server-only'
-import { cache } from 'react'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-import { SignJWT, jwtVerify } from 'jose'
-import { z } from 'zod'
-import { logger } from '@/lib/logger'
-import { env } from '@/lib/env'
-import type { AnalyticsEvent as _AnalyticsEvent, ErrorContext } from '@/types/analytics-types'
+import 'server-only';
+import { cache } from 'react';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { SignJWT, jwtVerify } from 'jose';
+import { z } from 'zod';
+import { logger } from '@/lib/logger';
+import { env } from '@/lib/env';
+import type { AnalyticsEvent as _AnalyticsEvent, ErrorContext } from '@/types/analytics-types';
 
 // Types and Schemas
 export interface SessionPayload {
@@ -66,7 +66,7 @@ export const LoginFormSchema = z.object({
     .min(8, { message: 'Password must be at least 8 characters long.' })
     .max(100, { message: 'Password must be less than 100 characters.' })
     .trim(),
-})
+});
 
 export const SignupFormSchema = z.object({
   username: z
@@ -90,7 +90,7 @@ export const SignupFormSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords don\'t match',
   path: ['confirmPassword'],
-})
+});
 
 export type FormState = 
   | {
@@ -118,11 +118,11 @@ const SESSION_CONFIG = {
     path: '/',
     maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
   },
-} as const
+} as const;
 
 // Session management utilities
-const secretKey = SESSION_CONFIG.secret
-const encodedKey = new TextEncoder().encode(secretKey)
+const secretKey = SESSION_CONFIG.secret;
+const encodedKey = new TextEncoder().encode(secretKey);
 
 /**
  * Encrypt session payload into JWT token
@@ -132,7 +132,7 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
     .setProtectedHeader({ alg: SESSION_CONFIG.algorithm })
     .setIssuedAt()
     .setExpirationTime(SESSION_CONFIG.expiresIn)
-    .sign(encodedKey)
+    .sign(encodedKey);
 }
 
 /**
@@ -140,18 +140,18 @@ export async function encrypt(payload: SessionPayload): Promise<string> {
  */
 export async function decrypt(session: string | undefined = ''): Promise<SessionPayload | null> {
   try {
-    if (!session) return null
+    if (!session) return null;
     
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: [SESSION_CONFIG.algorithm],
-    })
+    });
     
-    return payload as SessionPayload
+    return payload as SessionPayload;
   } catch (error) {
     logger.warn('Failed to verify session token', {
       error: error instanceof Error ? error.message : 'Unknown error',
-    })
-    return null
+    });
+    return null;
   }
 }
 
@@ -159,7 +159,7 @@ export async function decrypt(session: string | undefined = ''): Promise<Session
  * Create a new session and set secure cookie
  */
 export async function createSession(user: User, metadata?: ErrorContext): Promise<void> {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   
   const sessionPayload: SessionPayload = {
     userId: user.id,
@@ -167,68 +167,68 @@ export async function createSession(user: User, metadata?: ErrorContext): Promis
     role: user.role,
     expiresAt,
     metadata,
-  }
+  };
   
   // Encrypt session
-  const sessionToken = await encrypt(sessionPayload)
+  const sessionToken = await encrypt(sessionPayload);
   
   // Set secure cookie
-  const cookieStore = await cookies()
+  const cookieStore = await cookies();
   cookieStore.set(SESSION_CONFIG.cookieName, sessionToken, {
     ...SESSION_CONFIG.cookieOptions,
     expires: expiresAt,
-  })
+  });
   
   logger.info('Session created successfully', {
     userId: user.id,
     username: user.username,
     role: user.role,
-  })
+  });
 }
 
 /**
  * Update session expiration time
  */
 export async function updateSession(): Promise<void> {
-  const cookieStore = await cookies()
-  const session = cookieStore.get(SESSION_CONFIG.cookieName)?.value
-  const payload = await decrypt(session)
+  const cookieStore = await cookies();
+  const session = cookieStore.get(SESSION_CONFIG.cookieName)?.value;
+  const payload = await decrypt(session);
   
   if (!session || !payload) {
-    return
+    return;
   }
   
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
   const updatedPayload: SessionPayload = {
     ...payload,
     expiresAt: expires,
-  }
+  };
   
-  const newSession = await encrypt(updatedPayload)
+  const newSession = await encrypt(updatedPayload);
   
   cookieStore.set(SESSION_CONFIG.cookieName, newSession, {
     ...SESSION_CONFIG.cookieOptions,
     expires,
-  })
+  });
 }
 
 /**
  * Delete session and clear cookie
  */
 export async function deleteSession(): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.delete(SESSION_CONFIG.cookieName)
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_CONFIG.cookieName);
   
-  logger.info('Session deleted successfully')
+  logger.info('Session deleted successfully');
 }
 
 /**
  * Get current session from cookie
  */
 export async function getSession(): Promise<SessionPayload | null> {
-  const cookieStore = await cookies()
-  const session = cookieStore.get(SESSION_CONFIG.cookieName)?.value
-  return await decrypt(session)
+  const cookieStore = await cookies();
+  const session = cookieStore.get(SESSION_CONFIG.cookieName)?.value;
+  return await decrypt(session);
 }
 
 // Data Access Layer (DAL) for centralized auth logic
@@ -238,33 +238,33 @@ export async function getSession(): Promise<SessionPayload | null> {
  * Uses React cache for performance optimization
  */
 export const verifySession = cache(async (): Promise<{ isAuth: true; userId: string; role: string } | { isAuth: false }> => {
-  const session = await getSession()
+  const session = await getSession();
   
   if (!session?.userId) {
-    return { isAuth: false }
+    return { isAuth: false };
   }
   
   // Check if session is expired
   if (new Date() > new Date(session.expiresAt)) {
-    await deleteSession()
-    return { isAuth: false }
+    await deleteSession();
+    return { isAuth: false };
   }
   
   return {
     isAuth: true,
     userId: session.userId,
     role: session.role,
-  }
-})
+  };
+});
 
 /**
  * Get authenticated user data with caching
  */
 export const getUser = cache(async (): Promise<User | null> => {
-  const session = await verifySession()
+  const session = await verifySession();
   
   if (!session.isAuth) {
-    return null
+    return null;
   }
   
   try {
@@ -278,7 +278,7 @@ export const getUser = cache(async (): Promise<User | null> => {
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      };
     }
     
     // For regular users, you would fetch from your user database
@@ -297,47 +297,47 @@ export const getUser = cache(async (): Promise<User | null> => {
     // })
     // return user
     
-    return null
+    return null;
   } catch (error) {
     logger.error('Failed to fetch user', {
       error: error instanceof Error ? error.message : 'Unknown error',
       userId: session.userId,
-    })
-    return null
+    });
+    return null;
   }
-})
+});
 
 /**
  * Require authentication and redirect if not authenticated
  */
 export const requireAuth = cache(async (): Promise<{ userId: string; role: string }> => {
-  const session = await verifySession()
+  const session = await verifySession();
   
   if (!session.isAuth) {
-    redirect('/admin/auth/login')
+    redirect('/admin/auth/login');
   }
   
   return {
     userId: session.userId,
     role: session.role,
-  }
-})
+  };
+});
 
 /**
  * Require admin role and redirect if not authorized
  */
 export const requireAdmin = cache(async (): Promise<{ userId: string; role: 'admin' }> => {
-  const session = await requireAuth()
+  const session = await requireAuth();
   
   if (session.role !== 'admin') {
-    redirect('/admin/auth/login?error=unauthorized')
+    redirect('/admin/auth/login?error=unauthorized');
   }
   
   return {
     userId: session.userId,
     role: 'admin' as const,
-  }
-})
+  };
+});
 
 // Data Transfer Objects (DTOs) for safe data exposure
 
@@ -355,7 +355,7 @@ export function getUserProfileDTO(user: User): {
     username: user.username,
     role: user.role,
     isActive: user.isActive,
-  }
+  };
 }
 
 /**
@@ -378,7 +378,7 @@ export function getAdminUserDTO(user: User): {
     isActive: user.isActive,
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
-  }
+  };
 }
 
 // Authentication utilities
@@ -390,12 +390,12 @@ export async function authenticateUser(username: string, password: string): Prom
   try {
     // Basic validation
     if (!username || !password) {
-      return null
+      return null;
     }
     
     // For admin user
     if (username === env.ADMIN_USERNAME && password === env.ADMIN_PASSWORD) {
-      logger.info('Admin authentication successful', { username })
+      logger.info('Admin authentication successful', { username });
       
       return {
         id: 'admin-1',
@@ -405,7 +405,7 @@ export async function authenticateUser(username: string, password: string): Prom
         lastLoginAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
+      };
     }
     
     // For regular users, you would check against your user database
@@ -423,14 +423,14 @@ export async function authenticateUser(username: string, password: string): Prom
     // 
     // return user
     
-    logger.warn('Authentication failed for user', { username })
-    return null
+    logger.warn('Authentication failed for user', { username });
+    return null;
   } catch (error) {
     logger.error('Authentication error', {
       error: error instanceof Error ? error.message : 'Unknown error',
       username,
-    })
-    return null
+    });
+    return null;
   }
 }
 
@@ -438,21 +438,21 @@ export async function authenticateUser(username: string, password: string): Prom
  * Check if user has specific role
  */
 export function hasRole(user: User | null, role: string): boolean {
-  return user?.role === role
+  return user?.role === role;
 }
 
 /**
  * Check if user has admin privileges
  */
 export function isAdmin(user: User | null): boolean {
-  return hasRole(user, 'admin')
+  return hasRole(user, 'admin');
 }
 
 /**
  * Check if user has any of the specified roles
  */
 export function hasAnyRole(user: User | null, roles: string[]): boolean {
-  return user ? roles.includes(user.role) : false
+  return user ? roles.includes(user.role) : false;
 }
 
 // Authorization helpers for different contexts
@@ -461,34 +461,34 @@ export function hasAnyRole(user: User | null, roles: string[]): boolean {
  * Authorization check for Server Components
  */
 export async function authorizeServerComponent(requiredRoles: string[] = []): Promise<User | null> {
-  const user = await getUser()
+  const user = await getUser();
   
   if (!user) {
-    return null
+    return null;
   }
   
   if (requiredRoles.length > 0 && !hasAnyRole(user, requiredRoles)) {
-    return null
+    return null;
   }
   
-  return user
+  return user;
 }
 
 /**
  * Authorization check for Server Actions
  */
 export async function authorizeServerAction(requiredRoles: string[] = []): Promise<User> {
-  const user = await getUser()
+  const user = await getUser();
   
   if (!user) {
-    throw new Error('Authentication required')
+    throw new Error('Authentication required');
   }
   
   if (requiredRoles.length > 0 && !hasAnyRole(user, requiredRoles)) {
-    throw new Error('Insufficient permissions')
+    throw new Error('Insufficient permissions');
   }
   
-  return user
+  return user;
 }
 
 /**
@@ -499,14 +499,14 @@ export async function authorizeRouteHandler(requiredRoles: string[] = []): Promi
   authorized: boolean
   statusCode: number
 }> {
-  const user = await getUser()
+  const user = await getUser();
   
   if (!user) {
     return {
       user: null,
       authorized: false,
       statusCode: 401, // Unauthorized
-    }
+    };
   }
   
   if (requiredRoles.length > 0 && !hasAnyRole(user, requiredRoles)) {
@@ -514,14 +514,14 @@ export async function authorizeRouteHandler(requiredRoles: string[] = []): Promi
       user,
       authorized: false,
       statusCode: 403, // Forbidden
-    }
+    };
   }
   
   return {
     user,
     authorized: true,
     statusCode: 200,
-  }
+  };
 }
 
 // Development and testing utilities
@@ -531,7 +531,7 @@ export async function authorizeRouteHandler(requiredRoles: string[] = []): Promi
  */
 export async function createMockSession(mockUser: Partial<User> = {}): Promise<void> {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('Mock sessions are not allowed in production')
+    throw new Error('Mock sessions are not allowed in production');
   }
   
   const user: User = {
@@ -542,9 +542,9 @@ export async function createMockSession(mockUser: Partial<User> = {}): Promise<v
     createdAt: new Date(),
     updatedAt: new Date(),
     ...mockUser,
-  }
+  };
   
-  await createSession(user)
+  await createSession(user);
 }
 
 /**
@@ -557,21 +557,21 @@ export async function getSessionDebugInfo(): Promise<{
   cookiePresent: boolean
 }> {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('Debug info is not available in production')
+    throw new Error('Debug info is not available in production');
   }
   
-  const cookieStore = await cookies()
-  const sessionCookie = cookieStore.get(SESSION_CONFIG.cookieName)
-  const payload = await decrypt(sessionCookie?.value)
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(SESSION_CONFIG.cookieName);
+  const payload = await decrypt(sessionCookie?.value);
   
   return {
     hasSession: !!payload,
     isExpired: payload ? new Date() > new Date(payload.expiresAt) : false,
     payload,
     cookiePresent: !!sessionCookie,
-  }
+  };
 }
 
 // Export types and utilities
-export type { User, Session, SessionPayload, FormState }
-export { SESSION_CONFIG }
+export type { User, Session, SessionPayload, FormState };
+export { SESSION_CONFIG };

@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import Link from 'next/link'
-import { AlertCircle, ArrowLeft, Home, RefreshCw, Phone, Mail } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { AlertCircle, ArrowLeft, Home, RefreshCw, Phone, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ContactErrorProps {
   error: Error & { digest?: string }
@@ -14,16 +14,16 @@ interface ContactErrorProps {
 export default function ContactError({ error, reset }: ContactErrorProps) {
   useEffect(() => {
     // Log the error to error reporting service
-    console.error('Contact page error:', error)
+    console.error('Contact page error:', error);
     
     // Track error for analytics
     if (typeof window !== 'undefined' && 'gtag' in window) {
       ;(window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `Contact page error: ${error.message}`,
         fatal: false,
-      })
+      });
     }
-  }, [error])
+  }, [error]);
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
@@ -129,5 +129,5 @@ export default function ContactError({ error, reset }: ContactErrorProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

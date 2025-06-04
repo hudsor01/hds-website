@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import type { ReactNode } from 'react'
-import { textAnimations, transitions } from '@/lib/design-system'
-import { cn } from '@/lib/utils'
+import { m } from 'framer-motion';
+import type { ReactNode } from 'react';
+import { textAnimations, transitions } from '@/lib/design-system';
+import { cn } from '@/lib/utils';
 
 interface AnimatedTextProps {
   children: ReactNode
@@ -28,7 +28,7 @@ export function AnimatedText({
 }: AnimatedTextProps) {
   const gradientClass = gradient
     ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400'
-    : ''
+    : '';
 
   return (
     <m.span
@@ -43,7 +43,7 @@ export function AnimatedText({
     >
       {children}
     </m.span>
-  )
+  );
 }
 
 /**
@@ -61,7 +61,7 @@ export function AnimatedHeading({
 }: AnimatedTextProps) {
   const gradientClass = gradient
     ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300'
-    : ''
+    : '';
 
   return (
     <m.h2
@@ -76,5 +76,5 @@ export function AnimatedHeading({
     >
       {children}
     </m.h2>
-  )
+  );
 }

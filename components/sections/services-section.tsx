@@ -1,19 +1,19 @@
-import React from 'react'
-import { m } from 'framer-motion'
-import Link from 'next/link'
+import React from 'react';
+import { m } from 'framer-motion';
+import Link from 'next/link';
 import {
   TrendingUp,
   Code,
   BarChart3,
   DollarSign,
-} from 'lucide-react'
-import { ServiceCard } from '@/components/service-card'
-import { AnimatedSection } from '@/components/sections/section'
-import { gradients } from '@/lib/design-system'
+} from 'lucide-react';
+import { ServiceCard } from '@/components/service-card';
+import { AnimatedSection } from '@/components/sections/section';
+import { gradients } from '@/lib/design-system';
 import type {
   ServicesSectionProps,
   ServiceItem,
-} from '@/types/service-types'
+} from '@/types/service-types';
 
 // Animation variants for container and items
 const containerVariants = {
@@ -24,7 +24,7 @@ const containerVariants = {
       staggerChildren: 0.15,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -36,7 +36,7 @@ const itemVariants = {
       ease: [0.22, 1, 0.36, 1],
     },
   },
-}
+};
 
 
 
@@ -91,9 +91,9 @@ export function ServicesSection({
       gradient: 'linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)',
       featured: true,
     },
-  ]
+  ];
 
-  const servicesToDisplay = services || defaultServices
+  const servicesToDisplay = services || defaultServices;
 
   // Simple variant (no animations, clean layout)
   if (variant === 'simple') {
@@ -131,7 +131,7 @@ export function ServicesSection({
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   // Minimal variant (compact, less spacing)
@@ -171,7 +171,7 @@ export function ServicesSection({
           )}
         </div>
       </section>
-    )
+    );
   }
 
   // Gradient variant (animated cards with gradients)
@@ -251,7 +251,7 @@ export function ServicesSection({
           )}
         </div>
       </AnimatedSection>
-    )
+    );
   }
 
   // Default variant (animated cards without gradients)
@@ -299,5 +299,5 @@ export function ServicesSection({
         )}
       </div>
     </section>
-  )
+  );
 }

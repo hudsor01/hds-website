@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import React from 'react'
-import Link from 'next/link'
-import { m } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { transitions, shadows, hover, gradients } from '@/lib/design-system'
+import React from 'react';
+import Link from 'next/link';
+import { m } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { transitions, shadows, hover, gradients } from '@/lib/design-system';
 import {
   Card,
   CardContent,
@@ -14,10 +14,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
-import type { ServiceCardProps } from '@/types/service-types'
+import type { ServiceCardProps } from '@/types/service-types';
 
 export function ServiceCard({
   title,
@@ -36,15 +36,15 @@ export function ServiceCard({
   const renderIcon = (className: string) => {
     if (React.isValidElement(icon)) {
       // If it's already a JSX element, clone it with new className
-      return React.cloneElement(icon as React.ReactElement, { className })
+      return React.cloneElement(icon as React.ReactElement, { className });
     } else if (typeof icon === 'function') {
       // If it's a component function, render it
-      const IconComponent = icon as React.FC<React.SVGProps<SVGSVGElement>>
-      return <IconComponent className={className} />
+      const IconComponent = icon as React.FC<React.SVGProps<SVGSVGElement>>;
+      return <IconComponent className={className} />;
     }
     // Fallback for other cases
-    return null
-  }
+    return null;
+  };
 
   // Animated gradient variant
   if (variant === 'gradient') {
@@ -110,7 +110,7 @@ export function ServiceCard({
           </Link>
         </div>
       </AnimatedCard>
-    )
+    );
   }
 
   // Animated variant
@@ -148,7 +148,7 @@ export function ServiceCard({
           </div>
         </div>
       </m.div>
-    )
+    );
   }
 
   // Minimal variant
@@ -178,7 +178,7 @@ export function ServiceCard({
           <ArrowRight className='ml-1 h-3 w-3' />
         </Link>
       </div>
-    )
+    );
   }
 
   // Default variant (shadcn/ui Card based)
@@ -214,5 +214,5 @@ export function ServiceCard({
         </Link>
       </CardFooter>
     </Card>
-  )
+  );
 }

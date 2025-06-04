@@ -5,15 +5,15 @@
  * Shows website performance metrics and optimization insights
  */
 
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { toast } from '@/components/ui/use-toast'
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from '@/components/ui/use-toast';
 import { 
   Activity, 
   Zap, 
@@ -25,147 +25,147 @@ import {
   CheckCircle,
   Download,
   RefreshCw,
-} from 'lucide-react'
-import { api } from '@/lib/trpc/client'
+} from 'lucide-react';
+import { api } from '@/lib/trpc/client';
 
 function getMetricIcon(metric: string) {
   switch (metric) {
-    case 'LCP': return <Eye className='h-4 w-4' />
-    case 'FID': return <Zap className='h-4 w-4' />
-    case 'CLS': return <Activity className='h-4 w-4' />
-    case 'FCP': return <Clock className='h-4 w-4' />
-    case 'TTFB': return <Gauge className='h-4 w-4' />
-    default: return <Activity className='h-4 w-4' />
+    case 'LCP': return <Eye className='h-4 w-4' />;
+    case 'FID': return <Zap className='h-4 w-4' />;
+    case 'CLS': return <Activity className='h-4 w-4' />;
+    case 'FCP': return <Clock className='h-4 w-4' />;
+    case 'TTFB': return <Gauge className='h-4 w-4' />;
+    default: return <Activity className='h-4 w-4' />;
   }
 }
 
 function getMetricName(metric: string) {
   switch (metric) {
-    case 'LCP': return 'Largest Contentful Paint'
-    case 'FID': return 'First Input Delay'
-    case 'CLS': return 'Cumulative Layout Shift'
-    case 'FCP': return 'First Contentful Paint'
-    case 'TTFB': return 'Time to First Byte'
-    default: return metric
+    case 'LCP': return 'Largest Contentful Paint';
+    case 'FID': return 'First Input Delay';
+    case 'CLS': return 'Cumulative Layout Shift';
+    case 'FCP': return 'First Contentful Paint';
+    case 'TTFB': return 'Time to First Byte';
+    default: return metric;
   }
 }
 
 function getMetricUnit(metric: string) {
   switch (metric) {
-    case 'CLS': return ''
+    case 'CLS': return '';
     case 'LCP':
-    case 'FCP': return 's'
-    default: return 'ms'
+    case 'FCP': return 's';
+    default: return 'ms';
   }
 }
 
 function getMetricRating(metric: string, value: number): 'good' | 'needs-improvement' | 'poor' {
   switch (metric) {
     case 'LCP':
-      return value <= 2.5 ? 'good' : value <= 4.0 ? 'needs-improvement' : 'poor'
+      return value <= 2.5 ? 'good' : value <= 4.0 ? 'needs-improvement' : 'poor';
     case 'FID':
-      return value <= 100 ? 'good' : value <= 300 ? 'needs-improvement' : 'poor'
+      return value <= 100 ? 'good' : value <= 300 ? 'needs-improvement' : 'poor';
     case 'CLS':
-      return value <= 0.1 ? 'good' : value <= 0.25 ? 'needs-improvement' : 'poor'
+      return value <= 0.1 ? 'good' : value <= 0.25 ? 'needs-improvement' : 'poor';
     case 'FCP':
-      return value <= 1.8 ? 'good' : value <= 3.0 ? 'needs-improvement' : 'poor'
+      return value <= 1.8 ? 'good' : value <= 3.0 ? 'needs-improvement' : 'poor';
     case 'TTFB':
-      return value <= 800 ? 'good' : value <= 1800 ? 'needs-improvement' : 'poor'
+      return value <= 800 ? 'good' : value <= 1800 ? 'needs-improvement' : 'poor';
     default:
-      return 'good'
+      return 'good';
   }
 }
 
 function getRatingBadge(rating: string) {
   switch (rating) {
     case 'good':
-      return <Badge className='bg-green-100 text-green-800 hover:bg-green-100'>Good</Badge>
+      return <Badge className='bg-green-100 text-green-800 hover:bg-green-100'>Good</Badge>;
     case 'needs-improvement':
-      return <Badge className='bg-yellow-100 text-yellow-800 hover:bg-yellow-100'>Needs Improvement</Badge>
+      return <Badge className='bg-yellow-100 text-yellow-800 hover:bg-yellow-100'>Needs Improvement</Badge>;
     case 'poor':
-      return <Badge className='bg-red-100 text-red-800 hover:bg-red-100'>Poor</Badge>
+      return <Badge className='bg-red-100 text-red-800 hover:bg-red-100'>Poor</Badge>;
     default:
-      return <Badge variant='outline'>{rating}</Badge>
+      return <Badge variant='outline'>{rating}</Badge>;
   }
 }
 
 function calculatePerformanceScore(metrics: Record<string, unknown>): number {
-  if (!metrics?.LCP || !metrics?.FID || !metrics?.CLS) return 0
+  if (!metrics?.LCP || !metrics?.FID || !metrics?.CLS) return 0;
   
   const lcpScore = getMetricRating('LCP', metrics.LCP.avg) === 'good' ? 100 : 
-                   getMetricRating('LCP', metrics.LCP.avg) === 'needs-improvement' ? 75 : 50
+                   getMetricRating('LCP', metrics.LCP.avg) === 'needs-improvement' ? 75 : 50;
   const fidScore = getMetricRating('FID', metrics.FID.avg) === 'good' ? 100 : 
-                   getMetricRating('FID', metrics.FID.avg) === 'needs-improvement' ? 75 : 50
+                   getMetricRating('FID', metrics.FID.avg) === 'needs-improvement' ? 75 : 50;
   const clsScore = getMetricRating('CLS', metrics.CLS.avg) === 'good' ? 100 : 
-                   getMetricRating('CLS', metrics.CLS.avg) === 'needs-improvement' ? 75 : 50
+                   getMetricRating('CLS', metrics.CLS.avg) === 'needs-improvement' ? 75 : 50;
   
-  return Math.round((lcpScore + fidScore + clsScore) / 3)
+  return Math.round((lcpScore + fidScore + clsScore) / 3);
 }
 
 function getDateRange(period: string): { startDate?: string; endDate?: string } {
-  const now = new Date()
-  const endDate = now.toISOString()
+  const now = new Date();
+  const endDate = now.toISOString();
   
   switch (period) {
     case '7d':
       return {
         startDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
         endDate,
-      }
+      };
     case '30d':
       return {
         startDate: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
         endDate,
-      }
+      };
     case '90d':
       return {
         startDate: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000).toISOString(),
         endDate,
-      }
+      };
     default:
-      return {}
+      return {};
   }
 }
 
 export default function PerformancePage() {
-  const [dateRange, setDateRange] = useState('30d')
-  const [refreshing, setRefreshing] = useState(false)
+  const [dateRange, setDateRange] = useState('30d');
+  const [refreshing, setRefreshing] = useState(false);
 
   // Get date range for API calls
-  const dateParams = getDateRange(dateRange)
+  const dateParams = getDateRange(dateRange);
 
   // Fetch performance metrics
   const { 
     data: performanceData, 
     isLoading: performanceLoading, 
     refetch: refetchPerformance, 
-  } = api.admin.getPerformanceMetrics.useQuery(dateParams)
+  } = api.admin.getPerformanceMetrics.useQuery(dateParams);
 
   // Fetch analytics data for additional context
   const { 
     data: analyticsData, 
     isLoading: analyticsLoading, 
-  } = api.admin.getDashboardAnalytics.useQuery(dateParams)
+  } = api.admin.getDashboardAnalytics.useQuery(dateParams);
 
   const handleRefresh = async () => {
-    setRefreshing(true)
+    setRefreshing(true);
     try {
-      await Promise.all([refetchPerformance()])
-      toast({ title: 'Success', description: 'Performance data refreshed' })
+      await Promise.all([refetchPerformance()]);
+      toast({ title: 'Success', description: 'Performance data refreshed' });
     } catch (error) {
       toast({ 
         title: 'Error', 
         description: 'Failed to refresh data',
         variant: 'destructive',
-      })
+      });
     } finally {
-      setRefreshing(false)
+      setRefreshing(false);
     }
-  }
+  };
 
   const handleExport = () => {
     // Generate CSV export of performance data
-    if (!performanceData) return
+    if (!performanceData) return;
 
     const csvData = [
       ['Metric', 'Average', 'P95', 'Count', 'Rating'],
@@ -176,44 +176,44 @@ export default function PerformancePage() {
         data.count || '0',
         getMetricRating(metric, data.avg || 0),
       ]),
-    ]
+    ];
 
-    const csvContent = csvData.map(row => row.join(',')).join('\n')
-    const blob = new Blob([csvContent], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `performance-report-${dateRange}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `performance-report-${dateRange}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   // Calculate derived metrics
-  const performanceScore = performanceData ? calculatePerformanceScore(performanceData.metrics) : 0
-  const totalSessions = analyticsData?.overview.uniqueVisitors || 0
+  const performanceScore = performanceData ? calculatePerformanceScore(performanceData.metrics) : 0;
+  const totalSessions = analyticsData?.overview.uniqueVisitors || 0;
   const passingSessionsCount = performanceData ? 
-    Math.round(totalSessions * (performanceScore / 100)) : 0
-  const passingRate = totalSessions > 0 ? (passingSessionsCount / totalSessions) * 100 : 0
+    Math.round(totalSessions * (performanceScore / 100)) : 0;
+  const passingRate = totalSessions > 0 ? (passingSessionsCount / totalSessions) * 100 : 0;
 
   // Generate recommendations based on real data
   const generateRecommendations = () => {
-    if (!performanceData?.metrics) return []
+    if (!performanceData?.metrics) return [];
 
-    const recommendations = []
-    const metrics = performanceData.metrics
+    const recommendations = [];
+    const metrics = performanceData.metrics;
 
     if (metrics.LCP && getMetricRating('LCP', metrics.LCP.avg) !== 'good') {
       recommendations.push({
         type: 'warning',
         title: 'Improve LCP Performance',
         description: 'Optimize images, improve server response times, and consider using a CDN.',
-      })
+      });
     } else if (metrics.LCP) {
       recommendations.push({
         type: 'success',
         title: 'Excellent LCP Performance',
         description: 'Your Largest Contentful Paint is in the good range. Keep optimizing images and server response times.',
-      })
+      });
     }
 
     if (metrics.FID && getMetricRating('FID', metrics.FID.avg) !== 'good') {
@@ -221,13 +221,13 @@ export default function PerformancePage() {
         type: 'warning',
         title: 'Reduce Input Delay',
         description: 'Minimize JavaScript execution time and consider code splitting.',
-      })
+      });
     } else if (metrics.FID) {
       recommendations.push({
         type: 'success',
         title: 'Great Interactivity',
         description: 'First Input Delay is excellent. Your site responds quickly to user interactions.',
-      })
+      });
     }
 
     if (metrics.CLS && getMetricRating('CLS', metrics.CLS.avg) !== 'good') {
@@ -235,25 +235,25 @@ export default function PerformancePage() {
         type: 'warning',
         title: 'Reduce Layout Shifts',
         description: 'Set dimensions for images and videos, avoid inserting content above existing content.',
-      })
+      });
     } else if (metrics.CLS) {
       recommendations.push({
         type: 'success',
         title: 'Stable Layout',
         description: 'CLS is good but watch for layout shifts when adding new content or ads.',
-      })
+      });
     }
 
     recommendations.push({
       type: 'info',
       title: 'Continue Optimization',
       description: 'Consider implementing resource hints and optimizing critical rendering path.',
-    })
+    });
 
-    return recommendations.slice(0, 4) // Limit to 4 recommendations
-  }
+    return recommendations.slice(0, 4); // Limit to 4 recommendations
+  };
 
-  const recommendations = generateRecommendations()
+  const recommendations = generateRecommendations();
 
   return (
     <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
@@ -407,7 +407,7 @@ export default function PerformancePage() {
           ) : performanceData?.metrics ? (
             <div className='grid gap-4 md:grid-cols-5'>
               {Object.entries(performanceData.metrics).map(([metric, data]: [string, { avg?: number; p95?: number; count?: number }]) => {
-                const rating = getMetricRating(metric, data.avg || 0)
+                const rating = getMetricRating(metric, data.avg || 0);
                 
                 return (
                   <div key={metric} className='space-y-3'>
@@ -439,7 +439,7 @@ export default function PerformancePage() {
                       {(data.count || 0).toLocaleString()} samples
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           ) : (
@@ -559,5 +559,5 @@ export default function PerformancePage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

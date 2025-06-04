@@ -5,9 +5,9 @@
  * validation, submission, and form state management.
  */
 
-import { z } from 'zod'
-import { ServiceType, BudgetRange, FormStatus } from './enum-types'
-import type { ApiResponse } from './api-types'
+import { z } from 'zod';
+import { ServiceType, BudgetRange, FormStatus } from './enum-types';
+import type { ApiResponse } from './api-types';
 
 // ============= Form Validation Schemas =============
 
@@ -20,12 +20,12 @@ export const nameSchema = z
   .max(100, { message: 'Name cannot exceed 100 characters' })
   .refine(value => /^[a-zA-Z\s\-'\.]+$/.test(value), {
     message: 'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
-  })
+  });
 
 export const emailSchema = z
   .string()
   .email({ message: 'Please enter a valid email address' })
-  .max(255, { message: 'Email cannot exceed 255 characters' })
+  .max(255, { message: 'Email cannot exceed 255 characters' });
 
 export const phoneSchema = z
   .string()
@@ -34,32 +34,32 @@ export const phoneSchema = z
   .refine(value => /^[\d\+\-\(\)\s\.]+$/.test(value), {
     message: 'Phone number can only contain digits, spaces, and the characters: + - ( )',
   })
-  .optional()
+  .optional();
 
 export const companySchema = z
   .string()
   .min(2, { message: 'Company name must be at least 2 characters' })
   .max(100, { message: 'Company name cannot exceed 100 characters' })
-  .optional()
+  .optional();
 
 export const messageSchema = z
   .string()
   .min(10, { message: 'Message must be at least 10 characters' })
-  .max(2000, { message: 'Message cannot exceed 2000 characters' })
+  .max(2000, { message: 'Message cannot exceed 2000 characters' });
 
 export const subjectSchema = z
   .string()
   .min(3, { message: 'Subject must be at least 3 characters' })
-  .max(100, { message: 'Subject cannot exceed 100 characters' })
+  .max(100, { message: 'Subject cannot exceed 100 characters' });
 
 export const captchaTokenSchema = z
   .string()
-  .min(1, { message: 'Verification token is required' })
+  .min(1, { message: 'Verification token is required' });
 
 export const urlSchema = z
   .string()
   .url({ message: 'Please enter a valid URL' })
-  .max(2048, { message: 'URL cannot exceed 2048 characters' })
+  .max(2048, { message: 'URL cannot exceed 2048 characters' });
 
 // ============= Form Data Schemas =============
 
@@ -81,7 +81,7 @@ export const contactFormFullSchema = z.object({
   website: z.string().optional(), // Additional honeypot field
   formStartTime: z.number().optional(), // Timing protection
   formSubmissionTime: z.number().optional(), // Timing protection
-})
+});
 
 /**
  * Simple contact form schema (basic fields only)
@@ -95,7 +95,7 @@ export const contactFormBasicSchema = z.object({
   website: z.string().optional(),
   formStartTime: z.number().optional(),
   formSubmissionTime: z.number().optional(),
-})
+});
 
 /**
  * Newsletter subscription schema
@@ -107,7 +107,7 @@ export const newsletterSchema = z.object({
   source: z.string().optional(),
   interests: z.array(z.string()).optional(),
   frequency: z.enum(['weekly', 'monthly']).default('weekly'),
-})
+});
 
 /**
  * Lead magnet form schema
@@ -118,7 +118,7 @@ export const leadMagnetSchema = z.object({
   company: companySchema,
   resourceId: z.string().min(1, 'Resource ID is required'),
   source: z.string().optional(),
-})
+});
 
 /**
  * ROI calculator form schema
@@ -132,7 +132,7 @@ export const roiCalculatorSchema = z.object({
   marketingSpend: z.number().min(0).optional(),
   industry: z.string().optional(),
   companySize: z.enum(['startup', 'small', 'medium', 'large', 'enterprise']).optional(),
-})
+});
 
 /**
  * Website audit form schema
@@ -146,7 +146,7 @@ export const websiteAuditSchema = z.object({
   currentChallenges: z.string().max(500).optional(),
   budget: z.nativeEnum(BudgetRange).optional(),
   timeline: z.enum(['asap', '1-month', '3-months', '6-months', 'flexible']).optional(),
-})
+});
 
 /**
  * Booking form schema
@@ -162,7 +162,7 @@ export const bookingSchema = z.object({
   preferredTime: z.string().optional(),
   timezone: z.string().optional(),
   budget: z.nativeEnum(BudgetRange).optional(),
-})
+});
 
 // ============= Form Data Types =============
 
@@ -545,7 +545,7 @@ export const LEAD_MAGNET_RESOURCES = {
     downloadCount: 0,
     tags: ['crm', 'case-study', 'optimization'],
   },
-} as const
+} as const;
 
 export type LeadMagnetResourceId = keyof typeof LEAD_MAGNET_RESOURCES
 export type LeadMagnetResource = typeof LEAD_MAGNET_RESOURCES[LeadMagnetResourceId]

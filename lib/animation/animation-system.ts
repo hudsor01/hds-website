@@ -5,12 +5,12 @@
  * throughout the application.
  */
 
-import { useRef, useState, useEffect } from 'react'
-import { useInView } from 'react-intersection-observer'
+import { useRef, useState, useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 import {
   useAnimation,
   useInView as useFramerInView,
-} from 'framer-motion'
+} from 'framer-motion';
 
 // ========== Animation Variants ===========
 
@@ -41,7 +41,7 @@ export const fadeAnimations = {
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: 20 },
   },
-}
+};
 
 // Scale animations
 export const scaleAnimations = {
@@ -65,7 +65,7 @@ export const scaleAnimations = {
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.5 },
   },
-}
+};
 
 // Slide animations
 export const slideAnimations = {
@@ -89,7 +89,7 @@ export const slideAnimations = {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -100 },
   },
-}
+};
 
 // Rotation animations
 export const rotateAnimations = {
@@ -108,7 +108,7 @@ export const rotateAnimations = {
     animate: { opacity: 1, rotate: 0 },
     exit: { opacity: 0, rotate: -90 },
   },
-}
+};
 
 // Stagger animations
 export const staggerAnimations = {
@@ -154,7 +154,7 @@ export const staggerAnimations = {
       },
     },
   },
-}
+};
 
 // Spring animations
 export const springAnimations = {
@@ -198,7 +198,7 @@ export const springAnimations = {
       },
     },
   },
-}
+};
 
 // Text animations
 export const textAnimations = {
@@ -236,7 +236,7 @@ export const textAnimations = {
       transition: { duration: 0.3 },
     },
   },
-}
+};
 
 // Hover animations
 export const hoverAnimations = {
@@ -279,7 +279,7 @@ export const hoverAnimations = {
       damping: 10,
     },
   },
-}
+};
 
 // Tap animations
 export const tapAnimations = {
@@ -292,7 +292,7 @@ export const tapAnimations = {
     boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
     transition: { duration: 0.1 },
   },
-}
+};
 
 // Gesture animations
 export const gestureAnimations = {
@@ -315,7 +315,7 @@ export const gestureAnimations = {
     dragTransition: { bounceDamping: 10, bounceStiffness: 100 },
     whileDrag: { scale: 1.05 },
   },
-}
+};
 
 // Transition presets
 export const transitions = {
@@ -329,7 +329,7 @@ export const transitions = {
   elastic: { type: 'spring', stiffness: 300, damping: 8 },
   stiff: { type: 'spring', stiffness: 400, damping: 30 },
   molasses: { duration: 0.8, ease: [0.33, 1, 0.68, 1] },
-}
+};
 
 // Export all animations as a single object for easy access
 export const animations = {
@@ -343,7 +343,7 @@ export const animations = {
   hover: hoverAnimations,
   tap: tapAnimations,
   gesture: gestureAnimations,
-}
+};
 
 // ========== Animation Hooks ===========
 
@@ -361,15 +361,15 @@ export function useScrollAnimation(
     rootMargin?: string
   } = {},
 ) {
-  const { threshold = 0.1, once = true, rootMargin = '-100px' } = options
+  const { threshold = 0.1, once = true, rootMargin = '-100px' } = options;
 
   const [ref, inView] = useInView({
     threshold,
     triggerOnce: once,
     rootMargin,
-  })
+  });
 
-  return { ref, inView }
+  return { ref, inView };
 }
 
 /**
@@ -381,15 +381,15 @@ export function useFramerScrollAnimation(
     once?: boolean
   } = {},
 ) {
-  const { threshold = 0.1, once = true } = options
+  const { threshold = 0.1, once = true } = options;
 
-  const ref = useRef(null)
+  const ref = useRef(null);
   const isInView = useFramerInView(ref, {
     once,
     amount: threshold,
-  })
+  });
 
-  return { ref, isInView }
+  return { ref, isInView };
 }
 
 /**
@@ -404,32 +404,32 @@ export function useCounter(
   duration: number = 2,
   start: number = 0,
 ) {
-  const [count, setCount] = useState(start)
-  const controls = useAnimation()
+  const [count, setCount] = useState(start);
+  const controls = useAnimation();
 
   useEffect(() => {
-    let startTime: number
-    let animationFrame: number
+    let startTime: number;
+    let animationFrame: number;
 
     const updateCount = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
-      setCount(Math.floor(progress * (end - start) + start))
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      setCount(Math.floor(progress * (end - start) + start));
 
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(updateCount)
+        animationFrame = requestAnimationFrame(updateCount);
       }
-    }
+    };
 
-    controls.start({ opacity: 1 })
-    animationFrame = requestAnimationFrame(updateCount)
+    controls.start({ opacity: 1 });
+    animationFrame = requestAnimationFrame(updateCount);
 
     return () => {
-      cancelAnimationFrame(animationFrame)
-    }
-  }, [end, duration, start, controls])
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [end, duration, start, controls]);
 
-  return { count, controls }
+  return { count, controls };
 }
 
 /**
@@ -438,37 +438,37 @@ export function useCounter(
  * @param speed Speed of parallax effect (higher = more movement)
  */
 export function useParallax(speed: number = 0.5) {
-  const [scrollY, setScrollY] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const handleScroll = () => setScrollY(window.scrollY);
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Calculate transform based on scroll position
-  const y = scrollY * speed
+  const y = scrollY * speed;
 
-  return { y, scrollY }
+  return { y, scrollY };
 }
 
 /**
  * Hook for mouse tracking
  */
 export function useMousePosition() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
-  return mousePosition
+  return mousePosition;
 }
 
 /**
@@ -477,36 +477,36 @@ export function useMousePosition() {
  * @param delay Delay in milliseconds
  */
 export function useDelayedAnimation(delay: number) {
-  const [isReady, setIsReady] = useState(false)
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), delay)
-    return () => clearTimeout(timer)
-  }, [delay])
+    const timer = setTimeout(() => setIsReady(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
 
-  return isReady
+  return isReady;
 }
 
 /**
  * Hook for viewport size
  */
 export function useViewportSize() {
-  const [size, setSize] = useState({ width: 0, height: 0 })
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const handleResize = () => {
       setSize({
         width: window.innerWidth,
         height: window.innerHeight,
-      })
-    }
+      });
+    };
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  return size
+  return size;
 }
 
 /**
@@ -518,7 +518,7 @@ export function useViewportSize() {
 export function useStaggerAnimation(count: number, staggerDelay: number = 0.1) {
   return Array.from({ length: count }).map((_, i) => ({
     transition: { delay: i * staggerDelay },
-  }))
+  }));
 }
 
 /**
@@ -535,28 +535,28 @@ export function useScrollLinkedAnimation(
   scrollStart: number = 0,
   scrollEnd: number = 1,
 ) {
-  const [value, setValue] = useState(start)
+  const [value, setValue] = useState(start);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.body.offsetHeight - window.innerHeight
-      const scrollProgress = scrollTop / docHeight
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.offsetHeight - window.innerHeight;
+      const scrollProgress = scrollTop / docHeight;
 
       if (scrollProgress < scrollStart) {
-        setValue(start)
+        setValue(start);
       } else if (scrollProgress > scrollEnd) {
-        setValue(end)
+        setValue(end);
       } else {
         const normalizedProgress =
-          (scrollProgress - scrollStart) / (scrollEnd - scrollStart)
-        setValue(start + normalizedProgress * (end - start))
+          (scrollProgress - scrollStart) / (scrollEnd - scrollStart);
+        setValue(start + normalizedProgress * (end - start));
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [start, end, scrollStart, scrollEnd])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [start, end, scrollStart, scrollEnd]);
 
-  return value
+  return value;
 }

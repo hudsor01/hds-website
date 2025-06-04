@@ -1,7 +1,7 @@
-'use client'
-import { cn } from '@/lib/utils'
-import { useMotionValue, motion, useMotionTemplate } from 'framer-motion'
-import React from 'react'
+'use client';
+import { cn } from '@/lib/utils';
+import { useMotionValue, motion, useMotionTemplate } from 'framer-motion';
+import React from 'react';
 
 export const HeroHighlight = ({
   children,
@@ -12,8 +12,8 @@ export const HeroHighlight = ({
   className?: string;
   containerClassName?: string;
 }) => {
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   // SVG patterns for different states and themes
   const dotPatterns = {
@@ -25,18 +25,18 @@ export const HeroHighlight = ({
       default: 'url(\'data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' width=\'16\' height=\'16\' fill=\'none\'%3E%3Ccircle fill=\'%23404040\' id=\'pattern-circle\' cx=\'10\' cy=\'10\' r=\'2.5\'%3E%3C/circle%3E%3C/svg%3E\')',
       hover: 'url(\'data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' width=\'16\' height=\'16\' fill=\'none\'%3E%3Ccircle fill=\'%238183f4\' id=\'pattern-circle\' cx=\'10\' cy=\'10\' r=\'2.5\'%3E%3C/circle%3E%3C/svg%3E\')',
     },
-  }
+  };
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: React.MouseEvent<HTMLDivElement>) {
-    if (!currentTarget) return
-    const { left, top } = currentTarget.getBoundingClientRect()
+    if (!currentTarget) return;
+    const { left, top } = currentTarget.getBoundingClientRect();
 
-    mouseX.set(clientX - left)
-    mouseY.set(clientY - top)
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
   }
   return (
     <div
@@ -101,8 +101,8 @@ export const HeroHighlight = ({
 
       <div className={cn('relative z-20', className)}>{children}</div>
     </div>
-  )
-}
+  );
+};
 
 export const Highlight = ({
   children,
@@ -135,4 +135,4 @@ export const Highlight = ({
     >
       {children}
     </motion.span>
-  )
+  );

@@ -12,7 +12,7 @@ export const shadows = {
   xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
   '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
   glow: '0 0 20px rgba(59, 130, 246, 0.5)',
-}
+};
 
 export const gradients = {
   primary: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
@@ -25,7 +25,7 @@ export const gradients = {
     radial-gradient(at 80% 50%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
     radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%)
   `,
-}
+};
 
 export const borderRadius = {
   sm: '0.25rem',
@@ -35,7 +35,7 @@ export const borderRadius = {
   '2xl': '1rem',
   '3xl': '1.5rem',
   full: '9999px',
-}
+};
 
 export const breakpoints = {
   sm: '640px',
@@ -43,4 +43,4 @@ export const breakpoints = {
   lg: '1024px',
   xl: '1280px',
   '2xl': '1536px',
-}
+};

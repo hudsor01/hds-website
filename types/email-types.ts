@@ -5,8 +5,8 @@
  * transactional emails, sequences, templates, and automation.
  */
 
-import { z } from 'zod'
-import { SequenceStatus, ContentType } from './enum-types'
+import { z } from 'zod';
+import { SequenceStatus, ContentType } from './enum-types';
 
 // ============= Email Infrastructure =============
 

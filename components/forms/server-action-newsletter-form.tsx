@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useActionState } from 'react'
-import { subscribeToNewsletter } from '@/lib/actions/server-actions'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useActionState } from 'react';
+import { subscribeToNewsletter } from '@/lib/actions/server-actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 /**
  * Newsletter subscription form using Server Actions
@@ -17,17 +17,17 @@ type FormState = {
   errors?: string[]
 }
 
-const initialState: FormState = {}
+const initialState: FormState = {};
 
 export function ServerActionNewsletterForm({ source = 'website' }: { source?: string }) {
   const [state, formAction, isPending] = useActionState(
     async (prevState: FormState, formData: FormData) => {
       // Add source to form data
-      formData.set('source', source)
-      return await subscribeToNewsletter(formData)
+      formData.set('source', source);
+      return await subscribeToNewsletter(formData);
     },
     initialState,
-  )
+  );
 
   // If successfully subscribed, show success state
   if (state.success) {
@@ -43,7 +43,7 @@ export function ServerActionNewsletterForm({ source = 'website' }: { source?: st
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -122,5 +122,5 @@ export function ServerActionNewsletterForm({ source = 'website' }: { source?: st
         </p>
       </form>
     </div>
-  )
+  );
 }

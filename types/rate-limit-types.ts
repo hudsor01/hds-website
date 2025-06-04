@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Rate Limit Configuration Types
@@ -106,7 +106,7 @@ export const RATE_LIMIT_PRESETS = {
     maxRequests: 100,
     windowMs: 60 * 1000, // 1 minute
   },
-} as const
+} as const;
 
 /**
  * Rate Limit Error Schema
@@ -118,7 +118,7 @@ export const rateLimitErrorSchema = z.object({
   limit: z.number(),
   resetTime: z.number(),
   retryAfter: z.number(),
-})
+});
 
 export type RateLimitError = z.infer<typeof rateLimitErrorSchema>
 

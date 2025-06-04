@@ -1,15 +1,15 @@
-import Link from 'next/link'
-import { ArrowRight, CheckCircle, BarChart3, Zap, Target } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { getServices } from '@/lib/data-fetchers'
+import Link from 'next/link';
+import { ArrowRight, CheckCircle, BarChart3, Zap, Target } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { getServices } from '@/lib/data-fetchers';
 
 // Icon mapping for services
 const iconMap = {
   'revenue-operations': BarChart3,
   'web-development': Zap,
   'data-analytics': Target,
-}
+};
 
 // Fallback services for when database is not available
 const fallbackServices = [
@@ -55,14 +55,14 @@ const fallbackServices = [
       'Goal tracking & optimization',
     ],
   },
-]
+];
 
 export async function HomepageServices() {
   // Fetch services from database
-  const dbServices = await getServices()
+  const dbServices = await getServices();
   
   // Use database services if available, otherwise use fallback
-  const services = dbServices.length > 0 ? dbServices.slice(0, 3) : fallbackServices
+  const services = dbServices.length > 0 ? dbServices.slice(0, 3) : fallbackServices;
 
   return (
     <section className='py-20 bg-white'>
@@ -78,18 +78,18 @@ export async function HomepageServices() {
         
         <div className='features-grid gap-8 container'>
           {services.map((service, index) => {
-            const Icon = iconMap[service.id as keyof typeof iconMap] || BarChart3
+            const Icon = iconMap[service.id as keyof typeof iconMap] || BarChart3;
             const gradientColors = [
               'from-blue-50 to-blue-100 border-blue-200 hover:border-blue-400',
               'from-green-50 to-green-100 border-green-200 hover:border-green-400',
               'from-purple-50 to-purple-100 border-purple-200 hover:border-purple-400',
-            ]
-            const iconColors = ['bg-blue-600', 'bg-green-600', 'bg-purple-600']
+            ];
+            const iconColors = ['bg-blue-600', 'bg-green-600', 'bg-purple-600'];
             const buttonColors = [
               'bg-blue-600 hover:bg-blue-700',
               'bg-green-600 hover:bg-green-700', 
               'bg-purple-600 hover:bg-purple-700',
-            ]
+            ];
             
             return (
               <Card 
@@ -131,10 +131,10 @@ export async function HomepageServices() {
                   </Button>
                 </CardContent>
               </Card>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }

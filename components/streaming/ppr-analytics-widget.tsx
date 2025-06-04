@@ -1,4 +1,4 @@
-import { headers } from 'next/headers'
+import { headers } from 'next/headers';
 
 /**
  * Analytics Widget that uses headers (dynamic)
@@ -6,25 +6,25 @@ import { headers } from 'next/headers'
  */
 export async function AnalyticsWidget() {
   // Using headers makes this component dynamic
-  const headersList = await headers()
-  const userAgent = headersList.get('user-agent') || 'Unknown'
-  const acceptLanguage = headersList.get('accept-language') || 'en'
-  const referer = headersList.get('referer') || 'Direct'
+  const headersList = await headers();
+  const userAgent = headersList.get('user-agent') || 'Unknown';
+  const acceptLanguage = headersList.get('accept-language') || 'en';
+  const referer = headersList.get('referer') || 'Direct';
 
   // Simulate analytics API call
-  await new Promise(resolve => setTimeout(resolve, 400))
+  await new Promise(resolve => setTimeout(resolve, 400));
 
   // Mock analytics data based on headers
-  const isBot = /bot|crawler|spider/i.test(userAgent)
-  const isMobile = /mobile/i.test(userAgent)
-  const primaryLanguage = acceptLanguage.split(',')[0]?.split('-')[0] || 'en'
+  const isBot = /bot|crawler|spider/i.test(userAgent);
+  const isMobile = /mobile/i.test(userAgent);
+  const primaryLanguage = acceptLanguage.split(',')[0]?.split('-')[0] || 'en';
 
   const mockStats = {
     currentVisitors: Math.floor(Math.random() * 50) + 10,
     pageViews: Math.floor(Math.random() * 1000) + 500,
     bounceRate: Math.floor(Math.random() * 30) + 20,
     avgSessionDuration: Math.floor(Math.random() * 300) + 120,
-  }
+  };
 
   return (
     <div className='bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200'>
@@ -88,7 +88,7 @@ export async function AnalyticsWidget() {
         Data updated in real-time using request headers
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -117,5 +117,5 @@ export function AnalyticsWidgetSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }

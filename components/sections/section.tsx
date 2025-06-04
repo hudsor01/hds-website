@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { m } from 'framer-motion'
-import { cn } from '@/lib/utils'
-import type { SectionProps, AnimatedSectionProps } from '@/types/component-types'
-import { animations, transitions } from '@/lib/design-system'
-import { useScrollAnimation } from '@/hooks/use-animation-hooks'
+import React from 'react';
+import { m } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import type { SectionProps, AnimatedSectionProps } from '@/types/component-types';
+import { animations, transitions } from '@/lib/design-system';
+import { useScrollAnimation } from '@/hooks/use-animation-hooks';
 
 /**
  * Enhanced base section component for page content
@@ -31,27 +31,27 @@ export function Section({
     accent: 'bg-primary/5 border-y border-primary/10',
     gradient: 'bg-gradient-to-b from-gray-50 to-white',
     light: 'bg-gray-50',
-  }
+  };
 
   const paddingClasses = {
     default: 'py-12 md:py-20',
     small: 'py-8 md:py-12',
     large: 'py-16 md:py-32',
     none: '',
-  }
+  };
 
   const containerClasses = {
     default: 'container mx-auto px-4 md:px-6',
     narrow: 'container max-w-4xl mx-auto px-4 md:px-6',
     wide: 'container max-w-7xl mx-auto px-4 md:px-6',
     full: 'w-full px-4 md:px-6',
-  }
+  };
 
   const titleAlignmentClasses = {
     left: 'text-left',
     center: 'text-center',
     right: 'text-right',
-  }
+  };
 
   return (
     <section
@@ -80,7 +80,7 @@ export function Section({
         {children}
       </div>
     </section>
-  )
+  );
 }
 
 /**
@@ -102,7 +102,7 @@ export function AnimatedSection({
   animation = 'fadeInUp',
   delay = 0,
 }: AnimatedSectionProps) {
-  const { ref, isInView } = useScrollAnimation({})
+  const { ref, isInView } = useScrollAnimation({});
 
   // Style mapping based on props
   const variantClasses = {
@@ -111,27 +111,27 @@ export function AnimatedSection({
     accent: 'bg-primary/5 border-y border-primary/10',
     gradient: 'bg-gradient-to-b from-gray-50 to-white',
     light: 'bg-gray-50',
-  }
+  };
 
   const paddingClasses = {
     default: 'py-12 md:py-20',
     small: 'py-8 md:py-12',
     large: 'py-16 md:py-32',
     none: '',
-  }
+  };
 
   const containerClasses = {
     default: 'container mx-auto px-4 md:px-6',
     narrow: 'container max-w-4xl mx-auto px-4 md:px-6',
     wide: 'container max-w-7xl mx-auto px-4 md:px-6',
     full: 'w-full px-4 md:px-6',
-  }
+  };
 
   const titleAlignmentClasses = {
     left: 'text-left',
     center: 'text-center',
     right: 'text-right',
-  }
+  };
 
   return (
     <m.section
@@ -175,7 +175,7 @@ export function AnimatedSection({
         {children}
       </div>
     </m.section>
-  )
+  );
 }
 
 /**
@@ -194,7 +194,7 @@ export function DarkSection(props: SectionProps) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
@@ -204,7 +204,7 @@ export function DarkSection(props: SectionProps) {
  * This is a shorthand for Section with variant='accent'.
  */
 export function AccentSection(props: SectionProps) {
-  return <Section variant='accent' {...props} />
+  return <Section variant='accent' {...props} />;
 }
 
 /**
@@ -214,5 +214,5 @@ export function AccentSection(props: SectionProps) {
  * This is a shorthand for Section with variant='gradient'.
  */
 export function GradientSection(props: SectionProps) {
-  return <Section variant='gradient' {...props} />
+  return <Section variant='gradient' {...props} />;
 }

@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
-import { floatingAnimations } from '@/lib/design-system'
-import { useState, useEffect } from 'react'
+import { m } from 'framer-motion';
+import { floatingAnimations } from '@/lib/design-system';
+import { useState, useEffect } from 'react';
 
 interface FloatingElementsProps {
   count?: number
@@ -33,7 +33,7 @@ export function FloatingElements({
       delay: number
       offsetX: number
     }>
-  >([])
+  >([]);
 
   const [lines, setLines] = useState<
     Array<{
@@ -43,17 +43,17 @@ export function FloatingElements({
       width: number
       delay: number
     }>
-  >([])
+  >([]);
 
   useEffect(() => {
     // Configure elements based on density
     const elementCount =
-      density === 'sparse' ? count / 2 : density === 'dense' ? count * 2 : count
+      density === 'sparse' ? count / 2 : density === 'dense' ? count * 2 : count;
 
     // Generate elements
     const newElements = Array.from({ length: elementCount }, () => {
-      const speeds = ['gentle', 'medium', 'active'] as const
-      const speedIndex = Math.floor(Math.random() * speeds.length)
+      const speeds = ['gentle', 'medium', 'active'] as const;
+      const speedIndex = Math.floor(Math.random() * speeds.length);
       return {
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -61,8 +61,8 @@ export function FloatingElements({
         speed: speeds[speedIndex] || 'medium',
         delay: Math.random() * 5,
         offsetX: Math.random() * 20 - 10,
-      }
-    })
+      };
+    });
 
     // Generate lines
     const newLines = Array.from({ length: lineCount }, (_, i) => ({
@@ -71,11 +71,11 @@ export function FloatingElements({
       rotation: Math.random() * 360,
       width: 150 + Math.random() * 100,
       delay: i * 2,
-    }))
+    }));
 
-    setElements(newElements)
-    setLines(newLines)
-  }, [count, lineCount, density])
+    setElements(newElements);
+    setLines(newLines);
+  }, [count, lineCount, density]);
 
   // Color configuration
   const colorStyles = {
@@ -99,7 +99,7 @@ export function FloatingElements({
       dot: 'bg-gray-500/20',
       line: 'from-transparent via-gray-500/30 to-transparent',
     },
-  }
+  };
 
   return (
     <div className='absolute inset-0 overflow-hidden pointer-events-none'>
@@ -149,5 +149,5 @@ export function FloatingElements({
         />
       ))}
     </div>
-  )
+  );
 }

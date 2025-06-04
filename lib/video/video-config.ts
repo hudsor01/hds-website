@@ -96,7 +96,7 @@ export const videoHostingConfig: Record<string, VideoHostingConfig> = {
     provider: 'local',
     baseUrl: '/videos',
   },
-}
+};
 
 // External video platform configurations
 export const externalVideoConfig = {
@@ -137,7 +137,7 @@ export const externalVideoConfig = {
       'ui-start-screen-info': 0,
     },
   },
-} as const
+} as const;
 
 // Video format configurations for different use cases
 export const videoFormats = {
@@ -191,7 +191,7 @@ export const videoFormats = {
       profile: 'baseline',
     },
   },
-} as const
+} as const;
 
 // Performance optimization configuration
 export const performanceConfig = {
@@ -223,7 +223,7 @@ export const performanceConfig = {
     immutable: true,
     staleWhileRevalidate: 86400, // 1 day
   },
-} as const
+} as const;
 
 // Accessibility configuration
 export const accessibilityConfig = {
@@ -242,7 +242,7 @@ export const accessibilityConfig = {
     audioDescriptions: true,
     textAlternatives: true,
   },
-} as const
+} as const;
 
 // Utility functions for video operations
 export const videoUtils = {
@@ -261,66 +261,66 @@ export const videoUtils = {
     const sizes = Object.entries(breakpoints)
       .sort(([, a], [, b]) => b - a)
       .map(([width]) => `(max-width: ${width}px) ${width}px`)
-      .join(', ')
+      .join(', ');
     
-    return `${sizes}, 100vw`
+    return `${sizes}, 100vw`;
   },
 
   /**
    * Generate YouTube embed URL with privacy and performance options
    */
   generateYouTubeUrl: (videoId: string, options: Partial<ExternalVideoConfig['parameters']> = {}) => {
-    const config = externalVideoConfig.youtube
-    const baseUrl = options.privacyEnhanced ? config.privacyEnhancedUrl : config.embedBaseUrl
-    const params = { ...config.defaultParams, ...options }
+    const config = externalVideoConfig.youtube;
+    const baseUrl = options.privacyEnhanced ? config.privacyEnhancedUrl : config.embedBaseUrl;
+    const params = { ...config.defaultParams, ...options };
     
-    const searchParams = new URLSearchParams()
+    const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value))
+        searchParams.append(key, String(value));
       }
-    })
+    });
     
-    return `${baseUrl}/${videoId}?${searchParams.toString()}`
+    return `${baseUrl}/${videoId}?${searchParams.toString()}`;
   },
 
   /**
    * Generate Vimeo embed URL with custom parameters
    */
   generateVimeoUrl: (videoId: string, options: Partial<ExternalVideoConfig['parameters']> = {}) => {
-    const config = externalVideoConfig.vimeo
-    const params = { ...config.defaultParams, ...options }
+    const config = externalVideoConfig.vimeo;
+    const params = { ...config.defaultParams, ...options };
     
-    const searchParams = new URLSearchParams()
+    const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        searchParams.append(key, String(value))
+        searchParams.append(key, String(value));
       }
-    })
+    });
     
-    return `${config.embedBaseUrl}/${videoId}?${searchParams.toString()}`
+    return `${config.embedBaseUrl}/${videoId}?${searchParams.toString()}`;
   },
 
   /**
    * Validate video file format and size
    */
   validateVideo: (file: File): { valid: boolean; errors: string[] } => {
-    const errors: string[] = []
-    const maxSize = 100 * 1024 * 1024 // 100MB
-    const supportedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/avi', 'video/mov']
+    const errors: string[] = [];
+    const maxSize = 100 * 1024 * 1024; // 100MB
+    const supportedTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/avi', 'video/mov'];
     
     if (file.size > maxSize) {
-      errors.push(`File size ${(file.size / 1024 / 1024).toFixed(1)}MB exceeds maximum of ${maxSize / 1024 / 1024}MB`)
+      errors.push(`File size ${(file.size / 1024 / 1024).toFixed(1)}MB exceeds maximum of ${maxSize / 1024 / 1024}MB`);
     }
     
     if (!supportedTypes.includes(file.type)) {
-      errors.push(`File type ${file.type} is not supported. Supported types: ${supportedTypes.join(', ')}`)
+      errors.push(`File type ${file.type} is not supported. Supported types: ${supportedTypes.join(', ')}`);
     }
     
     return {
       valid: errors.length === 0,
       errors,
-    }
+    };
   },
 
   /**
@@ -338,7 +338,7 @@ export const videoUtils = {
           width: videoElement.videoWidth,
           height: videoElement.videoHeight,
           aspectRatio: videoElement.videoWidth / videoElement.videoHeight,
-        })
+        });
       } else {
         videoElement.addEventListener('loadedmetadata', () => {
           resolve({
@@ -346,12 +346,12 @@ export const videoUtils = {
             width: videoElement.videoWidth,
             height: videoElement.videoHeight,
             aspectRatio: videoElement.videoWidth / videoElement.videoHeight,
-          })
-        }, { once: true })
+          });
+        }, { once: true });
         
         videoElement.addEventListener('error', (event) => {
-          reject(new Error(`Video metadata loading failed: ${event.type}`))
-        }, { once: true })
+          reject(new Error(`Video metadata loading failed: ${event.type}`));
+        }, { once: true });
       }
     }),
 
@@ -359,34 +359,34 @@ export const videoUtils = {
    * Generate video thumbnail from video element
    */
   generateThumbnail: (videoElement: HTMLVideoElement, time = 0): Promise<string> => new Promise((resolve, reject) => {
-      videoElement.currentTime = time
+      videoElement.currentTime = time;
       
       videoElement.addEventListener('seeked', () => {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
         
         if (!ctx) {
-          reject(new Error('Could not get canvas context'))
-          return
+          reject(new Error('Could not get canvas context'));
+          return;
         }
         
-        canvas.width = videoElement.videoWidth
-        canvas.height = videoElement.videoHeight
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
         
-        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height)
+        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
         
         canvas.toBlob((blob) => {
           if (blob) {
-            resolve(URL.createObjectURL(blob))
+            resolve(URL.createObjectURL(blob));
           } else {
-            reject(new Error('Could not generate thumbnail'))
+            reject(new Error('Could not generate thumbnail'));
           }
-        }, 'image/jpeg', 0.8)
-      }, { once: true })
+        }, 'image/jpeg', 0.8);
+      }, { once: true });
       
       videoElement.addEventListener('error', (event) => {
-        reject(new Error(`Video thumbnail generation failed: ${event.type}`))
-      }, { once: true })
+        reject(new Error(`Video thumbnail generation failed: ${event.type}`));
+      }, { once: true });
     }),
 
   /**
@@ -399,29 +399,29 @@ export const videoUtils = {
       firstFrame: 0,
       buffering: 0,
       stalls: 0,
-    }
+    };
     
     videoElement.addEventListener('loadstart', () => {
-      metrics.loadStart = performance.now()
-    })
+      metrics.loadStart = performance.now();
+    });
     
     videoElement.addEventListener('canplay', () => {
-      metrics.loadEnd = performance.now()
-    })
+      metrics.loadEnd = performance.now();
+    });
     
     videoElement.addEventListener('playing', () => {
       if (metrics.firstFrame === 0) {
-        metrics.firstFrame = performance.now()
+        metrics.firstFrame = performance.now();
       }
-    })
+    });
     
     videoElement.addEventListener('waiting', () => {
-      metrics.buffering = performance.now()
-    })
+      metrics.buffering = performance.now();
+    });
     
     videoElement.addEventListener('stalled', () => {
-      metrics.stalls++
-    })
+      metrics.stalls++;
+    });
     
     return {
       getMetrics: () => ({
@@ -431,12 +431,12 @@ export const videoUtils = {
       }),
       reset: () => {
         Object.keys(metrics).forEach(key => {
-          metrics[key as keyof typeof metrics] = 0
-        })
+          metrics[key as keyof typeof metrics] = 0;
+        });
       },
-    }
+    };
   },
-}
+};
 
 // Export default configuration
 export const defaultVideoConfig = {
@@ -454,6 +454,6 @@ export const defaultVideoConfig = {
     trackCompletion: true,
     trackErrors: true,
   } as VideoAnalytics,
-} as const
+} as const;
 
 export type VideoConfig = typeof defaultVideoConfig

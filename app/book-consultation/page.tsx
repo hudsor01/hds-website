@@ -5,17 +5,17 @@
  * service selection, and comprehensive analytics tracking.
  */
 
-import { Suspense } from 'react'
-import type { Metadata } from 'next'
-import { CalBookingWidget } from '@/components/booking/cal-booking-widget'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Clock, DollarSign, Users, Star, CheckCircle } from 'lucide-react'
-import Link from 'next/link'
-import { db } from '@/lib/database'
-import type { CalService } from '@/types/cal-types'
+import { Suspense } from 'react';
+import type { Metadata } from 'next';
+import { CalBookingWidget } from '@/components/booking/cal-booking-widget';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Clock, DollarSign, Users, Star, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import { db } from '@/lib/database';
+import type { CalService } from '@/types/cal-types';
 
 export const metadata: Metadata = {
   title: 'Book a Consultation | Hudson Digital Solutions',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: 'Schedule a free consultation to discuss your digital transformation needs.',
     type: 'website',
   },
-}
+};
 
 // Service data with Cal.com integration
 const consultationServices: CalService[] = [
@@ -103,7 +103,7 @@ const consultationServices: CalService[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-]
+];
 
 async function getServicesFromDatabase(): Promise<CalService[]> {
   try {
@@ -119,7 +119,7 @@ async function getServicesFromDatabase(): Promise<CalService[]> {
         { displayOrder: 'asc' },
         { name: 'asc' },
       ],
-    })
+    });
 
     return services.map(service => ({
       ...service,
@@ -128,11 +128,11 @@ async function getServicesFromDatabase(): Promise<CalService[]> {
       calEventTypeId: service.calEventTypeId || undefined,
       allowedMeetingTypes: service.allowedMeetingTypes || ['VIDEO'],
       defaultMeetingType: service.defaultMeetingType || 'VIDEO',
-    })) as CalService[]
+    })) as CalService[];
   } catch (error) {
-    console.error('Error fetching services from database:', error)
+    console.error('Error fetching services from database:', error);
     // Fallback to static services
-    return consultationServices
+    return consultationServices;
   }
 }
 
@@ -147,10 +147,10 @@ interface BookConsultationPageProps {
 }
 
 export default async function BookConsultationPage({ searchParams }: BookConsultationPageProps) {
-  const services = await getServicesFromDatabase()
-  const resolvedSearchParams = await searchParams
-  const selectedServiceSlug = resolvedSearchParams.service || 'free-consultation'
-  const selectedService = services.find(s => s.slug === selectedServiceSlug) || services[0]
+  const services = await getServicesFromDatabase();
+  const resolvedSearchParams = await searchParams;
+  const selectedServiceSlug = resolvedSearchParams.service || 'free-consultation';
+  const selectedService = services.find(s => s.slug === selectedServiceSlug) || services[0];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -284,11 +284,11 @@ export default async function BookConsultationPage({ searchParams }: BookConsult
                     layout: 'month_view',
                   }}
                   onBookingSuccess={(booking) => {
-                    console.log('Booking successful:', booking)
+                    console.log('Booking successful:', booking);
                     // Handle successful booking (analytics, redirects, etc.)
                   }}
                   onBookingError={(error) => {
-                    console.error('Booking error:', error)
+                    console.error('Booking error:', error);
                     // Handle booking errors
                   }}
                 />
@@ -340,7 +340,7 @@ export default async function BookConsultationPage({ searchParams }: BookConsult
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function BookingWidgetSkeleton() {
@@ -362,5 +362,5 @@ function BookingWidgetSkeleton() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -5,11 +5,11 @@
  * It extends the basic animations from design-system.ts with more complex patterns and sequences.
  */
 
-import type { Variants } from 'framer-motion'
-import { animations, transitions, hover } from './design-system'
+import type { Variants } from 'framer-motion';
+import { animations, transitions, hover } from './design-system';
 
 // Re-export animations from design-system for backward compatibility
-export { animations, transitions, hover }
+export { animations, transitions, hover };
 
 // Text-specific animation variants
 export const textAnimations = {
@@ -46,14 +46,14 @@ export const textAnimations = {
       },
     },
   },
-}
+};
 
 // Stagger configurations for lists and grids
 export const staggerConfigs = {
   fast: 0.05,
   default: 0.1,
   slow: 0.2,
-}
+};
 
 // Container variants for staggered children
 export const containerVariants = {
@@ -104,7 +104,7 @@ export const containerVariants = {
       },
     },
   },
-}
+};
 
 // Variants for floating elements
 export const floatingAnimations = {
@@ -144,7 +144,7 @@ export const floatingAnimations = {
       ease: 'easeInOut',
     },
   },
-}
+};
 
 // Card animations
 export const cardAnimations = {
@@ -175,7 +175,7 @@ export const cardAnimations = {
     y: 0,
     scale: 1,
   },
-}
+};
 
 // Gradient background animations
 export const gradientAnimations = {
@@ -203,7 +203,7 @@ export const gradientAnimations = {
       damping: 30,
     },
   }),
-}
+};
 
 // Helper functions for animation
 export const withDelay = (animation: Variants, delay: number): Variants => ({
@@ -217,7 +217,7 @@ export const withDelay = (animation: Variants, delay: number): Variants => ({
       delay,
     },
   },
-})
+});
 
 /**
  * Animation settings for reduced motion preferences
@@ -233,4 +233,4 @@ export const reducedMotionAnimations = {
       },
     },
   },
-}
+};

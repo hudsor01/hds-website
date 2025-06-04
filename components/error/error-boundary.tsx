@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Error Boundary Components for Next.js 15
@@ -12,11 +12,11 @@
  * - Different error boundary types for various scenarios
  */
 
-import React, { Component, type ReactNode, useEffect, useState } from 'react'
-import { AlertTriangle, RefreshCw, Home, Bug, Shield, AlertCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import React, { Component, type ReactNode, useEffect, useState } from 'react';
+import { AlertTriangle, RefreshCw, Home, Bug, Shield, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // Error boundary state interface
 export interface ErrorBoundaryState {
@@ -37,7 +37,7 @@ function createErrorBoundaryState(): ErrorBoundaryState {
     errorId: crypto.randomUUID(),
     retryCount: 0,
     timestamp: new Date(),
-  }
+  };
 }
 
 // Handle boundary error and update state
@@ -52,7 +52,7 @@ function handleBoundaryError(
     errorInfo,
     retryCount: currentRetryCount + 1,
     timestamp: new Date(),
-  }
+  };
 }
 
 // Report error to monitoring service
@@ -62,16 +62,16 @@ async function reportErrorToService(
   errorId: string,
 ): Promise<void> {
   if (process.env.NODE_ENV === 'development') {
-    console.error('Error Report:', { error, errorInfo, errorId })
-    return
+    console.error('Error Report:', { error, errorInfo, errorId });
+    return;
   }
 
   // In production, send to your error monitoring service
   try {
     // Replace with your error reporting service
-    console.error('Production error:', { error: error.message, errorId })
+    console.error('Production error:', { error: error.message, errorId });
   } catch (reportError) {
-    console.error('Failed to report error:', reportError)
+    console.error('Failed to report error:', reportError);
   }
 }
 
@@ -98,23 +98,23 @@ isolate?: boolean
 // Base Error Boundary Class Component
 export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: BaseErrorBoundaryProps) {
-    super(props)
-    this.state = createErrorBoundaryState()
+    super(props);
+    this.state = createErrorBoundaryState();
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const newState = handleBoundaryError(error, errorInfo, this.state.retryCount)
-    this.setState(newState)
-    this.props.onError?.({ error, errorInfo })
+    const newState = handleBoundaryError(error, errorInfo, this.state.retryCount);
+    this.setState(newState);
+    this.props.onError?.({ error, errorInfo });
   }
 
   reset = () => {
-    this.setState(createErrorBoundaryState())
-  }
+    this.setState(createErrorBoundaryState());
+  };
 
   render() {
     if (this.state.hasError && this.state.error) {
@@ -123,7 +123,7 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, ErrorBo
           error: this.state.error,
           errorInfo: this.state.errorInfo,
           reset: this.reset,
-        })
+        });
       }
 
       return (
@@ -135,10 +135,10 @@ export class BaseErrorBoundary extends Component<BaseErrorBoundaryProps, ErrorBo
           retryCount={this.state.retryCount}
           isolate={this.props.isolate}
         />
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
@@ -158,21 +158,21 @@ function DefaultErrorFallback({
   retryCount?: number
   isolate?: boolean
 }) {
-  const [isReporting, setIsReporting] = useState(false)
-  const isDevelopment = process.env.NODE_ENV === 'development'
+  const [isReporting, setIsReporting] = useState(false);
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
   const handleReport = async () => {
-    if (!errorId) return
+    if (!errorId) return;
     
-    setIsReporting(true)
+    setIsReporting(true);
     try {
-      await reportErrorToService(error, errorInfo || null, errorId)
+      await reportErrorToService(error, errorInfo || null, errorId);
     } catch (reportError) {
-      console.error('Failed to report error:', reportError)
+      console.error('Failed to report error:', reportError);
     } finally {
-      setIsReporting(false)
+      setIsReporting(false);
     }
-  }
+  };
 
   return (
     <div className={`min-h-[400px] flex items-center justify-center p-6 ${isolate ? 'border rounded-lg bg-muted/50' : ''}`}>
@@ -279,7 +279,7 @@ function DefaultErrorFallback({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 // App Error Boundary with Context
@@ -288,12 +288,12 @@ export function AppErrorBoundary({ children }: { children: ReactNode }) {
     <BaseErrorBoundary
       onError={({ error, errorInfo }) => {
       // Global error tracking
-      console.error('App Error Boundary caught error:', error, errorInfo)
+      console.error('App Error Boundary caught error:', error, errorInfo);
       }}
     >
       {children}
     </BaseErrorBoundary>
-  )
+  );
 }
 
 // Route Error Boundary for Page-level Errors
@@ -313,7 +313,7 @@ export function RouteErrorBoundary({ children }: { children: ReactNode }) {
     >
       {children}
     </BaseErrorBoundary>
-  )
+  );
 }
 
 // Section Error Boundary for Component Isolation
@@ -347,12 +347,12 @@ export function SectionErrorBoundary({
         </Card>
       )}
       onError={({ error }) => {
-        console.error(`Section error in ${sectionName}:`, error)
+        console.error(`Section error in ${sectionName}:`, error);
       }}
     >
       {children}
     </BaseErrorBoundary>
-  )
+  );
 }
 
 // Form Error Boundary with Form-specific Handling
@@ -389,7 +389,7 @@ export function FormErrorBoundary({
     >
       {children}
     </BaseErrorBoundary>
-  )
+  );
 }
 
 // Admin Error Boundary with debugging
@@ -456,40 +456,40 @@ export function AdminErrorBoundary({ children }: { children: ReactNode }) {
     >
       {children}
     </BaseErrorBoundary>
-  )
+  );
 }
 
 // Hook for Error Boundary Integration
 export function useErrorHandler() {
-  const [error, setError] = useState<Error | null>(null)
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (error) {
-      throw error
+      throw error;
     }
-  }, [error])
+  }, [error]);
 
   const throwError = (error: Error) => {
-    setError(error)
-  }
+    setError(error);
+  };
 
   const clearError = () => {
-    setError(null)
-  }
+    setError(null);
+  };
 
-  return { throwError, clearError, hasError: !!error }
+  return { throwError, clearError, hasError: !!error };
 }
 
 // Async Error Boundary Hook
 export function useAsyncError() {
-  const { throwError } = useErrorHandler()
+  const { throwError } = useErrorHandler();
 
   const handleAsyncError = (error: unknown) => {
-    const errorObj = error instanceof Error ? error : new Error(String(error))
-    throwError(errorObj)
-  }
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    throwError(errorObj);
+  };
 
-  return handleAsyncError
+  return handleAsyncError;
 }
 
 // Legacy error boundary class for backward compatibility
@@ -507,6 +507,6 @@ super({
 children: props.children,
 fallback: props.fallback ? () => props.fallback! : undefined,
 onError: props.onError ? ({ error, errorInfo }) => props.onError!(error, errorInfo!) : undefined,
-})
+});
 }
 }

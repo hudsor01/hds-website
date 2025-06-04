@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Enhanced Authentication Forms for Next.js 15
@@ -11,21 +11,21 @@
  * - Error handling and user feedback
  */
 
-import { useActionState } from 'react'
-import { Eye, EyeOff, User, Lock, Mail, Shield, LogIn, UserPlus } from 'lucide-react'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { login, signup, changePassword, createUser } from '@/app/actions/auth-enhanced'
+import { useActionState } from 'react';
+import { Eye, EyeOff, User, Lock, Mail, Shield, LogIn, UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { login, signup, changePassword, createUser } from '@/app/actions/auth-enhanced';
 
 // Login Form Component
 export function LoginForm() {
-  const [state, action, pending] = useActionState(login, undefined)
-  const [showPassword, setShowPassword] = useState(false)
+  const [state, action, pending] = useActionState(login, undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Card className='w-full max-w-md mx-auto'>
@@ -131,14 +131,14 @@ export function LoginForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Signup Form Component (for future use)
 export function SignupForm() {
-  const [state, action, pending] = useActionState(signup, undefined)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [state, action, pending] = useActionState(signup, undefined);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <Card className='w-full max-w-md mx-auto'>
@@ -301,15 +301,15 @@ export function SignupForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Change Password Form Component
 export function ChangePasswordForm() {
-  const [state, action, pending] = useActionState(changePassword, undefined)
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [state, action, pending] = useActionState(changePassword, undefined);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <Card className='w-full max-w-md mx-auto'>
@@ -455,13 +455,13 @@ export function ChangePasswordForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // Create User Form Component (Admin only)
 export function CreateUserForm() {
-  const [state, action, pending] = useActionState(createUser, undefined)
-  const [showPassword, setShowPassword] = useState(false)
+  const [state, action, pending] = useActionState(createUser, undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Card className='w-full max-w-md mx-auto'>
@@ -600,5 +600,5 @@ export function CreateUserForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

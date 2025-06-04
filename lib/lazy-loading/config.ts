@@ -116,105 +116,105 @@ export const LAZY_LOADING_CONFIG = {
       'ServiceWorker',
     ],
   },
-} as const
+} as const;
 
 /**
  * Get lazy loading options for a specific component type
  */
 export function getLazyLoadingOptions(componentType: keyof typeof LAZY_LOADING_CONFIG.COMPONENT_OPTIONS) {
-  return LAZY_LOADING_CONFIG.COMPONENT_OPTIONS[componentType] || LAZY_LOADING_CONFIG.DEFAULT_OPTIONS
+  return LAZY_LOADING_CONFIG.COMPONENT_OPTIONS[componentType] || LAZY_LOADING_CONFIG.DEFAULT_OPTIONS;
 }
 
 /**
  * Determine if a component should be lazy loaded based on its category
  */
 export function shouldLazyLoad(componentName: string): boolean {
-  const { COMPONENT_CATEGORIES } = LAZY_LOADING_CONFIG
+  const { COMPONENT_CATEGORIES } = LAZY_LOADING_CONFIG;
   
   // Critical components should never be lazy loaded
   if ((COMPONENT_CATEGORIES.CRITICAL as readonly string[]).includes(componentName)) {
-    return false
+    return false;
   }
 
   // All other components should be lazy loaded
-  return true
+  return true;
 }
 
 /**
  * Get the priority level for a component
  */
 export function getComponentPriority(componentName: string): number {
-  const { COMPONENT_CATEGORIES, PRIORITY } = LAZY_LOADING_CONFIG
+  const { COMPONENT_CATEGORIES, PRIORITY } = LAZY_LOADING_CONFIG;
 
   if ((COMPONENT_CATEGORIES.CRITICAL as readonly string[]).includes(componentName)) {
-    return PRIORITY.CRITICAL
+    return PRIORITY.CRITICAL;
   }
   
   if ((COMPONENT_CATEGORIES.HIGH_PRIORITY as readonly string[]).includes(componentName)) {
-    return PRIORITY.HIGH
+    return PRIORITY.HIGH;
   }
   
   if ((COMPONENT_CATEGORIES.MEDIUM_PRIORITY as readonly string[]).includes(componentName)) {
-    return PRIORITY.MEDIUM
+    return PRIORITY.MEDIUM;
   }
   
   if ((COMPONENT_CATEGORIES.LOW_PRIORITY as readonly string[]).includes(componentName)) {
-    return PRIORITY.LOW
+    return PRIORITY.LOW;
   }
   
   if ((COMPONENT_CATEGORIES.DEFERRED as readonly string[]).includes(componentName)) {
-    return PRIORITY.DEFER
+    return PRIORITY.DEFER;
   }
 
   // Default to medium priority
-  return PRIORITY.MEDIUM
+  return PRIORITY.MEDIUM;
 }
 
 /**
  * Performance monitoring for lazy loading
  */
 export class LazyLoadingPerformanceMonitor {
-  private loadTimes: Map<string, number> = new Map()
-  private loadStartTimes: Map<string, number> = new Map()
+  private loadTimes: Map<string, number> = new Map();
+  private loadStartTimes: Map<string, number> = new Map();
 
   startLoad(componentName: string): void {
-    this.loadStartTimes.set(componentName, performance.now())
+    this.loadStartTimes.set(componentName, performance.now());
   }
 
   endLoad(componentName: string): void {
-    const startTime = this.loadStartTimes.get(componentName)
+    const startTime = this.loadStartTimes.get(componentName);
     if (startTime) {
-      const loadTime = performance.now() - startTime
-      this.loadTimes.set(componentName, loadTime)
-      this.loadStartTimes.delete(componentName)
+      const loadTime = performance.now() - startTime;
+      this.loadTimes.set(componentName, loadTime);
+      this.loadStartTimes.delete(componentName);
       
       // Log slow loads
       if (loadTime > 1000) {
-        console.warn(`Slow lazy load detected: ${componentName} took ${loadTime.toFixed(2)}ms`)
+        console.warn(`Slow lazy load detected: ${componentName} took ${loadTime.toFixed(2)}ms`);
       }
     }
   }
 
   getLoadTime(componentName: string): number | undefined {
-    return this.loadTimes.get(componentName)
+    return this.loadTimes.get(componentName);
   }
 
   getAverageLoadTime(): number {
-    const times = Array.from(this.loadTimes.values())
-    return times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0
+    const times = Array.from(this.loadTimes.values());
+    return times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
   }
 
   getSlowComponents(threshold = 500): string[] {
     return Array.from(this.loadTimes.entries())
       .filter(([_, time]) => time > threshold)
-      .map(([name]) => name)
+      .map(([name]) => name);
   }
 
   reset(): void {
-    this.loadTimes.clear()
-    this.loadStartTimes.clear()
+    this.loadTimes.clear();
+    this.loadStartTimes.clear();
   }
 }
 
 // Global performance monitor instance
-export const lazyLoadingMonitor = new LazyLoadingPerformanceMonitor()
+export const lazyLoadingMonitor = new LazyLoadingPerformanceMonitor();

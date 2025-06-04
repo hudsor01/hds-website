@@ -37,7 +37,7 @@ export const imageConfig = {
   dangerouslyAllowSVG: true,
   contentDispositionType: 'attachment' as const,
   contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-}
+};
 
 // Standard image sizes for responsive design
 export const imageSizes = {
@@ -76,7 +76,7 @@ export const imageSizes = {
     featured: { width: 800, height: 450 }, // 16:9
     banner: { width: 1200, height: 400 },   // 3:1
   },
-} as const
+} as const;
 
 // Responsive image sizes strings for different components
 export const responsiveSizes = {
@@ -86,7 +86,7 @@ export const responsiveSizes = {
   logo: '(max-width: 768px) 80px, 120px',
   content: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px',
   thumbnail: '(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 300px',
-} as const
+} as const;
 
 // Image quality settings
 export const imageQuality = {
@@ -94,7 +94,7 @@ export const imageQuality = {
   standard: 85,
   hero: 90,
   print: 95,
-} as const
+} as const;
 
 // Blur placeholder utilities
 export const blurDataURL = {
@@ -106,7 +106,7 @@ export const blurDataURL = {
   
   // Gradient placeholder
   gradient: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==',
-} as const
+} as const;
 
 // Image optimization utilities
 export const imageUtils = {
@@ -125,13 +125,13 @@ export const imageUtils = {
     size: string,
     devicePixelRatio = 1,
   ) => {
-    const dimensions = imageSizes[type]?.[size as keyof typeof imageSizes[typeof type]]
-    if (!dimensions) return null
+    const dimensions = imageSizes[type]?.[size as keyof typeof imageSizes[typeof type]];
+    if (!dimensions) return null;
 
     return {
       width: dimensions.width * devicePixelRatio,
       height: dimensions.height * devicePixelRatio,
-    }
+    };
   },
 
   /**
@@ -140,7 +140,7 @@ export const imageUtils = {
   generateSrcSet: (src: string, widths: number[]) => widths
       .map(width => `${src}?w=${width} ${width}w`)
       .join(', '),
-}
+};
 
 // Image preload utilities for critical images
 export const imagePreload = {
@@ -148,16 +148,16 @@ export const imagePreload = {
    * Preload critical images for better performance
    */
   preloadCriticalImages: (images: { src: string; as?: string; type?: string }[]) => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
 
     images.forEach(({ src, as = 'image', type }) => {
-      const link = document.createElement('link')
-      link.rel = 'preload'
-      link.as = as
-      link.href = src
-      if (type) link.type = type
-      document.head.appendChild(link)
-    })
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = as;
+      link.href = src;
+      if (type) link.type = type;
+      document.head.appendChild(link);
+    });
   },
 
   /**
@@ -168,7 +168,7 @@ export const imagePreload = {
     '/images/hero-background.jpg',
     '/images/placeholder.svg',
   ],
-}
+};
 
 // Error handling and fallback configuration
 export const imageFallbacks = {
@@ -177,7 +177,7 @@ export const imageFallbacks = {
   gallery: '/images/placeholder.svg',
   logo: '/logo.svg',
   content: '/images/placeholder.svg',
-} as const
+} as const;
 
 // Performance monitoring
 export const imagePerformance = {
@@ -185,11 +185,11 @@ export const imagePerformance = {
    * Track image loading performance
    */
   trackImageLoad: (src: string, startTime: number) => {
-    const loadTime = performance.now() - startTime
+    const loadTime = performance.now() - startTime;
     
     // In production, you might want to send this to your analytics
     if (process.env.NODE_ENV === 'development') {
-      console.log(`Image loaded: ${src} in ${loadTime.toFixed(2)}ms`)
+      console.log(`Image loaded: ${src} in ${loadTime.toFixed(2)}ms`);
     }
   },
 
@@ -197,16 +197,16 @@ export const imagePerformance = {
    * Monitor largest contentful paint for images
    */
   observeLCP: () => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
 
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'largest-contentful-paint') {
-          console.log('LCP:', entry)
+          console.log('LCP:', entry);
         }
       }
-    })
+    });
     
-    observer.observe({ entryTypes: ['largest-contentful-paint'] })
+    observer.observe({ entryTypes: ['largest-contentful-paint'] });
   },
-}
+};

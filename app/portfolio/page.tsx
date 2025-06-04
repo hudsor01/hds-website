@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import { CheckCircle, Building2 } from 'lucide-react'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { AnimatedText } from '@/components/animated/animated-text'
+import type { Metadata } from 'next';
+import { CheckCircle, Building2 } from 'lucide-react';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { AnimatedText } from '@/components/animated/animated-text';
 
 export const metadata: Metadata = {
   title: 'Portfolio | Hudson Digital Solutions - Client Success Stories',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     'Real projects completed for real businesses. See how we helped Spotio and others optimize their operations.',
   keywords:
     'portfolio, case studies, Spotio, Salesforce deduplication, small business success',
-}
+};
 
 const projects = [
   {
@@ -78,7 +78,7 @@ const projects = [
     duration: '10 years',
     value: 'Multi-million dollar impact',
   },
-]
+];
 
 // Server Component - Static content rendered on server
 export default function PortfolioPage() {
@@ -103,7 +103,7 @@ export default function PortfolioPage() {
 
         <div className="mx-auto mt-16 space-y-16">
           {projects.map((project, index) => {
-            const Logo = project.logo
+            const Logo = project.logo;
             return (
               <AnimatedCard
                 key={project.id}
@@ -188,7 +188,7 @@ export default function PortfolioPage() {
                   </div>
                 </div>
               </AnimatedCard>
-            )
+            );
           })}
         </div>
 
@@ -220,5 +220,5 @@ export default function PortfolioPage() {
         </AnimatedCard>
       </div>
     </main>
-  )
+  );
 }

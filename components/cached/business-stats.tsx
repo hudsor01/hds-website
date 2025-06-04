@@ -1,12 +1,12 @@
 // Note: 'use cache' directive requires Next.js canary version
 // For stable Next.js 15, we'll use React.cache() as an alternative
 
-import { cache } from 'react'
+import { cache } from 'react';
 
 // Cached business statistics function using React.cache()
 const getBusinessStats = cache(async () => {
   // Simulate data fetching with a delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
   return {
     clientsServed: 150,
@@ -15,12 +15,12 @@ const getBusinessStats = cache(async () => {
     yearsExperience: 8,
     revenueIncreased: 25000000,
     lastUpdated: new Date().toISOString(),
-  }
-})
+  };
+});
 
 // This component will be cached automatically due to 'use cache' directive
 export default async function BusinessStats() {
-  const stats = await getBusinessStats()
+  const stats = await getBusinessStats();
   
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6'>
@@ -69,7 +69,7 @@ export default async function BusinessStats() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Skeleton component for loading state
@@ -83,5 +83,5 @@ export function BusinessStatsSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }

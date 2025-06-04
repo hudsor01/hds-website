@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import Link from 'next/link'
-import { AlertCircle, ArrowLeft, Home, RefreshCw, BookOpen } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { AlertCircle, ArrowLeft, Home, RefreshCw, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface BlogErrorProps {
   error: Error & { digest?: string }
@@ -13,16 +13,16 @@ interface BlogErrorProps {
 export default function BlogError({ error, reset }: BlogErrorProps) {
   useEffect(() => {
     // Log the error to error reporting service
-    console.error('Blog page error:', error)
+    console.error('Blog page error:', error);
     
     // Track error for analytics
     if (typeof window !== 'undefined' && 'gtag' in window) {
       ;(window as typeof window & { gtag: (...args: unknown[]) => void }).gtag('event', 'exception', {
         description: `Blog page error: ${error.message}`,
         fatal: false,
-      })
+      });
     }
-  }, [error])
+  }, [error]);
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
@@ -95,5 +95,5 @@ export default function BlogError({ error, reset }: BlogErrorProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
-import { cache } from 'react'
+import type { Metadata } from 'next';
+import { cache } from 'react';
 
 /**
  * Metadata utilities for consistent SEO and social sharing
@@ -25,7 +25,7 @@ export const siteConfig = {
     'business intelligence',
     'digital transformation',
   ],
-}
+};
 
 // Cached function to avoid duplicate metadata generation
 export const generateSiteMetadata = cache((options: {
@@ -45,17 +45,17 @@ export const generateSiteMetadata = cache((options: {
     noIndex = false,
     canonicalUrl,
     type = 'website',
-  } = options
+  } = options;
 
   // Construct full title
   const fullTitle = title === siteConfig.title 
     ? title 
-    : `${title} | ${siteConfig.name}`
+    : `${title} | ${siteConfig.name}`;
 
   // Construct absolute image URL
   const imageUrl = image.startsWith('http') 
     ? image 
-    : `${siteConfig.url}${image}`
+    : `${siteConfig.url}${image}`;
 
   return {
     title: fullTitle,
@@ -133,8 +133,8 @@ export const generateSiteMetadata = cache((options: {
       'business:contact_data:postal_code': '75001',
       'business:contact_data:country_name': 'United States',
     },
-  }
-})
+  };
+});
 
 // Service-specific metadata generator
 export const generateServiceMetadata = cache((service: {
@@ -152,7 +152,7 @@ export const generateServiceMetadata = cache((service: {
     ],
     canonicalUrl: `${siteConfig.url}/services/${service.slug}`,
     type: 'service',
-  }))
+  }));
 
 // Blog post metadata generator
 export const generateBlogMetadata = cache((post: {
@@ -170,7 +170,7 @@ export const generateBlogMetadata = cache((post: {
     keywords: [...siteConfig.keywords, ...post.tags],
     canonicalUrl: `${siteConfig.url}/blog/${post.slug}`,
     type: 'article',
-  }))
+  }));
 
 // Case study metadata generator
 export const generateCaseStudyMetadata = cache((caseStudy: {
@@ -194,7 +194,7 @@ export const generateCaseStudyMetadata = cache((caseStudy: {
     ],
     canonicalUrl: `${siteConfig.url}/case-studies/${caseStudy.slug}`,
     type: 'article',
-  }))
+  }));
 
 // Structured data generators
 export const generateOrganizationSchema = () => ({
@@ -222,7 +222,7 @@ export const generateOrganizationSchema = () => ({
     'https://twitter.com/hudsondigital',
     'https://linkedin.com/company/hudson-digital-solutions',
   ],
-})
+});
 
 export const generateWebsiteSchema = () => ({
   '@context': 'https://schema.org',
@@ -239,7 +239,7 @@ export const generateWebsiteSchema = () => ({
     target: `${siteConfig.url}/search?q={search_term_string}`,
     'query-input': 'required name=search_term_string',
   },
-})
+});
 
 export const generateServiceSchema = (service: {
   name: string
@@ -262,4 +262,4 @@ export const generateServiceSchema = (service: {
   })),
   serviceType: service.serviceType,
   url: `${siteConfig.url}/services`,
-})
+});

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Global Error Boundary - Next.js 15 Pattern
@@ -6,10 +6,10 @@
  * Must be a Client Component with 'use client' directive
  */
 
-import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react'
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 
 interface GlobalErrorProps {
   error: Error & { digest?: string }
@@ -17,8 +17,8 @@ interface GlobalErrorProps {
 }
 
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  const errorId = error.digest || crypto.randomUUID()
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const errorId = error.digest || crypto.randomUUID();
 
   useEffect(() => {
     // Enhanced error logging for production monitoring
@@ -31,9 +31,9 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
       userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'unknown',
       timestamp: new Date().toISOString(),
       type: 'global-error',
-    }
+    };
 
-    console.error('Global error caught:', errorDetails)
+    console.error('Global error caught:', errorDetails);
     
     // Send to error monitoring service in production
     if (!isDevelopment && typeof window !== 'undefined') {
@@ -45,29 +45,29 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           body: JSON.stringify(errorDetails),
         }).catch(() => {
           // Fallback: Use console for critical errors if API fails
-          console.error('Failed to report error to monitoring service')
-        })
+          console.error('Failed to report error to monitoring service');
+        });
       } catch (reportError) {
-        console.error('Error reporting failed:', reportError)
+        console.error('Error reporting failed:', reportError);
       }
     }
-  }, [error, errorId, isDevelopment])
+  }, [error, errorId, isDevelopment]);
 
   const handleGoHome = () => {
-    window.location.href = '/'
-  }
+    window.location.href = '/';
+  };
 
   const handleReload = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   const handleReportIssue = () => {
-    const subject = encodeURIComponent('Website Error Report')
+    const subject = encodeURIComponent('Website Error Report');
     const body = encodeURIComponent(
       `I encountered an error on your website.\n\nError ID: ${errorId}\nPage: ${window.location.href}\nTime: ${new Date().toLocaleString()}\n\nAdditional details: `,
-    )
-    window.open(`mailto:support@hudsondigitalsolutions.com?subject=${subject}&body=${body}`)
-  }
+    );
+    window.open(`mailto:support@hudsondigitalsolutions.com?subject=${subject}&body=${body}`);
+  };
 
   return (
     <html>
@@ -183,5 +183,5 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
         </div>
       </body>
     </html>
-  )
+  );
 }

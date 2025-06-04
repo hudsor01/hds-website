@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Lazy-loaded component exports using Next.js dynamic imports
@@ -10,9 +10,9 @@
  * which is not allowed in Server Components in Next.js 15.
  */
 
-import React from 'react'
-import dynamic from 'next/dynamic'
-import { Skeleton } from '@/components/ui/skeleton'
+import React from 'react';
+import dynamic from 'next/dynamic';
+import { Skeleton } from '@/components/ui/skeleton';
 // Removed unused type imports
 
 // Loading components for better UX
@@ -20,7 +20,7 @@ const AnimationSkeleton = () => (
   <div className='flex items-center justify-center min-h-[200px]'>
     <Skeleton className='h-32 w-full rounded-lg' />
   </div>
-)
+);
 
 const SectionSkeleton = () => (
   <div className='py-16 space-y-6'>
@@ -32,7 +32,7 @@ const SectionSkeleton = () => (
       ))}
     </div>
   </div>
-)
+);
 
 const FormSkeleton = () => (
   <div className='space-y-4'>
@@ -41,7 +41,7 @@ const FormSkeleton = () => (
     <Skeleton className='h-24 w-full' />
     <Skeleton className='h-10 w-32' />
   </div>
-)
+);
 
 const CarouselSkeleton = () => (
   <div className='flex space-x-4 overflow-hidden'>
@@ -49,7 +49,7 @@ const CarouselSkeleton = () => (
       <Skeleton key={i} className='h-64 w-80 flex-shrink-0 rounded-lg' />
     ))}
   </div>
-)
+);
 
 // ===== Animated Components =====
 
@@ -59,7 +59,7 @@ export const LazyFloatingElements = dynamic(
     loading: () => <AnimationSkeleton />,
     ssr: false, // Animations don't need SSR
   },
-)
+);
 
 export const LazyGradientBackground = dynamic(
   () => import('@/components/animated/gradient-background'),
@@ -67,7 +67,7 @@ export const LazyGradientBackground = dynamic(
     loading: () => null, // Background doesn't need loading state
     ssr: false,
   },
-)
+);
 
 export const LazyAnimatedCard = dynamic(
   () => import('@/components/animated/animated-card'),
@@ -75,7 +75,7 @@ export const LazyAnimatedCard = dynamic(
     loading: () => <Skeleton className='h-48 w-full rounded-lg' />,
     ssr: false,
   },
-)
+);
 
 export const LazyAnimatedText = dynamic(
   () => import('@/components/animated/animated-text'),
@@ -83,7 +83,7 @@ export const LazyAnimatedText = dynamic(
     loading: () => <Skeleton className='h-8 w-48' />,
     ssr: false,
   },
-)
+);
 
 // ===== Section Components =====
 
@@ -96,7 +96,7 @@ export const LazyServicesSection = dynamic(
     loading: () => <SectionSkeleton />,
     ssr: true,
   },
-)
+);
 
 export const LazyTechStackSection = dynamic(
   () => import('@/components/sections/tech-stack-section').then(mod => ({ default: mod.TechStackSection })),
@@ -104,7 +104,7 @@ export const LazyTechStackSection = dynamic(
     loading: () => <SectionSkeleton />,
     ssr: true,
   },
-)
+);
 
 export const LazyPricingSection = dynamic(
   () => import('@/components/sections/pricing-section').then(mod => ({ default: mod.PricingSection })),
@@ -112,7 +112,7 @@ export const LazyPricingSection = dynamic(
     loading: () => <SectionSkeleton />,
     ssr: true,
   },
-)
+);
 
 export const LazyContactCTASection = dynamic(
   () => import('@/components/sections/contact-cta').then(mod => ({ default: mod.ContactCTA })),
@@ -120,7 +120,7 @@ export const LazyContactCTASection = dynamic(
     loading: () => <SectionSkeleton />,
     ssr: true,
   },
-)
+);
 
 export const LazyLeadMagnetSection = dynamic(
   () => import('@/components/sections/lead-magnet-section').then(mod => ({ default: mod.LeadMagnetSection })),
@@ -128,7 +128,7 @@ export const LazyLeadMagnetSection = dynamic(
     loading: () => <SectionSkeleton />,
     ssr: true,
   },
-)
+);
 
 // ===== Interactive Components =====
 
@@ -138,7 +138,7 @@ export const LazyTestimonialsCarousel = dynamic(
     loading: () => <CarouselSkeleton />,
     ssr: true,
   },
-)
+);
 
 // ===== Form Components =====
 
@@ -148,7 +148,7 @@ export const LazyContactForm = dynamic(
     loading: () => <FormSkeleton />,
     ssr: true, // Forms should be SSR for accessibility
   },
-)
+);
 
 export const LazyLeadMagnetForm = dynamic(
   () => import('@/components/forms/lead-magnet-form'),
@@ -156,7 +156,7 @@ export const LazyLeadMagnetForm = dynamic(
     loading: () => <FormSkeleton />,
     ssr: true,
   },
-)
+);
 
 export const LazyNewsletterForm = dynamic(
   () => import('@/components/forms/newsletter-form'),
@@ -164,7 +164,7 @@ export const LazyNewsletterForm = dynamic(
     loading: () => <FormSkeleton />,
     ssr: true,
   },
-)
+);
 
 // ===== Page-level Client Components =====
 // Note: Client components removed as they don't exist in the current codebase structure
@@ -185,7 +185,7 @@ export function lazyLoadOnIntersection<T extends Record<string, unknown>>(
   return dynamic(importFunc, {
     loading: () => options?.fallback ? <options.fallback {...({} as T)} /> : <AnimationSkeleton />,
     ssr: false,
-  })
+  });
 }
 
 /**
@@ -199,5 +199,5 @@ export function lazyLoadWithFallback<T extends Record<string, unknown>>(
   return dynamic(importFunc, {
     loading: LoadingComponent,
     ssr: enableSSR,
-  })
+  });
 }

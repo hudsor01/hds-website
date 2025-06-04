@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import { WebsiteAuditTool } from './website-audit-tool'
+import type { Metadata } from 'next';
+import { WebsiteAuditTool } from './website-audit-tool';
 
 export const metadata: Metadata = {
   title: 'Free Website Audit Tool | SEO & Performance Analysis | Hudson Digital',
   description: 'Get a comprehensive free website audit with SEO analysis, performance metrics, and actionable recommendations to improve your site.',
   keywords: 'free website audit, SEO audit tool, website performance analysis, site audit, web audit tool',
-}
+};
 
 export default function WebsiteAuditPage() {
   return (
@@ -24,5 +24,5 @@ export default function WebsiteAuditPage() {
         <WebsiteAuditTool />
       </div>
     </main>
-  )
+  );
 }

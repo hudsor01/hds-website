@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * Unified Animation Hooks
@@ -8,9 +8,9 @@
  * ways to add animations to components.
  */
 
-import { useInView as useFramerInView, useAnimation } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import { useRef, useEffect, useState } from 'react'
+import { useInView as useFramerInView, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { useRef, useEffect, useState } from 'react';
 
 /**
  * Hook for scroll-triggered animations using Intersection Observer
@@ -27,15 +27,15 @@ export function useScrollAnimation(
     rootMargin?: string
   } = {},
 ) {
-  const { threshold = 0.1, once = true, rootMargin = '-100px' } = options
+  const { threshold = 0.1, once = true, rootMargin = '-100px' } = options;
 
   const [ref, inView] = useInView({
     threshold,
     triggerOnce: once,
     rootMargin,
-  })
+  });
 
-  return { ref, inView }
+  return { ref, inView };
 }
 
 /**
@@ -51,15 +51,15 @@ export function useFramerScrollAnimation(
     once?: boolean
   } = {},
 ) {
-  const { threshold = 0.1, once = true } = options
+  const { threshold = 0.1, once = true } = options;
 
-  const ref = useRef(null)
+  const ref = useRef(null);
   const isInView = useFramerInView(ref, {
     once,
     amount: threshold,
-  })
+  });
 
-  return { ref, isInView }
+  return { ref, isInView };
 }
 
 /**
@@ -74,32 +74,32 @@ export function useCounter(
   duration: number = 2,
   start: number = 0,
 ) {
-  const [count, setCount] = useState(start)
-  const controls = useAnimation()
+  const [count, setCount] = useState(start);
+  const controls = useAnimation();
 
   useEffect(() => {
-    let startTime: number
-    let animationFrame: number
+    let startTime: number;
+    let animationFrame: number;
 
     const updateCount = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
-      setCount(Math.floor(progress * (end - start) + start))
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      setCount(Math.floor(progress * (end - start) + start));
 
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(updateCount)
+        animationFrame = requestAnimationFrame(updateCount);
       }
-    }
+    };
 
-    controls.start({ opacity: 1 })
-    animationFrame = requestAnimationFrame(updateCount)
+    controls.start({ opacity: 1 });
+    animationFrame = requestAnimationFrame(updateCount);
 
     return () => {
-      cancelAnimationFrame(animationFrame)
-    }
-  }, [end, duration, start, controls])
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [end, duration, start, controls]);
 
-  return { count, controls }
+  return { count, controls };
 }
 
 /**
@@ -108,37 +108,37 @@ export function useCounter(
  * @param speed Speed of parallax effect (higher = more movement)
  */
 export function useParallax(speed: number = 0.5) {
-  const [scrollY, setScrollY] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const handleScroll = () => setScrollY(window.scrollY);
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Calculate transform based on scroll position
-  const y = scrollY * speed
+  const y = scrollY * speed;
 
-  return { y, scrollY }
+  return { y, scrollY };
 }
 
 /**
  * Hook for mouse tracking
  */
 export function useMousePosition() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
-  return mousePosition
+  return mousePosition;
 }
 
 /**
@@ -147,36 +147,36 @@ export function useMousePosition() {
  * @param delay Delay in milliseconds
  */
 export function useDelayedAnimation(delay: number) {
-  const [isReady, setIsReady] = useState(false)
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), delay)
-    return () => clearTimeout(timer)
-  }, [delay])
+    const timer = setTimeout(() => setIsReady(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
 
-  return isReady
+  return isReady;
 }
 
 /**
  * Hook for viewport size
  */
 export function useViewportSize() {
-  const [size, setSize] = useState({ width: 0, height: 0 })
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const handleResize = () => {
       setSize({
         width: window.innerWidth,
         height: window.innerHeight,
-      })
-    }
+      });
+    };
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  return size
+  return size;
 }
 
 /**
@@ -188,7 +188,7 @@ export function useViewportSize() {
 export function useStaggerAnimation(count: number, staggerDelay: number = 0.1) {
   return Array.from({ length: count }).map((_, i) => ({
     transition: { delay: i * staggerDelay },
-  }))
+  }));
 }
 
 /**
@@ -205,28 +205,28 @@ export function useScrollLinkedAnimation(
   scrollStart: number = 0,
   scrollEnd: number = 1,
 ) {
-  const [value, setValue] = useState(start)
+  const [value, setValue] = useState(start);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.body.offsetHeight - window.innerHeight
-      const scrollProgress = scrollTop / docHeight
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.offsetHeight - window.innerHeight;
+      const scrollProgress = scrollTop / docHeight;
 
       if (scrollProgress < scrollStart) {
-        setValue(start)
+        setValue(start);
       } else if (scrollProgress > scrollEnd) {
-        setValue(end)
+        setValue(end);
       } else {
         const normalizedProgress =
-          (scrollProgress - scrollStart) / (scrollEnd - scrollStart)
-        setValue(start + normalizedProgress * (end - start))
+          (scrollProgress - scrollStart) / (scrollEnd - scrollStart);
+        setValue(start + normalizedProgress * (end - start));
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [start, end, scrollStart, scrollEnd])
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [start, end, scrollStart, scrollEnd]);
 
-  return value
+  return value;
 }

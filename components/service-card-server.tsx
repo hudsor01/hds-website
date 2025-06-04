@@ -1,7 +1,7 @@
-import React from 'react'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import {
   Card,
   CardContent,
@@ -9,9 +9,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { type ServiceCardProps } from '@/types/service-types'
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { type ServiceCardProps } from '@/types/service-types';
 
 type ServiceCardServerProps = ServiceCardProps
 
@@ -80,5 +80,5 @@ export function ServiceCardServer({
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

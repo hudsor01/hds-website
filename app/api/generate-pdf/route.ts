@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import puppeteer from 'puppeteer'
-import fs from 'fs/promises'
-import path from 'path'
+import { NextRequest, NextResponse } from 'next/server';
+import puppeteer from 'puppeteer';
+import fs from 'fs/promises';
+import path from 'path';
 
 // PDF styling template
 const getHtmlTemplate = (content: string, title: string) => `
@@ -97,7 +97,7 @@ const getHtmlTemplate = (content: string, title: string) => `
   </div>
 </body>
 </html>
-`
+`;
 
 // Pre-built HTML content for each resource
 const resourceContent = {
@@ -262,7 +262,7 @@ const resourceContent = {
       </ul>
     </div>
   `,
-}
+};
 
 // Resource config with titles
 const resources = {
@@ -278,46 +278,46 @@ const resources = {
     pdfFile: 'seo-basics-cheatsheet.pdf',
     title: 'SEO Basics Cheat Sheet',
   },
-}
+};
 
 export async function POST(request: NextRequest) {
-  let browser
+  let browser;
 
   try {
-    const body = await request.json()
-    const { resourceId } = body
+    const body = await request.json();
+    const { resourceId } = body;
 
     if (!resourceId || !resources[resourceId as keyof typeof resources]) {
       return NextResponse.json(
         { error: 'Invalid resource ID' },
         { status: 400 },
-      )
+      );
     }
 
-    const resource = resources[resourceId as keyof typeof resources]
+    const resource = resources[resourceId as keyof typeof resources];
     const pdfPath = path.join(
       process.cwd(),
       'public',
       'resources',
       resource.pdfFile,
-    )
+    );
 
     // Get pre-built HTML content
-    const htmlContent = resourceContent[resourceId as keyof typeof resourceContent]
+    const htmlContent = resourceContent[resourceId as keyof typeof resourceContent];
 
     // Create full HTML document
-    const fullHtml = getHtmlTemplate(htmlContent, resource.title)
+    const fullHtml = getHtmlTemplate(htmlContent, resource.title);
 
     // Launch Puppeteer
     browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
+    });
 
-    const page = await browser.newPage()
+    const page = await browser.newPage();
 
     // Set content and wait for it to load
-    await page.setContent(fullHtml, { waitUntil: 'networkidle0' })
+    await page.setContent(fullHtml, { waitUntil: 'networkidle0' });
 
     // Generate PDF
     const pdfBuffer = await page.pdf({
@@ -329,33 +329,33 @@ export async function POST(request: NextRequest) {
         bottom: '0',
         left: '0',
       },
-    })
+    });
 
     // Save PDF file
-    await fs.writeFile(pdfPath, pdfBuffer)
+    await fs.writeFile(pdfPath, pdfBuffer);
 
-    await browser.close()
+    await browser.close();
 
     return NextResponse.json({
       success: true,
       message: `PDF generated successfully for ${resource.title}`,
       path: `/resources/${resource.pdfFile}`,
-    })
+    });
   } catch (error) {
-    console.error('PDF generation error:', error)
+    console.error('PDF generation error:', error);
     if (browser) {
-      await browser.close()
+      await browser.close();
     }
     return NextResponse.json(
       { error: 'Failed to generate PDF' },
       { status: 500 },
-    )
+    );
   }
 }
 
 // GET request to generate all PDFs at once
 export async function GET() {
-  const results = []
+  const results = [];
 
   for (const [resourceId, resource] of Object.entries(resources)) {
     try {
@@ -364,18 +364,18 @@ export async function GET() {
           method: 'POST',
           body: JSON.stringify({ resourceId }),
         }),
-      )
+      );
 
-      const result = await response.json()
-      results.push({ resourceId, ...result })
+      const result = await response.json();
+      results.push({ resourceId, ...result });
     } catch (error) {
       results.push({
         resourceId,
         success: false,
         error: (error as Error).message,
-      })
+      });
     }
   }
 
-  return NextResponse.json({ results })
+  return NextResponse.json({ results });
 }

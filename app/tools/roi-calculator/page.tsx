@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
-import { ROICalculator } from './roi-calculator'
+import type { Metadata } from 'next';
+import { ROICalculator } from './roi-calculator';
 
 export const metadata: Metadata = {
   title: 'ROI Calculator | Revenue Operations Investment Return | Hudson Digital',
   description: 'Calculate your potential return on investment from revenue operations automation. See how much revenue you could gain and costs you could save.',
   keywords: 'ROI calculator, revenue operations ROI, sales automation ROI, CRM ROI calculator, business automation calculator',
-}
+};
 
 export default function ROICalculatorPage() {
   return (
@@ -24,5 +24,5 @@ export default function ROICalculatorPage() {
         <ROICalculator />
       </div>
     </main>
-  )
+  );
 }

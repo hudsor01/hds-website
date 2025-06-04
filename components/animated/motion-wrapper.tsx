@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
 /**
  * Motion Wrapper Component
  * Provides easy-to-use motion components for the application
  */
 
-import { m, type HTMLMotionProps } from 'framer-motion'
+import { m, type HTMLMotionProps } from 'framer-motion';
 import { 
   fadeInVariants, 
   slideInVariants, 
@@ -14,26 +14,26 @@ import {
   textVariants,
   buttonVariants,
   staggerVariants,
-} from '@/lib/animation/motion-config'
+} from '@/lib/animation/motion-config';
 
 // Motion Component Types
 type MotionDivProps = HTMLMotionProps<'div'>
 type MotionButtonProps = HTMLMotionProps<'button'>
 
 // Pre-configured Motion Components
-export const MotionDiv = m.div
-export const MotionSection = m.section
-export const MotionButton = m.button
-export const MotionH1 = m.h1
-export const MotionH2 = m.h2
-export const MotionH3 = m.h3
-export const MotionP = m.p
-export const MotionSpan = m.span
-export const MotionImg = m.img
-export const MotionArticle = m.article
-export const MotionNav = m.nav
-export const MotionUl = m.ul
-export const MotionLi = m.li
+export const MotionDiv = m.div;
+export const MotionSection = m.section;
+export const MotionButton = m.button;
+export const MotionH1 = m.h1;
+export const MotionH2 = m.h2;
+export const MotionH3 = m.h3;
+export const MotionP = m.p;
+export const MotionSpan = m.span;
+export const MotionImg = m.img;
+export const MotionArticle = m.article;
+export const MotionNav = m.nav;
+export const MotionUl = m.ul;
+export const MotionLi = m.li;
 
 // Preset Animation Components
 
@@ -54,7 +54,7 @@ export function FadeIn({ children, delay = 0, ...props }: FadeInProps) {
     >
       {children}
     </MotionDiv>
-  )
+  );
 }
 
 // Slide In Component
@@ -80,7 +80,7 @@ export function SlideIn({
     >
       {children}
     </MotionDiv>
-  )
+  );
 }
 
 // Scale In Component
@@ -102,7 +102,7 @@ export function ScaleIn({ children, delay = 0, ...props }: ScaleInProps) {
     >
       {children}
     </MotionDiv>
-  )
+  );
 }
 
 // Animated Card Component
@@ -129,7 +129,7 @@ export function AnimatedCard({
     >
       {children}
     </MotionDiv>
-  )
+  );
 }
 
 // Animated Text Component
@@ -150,7 +150,7 @@ export function AnimatedText({
                     as === 'h3' ? MotionH3 :
                     as === 'p' ? MotionP :
                     as === 'span' ? MotionSpan :
-                    MotionDiv
+                    MotionDiv;
 
   return (
     <Component
@@ -163,7 +163,7 @@ export function AnimatedText({
     >
       {children}
     </Component>
-  )
+  );
 }
 
 // Animated Button Component
@@ -189,7 +189,7 @@ export function AnimatedButton({
     >
       {children}
     </MotionButton>
-  )
+  );
 }
 
 // Stagger Container Component
@@ -213,7 +213,7 @@ export function StaggerContainer({
     >
       {children}
     </MotionDiv>
-  )
+  );
 }
 
 // Page Transition Component
@@ -233,5 +233,5 @@ export function PageTransition({ children, className }: PageTransitionProps) {
     >
       {children}
     </MotionDiv>
-  )
+  );
 }

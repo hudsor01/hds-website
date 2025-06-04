@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { setupGlobalErrorHandling } from '@/lib/error-tracking'
+import { useEffect } from 'react';
+import { setupGlobalErrorHandling } from '@/lib/error-tracking';
 
 /**
  * Error provider that sets up global error handling
@@ -9,8 +9,8 @@ import { setupGlobalErrorHandling } from '@/lib/error-tracking'
 export function ErrorProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up global error handlers
-    setupGlobalErrorHandling()
-  }, [])
+    setupGlobalErrorHandling();
+  }, []);
 
-  return <>{children}</>
+  return <>{children}</>;
 }

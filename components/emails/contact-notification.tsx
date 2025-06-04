@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 
 interface ContactNotificationProps {
   name: string
@@ -211,4 +211,4 @@ export const ContactNotificationTemplate: React.FC<Readonly<ContactNotificationP
       </p>
     </div>
   </div>
-)
+);

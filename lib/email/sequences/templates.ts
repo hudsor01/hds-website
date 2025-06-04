@@ -1,5 +1,5 @@
 // Pre-defined email sequence templates for Hudson Digital Solutions
-import type { EmailSequence } from './types'
+import type { EmailSequence } from './types';
 
 /**
  * Email sequence for website checklist lead magnet
@@ -99,7 +99,7 @@ export const websiteChecklistSequence: EmailSequence = {
       },
     },
   ],
-}
+};
 
 /**
  * Email sequence for SEO basics lead magnet
@@ -166,7 +166,7 @@ export const seoBasicsSequence: EmailSequence = {
       },
     },
   ],
-}
+};
 
 /**
  * Email sequence for contact form submissions
@@ -223,20 +223,20 @@ export const contactFormSequence: EmailSequence = {
       skipIf: [{ type: 'has_responded' }],
     },
   ],
-}
+};
 
 /**
  * Get all available email sequences
  */
 export function getAllSequences(): EmailSequence[] {
-  return [websiteChecklistSequence, seoBasicsSequence, contactFormSequence]
+  return [websiteChecklistSequence, seoBasicsSequence, contactFormSequence];
 }
 
 /**
  * Get sequence by ID
  */
 export function getSequenceById(id: string): EmailSequence | undefined {
-  return getAllSequences().find(seq => seq.id === id)
+  return getAllSequences().find(seq => seq.id === id);
 }
 
 /**
@@ -247,8 +247,8 @@ export function getSequencesByTrigger(
   resourceId?: string,
 ): EmailSequence[] {
   return getAllSequences().filter(seq => {
-    if (seq.trigger.type !== triggerType) return false
-    if (resourceId && seq.trigger.resourceId !== resourceId) return false
-    return true
-  })
+    if (seq.trigger.type !== triggerType) return false;
+    if (resourceId && seq.trigger.resourceId !== resourceId) return false;
+    return true;
+  });
 }

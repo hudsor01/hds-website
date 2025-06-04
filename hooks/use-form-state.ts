@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   useForm,
-} from 'react-hook-form'
+} from 'react-hook-form';
 import type {
   UseFormProps,
   FieldValues,
   Path,
   UseFormReturn,
-} from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+} from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 interface FormStateOptions<T extends FieldValues> extends UseFormProps<T> {
   schema?: z.ZodSchema<T>
@@ -31,53 +31,53 @@ export function useFormState<T extends FieldValues>({
   ...formOptions
 }: FormStateOptions<T>) {
   // Form status states
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Create form with React Hook Form
   const form = useForm<T>({
     ...formOptions,
     resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: defaultValues as T,
-  })
+  });
 
   // Handle form submission
   const handleSubmit = async (values: T) => {
-    setIsSubmitting(true)
-    setFormError(null)
+    setIsSubmitting(true);
+    setFormError(null);
 
     try {
       if (onSubmit) {
-        await onSubmit(values)
+        await onSubmit(values);
       }
 
-      setIsSubmitted(true)
+      setIsSubmitted(true);
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'An error occurred')
+      setFormError(error instanceof Error ? error.message : 'An error occurred');
 
       // Set form error
       form.setError('root' as Path<T>, {
         type: 'manual',
         message:
           error instanceof Error ? error.message : 'Form submission failed',
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   // Reset form state
   const resetForm = () => {
-    form.reset(defaultValues as T)
-    setIsSubmitted(false)
-    setFormError(null)
-  }
+    form.reset(defaultValues as T);
+    setIsSubmitted(false);
+    setFormError(null);
+  };
 
   // Set a specific field value
   const setField = <K extends Path<T>>(name: K, value: T[K]) => {
-    form.setValue(name, value, { shouldValidate: true, shouldDirty: true })
-  }
+    form.setValue(name, value, { shouldValidate: true, shouldDirty: true });
+  };
 
   return {
     form,
@@ -93,7 +93,7 @@ export function useFormState<T extends FieldValues>({
     formError,
     resetForm,
     setField,
-  }
+  };
 }
 
 /**

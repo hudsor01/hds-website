@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowRight, CheckCircle, MapPin, Clock, Star, BarChart3, TrendingUp, Users } from 'lucide-react'
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle, MapPin, Clock, Star, BarChart3, TrendingUp, Users } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Dallas Revenue Operations Consultant | Hudson Digital Solutions',
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
       },
     ],
   },
-}
+};
 
-const DALLAS_SKYLINE = 'https://images.unsplash.com/photo-1570089635851-e4537d7b4042?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+const DALLAS_SKYLINE = 'https://images.unsplash.com/photo-1570089635851-e4537d7b4042?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80';
 
 export default function DallasRevenueOperationsPage() {
   return (
@@ -312,5 +312,5 @@ export default function DallasRevenueOperationsPage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

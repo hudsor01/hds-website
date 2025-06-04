@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React, { Component } from 'react'
-import type { ErrorInfo, ReactNode } from 'react'
-import { AlertCircle } from 'lucide-react'
-import { logger } from '@/lib/logger'
-import { Button } from '@/components/ui/button'
+import React, { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
 interface Props {
 children: ReactNode
@@ -22,12 +22,12 @@ interface State {
 
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
-    super(props)
-    this.state = { hasError: false, error: null }
+    super(props);
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -37,33 +37,33 @@ export class ErrorBoundary extends Component<Props, State> {
         error: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack,
-      })
+      });
     } else {
-      console.error('Error caught by boundary:', error, errorInfo)
+      console.error('Error caught by boundary:', error, errorInfo);
     }
 
     // Call the optional onError callback
     if (this.props.onError) {
-      this.props.onError(error, errorInfo)
+      this.props.onError(error, errorInfo);
     }
   }
 
   reset = () => {
-    this.setState({ hasError: false, error: null })
-  }
+    this.setState({ hasError: false, error: null });
+  };
 
   render() {
     if (this.state.hasError) {
       // Return custom fallback if provided
       if (this.props.fallback) {
-        return this.props.fallback
+        return this.props.fallback;
       }
 
       const {
         variant = 'simple',
         darkMode = false,
         className = '',
-      } = this.props
+      } = this.props;
 
       // Simple minimal fallback
       if (variant === 'simple') {
@@ -94,7 +94,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
             </div>
           </div>
-        )
+        );
       }
 
       // Detailed fallback with more information
@@ -146,9 +146,9 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }

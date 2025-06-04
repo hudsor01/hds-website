@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { use } from 'react'
-import { Suspense } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { use } from 'react';
+import { Suspense } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Define the shape of streamed data items
 interface StreamedDataItem {
@@ -20,7 +20,7 @@ function ClientDataContent({
   dataPromise: Promise<StreamedDataItem[]> 
 }) {
   // Use the `use` hook to read the promise
-  const data = use(dataPromise)
+  const data = use(dataPromise);
 
   return (
     <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -42,7 +42,7 @@ function ClientDataContent({
         </Card>
       ))}
     </div>
-  )
+  );
 }
 
 // Loading skeleton for client data
@@ -62,7 +62,7 @@ function ClientDataSkeleton() {
         </Card>
       ))}
     </div>
-  )
+  );
 }
 
 // Main component that demonstrates client-side streaming
@@ -89,13 +89,13 @@ export function ClientDataStream({
         <ClientDataContent dataPromise={dataPromise} />
       </Suspense>
     </div>
-  )
+  );
 }
 
 // Example usage component (would be imported in a page)
 export function ClientDataStreamExample() {
   // Don't await the promise - pass it to the client component
-  const dataPromise = fetch('/api/data').then(res => res.json()) as Promise<StreamedDataItem[]>
+  const dataPromise = fetch('/api/data').then(res => res.json()) as Promise<StreamedDataItem[]>;
 
   return (
     <ClientDataStream 
@@ -103,5 +103,5 @@ export function ClientDataStreamExample() {
       title='Live Data Feed'
       description="This data is streamed directly to the client using React's use hook"
     />
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Hudson Digital Solutions',
   description:
     'Terms of service for Hudson Digital Solutions. Read our terms and conditions for using our website and services.',
-}
+};
 
 export default function TermsPage() {
   return (
@@ -113,5 +113,5 @@ export default function TermsPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

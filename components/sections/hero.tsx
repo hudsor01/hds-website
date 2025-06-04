@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { m } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { CountUp } from './count-up'
+import Image from 'next/image';
+import Link from 'next/link';
+import { m } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { CountUp } from './count-up';
 
 export interface HeroProps {
   title: string
@@ -92,7 +92,7 @@ export function Hero({
           </m.div>
         </div>
       </section>
-    )
+    );
   }
 
   if (variant === 'animated') {
@@ -190,7 +190,7 @@ export function Hero({
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   // Default variant
@@ -261,5 +261,5 @@ export function Hero({
         </div>
       </div>
     </section>
-  )
+  );
 }

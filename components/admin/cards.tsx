@@ -5,10 +5,10 @@
  * with real data from tRPC
  */
 
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { 
   TrendingUp, 
   Users, 
@@ -17,11 +17,11 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Activity,
-} from 'lucide-react'
-import { api } from '@/lib/trpc/client'
+} from 'lucide-react';
+import { api } from '@/lib/trpc/client';
 
 export function SectionCards() {
-  const { data: dashboardData, isLoading, error } = api.admin.getDashboardAnalytics.useQuery()
+  const { data: dashboardData, isLoading, error } = api.admin.getDashboardAnalytics.useQuery();
 
   if (isLoading) {
     return (
@@ -39,7 +39,7 @@ export function SectionCards() {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   if (error || !dashboardData) {
@@ -53,7 +53,7 @@ export function SectionCards() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   const cards = [
@@ -105,16 +105,16 @@ export function SectionCards() {
       icon: TrendingUp,
       description: 'from last month',
     },
-  ]
+  ];
 
   return (
     <div className='features-grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
       {cards.map((card, index) => {
-        const Icon = card.icon
-        const TrendIcon = card.trend === 'up' ? ArrowUpRight : ArrowDownRight
+        const Icon = card.icon;
+        const TrendIcon = card.trend === 'up' ? ArrowUpRight : ArrowDownRight;
         const trendColor = card.trend === 'up' 
           ? 'text-emerald-600 dark:text-emerald-400' 
-          : 'text-red-600 dark:text-red-400'
+          : 'text-red-600 dark:text-red-400';
         
         return (
           <Card key={index} className='card-entrance card-lift hover:shadow-xl transition-all duration-300 scroll-reveal'>
@@ -133,8 +133,8 @@ export function SectionCards() {
               </p>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

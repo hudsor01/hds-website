@@ -5,14 +5,14 @@
  * and Supabase for database operations with proper JWT forwarding
  */
 
-import { auth, currentUser } from '@clerk/nextjs/server'
-import { createClient } from '@supabase/supabase-js'
-import { env } from '@/lib/env'
+import { auth, currentUser } from '@clerk/nextjs/server';
+import { createClient } from '@supabase/supabase-js';
+import { env } from '@/lib/env';
 
 // Supabase client with Clerk JWT integration
 export function createClerkSupabaseClient() {
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('Supabase URL and Service Role Key are required for Clerk integration')
+    throw new Error('Supabase URL and Service Role Key are required for Clerk integration');
   }
 
   return createClient(
@@ -24,20 +24,20 @@ export function createClerkSupabaseClient() {
         persistSession: false,
       },
     },
-  )
+  );
 }
 
 // Server-side authenticated Supabase client
 export async function createAuthenticatedSupabaseClient() {
-  const { getToken } = auth()
-  const token = await getToken({ template: 'supabase' })
+  const { getToken } = auth();
+  const token = await getToken({ template: 'supabase' });
   
   if (!token) {
-    throw new Error('No Clerk session found')
+    throw new Error('No Clerk session found');
   }
 
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    throw new Error('Supabase URL and Anon Key are required')
+    throw new Error('Supabase URL and Anon Key are required');
   }
 
   const supabase = createClient(
@@ -50,15 +50,15 @@ export async function createAuthenticatedSupabaseClient() {
         },
       },
     },
-  )
+  );
 
-  return supabase
+  return supabase;
 }
 
 // Client-side Supabase client with Clerk integration
 export function createClientSupabaseClient(supabaseAccessToken?: string) {
   if (!env.NEXT_PUBLIC_SUPABASE_URL || !env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    throw new Error('Supabase URL and Anon Key are required')
+    throw new Error('Supabase URL and Anon Key are required');
   }
 
   return createClient(
@@ -73,16 +73,16 @@ export function createClientSupabaseClient(supabaseAccessToken?: string) {
           }
         : undefined,
     },
-  )
+  );
 }
 
 // Sync Clerk user to Supabase
 export async function syncClerkUserToSupabase() {
   try {
-    const user = await currentUser()
-    if (!user) return null
+    const user = await currentUser();
+    if (!user) return null;
 
-    const supabase = createClerkSupabaseClient()
+    const supabase = createClerkSupabaseClient();
 
     // Upsert user data to Supabase
     const { data, error } = await supabase
@@ -99,43 +99,43 @@ export async function syncClerkUserToSupabase() {
         onConflict: 'id',
       })
       .select()
-      .single()
+      .single();
 
     if (error) {
-      console.error('Error syncing user to Supabase:', error)
-      return null
+      console.error('Error syncing user to Supabase:', error);
+      return null;
     }
 
-    return data
+    return data;
   } catch (error) {
-    console.error('Error in syncClerkUserToSupabase:', error)
-    return null
+    console.error('Error in syncClerkUserToSupabase:', error);
+    return null;
   }
 }
 
 // Get current user from Supabase via Clerk
 export async function getCurrentSupabaseUser() {
   try {
-    const user = await currentUser()
-    if (!user) return null
+    const user = await currentUser();
+    if (!user) return null;
 
-    const supabase = createClerkSupabaseClient()
+    const supabase = createClerkSupabaseClient();
 
     const { data, error } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
-      .single()
+      .single();
 
     if (error) {
-      console.error('Error fetching user from Supabase:', error)
-      return null
+      console.error('Error fetching user from Supabase:', error);
+      return null;
     }
 
-    return data
+    return data;
   } catch (error) {
-    console.error('Error in getCurrentSupabaseUser:', error)
-    return null
+    console.error('Error in getCurrentSupabaseUser:', error);
+    return null;
   }
 }
 
@@ -158,25 +158,25 @@ export function useClerkSupabase() {
     createClientSupabaseClient,
     syncUser: syncClerkUserToSupabase,
     getCurrentUser: getCurrentSupabaseUser,
-  }
+  };
 }
 
 // Middleware helper for protected routes
 export async function requireAuth() {
-  const { userId } = auth()
+  const { userId } = auth();
   
   if (!userId) {
-    throw new Error('Unauthorized - Please sign in')
+    throw new Error('Unauthorized - Please sign in');
   }
 
-  return userId
+  return userId;
 }
 
 // Database operation helpers with Clerk auth
 export async function executeWithAuth<T>(
   operation: (supabase: ReturnType<typeof createAuthenticatedSupabaseClient>) => Promise<T>,
 ): Promise<T> {
-  await requireAuth()
-  const supabase = await createAuthenticatedSupabaseClient()
-  return operation(supabase)
+  await requireAuth();
+  const supabase = await createAuthenticatedSupabaseClient();
+  return operation(supabase);
 }

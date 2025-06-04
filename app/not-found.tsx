@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Header } from '@/components/layouts/header'
-import { Footer } from '@/components/layouts/footer'
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Header } from '@/components/layouts/header';
+import { Footer } from '@/components/layouts/footer';
 
 export const metadata: Metadata = {
   title: '404 - Page Not Found | Hudson Digital Solutions',
   description: 'The page you are looking for could not be found. Return to our homepage or contact us for assistance.',
   robots: 'noindex, nofollow',
-}
+};
 
 export default function NotFound() {
   return (
@@ -43,5 +43,5 @@ export default function NotFound() {
       
       <Footer />
     </div>
-  )
+  );
 }

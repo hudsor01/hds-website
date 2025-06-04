@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React from 'react'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Motion, fadeInUp } from '@/components/ui/framer-motion-wrapper'
+import React from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Motion, fadeInUp } from '@/components/ui/framer-motion-wrapper';
 import {
   Card,
   CardContent,
@@ -12,8 +12,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 interface AnimatedServiceCardProps {
   title: string
@@ -112,5 +112,5 @@ export function AnimatedServiceCard({
         </CardFooter>
       </Card>
     </Motion.div>
-  )
+  );
 }

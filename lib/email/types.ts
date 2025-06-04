@@ -1,7 +1,7 @@
 // Type definitions for email-related functionality
 
-import { z } from 'zod'
-import { emailSchema } from '@/lib/email/resend'
+import { z } from 'zod';
+import { emailSchema } from '@/lib/email/resend';
 
 /**
  * Email payload for Resend emails

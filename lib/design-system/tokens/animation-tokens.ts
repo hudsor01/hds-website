@@ -11,7 +11,7 @@ export const transitions = {
   slow: { duration: 0.5, ease: 'easeInOut' },
   spring: { type: 'spring', stiffness: 260, damping: 20 },
   smooth: { type: 'tween', ease: 'easeInOut', duration: 0.4 },
-}
+};
 
 export const animations = {
   // Fade animations
@@ -71,17 +71,17 @@ export const animations = {
       },
     },
   },
-}
+};
 
 // Import required for hover animations
-import { shadows } from './visual-tokens'
+import { shadows } from './visual-tokens';
 
 // Hover states
 export const hover = {
   scale: { scale: 1.05, transition: transitions.spring },
   glow: { boxShadow: shadows.glow, transition: transitions.default },
   lift: { y: -5, boxShadow: shadows.xl, transition: transitions.default },
-}
+};
 
 // Custom cursor animations
 export const cursor = {
@@ -89,4 +89,4 @@ export const cursor = {
   pointer: { cursor: 'pointer' },
   grab: { cursor: 'grab' },
   grabbing: { cursor: 'grabbing' },
-}
+};

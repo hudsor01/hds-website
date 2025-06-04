@@ -5,9 +5,9 @@
  * Following shadcn/ui data table patterns for admin dashboard
  */
 
-'use client'
+'use client';
 
-import * as React from 'react'
+import * as React from 'react';
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -18,16 +18,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -35,19 +35,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { columns, Lead } from './leads-columns'
-import { api } from '@/lib/trpc/client'
+} from '@/components/ui/table';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { columns, Lead } from './leads-columns';
+import { api } from '@/lib/trpc/client';
 
 export function DataTable() {
   // Fetch real data using tRPC
-  const { data: leadsData, isLoading, error } = api.admin.getRecentLeads.useQuery()
+  const { data: leadsData, isLoading, error } = api.admin.getRecentLeads.useQuery();
   
   // Transform the data to match the Lead interface
   const data: Lead[] = React.useMemo(() => {
-    if (!leadsData) return []
+    if (!leadsData) return [];
     
     return leadsData.map((lead, index) => ({
       id: `lead-${index + 1}`,
@@ -59,8 +59,8 @@ export function DataTable() {
       service: lead.service || undefined,
       value: Math.floor(Math.random() * 10000) + 1000, // Random value for demo
       lastContact: lead.createdAt ? new Date(lead.createdAt).toISOString() : new Date().toISOString(),
-    }))
-  }, [leadsData])
+    }));
+  }, [leadsData]);
 
   if (isLoading) {
     return (
@@ -76,7 +76,7 @@ export function DataTable() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (error) {
@@ -92,17 +92,17 @@ export function DataTable() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
-  return <DataTableContent data={data} />
+  return <DataTableContent data={data} />;
 }
 
 function DataTableContent({ data }: { data: Lead[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -121,7 +121,7 @@ function DataTableContent({ data }: { data: Lead[] }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <Card>
@@ -242,5 +242,5 @@ function DataTableContent({ data }: { data: Lead[] }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

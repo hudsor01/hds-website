@@ -1,16 +1,16 @@
-import { cookies } from 'next/headers'
-import React from 'react'
+import { cookies } from 'next/headers';
+import React from 'react';
 /**
  * User Profile component that demonstrates PPR dynamic rendering
  * Uses cookies API which makes it dynamic
  */
 export async function UserProfile() {
   // This makes the component dynamic due to cookies usage
-  const session = (await cookies()).get('session')?.value
-  const userPreferences = (await cookies()).get('user-preferences')?.value
+  const session = (await cookies()).get('session')?.value;
+  const userPreferences = (await cookies()).get('user-preferences')?.value;
 
   // Simulate loading time for dynamic content
-  await new Promise(resolve => setTimeout(resolve, 300))
+  await new Promise(resolve => setTimeout(resolve, 300));
 
   return (
     <div className='bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border'>
@@ -42,7 +42,7 @@ export async function UserProfile() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 /**
@@ -58,5 +58,5 @@ export function UserProfileSkeleton() {
         <div className='h-3 bg-gray-200 rounded w-1/4 mt-2'></div>
       </div>
     </div>
-  )
+  );
 }

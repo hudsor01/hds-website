@@ -1,5 +1,5 @@
-import { Suspense, use } from 'react'
-import { AnimatedTestimonials } from '@/components/aceternity/animated-testimonials'
+import { Suspense, use } from 'react';
+import { AnimatedTestimonials } from '@/components/aceternity/animated-testimonials';
 
 interface Testimonial {
   quote: string
@@ -11,7 +11,7 @@ interface Testimonial {
 // Mock API function - replace with your actual tRPC call
 async function fetchTestimonials() {
   // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 500))
+  await new Promise(resolve => setTimeout(resolve, 500));
   
   return [
     {
@@ -38,14 +38,14 @@ async function fetchTestimonials() {
       designation: 'Owner, Artisan Tattoo Studio',
       src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop&crop=face',
     },
-  ]
+  ];
 }
 
 // React 19 Server Component using use() hook
 function TestimonialsData({ testimonialsPromise }: { testimonialsPromise: Promise<Testimonial[]> }) {
-  const testimonials = use(testimonialsPromise)
+  const testimonials = use(testimonialsPromise);
   
-  return <AnimatedTestimonials testimonials={testimonials} autoplay={true} />
+  return <AnimatedTestimonials testimonials={testimonials} autoplay={true} />;
 }
 
 // Loading fallback component
@@ -76,12 +76,12 @@ function TestimonialsLoading() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Main component with Suspense boundary
 export function TestimonialsServerSection() {
-  const testimonialsPromise = fetchTestimonials()
+  const testimonialsPromise = fetchTestimonials();
   
   return (
     <section className='py-20 bg-gray-50'>
@@ -100,5 +100,5 @@ export function TestimonialsServerSection() {
         </Suspense>
       </div>
     </section>
-  )
+  );
 }

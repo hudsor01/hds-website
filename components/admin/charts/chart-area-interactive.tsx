@@ -4,40 +4,40 @@
  * Interactive chart component for dashboard following shadcn/ui patterns
  */
 
-'use client'
+'use client';
 
-import * as React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react'
-import { api } from '@/lib/trpc/client'
+import * as React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
+import { api } from '@/lib/trpc/client';
 
 export function ChartAreaInteractive() {
-  const [activeChart, setActiveChart] = React.useState('leads')
+  const [activeChart, setActiveChart] = React.useState('leads');
   
   // Fetch real analytics data from tRPC
-  const { data: dashboardData, isLoading, error } = api.admin.getDashboardAnalytics.useQuery({})
+  const { data: dashboardData, isLoading, error } = api.admin.getDashboardAnalytics.useQuery({});
   
   const chartTypes = [
     { key: 'pageViews', label: 'Page Views', color: 'hsl(var(--chart-1))' },
     { key: 'uniqueVisitors', label: 'Unique Visitors', color: 'hsl(var(--chart-2))' },
     { key: 'conversions', label: 'Conversions', color: 'hsl(var(--chart-3))' },
-  ]
+  ];
 
   // Transform real data into chart format
   const chartData = React.useMemo(() => {
-    if (!dashboardData) return []
+    if (!dashboardData) return [];
     
     // Create monthly aggregation from real data (simulate with same values for now)
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     return months.map(month => ({
       month,
       pageViews: dashboardData.overview.pageViews || 0,
       uniqueVisitors: dashboardData.overview.uniqueVisitors || 0,
       conversions: dashboardData.overview.conversions || 0,
-    }))
-  }, [dashboardData])
+    }));
+  }, [dashboardData]);
 
-  const maxValue = chartData.length > 0 ? Math.max(...chartData.map(item => item[activeChart as keyof typeof item] as number)) : 100
+  const maxValue = chartData.length > 0 ? Math.max(...chartData.map(item => item[activeChart as keyof typeof item] as number)) : 100;
   
   if (isLoading) {
     return (
@@ -54,7 +54,7 @@ export function ChartAreaInteractive() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (error) {
@@ -72,7 +72,7 @@ export function ChartAreaInteractive() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -109,9 +109,9 @@ export function ChartAreaInteractive() {
         <div className='space-y-4'>
           <div className='grid grid-cols-6 gap-2 h-64'>
             {chartData.map((item) => {
-              const value = item[activeChart as keyof typeof item] as number
-              const height = (value / maxValue) * 100
-              const color = chartTypes.find(t => t.key === activeChart)?.color || 'hsl(var(--chart-1))'
+              const value = item[activeChart as keyof typeof item] as number;
+              const height = (value / maxValue) * 100;
+              const color = chartTypes.find(t => t.key === activeChart)?.color || 'hsl(var(--chart-1))';
               
               return (
                 <div key={item.month} className='flex flex-col items-center gap-2'>
@@ -128,7 +128,7 @@ export function ChartAreaInteractive() {
                   </div>
                   <span className='text-xs text-muted-foreground'>{item.month}</span>
                 </div>
-              )
+              );
             })}
           </div>
           
@@ -167,5 +167,5 @@ export function ChartAreaInteractive() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

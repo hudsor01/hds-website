@@ -1,8 +1,8 @@
-import { Resend } from 'resend'
-import { z } from 'zod'
+import { Resend } from 'resend';
+import { z } from 'zod';
 
 // Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Email validation schema
 export const emailSchema = z.object({
@@ -22,7 +22,7 @@ export const emailSchema = z.object({
       }),
     )
     .optional(),
-})
+});
 
 export type EmailPayload = z.infer<typeof emailSchema>
 
@@ -34,13 +34,13 @@ export type EmailPayload = z.infer<typeof emailSchema>
 export async function sendEmail(emailData: EmailPayload) {
   try {
     // Validate email data
-    emailSchema.parse(emailData)
+    emailSchema.parse(emailData);
 
     // Set default sender if not provided
     const fromEmail =
       emailData.from ||
       process.env.RESEND_FROM_EMAIL ||
-      'noreply@hudsondigitalsolutions.com'
+      'noreply@hudsondigitalsolutions.com';
 
     // Prepare email payload for Resend
     const msg = {
@@ -56,13 +56,13 @@ export async function sendEmail(emailData: EmailPayload) {
         type: att.type,
         disposition: att.disposition as 'inline' | 'attachment' | undefined,
       })),
-    }
+    };
 
     // Send email
-    const response = await resend.emails.send(msg)
-    return { success: true, response }
+    const response = await resend.emails.send(msg);
+    return { success: true, response };
   } catch (error) {
-    console.error('Error sending email via Resend:', error)
+    console.error('Error sending email via Resend:', error);
 
     // Return a structured error
     if (error instanceof z.ZodError) {
@@ -70,13 +70,13 @@ export async function sendEmail(emailData: EmailPayload) {
         success: false,
         error: 'Validation error in email data',
         details: error.errors,
-      }
+      };
     }
 
     return {
       success: false,
       error: 'Failed to send email',
       details: error instanceof Error ? error.message : String(error),
-    }
+    };
   }
 }

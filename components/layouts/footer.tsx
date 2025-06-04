@@ -1,32 +1,32 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { api } from '@/lib/trpc/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import Link from 'next/link';
+import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { api } from '@/lib/trpc/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/form';
 import { 
 FadeIn, 
 SlideIn, 
 ScaleIn, 
 AnimatedText,
 StaggerContainer,
-} from '@/components/animated/motion-wrapper'
+} from '@/components/animated/motion-wrapper';
 
 const newsletterSchema = z.object({
   email: z.string().email('Please enter a valid email'),
-})
+});
 
 type NewsletterFormValues = z.infer<typeof newsletterSchema>
 
@@ -69,37 +69,37 @@ const navigation = {
       icon: Mail,
     },
   ],
-}
+};
 
 export function Footer() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const form = useForm<NewsletterFormValues>({
     resolver: zodResolver(newsletterSchema),
     defaultValues: {
       email: '',
     },
-  })
+  });
 
   const newsletterMutation = api.newsletter.subscribe.useMutation({
     onSuccess: () => {
       toast({
         title: 'Success!',
         description: 'You have been subscribed to our newsletter.',
-      })
-      form.reset()
+      });
+      form.reset();
     },
     onError: () => {
       toast({
         title: 'Error',
         description: 'Failed to subscribe. Please try again.',
         variant: 'destructive',
-      })
+      });
     },
-  })
+  });
 
   const onSubmit = (data: NewsletterFormValues) => {
-    newsletterMutation.mutate(data)
-  }
+    newsletterMutation.mutate(data);
+  };
 
   return (
     <footer className='bg-surface border-t border-neutral-200' aria-labelledby='footer-heading'>
@@ -257,5 +257,5 @@ export function Footer() {
         </FadeIn>
       </div>
     </footer>
-  )
+  );
 }

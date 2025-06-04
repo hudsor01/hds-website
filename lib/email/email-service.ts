@@ -1,11 +1,11 @@
-'use server'
+'use server';
 
-import { Resend } from 'resend'
-import { z } from 'zod'
-import { logger } from '../logger'
+import { Resend } from 'resend';
+import { z } from 'zod';
+import { logger } from '../logger';
 
 // Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Base email validation schema
 export const emailBaseSchema = z.object({
@@ -34,7 +34,7 @@ export const emailBaseSchema = z.object({
       disposition: z.string().optional(),
     }),
   ).optional(),
-})
+});
 
 // Contact form submission schema
 export const contactFormSchema = z.object({
@@ -49,21 +49,21 @@ export const contactFormSchema = z.object({
   // Spam protection fields
   honeypot: z.string().optional(),
   website: z.string().optional(),
-})
+});
 
 // Newsletter subscription schema
 export const newsletterSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   name: z.string().optional(),
   interests: z.array(z.string()).optional(),
-})
+});
 
 // Lead magnet request schema
 export const leadMagnetSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   name: z.string().min(2, 'Name must be at least 2 characters'),
   resourceId: z.string(),
-})
+});
 
 export type EmailPayload = z.infer<typeof emailBaseSchema>
 export type ContactFormData = z.infer<typeof contactFormSchema>
@@ -87,7 +87,7 @@ export type EmailResult = EmailSuccess | EmailError
 
 // Type guard for EmailError
 export function isEmailError(result: EmailResult): result is EmailError {
-  return !result.success
+  return !result.success;
 }
 
 /**
@@ -96,17 +96,17 @@ export function isEmailError(result: EmailResult): result is EmailError {
 export async function sendEmail(emailData: EmailPayload): Promise<EmailResult> {
   try {
     // Validate email data
-    emailBaseSchema.parse(emailData)
+    emailBaseSchema.parse(emailData);
     
     // Set default sender if not provided
-    const fromEmail = emailData.from || process.env.RESEND_FROM_EMAIL || 'noreply@hudsondigitalsolutions.com'
+    const fromEmail = emailData.from || process.env.RESEND_FROM_EMAIL || 'noreply@hudsondigitalsolutions.com';
     
     // Log email attempt (only in development to avoid leaking sensitive data)
     if (process.env.NODE_ENV === 'development') {
       logger.info('Sending email', {
         to: emailData.to,
         subject: emailData.subject,
-      })
+      });
     }
     
     // Prepare email payload for Resend
@@ -125,25 +125,25 @@ export async function sendEmail(emailData: EmailPayload): Promise<EmailResult> {
         type: att.type,
         disposition: att.disposition as 'inline' | 'attachment' | undefined,
       })),
-    }
+    };
     
     // Send email
-    const response = await resend.emails.send(msg)
+    const response = await resend.emails.send(msg);
     
     if (response.error) {
-      throw new Error(response.error.message)
+      throw new Error(response.error.message);
     }
     
     return { 
       success: true, 
       id: response.data?.id || '',
       message: 'Email sent successfully',
-    }
+    };
   } catch (error) {
     // Log the error
     logger.error('Error sending email via Resend', {
       error: error instanceof Error ? error.message : String(error),
-    })
+    });
     
     // Return a structured error
     if (error instanceof z.ZodError) {
@@ -151,14 +151,14 @@ export async function sendEmail(emailData: EmailPayload): Promise<EmailResult> {
         success: false, 
         error: 'Validation error in email data', 
         details: error.errors, 
-      }
+      };
     }
     
     return { 
       success: false, 
       error: 'Failed to send email', 
       details: error instanceof Error ? error.message : String(error), 
-    }
+    };
   }
 }
 
@@ -168,31 +168,31 @@ export async function sendEmail(emailData: EmailPayload): Promise<EmailResult> {
 export async function sendContactFormEmail(data: ContactFormData): Promise<EmailResult> {
   try {
     // Validate form data
-    contactFormSchema.parse(data)
+    contactFormSchema.parse(data);
     
     // Basic spam protection checks
     if (data.honeypot || data.website) {
-      throw new Error('Spam protection failed')
+      throw new Error('Spam protection failed');
     }
     
     // Prepare email to site owner
-    const adminEmail = process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL || 'contact@hudsondigitalsolutions.com'
+    const adminEmail = process.env.CONTACT_EMAIL || process.env.ADMIN_EMAIL || 'contact@hudsondigitalsolutions.com';
     
     // Create subject line based on available data
     const subject = data.subject 
       ? `New Contact Form: ${data.subject}` 
       : data.service 
         ? `New Contact Form: ${data.service} Inquiry` 
-        : 'New Contact Form Submission'
+        : 'New Contact Form Submission';
     
     // Build email HTML with all available fields
-    let fieldRows = ''
+    let fieldRows = '';
     
     // Add all optional fields if they exist
-    if (data.phone) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Phone:</strong></td><td style='padding:8px 8px;'>${data.phone}</td></tr>`
-    if (data.company) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Company:</strong></td><td style='padding:8px 8px;'>${data.company}</td></tr>`
-    if (data.service) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Service:</strong></td><td style='padding:8px 8px;'>${data.service}</td></tr>`
-    if (data.budget) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Budget:</strong></td><td style='padding:8px 8px;'>${data.budget}</td></tr>`
+    if (data.phone) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Phone:</strong></td><td style='padding:8px 8px;'>${data.phone}</td></tr>`;
+    if (data.company) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Company:</strong></td><td style='padding:8px 8px;'>${data.company}</td></tr>`;
+    if (data.service) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Service:</strong></td><td style='padding:8px 8px;'>${data.service}</td></tr>`;
+    if (data.budget) fieldRows += `<tr><td style='padding:8px 8px;'><strong>Budget:</strong></td><td style='padding:8px 8px;'>${data.budget}</td></tr>`;
     
     const adminHtml = `
       <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto;'>
@@ -208,7 +208,7 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
         </div>
         <p style='color: #666; font-size: 14px;'>This message was sent from the contact form on your website.</p>
       </div>
-    `
+    `;
     
     // Send email to admin
     const adminResult = await sendEmail({
@@ -216,10 +216,10 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
       subject,
       html: adminHtml,
       replyTo: data.email,
-    })
+    });
     
     if (isEmailError(adminResult)) {
-      throw new Error(`Failed to send admin email: ${adminResult.error}`)
+      throw new Error(`Failed to send admin email: ${adminResult.error}`);
     }
     
     // Send confirmation email to user
@@ -235,19 +235,19 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
         <p>We typically respond within 1 business day.</p>
         <p>Best regards,<br>The Hudson Digital Solutions Team</p>
       </div>
-    `
+    `;
     
     const userResult = await sendEmail({
       to: data.email,
       subject: 'Thank you for your message',
       html: userHtml,
-    })
+    });
     
     if (isEmailError(userResult)) {
       logger.warn('Failed to send user confirmation email', {
         error: userResult.error,
         email: data.email,
-      })
+      });
       // Continue even if user email fails, since admin already got the notification
     }
     
@@ -255,25 +255,25 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
       success: true, 
       id: adminResult.id, 
       message: 'Contact form submission processed successfully', 
-    }
+    };
   } catch (error) {
     logger.error('Error processing contact form', {
       error: error instanceof Error ? error.message : String(error),
-    })
+    });
     
     if (error instanceof z.ZodError) {
       return { 
         success: false, 
         error: 'Validation error in contact form data', 
         details: error.errors, 
-      }
+      };
     }
     
     return { 
       success: false, 
       error: 'Failed to process contact form submission', 
       details: error instanceof Error ? error.message : String(error), 
-    }
+    };
   }
 }
 
@@ -283,10 +283,10 @@ export async function sendContactFormEmail(data: ContactFormData): Promise<Email
 export async function processNewsletterSignup(data: NewsletterData): Promise<EmailResult> {
   try {
     // Validate newsletter data
-    newsletterSchema.parse(data)
+    newsletterSchema.parse(data);
     
     // Prepare email to admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@hudsondigitalsolutions.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@hudsondigitalsolutions.com';
     
     const adminHtml = `
       <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto;'>
@@ -299,17 +299,17 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
         }
         <p style='color: #666; font-size: 14px;'>This user subscribed to your newsletter on your website.</p>
       </div>
-    `
+    `;
     
     // Send notification to admin
     const adminResult = await sendEmail({
       to: adminEmail,
       subject: 'New Newsletter Subscription',
       html: adminHtml,
-    })
+    });
     
     if (isEmailError(adminResult)) {
-      throw new Error(`Failed to send admin notification: ${adminResult.error}`)
+      throw new Error(`Failed to send admin notification: ${adminResult.error}`);
     }
     
     // Send welcome email to subscriber
@@ -326,19 +326,19 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
         <p>If you have any questions, feel free to reply to this email.</p>
         <p>Best regards,<br>The Hudson Digital Solutions Team</p>
       </div>
-    `
+    `;
     
     const userResult = await sendEmail({
       to: data.email,
       subject: 'Welcome to Our Newsletter',
       html: userHtml,
-    })
+    });
     
     if (isEmailError(userResult)) {
       logger.warn('Failed to send newsletter welcome email', {
         error: userResult.error,
         email: data.email,
-      })
+      });
       // Continue if welcome email fails since admin was notified
     }
     
@@ -346,25 +346,25 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
       success: true, 
       id: adminResult.id, 
       message: 'Newsletter subscription processed successfully', 
-    }
+    };
   } catch (error) {
     logger.error('Error processing newsletter signup', {
       error: error instanceof Error ? error.message : String(error),
-    })
+    });
     
     if (error instanceof z.ZodError) {
       return { 
         success: false, 
         error: 'Validation error in newsletter data', 
         details: error.errors, 
-      }
+      };
     }
     
     return { 
       success: false, 
       error: 'Failed to process newsletter subscription', 
       details: error instanceof Error ? error.message : String(error), 
-    }
+    };
   }
 }
 
@@ -374,7 +374,7 @@ export async function processNewsletterSignup(data: NewsletterData): Promise<Ema
 export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResult> {
   try {
     // Validate lead magnet data
-    leadMagnetSchema.parse(data)
+    leadMagnetSchema.parse(data);
     
     // Get resource info based on resourceId
     const resources: Record<string, { name: string, path: string, description: string }> = {
@@ -394,16 +394,16 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
         description: 'Ready-to-use contact form templates for better lead generation.',
       },
       // Add more resources as needed
-    }
+    };
     
-    const resource = resources[data.resourceId]
+    const resource = resources[data.resourceId];
     
     if (!resource) {
-      throw new Error(`Resource not found: ${data.resourceId}`)
+      throw new Error(`Resource not found: ${data.resourceId}`);
     }
     
     // Prepare notification email to admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@hudsondigitalsolutions.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@hudsondigitalsolutions.com';
     
     const adminHtml = `
       <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto;'>
@@ -413,22 +413,22 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
         <p><strong>Resource:</strong> ${resource.name} (${data.resourceId})</p>
         <p style='color: #666; font-size: 14px;'>This lead was generated from your website.</p>
       </div>
-    `
+    `;
     
     // Send admin notification
     const adminResult = await sendEmail({
       to: adminEmail,
       subject: `New Lead Magnet Download: ${resource.name}`,
       html: adminHtml,
-    })
+    });
     
     if (isEmailError(adminResult)) {
-      throw new Error(`Failed to send admin notification: ${adminResult.error}`)
+      throw new Error(`Failed to send admin notification: ${adminResult.error}`);
     }
     
     // Send resource email to user
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'
-    const resourceUrl = `${siteUrl}${resource.path}`
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com';
+    const resourceUrl = `${siteUrl}${resource.path}`;
     
     const userHtml = `
       <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto;'>
@@ -444,19 +444,19 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
         <p>If you have any questions or need assistance, feel free to reply to this email.</p>
         <p>Best regards,<br>The Hudson Digital Solutions Team</p>
       </div>
-    `
+    `;
     
     const userResult = await sendEmail({
       to: data.email,
       subject: `Your ${resource.name} Download`,
       html: userHtml,
-    })
+    });
     
     if (isEmailError(userResult)) {
       logger.warn('Failed to send lead magnet email', {
         error: userResult.error,
         email: data.email,
-      })
+      });
       // Continue if lead magnet email fails since admin was notified
     }
     
@@ -464,24 +464,24 @@ export async function processLeadMagnet(data: LeadMagnetData): Promise<EmailResu
       success: true, 
       id: adminResult.id, 
       message: 'Lead magnet processed successfully',
-    }
+    };
   } catch (error) {
     logger.error('Error processing lead magnet', {
       error: error instanceof Error ? error.message : String(error),
-    })
+    });
     
     if (error instanceof z.ZodError) {
       return { 
         success: false, 
         error: 'Validation error in lead magnet data', 
         details: error.errors, 
-      }
+      };
     }
     
     return { 
       success: false, 
       error: 'Failed to process lead magnet request', 
       details: error instanceof Error ? error.message : String(error), 
-    }
+    };
   }
 }

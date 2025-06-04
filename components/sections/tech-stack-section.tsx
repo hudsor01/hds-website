@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
+import { m } from 'framer-motion';
 
 // Types
 export interface TechStackStat {
@@ -48,14 +48,14 @@ const defaultTechStack = {
     'CI/CD',
   ],
   tools: ['Git', 'GitHub Actions', 'Jest', 'Playwright', 'ESLint', 'Prettier'],
-}
+};
 
 // Default stats
 const defaultStats: TechStackStat[] = [
   { value: '50%', label: 'Faster development time' },
   { value: '99.9%', label: 'Uptime guarantee' },
   { value: '100%', label: 'Type-safe code' },
-]
+];
 
 export function TechStackSection({
   title = 'Modern Tech Stack',
@@ -160,5 +160,5 @@ export function TechStackSection({
         )}
       </div>
     </section>
-  )
+  );
 }

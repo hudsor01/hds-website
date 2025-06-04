@@ -1,60 +1,60 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export function GlobalLoading() {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const handleStart = () => setIsLoading(true)
-    const handleComplete = () => setIsLoading(false)
+    const handleStart = () => setIsLoading(true);
+    const handleComplete = () => setIsLoading(false);
 
     // Listen for navigation events
-    const _handleRouteChangeStart = () => handleStart()
-    const _handleRouteChangeComplete = () => handleComplete()
+    const _handleRouteChangeStart = () => handleStart();
+    const _handleRouteChangeComplete = () => handleComplete();
 
     // Add event listeners for Next.js navigation
-    const originalPushState = window.history.pushState
-    const originalReplaceState = window.history.replaceState
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
 
     window.history.pushState = function(...args) {
-      handleStart()
-      const result = originalPushState.apply(this, args)
-      setTimeout(handleComplete, 100)
-      return result
-    }
+      handleStart();
+      const result = originalPushState.apply(this, args);
+      setTimeout(handleComplete, 100);
+      return result;
+    };
 
     window.history.replaceState = function(...args) {
-      handleStart()
-      const result = originalReplaceState.apply(this, args)
-      setTimeout(handleComplete, 100)
-      return result
-    }
+      handleStart();
+      const result = originalReplaceState.apply(this, args);
+      setTimeout(handleComplete, 100);
+      return result;
+    };
 
     // Listen for click events on links
     const handleLinkClick = (e: Event) => {
-      const target = e.target as HTMLElement
+      const target = e.target as HTMLElement;
       if (target.tagName === 'A' || target.closest('a')) {
-        const link = target.tagName === 'A' ? target as HTMLAnchorElement : target.closest('a')
+        const link = target.tagName === 'A' ? target as HTMLAnchorElement : target.closest('a');
         if (link && link.href && !link.href.startsWith('#') && !link.target) {
-          handleStart()
-          setTimeout(handleComplete, 500)
+          handleStart();
+          setTimeout(handleComplete, 500);
         }
       }
-    }
+    };
 
-    document.addEventListener('click', handleLinkClick)
+    document.addEventListener('click', handleLinkClick);
 
     // Cleanup
     return () => {
-      window.history.pushState = originalPushState
-      window.history.replaceState = originalReplaceState
-      document.removeEventListener('click', handleLinkClick)
-    }
-  }, [])
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+      document.removeEventListener('click', handleLinkClick);
+    };
+  }, []);
 
-  if (!isLoading) return null
+  if (!isLoading) return null;
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm'>
@@ -66,7 +66,7 @@ export function GlobalLoading() {
         <p className='text-sm text-muted-foreground'>Loading...</p>
       </div>
     </div>
-  )
+  );
 }
 
 // Loading spinner component for other use cases
@@ -81,7 +81,7 @@ export function LoadingSpinner({
     sm: 'h-4 w-4 border-2',
     md: 'h-6 w-6 border-2',
     lg: 'h-8 w-8 border-4',
-  }
+  };
 
   return (
     <div className={cn('relative', className)}>
@@ -93,7 +93,7 @@ export function LoadingSpinner({
         )}
       ></div>
     </div>
-  )
+  );
 }
 
 // Page loading component
@@ -105,5 +105,5 @@ export function PageLoading() {
         <p className='text-lg text-muted-foreground'>Loading page...</p>
       </div>
     </div>
-  )
+  );
 }

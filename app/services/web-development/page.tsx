@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 import {
   Code,
   Rocket,
@@ -7,17 +7,17 @@ import {
   CheckCircle,
   Zap,
   Search,
-} from 'lucide-react'
-import Image from 'next/image'
-import { AnimatedSection } from '@/components/sections/section'
-import { SectionErrorBoundary } from '@/components/error/route-error-boundaries'
+} from 'lucide-react';
+import Image from 'next/image';
+import { AnimatedSection } from '@/components/sections/section';
+import { SectionErrorBoundary } from '@/components/error/route-error-boundaries';
 import {
   AnimatedText,
   AnimatedHeading,
-} from '@/components/animated/animated-text'
-import { AnimatedCard } from '@/components/animated/animated-card'
-import { LeadMagnetSection } from '@/components/sections/lead-magnet-section'
-import { generateServiceMetadata } from '@/lib/metadata/metadata-utils'
+} from '@/components/animated/animated-text';
+import { AnimatedCard } from '@/components/animated/animated-card';
+import { LeadMagnetSection } from '@/components/sections/lead-magnet-section';
+import { generateServiceMetadata } from '@/lib/metadata/metadata-utils';
 
 export const metadata: Metadata = generateServiceMetadata({
   name: 'Web Development',
@@ -31,7 +31,7 @@ export const metadata: Metadata = generateServiceMetadata({
     'Modern technology stack',
   ],
   slug: 'web-development',
-})
+});
 
 const features = [
   {
@@ -58,7 +58,7 @@ const features = [
     description:
       'SSL certificates, secure hosting, and regular backups included.',
   },
-]
+];
 
 const process = [
   {
@@ -85,7 +85,7 @@ const process = [
     description: 'I show you how to update content and manage your site.',
     timeline: '1 hour',
   },
-]
+];
 
 const packages = [
   {
@@ -136,7 +136,7 @@ const packages = [
     ],
     ideal: 'Retail businesses, product sellers',
   },
-]
+];
 
 export default function WebDevelopmentPage() {
   return (
@@ -491,5 +491,5 @@ export default function WebDevelopmentPage() {
         </div>
       </AnimatedSection>
     </main>
-  )
+  );
 }

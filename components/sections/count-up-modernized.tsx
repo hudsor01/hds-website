@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useState, useTransition, startTransition, useDeferredValue, memo } from 'react'
-import { useIntersectionObserver } from '@/hooks/use-intersection-observer-modern'
+import { useState, useTransition, startTransition, useDeferredValue, memo } from 'react';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer-modern';
 
 /**
  * React 19 modernized counter animation component with performance optimizations
@@ -28,47 +28,47 @@ export const CountUpModernized = memo(function CountUpModernized({
   duration = 1500,
   trigger = true,
 }: CountUpModernizedProps) {
-  const [count, setCount] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isPending, startCountTransition] = useTransition()
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPending, startCountTransition] = useTransition();
   
   // Defer the displayed count for better performance
-  const deferredCount = useDeferredValue(count)
+  const deferredCount = useDeferredValue(count);
   
   // Use intersection observer to trigger animation only when visible
   const { elementRef } = useIntersectionObserver<HTMLSpanElement>({
     threshold: 0.1,
     onIntersect: () => {
       if (!isVisible && trigger) {
-        setIsVisible(true)
-        animateCount()
+        setIsVisible(true);
+        animateCount();
       }
     },
-  })
+  });
 
   const animateCount = () => {
-    let current = 0
-    const increment = end / (duration / 30) // 30ms intervals
+    let current = 0;
+    const increment = end / (duration / 30); // 30ms intervals
     
     const timer = setInterval(() => {
-      current += increment
+      current += increment;
       
       if (current >= end) {
         // Use startTransition for the final update
         startTransition(() => {
-          setCount(end)
-        })
-        clearInterval(timer)
+          setCount(end);
+        });
+        clearInterval(timer);
       } else {
         // Use startTransition for non-blocking updates
         startCountTransition(() => {
-          setCount(Math.floor(current))
-        })
+          setCount(Math.floor(current));
+        });
       }
-    }, 30)
+    }, 30);
 
-    return () => clearInterval(timer)
-  }
+    return () => clearInterval(timer);
+  };
 
   return (
     <span 
@@ -82,8 +82,8 @@ export const CountUpModernized = memo(function CountUpModernized({
       {deferredCount.toLocaleString()}
       {suffix}
     </span>
-  )
-})
+  );
+});
 
 /**
  * Stats section using modernized CountUp with React 19 patterns
@@ -146,8 +146,8 @@ export const StatsGrid = memo(function StatsGrid({
         </div>
       </div>
     </section>
-  )
-})
+  );
+});
 
 // Default stats for business website
 export const defaultBusinessStats: Stat[] = [
@@ -175,4 +175,4 @@ export const defaultBusinessStats: Stat[] = [
     label: 'Support Available',
     description: 'Round-the-clock monitoring and help',
   },
-]
+];

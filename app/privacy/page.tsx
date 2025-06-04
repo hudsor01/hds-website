@@ -1,10 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
   description:
     'Privacy policy for Hudson Digital Solutions. Learn how we collect, use, and protect your personal information.',
-}
+};
 
 export default function PrivacyPage() {
   return (
@@ -110,5 +110,5 @@ export default function PrivacyPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

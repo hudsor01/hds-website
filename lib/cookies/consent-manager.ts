@@ -10,9 +10,9 @@
  * - Script blocking/unblocking
  * - GDPR compliance
  */
-import { useState, useEffect } from 'react'
-import { logger } from '@/lib/logger'
-import { CookieCategory } from '@/types/enum-types'
+import { useState, useEffect } from 'react';
+import { logger } from '@/lib/logger';
+import { CookieCategory } from '@/types/enum-types';
 
 /**
  * Cookie consent preferences
@@ -47,7 +47,7 @@ const DEFAULT_CONSENT: CookieConsent = {
   marketing: false,
   timestamp: Date.now(),
   version: '1.0',
-}
+};
 
 /**
  * Cookie definitions
@@ -130,44 +130,44 @@ export const COOKIE_DEFINITIONS: CookieInfo[] = [
     duration: '6 months',
     provider: 'LinkedIn',
   },
-]
+];
 
 /**
  * Cookie consent manager
  */
 export class CookieConsentManager {
-  private static CONSENT_COOKIE_NAME = 'cookie-consent'
-  private static CONSENT_VERSION = '1.0'
+  private static CONSENT_COOKIE_NAME = 'cookie-consent';
+  private static CONSENT_VERSION = '1.0';
   
   /**
    * Get current consent
    */
   static getConsent(): CookieConsent {
     if (typeof window === 'undefined') {
-      return DEFAULT_CONSENT
+      return DEFAULT_CONSENT;
     }
     
     try {
-      const stored = localStorage.getItem(this.CONSENT_COOKIE_NAME)
+      const stored = localStorage.getItem(this.CONSENT_COOKIE_NAME);
       if (stored) {
-        const consent = JSON.parse(stored)
+        const consent = JSON.parse(stored);
         // Validate stored consent
         if (consent.version === this.CONSENT_VERSION) {
-          return consent
+          return consent;
         }
       }
     } catch (error) {
-      logger.debug('Failed to parse stored consent', { error })
+      logger.debug('Failed to parse stored consent', { error });
     }
     
-    return DEFAULT_CONSENT
+    return DEFAULT_CONSENT;
   }
   
   /**
    * Save consent preferences
    */
   static saveConsent(consent: Partial<CookieConsent>): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
     const fullConsent: CookieConsent = {
       ...this.getConsent(),
@@ -175,28 +175,28 @@ export class CookieConsentManager {
       necessary: true, // Always true
       timestamp: Date.now(),
       version: this.CONSENT_VERSION,
-    }
+    };
     
     try {
       // Save to localStorage
-      localStorage.setItem(this.CONSENT_COOKIE_NAME, JSON.stringify(fullConsent))
+      localStorage.setItem(this.CONSENT_COOKIE_NAME, JSON.stringify(fullConsent));
       
       // Also set as cookie for server-side access
       document.cookie = `${this.CONSENT_COOKIE_NAME}=${encodeURIComponent(
         JSON.stringify(fullConsent),
-      )}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`
+      )}; path=/; max-age=${365 * 24 * 60 * 60}; SameSite=Lax`;
       
       // Apply consent changes
-      this.applyConsent(fullConsent)
+      this.applyConsent(fullConsent);
       
       // Trigger event for other components
       window.dispatchEvent(new CustomEvent('cookie-consent-updated', {
         detail: fullConsent,
-      }))
+      }));
       
-      logger.info('Cookie consent saved', fullConsent)
+      logger.info('Cookie consent saved', fullConsent);
     } catch (error) {
-      logger.error('Failed to save cookie consent', { error })
+      logger.error('Failed to save cookie consent', { error });
     }
   }
   
@@ -204,8 +204,8 @@ export class CookieConsentManager {
    * Check if category is allowed
    */
   static isCategoryAllowed(category: CookieCategory): boolean {
-    const consent = this.getConsent()
-    return consent[category] === true
+    const consent = this.getConsent();
+    return consent[category] === true;
   }
   
   /**
@@ -214,43 +214,43 @@ export class CookieConsentManager {
   private static applyConsent(consent: CookieConsent): void {
     // Block/unblock Google Analytics
     if (consent.analytics) {
-      this.enableGoogleAnalytics()
+      this.enableGoogleAnalytics();
     } else {
-      this.disableGoogleAnalytics()
+      this.disableGoogleAnalytics();
     }
     
     // Block/unblock marketing scripts
     if (consent.marketing) {
-      this.enableMarketingScripts()
+      this.enableMarketingScripts();
     } else {
-      this.disableMarketingScripts()
+      this.disableMarketingScripts();
     }
     
     // Remove non-consented cookies
-    this.removeNonConsentedCookies(consent)
+    this.removeNonConsentedCookies(consent);
   }
   
   /**
    * Enable Google Analytics
    */
   private static enableGoogleAnalytics(): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
     // Enable GA tracking
     window.gtag = window.gtag || function(...args: unknown[]) {
-      (window.dataLayer = window.dataLayer || []).push(...args)
-    }
+      (window.dataLayer = window.dataLayer || []).push(...args);
+    };
     
     window.gtag('consent', 'update', {
       analytics_storage: 'granted',
-    })
+    });
     
     // Load GA script if not already loaded
     if (!document.querySelector('script[src*="googletagmanager.com/gtag"]')) {
-      const script = document.createElement('script')
-      script.async = true
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`
-      document.head.appendChild(script)
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`;
+      document.head.appendChild(script);
     }
   }
   
@@ -258,74 +258,74 @@ export class CookieConsentManager {
    * Disable Google Analytics
    */
   private static disableGoogleAnalytics(): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
     // Disable GA tracking
     window.gtag = window.gtag || function(...args: unknown[]) {
-      (window.dataLayer = window.dataLayer || []).push(...args)
-    }
+      (window.dataLayer = window.dataLayer || []).push(...args);
+    };
     
     window.gtag('consent', 'update', {
       analytics_storage: 'denied',
-    })
+    });
     
     // Set opt-out cookie
-    document.cookie = `ga-disable-${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}=true; path=/; max-age=${365 * 24 * 60 * 60}`
+    document.cookie = `ga-disable-${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}=true; path=/; max-age=${365 * 24 * 60 * 60}`;
   }
   
   /**
    * Enable marketing scripts
    */
   private static enableMarketingScripts(): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
     window.gtag = window.gtag || function(...args: unknown[]) {
-      (window.dataLayer = window.dataLayer || []).push(...args)
-    }
+      (window.dataLayer = window.dataLayer || []).push(...args);
+    };
     
     window.gtag('consent', 'update', {
       ad_storage: 'granted',
       ad_user_data: 'granted',
       ad_personalization: 'granted',
-    })
+    });
   }
   
   /**
    * Disable marketing scripts
    */
   private static disableMarketingScripts(): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return;
     
     window.gtag = window.gtag || function(...args: unknown[]) {
-      (window.dataLayer = window.dataLayer || []).push(...args)
-    }
+      (window.dataLayer = window.dataLayer || []).push(...args);
+    };
     
     window.gtag('consent', 'update', {
       ad_storage: 'denied',
       ad_user_data: 'denied',
       ad_personalization: 'denied',
-    })
+    });
   }
   
   /**
    * Remove cookies that user hasn't consented to
    */
   private static removeNonConsentedCookies(consent: CookieConsent): void {
-    if (typeof document === 'undefined') return
+    if (typeof document === 'undefined') return;
 
-    const allCookies = document.cookie.split(';')
+    const allCookies = document.cookie.split(';');
 
     for (const cookie of allCookies) {
-      const [name] = cookie.trim().split('=')
-      if (!name) continue // Fix: guard against undefined name
+      const [name] = cookie.trim().split('=');
+      if (!name) continue; // Fix: guard against undefined name
       const definition = COOKIE_DEFINITIONS.find(d =>
         name.startsWith(d.name.replace('*', '')),
-      )
+      );
 
       if (definition && !consent[definition.category]) {
         // Remove cookie
-        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
-        document.cookie = `${name}=; path=/; domain=.${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        document.cookie = `${name}=; path=/; domain=.${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       }
     }
   }
@@ -334,17 +334,17 @@ export class CookieConsentManager {
    * Get cookies by category
    */
   static getCookiesByCategory(category: CookieCategory): CookieInfo[] {
-    return COOKIE_DEFINITIONS.filter(cookie => cookie.category === category)
+    return COOKIE_DEFINITIONS.filter(cookie => cookie.category === category);
   }
   
   /**
    * Check if consent is required (first visit or version change)
    */
   static isConsentRequired(): boolean {
-    if (typeof window === 'undefined') return false
+    if (typeof window === 'undefined') return false;
     
-    const consent = this.getConsent()
-    return !consent.timestamp || consent.version !== this.CONSENT_VERSION
+    const consent = this.getConsent();
+    return !consent.timestamp || consent.version !== this.CONSENT_VERSION;
   }
   
   /**
@@ -356,7 +356,7 @@ export class CookieConsentManager {
       functional: true,
       analytics: true,
       marketing: true,
-    })
+    });
   }
   
   /**
@@ -368,7 +368,7 @@ export class CookieConsentManager {
       functional: false,
       analytics: false,
       marketing: false,
-    })
+    });
   }
 }
 
@@ -376,22 +376,22 @@ export class CookieConsentManager {
  * Cookie consent hook for React components
  */
 export function useCookieConsent() {
-  const [consent, setConsent] = useState(CookieConsentManager.getConsent())
+  const [consent, setConsent] = useState(CookieConsentManager.getConsent());
   
   useEffect(() => {
     const handleUpdate = (event: CustomEvent) => {
-      setConsent(event.detail)
-    }
+      setConsent(event.detail);
+    };
     
-    window.addEventListener('cookie-consent-updated', handleUpdate as EventListener)
+    window.addEventListener('cookie-consent-updated', handleUpdate as EventListener);
     return () => {
-    window.removeEventListener('cookie-consent-updated', handleUpdate as EventListener)
-    }
-  }, [])
+    window.removeEventListener('cookie-consent-updated', handleUpdate as EventListener);
+    };
+  }, []);
   
   const updateConsent = (newConsent: Partial<CookieConsent>) => {
-    CookieConsentManager.saveConsent(newConsent)
-  }
+    CookieConsentManager.saveConsent(newConsent);
+  };
   
   return {
     consent,
@@ -399,30 +399,30 @@ export function useCookieConsent() {
     acceptAll: CookieConsentManager.acceptAll.bind(CookieConsentManager),
     rejectAll: CookieConsentManager.rejectAll.bind(CookieConsentManager),
     isRequired: CookieConsentManager.isConsentRequired(),
-  }
+  };
 }
 
 // For Next.js middleware
 export function getCookieConsentFromRequest(request: Request): CookieConsent {
-  const cookieHeader = request.headers.get('cookie')
-  if (!cookieHeader) return DEFAULT_CONSENT
+  const cookieHeader = request.headers.get('cookie');
+  if (!cookieHeader) return DEFAULT_CONSENT;
 
   const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-    const [name, value] = cookie.trim().split('=')
+    const [name, value] = cookie.trim().split('=');
     if (name !== undefined) { // Fix: guard against undefined name
-      acc[name] = value ?? ''
+      acc[name] = value ?? '';
     }
-    return acc
-  }, {} as Record<string, string>)
+    return acc;
+  }, {} as Record<string, string>);
 
   // Fix: use string literal for consent cookie name since it's private
-  const consentCookie = cookies['cookie-consent']
-  if (!consentCookie) return DEFAULT_CONSENT
+  const consentCookie = cookies['cookie-consent'];
+  if (!consentCookie) return DEFAULT_CONSENT;
 
   try {
-    return JSON.parse(decodeURIComponent(consentCookie))
+    return JSON.parse(decodeURIComponent(consentCookie));
   } catch {
-    return DEFAULT_CONSENT
+    return DEFAULT_CONSENT;
   }
 }
 
