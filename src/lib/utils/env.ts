@@ -107,8 +107,8 @@ function validateClientEnv() {
 }
 
 // Export validated environment variables
-const serverEnv = validateServerEnv();
-const clientEnv = validateClientEnv();
+const _serverEnv = validateServerEnv();
+const _clientEnv = validateClientEnv();
 
 // Combined ENV object for unified access
 export const ENV = {

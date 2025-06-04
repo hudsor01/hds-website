@@ -286,7 +286,7 @@ export const devUtils = {
       console.log('✅ All environment variables are valid')
     } catch (error) {
       console.error(error)
-      process.exit(1)
+      throw new Error('Environment validation failed - please check your .env files')
     }
   },
 }
