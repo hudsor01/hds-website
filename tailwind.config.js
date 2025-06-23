@@ -55,7 +55,7 @@ export default {
       },
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
-        'display': ['Clash Display', 'Inter', 'sans-serif'],
+        'display': ['Poppins', 'Inter', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',

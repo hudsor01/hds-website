@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hudson Digital - Color Palette Showcase</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f8fafc;
+            padding: 2rem;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #22d3ee 0%, #4ade80 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .color-card {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .color-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .color-swatch {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+        
+        .color-info {
+            padding: 1rem;
+            background: white;
+        }
+        
+        .color-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .color-hex {
+            color: #64748b;
+            font-size: 0.875rem;
+            font-family: monospace;
+        }
+        
+        /* Glow effects - refined */
+        .glow-cyan {
+            text-shadow: 0 0 4px rgba(34, 211, 238, 0.8), 0 0 8px rgba(34, 211, 238, 0.5), 0 0 12px rgba(34, 211, 238, 0.3);
+        }
+        
+        .glow-green {
+            text-shadow: 0 0 4px rgba(74, 222, 128, 0.8), 0 0 8px rgba(74, 222, 128, 0.5), 0 0 12px rgba(74, 222, 128, 0.3);
+        }
+        
+        .glow-orange {
+            text-shadow: 0 0 4px rgba(251, 146, 60, 0.8), 0 0 8px rgba(251, 146, 60, 0.5), 0 0 12px rgba(251, 146, 60, 0.3);
+        }
+        
+        .glow-demo {
+            background: #09090b;
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .glow-text {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 1rem 0;
+        }
+        
+        .gradient-card {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hudson Digital Color Palette</h1>
+        <p style="font-size: 1.125rem; color: #475569; margin-bottom: 3rem;">
+            Refined color system with subtle glow effects for a premium, modern aesthetic.
+        </p>
+        
+        <!-- Core Colors -->
+        <div class="section">
+            <h2 style="font-size: 1.875rem; font-weight: 800; margin-bottom: 1rem;">Core Colors</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #09090b; color: white;">Primary 950</div>
+                    <div class="color-info">
+                        <div class="color-name">Midnight Black</div>
+                        <div class="color-hex">#09090b</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #22d3ee; color: white;">Secondary 400</div>
+                    <div class="color-info">
+                        <div class="color-name">Electric Cyan</div>
+                        <div class="color-hex">#22d3ee</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #4ade80; color: white;">Accent 400</div>
+                    <div class="color-info">
+                        <div class="color-name">Neon Green</div>
+                        <div class="color-hex">#4ade80</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #fb923c; color: white;">Warning 400</div>
+                    <div class="color-info">
+                        <div class="color-name">Electric Orange</div>
+                        <div class="color-hex">#fb923c</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #c084fc; color: white;">Purple 400</div>
+                    <div class="color-info">
+                        <div class="color-name">Premium Purple</div>
+                        <div class="color-hex">#c084fc</div>
+                    </div>
+                </div>
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #ef4444; color: white;">Danger 500</div>
+                    <div class="color-info">
+                        <div class="color-name">Electric Red</div>
+                        <div class="color-hex">#ef4444</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gradients -->
+        <div class="section">
+            <h2 style="font-size: 1.875rem; font-weight: 800; margin-bottom: 1rem;">Gradients</h2>
+            <div class="gradient-card" style="background: linear-gradient(135deg, #09090b 0%, #164e63 50%, #581c87 100%);">
+                Hero Gradient
+            </div>
+            <div class="gradient-card" style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);">
+                Secondary Gradient
+            </div>
+            <div class="gradient-card" style="background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);">
+                Accent Gradient
+            </div>
+            <div class="gradient-card" style="background: linear-gradient(135deg, #22d3ee 0%, #4ade80 50%, #c084fc 100%);">
+                Neon Gradient
+            </div>
+        </div>
+        
+        <!-- Glow Effects Demo -->
+        <div class="section glow-demo">
+            <h2 style="font-size: 1.875rem; font-weight: 800; margin-bottom: 2rem; color: white;">Refined Glow Effects</h2>
+            <div class="glow-text glow-cyan" style="color: #22d3ee;">DEPLOY.</div>
+            <div class="glow-text glow-green" style="color: #4ade80;">DOMINATE.</div>
+            <div class="glow-text glow-orange" style="color: #fb923c;">ENERGIZE.</div>
+            <p style="color: #94a3b8; margin-top: 2rem;">
+                Subtle glow effects with reduced intensity for a more sophisticated look
+            </p>
+        </div>
+        
+        <!-- Usage Guidelines -->
+        <div class="section">
+            <h2 style="font-size: 1.875rem; font-weight: 800; margin-bottom: 1rem;">Usage Guidelines</h2>
+            <ul style="line-height: 1.8; color: #475569;">
+                <li><strong>Primary (Midnight Black):</strong> Main backgrounds, text, and authority elements</li>
+                <li><strong>Secondary (Electric Cyan):</strong> Primary CTAs, highlights, and innovation elements</li>
+                <li><strong>Accent (Neon Green):</strong> Success states, secondary CTAs, and growth indicators</li>
+                <li><strong>Warning (Electric Orange):</strong> Energy states, notifications, and urgent actions</li>
+                <li><strong>Purple:</strong> Premium features and special highlights</li>
+                <li><strong>Glow Effects:</strong> Use sparingly on key metrics, CTAs, and emphasis text only</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

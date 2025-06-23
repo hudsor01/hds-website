@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <Navbar />
-    <main>
-      <router-view />
-    </main>
-    <Footer />
+    <n-message-provider>
+      <Navbar />
+      <main>
+        <router-view />
+      </main>
+      <Footer />
+    </n-message-provider>
   </div>
 </template>
 

@@ -1,261 +1,369 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <section class="bg-white py-24">
-      <div class="max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-        <div class="flex justify-center mb-8">
-          <div class="inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-primary-50 to-primary-100 rounded-2xl border border-primary-200">
-            <img src="/HDS-Logo.jpeg" alt="Hudson Digital" class="h-10 w-auto" />
-            <div class="text-left">
-              <div class="text-sm font-medium text-primary-700">About Us</div>
-              <div class="text-lg font-bold text-primary-900">Our Story</div>
-            </div>
-          </div>
-        </div>
-        <h1 class="text-5xl font-bold text-gray-900 mb-6">Meet Hudson Digital</h1>
-        <p class="text-xl text-gray-600">
-          Passionate developers and designers creating exceptional digital experiences.
+  <div>
+    <!-- Header - Dark Tech -->
+    <section class="relative bg-gradient-hero py-24 overflow-hidden">
+      <!-- Tech Grid Pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+      </div>
+      
+      <!-- Dynamic Energy Elements -->
+      <div class="absolute top-20 right-20 w-64 h-64 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 left-20 w-80 h-80 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      
+      <div class="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
+        <n-tag 
+          size="large"
+          style="background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3); color: #22d3ee; font-weight: 600; margin-bottom: 32px;"
+        >
+          <template #icon>
+            <div class="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></div>
+          </template>
+          Our Story
+        </n-tag>
+        <h1 class="text-5xl font-black text-white mb-6">
+          Forged in 
+          <span class="text-gradient-neon glow-cyan">Excellence</span>
+        </h1>
+        <p class="text-xl text-gray-300">
+          Crafting digital solutions with the precision of master engineers.
         </p>
       </div>
     </section>
 
     <!-- Story Section -->
-    <section class="py-24">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section class="relative py-24 bg-gradient-primary overflow-hidden">
+      <!-- Subtle tech pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+      </div>
+      
+      <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
           <!-- Story Content -->
-          <div class="bg-white rounded-2xl p-12 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-            <div class="space-y-6 text-gray-600 leading-relaxed">
-              <p>
-                Founded with a mission to help businesses succeed in the digital age, Hudson Digital Solutions 
-                has been creating innovative web solutions that drive real results. We believe that great 
-                technology should be accessible to businesses of all sizes.
-              </p>
-              <p>
-                Our team combines technical expertise with creative vision to deliver solutions that not only 
-                look great but also perform exceptionally well. We stay at the forefront of technology trends 
-                to ensure our clients always have a competitive advantage.
-              </p>
-              <p>
-                Whether you're a startup looking to establish your online presence or an established business 
-                ready to scale, we have the experience and passion to help you achieve your goals.
-              </p>
+          <n-card 
+            class="glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 transition-all duration-500"
+            style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2);"
+            :bordered="false"
+          >
+            <div class="p-12">
+              <h2 class="text-3xl font-black text-white mb-6 glow-cyan">Built from Experience</h2>
+              <div class="space-y-6 text-gray-300 leading-relaxed">
+                <p>
+                  Hudson Digital was forged in the fires of enterprise-level challenges. With a foundation built on 
+                  <strong class="text-secondary-400 glow-cyan">$3.7M+ in revenue impact</strong>, we don't just build websites—we engineer 
+                  business transformation tools.
+                </p>
+                <p>
+                  Our approach combines the precision of revenue operations with the craftsmanship of modern development. 
+                  Every line of code, every design decision, every optimization is driven by one goal: 
+                  <strong class="text-accent-400 glow-green">measurable business results</strong>.
+                </p>
+                <p>
+                  We're not another agency promising the world. We're engineers who've proven that technology, 
+                  when properly applied, can generate <strong class="text-warning-400 glow-orange">340% ROI</strong> and transform businesses.
+                </p>
+              </div>
             </div>
-          </div>
+          </n-card>
           
           <!-- Mission & Vision Cards -->
-          <div class="space-y-8">
-            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-6">
-                <svg class="h-8 w-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+          <n-space vertical size="large">
+            <n-card 
+              class="glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 hover:-translate-y-2 transition-all duration-500"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-8">
+                <n-space align="center" class="mb-6">
+                  <n-avatar 
+                    :size="64"
+                    style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);"
+                    class="shadow-lg shadow-secondary-400/50 glow-cyan"
+                  >
+                    <n-icon size="32" color="white">
+                      <RocketLaunchIcon />
+                    </n-icon>
+                  </n-avatar>
+                  <h3 class="text-xl font-black text-white">Our Mission</h3>
+                </n-space>
+                <p class="text-gray-300">
+                  To forge digital solutions that don't just work—they dominate. We engineer competitive advantages, 
+                  not just websites.
+                </p>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Our Mission</h3>
-              <p class="text-gray-600">
-                To empower businesses with cutting-edge digital solutions that drive growth, enhance user experiences, and create lasting value.
-              </p>
-            </div>
+            </n-card>
             
-            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-6">
-                <svg class="h-8 w-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+            <n-card 
+              class="glass-morphism hover:shadow-xl hover:shadow-accent-400/30 hover:-translate-y-2 transition-all duration-500"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(74, 222, 128, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-8">
+                <n-space align="center" class="mb-6">
+                  <n-avatar 
+                    :size="64"
+                    style="background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);"
+                    class="shadow-lg shadow-accent-400/50 glow-green"
+                  >
+                    <n-icon size="32" color="white">
+                      <EyeIcon />
+                    </n-icon>
+                  </n-avatar>
+                  <h3 class="text-xl font-black text-white">Our Vision</h3>
+                </n-space>
+                <p class="text-gray-300">
+                  To be the premier digital forge where ambitious businesses come to build their market dominance.
+                </p>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
-              <p class="text-gray-600">
-                To be the leading digital partner for businesses seeking innovative, scalable, and results-driven web solutions.
-              </p>
-            </div>
-          </div>
+            </n-card>
+          </n-space>
         </div>
       </div>
     </section>
 
     <!-- Values Section -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
-          <p class="text-xl text-gray-600">
-            These principles guide everything we do.
-          </p>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <LightBulbIcon class="h-8 w-8 text-primary-600" />
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Innovation</h3>
-            <p class="text-gray-600">
-              We embrace new technologies and creative solutions to solve complex problems.
-            </p>
-          </div>
-          
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <ShieldCheckIcon class="h-8 w-8 text-primary-600" />
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Quality</h3>
-            <p class="text-gray-600">
-              Every project receives our full attention to detail and commitment to excellence.
-            </p>
-          </div>
-          
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <UsersIcon class="h-8 w-8 text-primary-600" />
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Partnership</h3>
-            <p class="text-gray-600">
-              We build lasting relationships with our clients based on trust and mutual success.
-            </p>
-          </div>
-        </div>
+    <section class="relative py-24 bg-gradient-hero overflow-hidden">
+      <!-- Tech Grid Pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
       </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="py-24">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      
+      <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 mb-4">Meet the Team</h2>
-          <p class="text-xl text-gray-600">
-            The experienced professionals behind Hudson Digital Solutions.
+          <h2 class="text-4xl font-black text-white mb-4 glow-cyan">Core Principles</h2>
+          <p class="text-xl text-gray-300">
+            The foundational elements that drive our engineering excellence.
           </p>
         </div>
         
-        <div class="grid md:grid-cols-2 gap-16 items-center">
-          <!-- Team Member -->
-          <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="flex items-start gap-6">
-              <div class="w-24 h-24 bg-primary-100 rounded-2xl flex items-center justify-center">
-                <svg class="h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Richard Hudson Jr.</h3>
-                <div class="text-primary-600 font-medium mb-4">Founder & Lead Developer</div>
-                <p class="text-gray-600 mb-4 leading-relaxed">
-                  Revenue operations expert with a proven track record of driving $3.7M+ in revenue impact. 
-                  Specializes in data analytics, process optimization, and building scalable web solutions 
-                  that deliver measurable business results.
+        <n-grid cols="1 m:3" x-gap="24" y-gap="24" responsive="screen">
+          <n-grid-item>
+            <n-card 
+              hoverable
+              class="h-full glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 hover:-translate-y-2 transition-all duration-500"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-gradient-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-400/50 glow-cyan">
+                  <n-icon size="32" color="white">
+                    <LightBulbIcon />
+                  </n-icon>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-4">Precision</h3>
+                <p class="text-gray-300">
+                  Every solution engineered with surgical precision to deliver exact business outcomes.
                 </p>
-                <div class="flex flex-wrap gap-2">
-                  <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Revenue Operations</span>
-                  <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Data Analytics</span>
-                  <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">Web Development</span>
-                </div>
               </div>
-            </div>
-          </div>
+            </n-card>
+          </n-grid-item>
           
-          <!-- Expertise Areas -->
-          <div class="space-y-6">
-            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
+          <n-grid-item>
+            <n-card 
+              hoverable
+              class="h-full glass-morphism hover:shadow-xl hover:shadow-accent-400/30 hover:-translate-y-2 transition-all duration-500"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(74, 222, 128, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-400/50 glow-green">
+                  <n-icon size="32" color="white">
+                    <ShieldCheckIcon />
+                  </n-icon>
                 </div>
-                <h4 class="text-lg font-bold text-gray-900">Revenue Analytics</h4>
+                <h3 class="text-2xl font-black text-white mb-4">Durability</h3>
+                <p class="text-gray-300">
+                  Built to last and scale. Our solutions withstand the test of growth and market evolution.
+                </p>
               </div>
-              <p class="text-gray-600">Advanced data analytics and revenue optimization with 96.8% forecast accuracy.</p>
-            </div>
-            
-            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
+            </n-card>
+          </n-grid-item>
+          
+          <n-grid-item>
+            <n-card 
+              hoverable
+              class="h-full glass-morphism hover:shadow-xl hover:shadow-purple-400/30 hover:-translate-y-2 transition-all duration-500"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(192, 132, 252, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-400/50">
+                  <n-icon size="32" color="white">
+                    <UsersIcon />
+                  </n-icon>
                 </div>
-                <h4 class="text-lg font-bold text-gray-900">Full-Stack Development</h4>
+                <h3 class="text-2xl font-black text-white mb-4">Partnership</h3>
+                <p class="text-gray-300">
+                  We forge lasting alliances with clients who demand excellence and measurable results.
+                </p>
               </div>
-              <p class="text-gray-600">Modern web applications using Vue.js, React, Next.js, and Python backends.</p>
-            </div>
-            
-            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                  <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                </div>
-                <h4 class="text-lg font-bold text-gray-900">Business Growth</h4>
-              </div>
-              <p class="text-gray-600">Strategic consulting delivering 340% ROI and measurable business transformation.</p>
-            </div>
-          </div>
-        </div>
+            </n-card>
+          </n-grid-item>
+        </n-grid>
       </div>
     </section>
 
-    <!-- Achievements Section -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <!-- Founder Section -->
+    <section class="relative py-24 bg-gradient-primary overflow-hidden">
+      <!-- Subtle tech pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+      </div>
+      
+      <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Achievements</h2>
-          <p class="text-xl text-gray-600">
-            Milestones that reflect our commitment to excellence and client success.
+          <h2 class="text-4xl font-black text-white mb-4 glow-cyan">The Engineer</h2>
+          <p class="text-xl text-gray-300">
+            The master craftsman behind the forge.
           </p>
         </div>
         
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <!-- Founder Card -->
+          <n-card 
+            class="glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 transition-all duration-500"
+            style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2);"
+            :bordered="false"
+          >
+            <div class="p-8">
+              <n-space align="start" size="large">
+                <n-avatar 
+                  :size="96"
+                  style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);"
+                  class="shadow-xl shadow-secondary-400/50 glow-cyan font-black text-white text-3xl"
+                >
+                  RH
+                </n-avatar>
+                <div class="flex-1">
+                  <h3 class="text-2xl font-black text-white mb-2">Richard Hudson Jr.</h3>
+                  <div class="text-secondary-400 font-bold mb-4 glow-cyan">Master Engineer & Founder</div>
+                  <p class="text-gray-300 mb-6 leading-relaxed">
+                    Revenue operations expert who has forged <strong class="text-secondary-400 glow-cyan">$3.7M+</strong> in measurable business impact. 
+                    Combines deep technical expertise with proven business acumen to build solutions that don't just work—they dominate markets.
+                  </p>
+                  <n-space wrap size="small">
+                    <n-tag size="small" style="background: rgba(34, 211, 238, 0.2); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3);">Revenue Engineering</n-tag>
+                    <n-tag size="small" style="background: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3);">Data Architecture</n-tag>
+                    <n-tag size="small" style="background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3);">Business Intelligence</n-tag>
+                    <n-tag size="small" style="background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3);">Full-Stack Development</n-tag>
+                  </n-space>
+                </div>
+              </n-space>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">$3.7M+ Revenue Impact</h3>
-            <p class="text-gray-600">Generated measurable revenue growth through data-driven optimization strategies.</p>
-          </div>
+          </n-card>
           
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Industry Recognition</h3>
-            <p class="text-gray-600">96.8% forecast accuracy and 340% ROI benchmarks recognized by industry peers.</p>
-          </div>
-          
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Rapid Innovation</h3>
-            <p class="text-gray-600">25+ projects delivered with cutting-edge technology and measurable outcomes.</p>
-          </div>
+          <!-- Achievements -->
+          <n-space vertical size="large">
+            <n-card 
+              class="glass-morphism hover:shadow-xl hover:shadow-accent-400/30 transition-all duration-300"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(74, 222, 128, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-6">
+                <n-space align="center" class="mb-4">
+                  <n-avatar 
+                    :size="48"
+                    style="background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);"
+                    class="shadow-lg shadow-accent-400/50 glow-green"
+                  >
+                    <n-icon size="24" color="white">
+                      <ArrowTrendingUpIcon />
+                    </n-icon>
+                  </n-avatar>
+                  <h4 class="text-lg font-black text-white">Revenue Impact</h4>
+                </n-space>
+                <p class="text-gray-300">$3.7M+ in measurable business transformation through data-driven solutions.</p>
+              </div>
+            </n-card>
+            
+            <n-card 
+              class="glass-morphism hover:shadow-xl hover:shadow-purple-400/30 transition-all duration-300"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(192, 132, 252, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-6">
+                <n-space align="center" class="mb-4">
+                  <n-avatar 
+                    :size="48"
+                    style="background: linear-gradient(135deg, #c084fc 0%, #7c3aed 100%);"
+                    class="shadow-lg shadow-purple-400/50"
+                  >
+                    <n-icon size="24" color="white">
+                      <ChartBarIcon />
+                    </n-icon>
+                  </n-avatar>
+                  <h4 class="text-lg font-black text-white">Precision Engineering</h4>
+                </n-space>
+                <p class="text-gray-300">96.8% forecast accuracy with enterprise-grade analytics and optimization.</p>
+              </div>
+            </n-card>
+            
+            <n-card 
+              class="glass-morphism hover:shadow-xl hover:shadow-warning-400/30 transition-all duration-300"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(251, 146, 60, 0.2);"
+              :bordered="false"
+            >
+              <div class="p-6">
+                <n-space align="center" class="mb-4">
+                  <n-avatar 
+                    :size="48"
+                    style="background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);"
+                    class="shadow-lg shadow-warning-400/50 glow-orange"
+                  >
+                    <n-icon size="24" color="white">
+                      <FireIcon />
+                    </n-icon>
+                  </n-avatar>
+                  <h4 class="text-lg font-black text-white">ROI Mastery</h4>
+                </n-space>
+                <p class="text-gray-300">340% average ROI through strategic digital transformation consulting.</p>
+              </div>
+            </n-card>
+          </n-space>
         </div>
       </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-24 bg-primary-600">
-      <div class="max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-        <h2 class="text-4xl font-bold text-white mb-6">
-          Ready to work together?
+    <section class="relative py-24 bg-gradient-hero overflow-hidden">
+      <!-- Tech Grid Pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+      </div>
+      
+      <!-- Dynamic Energy Elements -->
+      <div class="absolute top-20 right-16 w-96 h-96 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 left-20 w-80 h-80 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      
+      <div class="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
+        <h2 class="text-4xl font-black text-white mb-6 glow-cyan">
+          Ready to Build Something Legendary?
         </h2>
-        <p class="text-xl text-primary-100 mb-8">
-          Let's discuss your project and see how we can help bring your vision to life.
+        <p class="text-xl text-gray-300 mb-10">
+          Let's forge your digital dominance together.
         </p>
-        <router-link 
-          to="/contact"
-          class="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 shadow-lg"
+        <n-button 
+          size="large"
+          strong
+          style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border: none; padding: 20px 40px; font-size: 20px; height: auto; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.2);"
+          @click="$router.push('/contact')"
+          class="hover:scale-105 transition-all duration-300 glow-cyan"
         >
-          Get in Touch
-        </router-link>
+          <template #icon>
+            <n-icon>
+              <ArrowRightIcon />
+            </n-icon>
+          </template>
+          Start Forging
+        </n-button>
       </div>
     </section>
   </div>
@@ -265,6 +373,12 @@
 import { 
   LightBulbIcon, 
   ShieldCheckIcon, 
-  UsersIcon 
+  UsersIcon,
+  RocketLaunchIcon,
+  EyeIcon,
+  ArrowTrendingUpIcon,
+  ChartBarIcon,
+  FireIcon,
+  ArrowRightIcon
 } from '@heroicons/vue/24/outline'
 </script>

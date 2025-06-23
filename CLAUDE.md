@@ -1,44 +1,82 @@
-# Hudson Digital Website - Design System
+# CLAUDE.md
 
-## Design Theme: "Elevated Cards"
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-The site follows an **elevated card design system** inspired by the floating browser mockup on the homepage. This creates a premium, modern aesthetic with depth and sophistication.
+## Project Overview
 
-### Core Design Principles:
+Hudson Digital Website - A Vue 3 + TypeScript SPA built with Vite, using Tailwind CSS v4 and Naive UI components.
 
-1. **Floating Elements**: Key content is contained in elevated cards with subtle shadows
-2. **Layered Depth**: Multiple levels of elevation create visual hierarchy
-3. **Clean Backgrounds**: Light gray/white backgrounds allow cards to "pop"
-4. **Rounded Corners**: Consistent border-radius for modern feel
-5. **Subtle Shadows**: Professional drop shadows for depth without being heavy
+## Essential Commands
 
-### Card System Classes:
+```bash
+# Development
+npm run dev          # Start dev server on http://localhost:5180
 
+# Build
+npm run build        # Type check with vue-tsc, then build with Vite
+npm run preview      # Preview production build locally
+
+# Install dependencies
+npm install
+```
+
+## Architecture
+
+### Tech Stack
+- **Framework**: Vue 3.5 with Composition API
+- **Build Tool**: Vite 6.3
+- **Language**: TypeScript 5.8 (strict mode)
+- **Styling**: Tailwind CSS v4 + Naive UI
+- **Routing**: Vue Router 4
+
+### Path Aliases
+```typescript
+@ -> /src
+@/components -> /src/components
+@/pages -> /src/pages
+@/router -> /src/router
+@/types -> /src/types
+```
+
+### Key Patterns
+1. **Page Components**: Located in `src/pages/`, imported dynamically in router
+2. **Layout Components**: `Navbar.vue` and `Footer.vue` in `src/components/layout/`
+3. **Styling**: Tailwind utilities with extensive custom theme configuration
+4. **No Testing**: Project has no test framework configured
+5. **No Linting**: No ESLint setup - rely on TypeScript and Prettier
+
+## Design System: "Elevated Cards"
+
+The site follows an elevated card design system with floating elements and layered depth.
+
+### Card Classes
 - **Primary Cards**: `bg-white rounded-2xl shadow-lg border border-gray-100`
 - **Interactive Cards**: Add `hover:shadow-xl hover:-translate-y-1 transition-all duration-300`
 - **Logo Containers**: `bg-white rounded-2xl shadow-lg border border-gray-100 p-4`
-- **Content Sections**: Elevated from background with proper spacing
 
-### Color Palette:
+### Color Palette
 
-- **Primary Blue**: `#0ea5e9` (primary-500)
-- **Background**: `#f8fafc` (gray-50)
+#### Core Colors
+- **Primary (Midnight Black)**: `#09090b` to `#fafafa` - Authority & power
+- **Secondary (Electric Cyan)**: `#22d3ee` (400) / `#0891b2` (600) - Innovation & energy  
+- **Accent (Neon Green)**: `#4ade80` (400) / `#16a34a` (600) - Success & growth
+- **Warning (Electric Orange)**: `#fb923c` (400) / `#ea580c` (600) - Energy & action
+- **Purple**: `#c084fc` (400) / `#9333ea` (600) - Premium & luxury
+
+#### Background Colors
+- **Main Background**: `#f8fafc` (gray-50)
 - **Cards**: `#ffffff` (white)
-- **Text**: `#0f172a` (gray-900)
-- **Borders**: `#e2e8f0` (gray-200)
+- **Dark Sections**: Gradient combinations using primary-950
 
-### Implementation Notes:
+#### Glow Effects (Refined)
+- **Subtle glow**: 4px primary, 8px secondary (50% opacity), 12px tertiary (30% opacity)
+- **Usage**: Applied to key metrics, CTAs, and emphasis text
+- **Classes**: `.glow-cyan`, `.glow-green`, `.glow-orange`
 
-- Logo always appears in elevated containers, never floating alone
-- Service cards, portfolio items, and forms follow the elevated card pattern
-- Hover states add elevation and subtle movement
-- Consistent spacing and typography throughout
-- Mobile-first responsive design
+## Development Notes
 
-### Typography:
-
-- **Primary Font**: Inter (clean, modern)
-- **Headings**: Bold weights for hierarchy
-- **Body**: Regular weight for readability
-
-This design system creates a cohesive, professional appearance that makes content feel premium and trustworthy.
+1. **Type Definitions**: Currently empty `src/types/` directory - types should be centralized here per global instructions
+2. **Formatting**: Prettier configured for no semicolons, single quotes
+3. **Port**: Dev server runs on port 5180 (not default 5173)
+4. **Animations**: Extensive custom Tailwind animations defined in config
+5. **Component Library**: Uses Naive UI - check their docs for component usage
