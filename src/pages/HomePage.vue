@@ -1,430 +1,333 @@
 <template>
   <div>
-    <!-- Hero Section -->
-    <section class="relative py-32 bg-gradient-to-br from-gray-50 via-white to-gray-50 overflow-hidden">
-      <!-- Background Elements -->
-      <div class="absolute inset-0">
-        <div class="absolute top-20 left-20 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl animate-float animation-delay-1000"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-blue-100/20 to-transparent rounded-full"></div>
+    <!-- Hero Section - Bold & Masculine -->
+    <section class="relative min-h-screen bg-gradient-hero flex items-center overflow-hidden">
+      <!-- Power Grid Pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
       </div>
       
-      <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="grid lg:grid-cols-2 gap-20 items-center">
+      <!-- Dynamic Energy Elements -->
+      <div class="absolute top-20 right-16 w-96 h-96 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 left-20 w-80 h-80 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      <div class="absolute top-1/3 left-1/3 w-32 h-32 bg-secondary-400/10 rounded-full blur-2xl animate-pulse animation-delay-500"></div>
+      
+      <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
           <!-- Content -->
-          <div class="animate-fade-in-up">
-            <!-- Badge -->
-            <div class="mb-10">
-              <div class="inline-flex items-center gap-4 p-4 glass-morphism rounded-2xl shadow-xl border border-white/30 hover:scale-105 transition-all duration-300">
-                <div class="relative">
-                  <img 
-                    src="/HDS-Logo.jpeg" 
-                    alt="Hudson Digital Solutions" 
-                    class="h-12 w-auto"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur-sm"></div>
-                </div>
-                <div class="h-8 w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-                <div class="text-left">
-                  <div class="text-sm font-medium text-gray-600">Professional</div>
-                  <div class="text-sm font-bold text-gray-900">Digital Solutions</div>
-                </div>
-              </div>
-            </div>
+          <div>
             
-            <!-- Main Heading -->
-            <h1 class="font-display text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-none text-balance">
-              We craft 
-              <span class="relative inline-block">
-                <span class="gradient-text">exceptional</span>
-                <div class="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-xl rounded-lg"></div>
-              </span>
-              digital experiences
+            <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight">
+              BUILD.
+              <br>
+              <span class="text-gradient-neon glow-cyan">DEPLOY.</span>
+              <br>
+              <span class="text-secondary-400">DOMINATE.</span>
             </h1>
             
-            <!-- Subtitle -->
-            <p class="text-xl lg:text-2xl text-gray-600 mb-10 leading-relaxed max-w-2xl text-balance">
-              Transform your business with cutting-edge web solutions that drive growth, engagement, and success.
+            <p class="text-xl text-gray-300 mb-10 leading-relaxed max-w-xl">
+              We engineer digital solutions that don't just work—they <strong class="text-white">crush the competition</strong>. 
+              No fluff. No delays. Just results.
             </p>
             
-            <!-- CTA Buttons -->
-            <div class="flex flex-col sm:flex-row gap-6">
-              <router-link 
-                to="/contact"
-                class="group relative bg-gradient-to-r from-primary-600 to-blue-700 text-white px-10 py-5 rounded-2xl font-semibold text-lg overflow-hidden transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl text-center"
+            <n-space size="large" class="flex-wrap">
+              <n-button 
+                type="primary" 
+                size="large"
+                strong
+                style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border: none; padding: 16px 32px; font-size: 18px; height: auto; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.2);"
+                @click="$router.push('/contact')"
+                class="hover:scale-105 transition-all duration-300 glow-cyan"
               >
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span class="relative flex items-center justify-center gap-2">
-                  Start Your Project
-                  <ArrowRightIcon class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-                </span>
-              </router-link>
+                <template #icon>
+                  <n-icon>
+                    <RocketLaunchIcon />
+                  </n-icon>
+                </template>
+                Launch Project
+              </n-button>
               
-              <router-link 
-                to="/portfolio"
-                class="group bg-white/80 backdrop-blur-sm border-2 border-gray-200 text-gray-900 px-10 py-5 rounded-2xl font-semibold text-lg hover:bg-white hover:border-primary-300 hover:text-primary-700 transition-all duration-300 text-center shadow-lg hover:shadow-xl"
+              <n-button 
+                quaternary
+                size="large"
+                style="color: white; padding: 16px 32px; font-size: 18px; height: auto; border: 2px solid #22d3ee; background: rgba(34, 211, 238, 0.1); backdrop-filter: blur(10px);"
+                @click="$router.push('/portfolio')"
+                class="hover:scale-105 transition-all duration-300 glass-light"
               >
-                <span class="flex items-center justify-center gap-2">
-                  View Our Work
-                  <EyeIcon class="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
-                </span>
-              </router-link>
-            </div>
+                <template #icon>
+                  <n-icon>
+                    <EyeIcon />
+                  </n-icon>
+                </template>
+                View Arsenal
+              </n-button>
+            </n-space>
             
-            <!-- Trust Indicators -->
-            <div class="mt-12 animate-fade-in-up animation-delay-400">
-              <div class="flex items-center gap-8 text-sm text-gray-500">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span>150+ Projects Delivered</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse animation-delay-200"></div>
-                  <span>98% Client Satisfaction</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Visual Element -->
-          <div class="relative animate-fade-in-up animation-delay-200">
-            <!-- Main Browser Card -->
-            <div class="perspective-1000">
-              <div class="relative bg-white rounded-3xl shadow-2xl p-8 border border-gray-100/50 hover:shadow-3xl hover:-translate-y-4 hover:rotate-1 transition-all duration-700 preserve-3d group">
-                <!-- Browser Header -->
-                <div class="flex items-center gap-3 mb-6">
-                  <div class="w-3 h-3 bg-red-500 rounded-full group-hover:scale-125 transition-transform duration-300"></div>
-                  <div class="w-3 h-3 bg-yellow-500 rounded-full group-hover:scale-125 transition-transform duration-300 animation-delay-100"></div>
-                  <div class="w-3 h-3 bg-green-500 rounded-full group-hover:scale-125 transition-transform duration-300 animation-delay-200"></div>
-                  <div class="ml-4 flex-1 h-6 bg-gray-100 rounded-lg group-hover:bg-gray-200 transition-colors duration-300"></div>
-                </div>
-                
-                <!-- Content Mockup -->
-                <div class="space-y-4">
-                  <div class="h-8 bg-gradient-to-r from-primary-100 to-blue-100 rounded-lg animate-shimmer" style="background-size: 200% 100%;"></div>
-                  <div class="h-4 bg-gray-100 rounded-lg w-4/5 group-hover:bg-gray-200 transition-colors duration-300"></div>
-                  <div class="h-4 bg-gray-100 rounded-lg w-3/5 group-hover:bg-gray-200 transition-colors duration-300"></div>
-                  <div class="mt-6 flex gap-3">
-                    <div class="h-10 bg-gradient-to-r from-primary-500 to-blue-600 rounded-lg w-32 animate-glow"></div>
-                    <div class="h-10 bg-gray-100 rounded-lg w-28 group-hover:bg-gray-200 transition-colors duration-300"></div>
+            <!-- Power Metrics -->
+            <div class="mt-16">
+              <n-grid cols="3" x-gap="24" responsive="screen">
+                <n-grid-item>
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-accent-400 mb-1 glow-green">200+</div>
+                    <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Projects Deployed</div>
                   </div>
-                  
-                  <!-- Stats Preview -->
-                  <div class="mt-8 grid grid-cols-3 gap-4">
-                    <div class="text-center p-3 bg-gray-50 rounded-xl group-hover:bg-white transition-colors duration-300">
-                      <div class="text-lg font-bold text-primary-600">150+</div>
-                      <div class="text-xs text-gray-500">Projects</div>
-                    </div>
-                    <div class="text-center p-3 bg-gray-50 rounded-xl group-hover:bg-white transition-colors duration-300">
-                      <div class="text-lg font-bold text-green-600">98%</div>
-                      <div class="text-xs text-gray-500">Success</div>
-                    </div>
-                    <div class="text-center p-3 bg-gray-50 rounded-xl group-hover:bg-white transition-colors duration-300">
-                      <div class="text-lg font-bold text-purple-600">5⭐</div>
-                      <div class="text-xs text-gray-500">Rating</div>
-                    </div>
+                </n-grid-item>
+                <n-grid-item>
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-secondary-400 mb-1 glow-cyan">99.9%</div>
+                    <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Uptime Rate</div>
+                  </div>
+                </n-grid-item>
+                <n-grid-item>
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-warning-400 mb-1 glow-orange">24/7</div>
+                    <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Battle Ready</div>
+                  </div>
+                </n-grid-item>
+              </n-grid>
+            </div>
+          </div>
+          
+          <!-- Terminal Mockup -->
+          <div class="relative">
+            <n-card 
+              class="shadow-2xl hover:shadow-secondary-500/30 transition-all duration-500 glass-morphism"
+              style="background: rgba(9, 9, 11, 0.95); border: 1px solid rgba(34, 211, 238, 0.3);"
+              :bordered="false"
+            >
+              <!-- Terminal Header -->
+              <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-700">
+                <n-space size="small">
+                  <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                </n-space>
+                <div class="text-gray-400 text-sm font-mono">hudson-deploy.sh</div>
+              </div>
+              
+              <!-- Terminal Content -->
+              <div class="font-mono text-sm space-y-2">
+                <div class="text-accent-400">$ npm run deploy --production</div>
+                <div class="text-primary-200">✓ Build completed in 1.8s</div>
+                <div class="text-primary-200">✓ Tests passed (147/147)</div>
+                <div class="text-primary-200">✓ Security scan clean</div>
+                <div class="text-secondary-400">→ Deploying to production...</div>
+                <div class="text-accent-400">✓ Deployment successful</div>
+                <div class="text-warning-400">🚀 Live at https://client-app.com</div>
+                <div class="text-primary-400 mt-4">Performance: 100/100</div>
+                <div class="text-primary-400">Accessibility: 100/100</div>
+                <div class="text-primary-400">SEO: 98/100</div>
+                <div class="text-accent-400 animate-pulse mt-4 glow-green">$█</div>
+              </div>
+            </n-card>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services - Dark Grid -->
+    <section class="relative py-24 bg-gradient-primary overflow-hidden">
+      <!-- Subtle tech pattern -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+      </div>
+      
+      <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-black text-white mb-4 glow-cyan">Arsenal of Solutions</h2>
+          <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+            Three core services. Maximum impact. Zero compromise.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="align-items: stretch;">
+          <div class="flex flex-col h-full">
+            <n-card 
+              hoverable
+              class="glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
+              :bordered="false"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2); height: 100%;"
+            >
+                <div class="p-8 text-center h-full flex flex-col">
+                  <div class="w-16 h-16 bg-gradient-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-400/50 glow-cyan">
+                    <n-icon size="32" color="white">
+                      <CodeBracketIcon />
+                    </n-icon>
+                  </div>
+                  <h3 class="text-2xl font-black text-white mb-4">Web Apps</h3>
+                  <p class="text-gray-300 mb-6 flex-1">
+                    Lightning-fast web applications that scale. Built with modern frameworks, optimized for performance.
+                  </p>
+                  <div class="mt-auto">
+                    <n-tag size="small" style="background: rgba(34, 211, 238, 0.2); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); backdrop-filter: blur(10px);">Frontend • Backend • Database</n-tag>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-            <!-- Floating Elements -->
-            <div class="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-blue-200/60 to-purple-200/40 rounded-3xl opacity-60 shadow-lg animate-float animation-delay-0 blur-sm"></div>
-            <div class="absolute -bottom-8 -left-8 w-40 h-40 bg-gradient-to-br from-purple-200/40 to-pink-200/60 rounded-3xl opacity-50 shadow-lg animate-float animation-delay-1000 blur-sm"></div>
-            
-            <!-- Tech Stack Icons -->
-            <div class="absolute -right-4 top-1/4 space-y-4 animate-fade-in animation-delay-600">
-              <div class="w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100 hover:scale-110 transition-transform duration-300">
-                <div class="w-6 h-6 bg-blue-600 rounded"></div>
-              </div>
-              <div class="w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100 hover:scale-110 transition-transform duration-300 animation-delay-200">
-                <div class="w-6 h-6 bg-green-600 rounded-full"></div>
-              </div>
-              <div class="w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100 hover:scale-110 transition-transform duration-300 animation-delay-400">
-                <div class="w-6 h-6 bg-yellow-500 rounded-lg transform rotate-45"></div>
-              </div>
-            </div>
+            </n-card>
+          </div>
+          
+          <div class="flex flex-col h-full">
+            <n-card 
+              hoverable
+              class="glass-morphism hover:shadow-xl hover:shadow-accent-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
+              :bordered="false"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(74, 222, 128, 0.2); height: 100%;"
+            >
+                <div class="p-8 text-center h-full flex flex-col">
+                  <div class="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-400/50 glow-green">
+                    <n-icon size="32" color="white">
+                      <CogIcon />
+                    </n-icon>
+                  </div>
+                  <h3 class="text-2xl font-black text-white mb-4">Custom Solutions</h3>
+                  <p class="text-gray-300 mb-6 flex-1">
+                    Bespoke software tailored to your exact business needs. No templates, no shortcuts, just pure engineering.
+                  </p>
+                  <div class="mt-auto">
+                    <n-tag size="small" style="background: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); backdrop-filter: blur(10px);">APIs • Automation • Workflows</n-tag>
+                  </div>
+                </div>
+            </n-card>
+          </div>
+          
+          <div class="flex flex-col h-full">
+            <n-card 
+              hoverable
+              class="glass-morphism hover:shadow-xl hover:shadow-purple-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
+              :bordered="false"
+              style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(192, 132, 252, 0.2); height: 100%;"
+            >
+                <div class="p-8 text-center h-full flex flex-col">
+                  <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-400/50">
+                    <n-icon size="32" color="white">
+                      <ChartBarIcon />
+                    </n-icon>
+                  </div>
+                  <h3 class="text-2xl font-black text-white mb-4">Strategy</h3>
+                  <p class="text-gray-300 mb-6 flex-1">
+                    Data-driven digital strategy that cuts through the noise. ROI-focused planning and execution.
+                  </p>
+                  <div class="mt-auto">
+                    <n-tag size="small" style="background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); backdrop-filter: blur(10px);">Data • Insights • Growth</n-tag>
+                  </div>
+                </div>
+            </n-card>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Services Preview -->
-    <section class="py-32 bg-gradient-to-b from-white to-gray-50/50">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <!-- Section Header -->
-        <div class="text-center mb-20 animate-fade-in-up">
-          <div class="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <div class="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-            Our Services
-          </div>
-          <h2 class="font-display text-5xl lg:text-6xl font-bold text-gray-900 mb-6 text-balance">
-            What We <span class="gradient-text">Deliver</span>
-          </h2>
-          <p class="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto text-balance">
-            Comprehensive digital solutions designed to elevate your business and drive meaningful results.
-          </p>
-        </div>
-        
-        <!-- Services Grid -->
-        <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
-          <!-- Web Development -->
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative bg-white/80 backdrop-blur-sm text-center p-10 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in-up animation-delay-200">
-              <!-- Icon -->
-              <div class="relative mb-8">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                  <CodeBracketIcon class="h-10 w-10 text-white" />
-                </div>
-                <div class="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-              </div>
-              
-              <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">Web Development</h3>
-              <p class="text-gray-600 leading-relaxed mb-6">
-                Custom websites and applications built with cutting-edge technologies for optimal performance and user experience.
-              </p>
-              
-              <!-- Features -->
-              <div class="space-y-2 text-sm text-gray-500">
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  <span>Responsive Design</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  <span>Modern Frameworks</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  <span>SEO Optimized</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Mobile Apps -->
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative bg-white/80 backdrop-blur-sm text-center p-10 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in-up animation-delay-400">
-              <!-- Icon -->
-              <div class="relative mb-8">
-                <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                  <DevicePhoneMobileIcon class="h-10 w-10 text-white" />
-                </div>
-                <div class="absolute inset-0 bg-green-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-              </div>
-              
-              <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors duration-300">Mobile Apps</h3>
-              <p class="text-gray-600 leading-relaxed mb-6">
-                Native and cross-platform mobile applications that deliver exceptional user experiences across all devices.
-              </p>
-              
-              <!-- Features -->
-              <div class="space-y-2 text-sm text-gray-500">
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                  <span>iOS & Android</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                  <span>Cross-Platform</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                  <span>App Store Ready</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Digital Strategy -->
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative bg-white/80 backdrop-blur-sm text-center p-10 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-fade-in-up animation-delay-600">
-              <!-- Icon -->
-              <div class="relative mb-8">
-                <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                  <ChartBarIcon class="h-10 w-10 text-white" />
-                </div>
-                <div class="absolute inset-0 bg-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-              </div>
-              
-              <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-colors duration-300">Digital Strategy</h3>
-              <p class="text-gray-600 leading-relaxed mb-6">
-                Strategic consulting and planning to maximize your digital presence and achieve sustainable growth.
-              </p>
-              
-              <!-- Features -->
-              <div class="space-y-2 text-sm text-gray-500">
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
-                  <span>Growth Planning</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
-                  <span>Market Analysis</span>
-                </div>
-                <div class="flex items-center justify-center gap-2">
-                  <div class="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
-                  <span>ROI Optimization</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- CTA -->
-        <div class="text-center mt-16 animate-fade-in-up animation-delay-800">
-          <router-link 
-            to="/services"
-            class="group inline-flex items-center gap-3 bg-gradient-to-r from-primary-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
-          >
-            <span>Explore All Services</span>
-            <ArrowRightIcon class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-          </router-link>
-        </div>
+    <!-- Results Section -->
+    <section class="relative py-24 bg-gradient-primary overflow-hidden">
+      <!-- Tech grid pattern - consistent with arsenal -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
       </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-24 bg-gray-50">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      
+      <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            Don't just take our word for it. Here's what businesses are saying about working with Hudson Digital.
+          <h2 class="text-4xl font-black text-white mb-4 glow-cyan">Proven Results</h2>
+          <p class="text-xl text-gray-300">
+            The numbers speak louder than marketing fluff.
           </p>
         </div>
         
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="flex items-center mb-6">
-              <div class="flex text-yellow-400">
-                <svg v-for="star in 5" :key="star" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-              </div>
+        <n-grid cols="2 m:4" x-gap="24" y-gap="24" responsive="screen">
+          <n-grid-item>
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-secondary-400/20 transition-all duration-300">
+              <div class="text-5xl font-black text-secondary-400 mb-2 glow-cyan">400%</div>
+              <div class="text-gray-300 font-medium">Average traffic increase</div>
             </div>
-            <p class="text-gray-600 mb-6 italic">
-              "Hudson Digital transformed our online presence completely. Our website traffic increased by 300% 
-              and conversions are through the roof. Their team is professional, responsive, and truly understands business."
-            </p>
-            <div class="flex items-center">
-              <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
-              <div>
-                <div class="font-semibold text-gray-900">Sarah Johnson</div>
-                <div class="text-gray-600">CEO, TechStart Inc.</div>
-              </div>
+          </n-grid-item>
+          <n-grid-item>
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-accent-400/20 transition-all duration-300">
+              <div class="text-5xl font-black text-accent-400 mb-2 glow-green">$5.2M</div>
+              <div class="text-gray-300 font-medium">Revenue generated</div>
             </div>
-          </div>
-          
-          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="flex items-center mb-6">
-              <div class="flex text-yellow-400">
-                <svg v-for="star in 5" :key="star" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-              </div>
+          </n-grid-item>
+          <n-grid-item>
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-purple-400/20 transition-all duration-300">
+              <div class="text-5xl font-black text-purple-400 mb-2">9</div>
+              <div class="text-gray-300 font-medium">Days average delivery</div>
             </div>
-            <p class="text-gray-600 mb-6 italic">
-              "The mobile app they built for us exceeded all expectations. User engagement is up 250% and 
-              the app store reviews are fantastic. Hudson Digital delivers on their promises."
-            </p>
-            <div class="flex items-center">
-              <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
-              <div>
-                <div class="font-semibold text-gray-900">Michael Chen</div>
-                <div class="text-gray-600">Founder, FitLife Pro</div>
-              </div>
+          </n-grid-item>
+          <n-grid-item>
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-warning-400/20 transition-all duration-300">
+              <div class="text-5xl font-black text-warning-400 mb-2 glow-orange">Zero</div>
+              <div class="text-gray-300 font-medium">Failed launches</div>
             </div>
-          </div>
-          
-          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="flex items-center mb-6">
-              <div class="flex text-yellow-400">
-                <svg v-for="star in 5" :key="star" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-              </div>
-            </div>
-            <p class="text-gray-600 mb-6 italic">
-              "Working with Hudson Digital was a game-changer for our e-commerce business. Sales increased 
-              by 180% in the first quarter alone. Their strategic approach to digital transformation is unmatched."
-            </p>
-            <div class="flex items-center">
-              <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
-              <div>
-                <div class="font-semibold text-gray-900">Emily Rodriguez</div>
-                <div class="text-gray-600">Director, Retail Plus</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 mb-4">Proven Results</h2>
-          <p class="text-xl text-gray-600">
-            Numbers that showcase our commitment to delivering exceptional outcomes.
-          </p>
-        </div>
-        
-        <div class="grid md:grid-cols-4 gap-8">
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="text-4xl font-bold text-primary-600 mb-2">150+</div>
-            <div class="text-gray-600 font-medium">Projects Delivered</div>
-            <div class="text-sm text-gray-500 mt-2">Since 2019</div>
-          </div>
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="text-4xl font-bold text-primary-600 mb-2">98%</div>
-            <div class="text-gray-600 font-medium">Client Satisfaction</div>
-            <div class="text-sm text-gray-500 mt-2">Average rating</div>
-          </div>
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="text-4xl font-bold text-primary-600 mb-2">250%</div>
-            <div class="text-gray-600 font-medium">Average ROI</div>
-            <div class="text-sm text-gray-500 mt-2">Client growth</div>
-          </div>
-          <div class="bg-white text-center p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="text-4xl font-bold text-primary-600 mb-2">24/7</div>
-            <div class="text-gray-600 font-medium">Support Available</div>
-            <div class="text-sm text-gray-500 mt-2">Always here for you</div>
-          </div>
-        </div>
+          </n-grid-item>
+        </n-grid>
       </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-24 bg-primary-600">
-      <div class="max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-        <h2 class="text-4xl font-bold text-white mb-6">
-          Ready to transform your digital presence?
+    <section class="relative py-24 bg-gradient-primary overflow-hidden">
+      <!-- Tech grid pattern - consistent with other sections -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]"></div>
+      </div>
+      
+      <!-- Subtle energy elements -->
+      <div class="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 left-1/4 w-48 h-48 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      
+      <div class="relative max-w-4xl mx-auto text-center px-6 lg:px-12">
+        <h2 class="text-4xl font-black text-white mb-6 glow-cyan">
+          Ready to Build Something Legendary?
         </h2>
-        <p class="text-xl text-primary-100 mb-8">
-          Let's discuss how we can help your business grow with modern web solutions.
+        <p class="text-xl text-gray-300 mb-10">
+          Stop wasting time with agencies that overpromise and underdeliver.
         </p>
-        <router-link 
-          to="/contact"
-          class="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 shadow-lg"
+        <n-button 
+          size="large"
+          strong
+          style="background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%); color: white; border: none; padding: 20px 40px; font-size: 20px; height: auto; box-shadow: 0 4px 16px rgba(74, 222, 128, 0.25);"
+          @click="$router.push('/contact')"
+          class="hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-accent-500/30 glow-green"
         >
-          Get Started Today
-        </router-link>
+          <template #icon>
+            <n-icon>
+              <ArrowRightIcon />
+            </n-icon>
+          </template>
+          Launch Your Vision
+        </n-button>
       </div>
     </section>
+    
+    <!-- Back to Top -->
+    <n-back-top 
+      :right="40"
+      :bottom="40"
+      :visibility-height="300"
+    >
+      <n-card 
+        size="small"
+        class="shadow-lg"
+        style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border: none; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.25);"
+        :bordered="false"
+      >
+        <n-icon size="20" color="white">
+          <ArrowUpIcon />
+        </n-icon>
+      </n-card>
+    </n-back-top>
   </div>
 </template>
 
 <script setup lang="ts">
 import { 
   CodeBracketIcon, 
-  DevicePhoneMobileIcon, 
+  CogIcon, 
   ChartBarIcon,
   ArrowRightIcon,
-  EyeIcon
+  EyeIcon,
+  RocketLaunchIcon,
+  ArrowUpIcon
 } from '@heroicons/vue/24/outline'
 </script>

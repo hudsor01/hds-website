@@ -1,113 +1,145 @@
 <template>
-  <nav class="bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-200/50 sticky top-0 z-50 transition-all duration-300">
+  <nav class="bg-black/90 backdrop-blur-xl border-b border-cyan-500/20 sticky top-0 z-50 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-      <div class="flex justify-between items-center h-20">
-        <!-- Logo -->
-        <router-link to="/" class="flex items-center gap-3 group">
-          <div class="relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-md group-hover:blur-lg transition-all duration-300"></div>
-            <div class="relative bg-white p-2 rounded-2xl shadow-lg border border-gray-100 group-hover:scale-105 transition-transform duration-200">
-              <img src="/HDS-Logo.jpeg" alt="Hudson Digital" class="h-8 w-auto" />
-            </div>
-          </div>
-          <div class="hidden sm:block">
-            <div class="font-display font-bold text-xl text-gray-900 group-hover:text-primary-600 transition-colors duration-200">
-              Hudson Digital
-            </div>
+      <div class="flex items-center h-14 relative">
+        <!-- Brand Text -->
+        <router-link to="/" class="group">
+          <div class="text-lg font-bold text-gradient-secondary group-hover:scale-105 transition-transform duration-200">
+            Hudson Digital
           </div>
         </router-link>
         
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-1">
+        <!-- Centered Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
           <router-link 
             v-for="item in navigation" 
-            :key="item.name"
-            :to="item.href" 
-            class="relative px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-xl hover:bg-gray-50 group"
-            :class="{ 'text-primary-600 bg-primary-50': $route.path === item.href }"
+            :key="item.href"
+            :to="item.href"
+            class="text-gray-300 hover:text-secondary-400 font-medium text-sm transition-colors duration-200 relative group"
+            :class="{ 'text-secondary-400': $route.path === item.href }"
           >
-            <span class="relative z-10">{{ item.name }}</span>
-            <div 
+            {{ item.name }}
+            <span 
               v-if="$route.path === item.href"
-              class="absolute inset-0 bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl"
-            ></div>
+              class="absolute -bottom-1 left-0 w-full h-0.5 bg-secondary-400 rounded-full glow-cyan"
+            ></span>
           </router-link>
-          
-          <div class="ml-6">
-            <router-link 
-              to="/contact"
-              class="group relative bg-gradient-to-r from-primary-600 to-blue-700 text-white px-8 py-3 rounded-2xl font-semibold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl"
-            >
-              <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span class="relative flex items-center gap-2">
-                Get Started
-                <ArrowRightIcon class="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-              </span>
-            </router-link>
-          </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div class="hidden md:block ml-auto">
+          <n-button 
+            type="primary"
+            size="medium"
+            strong
+            style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); color: white; border: none; padding: 8px 16px; font-size: 14px; font-weight: 600; border-radius: 8px; box-shadow: 0 2px 8px rgba(34, 211, 238, 0.15);"
+            @click="$router.push('/contact')"
+            class="hover:scale-105 hover:shadow-lg hover:shadow-secondary-400/20 transition-all duration-300"
+          >
+            <template #icon>
+              <n-icon size="16">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </n-icon>
+            </template>
+            Get Started
+          </n-button>
         </div>
         
         <!-- Mobile menu button -->
-        <div class="md:hidden">
-          <button 
+        <div class="md:hidden ml-auto">
+          <n-button 
+            quaternary 
+            circle
             @click="mobileMenuOpen = !mobileMenuOpen"
-            class="p-3 rounded-2xl text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-all duration-200"
+            class="hover:bg-white/10 text-white"
+            style="border: 1px solid rgba(34, 211, 238, 0.3);"
           >
-            <Bars3Icon v-if="!mobileMenuOpen" class="h-6 w-6" />
-            <XMarkIcon v-else class="h-6 w-6" />
-          </button>
+            <template #icon>
+              <n-icon size="18" color="#22d3ee">
+                <svg v-if="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </n-icon>
+            </template>
+          </n-button>
         </div>
       </div>
       
       <!-- Mobile Navigation -->
-      <transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="transform scale-95 opacity-0"
-        enter-to-class="transform scale-100 opacity-100"
-        leave-active-class="transition duration-75 ease-in"
-        leave-from-class="transform scale-100 opacity-100"
-        leave-to-class="transform scale-95 opacity-0"
+      <n-drawer 
+        v-model:show="mobileMenuOpen" 
+        placement="top"
+        :height="250"
+        class="md:hidden"
+        :style="{ backgroundColor: 'rgba(9, 9, 11, 0.95)', backdropFilter: 'blur(16px)' }"
       >
-        <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200/50 py-6 bg-white/95 backdrop-blur-lg">
-          <div class="space-y-3">
-            <router-link 
-              v-for="item in navigation" 
-              :key="item.name"
-              :to="item.href" 
-              @click="mobileMenuOpen = false"
-              class="block px-4 py-3 text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 rounded-xl hover:bg-gray-50"
-              :class="{ 'text-primary-600 bg-primary-50': $route.path === item.href }"
-            >
-              {{ item.name }}
-            </router-link>
-            
-            <div class="pt-4">
+        <n-drawer-content 
+          title="Navigation" 
+          closable
+          :style="{ backgroundColor: 'rgba(9, 9, 11, 0.95)', color: 'white' }"
+        >
+          <n-space vertical size="large">
+            <div class="flex flex-col space-y-3">
               <router-link 
-                to="/contact"
+                v-for="item in navigation" 
+                :key="item.href"
+                :to="item.href"
                 @click="mobileMenuOpen = false"
-                class="block mx-4 bg-gradient-to-r from-primary-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-semibold transition-all duration-200 text-center shadow-lg hover:shadow-xl"
+                class="text-gray-300 hover:text-secondary-400 font-medium transition-colors duration-200 py-2 px-4 rounded-lg hover:bg-white/10"
+                :class="{ 'text-secondary-400 bg-white/10': $route.path === item.href }"
               >
-                Get Started
+                {{ item.name }}
               </router-link>
             </div>
-          </div>
-        </div>
-      </transition>
+            
+            <n-divider style="border-color: rgba(34, 211, 238, 0.2);" />
+            
+            <n-button 
+              type="primary"
+              size="medium"
+              block
+              strong
+              style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); color: white; border: none; font-weight: 600; box-shadow: 0 2px 8px rgba(34, 211, 238, 0.15);"
+              @click="handleContactClick"
+              class="hover:shadow-lg transition-all duration-300"
+            >
+              <template #icon>
+                <n-icon size="16">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </n-icon>
+              </template>
+              Get Started
+            </n-button>
+          </n-space>
+        </n-drawer-content>
+      </n-drawer>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Bars3Icon, XMarkIcon, ArrowRightIcon } from '@heroicons/vue/24/outline'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const mobileMenuOpen = ref(false)
 
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Services', href: '/services' },
   { name: 'About', href: '/about' },
-  { name: 'Portfolio', href: '/portfolio' },
   { name: 'Contact', href: '/contact' },
 ]
+
+const handleContactClick = () => {
+  router.push('/contact')
+  mobileMenuOpen.value = false
+}
 </script>
