@@ -110,29 +110,31 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  LightBulbIcon, 
-  ShieldCheckIcon, 
+import {
+  LightBulbIcon,
   RocketLaunchIcon,
-  CheckCircleIcon 
+  ShieldCheckIcon,
 } from '@heroicons/vue/24/outline'
 
 const values = [
   {
     icon: LightBulbIcon,
     title: 'Innovation',
-    description: 'We stay ahead of the curve with the latest technologies and best practices.'
+    description:
+      'We stay ahead of the curve with the latest technologies and best practices.',
   },
   {
     icon: ShieldCheckIcon,
     title: 'Reliability',
-    description: 'Consistent delivery of high-quality solutions that you can depend on.'
+    description:
+      'Consistent delivery of high-quality solutions that you can depend on.',
   },
   {
     icon: RocketLaunchIcon,
     title: 'Performance',
-    description: 'Optimized solutions that load fast and perform exceptionally well.'
-  }
+    description:
+      'Optimized solutions that load fast and perform exceptionally well.',
+  },
 ]
 
 const reasons = [
@@ -141,13 +143,13 @@ const reasons = [
   'Responsive design for all devices',
   'Ongoing support and maintenance',
   'Transparent communication throughout',
-  'Competitive pricing and timelines'
+  'Competitive pricing and timelines',
 ]
 
 const stats = [
   { value: '50+', label: 'Projects Completed' },
   { value: '99%', label: 'Client Satisfaction' },
   { value: '24/7', label: 'Support Available' },
-  { value: '5+', label: 'Years Experience' }
+  { value: '5+', label: 'Years Experience' },
 ]
 </script>

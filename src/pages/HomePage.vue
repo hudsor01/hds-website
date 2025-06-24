@@ -321,13 +321,5 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  CodeBracketIcon, 
-  CogIcon, 
-  ChartBarIcon,
-  ArrowRightIcon,
-  EyeIcon,
-  RocketLaunchIcon,
-  ArrowUpIcon
-} from '@heroicons/vue/24/outline'
+
 </script>

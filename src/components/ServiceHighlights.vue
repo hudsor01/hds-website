@@ -108,48 +108,49 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  CodeBracketIcon, 
-  GlobeAltIcon, 
+import {
+  CodeBracketIcon,
+  GlobeAltIcon,
   RocketLaunchIcon,
-  CheckIcon,
-  ArrowRightIcon
 } from '@heroicons/vue/24/outline'
 
 const services = [
   {
     icon: CodeBracketIcon,
     title: 'Web Applications',
-    description: 'Custom web applications built with cutting-edge technologies for optimal performance and scalability.',
+    description:
+      'Custom web applications built with cutting-edge technologies for optimal performance and scalability.',
     features: [
       'React & Vue.js Development',
       'Progressive Web Apps (PWA)',
       'API Development & Integration',
-      'Database Architecture'
-    ]
+      'Database Architecture',
+    ],
   },
   {
     icon: GlobeAltIcon,
     title: 'Modern Websites',
-    description: 'Stunning, responsive websites that convert visitors into customers with exceptional user experiences.',
+    description:
+      'Stunning, responsive websites that convert visitors into customers with exceptional user experiences.',
     features: [
       'Responsive Design',
       'SEO Optimization',
       'Performance Optimization',
-      'Content Management Systems'
-    ]
+      'Content Management Systems',
+    ],
   },
   {
     icon: RocketLaunchIcon,
     title: 'Digital Strategy',
-    description: 'Comprehensive digital transformation services to accelerate your business growth and success.',
+    description:
+      'Comprehensive digital transformation services to accelerate your business growth and success.',
     features: [
       'Technical Consulting',
       'Performance Audits',
       'Conversion Optimization',
-      'Analytics & Insights'
-    ]
-  }
+      'Analytics & Insights',
+    ],
+  },
 ]
 
 const scrollToContact = () => {

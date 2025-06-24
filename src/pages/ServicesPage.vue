@@ -172,32 +172,30 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  ArrowRightIcon
-} from '@heroicons/vue/24/outline'
-
 const services = [
   {
     title: 'WEB APPS',
-    description: 'Lightning-fast applications that scale with your business growth.',
+    description:
+      'Lightning-fast applications that scale with your business growth.',
     features: [
       'React • Vue • Next.js',
       'API Development',
       'Database Architecture',
-      'Performance Optimization'
+      'Performance Optimization',
     ],
-    pricing: '$5K+'
+    pricing: '$5K+',
   },
   {
     title: 'CUSTOM SOLUTIONS',
-    description: 'Bespoke software engineered for your exact business requirements.',
+    description:
+      'Bespoke software engineered for your exact business requirements.',
     features: [
       'Business Automation',
       'System Integrations',
       'Data Analytics',
-      'Revenue Operations'
+      'Revenue Operations',
     ],
-    pricing: '$8K+'
+    pricing: '$8K+',
   },
   {
     title: 'STRATEGY',
@@ -206,35 +204,35 @@ const services = [
       'Technical Audits',
       'Growth Planning',
       'ROI Optimization',
-      'Market Analysis'
+      'Market Analysis',
     ],
-    pricing: '$2K+'
-  }
+    pricing: '$2K+',
+  },
 ]
 
 const reasons = [
   { value: '150+', title: 'Projects Delivered' },
   { value: '98%', title: 'Success Rate' },
   { value: '340%', title: 'Average ROI' },
-  { value: '24/7', title: 'Support' }
+  { value: '24/7', title: 'Support' },
 ]
 
 const process = [
   {
     title: 'Discover',
-    description: 'Understand your business and requirements.'
+    description: 'Understand your business and requirements.',
   },
   {
     title: 'Plan',
-    description: 'Create comprehensive strategy and timeline.'
+    description: 'Create comprehensive strategy and timeline.',
   },
   {
     title: 'Build',
-    description: 'Engineer your solution with precision.'
+    description: 'Engineer your solution with precision.',
   },
   {
     title: 'Launch',
-    description: 'Deploy and dominate your market.'
-  }
+    description: 'Deploy and dominate your market.',
+  },
 ]
 </script>

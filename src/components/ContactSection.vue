@@ -151,12 +151,8 @@
 </template>
 
 <script setup lang="ts">
+import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
-import { 
-  EnvelopeIcon, 
-  PhoneIcon, 
-  MapPinIcon 
-} from '@heroicons/vue/24/outline'
 
 const contactInfo = [
   {
@@ -164,22 +160,22 @@ const contactInfo = [
     title: 'Email',
     description: 'Send us an email anytime',
     value: 'hello@hudsondigital.com',
-    link: 'mailto:hello@hudsondigital.com'
+    link: 'mailto:hello@hudsondigital.com',
   },
   {
     icon: PhoneIcon,
     title: 'Phone',
     description: 'Call us during business hours',
     value: '+1 (555) 123-4567',
-    link: 'tel:+15551234567'
+    link: 'tel:+15551234567',
   },
   {
     icon: MapPinIcon,
     title: 'Location',
     description: 'Based in Dallas, TX',
     value: 'Dallas, Texas',
-    link: '#'
-  }
+    link: '#',
+  },
 ]
 
 const form = ref({
@@ -187,30 +183,30 @@ const form = ref({
   lastName: '',
   email: '',
   service: '',
-  message: ''
+  message: '',
 })
 
 const isSubmitting = ref(false)
 
 const submitForm = async () => {
   isSubmitting.value = true
-  
+
   // Simulate form submission
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Here you would typically send the form data to your backend
     console.log('Form submitted:', form.value)
-    
+
     // Reset form
     form.value = {
       firstName: '',
       lastName: '',
       email: '',
       service: '',
-      message: ''
+      message: '',
     }
-    
+
     alert('Thank you! Your message has been sent.')
   } catch (error) {
     console.error('Error submitting form:', error)
