@@ -115,32 +115,32 @@ const socialLinks = [
   {
     name: 'LinkedIn',
     href: '#',
-    icon: 'div' // Placeholder - would use actual LinkedIn icon
+    icon: 'div', // Placeholder - would use actual LinkedIn icon
   },
   {
     name: 'Twitter',
-    href: '#', 
-    icon: 'div' // Placeholder - would use actual Twitter icon
+    href: '#',
+    icon: 'div', // Placeholder - would use actual Twitter icon
   },
   {
     name: 'GitHub',
     href: '#',
-    icon: 'div' // Placeholder - would use actual GitHub icon
-  }
+    icon: 'div', // Placeholder - would use actual GitHub icon
+  },
 ]
 
 const services = [
   'Web App Development',
-  'Website Solutions', 
+  'Website Solutions',
   'Digital Strategy',
-  'Performance Optimization'
+  'Performance Optimization',
 ]
 
 const quickLinks = [
   { name: 'Home', href: '#' },
   { name: 'Services', href: '#services' },
   { name: 'About', href: '#about' },
-  { name: 'Contact', href: '#contact' }
+  { name: 'Contact', href: '#contact' },
 ]
 
 const currentYear = computed(() => new Date().getFullYear())

@@ -1,63 +1,62 @@
-import { createApp } from 'vue'
 import { MotionPlugin } from '@vueuse/motion'
+import { createApp } from 'vue'
 import './style.css'
-import App from './App.vue'
-import router from './router'
 
 // Naive UI
 import {
   // create naive ui
   create,
+  NAffix,
+  NAlert,
+  NAvatar,
+  NBackTop,
+  NBadge,
   // component
   NButton,
   NCard,
-  NSpace,
-  NGrid,
-  NGridItem,
-  NGradientText,
-  NIcon,
-  NTag,
-  NDivider,
-  NStatistic,
-  NConfigProvider,
-  NProgress,
-  NTimeline,
-  NTimelineItem,
   NCarousel,
   NCarouselItem,
-  NAvatar,
-  NRate,
-  NCountdown,
-  NAlert,
-  NBadge,
-  NTooltip,
-  NDropdown,
-  NMenu,
-  NPopover,
-  NModal,
-  NDrawer,
-  NSteps,
-  NStep,
-  NResult,
-  NEmpty,
-  NSpin,
-  NBackTop,
-  NAffix,
   NCollapse,
   NCollapseItem,
-  NTabs,
-  NTabPane,
-  NList,
-  NListItem,
+  NConfigProvider,
+  NCountdown,
   NDescriptions,
   NDescriptionsItem,
+  NDivider,
+  NDrawer,
+  NDropdown,
+  NEmpty,
   NForm,
   NFormItem,
+  NGradientText,
+  NGrid,
+  NGridItem,
+  NIcon,
   NInput,
-  NSelect,
+  NList,
+  NListItem,
+  NMenu,
   NMessageProvider,
-  darkTheme
+  NModal,
+  NPopover,
+  NProgress,
+  NRate,
+  NResult,
+  NSelect,
+  NSpace,
+  NSpin,
+  NStatistic,
+  NStep,
+  NSteps,
+  NTabPane,
+  NTabs,
+  NTag,
+  NTimeline,
+  NTimelineItem,
+  NTooltip,
 } from 'naive-ui'
+import App from './App.vue'
+import router from './router'
 
 const naive = create({
   components: [
@@ -107,8 +106,8 @@ const naive = create({
     NFormItem,
     NInput,
     NSelect,
-    NMessageProvider
-  ]
+    NMessageProvider,
+  ],
 })
 
 const app = createApp(App)

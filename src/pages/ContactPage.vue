@@ -315,58 +315,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
-import { useMessage, createDiscreteApi } from 'naive-ui'
-import { 
-  EnvelopeIcon, 
-  RocketLaunchIcon,
-  ClockIcon,
+import {
   ChartBarIcon,
-  ChatBubbleLeftRightIcon,
-  CheckCircleIcon,
-  ShieldCheckIcon,
-  StarIcon,
   CodeBracketIcon,
-  DevicePhoneMobileIcon,
   CogIcon,
-  EllipsisHorizontalIcon
+  DevicePhoneMobileIcon,
+  EllipsisHorizontalIcon,
 } from '@heroicons/vue/24/outline'
+import { createDiscreteApi, useMessage } from 'naive-ui'
+import { h, ref } from 'vue'
 
 // Try to use the context message, fallback to discrete API if needed
 let message: ReturnType<typeof useMessage>
 try {
   message = useMessage()
-} catch (error) {
+} catch (_error) {
   const { message: discreteMessage } = createDiscreteApi(['message'])
   message = discreteMessage
 }
 
 const serviceOptions = [
-  { 
-    label: 'Web Application Development', 
+  {
+    label: 'Web Application Development',
     value: 'web-development',
-    icon: () => h(CodeBracketIcon)
+    icon: () => h(CodeBracketIcon),
   },
-  { 
-    label: 'Mobile App Development', 
+  {
+    label: 'Mobile App Development',
     value: 'mobile-app',
-    icon: () => h(DevicePhoneMobileIcon)
+    icon: () => h(DevicePhoneMobileIcon),
   },
-  { 
-    label: 'Custom Software Solutions', 
+  {
+    label: 'Custom Software Solutions',
     value: 'custom-software',
-    icon: () => h(CogIcon)
+    icon: () => h(CogIcon),
   },
-  { 
-    label: 'Digital Strategy & Consulting', 
+  {
+    label: 'Digital Strategy & Consulting',
     value: 'consulting',
-    icon: () => h(ChartBarIcon)
+    icon: () => h(ChartBarIcon),
   },
-  { 
-    label: 'Other / Not Sure', 
+  {
+    label: 'Other / Not Sure',
     value: 'other',
-    icon: () => h(EllipsisHorizontalIcon)
-  }
+    icon: () => h(EllipsisHorizontalIcon),
+  },
 ]
 
 const budgetOptions = [
@@ -375,7 +368,7 @@ const budgetOptions = [
   { label: '$25,000 - $50,000', value: '25k-50k' },
   { label: '$50,000 - $100,000', value: '50k-100k' },
   { label: '$100,000+', value: '100k+' },
-  { label: 'Not sure yet', value: 'unsure' }
+  { label: 'Not sure yet', value: 'unsure' },
 ]
 
 const timelineOptions = [
@@ -383,7 +376,7 @@ const timelineOptions = [
   { label: '1-2 Months', value: '1-2-months' },
   { label: '3-6 Months', value: '3-6-months' },
   { label: '6+ Months', value: '6-months-plus' },
-  { label: 'Just exploring options', value: 'exploring' }
+  { label: 'Just exploring options', value: 'exploring' },
 ]
 
 const form = ref({
@@ -395,7 +388,7 @@ const form = ref({
   service: '',
   budget: '',
   timeline: '',
-  message: ''
+  message: '',
 })
 
 const formRef = ref()
@@ -405,56 +398,60 @@ const rules = {
   firstName: {
     required: true,
     message: 'Please enter your first name',
-    trigger: ['input', 'blur']
+    trigger: ['input', 'blur'],
   },
   lastName: {
     required: true,
     message: 'Please enter your last name',
-    trigger: ['input', 'blur']
+    trigger: ['input', 'blur'],
   },
   email: [
     {
       required: true,
       message: 'Please enter your email',
-      trigger: ['input', 'blur']
+      trigger: ['input', 'blur'],
     },
     {
       type: 'email',
       message: 'Please enter a valid email',
-      trigger: ['input', 'blur']
-    }
+      trigger: ['input', 'blur'],
+    },
   ],
   service: {
     required: true,
     message: 'Please select a service',
-    trigger: ['change', 'blur']
+    trigger: ['change', 'blur'],
   },
   message: [
     {
       required: true,
       message: 'Please describe your project',
-      trigger: ['input', 'blur']
+      trigger: ['input', 'blur'],
     },
     {
       min: 10,
       message: 'Please provide more details (minimum 10 characters)',
-      trigger: ['input', 'blur']
-    }
-  ]
+      trigger: ['input', 'blur'],
+    },
+  ],
 }
 
-const renderServiceLabel = (option: any) => {
-  return h('span', { style: { display: 'flex', alignItems: 'center', gap: '8px' } }, [
-    option.icon?.(),
-    option.label
-  ])
+const renderServiceLabel = (option: {
+  icon?: () => any
+  label: string
+}) => {
+  return h(
+    'span',
+    { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+    [option.icon?.(), option.label],
+  )
 }
 
 const submitForm = async () => {
   try {
     await formRef.value?.validate()
     isSubmitting.value = true
-    
+
     // Create mailto link with form data
     const emailBody = `
 New Project Inquiry from Hudson Digital Solutions Website
@@ -466,9 +463,9 @@ Contact Information:
 - Company: ${form.value.company || 'Not provided'}
 
 Project Details:
-- Service: ${serviceOptions.find(s => s.value === form.value.service)?.label || form.value.service}
-- Budget: ${budgetOptions.find(b => b.value === form.value.budget)?.label || form.value.budget}
-- Timeline: ${timelineOptions.find(t => t.value === form.value.timeline)?.label || form.value.timeline}
+- Service: ${serviceOptions.find((s) => s.value === form.value.service)?.label || form.value.service}
+- Budget: ${budgetOptions.find((b) => b.value === form.value.budget)?.label || form.value.budget}
+- Timeline: ${timelineOptions.find((t) => t.value === form.value.timeline)?.label || form.value.timeline}
 
 Message:
 ${form.value.message}
@@ -480,15 +477,18 @@ Time: ${new Date().toLocaleString()}
 
     // Create and trigger mailto link
     const mailtoLink = `mailto:hello@hudsondigitalsolutions.com?subject=New Project Inquiry - ${form.value.firstName} ${form.value.lastName}&body=${encodeURIComponent(emailBody)}`
-    
+
     // Open email client
     window.location.href = mailtoLink
-    
+
     // Show success message
-    message.success('Email client opened! Please send the email to complete your inquiry.', {
-      duration: 6000
-    })
-    
+    message.success(
+      'Email client opened! Please send the email to complete your inquiry.',
+      {
+        duration: 6000,
+      },
+    )
+
     // Reset form after a delay
     setTimeout(() => {
       form.value = {
@@ -500,10 +500,9 @@ Time: ${new Date().toLocaleString()}
         service: '',
         budget: '',
         timeline: '',
-        message: ''
+        message: '',
       }
     }, 2000)
-    
   } catch (error) {
     console.error('Error submitting form:', error)
     message.error('Please check all required fields and try again.')
