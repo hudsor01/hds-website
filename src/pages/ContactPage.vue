@@ -323,7 +323,7 @@ import {
   EllipsisHorizontalIcon,
 } from '@heroicons/vue/24/outline'
 import { createDiscreteApi, useMessage } from 'naive-ui'
-import { h, ref } from 'vue'
+import { h, ref, type VNode } from 'vue'
 
 // Try to use the context message, fallback to discrete API if needed
 let message: ReturnType<typeof useMessage>
@@ -436,10 +436,7 @@ const rules = {
   ],
 }
 
-const renderServiceLabel = (option: {
-  icon?: () => any
-  label: string
-}) => {
+const renderServiceLabel = (option: { icon?: () => VNode; label: string }) => {
   return h(
     'span',
     { style: { display: 'flex', alignItems: 'center', gap: '8px' } },

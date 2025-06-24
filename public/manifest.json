@@ -1,0 +1,30 @@
+{
+  "name": "Hudson Digital Solutions",
+  "short_name": "Hudson Digital",
+  "description": "Premium web development and digital strategy services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#22d3ee",
+  "orientation": "portrait-primary",
+  "lang": "en-US",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/HDS-Logo.jpeg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "technology"],
+  "screenshots": [
+    {
+      "src": "/HDS-Logo.jpeg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Hudson Digital Solutions homepage"
+    }
+  ]
+}
