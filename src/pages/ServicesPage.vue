@@ -101,7 +101,7 @@
         </div>
         
         <n-grid cols="2 m:4" x-gap="0" y-gap="32" responsive="screen">
-          <n-grid-item v-for="(reason, index) in reasons" :key="reason.title">
+          <n-grid-item v-for="reason in reasons" :key="reason.title">
             <div class="text-center group cursor-pointer">
               <div class="text-5xl font-black text-secondary-400/40 mb-4 group-hover:text-secondary-400 group-hover:scale-105 transition-all duration-300 glow-cyan">
                 {{ reason.value }}

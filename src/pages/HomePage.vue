@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <main role="main">
     <!-- Hero Section - Bold & Masculine -->
-    <section class="relative min-h-screen bg-gradient-hero flex items-center overflow-hidden">
+    <section class="relative min-h-screen bg-gradient-hero flex items-center overflow-hidden" aria-label="Hero section">
       <!-- Power Grid Pattern -->
       <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
@@ -19,12 +19,14 @@
           <!-- Content -->
           <div>
             
-            <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight">
-              BUILD.
-              <br>
-              <span class="text-gradient-neon glow-cyan">DEPLOY.</span>
-              <br>
-              <span class="text-secondary-400">DOMINATE.</span>
+            <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight" id="main-heading">
+              <span aria-label="Build, Deploy, Dominate - Hudson Digital Solutions">
+                BUILD.
+                <br>
+                <span class="text-gradient-neon glow-cyan">DEPLOY.</span>
+                <br>
+                <span class="text-secondary-400">DOMINATE.</span>
+              </span>
             </h1>
             
             <p class="text-xl text-gray-300 mb-10 leading-relaxed max-w-xl">
@@ -317,7 +319,7 @@
         </n-icon>
       </n-card>
     </n-back-top>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">

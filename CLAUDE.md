@@ -76,7 +76,82 @@ The site follows an elevated card design system with floating elements and layer
 ## Development Notes
 
 1. **Type Definitions**: Currently empty `src/types/` directory - types should be centralized here per global instructions
-2. **Formatting**: Prettier configured for no semicolons, single quotes
+2. **Formatting**: Biome handles linting and formatting (replaced Prettier)
 3. **Port**: Dev server runs on port 5180 (not default 5173)
 4. **Animations**: Extensive custom Tailwind animations defined in config
 5. **Component Library**: Uses Naive UI - check their docs for component usage
+
+## Modern CLI Tools (Homebrew Installed)
+Use these faster, better alternatives to traditional commands:
+
+### Search & Find (ripgrep + fd + fzf)
+```bash
+rg "pattern" --glob "*.ts" --glob "*.tsx"   # Search code using ripgrep (faster than grep)
+rg "DialogContent" -A 2 -B 2                # Search with context lines
+rg -l "useState" src/                       # List files containing pattern
+fd "Modal.*tsx" src/                        # Find files by pattern (faster than find)
+fd -e tsx -e ts                             # Find TypeScript files
+fzf                                         # Interactive fuzzy finder
+fzf --preview="bat {}"                      # Fuzzy find with syntax-highlighted preview
+```
+
+### File Operations (bat + eza + zoxide)
+```bash
+bat filename.tsx                            # View files with syntax highlighting (better than cat)
+bat -n filename.tsx                         # Show line numbers
+eza -la --git                               # List files with Git status (modern ls)
+eza -T                                      # Tree view of directory
+z tenantflow                                # Smart directory jumping with zoxide
+z src                                       # Jump to frequently used directories
+```
+
+### Git Operations (delta + modern git tools)
+```bash
+git diff | delta                            # Enhanced Git diffs with syntax highlighting
+git log --oneline | delta                   # Better git log output
+git-ignore node                             # Generate .gitignore files
+git-lfs track "*.pdf"                       # Track large files with Git LFS
+git-secrets --scan                          # Scan for committed secrets
+```
+
+### GitHub CLI (gh)
+```bash
+gh repo view                                # View repository info
+gh pr list                                  # List pull requests
+gh pr create --title "Fix TypeScript errors" # Create PR
+gh issue list                               # List issues
+gh auth status                              # Check authentication status
+```
+
+### HTTP & API Testing (httpie)
+```bash
+http GET localhost:5173/api/health          # HTTPie for API testing (better than curl)
+http POST localhost:3000/api/users name=John # POST requests with JSON
+http --json POST localhost:3000/api/data @data.json # Send JSON file
+```
+
+### Command Correction (thefuck)
+```bash
+fuck                                        # Auto-correct last command
+npm run biuld                               # (typo)
+fuck                                        # Suggests: npm run build
+```
+
+### Text Processing & Analysis
+```bash
+tree-sitter parse filename.tsx              # Parse code with tree-sitter
+fftw-wisdom                                 # FFT optimization (if using audio/signal processing)
+```
+
+### Neovim Integration
+```bash
+nvim filename.tsx                           # Modern Vim with LSP support
+nvim +":Telescope find_files"               # Open with file finder
+```
+
+### Performance & Debugging
+```bash
+rg --stats "import.*react"                  # Search with performance stats
+fd --exec bat {}                            # Execute command on found files
+eza --long --header --git --time-style=long-iso # Detailed file listing
+```

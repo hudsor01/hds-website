@@ -55,6 +55,9 @@ import {
   NTimelineItem,
   NTooltip,
 } from 'naive-ui'
+import { initAccessibilityFeatures } from '@/utils/accessibility'
+// SEO and Performance utilities
+import { initPerformanceOptimizations } from '@/utils/performance'
 import App from './App.vue'
 import router from './router'
 
@@ -114,4 +117,12 @@ const app = createApp(App)
 app.use(router)
 app.use(MotionPlugin)
 app.use(naive)
+
+// Initialize optimizations after DOM is ready
 app.mount('#app')
+
+// Initialize performance and accessibility features
+window.addEventListener('DOMContentLoaded', () => {
+  initPerformanceOptimizations()
+  initAccessibilityFeatures()
+})
