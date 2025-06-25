@@ -1,5 +1,5 @@
 <template>
-  <main role="main">
+  <main role="main" id="main-content">
     <!-- Hero Section - Bold & Masculine -->
     <section class="relative min-h-screen bg-gradient-hero flex items-center overflow-hidden" aria-label="Hero section">
       <!-- Power Grid Pattern -->
@@ -20,13 +20,11 @@
           <div>
             
             <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight" id="main-heading">
-              <span aria-label="Build, Deploy, Dominate - Hudson Digital Solutions">
-                BUILD.
-                <br>
-                <span class="text-gradient-neon glow-cyan">DEPLOY.</span>
-                <br>
-                <span class="text-secondary-400">DOMINATE.</span>
-              </span>
+              BUILD.
+              <br>
+              <span class="text-gradient-neon glow-cyan">DEPLOY.</span>
+              <br>
+              <span class="text-secondary-400">DOMINATE.</span>
             </h1>
             
             <p class="text-xl text-gray-300 mb-10 leading-relaxed max-w-xl">
@@ -68,49 +66,53 @@
             </n-space>
             
             <!-- Power Metrics -->
-            <div class="mt-16">
-              <n-grid cols="3" x-gap="24" responsive="screen">
+            <section class="mt-16" aria-labelledby="metrics-heading">
+              <h2 id="metrics-heading" class="sr-only">Key Performance Metrics</h2>
+              <n-grid cols="3" x-gap="24" responsive="screen" role="group" aria-label="Hudson Digital Solutions key metrics">
                 <n-grid-item>
                   <div class="text-center">
-                    <div class="text-3xl font-black text-accent-400 mb-1 glow-green">200+</div>
+                    <div class="text-3xl font-black text-accent-400 mb-1 glow-green" aria-label="Over 200 projects deployed">200+</div>
                     <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Projects Deployed</div>
                   </div>
                 </n-grid-item>
                 <n-grid-item>
                   <div class="text-center">
-                    <div class="text-3xl font-black text-secondary-400 mb-1 glow-cyan">99.9%</div>
+                    <div class="text-3xl font-black text-secondary-400 mb-1 glow-cyan" aria-label="99.9 percent uptime rate">99.9%</div>
                     <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Uptime Rate</div>
                   </div>
                 </n-grid-item>
                 <n-grid-item>
                   <div class="text-center">
-                    <div class="text-3xl font-black text-warning-400 mb-1 glow-orange">24/7</div>
+                    <div class="text-3xl font-black text-warning-400 mb-1 glow-orange" aria-label="24 hours a day, 7 days a week availability">24/7</div>
                     <div class="text-sm text-primary-300 uppercase tracking-wide font-semibold">Battle Ready</div>
                   </div>
                 </n-grid-item>
               </n-grid>
-            </div>
+            </section>
           </div>
           
           <!-- Terminal Mockup -->
-          <div class="relative">
+          <aside class="relative" aria-labelledby="terminal-heading">
+            <h2 id="terminal-heading" class="sr-only">Deployment Terminal Example</h2>
             <n-card 
               class="shadow-2xl hover:shadow-secondary-500/30 transition-all duration-500 glass-morphism"
               style="background: rgba(9, 9, 11, 0.95); border: 1px solid rgba(34, 211, 238, 0.3);"
               :bordered="false"
+              role="img"
+              aria-label="Terminal showing successful deployment process with perfect performance scores"
             >
               <!-- Terminal Header -->
               <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-700">
-                <n-space size="small">
-                  <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <n-space size="small" role="group" aria-label="Terminal window controls">
+                  <div class="w-3 h-3 bg-red-500 rounded-full" aria-label="Close button"></div>
+                  <div class="w-3 h-3 bg-yellow-500 rounded-full" aria-label="Minimize button"></div>
+                  <div class="w-3 h-3 bg-green-500 rounded-full" aria-label="Maximize button"></div>
                 </n-space>
                 <div class="text-gray-400 text-sm font-mono">hudson-deploy.sh</div>
               </div>
               
               <!-- Terminal Content -->
-              <div class="font-mono text-sm space-y-2">
+              <div class="font-mono text-sm space-y-2" role="log" aria-label="Deployment console output">
                 <div class="text-accent-400">$ npm run deploy --production</div>
                 <div class="text-primary-200">✓ Build completed in 1.8s</div>
                 <div class="text-primary-200">✓ Tests passed (147/147)</div>
@@ -121,10 +123,10 @@
                 <div class="text-primary-400 mt-4">Performance: 100/100</div>
                 <div class="text-primary-400">Accessibility: 100/100</div>
                 <div class="text-primary-400">SEO: 98/100</div>
-                <div class="text-accent-400 animate-pulse mt-4 glow-green">$█</div>
+                <div class="text-accent-400 animate-pulse mt-4 glow-green" aria-label="Command prompt ready">$█</div>
               </div>
             </n-card>
-          </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -138,15 +140,15 @@
       </div>
       
       <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="text-center mb-16">
+        <header class="text-center mb-16">
           <h2 class="text-4xl font-black text-white mb-4 glow-cyan">Arsenal of Solutions</h2>
           <p class="text-xl text-gray-300 max-w-3xl mx-auto">
             Three core services. Maximum impact. Zero compromise.
           </p>
-        </div>
+        </header>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="align-items: stretch;">
-          <div class="flex flex-col h-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="align-items: stretch;" role="list" aria-label="Our core services">
+          <article class="flex flex-col h-full" role="listitem">
             <n-card 
               hoverable
               class="glass-morphism hover:shadow-xl hover:shadow-secondary-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
@@ -154,7 +156,7 @@
               style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(34, 211, 238, 0.2); height: 100%;"
             >
                 <div class="p-8 text-center h-full flex flex-col">
-                  <div class="w-16 h-16 bg-gradient-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-400/50 glow-cyan">
+                  <div class="w-16 h-16 bg-gradient-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-400/50 glow-cyan" role="img" aria-label="Web applications icon">
                     <n-icon size="32" color="white">
                       <CodeBracketIcon />
                     </n-icon>
@@ -164,13 +166,13 @@
                     Lightning-fast web applications that scale. Built with modern frameworks, optimized for performance.
                   </p>
                   <div class="mt-auto">
-                    <n-tag size="small" style="background: rgba(34, 211, 238, 0.2); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); backdrop-filter: blur(10px);">Frontend • Backend • Database</n-tag>
+                    <n-tag size="small" style="background: rgba(34, 211, 238, 0.2); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); backdrop-filter: blur(10px);" aria-label="Technologies: Frontend, Backend, Database">Frontend • Backend • Database</n-tag>
                   </div>
                 </div>
             </n-card>
-          </div>
+          </article>
           
-          <div class="flex flex-col h-full">
+          <article class="flex flex-col h-full" role="listitem">
             <n-card 
               hoverable
               class="glass-morphism hover:shadow-xl hover:shadow-accent-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
@@ -178,7 +180,7 @@
               style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(74, 222, 128, 0.2); height: 100%;"
             >
                 <div class="p-8 text-center h-full flex flex-col">
-                  <div class="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-400/50 glow-green">
+                  <div class="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-400/50 glow-green" role="img" aria-label="Custom solutions icon">
                     <n-icon size="32" color="white">
                       <CogIcon />
                     </n-icon>
@@ -188,13 +190,13 @@
                     Bespoke software tailored to your exact business needs. No templates, no shortcuts, just pure engineering.
                   </p>
                   <div class="mt-auto">
-                    <n-tag size="small" style="background: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); backdrop-filter: blur(10px);">APIs • Automation • Workflows</n-tag>
+                    <n-tag size="small" style="background: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); backdrop-filter: blur(10px);" aria-label="Technologies: APIs, Automation, Workflows">APIs • Automation • Workflows</n-tag>
                   </div>
                 </div>
             </n-card>
-          </div>
+          </article>
           
-          <div class="flex flex-col h-full">
+          <article class="flex flex-col h-full" role="listitem">
             <n-card 
               hoverable
               class="glass-morphism hover:shadow-xl hover:shadow-purple-400/30 hover:-translate-y-2 transition-all duration-300 flex-1 flex flex-col"
@@ -202,7 +204,7 @@
               style="background: rgba(9, 9, 11, 0.8); border: 1px solid rgba(192, 132, 252, 0.2); height: 100%;"
             >
                 <div class="p-8 text-center h-full flex flex-col">
-                  <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-400/50">
+                  <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-400/50" role="img" aria-label="Digital strategy icon">
                     <n-icon size="32" color="white">
                       <ChartBarIcon />
                     </n-icon>
@@ -212,11 +214,11 @@
                     Data-driven digital strategy that cuts through the noise. ROI-focused planning and execution.
                   </p>
                   <div class="mt-auto">
-                    <n-tag size="small" style="background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); backdrop-filter: blur(10px);">Data • Insights • Growth</n-tag>
+                    <n-tag size="small" style="background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); backdrop-filter: blur(10px);" aria-label="Focus areas: Data, Insights, Growth">Data • Insights • Growth</n-tag>
                   </div>
                 </div>
             </n-card>
-          </div>
+          </article>
         </div>
       </div>
     </section>
@@ -230,34 +232,34 @@
       </div>
       
       <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="text-center mb-16">
+        <header class="text-center mb-16">
           <h2 class="text-4xl font-black text-white mb-4 glow-cyan">Proven Results</h2>
           <p class="text-xl text-gray-300">
             The numbers speak louder than marketing fluff.
           </p>
-        </div>
+        </header>
         
-        <n-grid cols="2 m:4" x-gap="24" y-gap="24" responsive="screen">
+        <n-grid cols="2 m:4" x-gap="24" y-gap="24" responsive="screen" role="group" aria-label="Company performance statistics">
           <n-grid-item>
-            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-secondary-400/20 transition-all duration-300">
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-secondary-400/20 transition-all duration-300" role="img" aria-label="400 percent average traffic increase">
               <div class="text-5xl font-black text-secondary-400 mb-2 glow-cyan">400%</div>
               <div class="text-gray-300 font-medium">Average traffic increase</div>
             </div>
           </n-grid-item>
           <n-grid-item>
-            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-accent-400/20 transition-all duration-300">
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-accent-400/20 transition-all duration-300" role="img" aria-label="5.2 million dollars revenue generated">
               <div class="text-5xl font-black text-accent-400 mb-2 glow-green">$5.2M</div>
               <div class="text-gray-300 font-medium">Revenue generated</div>
             </div>
           </n-grid-item>
           <n-grid-item>
-            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-purple-400/20 transition-all duration-300">
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-purple-400/20 transition-all duration-300" role="img" aria-label="9 days average delivery time">
               <div class="text-5xl font-black text-purple-400 mb-2">9</div>
               <div class="text-gray-300 font-medium">Days average delivery</div>
             </div>
           </n-grid-item>
           <n-grid-item>
-            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-warning-400/20 transition-all duration-300">
+            <div class="text-center p-8 glass-light rounded-2xl hover:shadow-xl hover:shadow-warning-400/20 transition-all duration-300" role="img" aria-label="Zero failed launches">
               <div class="text-5xl font-black text-warning-400 mb-2 glow-orange">Zero</div>
               <div class="text-gray-300 font-medium">Failed launches</div>
             </div>
@@ -291,6 +293,7 @@
           style="background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%); color: white; border: none; padding: 20px 40px; font-size: 20px; height: auto; box-shadow: 0 4px 16px rgba(74, 222, 128, 0.25);"
           @click="$router.push('/contact')"
           class="hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-accent-500/30 glow-green"
+          aria-label="Get started with Hudson Digital Solutions - Launch your vision"
         >
           <template #icon>
             <n-icon>
@@ -307,14 +310,17 @@
       :right="40"
       :bottom="40"
       :visibility-height="300"
+      aria-label="Scroll back to top of page"
     >
       <n-card 
         size="small"
         class="shadow-lg"
         style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border: none; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(34, 211, 238, 0.25);"
         :bordered="false"
+        role="button"
+        tabindex="0"
       >
-        <n-icon size="20" color="white">
+        <n-icon size="20" color="white" aria-hidden="true">
           <ArrowUpIcon />
         </n-icon>
       </n-card>
@@ -323,5 +329,13 @@
 </template>
 
 <script setup lang="ts">
-
+import { 
+  ArrowUpIcon, 
+  ArrowRightIcon, 
+  RocketLaunchIcon, 
+  EyeIcon, 
+  CodeBracketIcon, 
+  CogIcon, 
+  ChartBarIcon 
+} from '@heroicons/vue/24/solid'
 </script>
