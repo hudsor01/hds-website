@@ -1,4 +1,5 @@
 // Performance optimization utilities
+import type { FIDEntry, CLSEntry } from '@/types/performance'
 
 // Lazy loading for images
 export function setupLazyLoading() {
@@ -50,19 +51,11 @@ export function addResourceHints() {
 }
 
 // Service Worker registration for caching
+// TODO: Implement service worker for production caching
 export function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('SW registered: ', registration)
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError)
-        })
-    })
-  }
+  // Service worker not yet implemented
+  // Remove this function or implement proper SW at /public/sw.js
+  console.log('Service worker registration disabled - not yet implemented')
 }
 
 // Web Vitals tracking
@@ -80,9 +73,8 @@ export function trackWebVitals() {
     // Track FID
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
-      entries.forEach((entry: PerformanceEntry) => {
-        // Type assertion for first-input entries which have processingStart
-        const fidEntry = entry as PerformanceEntry & { processingStart: number }
+      entries.forEach((entry) => {
+        const fidEntry = entry as FIDEntry
         console.log('FID:', fidEntry.processingStart - fidEntry.startTime)
       })
     }).observe({ entryTypes: ['first-input'] })
@@ -91,12 +83,8 @@ export function trackWebVitals() {
     new PerformanceObserver((entryList) => {
       let clsValue = 0
       const entries = entryList.getEntries()
-      entries.forEach((entry: PerformanceEntry) => {
-        // Type assertion for layout-shift entries which have hadRecentInput and value
-        const clsEntry = entry as PerformanceEntry & {
-          hadRecentInput: boolean
-          value: number
-        }
+      entries.forEach((entry) => {
+        const clsEntry = entry as CLSEntry
         if (!clsEntry.hadRecentInput) {
           clsValue += clsEntry.value
         }

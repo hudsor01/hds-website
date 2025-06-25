@@ -3,6 +3,7 @@ import AboutPage from '@/pages/AboutPage.vue'
 import ContactPage from '@/pages/ContactPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import ServicesPage from '@/pages/ServicesPage.vue'
+import NotFound from '@/pages/NotFound.vue'
 import { SEO_CONFIG, updateMetaTags } from '@/utils/seo'
 
 const router = createRouter({
@@ -43,7 +44,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      redirect: '/',
+      component: NotFound,
     },
   ],
   scrollBehavior(_, __, savedPosition) {

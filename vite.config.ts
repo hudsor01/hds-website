@@ -14,6 +14,26 @@ export default defineConfig({
       '@/types': path.resolve(__dirname, './src/types')
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue', 'vue-router'],
+          ui: ['naive-ui']
+        }
+      }
+    },
+    cssCodeSplit: true,
+    sourcemap: false,
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
+  },
   server: {
     port: 5180,
     host: true
