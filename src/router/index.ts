@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AboutPage from '@/pages/AboutPage.vue'
 import ContactPage from '@/pages/ContactPage.vue'
 import HomePage from '@/pages/HomePage.vue'
-import ServicesPage from '@/pages/ServicesPage.vue'
 import NotFound from '@/pages/NotFound.vue'
+import ServicesPage from '@/pages/ServicesPage.vue'
 import { SEO_CONFIG, updateMetaTags } from '@/utils/seo'
 
 const router = createRouter({

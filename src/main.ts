@@ -56,6 +56,7 @@ import {
   NTooltip,
 } from 'naive-ui'
 import { initAccessibilityFeatures } from '@/utils/accessibility'
+import { initCrawlingOptimizations } from '@/utils/crawling'
 // SEO and Performance utilities
 import { initPerformanceOptimizations } from '@/utils/performance'
 import App from './App.vue'
@@ -121,8 +122,9 @@ app.use(naive)
 // Initialize optimizations after DOM is ready
 app.mount('#app')
 
-// Initialize performance and accessibility features
+// Initialize performance, accessibility, and crawling features
 window.addEventListener('DOMContentLoaded', () => {
   initPerformanceOptimizations()
   initAccessibilityFeatures()
+  initCrawlingOptimizations()
 })

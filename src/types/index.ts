@@ -1,7 +1,8 @@
 // Central export for all type definitions
-export type * from './seo'
-export type * from './performance' 
+
 export type * from './accessibility'
+export type * from './performance'
+export type * from './seo'
 
 // Common utility types
 export interface BaseConfig {

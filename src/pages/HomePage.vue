@@ -329,13 +329,13 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  ArrowUpIcon, 
-  ArrowRightIcon, 
-  RocketLaunchIcon, 
-  EyeIcon, 
-  CodeBracketIcon, 
-  CogIcon, 
-  ChartBarIcon 
+import {
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ChartBarIcon,
+  CodeBracketIcon,
+  CogIcon,
+  EyeIcon,
+  RocketLaunchIcon,
 } from '@heroicons/vue/24/solid'
 </script>
