@@ -48,6 +48,24 @@ export function updateMetaTags(meta: SEOMetaData) {
   }
 }
 
+// Add breadcrumb structured data
+export function addBreadcrumbStructuredData(
+  breadcrumbs: Array<{ name: string; url: string }>,
+) {
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }
+
+  updateStructuredData(breadcrumbSchema)
+}
+
 function updateMetaTag(name: string, content: string) {
   let element = document.querySelector(
     `meta[name="${name}"]`,

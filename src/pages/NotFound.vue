@@ -95,21 +95,26 @@
 </template>
 
 <script setup lang="ts">
-import { HomeIcon, ChatBubbleLeftRightIcon } from '@heroicons/vue/24/solid'
+import { ChatBubbleLeftRightIcon, HomeIcon } from '@heroicons/vue/24/solid'
 import { onMounted } from 'vue'
 
 // SEO for 404 page
 onMounted(() => {
   document.title = '404 - Page Not Found | Hudson Digital Solutions'
-  
+
   // Update meta description
   const metaDescription = document.querySelector('meta[name="description"]')
   if (metaDescription) {
-    metaDescription.setAttribute('content', 'Page not found. Return to Hudson Digital Solutions for premium web development and digital strategy services.')
+    metaDescription.setAttribute(
+      'content',
+      'Page not found. Return to Hudson Digital Solutions for premium web development and digital strategy services.',
+    )
   }
-  
+
   // Add noindex to prevent 404 pages from being indexed
-  const robotsMeta = document.querySelector('meta[name="robots"]') || document.createElement('meta')
+  const robotsMeta =
+    document.querySelector('meta[name="robots"]') ||
+    document.createElement('meta')
   robotsMeta.setAttribute('name', 'robots')
   robotsMeta.setAttribute('content', 'noindex, nofollow')
   if (!document.querySelector('meta[name="robots"]')) {

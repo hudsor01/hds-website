@@ -1,5 +1,5 @@
 // Performance optimization utilities
-import type { FIDEntry, CLSEntry } from '@/types/performance'
+import type { CLSEntry, FIDEntry } from '@/types/performance'
 
 // Lazy loading for images
 export function setupLazyLoading() {
