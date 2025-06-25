@@ -20,7 +20,6 @@ export default defineConfig({
         manualChunks: {
           'vendor': ['vue', 'vue-router'],
           'naive-ui': ['naive-ui'],
-          'icons': ['@heroicons/vue'],
           'motion': ['@vueuse/motion']
         }
       }
