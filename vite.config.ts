@@ -40,7 +40,7 @@ export default defineConfig({
         safari10: true
       }
     },
-    chunkSizeWarningLimit: 300
+    chunkSizeWarningLimit: 500
   },
   server: {
     port: 5180,
