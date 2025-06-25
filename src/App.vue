@@ -2,7 +2,7 @@
   <div id="app">
     <n-message-provider>
       <Navbar />
-      <main>
+      <main id="main-content">
         <router-view />
       </main>
       <Footer />

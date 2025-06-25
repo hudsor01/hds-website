@@ -1,16 +1,5 @@
 // SEO utilities for dynamic meta tag management
-
-export interface SEOMetaData {
-  title: string
-  description: string
-  keywords?: string
-  ogTitle?: string
-  ogDescription?: string
-  ogImage?: string
-  canonical?: string
-  noindex?: boolean
-  structuredData?: object
-}
+import type { SEOMetaData } from '@/types/seo'
 
 export function updateMetaTags(meta: SEOMetaData) {
   // Update document title

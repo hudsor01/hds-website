@@ -1,5 +1,5 @@
 <template>
-  <main role="main" id="main-content">
+  <div>
     <!-- Hero Section - Bold & Masculine -->
     <section class="relative min-h-screen bg-gradient-hero flex items-center overflow-hidden" aria-label="Hero section">
       <!-- Power Grid Pattern -->
@@ -325,7 +325,7 @@
         </n-icon>
       </n-card>
     </n-back-top>
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">

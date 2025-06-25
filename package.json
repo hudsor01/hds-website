@@ -31,6 +31,7 @@
     "vue-tsc": "^2.2.10"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.5"
+    "@biomejs/biome": "^2.0.5",
+    "terser": "^5.43.1"
   }
 }
