@@ -2,16 +2,26 @@ import { MotionPlugin } from '@vueuse/motion'
 import { createApp } from 'vue'
 import './style.css'
 
-// Naive UI - Core components only (others loaded on demand)
+// Naive UI - Essential components for app functionality
 import {
   create,
+  NAvatar,
+  NBackTop,
   NButton,
   NCard,
   NConfigProvider,
+  NDivider,
+  NDrawer,
+  NDrawerContent,
+  NForm,
+  NFormItem,
   NGradientText,
   NGrid,
   NGridItem,
   NIcon,
+  NInput,
+  NMessageProvider,
+  NSelect,
   NSpace,
   NTag,
 } from 'naive-ui'
@@ -22,16 +32,26 @@ import { initPerformanceOptimizations } from '@/utils/performance'
 import App from './App.vue'
 import router from './router'
 
-// Core Naive UI components
+// Essential Naive UI components for app functionality
 const naive = create({
   components: [
+    NAvatar,
+    NBackTop,
     NButton,
     NCard,
     NConfigProvider,
+    NDivider,
+    NDrawer,
+    NDrawerContent,
+    NForm,
+    NFormItem,
     NGradientText,
     NGrid,
     NGridItem,
     NIcon,
+    NInput,
+    NMessageProvider,
+    NSelect,
     NSpace,
     NTag,
   ],
