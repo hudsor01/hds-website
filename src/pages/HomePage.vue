@@ -338,4 +338,7 @@ import {
   EyeIcon,
   RocketLaunchIcon,
 } from '@heroicons/vue/24/solid'
+import { updateMetaTags, SEO_CONFIG } from '@/utils/seo'
+
+updateMetaTags(SEO_CONFIG.home)
 </script>

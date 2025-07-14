@@ -172,6 +172,10 @@
 </template>
 
 <script setup lang="ts">
+import { updateMetaTags, SEO_CONFIG } from '@/utils/seo'
+
+updateMetaTags(SEO_CONFIG.services)
+
 const services = [
   {
     title: 'WEB APPS',
