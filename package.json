@@ -16,22 +16,22 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/postcss": "^4.1.10",
-    "@tailwindcss/vite": "^4.1.10",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
     "@vicons/ionicons5": "^0.13.0",
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6.0.0",
     "@vueuse/motion": "^3.0.3",
     "naive-ui": "^2.42.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.10",
+    "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.4",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "^3.0.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.5",
+    "@biomejs/biome": "^2.1.1",
     "terser": "^5.43.1"
   }
 }
