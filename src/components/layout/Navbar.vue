@@ -1,27 +1,27 @@
 <template>
-  <nav class="bg-black/90 backdrop-blur-xl border-b border-cyan-500/20 sticky top-0 z-50 transition-all duration-300">
+  <nav class="bg-gradient-to-r from-black via-gray-900 to-black/90 shadow-xl border-b-4 border-cyan-400 sticky top-0 z-50 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-      <div class="flex items-center h-14 relative">
+      <div class="flex items-center h-16 relative">
         <!-- Brand Text -->
-        <router-link to="/" class="group">
-          <div class="text-lg font-bold text-gradient-secondary group-hover:scale-105 transition-transform duration-200">
+        <router-link to="/" class="group flex items-center">
+          <div class="text-2xl font-extrabold uppercase tracking-widest text-cyan-400 drop-shadow-lg group-hover:scale-110 transition-transform duration-200">
             Hudson Digital
           </div>
         </router-link>
         
         <!-- Centered Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+        <div class="hidden md:flex items-center space-x-8 absolute left-1/2 transform -translate-x-1/2">
           <router-link 
             v-for="item in navigation" 
             :key="item.href"
             :to="item.href"
-            class="text-gray-300 hover:text-secondary-400 font-medium text-sm transition-colors duration-200 relative group"
-            :class="{ 'text-secondary-400': $route.path === item.href }"
+            class="text-lg font-bold uppercase tracking-wide text-white hover:text-cyan-400 px-2 py-1 rounded transition-colors duration-200 relative group"
+            :class="{ 'text-cyan-400': $route.path === item.href }"
           >
             {{ item.name }}
             <span 
               v-if="$route.path === item.href"
-              class="absolute -bottom-1 left-0 w-full h-0.5 bg-secondary-400 rounded-full glow-cyan"
+              class="absolute -bottom-1 left-0 w-full h-1 bg-cyan-400 rounded-full shadow-cyan-400/40"
             ></span>
           </router-link>
         </div>
@@ -30,15 +30,15 @@
         <div class="hidden md:block ml-auto">
           <n-button 
             type="primary"
-            size="medium"
+            size="large"
             strong
-            style="background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); color: white; border: none; padding: 8px 16px; font-size: 14px; font-weight: 600; border-radius: 8px; box-shadow: 0 2px 8px rgba(34, 211, 238, 0.15);"
+            style="background: linear-gradient(90deg, #22d3ee 0%, #0891b2 100%); color: white; border: none; padding: 12px 32px; font-size: 1rem; font-weight: 800; border-radius: 9999px; box-shadow: 0 4px 24px 0 rgba(34, 211, 238, 0.25); letter-spacing: 0.05em;"
             @click="$router.push('/contact')"
-            class="hover:scale-105 hover:shadow-lg hover:shadow-secondary-400/20 transition-all duration-300"
+            class="hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/40 transition-all duration-300"
           >
             <template #icon>
-              <n-icon size="16">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+              <n-icon size="18">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </n-icon>
@@ -124,22 +124,34 @@
   </nav>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-const mobileMenuOpen = ref(false)
+export default defineComponent({
+  name: 'Navbar',
+  setup() {
+    const router = useRouter()
+    const mobileMenuOpen = ref(false)
 
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Services', href: '/services' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-]
+    const navigation = [
+      { name: 'Home', href: '/' },
+      { name: 'Services', href: '/services' },
+      { name: 'About', href: '/about' },
+      { name: 'Contact', href: '/contact' },
+    ]
 
-const handleContactClick = () => {
-  router.push('/contact')
-  mobileMenuOpen.value = false
-}
+    const handleContactClick = () => {
+      router.push('/contact')
+      mobileMenuOpen.value = false
+    }
+
+    return {
+      router,
+      mobileMenuOpen,
+      navigation,
+      handleContactClick,
+    }
+  },
+})
 </script>

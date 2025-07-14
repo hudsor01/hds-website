@@ -370,5 +370,7 @@
 </template>
 
 <script setup lang="ts">
+import { updateMetaTags, SEO_CONFIG } from '@/utils/seo'
 
+updateMetaTags(SEO_CONFIG.about)
 </script>
