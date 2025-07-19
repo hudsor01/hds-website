@@ -44,3 +44,26 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Test files
+test-*.html
+test-*.ts
+test-*.js
+*-test-suite.ts
+*-test-report.*
+*-test-summary.md
+
+# Visual test screenshots
+visual-test-screenshots/
+
+# Manual testing guides
+manual-testing-guide.md
+
+# Log files
+*.log
+dev-server.log
+
+# Temporary files
+tmp/
+temp/
+.tmp/

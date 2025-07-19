@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -28,8 +29,10 @@
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.31.0",
     "eslint-config-next": "15.4.1",
+    "husky": "^9.1.7",
     "playwright": "^1.54.1",
     "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "webpack-bundle-analyzer": "^4.10.2"
   }

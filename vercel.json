@@ -1,4 +1,6 @@
 {
+  "framework": "nextjs",
+  "buildCommand": "next build",
   "functions": {
     "src/app/api/contact/route.ts": {
       "maxDuration": 10
@@ -37,15 +39,5 @@
   ],
   "cleanUrls": true,
   "trailingSlash": false,
-  "regions": ["iad1"],
-  "crons": [
-    {
-      "path": "/api/cron/process-email-queue",
-      "schedule": "*/5 * * * *"
-    },
-    {
-      "path": "/api/cron/update-sitemap",
-      "schedule": "0 2 * * *"
-    }
-  ]
+  "regions": ["iad1"]
 }

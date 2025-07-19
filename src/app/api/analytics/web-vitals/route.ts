@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { securityMiddleware, validateRequestBody } from '@/middleware/security';
 
 interface WebVital {
   id: string;
@@ -10,17 +11,40 @@ interface WebVital {
   navigationType: string;
 }
 
+// Validation schema for web vitals
+const webVitalSchema = {
+  id: { required: true, type: 'string' as const, max: 100 },
+  name: { 
+    required: true, 
+    type: 'string' as const,
+    pattern: /^(FCP|LCP|CLS|FID|TTFB|INP)$/
+  },
+  value: { required: true, type: 'number' as const, min: 0 },
+  rating: { 
+    required: true, 
+    type: 'string' as const,
+    pattern: /^(good|needs-improvement|poor)$/
+  },
+  delta: { required: true, type: 'number' as const },
+  navigationType: { required: true, type: 'string' as const, max: 50 }
+};
+
 export async function POST(request: NextRequest) {
-  try {
-    const metric: WebVital = await request.json();
-    
-    // Validate metric data
-    if (!metric.name || typeof metric.value !== 'number') {
-      return NextResponse.json(
-        { error: 'Invalid metric data' },
-        { status: 400 }
-      );
-    }
+  return securityMiddleware(request, async (req) => {
+    try {
+      const body = await req.json();
+      
+      // Validate metric data
+      const validation = validateRequestBody<WebVital>(body, webVitalSchema);
+      
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: 'Invalid metric data', details: validation.errors },
+          { status: 400 }
+        );
+      }
+      
+      const metric = validation.data!;
 
     // Log metric for monitoring
     if (process.env.NODE_ENV === "development" && process.env.DEBUG_WEB_VITALS) {
@@ -47,13 +71,14 @@ export async function POST(request: NextRequest) {
     await storeMetric(metric, request);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Web vitals logging error:', error);
-    return NextResponse.json(
-      { error: 'Failed to log metric' },
-      { status: 500 }
-    );
-  }
+    } catch (error) {
+      console.error('Web vitals logging error:', error);
+      return NextResponse.json(
+        { error: 'Failed to log metric' },
+        { status: 500 }
+      );
+    }
+  });
 }
 
 async function sendToGA4(metric: WebVital, request: NextRequest) {
