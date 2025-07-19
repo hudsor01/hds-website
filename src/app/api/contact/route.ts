@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { scheduleEmailSequence } from '@/lib/email-sequences';
+import { 
+  securityMiddleware, 
+  validateRequestBody, 
+  validateEmail,
+  validatePhone,
+  sanitizeInput 
+} from '@/middleware/security';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -16,33 +23,87 @@ interface ContactFormData {
   message: string;
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const data: ContactFormData = await request.json();
-    
-    // Validate required fields
-    if (!data.firstName || !data.lastName || !data.email || !data.message) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
+// Define validation schema
+const contactFormSchema = {
+  firstName: { 
+    required: true, 
+    type: 'string' as const, 
+    min: 1, 
+    max: 50,
+    pattern: /^[a-zA-Z\s\-']+$/
+  },
+  lastName: { 
+    required: true, 
+    type: 'string' as const, 
+    min: 1, 
+    max: 50,
+    pattern: /^[a-zA-Z\s\-']+$/
+  },
+  email: { 
+    required: true, 
+    type: 'string' as const,
+    validator: (value: unknown) => typeof value === 'string' && validateEmail(value)
+  },
+  phone: { 
+    required: false, 
+    type: 'string' as const,
+    validator: (value: unknown) => !value || (typeof value === 'string' && validatePhone(value))
+  },
+  company: { 
+    required: false, 
+    type: 'string' as const, 
+    max: 100
+  },
+  service: { 
+    required: false, 
+    type: 'string' as const,
+    pattern: /^[a-zA-Z0-9\s\-,&]+$/
+  },
+  budget: { 
+    required: false, 
+    type: 'string' as const,
+    pattern: /^[\$\d\s\-\+kKmM]+$/
+  },
+  timeline: { 
+    required: false, 
+    type: 'string' as const,
+    max: 100
+  },
+  message: { 
+    required: true, 
+    type: 'string' as const, 
+    min: 10, 
+    max: 5000
+  }
+};
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+export async function POST(request: NextRequest) {
+  return securityMiddleware(request, async (req) => {
+    try {
+      const body = await req.json();
+      
+      // Validate request body
+      const validation = validateRequestBody<ContactFormData>(body, contactFormSchema);
+      
+      if (!validation.valid) {
+        // Log detailed errors for debugging
+        console.error('Validation errors:', validation.errors);
+        
+        // Return generic message in production
+        return NextResponse.json(
+          { error: 'Please check your input and try again' },
+          { status: 400 }
+        );
+      }
+      
+      const data = validation.data!;
 
     // Check if Resend is configured
     if (!resend) {
       console.error('Resend API key not configured');
       return NextResponse.json(
-        { error: 'Email service not configured' },
-        { status: 500 }
+        { error: 'Service temporarily unavailable. Please try again later.' },
+        { status: 503 }
       );
     }
 
@@ -113,7 +174,7 @@ export async function POST(request: NextRequest) {
           <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
             <h2 style="color: #0891b2; margin-top: 0; font-size: 20px; border-bottom: 2px solid #22d3ee; padding-bottom: 10px;">Message</h2>
             <div style="background: #f1f5f9; padding: 20px; border-radius: 6px; border-left: 4px solid #22d3ee;">
-              <p style="margin: 0; color: #475569; line-height: 1.6;">${data.message}</p>
+              <p style="margin: 0; color: #475569; line-height: 1.6; white-space: pre-wrap;">${sanitizeInput(data.message)}</p>
             </div>
           </div>
 
@@ -233,11 +294,12 @@ export async function POST(request: NextRequest) {
       message: 'Your message has been sent successfully!' 
     });
 
-  } catch (error) {
-    console.error('Contact form error:', error);
-    return NextResponse.json(
-      { error: 'Failed to send message. Please try again.' },
-      { status: 500 }
-    );
-  }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      return NextResponse.json(
+        { error: 'Failed to send message. Please try again.' },
+        { status: 500 }
+      );
+    }
+  });
 }
