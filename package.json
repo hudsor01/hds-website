@@ -1,37 +1,36 @@
 {
-  "name": "business-website",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
+  "name": "hds-website",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "typecheck": "vue-tsc --noEmit"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/vue": "^2.2.0",
-    "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@tailwindcss/vite": "^4.1.11",
-    "@vicons/ionicons5": "^0.13.0",
-    "@vitejs/plugin-vue": "^6.0.0",
-    "@vueuse/motion": "^3.0.3",
-    "naive-ui": "^2.42.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11",
-    "typescript": "^5.8.3",
-    "vite": "^7.0.4",
-    "vue": "^3.5.17",
-    "vue-router": "^4.5.1",
-    "vue-tsc": "^3.0.1"
+    "@heroicons/react": "^2.2.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tryghost/content-api": "^1.11.28",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
+    "next": "15.4.1",
+    "posthog-js": "^1.257.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "resend": "^4.6.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.1",
-    "terser": "^5.43.1"
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^24.0.13",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.31.0",
+    "eslint-config-next": "15.4.1",
+    "playwright": "^1.54.1",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

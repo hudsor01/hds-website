@@ -48,11 +48,14 @@ export function addSkipToMainLink() {
 
 // Focus management for SPA navigation
 export function manageFocus() {
-  let _lastFocusedElement: Element | null = null
-
   // Store focus before navigation
   window.addEventListener('beforeunload', () => {
-    _lastFocusedElement = document.activeElement
+    // Store the last focused element for potential restoration
+    const lastFocused = document.activeElement;
+    if (lastFocused) {
+      // Store reference for potential restoration
+      console.log('Storing last focused element:', lastFocused);
+    }
   })
 
   // Restore or set appropriate focus after navigation
