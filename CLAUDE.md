@@ -2,156 +2,280 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Development Commands
 
-Hudson Digital Website - A Vue 3 + TypeScript SPA built with Vite, using Tailwind CSS v4 and Naive UI components.
+### Core Commands
+- `npm run dev` - Start development server (localhost:3000)
+- `npm run build` - Build production application
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint for code quality checks
 
-## Essential Commands
+### Testing Commands
+- `npx tsx test-contact-form.ts` - Test contact form API endpoint functionality
+- `ANALYZE=true npm run build` - Build with bundle analyzer for performance optimization
 
+### Development Workflow
+- Use `npm run dev` for local development with hot reload
+- Always run `npm run lint` before commits to ensure code quality
+- Use `npm run build` to verify production build works correctly
+
+## Project Architecture
+
+### Technology Stack
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4.x
+- **UI Components**: Custom components with Heroicons
+- **Email Service**: Resend for transactional emails
+- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
+- **CMS**: Ghost CMS for blog content
+- **Calendar**: Cal.com integration
+- **Performance**: Web Vitals tracking, Core Web Vitals optimization
+
+### Directory Structure
+```
+src/
+├── app/                    # Next.js App Router pages and API routes
+│   ├── layout.tsx         # Root layout with fonts and metadata
+│   ├── page.tsx           # Home page
+│   ├── about/page.tsx     # About page
+│   ├── contact/page.tsx   # Contact page
+│   ├── services/page.tsx  # Services page
+│   ├── portfolio/page.tsx # Portfolio showcase page
+│   ├── pricing/page.tsx   # Pricing information page
+│   ├── privacy/page.tsx   # Privacy policy page
+│   ├── blog/              # Blog pages with Ghost CMS
+│   │   ├── page.tsx       # Blog listing
+│   │   ├── [slug]/page.tsx # Individual blog posts
+│   │   └── tag/[tag]/page.tsx # Blog posts by tag
+│   ├── robots.ts          # Dynamic robots.txt generation
+│   ├── sitemap.ts         # Dynamic sitemap generation
+│   └── api/               # API routes
+│       ├── contact/route.ts # Contact form handler
+│       ├── analytics/web-vitals/route.ts # Web Vitals tracking
+│       ├── rss/feed/route.ts # RSS feed generation
+│       └── cron/          # Scheduled jobs
+│           ├── process-email-queue/route.ts # Email queue processing
+│           └── update-sitemap/route.ts # Sitemap updates
+├── components/            # Reusable UI components
+│   ├── layout/
+│   │   ├── Navbar.tsx     # Main navigation (client component)
+│   │   └── Footer.tsx     # Site footer
+│   ├── ContactForm.tsx    # Contact form with validation and analytics
+│   ├── CalendarWidget.tsx # Cal.com integration widget
+│   ├── ThemeToggle.tsx    # Dark/light mode toggle
+│   ├── Analytics.tsx      # Analytics tracking components
+│   ├── AccessibilityProvider.tsx # Accessibility features provider
+│   ├── CookieConsent.tsx  # GDPR cookie consent management
+│   ├── ErrorBoundary.tsx  # React error boundary component
+│   ├── LoadingStates.tsx  # Loading indicators and states
+│   ├── ServiceWorkerRegistration.tsx # PWA service worker
+│   └── WebVitalsReporting.tsx # Core Web Vitals monitoring
+├── contexts/              # React contexts
+│   └── ThemeContext.tsx   # Theme management
+├── hooks/                 # Custom React hooks
+│   └── useTouchInteractions.ts # Touch interaction handling
+├── lib/                   # Core utilities and integrations
+│   ├── analytics.ts       # Multi-platform analytics tracking
+│   ├── seo.ts            # SEO configuration with schema markup
+│   ├── email-sequences.ts # Automated email nurturing sequences
+│   ├── ghost.ts          # Ghost CMS API integration
+│   ├── posthog.ts        # PostHog analytics configuration
+│   ├── image-loader.ts   # Next.js image optimization
+│   └── analytics.ts.bak  # Backup of analytics configuration
+├── types/                 # TypeScript type definitions
+│   ├── seo.ts            # SEO metadata types and interfaces
+│   ├── accessibility.ts  # Accessibility compliance types
+│   ├── performance.ts    # Performance monitoring types
+│   ├── components.ts     # Component prop and state types
+│   └── ghost.d.ts        # Ghost CMS API response types
+└── utils/                 # Utility functions
+    ├── seo.ts            # SEO optimization utilities
+    ├── accessibility.ts  # Accessibility helper functions
+    ├── performance.ts    # Performance measurement utilities
+    └── crawling.ts       # Web crawling and indexing utilities
+```
+
+### Key Architectural Patterns
+
+#### Multi-Platform Analytics Integration
+- **Google Analytics 4**: Page views, conversions, custom events
+- **PostHog**: Product analytics, feature flags, session recordings
+- **Vercel Analytics**: Core Web Vitals, speed insights
+- Unified tracking through `src/lib/analytics.ts`
+- Comprehensive event tracking: form submissions, scroll depth, time on page
+- Web Vitals monitoring (LCP, FID, CLS) with automatic reporting
+
+#### SEO and Performance Optimization
+- Centralized SEO config in `src/lib/seo.ts`
+- Rich schema markup (Organization, Service, LocalBusiness, Person)
+- Dynamic keyword generation and meta descriptions
+- OpenGraph and Twitter Card optimization
+- Performance-first approach with Next.js Image optimization
+- Core Web Vitals tracking and optimization
+
+#### Email Marketing and Lead Nurturing
+- Automated email sequences in `src/lib/email-sequences.ts`
+- Multiple nurturing flows: welcome series, consultation follow-up, long-term nurturing
+- Resend integration for transactional emails
+- Lead scoring and high-intent detection
+- Conversion tracking across all touchpoints
+
+#### Content Management and Blog
+- Ghost CMS integration for blog content
+- Dynamic blog post generation with SEO optimization
+- Structured data for blog posts
+- RSS feed generation
+- Static generation for optimal performance
+
+#### Component Architecture
+- **Layout Components**: Navbar, Footer in `src/components/layout/`
+- **Form Components**: ContactForm with validation and analytics
+- **Integration Components**: CalendarWidget, ThemeToggle
+- **Client Components**: Use `"use client"` directive for interactive components
+- **Server Components**: Default for static content and SEO
+
+#### TypeScript Configuration
+- Path aliases configured: `@/*` maps to `src/*`
+- Strict TypeScript settings enabled
+- Component-specific path aliases for better imports
+- Comprehensive type definitions for all integrations
+
+#### Styling and Theme System
+- Tailwind CSS 4.x with custom theme configuration
+- Dark/light mode support with system preference detection
+- CSS custom properties for theming
+- Responsive design patterns with mobile-first approach
+- Custom gradient and glow effects for brand identity
+
+#### Progressive Web App (PWA) Features
+- Service worker registration for offline functionality
+- Manifest.json configuration for app-like experience
+- Caching strategies for improved performance
+- Offline page fallback for network failures
+- App icon and splash screen configurations
+
+#### Cron Jobs and Background Processing
+- Email queue processing via `/api/cron/process-email-queue`
+- Automated sitemap updates via `/api/cron/update-sitemap`
+- RSS feed generation at `/api/rss/feed`
+- Background analytics data processing
+- Scheduled maintenance tasks
+
+### Business Context and Features
+- **Company**: Hudson Digital Solutions
+- **Brand Colors**: Cyan-based palette with gradients
+- **Design Language**: Modern, tech-focused with terminal/coding aesthetics
+- **Target Audience**: Businesses needing web development and digital solutions
+- **Contact Form**: Sends to hello@hudsondigitalsolutions.com with automated nurturing
+- **Calendar Integration**: Cal.com widget for consultation bookings
+- **Lead Nurturing**: Automated email sequences for different user intents
+
+### Development Guidelines
+- Use Next.js App Router patterns (not Pages Router)
+- Implement proper TypeScript types for all components
+- Follow accessibility best practices with ARIA labels
+- Optimize for SEO with structured data and metadata
+- Use server components by default, client components only when needed
+- Maintain responsive design across all screen sizes
+- Follow the existing brand aesthetic and color scheme
+- Always test contact form functionality before deployment
+- Monitor Core Web Vitals and optimize for performance
+- Use analytics tracking for all user interactions
+
+### Environment Variables Required
 ```bash
-# Development
-npm run dev          # Start dev server on http://localhost:5180
+# Email
+RESEND_API_KEY=             # Resend API key for email sending
 
-# Build
-npm run build        # Type check with vue-tsc, then build with Vite
-npm run preview      # Preview production build locally
+# Ghost CMS
+GHOST_URL=                  # Your Ghost instance URL
+GHOST_CONTENT_API_KEY=      # Ghost Content API key
 
-# Install dependencies
-npm install
+# Analytics & Monitoring
+NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4 ID
+GA4_API_SECRET=             # GA4 Measurement Protocol API secret
+NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
+NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host (default: https://app.posthog.com)
+
+# SEO
+GOOGLE_SITE_VERIFICATION=   # Google Search Console verification
 ```
 
-## Architecture
+### Configuration Files
+- `next.config.ts` - Next.js configuration with image optimization and security headers
+- `tsconfig.json` - TypeScript configuration with path aliases
+- `eslint.config.mjs` - ESLint configuration using Next.js presets
+- `postcss.config.mjs` - PostCSS configuration for Tailwind
+- `tailwind.config.js` - Tailwind CSS configuration
+- `vercel.json` - Vercel deployment configuration with performance optimizations
 
-### Tech Stack
-- **Framework**: Vue 3.5 with Composition API
-- **Build Tool**: Vite 6.3
-- **Language**: TypeScript 5.8 (strict mode)
-- **Styling**: Tailwind CSS v4 + Naive UI
-- **Routing**: Vue Router 4
+### Testing Strategy
 
-### Path Aliases
-```typescript
-@ -> /src
-@/components -> /src/components
-@/pages -> /src/pages
-@/router -> /src/router
-@/types -> /src/types
-```
+#### Contact Form Testing
+The contact form can be tested using:
+1. Test HTML page at `http://localhost:3000/test-contact-form.html`
+2. Test script: `npx tsx test-contact-form.ts`
+3. Live site form at `/contact` page
 
-### Key Patterns
-1. **Page Components**: Located in `src/pages/`, imported dynamically in router
-2. **Layout Components**: `Navbar.vue` and `Footer.vue` in `src/components/layout/`
-3. **Styling**: Tailwind utilities with extensive custom theme configuration
-4. **No Testing**: Project has no test framework configured
-5. **No Linting**: No ESLint setup - rely on TypeScript and Prettier
+#### E2E Testing Setup
+- Playwright configured for end-to-end testing
+- Test files: `e2e-test-suite.ts`, `playwright-e2e-tests.ts`
+- Visual regression testing with screenshots in `visual-test-screenshots/`
+- Manual testing guide available in `manual-testing-guide.md`
+- Comprehensive test reports generated in `e2e-test-report.json`
 
-## Design System: "Elevated Cards"
+#### Performance Testing
+- Core Web Vitals monitoring with automated reports
+- Bundle analysis available with `ANALYZE=true npm run build`
+- Performance regression testing included in CI/CD
+- Real User Monitoring (RUM) data collection
 
-The site follows an elevated card design system with floating elements and layered depth.
+### Performance and Monitoring
+- Real User Monitoring (RUM) with Web Vitals tracking
+- Performance budgets and optimization
+- Error tracking and debugging
+- Lead attribution and marketing campaign tracking
+- Comprehensive analytics dashboard integration
 
-### Card Classes
-- **Primary Cards**: `bg-white rounded-2xl shadow-lg border border-gray-100`
-- **Interactive Cards**: Add `hover:shadow-xl hover:-translate-y-1 transition-all duration-300`
-- **Logo Containers**: `bg-white rounded-2xl shadow-lg border border-gray-100 p-4`
+### Key Development Patterns
 
-### Color Palette
+#### File-based Routing Architecture
+- Uses Next.js 15 App Router (not Pages Router)
+- Route handlers in `app/api/` for server-side logic
+- Dynamic routes: `[slug]` for blog posts, `[tag]` for blog tags
+- Special files: `layout.tsx`, `page.tsx`, `robots.ts`, `sitemap.ts`
+- Client components marked with `"use client"` directive
 
-#### Core Colors
-- **Primary (Midnight Black)**: `#09090b` to `#fafafa` - Authority & power
-- **Secondary (Electric Cyan)**: `#22d3ee` (400) / `#0891b2` (600) - Innovation & energy  
-- **Accent (Neon Green)**: `#4ade80` (400) / `#16a34a` (600) - Success & growth
-- **Warning (Electric Orange)**: `#fb923c` (400) / `#ea580c` (600) - Energy & action
-- **Purple**: `#c084fc` (400) / `#9333ea` (600) - Premium & luxury
+#### Data Flow and State Management
+- Server components for static content and SEO optimization
+- Client components for interactive features (forms, navigation)
+- React Context for theme management (`ThemeContext.tsx`)
+- Custom hooks for reusable stateful logic (`useTouchInteractions.ts`)
+- Type-safe APIs with comprehensive TypeScript definitions
 
-#### Background Colors
-- **Main Background**: `#f8fafc` (gray-50)
-- **Cards**: `#ffffff` (white)
-- **Dark Sections**: Gradient combinations using primary-950
+#### Integration Architecture
+- Multi-platform analytics unified through `src/lib/analytics.ts`
+- Email automation orchestrated via `src/lib/email-sequences.ts`
+- Ghost CMS headless integration for blog content
+- PostHog for advanced product analytics and feature flags
+- Resend for transactional email delivery
 
-#### Glow Effects (Refined)
-- **Subtle glow**: 4px primary, 8px secondary (50% opacity), 12px tertiary (30% opacity)
-- **Usage**: Applied to key metrics, CTAs, and emphasis text
-- **Classes**: `.glow-cyan`, `.glow-green`, `.glow-orange`
+#### Performance-First Design
+- Static generation for blog posts and marketing pages
+- Image optimization with Next.js Image component
+- Bundle splitting and lazy loading strategies
+- Edge caching and CDN optimization
+- Core Web Vitals monitoring and optimization
 
-## Development Notes
+## Memories and Development Notes
 
-1. **Type Definitions**: Currently empty `src/types/` directory - types should be centralized here per global instructions
-2. **Formatting**: Biome handles linting and formatting (replaced Prettier)
-3. **Port**: Dev server runs on port 5180 (not default 5173)
-4. **Animations**: Extensive custom Tailwind animations defined in config
-5. **Component Library**: Uses Naive UI - check their docs for component usage
+### Integration Strategies
+- Route all memories to use mcp server supermemory
 
-## Modern CLI Tools (Homebrew Installed)
-Use these faster, better alternatives to traditional commands:
-
-### Search & Find (ripgrep + fd + fzf)
-```bash
-rg "pattern" --glob "*.ts" --glob "*.tsx"   # Search code using ripgrep (faster than grep)
-rg "DialogContent" -A 2 -B 2                # Search with context lines
-rg -l "useState" src/                       # List files containing pattern
-fd "Modal.*tsx" src/                        # Find files by pattern (faster than find)
-fd -e tsx -e ts                             # Find TypeScript files
-fzf                                         # Interactive fuzzy finder
-fzf --preview="bat {}"                      # Fuzzy find with syntax-highlighted preview
-```
-
-### File Operations (bat + eza + zoxide)
-```bash
-bat filename.tsx                            # View files with syntax highlighting (better than cat)
-bat -n filename.tsx                         # Show line numbers
-eza -la --git                               # List files with Git status (modern ls)
-eza -T                                      # Tree view of directory
-z tenantflow                                # Smart directory jumping with zoxide
-z src                                       # Jump to frequently used directories
-```
-
-### Git Operations (delta + modern git tools)
-```bash
-git diff | delta                            # Enhanced Git diffs with syntax highlighting
-git log --oneline | delta                   # Better git log output
-git-ignore node                             # Generate .gitignore files
-git-lfs track "*.pdf"                       # Track large files with Git LFS
-git-secrets --scan                          # Scan for committed secrets
-```
-
-### GitHub CLI (gh)
-```bash
-gh repo view                                # View repository info
-gh pr list                                  # List pull requests
-gh pr create --title "Fix TypeScript errors" # Create PR
-gh issue list                               # List issues
-gh auth status                              # Check authentication status
-```
-
-### HTTP & API Testing (httpie)
-```bash
-http GET localhost:5173/api/health          # HTTPie for API testing (better than curl)
-http POST localhost:3000/api/users name=John # POST requests with JSON
-http --json POST localhost:3000/api/data @data.json # Send JSON file
-```
-
-### Command Correction (thefuck)
-```bash
-fuck                                        # Auto-correct last command
-npm run biuld                               # (typo)
-fuck                                        # Suggests: npm run build
-```
-
-### Text Processing & Analysis
-```bash
-tree-sitter parse filename.tsx              # Parse code with tree-sitter
-fftw-wisdom                                 # FFT optimization (if using audio/signal processing)
-```
-
-### Neovim Integration
-```bash
-nvim filename.tsx                           # Modern Vim with LSP support
-nvim +":Telescope find_files"               # Open with file finder
-```
-
-### Performance & Debugging
-```bash
-rg --stats "import.*react"                  # Search with performance stats
-fd --exec bat {}                            # Execute command on found files
-eza --long --header --git --time-style=long-iso # Detailed file listing
-```
+### Important Development Considerations
+- Always test contact form functionality before deployment
+- Monitor bundle size with analyzer (`ANALYZE=true npm run build`)
+- Verify email sequences are working in production
+- Check Core Web Vitals after significant changes
+- Ensure accessibility compliance with screen readers

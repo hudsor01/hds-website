@@ -1,0 +1,51 @@
+{
+  "functions": {
+    "src/app/api/contact/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/blog/[slug]/page.tsx": {
+      "maxDuration": 60
+    },
+    "src/app/sitemap.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/blog/rss",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/blog/feed",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/rss",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/feed",
+      "destination": "/api/rss/feed"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/portfolio",
+      "destination": "/services",
+      "permanent": true
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "regions": ["iad1"],
+  "crons": [
+    {
+      "path": "/api/cron/process-email-queue",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/update-sitemap",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}

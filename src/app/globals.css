@@ -1,0 +1,423 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Light mode colors */
+.light {
+  --background: #ffffff;
+  --foreground: #09090b;
+  --primary: #0891b2;
+  --secondary: #06b6d4;
+  --accent: #10b981;
+  --destructive: #ef4444;
+  --muted: #f3f4f6;
+  --card: #ffffff;
+  --popover: #ffffff;
+  --border: #e5e7eb;
+}
+
+/* Dark mode colors (default) */
+.dark {
+  --background: #09090b;
+  --foreground: #f9fafb;
+  --primary: #22d3ee;
+  --secondary: #06b6d4;
+  --accent: #10b981;
+  --destructive: #ef4444;
+  --muted: #18181b;
+  --card: #0f0f11;
+  --popover: #09090b;
+  --border: #27272a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode utilities */
+.bg-gradient-hero {
+  @apply bg-gradient-to-br from-black via-gray-900 to-black;
+}
+
+.dark .bg-gradient-hero {
+  @apply bg-gradient-to-br from-black via-gray-900 to-black;
+}
+
+.light .bg-gradient-hero {
+  @apply bg-gradient-to-br from-slate-100 via-gray-100 to-white;
+}
+
+.bg-gradient-primary {
+  @apply bg-gradient-to-b from-gray-900 to-black;
+}
+
+.dark .bg-gradient-primary {
+  @apply bg-gradient-to-b from-gray-900 to-black;
+}
+
+.light .bg-gradient-primary {
+  @apply bg-gradient-to-b from-gray-50 to-white;
+}
+
+/* Glass morphism effects */
+.glass-morphism {
+  @apply backdrop-blur-xl bg-white/80;
+}
+
+.dark .glass-morphism {
+  @apply bg-black/80 backdrop-blur-xl;
+}
+
+.light .glass-morphism {
+  @apply bg-white/80 backdrop-blur-xl;
+}
+
+/* Text gradients */
+.text-gradient-neon {
+  @apply bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent;
+}
+
+.text-gradient-secondary {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
+}
+
+/* Glow effects */
+.glow-cyan {
+  text-shadow: 0 0 30px rgba(34, 211, 238, 0.5);
+}
+
+.glow-green {
+  text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+}
+
+.glow-orange {
+  text-shadow: 0 0 30px rgba(251, 146, 60, 0.5);
+}
+
+/* Input styles */
+.input-dark {
+  @apply w-full px-4 py-3 bg-gray-800 dark:bg-gray-800 border border-gray-600 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-300;
+}
+
+.light .input-dark {
+  @apply bg-gray-100 border-gray-300 text-gray-900;
+}
+
+/* Blog content styles */
+.blog-content {
+  @apply max-w-none text-gray-900 dark:text-white;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3 {
+  @apply font-bold text-gray-900 dark:text-white;
+}
+
+.blog-content a {
+  @apply text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300;
+}
+
+.blog-content code {
+  @apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded;
+}
+
+.blog-content pre {
+  @apply bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto;
+}
+
+/* Animation delays */
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
+}
+
+/* Tailwind CSS v4 custom utilities for undefined classes */
+@utility glass-light {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Brand color utilities */
+@utility text-brand-cyan {
+  color: #22d3ee;
+}
+
+@utility text-brand-blue {
+  color: #0ea5e9;
+}
+
+@utility bg-brand-cyan {
+  background-color: #22d3ee;
+}
+
+@utility bg-brand-blue {
+  background-color: #0ea5e9;
+}
+
+/* Hover utilities need to be applied via CSS not @utility */
+
+/* Extended color utilities */
+@utility text-accent-400 {
+  color: #4ade80;
+}
+
+@utility text-warning-400 {
+  color: #fb923c;
+}
+
+@utility text-secondary-400 {
+  color: #22d3ee;
+}
+
+@utility bg-secondary-400 {
+  background-color: #22d3ee;
+}
+
+/* Hover states handled by Tailwind's built-in utilities */
+
+@utility bg-secondary-400-10 {
+  background-color: rgba(34, 211, 238, 0.1);
+}
+
+@utility bg-secondary-400-40 {
+  background-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Group hover states handled by Tailwind's built-in utilities */
+
+/* Gradient utilities */
+@utility bg-gradient-accent {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+@utility bg-gradient-secondary {
+  background: linear-gradient(135deg, #22d3ee, #0891b2);
+}
+
+@utility bg-gradient-warning {
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+}
+
+/* Shadow utilities */
+@utility shadow-accent-500-30 {
+  box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3), 0 4px 6px -2px rgba(34, 197, 94, 0.05);
+}
+
+@utility shadow-warning-500-30 {
+  box-shadow: 0 10px 15px -3px rgba(251, 146, 60, 0.3), 0 4px 6px -2px rgba(251, 146, 60, 0.05);
+}
+
+@utility shadow-secondary-500-30 {
+  box-shadow: 0 10px 15px -3px rgba(34, 211, 238, 0.3), 0 4px 6px -2px rgba(34, 211, 238, 0.05);
+}
+
+/* Hover shadow effects handled by Tailwind's built-in utilities */
+
+/* Font family fix for roboto-flex */
+@utility font-roboto-flex {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* Comprehensive Accessibility and Focus Management */
+
+/* Custom focus ring utilities */
+@utility focus-ring {
+  outline: 2px solid theme("colors.cyan.400");
+  outline-offset: 2px;
+}
+
+/* Global focus management */
+*:focus {
+  outline: 2px solid #22d3ee; /* cyan-400 */
+  outline-offset: 2px;
+}
+
+/* Hide focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Show focus outline for keyboard users */
+*:focus-visible {
+  outline: 2px solid #22d3ee; /* cyan-400 */
+  outline-offset: 2px;
+}
+
+/* Skip navigation link for screen readers */
+.skip-nav {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #22d3ee;
+  color: #000;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 100;
+}
+
+.skip-nav:focus {
+  top: 6px;
+}
+
+/* Ensure interactive elements have sufficient size for touch */
+button, 
+a, 
+input, 
+textarea, 
+select,
+[role="button"],
+[role="link"],
+[role="menuitem"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus trap for modal dialogs */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap:before,
+.focus-trap:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: CanvasText !important;
+  }
+  
+  button, 
+  input, 
+  select, 
+  textarea {
+    border: 2px solid CanvasText !important;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus indicators for specific component types */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  border-color: #22d3ee;
+}
+
+button:focus,
+[role="button"]:focus {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
+}
+
+a:focus,
+[role="link"]:focus {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  text-decoration: underline;
+}
+
+/* Custom focus styles for navigation */
+nav a:focus {
+  background-color: rgba(34, 211, 238, 0.1);
+  border-radius: 4px;
+}
+
+/* Ensure sufficient color contrast */
+.text-low-contrast {
+  color: #6b7280; /* gray-500 - meets WCAG AA */
+}
+
+.bg-high-contrast {
+  background-color: #111827; /* gray-900 - high contrast */
+}
+
+/* Live region for dynamic content announcements */
+.live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Keyboard-only navigation indicators */
+.keyboard-nav button:focus,
+.keyboard-nav a:focus,
+.keyboard-nav [tabindex]:focus {
+  outline: 3px solid #22d3ee !important;
+  outline-offset: 2px !important;
+  z-index: 10;
+  position: relative;
+}

@@ -14,7 +14,7 @@ export interface SEOMetaData {
 export interface StructuredData {
   '@context': string
   '@type': string
-  [key: string]: unknown
+  [key: string]: string | number | boolean | object | string[] | null | undefined
 }
 
 export interface LocalBusinessSchema extends StructuredData {
