@@ -1,89 +1,42 @@
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const CSRF_TOKEN_NAME = 'csrf-token';
-const CSRF_HEADER_NAME = 'x-csrf-token';
+const CSRF_TOKEN_COOKIE_NAME = 'csrf-token';
+const CSRF_TOKEN_LENGTH = 32;
+const CSRF_TOKEN_MAX_AGE = 60 * 60 * 24; // 24 hours
 
-// Generate a new CSRF token
 export function generateCSRFToken(): string {
-  return crypto.randomBytes(32).toString('hex');
+  return crypto.randomBytes(CSRF_TOKEN_LENGTH).toString('hex');
 }
 
-// Get or create CSRF token from cookies
-export async function getCSRFToken(): Promise<string> {
-  const cookieStore = await cookies();
-  const existingToken = cookieStore.get(CSRF_TOKEN_NAME);
-  
-  if (existingToken) {
-    return existingToken.value;
-  }
-  
-  // Generate new token
-  const newToken = generateCSRFToken();
-  
-  // Set cookie with secure options
-  cookieStore.set(CSRF_TOKEN_NAME, newToken, {
+export function setCSRFTokenCookie(response: NextResponse, token: string): void {
+  response.cookies.set(CSRF_TOKEN_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
+    maxAge: CSRF_TOKEN_MAX_AGE,
     path: '/',
-    maxAge: 60 * 60 * 24, // 24 hours
   });
-  
-  return newToken;
 }
 
-// Verify CSRF token from request
-export async function verifyCSRFToken(request: Request): Promise<boolean> {
-  const cookieStore = await cookies();
-  const cookieToken = cookieStore.get(CSRF_TOKEN_NAME);
+export function getCSRFTokenFromCookie(request: NextRequest): string | undefined {
+  return request.cookies.get(CSRF_TOKEN_COOKIE_NAME)?.value;
+}
+
+export function verifyCSRFToken(tokenFromHeader: string, request: NextRequest): boolean {
+  const tokenFromCookie = getCSRFTokenFromCookie(request);
   
-  if (!cookieToken) {
+  if (!tokenFromCookie || !tokenFromHeader) {
     return false;
   }
   
-  // Check header
-  const headerToken = request.headers.get(CSRF_HEADER_NAME);
-  if (headerToken && crypto.timingSafeEqual(
-    Buffer.from(cookieToken.value),
-    Buffer.from(headerToken)
-  )) {
-    return true;
-  }
-  
-  // Check body (for form submissions)
-  try {
-    const body = await request.clone().json();
-    const bodyToken = body._csrf;
-    
-    if (bodyToken && crypto.timingSafeEqual(
-      Buffer.from(cookieToken.value),
-      Buffer.from(bodyToken)
-    )) {
-      return true;
-    }
-  } catch {
-    // Body is not JSON or couldn't be parsed
-  }
-  
-  return false;
+  // Use timing-safe comparison to prevent timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(tokenFromCookie, 'hex'),
+    Buffer.from(tokenFromHeader, 'hex')
+  );
 }
 
-// Client-side helper to get CSRF token
-export function getCSRFTokenFromCookie(): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  
-  const match = document.cookie.match(new RegExp(`(^| )${CSRF_TOKEN_NAME}=([^;]+)`));
-  return match ? match[2] : null;
-}
-
-// React hook for CSRF token
-export function useCSRFToken() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  
-  return getCSRFTokenFromCookie();
+export function clearCSRFTokenCookie(response: NextResponse): void {
+  response.cookies.delete(CSRF_TOKEN_COOKIE_NAME);
 }

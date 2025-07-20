@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RateLimiter } from '@/lib/rate-limiter';
-import crypto from 'crypto';
 
 // Rate limiter instance
 const rateLimiter = new RateLimiter();
@@ -22,7 +21,7 @@ const corsOptions = {
     'http://localhost:3000', // Development
   ],
   allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   maxAge: 86400, // 24 hours
 };
@@ -35,12 +34,34 @@ const validationPatterns = {
   url: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
 };
 
-// Sanitize input to prevent XSS
+// Comprehensive input sanitization to prevent code injection
 export function sanitizeInput(input: string): string {
   return input
-    .replace(/[<>]/g, '') // Remove HTML tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+\s*=/gi, '') // Remove event handlers
+    // Remove HTML/XML tags
+    .replace(/<[^>]*>/g, '')
+    // Remove JavaScript protocols
+    .replace(/javascript:/gi, '')
+    .replace(/vbscript:/gi, '')
+    .replace(/data:/gi, '')
+    // Remove event handlers
+    .replace(/on\w+\s*=/gi, '')
+    // Remove script-related keywords
+    .replace(/script\b/gi, '')
+    .replace(/iframe\b/gi, '')
+    .replace(/object\b/gi, '')
+    .replace(/embed\b/gi, '')
+    .replace(/form\b/gi, '')
+    // Remove SQL injection patterns
+    .replace(/(\s|^)(union|select|insert|update|delete|drop|create|alter|exec|execute)\s/gi, ' ')
+    .replace(/(\s|^)(or|and)\s+[\d\w'"]+\s*[=<>]/gi, ' ')
+    .replace(/['"]\s*(or|and)\s*['"]/gi, '')
+    // Remove common XSS patterns
+    .replace(/eval\s*\(/gi, '')
+    .replace(/expression\s*\(/gi, '')
+    .replace(/setTimeout\s*\(/gi, '')
+    .replace(/setInterval\s*\(/gi, '')
+    // Remove special characters that could be used for injection
+    .replace(/[^\w\s@.\-,!?()'"]/g, '')
     .trim();
 }
 
@@ -54,17 +75,40 @@ export function validatePhone(phone: string): boolean {
   return validationPatterns.phone.test(phone);
 }
 
-// Generate CSRF token
-export function generateCSRFToken(): string {
-  return crypto.randomBytes(32).toString('hex');
-}
+// Detect potential injection attempts for logging/blocking
+export function detectInjectionAttempt(input: string): { 
+  isInjection: boolean; 
+  type: string[]; 
+  confidence: number; 
+} {
+  const injectionPatterns = [
+    { name: 'XSS', pattern: /<script|javascript:|on\w+\s*=|eval\s*\(|expression\s*\(/gi },
+    { name: 'SQL', pattern: /(union|select|insert|update|delete|drop)\s/gi },
+    { name: 'NoSQL', pattern: /\$where|\$ne|\$gt|\$lt|\$regex/gi },
+    { name: 'Command', pattern: /[;&|`$(){}[\]\\]/g },
+    { name: 'Path Traversal', pattern: /\.\.\/|\.\.\\|\.\.\%2f/gi },
+    { name: 'LDAP', pattern: /[()&|!]/g },
+    { name: 'XML', pattern: /<!entity|<!doctype|<!\[cdata/gi }
+  ];
 
-// Verify CSRF token
-export function verifyCSRFToken(token: string, sessionToken: string): boolean {
-  return crypto.timingSafeEqual(
-    Buffer.from(token),
-    Buffer.from(sessionToken)
-  );
+  const detectedTypes: string[] = [];
+  let totalMatches = 0;
+
+  injectionPatterns.forEach(({ name, pattern }) => {
+    const matches = input.match(pattern);
+    if (matches && matches.length > 0) {
+      detectedTypes.push(name);
+      totalMatches += matches.length;
+    }
+  });
+
+  const confidence = Math.min(totalMatches * 0.2, 1.0);
+  
+  return {
+    isInjection: detectedTypes.length > 0,
+    type: detectedTypes,
+    confidence
+  };
 }
 
 // Check if origin is allowed

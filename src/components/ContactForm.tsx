@@ -3,6 +3,7 @@ import { useState } from "react";
 import { RocketLaunchIcon, CheckCircleIcon, ShieldCheckIcon, StarIcon, ChatBubbleLeftRightIcon, EnvelopeIcon, ClockIcon, ChartBarIcon } from "@heroicons/react/24/solid";
 import CalendarWidget from "./CalendarWidget";
 import { trackEvent } from "@/lib/analytics";
+import { useCSRFToken } from "@/hooks/useCSRFToken";
 
 interface FormData {
   firstName: string;
@@ -40,6 +41,7 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { token: csrfToken, loading: csrfLoading, error: csrfError, refreshToken } = useCSRFToken();
 
   const validateForm = (): FormErrors => {
     const newErrors: FormErrors = {};
@@ -86,6 +88,16 @@ export default function ContactForm() {
       return;
     }
 
+    // Check if CSRF token is available
+    if (!csrfToken) {
+      if (csrfError) {
+        setErrors({ message: 'Security token error. Please refresh the page and try again.' });
+      } else {
+        setErrors({ message: 'Loading security token. Please wait and try again.' });
+      }
+      return;
+    }
+
     setIsSubmitting(true);
     setErrors({});
 
@@ -95,6 +107,7 @@ export default function ContactForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify(form),
       });
@@ -131,7 +144,19 @@ export default function ContactForm() {
       // Track form submission errors
       trackEvent('contact_form_error', 'form', error instanceof Error ? error.message : 'unknown_error');
       
-      setErrors({ message: error instanceof Error ? error.message : 'Failed to submit form. Please try again.' });
+      let errorMessage = error instanceof Error ? error.message : 'Failed to submit form. Please try again.';
+      
+      // If it's a CSRF error (403), try to refresh the token
+      if (error instanceof Error && error.message.includes('security token')) {
+        try {
+          await refreshToken();
+          errorMessage = 'Security token refreshed. Please try submitting again.';
+        } catch {
+          errorMessage = 'Security token error. Please refresh the page and try again.';
+        }
+      }
+      
+      setErrors({ message: errorMessage });
     } finally {
       setIsSubmitting(false);
     }
@@ -272,13 +297,13 @@ export default function ContactForm() {
                   <div className="pt-4">
                     <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || csrfLoading || !csrfToken}
                       className={`w-full flex items-center justify-center gap-2 bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-4 px-8 rounded-lg text-lg shadow-lg transition-all duration-300 glow-cyan ${
-                        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                        isSubmitting || csrfLoading || !csrfToken ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
                       <RocketLaunchIcon className="w-5 h-5" />
-                      {isSubmitting ? 'Submitting...' : 'Launch Project'}
+                      {isSubmitting ? 'Submitting...' : csrfLoading ? 'Loading...' : 'Launch Project'}
                     </button>
                   </div>
                   {isSubmitted && (
@@ -286,6 +311,14 @@ export default function ContactForm() {
                       <p className="text-green-400 text-center">
                         <CheckCircleIcon className="w-5 h-5 inline mr-2" />
                         Thank you! Your message has been sent successfully.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {csrfError && (
+                    <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                      <p className="text-red-400 text-center text-sm">
+                        Security initialization failed. Please refresh the page.
                       </p>
                     </div>
                   )}

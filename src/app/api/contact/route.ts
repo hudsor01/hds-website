@@ -8,6 +8,7 @@ import {
   validatePhone,
   sanitizeInput 
 } from '@/middleware/security';
+import { verifyCSRFToken } from '@/lib/csrf';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -81,6 +82,15 @@ export async function POST(request: NextRequest) {
   return securityMiddleware(request, async (req) => {
     try {
       const body = await req.json();
+      
+      // Verify CSRF token
+      const csrfToken = req.headers.get('x-csrf-token');
+      if (!csrfToken || !verifyCSRFToken(csrfToken, req)) {
+        return NextResponse.json(
+          { error: 'Invalid security token. Please refresh the page and try again.' },
+          { status: 403 }
+        );
+      }
       
       // Validate request body
       const validation = validateRequestBody<ContactFormData>(body, contactFormSchema);
