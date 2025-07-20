@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RateLimiter } from '@/lib/rate-limiter';
+import type { ValidationSchema, ValidationResult } from '@/types/validation';
 
 // Rate limiter instance
 const rateLimiter = new RateLimiter();
@@ -202,15 +203,8 @@ export async function securityMiddleware(
 // Validate request body
 export function validateRequestBody<T>(
   body: unknown,
-  schema: Record<string, {
-    required?: boolean;
-    type?: 'string' | 'number' | 'boolean' | 'object' | 'array';
-    pattern?: RegExp;
-    min?: number;
-    max?: number;
-    validator?: (value: unknown) => boolean;
-  }>
-): { valid: boolean; errors: string[]; data?: T } {
+  schema: ValidationSchema
+): ValidationResult<T> {
   const errors: string[] = [];
   const validatedData: Record<string, unknown> = {};
   

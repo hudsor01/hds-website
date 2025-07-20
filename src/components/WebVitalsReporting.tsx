@@ -1,6 +1,6 @@
 "use client";
 import { useReportWebVitals } from 'next/web-vitals';
-import { trackEvent as posthogTrackEvent } from '@/lib/posthog';
+import { trackWebVital } from '@/lib/posthog';
 
 export default function WebVitalsReporting() {
   useReportWebVitals((metric) => {
@@ -22,17 +22,16 @@ export default function WebVitalsReporting() {
       });
     }
 
-    // Send to PostHog
-    posthogTrackEvent('web_vitals', {
-      metric_name: metric.name,
-      metric_value: roundedValue,
-      metric_rating: metric.rating,
-      metric_id: metric.id,
-      navigation_type: metric.navigationType,
+    // Send to PostHog (enhanced with performance tracking)
+    trackWebVital({
+      name: metric.name,
+      value: metric.value,
+      rating: metric.rating,
+      id: metric.id,
+      navigationType: metric.navigationType,
     });
 
-    // Send to Vercel Analytics (automatically handled by Speed Insights)
-    // Send to your analytics endpoint
+    // Send to custom analytics endpoint
     sendToAnalytics(metric);
   });
 

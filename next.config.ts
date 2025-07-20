@@ -25,10 +25,23 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
   },
 
-  // Bundle optimization
+  // Bundle optimization - using only stable features
   experimental: {
-    optimizePackageImports: ['@heroicons/react'],
-    webVitalsAttribution: ['CLS', 'LCP'],
+    // optimizePackageImports is stable in Next.js 15
+    optimizePackageImports: ['@heroicons/react', 'posthog-js', '@vercel/analytics'],
+  },
+  
+  // Optimize production builds
+  productionBrowserSourceMaps: false,
+  
+  // Aggressive code splitting
+  modularizeImports: {
+    '@heroicons/react/24/outline': {
+      transform: '@heroicons/react/24/outline/{{member}}',
+    },
+    '@heroicons/react/24/solid': {
+      transform: '@heroicons/react/24/solid/{{member}}',
+    },
   },
 
   // Headers for security and performance

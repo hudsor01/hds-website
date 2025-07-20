@@ -51,8 +51,16 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
-  // Skip admin and API routes
-  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/admin')) {
+  // Skip admin, API routes, and development assets
+  if (url.pathname.startsWith('/api/') || 
+      url.pathname.startsWith('/admin') ||
+      url.pathname.startsWith('/_next/webpack-hmr') ||
+      url.hostname === 'localhost' && url.port !== location.port) {
+    return;
+  }
+
+  // Skip caching in development mode
+  if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
     return;
   }
 
@@ -61,11 +69,15 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Clone the response before caching
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseToCache);
-          });
+          // Only cache successful responses in production
+          if (response.status === 200 && url.protocol === 'https:') {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache).catch(() => {
+                // Silently handle cache errors
+              });
+            });
+          }
           return response;
         })
         .catch(() => {
@@ -77,12 +89,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first strategy for static assets
+  // Cache-first strategy for static assets (production only)
   if (
-    request.destination === 'style' ||
-    request.destination === 'script' ||
-    request.destination === 'image' ||
-    request.destination === 'font'
+    (request.destination === 'style' ||
+     request.destination === 'script' ||
+     request.destination === 'image' ||
+     request.destination === 'font') &&
+    url.protocol === 'https:'
   ) {
     event.respondWith(
       caches.match(request).then((response) => {
@@ -93,10 +106,15 @@ self.addEventListener('fetch', (event) => {
             if (response.status === 200) {
               const responseToCache = response.clone();
               caches.open(CACHE_NAME).then((cache) => {
-                cache.put(request, responseToCache);
+                cache.put(request, responseToCache).catch(() => {
+                  // Silently handle cache errors
+                });
               });
             }
             return response;
+          }).catch(() => {
+            // Return from cache if network fails
+            return caches.match(request);
           })
         );
       })
@@ -116,6 +134,16 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('sync', (event) => {
   if (event.tag === 'contact-form-sync') {
     event.waitUntil(syncContactForms());
+  }
+  
+  // Pre-warm functions when connection is restored
+  if (event.tag === 'warm-functions') {
+    event.waitUntil(
+      Promise.all([
+        fetch('/api/warm'),
+        fetch('/api/contact', { method: 'HEAD' }),
+      ])
+    );
   }
 });
 

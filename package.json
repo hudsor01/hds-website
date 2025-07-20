@@ -4,17 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:https": "HTTPS=true next dev",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-sitemap": "tsx scripts/generate-sitemap.ts"
+    "generate-sitemap": "tsx scripts/generate-sitemap.ts",
+    "setup:https": "./scripts/setup-https.sh",
+    "test:performance": "npm run build && npm run start & sleep 5 && lighthouse https://localhost:3000 --view",
+    "optimize:images": "find public -name '*.jpg' -o -name '*.png' | xargs -I {} convert {} -quality 85 {}",
+    "check:bundle": "npm run build:analyze"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tryghost/content-api": "^1.11.28",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
     "next": "15.4.1",
     "posthog-js": "^1.257.0",
     "react": "^19.1.0",

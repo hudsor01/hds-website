@@ -89,6 +89,9 @@ export async function generateMetadata({ params }: BlogPostProps): Promise<Metad
   };
 }
 
+// Revalidate every hour to balance freshness and performance
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const { posts } = await getPosts(100); // Get first 100 posts for static generation
   return posts.map((post) => ({

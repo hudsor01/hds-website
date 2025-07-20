@@ -1,66 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-// Security headers to apply to all responses
-const securityHeaders = {
-  'X-DNS-Prefetch-Control': 'on',
-  'X-XSS-Protection': '1; mode=block',
-  'X-Frame-Options': 'SAMEORIGIN',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  'Content-Security-Policy': `
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://app.posthog.com https://vercel.live https://va.vercel-scripts.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
-    img-src 'self' data: https: blob:;
-    connect-src 'self' https://www.google-analytics.com https://app.posthog.com https://vercel.live https://va.vercel-scripts.com wss://ws-us3.pusher.com;
-    frame-src 'self' https://cal.com;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim()
-};
-
-export function middleware(request: NextRequest) {
-  // Clone the request headers
-  const requestHeaders = new Headers(request.headers);
-
-  // Create response
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  // Apply security headers
-  Object.entries(securityHeaders).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
-  // Add CORS headers for API routes
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    const origin = request.headers.get('origin');
-    const allowedOrigins = [
-      'https://hudsondigitalsolutions.com',
-      'http://localhost:3000',
-    ];
-
-    if (origin && allowedOrigins.includes(origin)) {
-      response.headers.set('Access-Control-Allow-Origin', origin);
-      response.headers.set('Access-Control-Allow-Credentials', 'true');
-    }
-
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  }
-
-  return response;
-}
-
+// Run on Edge Runtime for minimal overhead
 export const config = {
   matcher: [
     /*
@@ -73,3 +14,91 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
+
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  const url = request.nextUrl;
+
+  // Add security headers
+  response.headers.set('X-DNS-Prefetch-Control', 'on');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+  // Add performance headers
+  response.headers.set('X-Request-Time', Date.now().toString());
+
+  // Force HTTPS in production
+  if (process.env.NODE_ENV === 'production' && 
+      request.headers.get('x-forwarded-proto') === 'http') {
+    return NextResponse.redirect(
+      `https://${request.headers.get('host')}${request.nextUrl.pathname}${request.nextUrl.search}`,
+      { status: 301 }
+    );
+  }
+
+  // Add Link preload headers for critical resources
+  const preloadHeaders: string[] = [];
+  
+  // Preload fonts
+  preloadHeaders.push(
+    '</fonts/geist-sans.woff2>; rel=preload; as=font; type=font/woff2; crossorigin',
+    '</fonts/geist-mono.woff2>; rel=preload; as=font; type=font/woff2; crossorigin'
+  );
+
+  // Preload critical CSS
+  if (url.pathname === '/') {
+    preloadHeaders.push(
+      '</_next/static/css/app/layout.css>; rel=preload; as=style',
+      '</_next/static/css/app/page.css>; rel=preload; as=style'
+    );
+  }
+
+  if (preloadHeaders.length > 0) {
+    response.headers.set('Link', preloadHeaders.join(', '));
+  }
+
+  // Implement stale-while-revalidate for static pages
+  if (url.pathname.match(/^\/(about|services|pricing|privacy)$/)) {
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=3600, stale-while-revalidate=86400'
+    );
+  }
+
+  // Blog pages - longer cache with stale-while-revalidate
+  if (url.pathname.startsWith('/blog')) {
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=7200, stale-while-revalidate=604800'
+    );
+  }
+
+  // API routes - no cache by default
+  if (url.pathname.startsWith('/api')) {
+    response.headers.set('Cache-Control', 'no-store, max-age=0');
+    
+    // Add CORS headers for API routes
+    response.headers.set('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
+      ? 'https://hudsondigitalsolutions.com' 
+      : '*'
+    );
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token');
+  }
+
+  // A/B testing for performance optimizations
+  const testGroup = Math.random() > 0.5 ? 'A' : 'B';
+  response.cookies.set('perf-test-group', testGroup, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+  });
+
+  // Add timing header for performance monitoring
+  response.headers.set('Server-Timing', `middleware;dur=${Date.now() - parseInt(response.headers.get('X-Request-Time') || '0')}`);
+
+  return response;
+}
