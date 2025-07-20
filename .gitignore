@@ -87,3 +87,12 @@ CLAUDE.local.md
 # Generated/temporary assets
 public/Generated*
 *copy.*
+
+# Conflicting/redundant configuration files
+public/.htaccess
+public/_headers
+public/sitemap.xml
+
+# Development documentation (use local versions)
+docs/ROADMAP.md
+scripts/generate-sitemap.ts
