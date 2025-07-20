@@ -88,11 +88,11 @@ CLAUDE.local.md
 public/Generated*
 *copy.*
 
-# Conflicting/redundant configuration files
+# Deployment-specific files that conflict with Vercel
 public/.htaccess
 public/_headers
 public/sitemap.xml
 
-# Development documentation (use local versions)
+# Development documentation with sensitive info
 docs/ROADMAP.md
 scripts/generate-sitemap.ts
