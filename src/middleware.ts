@@ -38,26 +38,7 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // Add Link preload headers for critical resources
-  const preloadHeaders: string[] = [];
-  
-  // Preload fonts
-  preloadHeaders.push(
-    '</fonts/geist-sans.woff2>; rel=preload; as=font; type=font/woff2; crossorigin',
-    '</fonts/geist-mono.woff2>; rel=preload; as=font; type=font/woff2; crossorigin'
-  );
-
-  // Preload critical CSS
-  if (url.pathname === '/') {
-    preloadHeaders.push(
-      '</_next/static/css/app/layout.css>; rel=preload; as=style',
-      '</_next/static/css/app/page.css>; rel=preload; as=style'
-    );
-  }
-
-  if (preloadHeaders.length > 0) {
-    response.headers.set('Link', preloadHeaders.join(', '));
-  }
+  // Remove preload headers since fonts are from Google and CSS paths are dynamic
 
   // Implement stale-while-revalidate for static pages
   if (url.pathname.match(/^\/(about|services|pricing|privacy)$/)) {

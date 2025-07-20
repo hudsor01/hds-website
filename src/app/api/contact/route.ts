@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification email to you
     await resend.emails.send({
-      from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
+      from: 'Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>',
       to: ['hello@hudsondigitalsolutions.com'],
       subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
       html: `
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email to the client with nurturing sequence
     await resend.emails.send({
-      from: 'Hudson Digital <hello@hudsondigitalsolutions.com>',
+      from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
       to: [data.email],
       subject: '🚀 Your Project Inquiry Received - What Happens Next?',
       html: `
