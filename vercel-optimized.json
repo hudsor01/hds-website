@@ -1,0 +1,111 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "installCommand": "npm ci --prefer-offline --no-audit --no-fund",
+  "devCommand": "next dev",
+  
+  "functions": {
+    "src/app/page.tsx": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 10,
+      "memory": 512
+    },
+    "src/app/api/contact/route.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 10,
+      "memory": 256
+    },
+    "src/app/api/warm/route.ts": {
+      "runtime": "edge",
+      "maxDuration": 5
+    },
+    "src/app/blog/[slug]/page.tsx": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "src/app/blog/page.tsx": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 20,
+      "memory": 512
+    },
+    "src/app/api/analytics/web-vitals/route.ts": {
+      "runtime": "edge",
+      "maxDuration": 5
+    },
+    "src/app/sitemap.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 256
+    },
+    "src/app/api/rss/feed/route.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 20,
+      "memory": 256
+    }
+  },
+
+  "rewrites": [
+    {
+      "source": "/blog/rss",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/blog/feed",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/rss",
+      "destination": "/api/rss/feed"
+    },
+    {
+      "source": "/feed",
+      "destination": "/api/rss/feed"
+    }
+  ],
+
+  "redirects": [
+    {
+      "source": "/portfolio",
+      "destination": "/services",
+      "permanent": true
+    }
+  ],
+
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "Link",
+          "value": "</fonts/geist-sans.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous, </fonts/geist-mono.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous"
+        }
+      ]
+    }
+  ],
+
+  "cleanUrls": true,
+  "trailingSlash": false,
+  
+  "regions": ["iad1"],
+  
+  "crons": [
+    {
+      "path": "/api/warm",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+
+  "buildEnv": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+
+  "env": {
+    "NODE_OPTIONS": "--max-old-space-size=512"
+  }
+}

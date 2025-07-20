@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import type { EmailTemplateData, EmailTemplatesRecord } from '@/types/email';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -98,7 +99,7 @@ export const EMAIL_SEQUENCES: Record<string, EmailSequence> = {
 };
 
 // Email templates
-export const EMAIL_TEMPLATES: Record<string, (data: Record<string, unknown>) => string> = {
+export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   'welcome-immediate': (data) => `
     <h2>Welcome to Hudson Digital Solutions, ${data.name}!</h2>
     <p>Thank you for reaching out. We're excited to learn more about your project.</p>
@@ -264,7 +265,7 @@ export async function sendSequenceEmail(
   to: string,
   sequenceId: string,
   emailId: string,
-  data: Record<string, unknown>
+  data: EmailTemplateData
 ) {
   if (!resend) {
     console.error('Resend API key not configured');
