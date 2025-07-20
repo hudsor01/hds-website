@@ -67,3 +67,23 @@ dev-server.log
 tmp/
 temp/
 .tmp/
+
+# IDE and editor files
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Private local files
+CLAUDE.local.md
+
+# Generated/temporary assets
+public/Generated*
+*copy.*
