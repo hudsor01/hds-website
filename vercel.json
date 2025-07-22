@@ -1,45 +1,6 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "next build",
-  "outputDirectory": ".next",
-  "installCommand": "npm ci --prefer-offline --no-audit --no-fund",
-  "devCommand": "next dev",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   
-  "functions": {
-    "src/app/page.tsx": {
-      "maxDuration": 10,
-      "memory": 512
-    },
-    "src/app/api/contact/route.ts": {
-      "maxDuration": 10,
-      "memory": 256
-    },
-    "src/app/api/warm/route.ts": {
-      "runtime": "edge",
-      "maxDuration": 5
-    },
-    "src/app/blog/[slug]/page.tsx": {
-      "maxDuration": 30,
-      "memory": 512
-    },
-    "src/app/blog/page.tsx": {
-      "maxDuration": 20,
-      "memory": 512
-    },
-    "src/app/api/analytics/web-vitals/route.ts": {
-      "runtime": "edge",
-      "maxDuration": 5
-    },
-    "src/app/sitemap.ts": {
-      "maxDuration": 30,
-      "memory": 256
-    },
-    "src/app/api/rss/feed/route.ts": {
-      "maxDuration": 20,
-      "memory": 256
-    }
-  },
-
   "rewrites": [
     {
       "source": "/blog/rss",
@@ -67,29 +28,5 @@
     }
   ],
 
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-DNS-Prefetch-Control",
-          "value": "on"
-        },
-        {
-          "key": "Link",
-          "value": "</fonts/geist-sans.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous, </fonts/geist-mono.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous"
-        }
-      ]
-    }
-  ],
-
-  "cleanUrls": true,
-  "trailingSlash": false,
-  
-  "regions": ["iad1"],
-
-  "env": {
-    "NEXT_TELEMETRY_DISABLED": "1",
-    "NODE_OPTIONS": "--max-old-space-size=512"
-  }
+  "regions": ["iad1"]
 }
