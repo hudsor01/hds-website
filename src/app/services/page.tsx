@@ -184,16 +184,53 @@ export default function ServicesPage() {
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
-            {reasons.map((reason) => (
-              <div key={reason.title} className="text-center group cursor-pointer">
-                <div className="text-5xl font-black text-secondary-400/40 mb-4 group-hover:text-secondary-400 group-hover:scale-105 transition-all duration-300 glow-cyan">
-                  {reason.value}
+            {reasons.map((reason, index) => {
+              const colors = [
+                { 
+                  text: "text-cyan-400", 
+                  hoverText: "group-hover:text-cyan-300", 
+                  glow: "glow-cyan",
+                  bg: "bg-gradient-to-br from-cyan-400/10 to-cyan-600/10",
+                  border: "border-cyan-400/30 hover:border-cyan-400"
+                },
+                { 
+                  text: "text-green-400", 
+                  hoverText: "group-hover:text-green-300", 
+                  glow: "glow-green",
+                  bg: "bg-gradient-to-br from-green-400/10 to-green-600/10",
+                  border: "border-green-400/30 hover:border-green-400"
+                },
+                { 
+                  text: "text-orange-400", 
+                  hoverText: "group-hover:text-orange-300", 
+                  glow: "glow-orange",
+                  bg: "bg-gradient-to-br from-orange-400/10 to-orange-600/10",
+                  border: "border-orange-400/30 hover:border-orange-400"
+                },
+                { 
+                  text: "text-purple-400", 
+                  hoverText: "group-hover:text-purple-300", 
+                  glow: "glow-purple",
+                  bg: "bg-gradient-to-br from-purple-400/10 to-purple-600/10",
+                  border: "border-purple-400/30 hover:border-purple-400"
+                }
+              ];
+              const colorSet = colors[index % colors.length];
+              
+              return (
+                <div 
+                  key={reason.title} 
+                  className={`text-center group cursor-pointer p-6 rounded-xl border ${colorSet.bg} ${colorSet.border} transition-all duration-300 hover:scale-105`}
+                >
+                  <div className={`text-5xl font-black mb-4 group-hover:scale-105 transition-all duration-300 ${colorSet.text} ${colorSet.glow}`}>
+                    {reason.value}
+                  </div>
+                  <div className={`text-sm uppercase tracking-wide font-bold transition-colors duration-300 text-gray-400 ${colorSet.hoverText}`}>
+                    {reason.title}
+                  </div>
                 </div>
-                <div className="text-sm uppercase tracking-wide text-gray-400 font-bold group-hover:text-secondary-400 transition-colors duration-300">
-                  {reason.title}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -209,19 +246,53 @@ export default function ServicesPage() {
             </p>
           </div>
           <div className="grid md:grid-cols-4 gap-8">
-            {process.map((step, index) => (
-              <div key={step.title} className="text-center group cursor-pointer">
-                <div className="w-16 h-16 border border-cyan-500/30 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-black text-secondary-400/40 group-hover:border-secondary-400 group-hover:text-secondary-400 group-hover:scale-105 group-hover:bg-secondary-400/10 transition-all duration-300 glow-cyan">
-                  {index + 1}
+            {process.map((step, index) => {
+              const stepColors = [
+                { 
+                  text: "text-cyan-400", 
+                  hoverText: "group-hover:text-cyan-300", 
+                  glow: "glow-cyan",
+                  border: "border-cyan-400/30 group-hover:border-cyan-400",
+                  bg: "group-hover:bg-cyan-400/10"
+                },
+                { 
+                  text: "text-green-400", 
+                  hoverText: "group-hover:text-green-300", 
+                  glow: "glow-green",
+                  border: "border-green-400/30 group-hover:border-green-400",
+                  bg: "group-hover:bg-green-400/10"
+                },
+                { 
+                  text: "text-orange-400", 
+                  hoverText: "group-hover:text-orange-300", 
+                  glow: "glow-orange",
+                  border: "border-orange-400/30 group-hover:border-orange-400",
+                  bg: "group-hover:bg-orange-400/10"
+                },
+                { 
+                  text: "text-purple-400", 
+                  hoverText: "group-hover:text-purple-300", 
+                  glow: "glow-purple",
+                  border: "border-purple-400/30 group-hover:border-purple-400",
+                  bg: "group-hover:bg-purple-400/10"
+                }
+              ];
+              const stepColor = stepColors[index % stepColors.length];
+              
+              return (
+                <div key={step.title} className="text-center group cursor-pointer p-6 rounded-xl hover:scale-105 transition-all duration-300">
+                  <div className={`w-16 h-16 border rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-black transition-all duration-300 ${stepColor.text} ${stepColor.border} ${stepColor.bg} ${stepColor.glow}`}>
+                    {index + 1}
+                  </div>
+                  <h3 className={`text-lg font-black text-white mb-3 uppercase tracking-wide transition-colors duration-300 ${stepColor.hoverText}`}>
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors duration-300">
+                    {step.description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-black text-white mb-3 uppercase tracking-wide group-hover:text-secondary-400 transition-colors duration-300">
-                  {step.title}
-                </h3>
-                <p className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors duration-300">
-                  {step.description}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

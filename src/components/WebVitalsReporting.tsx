@@ -47,22 +47,30 @@ interface Metric {
 }
 
 function sendToAnalytics(metric: Metric) {
-  const body = JSON.stringify(metric);
-  
-  // Use beacon API if available for better reliability
-  if ('sendBeacon' in navigator) {
-    navigator.sendBeacon('/api/analytics/web-vitals', body);
-  } else {
-    // Fallback to fetch
-    fetch('/api/analytics/web-vitals', {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      keepalive: true,
-    }).catch((error) => {
-      console.error('Failed to send analytics:', error);
-    });
+  try {
+    const body = JSON.stringify(metric);
+    
+    // Use beacon API if available for better reliability
+    if ('sendBeacon' in navigator) {
+      navigator.sendBeacon('/api/analytics/web-vitals', body);
+    } else {
+      // Fallback to fetch
+      fetch('/api/analytics/web-vitals', {
+        method: 'POST',
+        body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        keepalive: true,
+      }).catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Analytics request failed (expected in development):', error.message);
+        }
+      });
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Analytics error:', error);
+    }
   }
 }

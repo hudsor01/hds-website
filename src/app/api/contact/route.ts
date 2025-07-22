@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification email to you
     await resend.emails.send({
-      from: 'Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>',
+      from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
       to: ['hello@hudsondigitalsolutions.com'],
       subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
       html: `
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email to the client with nurturing sequence
     await resend.emails.send({
-      from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+      from: 'Hudson Digital <hello@hudsondigitalsolutions.com>',
       to: [data.email],
       subject: '🚀 Your Project Inquiry Received - What Happens Next?',
       html: `
@@ -255,9 +255,8 @@ export async function POST(request: NextRequest) {
           </div>
 
           <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
-            <h3 style="margin: 0 0 15px 0; font-size: 20px;">📅 Book Your Free Strategy Call</h3>
-            <p style="margin: 0 0 20px 0; opacity: 0.9;">Let's discuss your project in detail</p>
-            <a href="https://cal.com/hudsondigital/strategy-call" style="display: inline-block; background: white; color: #059669; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px;">Schedule Now</a>
+            <h3 style="margin: 0 0 15px 0; font-size: 20px;">💬 Let's Connect</h3>
+            <p style="margin: 0 0 20px 0; opacity: 0.9;">I'll respond within 24 hours to discuss your project in detail</p>
           </div>
 
           <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 8px;">

@@ -2,280 +2,144 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+This is a modern business website for Hudson Digital Solutions built with Next.js 15, React 19, and TypeScript. It's a high-performance marketing site with integrated blog, contact forms, analytics, and automated email sequences.
+
 ## Development Commands
 
 ### Core Commands
-- `npm run dev` - Start development server (localhost:3000)
-- `npm run build` - Build production application
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint for code quality checks
+```bash
+# Development
+npm run dev                # Start development server
+npm run dev:https         # Start development server with HTTPS
 
-### Testing Commands
-- `npx tsx test-contact-form.ts` - Test contact form API endpoint functionality
-- `ANALYZE=true npm run build` - Build with bundle analyzer for performance optimization
+# Build & Production
+npm run build             # Production build
+npm run build:analyze     # Build with bundle analyzer
+npm run start             # Start production server
 
-### Development Workflow
-- Use `npm run dev` for local development with hot reload
-- Always run `npm run lint` before commits to ensure code quality
-- Use `npm run build` to verify production build works correctly
-
-## Project Architecture
-
-### Technology Stack
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4.x
-- **UI Components**: Custom components with Heroicons
-- **Email Service**: Resend for transactional emails
-- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
-- **CMS**: Ghost CMS for blog content
-- **Calendar**: Cal.com integration
-- **Performance**: Web Vitals tracking, Core Web Vitals optimization
-
-### Directory Structure
+# Quality & Analysis
+npm run lint              # ESLint checking
+npm run check:bundle      # Analyze bundle size
+npm run test:performance  # Run Lighthouse performance test
 ```
-src/
-├── app/                    # Next.js App Router pages and API routes
-│   ├── layout.tsx         # Root layout with fonts and metadata
-│   ├── page.tsx           # Home page
-│   ├── about/page.tsx     # About page
-│   ├── contact/page.tsx   # Contact page
-│   ├── services/page.tsx  # Services page
-│   ├── portfolio/page.tsx # Portfolio showcase page
-│   ├── pricing/page.tsx   # Pricing information page
-│   ├── privacy/page.tsx   # Privacy policy page
-│   ├── blog/              # Blog pages with Ghost CMS
-│   │   ├── page.tsx       # Blog listing
-│   │   ├── [slug]/page.tsx # Individual blog posts
-│   │   └── tag/[tag]/page.tsx # Blog posts by tag
-│   ├── robots.ts          # Dynamic robots.txt generation
-│   ├── sitemap.ts         # Dynamic sitemap generation
-│   └── api/               # API routes
-│       ├── contact/route.ts # Contact form handler
-│       ├── analytics/web-vitals/route.ts # Web Vitals tracking
-│       ├── rss/feed/route.ts # RSS feed generation
-│       └── cron/          # Scheduled jobs
-│           ├── process-email-queue/route.ts # Email queue processing
-│           └── update-sitemap/route.ts # Sitemap updates
-├── components/            # Reusable UI components
-│   ├── layout/
-│   │   ├── Navbar.tsx     # Main navigation (client component)
-│   │   └── Footer.tsx     # Site footer
-│   ├── ContactForm.tsx    # Contact form with validation and analytics
-│   ├── CalendarWidget.tsx # Cal.com integration widget
-│   ├── ThemeToggle.tsx    # Dark/light mode toggle
-│   ├── Analytics.tsx      # Analytics tracking components
-│   ├── AccessibilityProvider.tsx # Accessibility features provider
-│   ├── CookieConsent.tsx  # GDPR cookie consent management
-│   ├── ErrorBoundary.tsx  # React error boundary component
-│   ├── LoadingStates.tsx  # Loading indicators and states
-│   ├── ServiceWorkerRegistration.tsx # PWA service worker
-│   └── WebVitalsReporting.tsx # Core Web Vitals monitoring
-├── contexts/              # React contexts
-│   └── ThemeContext.tsx   # Theme management
-├── hooks/                 # Custom React hooks
-│   └── useTouchInteractions.ts # Touch interaction handling
-├── lib/                   # Core utilities and integrations
-│   ├── analytics.ts       # Multi-platform analytics tracking
-│   ├── seo.ts            # SEO configuration with schema markup
-│   ├── email-sequences.ts # Automated email nurturing sequences
-│   ├── ghost.ts          # Ghost CMS API integration
-│   ├── posthog.ts        # PostHog analytics configuration
-│   ├── image-loader.ts   # Next.js image optimization
-│   └── analytics.ts.bak  # Backup of analytics configuration
-├── types/                 # TypeScript type definitions
-│   ├── seo.ts            # SEO metadata types and interfaces
-│   ├── accessibility.ts  # Accessibility compliance types
-│   ├── performance.ts    # Performance monitoring types
-│   ├── components.ts     # Component prop and state types
-│   └── ghost.d.ts        # Ghost CMS API response types
-└── utils/                 # Utility functions
-    ├── seo.ts            # SEO optimization utilities
-    ├── accessibility.ts  # Accessibility helper functions
-    ├── performance.ts    # Performance measurement utilities
-    └── crawling.ts       # Web crawling and indexing utilities
+
+### Utility Commands
+```bash
+npm run generate-sitemap    # Generate sitemap.xml
+npm run setup:https        # Setup local HTTPS certificates
+npm run optimize:images    # Optimize images in public folder
 ```
+
+## Architecture & Structure
+
+### Next.js App Router Structure
+- **Pages**: All routes in `src/app/` using App Router
+- **API Routes**: RESTful endpoints in `src/app/api/`
+- **Components**: Reusable UI components in `src/components/`
+- **Layouts**: Shared layout components in `src/components/layout/`
 
 ### Key Architectural Patterns
 
-#### Multi-Platform Analytics Integration
-- **Google Analytics 4**: Page views, conversions, custom events
-- **PostHog**: Product analytics, feature flags, session recordings
-- **Vercel Analytics**: Core Web Vitals, speed insights
-- Unified tracking through `src/lib/analytics.ts`
-- Comprehensive event tracking: form submissions, scroll depth, time on page
-- Web Vitals monitoring (LCP, FID, CLS) with automatic reporting
+#### Email System Architecture
+The contact form triggers automated email sequences:
+1. **Admin notification** to `hello@hudsondigitalsolutions.com`
+2. **Client welcome email** with immediate nurturing sequence
+3. **Lead scoring** determines sequence type (welcome vs consultation)
+4. **Templates** in `src/lib/email-sequences.ts` with conditional logic
 
-#### SEO and Performance Optimization
-- Centralized SEO config in `src/lib/seo.ts`
-- Rich schema markup (Organization, Service, LocalBusiness, Person)
-- Dynamic keyword generation and meta descriptions
-- OpenGraph and Twitter Card optimization
-- Performance-first approach with Next.js Image optimization
-- Core Web Vitals tracking and optimization
+#### Analytics & Monitoring
+Multi-platform analytics setup:
+- **Google Analytics 4**: Conversion tracking, custom events
+- **PostHog**: Product analytics, feature flags, session recordings  
+- **Vercel Analytics**: Core Web Vitals, performance monitoring
+- **Custom Web Vitals**: Real user monitoring via API endpoint
 
-#### Email Marketing and Lead Nurturing
-- Automated email sequences in `src/lib/email-sequences.ts`
-- Multiple nurturing flows: welcome series, consultation follow-up, long-term nurturing
-- Resend integration for transactional emails
-- Lead scoring and high-intent detection
-- Conversion tracking across all touchpoints
+#### Performance Optimization
+- **Edge Runtime**: API routes use Edge Runtime where possible
+- **Image Optimization**: WebP/AVIF formats with long caching
+- **Code Splitting**: Modular imports for icons and components
+- **Bundle Analysis**: Webpack bundle analyzer integration
+- **Caching Strategy**: Multi-level caching (CDN, browser, ISR)
 
-#### Content Management and Blog
-- Ghost CMS integration for blog content
-- Dynamic blog post generation with SEO optimization
-- Structured data for blog posts
-- RSS feed generation
-- Static generation for optimal performance
+### Ghost CMS Integration
+Blog powered by headless Ghost CMS:
+- **Content API**: Read-only integration via `@tryghost/content-api`
+- **ISR**: Blog posts use Incremental Static Regeneration
+- **SEO**: Dynamic sitemaps, schema markup, RSS feeds
+- **Error Handling**: Graceful fallbacks when Ghost is unavailable
 
-#### Component Architecture
-- **Layout Components**: Navbar, Footer in `src/components/layout/`
-- **Form Components**: ContactForm with validation and analytics
-- **Integration Components**: CalendarWidget, ThemeToggle
-- **Client Components**: Use `"use client"` directive for interactive components
-- **Server Components**: Default for static content and SEO
+### Security & Headers
+Comprehensive security implemented via:
+- **Next.js config headers**: Security headers applied globally
+- **Middleware**: Additional security and performance headers
+- **HTTPS enforcement**: Production redirects, HSTS
+- **CORS configuration**: API route protection
+- **CSP**: Content Security Policy via Vercel config
 
-#### TypeScript Configuration
-- Path aliases configured: `@/*` maps to `src/*`
-- Strict TypeScript settings enabled
-- Component-specific path aliases for better imports
-- Comprehensive type definitions for all integrations
+## Environment Variables
 
-#### Styling and Theme System
-- Tailwind CSS 4.x with custom theme configuration
-- Dark/light mode support with system preference detection
-- CSS custom properties for theming
-- Responsive design patterns with mobile-first approach
-- Custom gradient and glow effects for brand identity
-
-#### Progressive Web App (PWA) Features
-- Service worker registration for offline functionality
-- Manifest.json configuration for app-like experience
-- Caching strategies for improved performance
-- Offline page fallback for network failures
-- App icon and splash screen configurations
-
-#### Cron Jobs and Background Processing
-- Email queue processing via `/api/cron/process-email-queue`
-- Automated sitemap updates via `/api/cron/update-sitemap`
-- RSS feed generation at `/api/rss/feed`
-- Background analytics data processing
-- Scheduled maintenance tasks
-
-### Business Context and Features
-- **Company**: Hudson Digital Solutions
-- **Brand Colors**: Cyan-based palette with gradients
-- **Design Language**: Modern, tech-focused with terminal/coding aesthetics
-- **Target Audience**: Businesses needing web development and digital solutions
-- **Contact Form**: Sends to hello@hudsondigitalsolutions.com with automated nurturing
-- **Calendar Integration**: Cal.com widget for consultation bookings
-- **Lead Nurturing**: Automated email sequences for different user intents
-
-### Development Guidelines
-- Use Next.js App Router patterns (not Pages Router)
-- Implement proper TypeScript types for all components
-- Follow accessibility best practices with ARIA labels
-- Optimize for SEO with structured data and metadata
-- Use server components by default, client components only when needed
-- Maintain responsive design across all screen sizes
-- Follow the existing brand aesthetic and color scheme
-- Always test contact form functionality before deployment
-- Monitor Core Web Vitals and optimize for performance
-- Use analytics tracking for all user interactions
-
-### Environment Variables Required
+### Required
 ```bash
-# Email
-RESEND_API_KEY=             # Resend API key for email sending
-
-# Ghost CMS
-GHOST_URL=                  # Your Ghost instance URL
-GHOST_CONTENT_API_KEY=      # Ghost Content API key
-
-# Analytics & Monitoring
-NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4 ID
-GA4_API_SECRET=             # GA4 Measurement Protocol API secret
-NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
-NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host (default: https://app.posthog.com)
-
-# SEO
-GOOGLE_SITE_VERIFICATION=   # Google Search Console verification
+RESEND_API_KEY=             # Email sending via Resend
+GHOST_URL=                  # Ghost CMS instance URL
+GHOST_CONTENT_API_KEY=      # Ghost Content API key (26 chars)
 ```
 
-### Configuration Files
-- `next.config.ts` - Next.js configuration with image optimization and security headers
-- `tsconfig.json` - TypeScript configuration with path aliases
-- `eslint.config.mjs` - ESLint configuration using Next.js presets
-- `postcss.config.mjs` - PostCSS configuration for Tailwind
-- `tailwind.config.js` - Tailwind CSS configuration
-- `vercel.json` - Vercel deployment configuration with performance optimizations
+### Analytics & Monitoring
+```bash
+NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4
+GA4_API_SECRET=             # GA4 Measurement Protocol
+NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
+NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host URL
+```
 
-### Testing Strategy
+### SEO & Verification
+```bash
+GOOGLE_SITE_VERIFICATION=   # Google Search Console
+```
 
-#### Contact Form Testing
-The contact form can be tested using:
-1. Test HTML page at `http://localhost:3000/test-contact-form.html`
-2. Test script: `npx tsx test-contact-form.ts`
-3. Live site form at `/contact` page
+## Contact Form Flow
+1. Form submission triggers `/api/contact` endpoint
+2. **Validation**: Server-side validation with rate limiting  
+3. **Email sending**: Admin notification + client welcome
+4. **Lead scoring**: High-intent detection for consultation requests
+5. **Sequence scheduling**: Automated nurturing emails via Resend
+6. **Analytics**: Conversion events sent to GA4/PostHog
 
-#### E2E Testing Setup
-- Playwright configured for end-to-end testing
-- Test files: `e2e-test-suite.ts`, `playwright-e2e-tests.ts`
-- Visual regression testing with screenshots in `visual-test-screenshots/`
-- Manual testing guide available in `manual-testing-guide.md`
-- Comprehensive test reports generated in `e2e-test-report.json`
+## Performance Considerations
+- **Bundle optimization**: Tree shaking, code splitting
+- **Image handling**: Next.js Image component with optimization
+- **Font loading**: Google Fonts with display swap
+- **Critical CSS**: Inlined critical styles
+- **Service Worker**: PWA capabilities with offline support
 
-#### Performance Testing
-- Core Web Vitals monitoring with automated reports
-- Bundle analysis available with `ANALYZE=true npm run build`
-- Performance regression testing included in CI/CD
-- Real User Monitoring (RUM) data collection
+## TypeScript Architecture
+- **Strict mode**: Full TypeScript strict mode enabled
+- **Path mapping**: `@/` alias for `src/` directory
+- **Type definitions**: Custom types in `src/types/`
+- **API types**: Shared between frontend and backend
 
-### Performance and Monitoring
-- Real User Monitoring (RUM) with Web Vitals tracking
-- Performance budgets and optimization
-- Error tracking and debugging
-- Lead attribution and marketing campaign tracking
-- Comprehensive analytics dashboard integration
+## Deployment (Vercel)
+- **Edge functions**: Contact API and analytics on Edge Runtime
+- **Regional deployment**: US East (iad1) for performance
+- **Build optimization**: Webpack customizations, memory limits
+- **Environment**: Node.js 20.x with optimized memory allocation
 
-### Key Development Patterns
+## Testing Contact Form
+Three methods available:
+1. **Live site**: `/contact` page
+2. **Test HTML**: `http://localhost:3000/test-contact-form.html`  
+3. **Script**: `npx tsx test-contact-form.ts`
 
-#### File-based Routing Architecture
-- Uses Next.js 15 App Router (not Pages Router)
-- Route handlers in `app/api/` for server-side logic
-- Dynamic routes: `[slug]` for blog posts, `[tag]` for blog tags
-- Special files: `layout.tsx`, `page.tsx`, `robots.ts`, `sitemap.ts`
-- Client components marked with `"use client"` directive
+All emails sent to `hello@hudsondigitalsolutions.com`
 
-#### Data Flow and State Management
-- Server components for static content and SEO optimization
-- Client components for interactive features (forms, navigation)
-- React Context for theme management (`ThemeContext.tsx`)
-- Custom hooks for reusable stateful logic (`useTouchInteractions.ts`)
-- Type-safe APIs with comprehensive TypeScript definitions
-
-#### Integration Architecture
-- Multi-platform analytics unified through `src/lib/analytics.ts`
-- Email automation orchestrated via `src/lib/email-sequences.ts`
-- Ghost CMS headless integration for blog content
-- PostHog for advanced product analytics and feature flags
-- Resend for transactional email delivery
-
-#### Performance-First Design
-- Static generation for blog posts and marketing pages
-- Image optimization with Next.js Image component
-- Bundle splitting and lazy loading strategies
-- Edge caching and CDN optimization
-- Core Web Vitals monitoring and optimization
-
-## Memories and Development Notes
-
-### Integration Strategies
-- Route all memories to use mcp server supermemory
-
-### Important Development Considerations
-- Always test contact form functionality before deployment
-- Monitor bundle size with analyzer (`ANALYZE=true npm run build`)
-- Verify email sequences are working in production
-- Check Core Web Vitals after significant changes
-- Ensure accessibility compliance with screen readers
+## Key Libraries & Dependencies
+- **Next.js 15**: App Router, Edge Runtime, Image Optimization
+- **React 19**: Latest React with concurrent features
+- **Tailwind CSS 4**: Utility-first styling with custom config
+- **Ghost Content API**: Headless CMS integration
+- **Resend**: Email sending and automation
+- **PostHog**: Product analytics platform
+- **@vercel/analytics**: Performance monitoring

@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
     // In production, you would send this to your analytics service
     // Examples: Google Analytics, DataDog, New Relic, custom database
     
-    // Send to Google Analytics 4 if available
-    if (process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
+    // Send to Google Analytics 4 if available (only in production)
+    if (process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && process.env.NODE_ENV === 'production') {
       await sendToGA4(metric, request);
     }
 
@@ -139,8 +139,10 @@ async function storeMetric(metric: WebVital, request: NextRequest) {
   // Example: Store in database
   // await db.webVitals.create({ data: metricRecord });
   
-  // For now, log to console
-  console.log('Metric stored:', metricRecord);
+  // For now, log to console in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Metric stored:', metricRecord);
+  }
 }
 
 function getDeviceType(userAgent: string): string {

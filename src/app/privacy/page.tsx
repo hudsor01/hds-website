@@ -101,7 +101,7 @@ export default function PrivacyPage() {
                   <li><strong>PostHog:</strong> Product analytics and user experience optimization</li>
                   <li><strong>Vercel Analytics:</strong> Performance monitoring</li>
                   <li><strong>Resend:</strong> Email communications</li>
-                  <li><strong>Cal.com:</strong> Calendar scheduling</li>
+                  <li><strong>Google Maps:</strong> Location services</li>
                 </ul>
                 <p>Each service has its own privacy policy governing the use of your information.</p>
               </div>

@@ -19,7 +19,7 @@ const securityHeaders = {
 const corsOptions = {
   allowedOrigins: [
     process.env.NEXT_PUBLIC_APP_URL || 'https://hudsondigitalsolutions.com',
-    'http://localhost:3000', // Development
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []),
   ],
   allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
