@@ -55,7 +55,9 @@ export function addResourceHints() {
 export function registerServiceWorker() {
   // Service worker not yet implemented
   // Remove this function or implement proper SW at /public/sw.js
-  console.log('Service worker registration disabled - not yet implemented')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Service worker registration disabled - not yet implemented')
+  }
 }
 
 // Web Vitals tracking
@@ -67,7 +69,9 @@ export function trackWebVitals() {
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
       const lastEntry = entries[entries.length - 1]
-      console.log('LCP:', lastEntry.startTime)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('LCP:', lastEntry.startTime)
+      }
     }).observe({ entryTypes: ['largest-contentful-paint'] })
 
     // Track FID
@@ -75,7 +79,9 @@ export function trackWebVitals() {
       const entries = entryList.getEntries()
       entries.forEach((entry) => {
         const fidEntry = entry as FIDEntry
-        console.log('FID:', fidEntry.processingStart - fidEntry.startTime)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('FID:', fidEntry.processingStart - fidEntry.startTime)
+        }
       })
     }).observe({ entryTypes: ['first-input'] })
 
@@ -89,7 +95,9 @@ export function trackWebVitals() {
           clsValue += clsEntry.value
         }
       })
-      console.log('CLS:', clsValue)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('CLS:', clsValue)
+      }
     }).observe({ entryTypes: ['layout-shift'] })
   }
 }

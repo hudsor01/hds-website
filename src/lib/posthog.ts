@@ -61,8 +61,12 @@ export function initializePostHog() {
 
 // Event tracking functions
 export const trackEvent = (eventName: string, properties?: AnalyticsProperties) => {
-  if (typeof window !== 'undefined' && posthog) {
-    posthog.capture(eventName, properties);
+  if (typeof window !== 'undefined' && posthog && posthogInitialized) {
+    try {
+      posthog.capture(eventName, properties);
+    } catch (error) {
+      console.warn('PostHog tracking error:', error);
+    }
   }
 };
 

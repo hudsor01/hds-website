@@ -1,6 +1,6 @@
 "use client";
-import React from 'react';
-import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
+import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackEvent } from '@/lib/analytics';
 
 interface ErrorBoundaryState {
@@ -22,6 +22,22 @@ interface ErrorFallbackProps {
 }
 
 function DefaultErrorFallback({ error, resetError, retry }: ErrorFallbackProps) {
+  const [copied, setCopied] = useState(false);
+
+  const copyErrorDetails = async () => {
+    if (!error) return;
+    
+    const errorDetails = `Error: ${error.message}\n\nStack Trace:\n${error.stack}\n\nTimestamp: ${new Date().toISOString()}\nUser Agent: ${navigator.userAgent}\nURL: ${window.location.href}`;
+    
+    try {
+      await navigator.clipboard.writeText(errorDetails);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy error details:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">
       <div className="max-w-md w-full text-center">
@@ -36,16 +52,47 @@ function DefaultErrorFallback({ error, resetError, retry }: ErrorFallbackProps) 
             We&apos;re sorry for the inconvenience. Please try refreshing the page or contact us if the problem persists.
           </p>
           
-          {process.env.NODE_ENV === 'development' && error && (
+          {error && (
             <details className="text-left mb-6 p-4 bg-black/30 rounded-lg border border-red-500/20">
-              <summary className="text-red-400 cursor-pointer mb-2">
-                Error Details (Development)
+              <summary className="text-red-400 cursor-pointer mb-2 flex items-center justify-between">
+                <span>Error Details</span>
+                <button
+                  onClick={copyErrorDetails}
+                  className="ml-2 p-1 hover:bg-red-500/20 rounded transition-colors"
+                  title="Copy error details"
+                >
+                  {copied ? (
+                    <CheckIcon className="w-4 h-4 text-green-400" />
+                  ) : (
+                    <ClipboardDocumentIcon className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
               </summary>
-              <pre className="text-xs text-gray-300 overflow-auto">
-                {error.message}
-                {'\n'}
-                {error.stack}
-              </pre>
+              <div className="mt-3">
+                <pre className="text-xs text-gray-300 overflow-auto whitespace-pre-wrap">
+                  {error.message}
+                  {'\n'}
+                  {error.stack}
+                </pre>
+                <div className="mt-3 pt-3 border-t border-red-500/20">
+                  <button
+                    onClick={copyErrorDetails}
+                    className="flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    {copied ? (
+                      <>
+                        <CheckIcon className="w-3 h-3" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <ClipboardDocumentIcon className="w-3 h-3" />
+                        Copy Error Details
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </details>
           )}
           

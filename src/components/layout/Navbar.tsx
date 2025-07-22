@@ -8,9 +8,9 @@ import { trackEvent } from "@/lib/analytics";
 
 const navigation: NavigationItem[] = [
   { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
   { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 

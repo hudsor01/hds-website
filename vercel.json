@@ -1,21 +1,51 @@
 {
   "framework": "nextjs",
   "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "installCommand": "npm ci --prefer-offline --no-audit --no-fund",
+  "devCommand": "next dev",
+  
   "functions": {
-    "src/app/api/*/route.ts": {
-      "runtime": "edge",
-      "maxDuration": 10
+    "src/app/page.tsx": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 10,
+      "memory": 512
     },
     "src/app/api/contact/route.ts": {
-      "maxDuration": 10
+      "runtime": "nodejs20.x",
+      "maxDuration": 10,
+      "memory": 256
+    },
+    "src/app/api/warm/route.ts": {
+      "runtime": "edge",
+      "maxDuration": 5
     },
     "src/app/blog/[slug]/page.tsx": {
-      "maxDuration": 60
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "src/app/blog/page.tsx": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 20,
+      "memory": 512
+    },
+    "src/app/api/analytics/web-vitals/route.ts": {
+      "runtime": "edge",
+      "maxDuration": 5
     },
     "src/app/sitemap.ts": {
-      "maxDuration": 30
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "memory": 256
+    },
+    "src/app/api/rss/feed/route.ts": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 20,
+      "memory": 256
     }
   },
+
   "rewrites": [
     {
       "source": "/blog/rss",
@@ -34,6 +64,7 @@
       "destination": "/api/rss/feed"
     }
   ],
+
   "redirects": [
     {
       "source": "/portfolio",
@@ -41,7 +72,33 @@
       "permanent": true
     }
   ],
+
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "Link",
+          "value": "</fonts/geist-sans.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous, </fonts/geist-mono.woff2>; rel=preload; as=font; type=font/woff2; crossorigin=anonymous"
+        }
+      ]
+    }
+  ],
+
   "cleanUrls": true,
   "trailingSlash": false,
-  "regions": ["iad1"]
+  
+  "regions": ["iad1"],
+
+  "buildEnv": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+
+  "env": {
+    "NODE_OPTIONS": "--max-old-space-size=512"
+  }
 }

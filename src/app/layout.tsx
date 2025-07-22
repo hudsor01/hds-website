@@ -124,7 +124,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://app.cal.com" />
         
         {/* DNS prefetch for performance */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />

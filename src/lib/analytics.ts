@@ -17,11 +17,11 @@ declare global {
 }
 
 // Google Analytics 4 Configuration
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 // Initialize Google Analytics
 export function initGA() {
-  if (typeof window === 'undefined' || !GA_MEASUREMENT_ID) return;
+  if (typeof window === 'undefined' || !GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.startsWith('G-XXXXXXXXXX')) return;
 
   // Load gtag script
   const script = document.createElement('script');
@@ -51,7 +51,7 @@ export function initGA() {
 
 // Track page views
 export function trackPageView(url: string, title?: string) {
-  if (typeof window === 'undefined' || !window.gtag) return;
+  if (typeof window === 'undefined' || !window.gtag || !GA_MEASUREMENT_ID) return;
 
   window.gtag('config', GA_MEASUREMENT_ID, {
     page_title: title || document.title,

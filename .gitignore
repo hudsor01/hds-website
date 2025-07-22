@@ -56,6 +56,9 @@ test-*.js
 # Visual test screenshots
 visual-test-screenshots/
 
+# Test results directory
+test-results/
+
 # Manual testing guides
 manual-testing-guide.md
 
@@ -87,6 +90,7 @@ CLAUDE.local.md
 # Generated/temporary assets
 public/Generated*
 *copy.*
+public/test-*
 
 # Deployment-specific files that conflict with Vercel
 public/.htaccess
