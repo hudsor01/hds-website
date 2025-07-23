@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env.*
 .env
 .env.local
 .env.development.local
@@ -100,3 +101,4 @@ public/sitemap.xml
 # Development documentation with sensitive info
 docs/ROADMAP.md
 scripts/generate-sitemap.ts
+.trae/

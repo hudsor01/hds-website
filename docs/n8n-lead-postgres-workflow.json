@@ -1,0 +1,303 @@
+{
+  "name": "Hudson Digital - Lead Attribution PostgreSQL",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-attribution",
+        "options": {}
+      },
+      "id": "webhook-lead-attribution",
+      "name": "Lead Attribution Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "webhookId": "lead-attribution-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "lead_id",
+              "value": "={{ $now.toUnix() }}-{{ $json.email?.split('@')[0] || 'anonymous' }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.email || 'unknown@example.com' }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.name || 'Unknown' }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $json.company || '' }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.phone || '' }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message || '' }}"
+            },
+            {
+              "name": "utm_source",
+              "value": "={{ $json.utm_source || 'direct' }}"
+            },
+            {
+              "name": "utm_medium",
+              "value": "={{ $json.utm_medium || 'none' }}"
+            },
+            {
+              "name": "utm_campaign",
+              "value": "={{ $json.utm_campaign || '' }}"
+            },
+            {
+              "name": "utm_content",
+              "value": "={{ $json.utm_content || '' }}"
+            },
+            {
+              "name": "utm_term",
+              "value": "={{ $json.utm_term || '' }}"
+            },
+            {
+              "name": "referrer",
+              "value": "={{ $json.referrer || 'direct' }}"
+            },
+            {
+              "name": "page_url",
+              "value": "={{ $json.page_url || '' }}"
+            },
+            {
+              "name": "user_agent",
+              "value": "={{ $json.user_agent || '' }}"
+            },
+            {
+              "name": "ip_address",
+              "value": "={{ $json.ip_address || '' }}"
+            },
+            {
+              "name": "budget",
+              "value": "={{ $json.budget || '' }}"
+            },
+            {
+              "name": "timeline",
+              "value": "={{ $json.timeline || '' }}"
+            },
+            {
+              "name": "services",
+              "value": "={{ $json.services || '' }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "lead_score",
+              "value": "={{ ($json.budget && parseInt($json.budget) > 5000) ? 80 : ($json.budget && parseInt($json.budget) > 1000) ? 60 : ($json.timeline === 'ASAP' || $json.timeline === '1-2 weeks') ? 70 : 40 }}"
+            }
+          ]
+        }
+      },
+      "id": "set-lead-data",
+      "name": "Set Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO leads (\n  lead_id,\n  email,\n  name,\n  company,\n  phone,\n  message,\n  lead_score,\n  utm_source,\n  utm_medium,\n  utm_campaign,\n  utm_content,\n  utm_term,\n  referrer,\n  page_url,\n  user_agent,\n  ip_address,\n  budget,\n  timeline,\n  services,\n  status,\n  created_at,\n  updated_at\n) VALUES (\n  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,\n  $11, $12, $13, $14, $15, $16, $17, $18, $19,\n  $20, $21, $22\n)\nON CONFLICT (email) DO UPDATE SET\n  name = EXCLUDED.name,\n  company = EXCLUDED.company,\n  phone = EXCLUDED.phone,\n  message = EXCLUDED.message,\n  lead_score = EXCLUDED.lead_score,\n  utm_source = EXCLUDED.utm_source,\n  utm_medium = EXCLUDED.utm_medium,\n  utm_campaign = EXCLUDED.utm_campaign,\n  utm_content = EXCLUDED.utm_content,\n  utm_term = EXCLUDED.utm_term,\n  referrer = EXCLUDED.referrer,\n  page_url = EXCLUDED.page_url,\n  user_agent = EXCLUDED.user_agent,\n  ip_address = EXCLUDED.ip_address,\n  budget = EXCLUDED.budget,\n  timeline = EXCLUDED.timeline,\n  services = EXCLUDED.services,\n  updated_at = NOW(),\n  contact_count = leads.contact_count + 1\nRETURNING *;",
+        "options": {
+          "queryBatching": "independently",
+          "queryReplacement": "={{ [\n  $json.lead_id,\n  $json.email,\n  $json.name,\n  $json.company,\n  $json.phone,\n  $json.message,\n  $json.lead_score,\n  $json.utm_source,\n  $json.utm_medium,\n  $json.utm_campaign,\n  $json.utm_content,\n  $json.utm_term,\n  $json.referrer,\n  $json.page_url,\n  $json.user_agent,\n  $json.ip_address,\n  $json.budget,\n  $json.timeline,\n  $json.services,\n  'new',\n  new Date().toISOString(),\n  new Date().toISOString()\n] }}"
+        }
+      },
+      "id": "insert-to-postgres",
+      "name": "Insert to PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [600, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO lead_events (\n  lead_id,\n  email,\n  event_type,\n  event_data,\n  utm_source,\n  utm_medium,\n  utm_campaign,\n  created_at\n) VALUES (\n  $1, $2, $3, $4, $5, $6, $7, $8\n);",
+        "options": {
+          "queryBatching": "independently",
+          "queryReplacement": "={{ [\n  $json.lead_id,\n  $json.email,\n  'form_submission',\n  JSON.stringify({\n    referrer: $json.referrer,\n    page_url: $json.page_url,\n    services: $json.services,\n    budget: $json.budget,\n    timeline: $json.timeline\n  }),\n  $json.utm_source,\n  $json.utm_medium,\n  $json.utm_campaign,\n  new Date().toISOString()\n] }}"
+        }
+      },
+      "id": "log-event",
+      "name": "Log Lead Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [800, 300],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.posthog.com/capture/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={{ {\n  \"api_key\": \"{{ $env.NEXT_PUBLIC_POSTHOG_KEY }}\",\n  \"event\": \"lead_captured\",\n  \"properties\": {\n    \"distinct_id\": $json.email,\n    \"email\": $json.email,\n    \"name\": $json.name,\n    \"company\": $json.company,\n    \"lead_score\": $json.lead_score,\n    \"utm_source\": $json.utm_source,\n    \"utm_medium\": $json.utm_medium,\n    \"utm_campaign\": $json.utm_campaign,\n    \"utm_content\": $json.utm_content,\n    \"utm_term\": $json.utm_term,\n    \"referrer\": $json.referrer,\n    \"page_url\": $json.page_url,\n    \"$current_url\": $json.page_url,\n    \"$referrer\": $json.referrer,\n    \"budget\": $json.budget,\n    \"timeline\": $json.timeline,\n    \"services\": $json.services\n  }\n} }}"
+      },
+      "id": "track-posthog-event",
+      "name": "Track PostHog Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "boolean": [
+            {
+              "name": "success",
+              "value": true
+            }
+          ],
+          "string": [
+            {
+              "name": "message",
+              "value": "Lead captured and stored successfully"
+            },
+            {
+              "name": "lead_id",
+              "value": "={{ $('Insert to PostgreSQL').item.json.lead_id }}"
+            },
+            {
+              "name": "attribution",
+              "value": "={{ $json.utm_source }}/{{ $json.utm_medium }}/{{ $json.utm_campaign }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "lead_score",
+              "value": "={{ $json.lead_score }}"
+            },
+            {
+              "name": "contact_count",
+              "value": "={{ $('Insert to PostgreSQL').item.json.contact_count || 1 }}"
+            }
+          ]
+        }
+      },
+      "id": "set-success-response",
+      "name": "Set Success Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1400, 300]
+    }
+  ],
+  "connections": {
+    "Lead Attribution Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Insert to PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert to PostgreSQL": {
+      "main": [
+        [
+          {
+            "node": "Log Lead Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Lead Event": {
+      "main": [
+        [
+          {
+            "node": "Track PostHog Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Track PostHog Event": {
+      "main": [
+        [
+          {
+            "node": "Set Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Success Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-07-22T00:00:00.000Z",
+  "versionId": "1"
+}

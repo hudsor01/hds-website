@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
+
+
 const nextConfig: NextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
-  
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -30,10 +32,10 @@ const nextConfig: NextConfig = {
     // optimizePackageImports is stable in Next.js 15
     optimizePackageImports: ['@heroicons/react', 'posthog-js', '@vercel/analytics'],
   },
-  
+
   // Optimize production builds
   productionBrowserSourceMaps: false,
-  
+
   // Aggressive code splitting
   modularizeImports: {
     '@heroicons/react/24/outline': {
@@ -132,31 +134,7 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
 
-    // Add bundle analyzer in development
-    if (process.env.ANALYZE === 'true') {
-      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-      config.plugins.push(
-        new BundleAnalyzerPlugin({
-          analyzerMode: 'static',
-          openAnalyzer: false,
-        })
-      );
-    }
-
-    return config;
-  },
 
 };
 
