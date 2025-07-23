@@ -1,0 +1,293 @@
+name: Development Issue
+description: Comprehensive template for any development request, bug report, or feature
+title: "[TYPE]: Brief description"
+labels: ["triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for creating an issue! Please fill out the form below with as much detail as possible.
+        
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Type
+      description: What type of issue is this?
+      options:
+        - Bug Report
+        - Feature Request
+        - Enhancement
+        - Documentation
+        - Performance Issue
+        - Security Issue
+        - Technical Debt
+        - Infrastructure
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Provide a clear and detailed description
+      placeholder: What needs to be done and why?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How urgent is this issue?
+      options:
+        - Critical (Blocking production)
+        - High (Should be done soon)
+        - Medium (Normal priority)
+        - Low (Nice to have)
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical_requirements
+    attributes:
+      label: Technical Requirements
+      description: List specific technical requirements and acceptance criteria
+      placeholder: |
+        - [ ] Requirement 1
+        - [ ] Requirement 2
+        - Components/files to modify:
+        - APIs/services involved:
+        - Database changes needed:
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Reproduction Steps (For Bugs)
+      description: If this is a bug, provide steps to reproduce
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. See error...
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen?
+    validations:
+      required: false
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior (For Bugs)
+      description: What actually happens?
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Provide environment information
+      placeholder: |
+        - OS: 
+        - Browser: 
+        - Node.js Version: 
+        - Next.js Version: 
+        - Device: 
+    validations:
+      required: false
+
+  - type: textarea
+    id: error_logs
+    attributes:
+      label: Error Messages & Logs
+      description: Paste any relevant error messages or logs
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: code_context
+    attributes:
+      label: Code Context
+      description: Paste relevant code snippets
+      render: javascript
+    validations:
+      required: false
+
+  - type: input
+    id: files_involved
+    attributes:
+      label: Files/Components Involved
+      description: List file paths that need to be modified
+      placeholder: "src/components/Example.tsx, src/pages/api/example.ts"
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies & Libraries
+      description: List any new dependencies needed or version updates required
+      placeholder: |
+        - package-name@version (reason)
+        - Updates to existing packages:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: security_considerations
+    attributes:
+      label: Security Considerations
+      description: Check all that apply
+      options:
+        - label: No security implications
+        - label: Authentication required
+        - label: Authorization levels needed
+        - label: Data validation/sanitization required
+        - label: API keys/secrets involved
+        - label: User data handling required
+
+  - type: checkboxes
+    id: testing_requirements
+    attributes:
+      label: Testing Requirements
+      description: What types of testing are needed?
+      options:
+        - label: Unit tests
+        - label: Integration tests
+        - label: E2E tests
+        - label: Performance tests
+        - label: Mobile/responsive testing
+        - label: Cross-browser testing
+
+  - type: textarea
+    id: design_requirements
+    attributes:
+      label: Design & UX Requirements
+      description: UI/UX specifications, wireframes, user flow
+      placeholder: |
+        - Wireframes/mockups: (attach images)
+        - User flow description:
+        - Responsive design needs:
+        - Accessibility requirements:
+    validations:
+      required: false
+
+  - type: textarea
+    id: performance_requirements
+    attributes:
+      label: Performance & Scalability
+      description: Performance requirements and scalability considerations
+      placeholder: |
+        - Expected load/traffic:
+        - Response time requirements:
+        - Database optimization needed:
+        - Caching strategy:
+    validations:
+      required: false
+
+  - type: textarea
+    id: integrations
+    attributes:
+      label: Third-party Integrations
+      description: External APIs, webhooks, or services involved
+      placeholder: |
+        - APIs to integrate:
+        - Webhook endpoints:
+        - Authentication methods:
+    validations:
+      required: false
+
+  - type: input
+    id: estimated_effort
+    attributes:
+      label: Estimated Effort
+      description: How long do you estimate this will take?
+      placeholder: "e.g., 2 hours, 3 days, 1 week"
+    validations:
+      required: false
+
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline (if applicable)
+      description: When does this need to be completed?
+      placeholder: "YYYY-MM-DD or 'ASAP' or 'No deadline'"
+    validations:
+      required: false
+
+  - type: textarea
+    id: success_metrics
+    attributes:
+      label: Success Metrics
+      description: How will we measure if this is successful?
+      placeholder: |
+        - Metric 1:
+        - Metric 2:
+        - User feedback criteria:
+    validations:
+      required: false
+
+  - type: textarea
+    id: documentation_needs
+    attributes:
+      label: Documentation Requirements
+      description: What documentation needs to be created or updated?
+      placeholder: |
+        - [ ] API documentation
+        - [ ] User guide
+        - [ ] Developer documentation
+        - [ ] README updates
+    validations:
+      required: false
+
+  - type: textarea
+    id: breaking_changes
+    attributes:
+      label: Breaking Changes
+      description: Will this change break existing functionality?
+      placeholder: |
+        - [ ] No breaking changes
+        - [ ] Breaking changes (describe migration steps needed)
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Links, research, related issues, or any other context
+      placeholder: |
+        - Related issues/PRs:
+        - References/documentation:
+        - Research links:
+        - Questions/concerns:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: pre_submission
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have provided all relevant technical details
+          required: true
+        - label: I have considered security and performance implications
+          required: false
+        - label: I have estimated effort and priority appropriately
+          required: false
+        - label: I can provide additional clarification if needed
+          required: true

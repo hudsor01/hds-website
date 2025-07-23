@@ -143,3 +143,42 @@ All emails sent to `hello@hudsondigitalsolutions.com`
 - **Resend**: Email sending and automation
 - **PostHog**: Product analytics platform
 - **@vercel/analytics**: Performance monitoring
+
+## n8n Email Queue Integration
+
+### n8n Workflow JSON Structure
+- **Required fields**: Each node needs `id` (UUID format), `name`, `type`, `typeVersion`, `position` [x,y], `parameters`
+- **Node types format**: `n8n-nodes-base.nodeName` (e.g., `n8n-nodes-base.webhook`)
+- **Connections structure**: `'SourceNode': {'main': [[{'node': 'TargetNode', 'type': 'main', 'index': 0}]]}`
+- **Workflow structure**: Must include `meta{instanceId}`, `nodes[]`, `connections{}`, `active`, `settings`, `versionId`, `id`, `tags`
+- **Common import error**: "undefined is not a function" indicates malformed JSON structure
+
+### n8n Node Configuration Patterns
+- **Webhook node**: `path` parameter, `responseMode: 'responseNode'`, `webhookId` matches path
+- **IF node**: Works better than Switch for simple conditions in n8n workflows
+- **EmailSend node**: Requires SMTP credentials, uses `resource: 'email'`, `operation: 'send'`
+- **Wait node**: `amount` and `unit` parameters for delays
+- **Set node**: `values` object with `boolean/string` arrays for data manipulation
+- **Respond to Webhook**: `respondWith: 'allIncomingItems'` to return processed data
+
+### Email Queue Workflow Architecture
+- **Request format**: Webhook receives JSON with `action: 'send'|'schedule'` and `email` object
+- **Routing logic**: IF condition routes immediate vs scheduled emails based on action parameter
+- **Immediate path**: Webhook → IF → Send Email → Set Success → Respond
+- **Scheduled path**: Webhook → IF → Wait → Send Scheduled Email → Set Schedule Success → Respond
+- **Response format**: Both paths return `{success: true, message: 'descriptive text'}`
+- **Email structure**: `{from, to, subject, html}` with fallback values
+
+### n8n Integration Best Practices
+- **Node IDs**: Always use UUID format to prevent import errors
+- **Node positioning**: Use adequate spacing with `[x,y]` coordinates for visual layout
+- **Compatibility**: Include `typeVersion` for all nodes to ensure compatibility
+- **Stability**: Use built-in nodes (emailSend) over community nodes (resend) when possible
+- **Response handling**: Set proper `responseMode` on webhook to control response behavior
+- **Testing approach**: Start with minimal structure, then add complexity incrementally
+
+### Working n8n Configuration
+- **Location**: `/docs/n8n-email-queue-workflow.json` - Successfully tested and imported
+- **Webhook URL**: `https://n8n.thehudsonfam.com/webhook/email-queue`
+- **API Key**: Configured in `.env.local` as `N8N_API_KEY`
+- **Credentials**: Requires SMTP setup in n8n for EmailSend nodes
