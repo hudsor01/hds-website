@@ -1,0 +1,178 @@
+{
+  "name": "Hudson Digital - Email Queue Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "email-queue",
+        "options": {}
+      },
+      "id": "webhook-email-queue",
+      "name": "Email Queue Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 300],
+      "webhookId": "email-queue-webhook"
+    },
+    {
+      "parameters": {
+        "rules": [
+          {
+            "value1": "={{ $json.action }}",
+            "operation": "equal",
+            "value2": "send"
+          },
+          {
+            "value1": "={{ $json.action }}",
+            "operation": "equal",
+            "value2": "schedule"
+          }
+        ]
+      },
+      "id": "action-switch",
+      "name": "Action Switch", 
+      "type": "n8n-nodes-base.switch",
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "Hudson Digital <noreply@hudsondigitalsolutions.com>",
+        "toEmail": "={{ $json.email.to }}",
+        "subject": "={{ $json.email.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.email.html }}"
+      },
+      "id": "send-email-resend",
+      "name": "Send Email (Resend)",
+      "type": "n8n-nodes-base.resend",
+      "position": [600, 200],
+      "credentials": {
+        "resendApi": {
+          "id": "resend-api-credentials",
+          "name": "Resend API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "minutes"
+      },
+      "id": "wait-for-schedule",
+      "name": "Wait for Schedule",
+      "type": "n8n-nodes-base.wait",
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "Hudson Digital <noreply@hudsondigitalsolutions.com>",
+        "toEmail": "={{ $json.email.to }}",
+        "subject": "={{ $json.email.subject }}",
+        "emailType": "html", 
+        "message": "={{ $json.email.html }}"
+      },
+      "id": "send-scheduled-email",
+      "name": "Send Scheduled Email",
+      "type": "n8n-nodes-base.resend",
+      "position": [800, 300],
+      "credentials": {
+        "resendApi": {
+          "id": "resend-api-credentials", 
+          "name": "Resend API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\"success\": true, \"message\": \"Email sent successfully\", \"queueId\": $runIndex} }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\"success\": true, \"message\": \"Email scheduled successfully\", \"queueId\": $runIndex} }}"
+      },
+      "id": "schedule-response", 
+      "name": "Schedule Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Email Queue Webhook": {
+      "main": [
+        [
+          {
+            "node": "Action Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action Switch": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Resend)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (Resend)": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main", 
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Schedule": {
+      "main": [
+        [
+          {
+            "node": "Send Scheduled Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Scheduled Email": {
+      "main": [
+        [
+          {
+            "node": "Schedule Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-07-22T00:00:00.000Z",
+  "versionId": "1"
+}

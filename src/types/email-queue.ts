@@ -47,13 +47,15 @@ export interface EmailCondition {
   value: string | number | boolean;
 }
 
+export type SequenceData = Record<string, unknown>;
+
 export interface N8nWebhookPayload {
   action: 'send' | 'schedule' | 'sequence';
   email?: EmailQueueItem;
   sequence?: {
     name: string;
     recipientEmail: string;
-    data: Record<string, unknown>;
+    data: SequenceData;
   };
 }
 

@@ -263,6 +263,43 @@ export async function POST(request: NextRequest) {
       // Schedule the email sequence using existing method
       await scheduleContactFormSequence(data);
 
+      // Send lead attribution data to n8n for tracking
+      try {
+        const attributionData = {
+          email: data.email,
+          name: `${data.firstName} ${data.lastName}`,
+          company: data.company || '',
+          phone: data.phone || '',
+          message: data.message,
+          budget: data.budget,
+          timeline: data.timeline,
+          services: data.service,
+          // UTM and attribution data from headers/request
+          utm_source: request.nextUrl.searchParams.get('utm_source') || (req.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
+          utm_medium: request.nextUrl.searchParams.get('utm_medium') || 'none',
+          utm_campaign: request.nextUrl.searchParams.get('utm_campaign') || '',
+          utm_content: request.nextUrl.searchParams.get('utm_content') || '',
+          utm_term: request.nextUrl.searchParams.get('utm_term') || '',
+          referrer: req.headers.get('referer') || 'direct',
+          page_url: req.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
+          user_agent: req.headers.get('user-agent') || '',
+          ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+        };
+
+        await fetch('https://n8n.thehudsonfam.com/webhook/lead-attribution', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(attributionData)
+        });
+        
+        console.log('Lead attribution data sent to n8n');
+      } catch (attributionError) {
+        console.error('Lead attribution tracking failed:', attributionError);
+        // Non-blocking error - continue with response
+      }
+
       return NextResponse.json({
         message: 'Thank you for your inquiry! We\'ll be in touch within 24 hours.',
         success: true

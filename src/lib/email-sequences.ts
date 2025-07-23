@@ -2,9 +2,32 @@ import { Resend } from 'resend';
 import type { EmailTemplateData, EmailTemplatesRecord } from '@/types/email';
 import { createN8nClient } from '@/lib/n8n-webhook';
 import type { EmailQueueItem } from '@/types/email-queue';
+// Removed unused import: sanitizeInput is already used in the contact form API
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const n8nClient = createN8nClient();
+
+// Helper function to escape HTML content in email templates
+function escapeHtml(unsafe: string | number | boolean | undefined): string {
+  if (!unsafe) return '';
+  
+  const str = typeof unsafe === 'string' ? unsafe : String(unsafe);
+  
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Helper function to safely encode URL parameters
+function encodeUrlParam(param: string | number | boolean | undefined): string {
+  if (!param) return '';
+  
+  const str = typeof param === 'string' ? param : String(param);
+  return encodeURIComponent(str);
+}
 
 export interface EmailSequence {
   id: string;
@@ -214,7 +237,7 @@ export const EMAIL_SEQUENCES: Record<string, EmailSequence> = {
 // Email templates
 export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   'welcome-immediate': (data) => `
-    <h2>Welcome to Hudson Digital Solutions, ${data.name}!</h2>
+    <h2>Welcome to Hudson Digital Solutions, ${escapeHtml(data.name)}!</h2>
     <p>Thank you for reaching out. We're excited to learn more about your project.</p>
     <p>Here's what you can expect from us:</p>
     <ul>
@@ -228,7 +251,7 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   `,
   
   'value-proposition': (data) => `
-    <h2>Hi ${data.name}, Let's Transform Your Business Together</h2>
+    <h2>Hi ${escapeHtml(data.name)}, Let's Transform Your Business Together</h2>
     <p>Did you know that businesses with modern web applications see an average of:</p>
     <ul>
       <li>📈 42% increase in conversion rates</li>
@@ -247,7 +270,7 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   `,
   
   'case-studies': (data) => `
-    <h2>${data.name}, See What We've Built for Others</h2>
+    <h2>${escapeHtml(data.name)}, See What We've Built for Others</h2>
     <p>Here are some recent success stories:</p>
     <div style="margin: 20px 0;">
       <h3>E-commerce Platform Rebuild</h3>
@@ -266,7 +289,7 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   `,
   
   'free-audit': (data) => `
-    <h2>${data.name}, Get Your Free Website Audit</h2>
+    <h2>${escapeHtml(data.name)}, Get Your Free Website Audit</h2>
     <p>As a thank you for your interest, we're offering a complimentary website audit that includes:</p>
     <ul>
       <li>🔍 Performance analysis</li>
@@ -377,7 +400,7 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
         <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🚀 PRIORITY RESPONSE</h1>
-        <p style="margin: 15px 0 0 0; font-size: 18px; opacity: 0.95;">Thank you for your high-value inquiry, ${data.name}!</p>
+        <p style="margin: 15px 0 0 0; font-size: 18px; opacity: 0.95;">Thank you for your high-value inquiry, ${escapeHtml(data.name)}!</p>
       </div>
       
       <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 25px; border-left: 6px solid #10b981;">
@@ -407,7 +430,7 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
         <h1 style="margin: 0; font-size: 26px; font-weight: bold;">🏆 Your Enterprise Proposal</h1>
-        <p style="margin: 15px 0 0 0; font-size: 16px; opacity: 0.95;">${data.name}, we've crafted something special for you</p>
+        <p style="margin: 15px 0 0 0; font-size: 16px; opacity: 0.95;">${escapeHtml(data.name)}, we've crafted something special for you</p>
       </div>
       
       <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 25px;">
@@ -428,8 +451,8 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
           </div>
           
           <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 25px; border-radius: 8px; text-align: center;">
-            <h3 style="margin: 0 0 15px 0; font-size: 20px;">💰 Investment: ${data.budget || 'Custom Quote'}</h3>
-            <p style="margin: 0; opacity: 0.9;">Timeline: ${data.timeline || '12-16 weeks'} • ROI: 300%+ typical</p>
+            <h3 style="margin: 0 0 15px 0; font-size: 20px;">💰 Investment: ${escapeHtml(data.budget || 'Custom Quote')}</h3>
+            <p style="margin: 0; opacity: 0.9;">Timeline: ${escapeHtml(data.timeline || '12-16 weeks')} • ROI: 300%+ typical</p>
           </div>
         </div>
         
@@ -476,11 +499,11 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   
   // Service-Specific Templates
   'service-specific-followup': (data) => `
-    <h2>Thank You, ${data.name}!</h2>
-    <p>We're excited about your ${data.service || 'development project'} inquiry.</p>
+    <h2>Thank You, ${escapeHtml(data.name)}!</h2>
+    <p>We're excited about your ${escapeHtml(data.service || 'development project')} inquiry.</p>
     <p>Based on your specific service request, we'll prepare a targeted consultation that covers:</p>
     <ul>
-      <li>✓ ${data.service || 'Service'}-specific best practices</li>
+      <li>✓ ${escapeHtml(data.service || 'Service')}-specific best practices</li>
       <li>✓ Technology recommendations for your use case</li>
       <li>✓ Timeline and budget optimization</li>
       <li>✓ Success metrics and KPI planning</li>
@@ -490,15 +513,15 @@ export const EMAIL_TEMPLATES: EmailTemplatesRecord = {
   `,
   
   'targeted-proposal': (data) => `
-    <h2>${data.name}, Your ${data.service || 'Development'} Proposal</h2>
+    <h2>${escapeHtml(data.name)}, Your ${escapeHtml(data.service || 'Development')} Proposal</h2>
     <p>We've analyzed your specific needs and prepared a targeted solution:</p>
     <div style="border: 2px solid #22d3ee; padding: 20px; border-radius: 8px; margin: 20px 0;">
       <h3>Recommended Solution</h3>
-      <p><strong>Service:</strong> ${data.service || 'Custom Development'}</p>
-      <p><strong>Timeline:</strong> ${data.timeline || 'To be determined'}</p>
-      <p><strong>Budget Range:</strong> ${data.budget || 'Custom quote'}</p>
+      <p><strong>Service:</strong> ${escapeHtml(data.service || 'Custom Development')}</p>
+      <p><strong>Timeline:</strong> ${escapeHtml(data.timeline || 'To be determined')}</p>
+      <p><strong>Budget Range:</strong> ${escapeHtml(data.budget || 'Custom quote')}</p>
     </div>
-    <a href="https://hudsondigitalsolutions.com/contact?source=targeted-proposal&service=${data.service}" style="background: #22d3ee; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">Review Full Proposal</a>
+    <a href="https://hudsondigitalsolutions.com/contact?source=targeted-proposal&service=${encodeUrlParam(data.service || '')}" style="background: #22d3ee; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">Review Full Proposal</a>
   `,
   
   'service-offer': (data) => `
