@@ -1,4 +1,4 @@
-import { EmailQueueItem, N8nWebhookPayload, N8nWebhookResponse } from '@/types/email-queue';
+import { EmailQueueItem, N8nWebhookPayload, N8nWebhookResponse, SequenceData } from '@/types/email-queue';
 
 export class N8nWebhookClient {
   private webhookUrl: string;
@@ -7,6 +7,44 @@ export class N8nWebhookClient {
   constructor(webhookUrl: string, apiKey?: string) {
     this.webhookUrl = webhookUrl;
     this.apiKey = apiKey;
+  }
+
+  // Validate n8n webhook response to prevent type confusion attacks
+  private validateN8nResponse(data: Record<string, unknown>): N8nWebhookResponse {
+    if (!data || typeof data !== 'object') {
+      throw new Error('Invalid response format');
+    }
+    
+    const response = data as Record<string, unknown>;
+    
+    if (typeof response.success !== 'boolean') {
+      throw new Error('Invalid success field');
+    }
+    
+    // Ensure error is a string if present
+    let error: string | undefined;
+    if (response.error !== undefined) {
+      error = typeof response.error === 'string' ? response.error : 'Invalid error format received';
+    }
+    
+    // Ensure message is a string if present  
+    let message: string | undefined;
+    if (response.message !== undefined && typeof response.message === 'string') {
+      message = response.message;
+    }
+    
+    // Ensure queueId is a string if present
+    let queueId: string | undefined;
+    if (response.queueId !== undefined && typeof response.queueId === 'string') {
+      queueId = response.queueId;
+    }
+    
+    return {
+      success: response.success,
+      message,
+      queueId,
+      error
+    };
   }
 
   async sendToQueue(email: EmailQueueItem): Promise<N8nWebhookResponse> {
@@ -30,12 +68,16 @@ export class N8nWebhookClient {
       }
 
       const data = await response.json();
-      return data as N8nWebhookResponse;
+      return this.validateN8nResponse(data);
     } catch (error) {
-      console.error('Failed to send to n8n webhook:', error);
+      console.error('Failed to send to n8n webhook:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      });
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error: 'External email service temporarily unavailable. Please try again.'
       };
     }
   }
@@ -64,12 +106,16 @@ export class N8nWebhookClient {
       }
 
       const data = await response.json();
-      return data as N8nWebhookResponse;
+      return this.validateN8nResponse(data);
     } catch (error) {
-      console.error('Failed to schedule email via n8n:', error);
+      console.error('Failed to schedule email via n8n:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      });
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error: 'Email scheduling service temporarily unavailable. Please try again.'
       };
     }
   }
@@ -77,7 +123,7 @@ export class N8nWebhookClient {
   async triggerSequence(
     sequenceName: string, 
     recipientEmail: string, 
-    sequenceData: Record<string, unknown>
+    sequenceData: SequenceData
   ): Promise<N8nWebhookResponse> {
     try {
       const payload: N8nWebhookPayload = {
@@ -103,12 +149,16 @@ export class N8nWebhookClient {
       }
 
       const data = await response.json();
-      return data as N8nWebhookResponse;
+      return this.validateN8nResponse(data);
     } catch (error) {
-      console.error('Failed to trigger email sequence via n8n:', error);
+      console.error('Failed to trigger email sequence via n8n:', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      });
+      
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error: 'Email sequence service temporarily unavailable. Please try again.'
       };
     }
   }
