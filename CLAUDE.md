@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a modern business website for Hudson Digital Solutions built with Next.js 15, React 19, and TypeScript. It's a high-performance marketing site with integrated blog, contact forms, analytics, and automated email sequences.
+This is a modern business website for Hudson Digital Solutions built with Next.js 15, React 19, and TypeScript. It's a high-performance marketing site with contact forms, analytics, and automated email sequences.
 
 ## Development Commands
 
@@ -63,12 +63,6 @@ Multi-platform analytics setup:
 - **Bundle Analysis**: Webpack bundle analyzer integration
 - **Caching Strategy**: Multi-level caching (CDN, browser, ISR)
 
-### Ghost CMS Integration
-Blog powered by headless Ghost CMS:
-- **Content API**: Read-only integration via `@tryghost/content-api`
-- **ISR**: Blog posts use Incremental Static Regeneration
-- **SEO**: Dynamic sitemaps, schema markup, RSS feeds
-- **Error Handling**: Graceful fallbacks when Ghost is unavailable
 
 ### Security & Headers
 Comprehensive security implemented via:
@@ -83,8 +77,6 @@ Comprehensive security implemented via:
 ### Required
 ```bash
 RESEND_API_KEY=             # Email sending via Resend
-GHOST_URL=                  # Ghost CMS instance URL
-GHOST_CONTENT_API_KEY=      # Ghost Content API key (26 chars)
 ```
 
 ### Analytics & Monitoring
@@ -139,7 +131,6 @@ All emails sent to `hello@hudsondigitalsolutions.com`
 - **Next.js 15**: App Router, Edge Runtime, Image Optimization
 - **React 19**: Latest React with concurrent features
 - **Tailwind CSS 4**: Utility-first styling with custom config
-- **Ghost Content API**: Headless CMS integration
 - **Resend**: Email sending and automation
 - **PostHog**: Product analytics platform
 - **@vercel/analytics**: Performance monitoring

@@ -1,7 +1,37 @@
 import { Metadata } from "next";
 import { SEO_CONFIG } from "@/utils/seo";
-import ContactForm from "@/components/ContactForm";
-import GoogleMap from "@/components/GoogleMap";
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+// Lazy load components to reduce initial bundle
+const ContactFormLight = dynamic(() => import('@/components/ContactFormLight'), {
+  loading: () => <ContactFormSkeleton />
+});
+
+const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
+  loading: () => <MapSkeleton />
+});
+
+// Loading skeletons
+function ContactFormSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="h-12 bg-gray-800 rounded-lg"></div>
+        <div className="h-12 bg-gray-800 rounded-lg"></div>
+      </div>
+      <div className="h-12 bg-gray-800 rounded-lg"></div>
+      <div className="h-32 bg-gray-800 rounded-lg"></div>
+      <div className="h-12 bg-gray-800 rounded-lg"></div>
+    </div>
+  );
+}
+
+function MapSkeleton() {
+  return (
+    <div className="h-96 bg-gray-800 rounded-lg animate-pulse"></div>
+  );
+}
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
@@ -37,17 +67,12 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero relative">
-      {/* Power Grid Pattern */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
-      </div>
+    <main className="min-h-screen bg-gradient-primary">
+      {/* Simple gradient background - no complex animations */}
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 -z-10" />
       
-      {/* Dynamic Energy Elements */}
-      <div className="absolute top-20 right-16 w-96 h-96 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      {/* Single accent gradient */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl -z-10" />
       
       {/* Header */}
       <section className="relative py-16">
@@ -66,14 +91,18 @@ export default function ContactPage() {
             {/* Left Column - Google Map */}
             <div className="order-2 lg:order-1">
               <div className="sticky top-24">
-                <GoogleMap />
+                <Suspense fallback={<MapSkeleton />}>
+                  <GoogleMap />
+                </Suspense>
               </div>
             </div>
             
             {/* Right Column - Contact Form */}
             <div className="order-1 lg:order-2">
-              <div className="shadow-2xl hover:shadow-secondary-500/30 transition-all duration-500 glass-morphism bg-black/95 border border-cyan-300 rounded-xl p-8">
-                <ContactForm />
+              <div className="bg-gray-900/90 backdrop-blur-sm border border-cyan-400/20 rounded-xl p-8 shadow-2xl">
+                <Suspense fallback={<ContactFormSkeleton />}>
+                  <ContactFormLight />
+                </Suspense>
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { NavigationItem } from "@/types/components";
 import ThemeToggle from "@/components/ThemeToggle";
 import { trackEvent } from "@/lib/analytics";
@@ -67,20 +68,22 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4 ml-auto">
             <ThemeToggle />
             <Link href="/contact" passHref>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => {
                   trackEvent('cta_click', 'navigation', 'get_started_navbar');
                   trackEvent('conversion_intent', 'cta', 'navbar_get_started');
                 }}
-                className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-cyan-700 text-white font-extrabold py-3 px-8 rounded-full text-base shadow-lg hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-cyan-700 text-white font-extrabold py-3 px-8 rounded-full text-base shadow-lg hover:shadow-2xl hover:shadow-cyan-400/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900"
                 aria-label="Get started with Hudson Digital Solutions"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
                 Get Started
-              </button>
+              </motion.button>
             </Link>
           </div>
           {/* Mobile menu button */}
@@ -106,13 +109,18 @@ export default function Navbar() {
           </div>
         </div>
         {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div 
-            id="mobile-menu"
-            className="md:hidden absolute left-0 right-0 top-16 bg-black/95 backdrop-blur-xl border-b-2 border-cyan-400 z-50 rounded-b-xl shadow-2xl transition-all duration-300"
-            role="menu"
-            aria-label="Mobile navigation menu"
-          >
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div 
+              id="mobile-menu"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden absolute left-0 right-0 top-16 bg-black/95 backdrop-blur-xl border-b-2 border-cyan-400 z-50 rounded-b-xl shadow-2xl"
+              role="menu"
+              aria-label="Mobile navigation menu"
+            >
             <div className="flex flex-col space-y-3 p-6">
               {navigation.map((item) => (
                 <Link
@@ -142,8 +150,9 @@ export default function Navbar() {
                 Get Started
               </button>
             </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

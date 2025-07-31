@@ -1,9 +1,12 @@
 "use client";
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useThemeStore } from '@/stores/theme';
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, mounted, toggleTheme } = useThemeStore();
+
+  // Prevent hydration mismatch
+  if (!mounted) return null;
 
   return (
     <button
