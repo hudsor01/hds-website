@@ -1,39 +1,8 @@
 import { Metadata } from "next";
 import { SEO_CONFIG } from "@/utils/seo";
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import ContactPageClient from "@/components/ContactPageClient";
 
-// Lazy load components to reduce initial bundle
-const ContactFormLight = dynamic(() => import('@/components/ContactFormLight'), {
-  loading: () => <ContactFormSkeleton />
-});
-
-const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
-  loading: () => <MapSkeleton />
-});
-
-// Loading skeletons
-function ContactFormSkeleton() {
-  return (
-    <div className="space-y-6 animate-pulse">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="h-12 bg-gray-800 rounded-lg"></div>
-        <div className="h-12 bg-gray-800 rounded-lg"></div>
-      </div>
-      <div className="h-12 bg-gray-800 rounded-lg"></div>
-      <div className="h-32 bg-gray-800 rounded-lg"></div>
-      <div className="h-12 bg-gray-800 rounded-lg"></div>
-    </div>
-  );
-}
-
-function MapSkeleton() {
-  return (
-    <div className="h-96 bg-gray-800 rounded-lg animate-pulse"></div>
-  );
-}
-
-// Next.js 15: SSR meta for SEO/TTFB
+// SSR metadata for SEO
 export const metadata: Metadata = {
   title: SEO_CONFIG.contact.title,
   description: SEO_CONFIG.contact.description,
@@ -84,28 +53,10 @@ export default function ContactPage() {
         </div>
       </section>
       
-      {/* Contact Form Section - Two Column Layout */}
+      {/* Contact Form Section - Client Component handles dynamic imports */}
       <section className="relative py-12">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Left Column - Google Map */}
-            <div className="order-2 lg:order-1">
-              <div className="sticky top-24">
-                <Suspense fallback={<MapSkeleton />}>
-                  <GoogleMap />
-                </Suspense>
-              </div>
-            </div>
-            
-            {/* Right Column - Contact Form */}
-            <div className="order-1 lg:order-2">
-              <div className="bg-gray-900/90 backdrop-blur-sm border border-cyan-400/20 rounded-xl p-8 shadow-2xl">
-                <Suspense fallback={<ContactFormSkeleton />}>
-                  <ContactFormLight />
-                </Suspense>
-              </div>
-            </div>
-          </div>
+          <ContactPageClient />
         </div>
       </section>
     </main>

@@ -33,7 +33,7 @@ function MapSkeleton() {
   );
 }
 
-// Next.js 15: SSR meta for SEO/TTFB
+// SSR metadata for SEO
 export const metadata: Metadata = {
   title: SEO_CONFIG.contact.title,
   description: SEO_CONFIG.contact.description,
@@ -59,13 +59,9 @@ export const metadata: Metadata = {
     "max-image-preview": "large",
     "max-video-preview": -1,
   },
-  other: {
-    // JSON-LD structured data for SSR
-    "ld+json": JSON.stringify(SEO_CONFIG.contact.structuredData),
-  },
 };
 
-export default function ContactPage() {
+export default function ContactPageLight() {
   return (
     <main className="min-h-screen bg-gradient-primary">
       {/* Simple gradient background - no complex animations */}
@@ -77,18 +73,20 @@ export default function ContactPage() {
       {/* Header */}
       <section className="relative py-16">
         <div className="max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <h1 className="text-5xl font-black text-white mb-6 glow-cyan">Let&apos;s Build Something Legendary</h1>
+          <h1 className="text-5xl font-black text-white mb-6">
+            Let&apos;s Build Something Legendary
+          </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Ready to dominate your market? Tell us about your vision and let&apos;s engineer a solution that crushes the competition.
           </p>
         </div>
       </section>
       
-      {/* Contact Form Section - Two Column Layout */}
+      {/* Contact Section - Optimized Layout */}
       <section className="relative py-12">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Left Column - Google Map */}
+            {/* Left Column - Map (lazy loaded) */}
             <div className="order-2 lg:order-1">
               <div className="sticky top-24">
                 <Suspense fallback={<MapSkeleton />}>
@@ -97,7 +95,7 @@ export default function ContactPage() {
               </div>
             </div>
             
-            {/* Right Column - Contact Form */}
+            {/* Right Column - Contact Form (lazy loaded) */}
             <div className="order-1 lg:order-2">
               <div className="bg-gray-900/90 backdrop-blur-sm border border-cyan-400/20 rounded-xl p-8 shadow-2xl">
                 <Suspense fallback={<ContactFormSkeleton />}>

@@ -1,0 +1,82 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Update dependencies
+        run: |
+          # Update all dependencies to latest minor/patch versions
+          npm update
+          
+          # Check for major updates
+          npx npm-check-updates -u --target minor
+          
+          # Install updated dependencies
+          npm install
+          
+          # Audit and fix vulnerabilities
+          npm audit fix || true
+
+      - name: Run tests
+        run: |
+          npm run lint || true
+          npm run typecheck || true
+          npm run build
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: '🔄 Weekly dependency updates'
+          body: |
+            ## 📦 Dependency Updates
+            
+            This PR contains the following updates:
+            - Minor and patch version updates
+            - Security vulnerability fixes
+            
+            ### 🔍 Review checklist
+            - [ ] All tests pass
+            - [ ] Build succeeds
+            - [ ] No breaking changes
+            - [ ] Bundle size impact is acceptable
+            
+            ### 📊 Bundle size analysis
+            Check the bundle analysis comment below for size changes.
+            
+            ---
+            *This PR was automatically created by the dependency update workflow.*
+            
+            @claude Please review these dependency updates for any breaking changes or security concerns.
+          branch: deps/weekly-update
+          delete-branch: true
+          labels: |
+            dependencies
+            automated
