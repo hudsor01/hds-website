@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
-import Navbar from "@/components/layout/Navbar";
+import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -163,7 +163,7 @@ export default function RootLayout({
             <ServiceWorkerRegistration />
             <WebVitalsReporting />
             <ErrorBoundary>
-              <Navbar />
+              <NavbarLight />
               <main id="main-content" className="min-h-screen">
                 <ErrorBoundary>
                   {children}
