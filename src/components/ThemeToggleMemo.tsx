@@ -1,8 +1,9 @@
 "use client";
+import { memo } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { useThemeStore } from '@/stores/theme';
 
-export default function ThemeToggle() {
+const ThemeToggleMemo = memo(function ThemeToggleMemo() {
   const { theme, mounted, toggleTheme } = useThemeStore();
 
   // Prevent hydration mismatch
@@ -39,4 +40,6 @@ export default function ThemeToggle() {
       } group-hover:opacity-100 blur-xl`} />
     </button>
   );
-}
+});
+
+export default ThemeToggleMemo;

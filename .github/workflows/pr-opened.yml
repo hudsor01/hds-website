@@ -1,0 +1,51 @@
+name: PR Opened
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  welcome-comment:
+    name: Add Welcome Comment
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Add PR comment with Claude mention
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prAuthor = context.payload.pull_request.user.login;
+            const prTitle = context.payload.pull_request.title;
+            const prBody = context.payload.pull_request.body || 'No description provided';
+            
+            const comment = `## 👋 Welcome to the PR!\n\n` +
+              `Thanks @${prAuthor} for opening this pull request!\n\n` +
+              `### 📋 PR Summary\n` +
+              `**Title:** ${prTitle}\n` +
+              `**Description:** ${prBody.substring(0, 200)}${prBody.length > 200 ? '...' : ''}\n\n` +
+              `### 🤖 Automated Checks\n` +
+              `The following automated checks will run:\n` +
+              `- ✅ Code quality (lint, typecheck)\n` +
+              `- 📦 Bundle size analysis\n` +
+              `- 🚀 Preview deployment\n` +
+              `- 🔍 Lighthouse performance test\n` +
+              `- 🔒 Security vulnerability scan\n\n` +
+              `### 🎯 Next Steps\n` +
+              `1. Wait for all checks to pass\n` +
+              `2. Review the preview deployment (link coming soon)\n` +
+              `3. Address any feedback from automated checks\n\n` +
+              `---\n\n` +
+              `@claude Please review this PR when the preview deployment is ready. Focus on:\n` +
+              `- Code quality and best practices\n` +
+              `- Performance implications\n` +
+              `- Security considerations\n` +
+              `- User experience improvements\n\n` +
+              `_This comment will be updated with the preview URL once deployment completes._`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });

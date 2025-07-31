@@ -1,71 +1,31 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { trackFormSubmission } from '@/lib/posthog';
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-  service: string;
-  budget: string;
-  timeline: string;
-  message: string;
-}
-
-interface FormErrors {
-  [key: string]: string | undefined;
-}
-
-const initialFormState: FormData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  company: '',
-  service: '',
-  budget: '',
-  timeline: '',
-  message: '',
-};
+import { useContactStore } from '@/stores/contact';
 
 export default function ContactForm() {
-  const [form, setForm] = useState<FormData>(initialFormState);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isPending, startTransition] = useTransition();
-
-  const validateForm = (): FormErrors => {
-    const newErrors: FormErrors = {};
-
-    if (!form.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!form.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    if (form.phone && !/^[\d\s\-\+\(\)]+$/.test(form.phone)) {
-      newErrors.phone = 'Phone number is invalid';
-    }
-    if (!form.message.trim()) {
-      newErrors.message = 'Message is required';
-    } else if (form.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
-    }
-
-    return newErrors;
-  };
+  const {
+    form,
+    errors,
+    isSubmitted,
+    isPending,
+    setForm,
+    setErrors,
+    setIsSubmitted,
+    setIsPending,
+    clearError,
+    validateForm,
+    resetForm
+  } = useContactStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ [name]: value });
     
     // Clear error for this field when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      setErrors({ ...errors, [name]: undefined });
+    if (errors[name]) {
+      clearError(name);
     }
   };
 
@@ -78,48 +38,53 @@ export default function ContactForm() {
       return;
     }
 
+    setIsPending(true);
 
-    // Optimistic UI update
-    startTransition(async () => {
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(form),
-        });
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to submit form');
-        }
-
-        // Track successful submission
-        trackFormSubmission('contact', true, {
-          service: form.service,
-          budget: form.budget,
-          hasCompany: !!form.company,
-        });
-
-        setIsSubmitted(true);
-        setForm(initialFormState);
-      } catch (error) {
-        console.error('Form submission error:', error);
-        setErrors({ 
-          message: error instanceof Error ? error.message : 'Failed to send message. Please try again.' 
-        });
-        
-        // Track failed submission
-        trackFormSubmission('contact', false);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit form');
       }
-    });
+
+      // Track successful submission
+      trackFormSubmission('contact', true, {
+        service: form.service,
+        budget: form.budget,
+        hasCompany: !!form.company,
+      });
+
+      setIsSubmitted(true);
+      resetForm();
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setErrors({ 
+        message: error instanceof Error ? error.message : 'Failed to send message. Please try again.' 
+      });
+      
+      // Track failed submission
+      trackFormSubmission('contact', false);
+    } finally {
+      setIsPending(false);
+    }
   };
 
   if (isSubmitted) {
     return (
-      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-8 text-center animate-in fade-in slide-in-from-bottom-3 duration-500">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-8 text-center"
+      >
         <div className="mb-4">
           <svg className="mx-auto h-12 w-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -131,36 +96,53 @@ export default function ContactForm() {
         <p className="text-green-700 dark:text-green-300 mb-6">
           Thank you for reaching out. I&apos;ll get back to you within 24 hours.
         </p>
-        <button
+        <motion.button
           onClick={() => setIsSubmitted(false)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           className="text-green-700 dark:text-green-300 hover:text-green-800 dark:hover:text-green-200 underline"
         >
           Send another message
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {errors.message && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 animate-in fade-in slide-in-from-top-2">
-          <p className="text-red-700 dark:text-red-300">{errors.message}</p>
-        </div>
-      )}
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className="space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <AnimatePresence>
+        {errors.message && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+          >
+            <p className="text-red-700 dark:text-red-300">{errors.message}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             First Name *
           </label>
-          <input
+          <motion.input
             type="text"
             id="firstName"
             name="firstName"
             value={form.firstName}
             onChange={handleChange}
             disabled={isPending}
+            whileFocus={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
             className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 ${
               errors.firstName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
             } bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -359,10 +341,13 @@ export default function ContactForm() {
         )}
       </div>
 
-      <button
+      <motion.button
         type="submit"
         disabled={isPending}
-        className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg"
+        whileHover={{ scale: 1.05, y: -2 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isPending ? (
           <span className="flex items-center justify-center">
@@ -375,7 +360,7 @@ export default function ContactForm() {
         ) : (
           'Send Message'
         )}
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   );
 }

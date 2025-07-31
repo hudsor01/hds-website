@@ -191,115 +191,121 @@ export async function POST(request: NextRequest) {
       
       const data = validation.data!;
 
-      // Prepare admin notification email
-      const adminEmail: EmailQueueItem = {
-        to: 'hello@hudsondigitalsolutions.com',
-        from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
-        subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
-        html: generateAdminNotificationHTML(data),
-        priority: 'high',
-        metadata: {
-          source: 'contact-form',
-          formId: 'main-contact',
-        }
-      };
-
-      // Try to use n8n webhook first, fallback to direct Resend
-      if (n8nClient) {
-        console.log('Sending emails via n8n webhook queue...');
-        
-        // Send admin notification to queue
-        const adminResult = await n8nClient.sendToQueue(adminEmail);
-        
-        if (!adminResult.success) {
-          console.error('Failed to queue admin email:', adminResult.error);
-          // Don't fail the request, try direct send below
-        } else {
-          // Trigger email sequence for the client
-          const sequenceResult = await n8nClient.triggerSequence(
-            determineSequenceType(data),
-            data.email,
-            {
-              firstName: data.firstName,
-              lastName: data.lastName,
-              company: data.company || '',
-              service: data.service || '',
-              budget: data.budget || '',
-              timeline: data.timeline || ''
+      // Process contact form submission
+      console.log('Processing contact form submission for:', data.email);
+      
+      try {
+          // Prepare admin notification email
+          const adminEmail: EmailQueueItem = {
+            to: 'hello@hudsondigitalsolutions.com',
+            from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
+            subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
+            html: generateAdminNotificationHTML(data),
+            priority: 'high',
+            metadata: {
+              source: 'contact-form',
+              formId: 'main-contact',
             }
-          );
+          };
 
-          if (!sequenceResult.success) {
-            console.error('Failed to trigger email sequence:', sequenceResult.error);
+          // Try to use n8n webhook first, fallback to direct Resend
+          let emailSent = false;
+          
+          if (n8nClient) {
+            console.log('Sending emails via n8n webhook queue...');
+            
+            // Send admin notification to queue
+            const adminResult = await n8nClient.sendToQueue(adminEmail);
+            
+            if (!adminResult.success) {
+              console.error('Failed to queue admin email:', adminResult.error);
+            } else {
+              emailSent = true;
+              
+              // Trigger email sequence for the client
+              const sequenceResult = await n8nClient.triggerSequence(
+                determineSequenceType(data),
+                data.email,
+                {
+                  firstName: data.firstName,
+                  lastName: data.lastName,
+                  company: data.company || '',
+                  service: data.service || '',
+                  budget: data.budget || '',
+                  timeline: data.timeline || ''
+                }
+              );
+
+              if (!sequenceResult.success) {
+                console.error('Failed to trigger email sequence:', sequenceResult.error);
+              }
+            }
           }
 
-          // If n8n succeeded, return success
-          return NextResponse.json({
-            message: 'Thank you for your inquiry! We\'ll be in touch within 24 hours.',
-            success: true
-          });
+          // Fallback to direct Resend if n8n failed or not configured
+          if (!emailSent && resend) {
+            console.log('Falling back to direct Resend email...');
+            
+            // Send notification email directly
+            await resend.emails.send({
+              from: adminEmail.from!,
+              to: [adminEmail.to],
+              subject: adminEmail.subject,
+              html: adminEmail.html!
+            });
+
+            // Schedule the email sequence using existing method
+            await scheduleContactFormSequence(data);
+            emailSent = true;
+          }
+
+          if (!emailSent) {
+            console.error('Neither n8n nor Resend is properly configured - email not sent');
+          }
+
+          // Send lead attribution data to n8n for tracking
+          try {
+            const attributionData = {
+              email: data.email,
+              name: `${data.firstName} ${data.lastName}`,
+              company: data.company || '',
+              phone: data.phone || '',
+              message: data.message,
+              budget: data.budget,
+              timeline: data.timeline,
+              services: data.service,
+              // UTM and attribution data from headers/request
+              utm_source: request.nextUrl.searchParams.get('utm_source') || (req.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
+              utm_medium: request.nextUrl.searchParams.get('utm_medium') || 'none',
+              utm_campaign: request.nextUrl.searchParams.get('utm_campaign') || '',
+              utm_content: request.nextUrl.searchParams.get('utm_content') || '',
+              utm_term: request.nextUrl.searchParams.get('utm_term') || '',
+              referrer: req.headers.get('referer') || 'direct',
+              page_url: req.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
+              user_agent: req.headers.get('user-agent') || '',
+              ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+            };
+
+            await fetch('https://n8n.thehudsonfam.com/webhook/lead-attribution', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(attributionData)
+            });
+            
+            console.log('Lead attribution data sent to n8n');
+          } catch (attributionError) {
+            console.error('Lead attribution tracking failed:', attributionError);
+          }
+
+          console.log('Contact form processing completed for:', data.email);
+        } catch (processingError) {
+          console.error('Error processing contact form:', processingError);
+          // Don't fail the request for background task errors
         }
-      }
 
-      // Fallback to direct Resend if n8n is not configured or failed
-      if (!resend) {
-        console.error('Neither n8n nor Resend is properly configured');
-        return NextResponse.json(
-          { error: 'Service temporarily unavailable. Please try again later.' },
-          { status: 503 }
-        );
-      }
-
-      console.log('Falling back to direct Resend email...');
-      
-      // Send notification email directly
-      await resend.emails.send({
-        from: adminEmail.from!,
-        to: [adminEmail.to],
-        subject: adminEmail.subject,
-        html: adminEmail.html!
-      });
-
-      // Schedule the email sequence using existing method
-      await scheduleContactFormSequence(data);
-
-      // Send lead attribution data to n8n for tracking
-      try {
-        const attributionData = {
-          email: data.email,
-          name: `${data.firstName} ${data.lastName}`,
-          company: data.company || '',
-          phone: data.phone || '',
-          message: data.message,
-          budget: data.budget,
-          timeline: data.timeline,
-          services: data.service,
-          // UTM and attribution data from headers/request
-          utm_source: request.nextUrl.searchParams.get('utm_source') || (req.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
-          utm_medium: request.nextUrl.searchParams.get('utm_medium') || 'none',
-          utm_campaign: request.nextUrl.searchParams.get('utm_campaign') || '',
-          utm_content: request.nextUrl.searchParams.get('utm_content') || '',
-          utm_term: request.nextUrl.searchParams.get('utm_term') || '',
-          referrer: req.headers.get('referer') || 'direct',
-          page_url: req.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
-          user_agent: req.headers.get('user-agent') || '',
-          ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
-        };
-
-        await fetch('https://n8n.thehudsonfam.com/webhook/lead-attribution', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(attributionData)
-        });
-        
-        console.log('Lead attribution data sent to n8n');
-      } catch (attributionError) {
-        console.error('Lead attribution tracking failed:', attributionError);
-        // Non-blocking error - continue with response
-      }
-
+      // Return success response after processing
       return NextResponse.json({
         message: 'Thank you for your inquiry! We\'ll be in touch within 24 hours.',
         success: true
