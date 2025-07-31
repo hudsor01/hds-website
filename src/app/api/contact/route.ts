@@ -286,10 +286,16 @@ export async function POST(request: NextRequest) {
               ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
             };
 
-            await fetch('https://n8n.thehudsonfam.com/webhook/lead-attribution', {
+            const n8nUrl = process.env.N8N_WEBHOOK_URL;
+            if (!n8nUrl) {
+              throw new Error('N8N webhook URL not configured');
+            }
+            
+            await fetch(`${n8nUrl}/webhook/lead-attribution`, {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': process.env.N8N_API_KEY ? `Bearer ${process.env.N8N_API_KEY}` : ''
               },
               body: JSON.stringify(attributionData)
             });

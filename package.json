@@ -23,7 +23,6 @@
     "@tailwindcss/vite": "^4.1.11",
     "@vercel/analytics": "^1.5.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.12",
     "next": "15.4.3",
     "posthog-js": "^1.257.2",
     "react": "^19.1.0",
