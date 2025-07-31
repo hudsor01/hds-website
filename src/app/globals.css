@@ -99,6 +99,36 @@ body {
   text-shadow: 0 0 30px rgba(34, 211, 238, 0.5);
 }
 
+/* Lightweight animations for contact form */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Simple loading spinner */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .glow-green {
   text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
 }
