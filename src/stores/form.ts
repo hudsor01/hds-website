@@ -2,6 +2,11 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { ContactFormData, LeadScoring } from '@/schemas/contact';
 
+// Only use devtools in development
+const withDevtools = process.env.NODE_ENV === 'development' 
+  ? devtools 
+  : ((fn: unknown) => fn) as typeof devtools;
+
 interface FormState<T = Record<string, unknown>> {
   data: Partial<T>;
   errors: Record<string, string[]>;
@@ -26,7 +31,7 @@ export const createFormStore = <T extends Record<string, unknown>>(
   initialData: Partial<T> = {}
 ) => {
   return create<FormState<T>>()(
-    devtools(
+    withDevtools(
       persist(
         (set) => ({
           data: initialData,
@@ -80,7 +85,29 @@ export const createFormStore = <T extends Record<string, unknown>>(
         }),
         {
           name: `${name}-form-storage`,
-          partialize: (state) => ({ data: state.data }), // Only persist form data
+          partialize: (state) => {
+            // Filter out potentially sensitive fields
+            const { data } = state;
+            const sanitizedData = Object.entries(data).reduce((acc, [key, value]) => {
+              // Don't persist fields that might contain sensitive data
+              const sensitiveFieldPatterns = [
+                'password', 'token', 'secret', 'key', 'ssn', 
+                'creditcard', 'cvv', 'pin', 'api'
+              ];
+              
+              const isSensitive = sensitiveFieldPatterns.some(pattern => 
+                key.toLowerCase().includes(pattern)
+              );
+              
+              if (!isSensitive) {
+                (acc as Record<string, unknown>)[key] = value;
+              }
+              
+              return acc;
+            }, {} as Partial<T>);
+            
+            return { data: sanitizedData };
+          },
         }
       ),
       { name: `${name}-form` }
@@ -108,7 +135,7 @@ interface ContactFormStore extends FormState<ContactFormData> {
 }
 
 export const useContactFormStore = create<ContactFormStore>()(
-  devtools(
+  withDevtools(
     persist(
       (set, get) => ({
         data: {
@@ -233,11 +260,24 @@ export const useContactFormStore = create<ContactFormStore>()(
       }),
       {
         name: 'contact-form-storage',
-        partialize: (state) => ({ 
-          data: state.data,
-          submissionResult: state.submissionResult,
-          isSubmitted: state.isSubmitted,
-        }),
+        partialize: (state) => {
+          // Only persist non-sensitive data
+          const { data, submissionResult, isSubmitted } = state;
+          
+          // Filter out phone number and email for privacy
+          const { email, ...safeData } = data;
+          
+          return { 
+            data: {
+              ...safeData,
+              // Only persist if user explicitly submitted (not just typing)
+              email: isSubmitted ? email : undefined,
+              phone: undefined, // Never persist phone numbers
+            },
+            submissionResult,
+            isSubmitted,
+          };
+        },
       }
     ),
     { name: 'contact-form' }
