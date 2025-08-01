@@ -1,80 +1,94 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { trackFormSubmission } from '@/lib/posthog';
-import { useContactStore } from '@/stores/contact';
+import { useContactFormStore } from '@/stores/form';
 import { getCSRFToken } from '@/lib/csrf';
+import { contactFormSchema, type ContactFormData } from '@/schemas/contact';
+import { useErrorStore } from '@/stores/error';
 
 export default function ContactFormLight() {
-  const [isPending, startTransition] = useTransition();
+  const { 
+    isSubmitted, 
+    setSubmitted, 
+    updateData, 
+    resetForm: resetStore 
+  } = useContactFormStore();
+  const { addError } = useErrorStore();
+  
   const {
-    form,
-    errors,
-    isSubmitted,
-    setForm,
-    setErrors,
-    setIsSubmitted,
-    clearError,
-    validateForm,
-    resetForm
-  } = useContactStore();
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    watch,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      company: '',
+      service: undefined,
+      budget: undefined,
+      timeline: undefined,
+      message: '',
+    },
+  });
+  
+  // Watch form data and sync with Zustand store
+  const formData = watch();
+  updateData(formData);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm({ [name]: value });
-    
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      clearError(name);
-    }
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      return;
-    }
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      const csrfToken = getCSRFToken();
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-csrf-token': csrfToken,
+        },
+        body: JSON.stringify(data),
+      });
 
-    startTransition(async () => {
-      try {
-        const csrfToken = getCSRFToken();
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-csrf-token': csrfToken,
-          },
-          body: JSON.stringify(form),
-        });
+      const result = await response.json();
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to submit form');
-        }
-
-        // Track successful submission
-        trackFormSubmission('contact', true, {
-          service: form.service,
-          budget: form.budget,
-          hasCompany: !!form.company,
-        });
-
-        setIsSubmitted(true);
-        resetForm();
-      } catch (error) {
-        console.error('Form submission error:', error);
-        setErrors({ 
-          message: error instanceof Error ? error.message : 'Failed to send message. Please try again.' 
-        });
-        
-        // Track failed submission
-        trackFormSubmission('contact', false);
+      if (!response.ok) {
+        throw new Error(result.error || result.message || 'Failed to submit form');
       }
-    });
+
+      // Track successful submission with lead score
+      trackFormSubmission('contact', true, {
+        service: data.service,
+        budget: data.budget,
+        hasCompany: !!data.company,
+        leadScore: result.leadScore,
+      });
+
+      setSubmitted(true);
+      reset();
+      resetStore();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send message. Please try again.';
+      
+      // Add to error store for global error tracking
+      addError({
+        message: errorMessage,
+        category: 'network',
+        severity: 'medium',
+        metadata: { form: 'contact', data },
+      });
+      
+      // Track failed submission
+      trackFormSubmission('contact', false);
+      
+      // Re-throw to let react-hook-form handle the error
+      throw error;
+    }
   };
 
   if (isSubmitted) {
@@ -92,7 +106,10 @@ export default function ContactFormLight() {
           Thank you for reaching out. We&apos;ll get back to you within 24 hours.
         </p>
         <button
-          onClick={() => setIsSubmitted(false)}
+          onClick={() => {
+            setSubmitted(false);
+            reset();
+          }}
           className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
         >
           Send Another Message
@@ -102,7 +119,7 @@ export default function ContactFormLight() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 fade-in">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 fade-in">
       {/* Name Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -110,19 +127,16 @@ export default function ContactFormLight() {
             First Name *
           </label>
           <input
+            {...register('firstName')}
             type="text"
             id="firstName"
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange}
-            required
             className={`w-full px-4 py-3 bg-black/40 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500 ${
               errors.firstName ? 'border-red-500' : 'border-gray-600'
             }`}
             placeholder="John"
           />
-          {errors.firstName && (
-            <p className="mt-1 text-sm text-red-500 fade-in">{errors.firstName}</p>
+          {errors.firstName?.message && (
+            <p className="mt-1 text-sm text-red-500 fade-in">{errors.firstName.message}</p>
           )}
         </div>
 
@@ -131,19 +145,16 @@ export default function ContactFormLight() {
             Last Name *
           </label>
           <input
+            {...register('lastName')}
             type="text"
             id="lastName"
-            name="lastName"
-            value={form.lastName}
-            onChange={handleChange}
-            required
             className={`w-full px-4 py-3 bg-black/40 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500 ${
               errors.lastName ? 'border-red-500' : 'border-gray-600'
             }`}
             placeholder="Doe"
           />
-          {errors.lastName && (
-            <p className="mt-1 text-sm text-red-500 fade-in">{errors.lastName}</p>
+          {errors.lastName?.message && (
+            <p className="mt-1 text-sm text-red-500 fade-in">{errors.lastName.message}</p>
           )}
         </div>
       </div>
@@ -154,19 +165,16 @@ export default function ContactFormLight() {
           Email *
         </label>
         <input
+          {...register('email')}
           type="email"
           id="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
           className={`w-full px-4 py-3 bg-black/40 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500 ${
             errors.email ? 'border-red-500' : 'border-gray-600'
           }`}
           placeholder="john@example.com"
         />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500 fade-in">{errors.email}</p>
+        {errors.email?.message && (
+          <p className="mt-1 text-sm text-red-500 fade-in">{errors.email.message}</p>
         )}
       </div>
 
@@ -177,18 +185,16 @@ export default function ContactFormLight() {
             Phone (Optional)
           </label>
           <input
+            {...register('phone')}
             type="tel"
             id="phone"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
             className={`w-full px-4 py-3 bg-black/40 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500 ${
               errors.phone ? 'border-red-500' : 'border-gray-600'
             }`}
             placeholder="+1 (555) 000-0000"
           />
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-500 fade-in">{errors.phone}</p>
+          {errors.phone?.message && (
+            <p className="mt-1 text-sm text-red-500 fade-in">{errors.phone.message}</p>
           )}
         </div>
 
@@ -197,11 +203,9 @@ export default function ContactFormLight() {
             Company (Optional)
           </label>
           <input
+            {...register('company')}
             type="text"
             id="company"
-            name="company"
-            value={form.company}
-            onChange={handleChange}
             className="w-full px-4 py-3 bg-black/40 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500"
             placeholder="Acme Corp"
           />
@@ -215,10 +219,8 @@ export default function ContactFormLight() {
             Service Needed
           </label>
           <select
+            {...register('service')}
             id="service"
-            name="service"
-            value={form.service}
-            onChange={handleChange}
             className="w-full px-4 py-3 bg-black/40 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white"
           >
             <option value="">Select a service</option>
@@ -236,10 +238,8 @@ export default function ContactFormLight() {
             Project Budget
           </label>
           <select
+            {...register('budget')}
             id="budget"
-            name="budget"
-            value={form.budget}
-            onChange={handleChange}
             className="w-full px-4 py-3 bg-black/40 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white"
           >
             <option value="">Select budget range</option>
@@ -258,11 +258,9 @@ export default function ContactFormLight() {
           Project Timeline
         </label>
         <input
+          {...register('timeline')}
           type="text"
           id="timeline"
-          name="timeline"
-          value={form.timeline}
-          onChange={handleChange}
           className="w-full px-4 py-3 bg-black/40 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500"
           placeholder="e.g., 3 months, ASAP, Q1 2024"
         />
@@ -274,19 +272,16 @@ export default function ContactFormLight() {
           Project Details *
         </label>
         <textarea
+          {...register('message')}
           id="message"
-          name="message"
           rows={5}
-          value={form.message}
-          onChange={handleChange}
-          required
           className={`w-full px-4 py-3 bg-black/40 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-white placeholder-gray-500 resize-none ${
             errors.message ? 'border-red-500' : 'border-gray-600'
           }`}
           placeholder="Tell us about your project goals, challenges, and vision..."
         />
-        {errors.message && (
-          <p className="mt-1 text-sm text-red-500 fade-in">{errors.message}</p>
+        {errors.message?.message && (
+          <p className="mt-1 text-sm text-red-500 fade-in">{errors.message.message}</p>
         )}
       </div>
 
@@ -294,14 +289,14 @@ export default function ContactFormLight() {
       <div>
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isSubmitting}
           className={`w-full py-4 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-[1.02] ${
-            isPending
+            isSubmitting
               ? 'bg-gray-600 cursor-not-allowed opacity-50'
               : 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-black shadow-lg hover:shadow-cyan-500/25'
           }`}
         >
-          {isPending ? (
+          {isSubmitting ? (
             <span className="flex items-center justify-center">
               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -316,9 +311,9 @@ export default function ContactFormLight() {
       </div>
 
       {/* General Error Message */}
-      {errors.message && !errors.firstName && !errors.lastName && !errors.email && !errors.phone && (
+      {errors.root?.message && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 fade-in">
-          <p className="text-red-800 dark:text-red-200 text-sm">{errors.message}</p>
+          <p className="text-red-800 dark:text-red-200 text-sm">{errors.root.message}</p>
         </div>
       )}
     </form>

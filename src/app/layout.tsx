@@ -10,7 +10,8 @@ import { Theme } from '@radix-ui/themes';
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import WebVitalsReporting from "@/components/WebVitalsReporting";
 import CookieConsent from "@/components/CookieConsent";
-import ErrorBoundary from "@/components/ErrorBoundary";
+import { ErrorBoundary, AsyncErrorBoundary } from "@/components/ErrorBoundary";
+import { ProgressBar } from "@/components/ProgressBar";
 import AccessibilityProvider from "@/components/AccessibilityProvider";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
 
@@ -159,9 +160,12 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Theme accentColor="cyan" grayColor="mauve" radius="medium" scaling="100%">
+            {/* <DefaultSeo /> */}
             <AccessibilityProvider />
             <ServiceWorkerRegistration />
             <WebVitalsReporting />
+            <ProgressBar />
+            <AsyncErrorBoundary>
             <ErrorBoundary>
               <NavbarLight />
               <main id="main-content" className="min-h-screen">
@@ -171,6 +175,7 @@ export default function RootLayout({
               </main>
               <Footer />
             </ErrorBoundary>
+            </AsyncErrorBoundary>
             <Analytics />
             <CookieConsent />
           </Theme>
