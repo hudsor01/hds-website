@@ -4,82 +4,55 @@ import { createN8nClient } from '@/lib/n8n-webhook';
 import { EmailQueueItem } from '@/types/email-queue';
 import { scheduleContactFormSequence } from '@/lib/email-sequences';
 import { 
-  securityMiddleware, 
-  validateRequestBody, 
-  validateEmail,
-  validatePhone,
+  applySecurityHeaders,
+  checkRateLimit,
   sanitizeInput 
 } from '@/middleware/security';
 import { verifyCSRFToken } from '@/lib/csrf';
+import { validateRequestWithZod, createValidatedResponse } from '@/lib/validation';
+import { contactFormSchema, type ContactFormData } from '@/schemas/contact';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const n8nClient = createN8nClient();
 
-interface ContactFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  service?: string;
-  budget?: string;
-  timeline?: string;
-  message: string;
-}
-
-// Define validation schema
-const contactFormSchema = {
-  firstName: { 
-    required: true, 
-    type: 'string' as const, 
-    min: 1, 
-    max: 50,
-    pattern: /^[a-zA-Z\s\-']+$/
-  },
-  lastName: { 
-    required: true, 
-    type: 'string' as const, 
-    min: 1, 
-    max: 50,
-    pattern: /^[a-zA-Z\s\-']+$/
-  },
-  email: { 
-    required: true, 
-    type: 'string' as const,
-    validator: (value: unknown) => typeof value === 'string' && validateEmail(value)
-  },
-  phone: { 
-    required: false, 
-    type: 'string' as const,
-    validator: (value: unknown) => !value || (typeof value === 'string' && validatePhone(value))
-  },
-  company: { 
-    required: false, 
-    type: 'string' as const, 
-    max: 100
-  },
-  service: { 
-    required: false, 
-    type: 'string' as const,
-    pattern: /^[a-zA-Z0-9\s\-,&]+$/
-  },
-  budget: { 
-    required: false, 
-    type: 'string' as const,
-    pattern: /^[\$\d\s\-\+kKmM]+$/
-  },
-  timeline: { 
-    required: false, 
-    type: 'string' as const,
-    max: 100
-  },
-  message: { 
-    required: true, 
-    type: 'string' as const, 
-    min: 10, 
-    max: 5000
+// Calculate lead score based on contact form data
+function calculateLeadScore(data: ContactFormData): number {
+  let score = 0;
+  
+  // Budget scoring (0-30 points)
+  if (data.budget) {
+    if (data.budget.includes('50K+')) score += 30;
+    else if (data.budget.includes('25-50K')) score += 25;
+    else if (data.budget.includes('10-25K')) score += 20;
+    else if (data.budget.includes('5-10K')) score += 15;
+    else if (data.budget === 'tbd') score += 10;
   }
-};
+  
+  // Timeline scoring (0-20 points)
+  if (data.timeline) {
+    const timelineLower = data.timeline.toLowerCase();
+    if (timelineLower.includes('asap') || timelineLower.includes('urgent')) score += 20;
+    else if (timelineLower.includes('1 month') || timelineLower.includes('4 week')) score += 15;
+    else if (timelineLower.includes('2 month') || timelineLower.includes('8 week')) score += 10;
+    else if (timelineLower.includes('3 month') || timelineLower.includes('quarter')) score += 5;
+  }
+  
+  // Service specificity (0-15 points)
+  if (data.service && data.service !== 'other') score += 15;
+  
+  // Company presence (0-10 points)
+  if (data.company) score += 10;
+  
+  // Phone number provided (0-10 points)
+  if (data.phone) score += 10;
+  
+  // Message quality (0-15 points)
+  if (data.message.length > 200) score += 15;
+  else if (data.message.length > 100) score += 10;
+  else if (data.message.length > 50) score += 5;
+  
+  return Math.min(score, 100); // Cap at 100
+}
 
 // Helper function to generate admin notification HTML
 function generateAdminNotificationHTML(data: ContactFormData): string {
@@ -165,34 +138,38 @@ function generateAdminNotificationHTML(data: ContactFormData): string {
 }
 
 export async function POST(request: NextRequest) {
-  return securityMiddleware(request, async (req) => {
-    try {
-      const body = await req.json();
-      
-      // Verify CSRF token
-      const csrfToken = req.headers.get('x-csrf-token');
-      if (!csrfToken || !verifyCSRFToken(csrfToken, req)) {
-        return NextResponse.json(
-          { error: 'Invalid security token. Please refresh the page and try again.' },
-          { status: 403 }
-        );
-      }
-      
-      // Validate request body
-      const validation = validateRequestBody<ContactFormData>(body, contactFormSchema);
-      
-      if (!validation.valid) {
-        console.error('Validation errors:', validation.errors);
-        return NextResponse.json(
-          { error: 'Please check your input and try again' },
-          { status: 400 }
-        );
-      }
-      
-      const data = validation.data!;
+  try {
+    // Check rate limiting first
+    const rateLimitOk = await checkRateLimit(request, 5, 60000); // 5 requests per minute
+    if (!rateLimitOk) {
+      return new NextResponse('Too Many Requests', { status: 429 });
+    }
+    
+    // Verify CSRF token
+    const csrfToken = request.headers.get('x-csrf-token');
+    if (!csrfToken || !verifyCSRFToken(csrfToken, request)) {
+      return NextResponse.json(
+        { error: 'Invalid security token. Please refresh the page and try again.' },
+        { status: 403 }
+      );
+    }
+    
+    // Validate request body with Zod
+    const validation = await validateRequestWithZod(request, contactFormSchema);
+    
+    if (!validation.success) {
+      return createValidatedResponse(validation);
+    }
+    
+    const data = validation.data;
+    const leadScore = calculateLeadScore(data);
 
-      // Process contact form submission
-      console.log('Processing contact form submission for:', data.email);
+      // Process contact form submission with lead score
+      console.log('Processing contact form submission:', {
+        email: data.email,
+        leadScore,
+        isHighValue: leadScore >= 70
+      });
       
       try {
           // Prepare admin notification email
@@ -275,15 +252,15 @@ export async function POST(request: NextRequest) {
               timeline: data.timeline,
               services: data.service,
               // UTM and attribution data from headers/request
-              utm_source: request.nextUrl.searchParams.get('utm_source') || (req.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
+              utm_source: request.nextUrl.searchParams.get('utm_source') || (request.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
               utm_medium: request.nextUrl.searchParams.get('utm_medium') || 'none',
               utm_campaign: request.nextUrl.searchParams.get('utm_campaign') || '',
               utm_content: request.nextUrl.searchParams.get('utm_content') || '',
               utm_term: request.nextUrl.searchParams.get('utm_term') || '',
-              referrer: req.headers.get('referer') || 'direct',
-              page_url: req.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
-              user_agent: req.headers.get('user-agent') || '',
-              ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+              referrer: request.headers.get('referer') || 'direct',
+              page_url: request.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
+              user_agent: request.headers.get('user-agent') || '',
+              ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
             };
 
             const n8nUrl = process.env.N8N_WEBHOOK_URL;
@@ -311,47 +288,41 @@ export async function POST(request: NextRequest) {
           // Don't fail the request for background task errors
         }
 
-      // Return success response after processing
-      return NextResponse.json({
-        message: 'Thank you for your inquiry! We\'ll be in touch within 24 hours.',
-        success: true
-      });
+    // Create response with security headers
+    const response = NextResponse.json({
+      message: 'Thank you for your inquiry! We\'ll be in touch within 24 hours.',
+      success: true,
+      leadScore // Include lead score in response for frontend tracking
+    });
+    
+    // Apply security headers
+    return applySecurityHeaders(response);
 
-    } catch (error) {
-      console.error('Contact form error:', error);
-      return NextResponse.json(
-        { error: 'An unexpected error occurred. Please try again later.' },
-        { status: 500 }
-      );
-    }
-  });
+  } catch (error) {
+    console.error('Contact form error:', error);
+    
+    const response = NextResponse.json(
+      { error: 'An unexpected error occurred. Please try again later.' },
+      { status: 500 }
+    );
+    
+    return applySecurityHeaders(response);
+  }
 }
 
-// Helper function to determine email sequence type based on form data
+// Helper function to determine email sequence type based on lead score
 function determineSequenceType(data: ContactFormData): string {
-  // High-intent indicators
-  const hasHighBudget = data.budget && (
-    data.budget.includes('25K') || 
-    data.budget.includes('50K') || 
-    data.budget.includes('+')
-  );
+  const leadScore = calculateLeadScore(data);
   
-  const hasUrgentTimeline = data.timeline && (
-    data.timeline.toLowerCase().includes('asap') || 
-    data.timeline.includes('1 month')
-  );
-
-  const hasSpecificService = data.service && 
-    data.service !== 'other' && 
-    data.service !== '';
-
-  // Determine sequence
-  if (hasHighBudget && hasUrgentTimeline) {
+  // Use lead score for more precise sequence selection
+  if (leadScore >= 80) {
     return 'high-value-consultation';
-  } else if (hasSpecificService && (hasHighBudget || hasUrgentTimeline)) {
+  } else if (leadScore >= 60) {
     return 'targeted-service-consultation';
-  } else if (data.company) {
+  } else if (leadScore >= 40 && data.company) {
     return 'enterprise-nurture';
+  } else if (leadScore >= 30) {
+    return 'qualified-lead-nurture';
   } else {
     return 'standard-welcome';
   }

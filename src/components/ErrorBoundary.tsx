@@ -1,27 +1,25 @@
-"use client";
-import React, { useState } from 'react';
+'use client';
+
+import { ComponentType, ReactNode, useState, ErrorInfo as ReactErrorInfo } from 'react';
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackEvent } from '@/lib/analytics';
+import { useErrorStore, createErrorRecord } from '@/stores/error';
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+interface ErrorFallbackProps {
+  error: Error;
+  resetErrorBoundary: () => void;
 }
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ComponentType<ErrorFallbackProps>;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  children: ReactNode;
+  fallback?: ComponentType<ErrorFallbackProps>;
+  onError?: (error: Error, errorInfo: ReactErrorInfo) => void;
+  onReset?: () => void;
+  resetKeys?: Array<string | number>;
 }
 
-interface ErrorFallbackProps {
-  error?: Error;
-  resetError: () => void;
-  retry: () => void;
-}
-
-function DefaultErrorFallback({ error, resetError, retry }: ErrorFallbackProps) {
+function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   const [copied, setCopied] = useState(false);
 
   const copyErrorDetails = async () => {
@@ -96,20 +94,13 @@ function DefaultErrorFallback({ error, resetError, retry }: ErrorFallbackProps) 
             </details>
           )}
           
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex justify-center">
             <button
-              onClick={retry}
+              onClick={resetErrorBoundary}
               className="flex items-center justify-center gap-2 bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg hover:bg-cyan-300 transition-colors"
             >
               <ArrowPathIcon className="w-5 h-5" />
               Try Again
-            </button>
-            
-            <button
-              onClick={resetError}
-              className="flex items-center justify-center gap-2 bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Reset
             </button>
           </div>
           
@@ -128,110 +119,112 @@ function DefaultErrorFallback({ error, resetError, retry }: ErrorFallbackProps) 
   );
 }
 
-export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  private retryTimeoutId: number | null = null;
+export function ErrorBoundary({
+  children,
+  fallback = DefaultErrorFallback,
+  onError,
+  onReset,
+  resetKeys,
+}: ErrorBoundaryProps) {
+  const addError = useErrorStore((state) => state.addError);
 
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return {
-      hasError: true,
-      error,
-    };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to analytics
-    trackEvent('error_boundary_triggered', 'error', error.message);
-    
-    // Log to console for debugging
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
-    // Update state with error info
-    this.setState({
-      error,
-      errorInfo,
+  const handleError = (error: Error, errorInfo: ReactErrorInfo) => {
+    // Add to error store with automatic severity and category detection
+    const errorRecord = createErrorRecord(error, 'runtime', 'high');
+    addError({
+      ...errorRecord,
+      componentStack: errorInfo.componentStack || undefined,
     });
 
+    // Track error in analytics
+    trackEvent('error_boundary_triggered', 'error', error.message);
+
     // Call custom error handler if provided
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo);
-    }
+    onError?.(error, errorInfo);
 
-    // In production, you might want to send this to an error reporting service
-    if (process.env.NODE_ENV === 'production') {
-      // Example: Sentry, LogRocket, etc.
-      // Sentry.captureException(error);
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error Boundary Caught:', error, errorInfo);
     }
-  }
+  };
 
-  resetError = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  const handleReset = () => {
     trackEvent('error_boundary_reset', 'error', 'manual_reset');
+    onReset?.();
   };
 
-  retry = () => {
-    // Clear any existing timeout
-    if (this.retryTimeoutId) {
-      clearTimeout(this.retryTimeoutId);
-    }
-
-    trackEvent('error_boundary_retry', 'error', 'manual_retry');
-    
-    // Reset the error state
-    this.resetError();
-    
-    // Optional: Add a small delay before retry to prevent immediate re-error
-    this.retryTimeoutId = window.setTimeout(() => {
-      // Force a re-render by updating the key prop or state
-      this.forceUpdate();
-    }, 100);
-  };
-
-  componentWillUnmount() {
-    if (this.retryTimeoutId) {
-      clearTimeout(this.retryTimeoutId);
-    }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      const FallbackComponent = this.props.fallback || DefaultErrorFallback;
-      
-      return (
-        <FallbackComponent
-          error={this.state.error}
-          resetError={this.resetError}
-          retry={this.retry}
-        />
-      );
-    }
-
-    return this.props.children;
-  }
+  return (
+    <ReactErrorBoundary
+      FallbackComponent={fallback}
+      onError={handleError}
+      onReset={handleReset}
+      resetKeys={resetKeys}
+    >
+      {children}
+    </ReactErrorBoundary>
+  );
 }
 
-// Hook for functional components to handle errors
+// Export default for backwards compatibility
+export default ErrorBoundary;
+
+// Component-specific error boundary with minimal UI
+export function ComponentErrorBoundary({
+  children,
+  name,
+}: {
+  children: ReactNode;
+  name: string;
+}) {
+  return (
+    <ErrorBoundary
+      fallback={({ resetErrorBoundary }) => (
+        <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">
+            Failed to load {name}
+          </p>
+          <button
+            onClick={resetErrorBoundary}
+            className="mt-2 text-xs text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300 underline"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+    >
+      {children}
+    </ErrorBoundary>
+  );
+}
+
+// Hook for imperatively showing error boundary
 export function useErrorHandler() {
-  return (error: Error, errorInfo?: React.ErrorInfo) => {
-    trackEvent('error_handler_used', 'error', error.message);
-    console.error('Error caught by useErrorHandler:', error, errorInfo);
+  const addError = useErrorStore((state) => state.addError);
+
+  return (error: unknown) => {
+    const errorRecord = createErrorRecord(error, 'runtime', 'high');
+    addError(errorRecord);
     
-    // You could throw the error to be caught by an ErrorBoundary
-    // throw error;
+    // Track error in analytics
+    trackEvent('error_handler_used', 'error', errorRecord.message);
+    
+    // Re-throw to trigger nearest error boundary
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error(errorRecord.message);
+    }
   };
 }
 
 // Higher-order component for wrapping components with error boundary
 export function withErrorBoundary<P extends object>(
-  Component: React.ComponentType<P>,
-  fallback?: React.ComponentType<ErrorFallbackProps>
+  Component: ComponentType<P>,
+  fallback?: ComponentType<ErrorFallbackProps>,
+  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>
 ) {
   const WrappedComponent = (props: P) => (
-    <ErrorBoundary fallback={fallback}>
+    <ErrorBoundary fallback={fallback} {...errorBoundaryProps}>
       <Component {...props} />
     </ErrorBoundary>
   );
@@ -239,4 +232,22 @@ export function withErrorBoundary<P extends object>(
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
   
   return WrappedComponent;
+}
+
+// Error recovery component for async errors
+export function AsyncErrorBoundary({ children }: { children: ReactNode }) {
+  return (
+    <ErrorBoundary
+      resetKeys={['async-error']}
+      onError={(error) => {
+        // Special handling for async errors
+        if (error.message.includes('ChunkLoadError') || error.message.includes('Loading chunk')) {
+          // Reload the page for chunk loading errors
+          window.location.reload();
+        }
+      }}
+    >
+      {children}
+    </ErrorBoundary>
+  );
 }
