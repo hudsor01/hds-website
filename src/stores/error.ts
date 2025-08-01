@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
+// Only use devtools in development
+const withDevtools = process.env.NODE_ENV === 'development' 
+  ? devtools 
+  : ((fn: unknown) => fn) as typeof devtools;
+
 export interface ErrorRecord {
   id: string;
   message: string;
@@ -33,7 +38,7 @@ interface ErrorStore {
 }
 
 export const useErrorStore = create<ErrorStore>()(
-  devtools(
+  withDevtools(
     persist(
       (set, get) => ({
         errors: [],
@@ -103,7 +108,20 @@ export const useErrorStore = create<ErrorStore>()(
       {
         name: 'error-storage',
         partialize: (state) => ({
-          errors: state.errors.slice(0, 50), // Only persist last 50 errors
+          errors: state.errors.slice(0, 50).map(error => ({
+            ...error,
+            // Remove potentially sensitive data from persisted errors
+            stack: undefined,
+            componentStack: undefined,
+            metadata: error.metadata ? {
+              ...error.metadata,
+              // Filter out sensitive metadata fields
+              password: undefined,
+              token: undefined,
+              apiKey: undefined,
+              secret: undefined,
+            } : undefined,
+          })),
           errorCount: state.errorCount,
         }),
       }
