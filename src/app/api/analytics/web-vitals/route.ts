@@ -1,50 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { securityMiddleware, validateRequestBody } from '@/middleware/security';
+import { securityMiddleware } from '@/middleware/security';
+import { z } from 'zod';
 
-interface WebVital {
-  id: string;
-  name: string;
-  value: number;
-  rating: 'good' | 'needs-improvement' | 'poor';
-  delta: number;
-  entries: PerformanceEntry[];
-  navigationType: string;
-}
+const webVitalSchema = z.object({
+  id: z.string().max(100),
+  name: z.enum(['FCP', 'LCP', 'CLS', 'FID', 'TTFB', 'INP']),
+  value: z.number().min(0),
+  rating: z.enum(['good', 'needs-improvement', 'poor']),
+  delta: z.number(),
+  navigationType: z.string().max(50),
+  entries: z.array(z.any()).optional() // PerformanceEntry is complex, allow any for now
+});
 
-// Validation schema for web vitals
-const webVitalSchema = {
-  id: { required: true, type: 'string' as const, max: 100 },
-  name: { 
-    required: true, 
-    type: 'string' as const,
-    pattern: /^(FCP|LCP|CLS|FID|TTFB|INP)$/
-  },
-  value: { required: true, type: 'number' as const, min: 0 },
-  rating: { 
-    required: true, 
-    type: 'string' as const,
-    pattern: /^(good|needs-improvement|poor)$/
-  },
-  delta: { required: true, type: 'number' as const },
-  navigationType: { required: true, type: 'string' as const, max: 50 }
-};
+type WebVital = z.infer<typeof webVitalSchema>;
 
 export async function POST(request: NextRequest) {
   return securityMiddleware(request, async (req) => {
     try {
-      const body = await req.json();
-      
-      // Validate metric data
-      const validation = validateRequestBody<WebVital>(body, webVitalSchema);
-      
-      if (!validation.valid) {
+      // Check if request has a body
+      const text = await req.text();
+      if (!text.trim()) {
         return NextResponse.json(
-          { error: 'Invalid metric data', details: validation.errors },
+          { error: 'Empty request body' },
+          { status: 400 }
+        );
+      }
+
+      // Parse JSON safely
+      let body;
+      try {
+        body = JSON.parse(text);
+      } catch (parseError) {
+        console.error('Web vitals JSON parse error:', parseError);
+        return NextResponse.json(
+          { error: 'Invalid JSON in request body' },
           { status: 400 }
         );
       }
       
-      const metric = validation.data!;
+      // Validate metric data with Zod
+      const result = webVitalSchema.safeParse(body);
+      
+      if (!result.success) {
+        return NextResponse.json(
+          { error: 'Invalid metric data', details: result.error.issues },
+          { status: 400 }
+        );
+      }
+      
+      const metric = result.data;
 
     // Log metric for monitoring
     if (process.env.NODE_ENV === "development" && process.env.DEBUG_WEB_VITALS) {

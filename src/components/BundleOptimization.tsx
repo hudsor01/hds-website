@@ -5,14 +5,13 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/LoadingSkeletons";
 
 // Lazy loading utilities
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createLazyComponent<T extends React.ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>,
+export function createLazyComponent(
+  importFunc: () => Promise<{ default: React.ComponentType }>,
   fallback?: ReactNode
 ) {
   const LazyComponent = lazy(importFunc);
   
-  return function LazyWrapper(props: React.ComponentProps<T>) {
+  return function LazyWrapper(props: Record<string, unknown>) {
     return (
       <Suspense fallback={fallback || <Skeleton className="w-full h-32" />}>
         <LazyComponent {...props} />
@@ -22,9 +21,8 @@ export function createLazyComponent<T extends React.ComponentType<any>>(
 }
 
 // Dynamic imports with Next.js
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createDynamicComponent<T extends React.ComponentType<any>>(
-  importFunc: () => Promise<{ default: T }>,
+export function createDynamicComponent(
+  importFunc: () => Promise<{ default: React.ComponentType }>,
   options?: {
     loading?: () => ReactNode;
     ssr?: boolean;
@@ -137,19 +135,27 @@ export const RouteComponents = {
     { loading: () => <Skeleton className="w-full h-96" /> }
   ),
   
-  // Working components only to avoid TypeScript errors
-  // TODO: Add other components when they match expected interfaces
+  // Portfolio showcase
+  PortfolioShowcase: createDynamicComponent(
+    () => import('@/components/portfolio/PortfolioShowcase'),
+    { loading: () => <Skeleton className="w-full h-64 mb-4" /> }
+  ),
+  
+  // Navigation components
+  NavbarLight: createDynamicComponent(
+    () => import('@/components/layout/NavbarLight'),
+    { loading: () => <Skeleton className="w-full h-16" /> }
+  ),
 };
 
 // Progressive enhancement utilities
 export const ProgressiveEnhancement = {
   // Enhanced interactions for capable browsers
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  withEnhancedInteractions: <T extends React.ComponentType<any>>(
-    Component: T,
-    enhancedProps: Partial<React.ComponentProps<T>> = {}
+  withEnhancedInteractions: (
+    Component: React.ComponentType,
+    enhancedProps: Record<string, unknown> = {}
   ) => {
-    return function EnhancedComponent(props: React.ComponentProps<T>) {
+    return function EnhancedComponent(props: Record<string, unknown>) {
       // Check for advanced features
       const supportsIntersectionObserver = typeof IntersectionObserver !== 'undefined';
       const supportsWebGL = (() => {
@@ -209,9 +215,6 @@ export const TreeShakingHelpers = {
         case 'formatDate':
           utils.formatDate = (await import('@/lib/utils')).formatDate;
           break;
-        // case 'debounce':
-        //   utils.debounce = (await import('@/lib/utils')).debounce;
-        //   break;
       }
     }
     

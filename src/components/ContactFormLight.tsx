@@ -1,8 +1,8 @@
 'use client';
 
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContactFormStore } from '@/stores/form';
 import { contactFormSchema, type ContactFormData } from '@/schemas/contact';
 import { useContactMutation } from '@/hooks/api/useContactMutation';
 // Optimized: Single icon import to reduce bundle size
@@ -25,12 +25,8 @@ import { ErrorMessage } from './contact/ErrorMessage';
 import { serviceOptions, budgetOptions } from './contact/formOptions';
 
 export default function ContactFormLight() {
-  const { 
-    isSubmitted, 
-    setSubmitted, 
-    updateData, 
-    resetForm: resetStore 
-  } = useContactFormStore();
+  // Simple React state for submission success
+  const [isSubmitted, setSubmitted] = useState(false);
   
   // React Query mutation for contact form
   const contactMutation = useContactMutation();
@@ -40,7 +36,6 @@ export default function ContactFormLight() {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -56,16 +51,14 @@ export default function ContactFormLight() {
     },
   });
   
-  // Watch form data and sync with Zustand store
-  const formData = watch();
-  updateData(formData);
+  // Form is completely self-contained using React Hook Form + React Query
+  // No external state management needed - keeps it simple and performant
 
   const onSubmit = async (data: ContactFormData) => {
     try {
       await contactMutation.mutateAsync(data);
       setSubmitted(true);
       reset();
-      resetStore();
     } catch (error) {
       // React Query handles error state automatically
       // Error will be shown via contactMutation.isError below

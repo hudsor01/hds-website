@@ -1,4 +1,4 @@
-import { Skeleton, SkeletonText } from '@/components/ui/Skeleton';
+import { Skeleton, ContentSkeleton } from '@/components/ui/Skeleton';
 
 export default function AboutLoading() {
   return (
@@ -17,7 +17,7 @@ export default function AboutLoading() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div className="space-y-4">
             <Skeleton className="h-8 w-2/3 mb-4" />
-            <SkeletonText lines={5} />
+            <ContentSkeleton lines={5} />
           </div>
           <div className="relative">
             <Skeleton className="h-64 w-full rounded-lg" />
@@ -35,7 +35,7 @@ export default function AboutLoading() {
               <div key={i} className="text-center">
                 <Skeleton className="h-16 w-16 rounded-full mx-auto mb-4" />
                 <Skeleton className="h-6 w-2/3 mx-auto mb-2" />
-                <SkeletonText lines={3} />
+                <ContentSkeleton lines={3} />
               </div>
             ))}
           </div>
@@ -53,7 +53,7 @@ export default function AboutLoading() {
                 <Skeleton className="h-48 w-full rounded-lg mb-4" />
                 <Skeleton className="h-6 w-3/4 mb-2" />
                 <Skeleton className="h-4 w-1/2 mb-4" />
-                <SkeletonText lines={2} />
+                <ContentSkeleton lines={2} />
               </div>
             ))}
           </div>

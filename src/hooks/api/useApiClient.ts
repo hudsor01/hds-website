@@ -92,7 +92,7 @@ export function useApiMutation<TData, TVariables>(
 
 // Specialized hooks for common endpoints
 export function useHealthCheck() {
-  return useApiQuery(['health'], '/api/warm', {}, {
+  return useApiQuery(['health'], '/api/metrics', {}, {
     staleTime: 30000, // 30 seconds
     gcTime: 60000, // 1 minute
     retry: 2,

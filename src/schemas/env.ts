@@ -11,8 +11,6 @@ export const envSchema = z.object({
   
   // API Keys
   RESEND_API_KEY: z.string().min(1, 'Resend API key is required'),
-  N8N_WEBHOOK_URL: z.string().url().optional(),
-  N8N_API_KEY: z.string().optional(),
   
   // Analytics
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),

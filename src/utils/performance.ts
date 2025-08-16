@@ -50,15 +50,7 @@ export function addResourceHints() {
   })
 }
 
-// Service Worker registration for caching
-// TODO: Implement service worker for production caching
-export function registerServiceWorker() {
-  // Service worker not yet implemented
-  // Remove this function or implement proper SW at /public/sw.js
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Service worker registration disabled - not yet implemented')
-  }
-}
+// Note: Service Worker registration is handled by ServiceWorkerRegistration.tsx component
 
 // Web Vitals tracking
 export function trackWebVitals() {

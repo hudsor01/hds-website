@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { createN8nClient } from '@/lib/n8n-webhook';
-import { EmailQueueItem } from '@/types/email-queue';
-import { scheduleContactFormSequence } from '@/lib/email-sequences';
 import { 
   applySecurityHeaders,
   checkRateLimit,
@@ -12,17 +9,14 @@ import { verifyCSRFToken } from '@/lib/csrf';
 import { validateRequestWithZod, createValidatedResponse } from '@/lib/validation';
 import { contactFormSchema, type ContactFormData } from '@/schemas/contact';
 import { logger } from '@/lib/logger';
-// Metrics imports commented out until implemented
-// import { 
-//   recordContactFormMetrics, 
-//   recordHttpMetrics, 
-//   emailSentTotal,
-//   recordSecurityEvent,
-//   conversionEvents 
-// } from '@/lib/metrics';
+import { 
+  recordContactFormMetrics, 
+  recordHttpMetrics, 
+  emailSentTotal,
+  recordSecurityEvent
+} from '@/lib/metrics';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const n8nClient = createN8nClient();
 
 // Calculate lead score based on contact form data
 function calculateLeadScore(data: ContactFormData): number {
@@ -147,16 +141,24 @@ function generateAdminNotificationHTML(data: ContactFormData): string {
 }
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
+  
   try {
+    // Record HTTP request metrics (will be updated with status and duration later)
+    
     // Check rate limiting first
     const rateLimitOk = await checkRateLimit(request, 5, 60000); // 5 requests per minute
     if (!rateLimitOk) {
+      recordSecurityEvent('rate_limit', 'warning', true);
+      recordHttpMetrics('POST', '/api/contact', 429, (Date.now() - startTime) / 1000);
       return new NextResponse('Too Many Requests', { status: 429 });
     }
     
     // Verify CSRF token
     const csrfToken = request.headers.get('x-csrf-token');
     if (!csrfToken || !verifyCSRFToken(csrfToken, request)) {
+      recordSecurityEvent('csrf_failure', 'warning', true);
+      recordHttpMetrics('POST', '/api/contact', 403, (Date.now() - startTime) / 1000);
       return NextResponse.json(
         { error: 'Invalid security token. Please refresh the page and try again.' },
         { status: 403 }
@@ -180,122 +182,32 @@ export async function POST(request: NextRequest) {
         isHighValue: leadScore >= 70
       });
       
-      try {
-          // Prepare admin notification email
-          const adminEmail: EmailQueueItem = {
-            to: 'hello@hudsondigitalsolutions.com',
-            from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
-            subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
-            html: generateAdminNotificationHTML(data),
-            priority: 'high',
-            metadata: {
-              source: 'contact-form',
-              formId: 'main-contact',
-            }
-          };
+      // Send admin notification email via Resend
+      if (!resend) {
+        logger.error('Resend is not configured - email not sent');
+        throw new Error('Email service not configured');
+      }
 
-          // Try to use n8n webhook first, fallback to direct Resend
-          let emailSent = false;
-          
-          if (n8nClient) {
-            logger.debug('Sending emails via n8n webhook queue');
-            
-            // Send admin notification to queue
-            const adminResult = await n8nClient.sendToQueue(adminEmail);
-            
-            if (!adminResult.success) {
-              logger.error('Failed to queue admin email', adminResult.error);
-            } else {
-              emailSent = true;
-              
-              // Trigger email sequence for the client
-              const sequenceResult = await n8nClient.triggerSequence(
-                determineSequenceType(data),
-                data.email,
-                {
-                  firstName: data.firstName,
-                  lastName: data.lastName,
-                  company: data.company || '',
-                  service: data.service || '',
-                  budget: data.budget || '',
-                  timeline: data.timeline || ''
-                }
-              );
+      // Send notification email
+      await resend.emails.send({
+        from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
+        to: ['hello@hudsondigitalsolutions.com'],
+        subject: `🚀 New Project Inquiry - ${data.firstName} ${data.lastName}`,
+        html: generateAdminNotificationHTML(data)
+      });
 
-              if (!sequenceResult.success) {
-                logger.error('Failed to trigger email sequence', sequenceResult.error);
-              }
-            }
-          }
+      emailSentTotal.inc({ type: 'admin', status: 'sent' });
 
-          // Fallback to direct Resend if n8n failed or not configured
-          if (!emailSent && resend) {
-            logger.info('Falling back to direct Resend email');
-            
-            // Send notification email directly
-            await resend.emails.send({
-              from: adminEmail.from!,
-              to: [adminEmail.to],
-              subject: adminEmail.subject,
-              html: adminEmail.html!
-            });
+      logger.info('Contact form processing completed', { email: data.email });
 
-            // Schedule the email sequence using existing method
-            await scheduleContactFormSequence(data);
-            emailSent = true;
-          }
-
-          if (!emailSent) {
-            logger.error('Neither n8n nor Resend is properly configured - email not sent');
-          }
-
-          // Send lead attribution data to n8n for tracking
-          try {
-            const attributionData = {
-              email: data.email,
-              name: `${data.firstName} ${data.lastName}`,
-              company: data.company || '',
-              phone: data.phone || '',
-              message: data.message,
-              budget: data.budget,
-              timeline: data.timeline,
-              services: data.service,
-              // UTM and attribution data from headers/request
-              utm_source: request.nextUrl.searchParams.get('utm_source') || (request.headers.get('referer')?.includes('google') ? 'google' : 'direct'),
-              utm_medium: request.nextUrl.searchParams.get('utm_medium') || 'none',
-              utm_campaign: request.nextUrl.searchParams.get('utm_campaign') || '',
-              utm_content: request.nextUrl.searchParams.get('utm_content') || '',
-              utm_term: request.nextUrl.searchParams.get('utm_term') || '',
-              referrer: request.headers.get('referer') || 'direct',
-              page_url: request.headers.get('referer') || 'https://hudsondigitalsolutions.com/contact',
-              user_agent: request.headers.get('user-agent') || '',
-              ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-            };
-
-            const n8nUrl = process.env.N8N_WEBHOOK_URL;
-            if (!n8nUrl) {
-              throw new Error('N8N webhook URL not configured');
-            }
-            
-            await fetch(`${n8nUrl}/webhook/lead-attribution`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.N8N_API_KEY ? `Bearer ${process.env.N8N_API_KEY}` : ''
-              },
-              body: JSON.stringify(attributionData)
-            });
-            
-            logger.debug('Lead attribution data sent to n8n');
-          } catch (attributionError) {
-            logger.warn('Lead attribution tracking failed', { error: attributionError });
-          }
-
-          logger.info('Contact form processing completed', { email: data.email });
-        } catch (processingError) {
-          logger.error('Error processing contact form', processingError);
-          // Don't fail the request for background task errors
-        }
+    // Record successful contact form submission metrics
+    const processingTime = (Date.now() - startTime) / 1000;
+    const leadType = leadScore >= 70 ? 'high' : leadScore >= 40 ? 'medium' : 'low';
+    
+    recordContactFormMetrics(leadScore, processingTime, 'success', leadType === 'high');
+    
+    // Record successful HTTP request metrics
+    recordHttpMetrics('POST', '/api/contact', 200, processingTime);
 
     // Create response with security headers
     const response = NextResponse.json({
@@ -310,6 +222,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     logger.error('Contact form error', error);
     
+    // Record failed contact form submission metrics
+    const processingTime = (Date.now() - startTime) / 1000;
+    recordContactFormMetrics(0, processingTime, 'error', false);
+    
+    // Record failed HTTP request metrics
+    recordHttpMetrics('POST', '/api/contact', 500, processingTime);
+    
     const response = NextResponse.json(
       { error: 'An unexpected error occurred. Please try again later.' },
       { status: 500 }
@@ -319,20 +238,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to determine email sequence type based on lead score
-function determineSequenceType(data: ContactFormData): string {
-  const leadScore = calculateLeadScore(data);
-  
-  // Use lead score for more precise sequence selection
-  if (leadScore >= 80) {
-    return 'high-value-consultation';
-  } else if (leadScore >= 60) {
-    return 'targeted-service-consultation';
-  } else if (leadScore >= 40 && data.company) {
-    return 'enterprise-nurture';
-  } else if (leadScore >= 30) {
-    return 'qualified-lead-nurture';
-  } else {
-    return 'standard-welcome';
-  }
-}
+// Complex sequence type determination removed with email sequences

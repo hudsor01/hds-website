@@ -4,8 +4,8 @@ interface NetworkCall {
   url: string;
   method: string;
   status: number;
-  requestBody?: any;
-  responseBody?: any;
+  requestBody?: unknown;
+  responseBody?: unknown;
   timestamp: number;
 }
 
@@ -28,7 +28,7 @@ export class NetworkInterceptor {
       const method = request.method();
       
       // Capture request details
-      let requestBody: any;
+      let requestBody: unknown;
       try {
         if (method === 'POST' || method === 'PUT') {
           requestBody = request.postDataJSON();
@@ -42,7 +42,7 @@ export class NetworkInterceptor {
       const response = await route.fetch();
       
       // Capture response details
-      let responseBody: any;
+      let responseBody: unknown;
       try {
         responseBody = await response.json();
       } catch (e) {
@@ -88,9 +88,7 @@ export class NetworkInterceptor {
   getEmailAPICalls(): NetworkCall[] {
     return this.calls.filter(call => 
       call.url.includes('/api/contact') ||
-      call.url.includes('resend.com') ||
-      call.url.includes('n8n') ||
-      call.url.includes('webhook')
+      call.url.includes('resend.com')
     );
   }
 
@@ -103,10 +101,10 @@ export class NetworkInterceptor {
   async verifySecurityHeaders(response: Response) {
     const headers = response.headers();
     
+    // Import centralized security headers for consistency
+    const { EXPECTED_SECURITY_HEADERS } = await import('@/lib/security-headers');
     const securityHeaders = {
-      'x-frame-options': 'DENY',
-      'x-content-type-options': 'nosniff',
-      'x-xss-protection': '1; mode=block',
+      ...EXPECTED_SECURITY_HEADERS,
       'referrer-policy': ['strict-origin-when-cross-origin', 'origin-when-cross-origin'],
     };
 
