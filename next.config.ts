@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { getNextjsHeaders } from './src/lib/security-headers';
 
 
 
@@ -82,33 +83,7 @@ const nextConfig: NextConfig = {
       // Global security headers
       {
         source: '/(.*)',
-        headers: [
-          // Security headers
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'geolocation=(), microphone=(), camera=()',
-          },
-        ],
+        headers: getNextjsHeaders(process.env.NODE_ENV === 'production'),
       },
       {
         source: '/api/(.*)',

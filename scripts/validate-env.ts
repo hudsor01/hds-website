@@ -25,9 +25,6 @@ const envSchema = z.object({
   GOOGLE_SITE_VERIFICATION: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional().default('https://hudsondigitalsolutions.com'),
   
-  // n8n Integration (optional)
-  N8N_WEBHOOK_URL: z.string().url().optional(),
-  N8N_API_KEY: z.string().optional(),
   
   // Development & Testing
   NODE_ENV: z.enum(['development', 'test', 'production']).optional().default('development'),
@@ -94,11 +91,6 @@ function validateEnvironment(): void {
       console.log(`   ⚠️  PostHog Analytics: ${colors.yellow}Not configured${colors.reset}`);
     }
     
-    if (env.N8N_WEBHOOK_URL && env.N8N_API_KEY) {
-      console.log(`   ✅ n8n Integration: ${colors.green}Configured${colors.reset}`);
-    } else {
-      console.log(`   ⚠️  n8n Integration: ${colors.yellow}Not configured${colors.reset}`);
-    }
     
     if (env.GOOGLE_SITE_VERIFICATION) {
       console.log(`   ✅ Google Search Console: ${colors.green}Configured${colors.reset}`);
@@ -151,12 +143,12 @@ function validateEnvironment(): void {
     console.log(`\n${colors.green}✨ Environment is properly configured!${colors.reset}`);
     process.exit(0);
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`${colors.red}❌ Environment validation failed!${colors.reset}\n`);
     
-    if (error instanceof z.ZodError || (error && error.errors && Array.isArray(error.errors))) {
-      const errors = error.errors || error.issues || [];
-      errors.forEach((err: any) => {
+    if (error instanceof z.ZodError || (error && typeof error === 'object' && 'errors' in error && Array.isArray((error as { errors: unknown[] }).errors))) {
+      const errors = (error as z.ZodError).errors || (error as z.ZodError).issues || [];
+      errors.forEach((err: z.ZodIssue) => {
         const variable = err.path ? (Array.isArray(err.path) ? err.path.join('.') : err.path) : 'Unknown';
         console.error(`   ${colors.red}❌ ${variable}: ${err.message}${colors.reset}`);
       });

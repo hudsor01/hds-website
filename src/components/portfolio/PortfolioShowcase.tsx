@@ -13,8 +13,6 @@ import {
   CheckCircleIcon,
   StarIcon,
   ClockIcon,
-  CurrencyDollarIcon,
-  UserGroupIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
@@ -251,7 +249,7 @@ export default function PortfolioShowcase() {
                   <StarIcon
                     key={i}
                     className={`w-5 h-5 ${
-                      i < selectedProject.testimonial.rating
+                      i < (selectedProject.testimonial?.rating || 5)
                         ? 'text-yellow-400 fill-current'
                         : 'text-gray-600'
                     }`}
@@ -259,7 +257,7 @@ export default function PortfolioShowcase() {
                 ))}
               </div>
               <blockquote className="text-gray-300 italic mb-4">
-                "{selectedProject.testimonial.content}"
+                &ldquo;{selectedProject.testimonial.content}&rdquo;
               </blockquote>
               <div>
                 <p className="text-white font-semibold">{selectedProject.testimonial.author}</p>

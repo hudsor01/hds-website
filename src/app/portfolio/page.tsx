@@ -131,7 +131,7 @@ export default function Portfolio() {
             <h3 className="text-xl font-bold text-white mb-2">Built to Scale</h3>
             <p className="text-gray-400">
               Enterprise-grade architecture that grows with your business. 
-              From startup to scale-up, we've got you covered.
+              From startup to scale-up, we&apos;ve got you covered.
             </p>
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function Portfolio() {
           </h2>
           <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
             Join the ranks of businesses that have transformed their digital presence. 
-            Let's build something extraordinary together.
+            Let&apos;s build something extraordinary together.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

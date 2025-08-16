@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { applySecurityHeaders } from '@/lib/security-headers';
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -19,12 +20,8 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const url = request.nextUrl;
 
-  // Add security headers
-  response.headers.set('X-DNS-Prefetch-Control', 'on');
-  response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Add security headers using centralized configuration
+  applySecurityHeaders(response, process.env.NODE_ENV === 'production');
 
   // Add performance headers
   response.headers.set('X-Request-Time', Date.now().toString());

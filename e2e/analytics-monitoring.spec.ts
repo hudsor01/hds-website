@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+interface AnalyticsRequest {
+  url: string;
+  method: string;
+  postData?: string | null;
+}
+
 test.describe('Analytics and Monitoring', () => {
   test.beforeEach(async ({ page }) => {
     // Set up network interception for analytics
@@ -29,7 +35,7 @@ test.describe('Analytics and Monitoring', () => {
   });
 
   test('PostHog analytics initializes and tracks page views', async ({ page }) => {
-    const posthogRequests: any[] = [];
+    const posthogRequests: AnalyticsRequest[] = [];
     
     page.on('request', request => {
       if (request.url().includes('i.posthog.com')) {
@@ -70,7 +76,7 @@ test.describe('Analytics and Monitoring', () => {
   });
 
   test('Vercel Analytics tracks Web Vitals', async ({ page }) => {
-    const vercelRequests: any[] = [];
+    const vercelRequests: AnalyticsRequest[] = [];
     
     page.on('request', request => {
       if (request.url().includes('vitals.vercel-insights.com')) {
@@ -107,7 +113,7 @@ test.describe('Analytics and Monitoring', () => {
   });
 
   test('Custom metrics endpoint receives data', async ({ page }) => {
-    const metricsRequests: any[] = [];
+    const metricsRequests: AnalyticsRequest[] = [];
     
     page.on('request', request => {
       if (request.url().includes('/api/metrics')) {
@@ -143,7 +149,7 @@ test.describe('Analytics and Monitoring', () => {
   });
 
   test('Form interactions are tracked', async ({ page }) => {
-    const analyticsRequests: any[] = [];
+    const analyticsRequests: AnalyticsRequest[] = [];
     
     page.on('request', request => {
       if (request.url().includes('posthog.com') || request.url().includes('vercel-insights')) {
@@ -200,7 +206,7 @@ test.describe('Analytics and Monitoring', () => {
   });
 
   test('Error tracking captures exceptions', async ({ page }) => {
-    const errorRequests: any[] = [];
+    const errorRequests: AnalyticsRequest[] = [];
     
     page.on('request', request => {
       if (request.url().includes('posthog') && request.postData()?.includes('error')) {

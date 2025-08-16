@@ -1,4 +1,4 @@
-import { SkeletonPricingCard } from '@/components/ui/Skeleton';
+import { CardSkeleton } from '@/components/ui/Skeleton';
 
 export default function PricingLoading() {
   return (
@@ -15,7 +15,7 @@ export default function PricingLoading() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {[1, 2, 3].map((i) => (
-            <SkeletonPricingCard key={i} />
+            <CardSkeleton key={i} />
           ))}
         </div>
         

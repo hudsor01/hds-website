@@ -18,8 +18,6 @@ export function initializeEnv() {
         'GA4_API_SECRET',
         'NEXT_PUBLIC_POSTHOG_KEY',
         'NEXT_PUBLIC_POSTHOG_HOST',
-        'N8N_WEBHOOK_URL',
-        'N8N_API_KEY',
       ];
       
       const missingOptional = optionalVars.filter(v => !process.env[v]);

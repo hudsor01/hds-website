@@ -1,4 +1,4 @@
-import { SkeletonServiceCard } from '@/components/ui/Skeleton';
+import { CardSkeleton } from '@/components/ui/Skeleton';
 
 export default function ServicesLoading() {
   return (
@@ -15,7 +15,7 @@ export default function ServicesLoading() {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <SkeletonServiceCard key={i} />
+            <CardSkeleton key={i} />
           ))}
         </div>
         
