@@ -1,5 +1,6 @@
 // Enhanced analytics and performance monitoring
 import { trackEvent as posthogTrackEvent, trackConversionFunnel } from './posthog';
+import { logger } from './logger';
 
 interface LayoutShift extends PerformanceEntry {
   value: number;
@@ -88,7 +89,9 @@ export function trackEvent(action: string, category: string, label?: string, val
       window.va.track(action, vaData);
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
-        console.debug("Vercel Analytics error:", error);
+        if (process.env.NODE_ENV === "development") {
+          logger.debug("Vercel Analytics error", { error });
+        }
       }
     }
   }
@@ -134,7 +137,9 @@ export function trackConversion(conversionType: 'form_submit' | 'phone_call' | '
       });
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
-        console.debug("Vercel Analytics error:", error);
+        if (process.env.NODE_ENV === "development") {
+          logger.debug("Vercel Analytics error", { error });
+        }
       }
     }
   }

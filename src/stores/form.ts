@@ -258,8 +258,10 @@ export const useContactFormStore = create<ContactFormStore>()(
           isSubmitted: false,
         }),
       }),
-      {
+{
         name: 'contact-form-storage',
+        // Skip persistence if storage is unavailable (E2E tests, SSR)
+        skipHydration: typeof window === 'undefined' || !window.localStorage,
         partialize: (state) => {
           // Only persist non-sensitive data
           const { data, submissionResult, isSubmitted } = state;
@@ -277,6 +279,31 @@ export const useContactFormStore = create<ContactFormStore>()(
             submissionResult,
             isSubmitted,
           };
+        },
+        // Custom storage with error handling
+        storage: {
+          getItem: (name) => {
+            try {
+              const value = localStorage?.getItem(name) ?? null;
+              return value ? JSON.parse(value) : null;
+            } catch {
+              return null;
+            }
+          },
+          setItem: (name, value) => {
+            try {
+              localStorage?.setItem(name, JSON.stringify(value));
+            } catch {
+              // Silently fail if storage is unavailable
+            }
+          },
+          removeItem: (name) => {
+            try {
+              localStorage?.removeItem(name);
+            } catch {
+              // Silently fail if storage is unavailable
+            }
+          },
         },
       }
     ),

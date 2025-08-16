@@ -11,6 +11,15 @@ import {
 import { verifyCSRFToken } from '@/lib/csrf';
 import { validateRequestWithZod, createValidatedResponse } from '@/lib/validation';
 import { contactFormSchema, type ContactFormData } from '@/schemas/contact';
+import { logger } from '@/lib/logger';
+// Metrics imports commented out until implemented
+// import { 
+//   recordContactFormMetrics, 
+//   recordHttpMetrics, 
+//   emailSentTotal,
+//   recordSecurityEvent,
+//   conversionEvents 
+// } from '@/lib/metrics';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const n8nClient = createN8nClient();
@@ -165,7 +174,7 @@ export async function POST(request: NextRequest) {
     const leadScore = calculateLeadScore(data);
 
       // Process contact form submission with lead score
-      console.log('Processing contact form submission:', {
+      logger.info('Processing contact form submission', {
         email: data.email,
         leadScore,
         isHighValue: leadScore >= 70
@@ -189,13 +198,13 @@ export async function POST(request: NextRequest) {
           let emailSent = false;
           
           if (n8nClient) {
-            console.log('Sending emails via n8n webhook queue...');
+            logger.debug('Sending emails via n8n webhook queue');
             
             // Send admin notification to queue
             const adminResult = await n8nClient.sendToQueue(adminEmail);
             
             if (!adminResult.success) {
-              console.error('Failed to queue admin email:', adminResult.error);
+              logger.error('Failed to queue admin email', adminResult.error);
             } else {
               emailSent = true;
               
@@ -214,14 +223,14 @@ export async function POST(request: NextRequest) {
               );
 
               if (!sequenceResult.success) {
-                console.error('Failed to trigger email sequence:', sequenceResult.error);
+                logger.error('Failed to trigger email sequence', sequenceResult.error);
               }
             }
           }
 
           // Fallback to direct Resend if n8n failed or not configured
           if (!emailSent && resend) {
-            console.log('Falling back to direct Resend email...');
+            logger.info('Falling back to direct Resend email');
             
             // Send notification email directly
             await resend.emails.send({
@@ -237,7 +246,7 @@ export async function POST(request: NextRequest) {
           }
 
           if (!emailSent) {
-            console.error('Neither n8n nor Resend is properly configured - email not sent');
+            logger.error('Neither n8n nor Resend is properly configured - email not sent');
           }
 
           // Send lead attribution data to n8n for tracking
@@ -277,14 +286,14 @@ export async function POST(request: NextRequest) {
               body: JSON.stringify(attributionData)
             });
             
-            console.log('Lead attribution data sent to n8n');
+            logger.debug('Lead attribution data sent to n8n');
           } catch (attributionError) {
-            console.error('Lead attribution tracking failed:', attributionError);
+            logger.warn('Lead attribution tracking failed', { error: attributionError });
           }
 
-          console.log('Contact form processing completed for:', data.email);
+          logger.info('Contact form processing completed', { email: data.email });
         } catch (processingError) {
-          console.error('Error processing contact form:', processingError);
+          logger.error('Error processing contact form', processingError);
           // Don't fail the request for background task errors
         }
 
@@ -299,7 +308,7 @@ export async function POST(request: NextRequest) {
     return applySecurityHeaders(response);
 
   } catch (error) {
-    console.error('Contact form error:', error);
+    logger.error('Contact form error', error);
     
     const response = NextResponse.json(
       { error: 'An unexpected error occurred. Please try again later.' },
