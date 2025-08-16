@@ -4,7 +4,7 @@ import { ComponentType, ReactNode, useState, ErrorInfo as ReactErrorInfo } from 
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackEvent } from '@/lib/analytics';
-import { useErrorStore, createErrorRecord } from '@/stores/error';
+// Error handling is now managed by React Query for API calls
 
 interface ErrorFallbackProps {
   error: Error;
@@ -126,16 +126,7 @@ export function ErrorBoundary({
   onReset,
   resetKeys,
 }: ErrorBoundaryProps) {
-  const addError = useErrorStore((state) => state.addError);
-
   const handleError = (error: Error, errorInfo: ReactErrorInfo) => {
-    // Add to error store with automatic severity and category detection
-    const errorRecord = createErrorRecord(error, 'runtime', 'high');
-    addError({
-      ...errorRecord,
-      componentStack: errorInfo.componentStack || undefined,
-    });
-
     // Track error in analytics
     trackEvent('error_boundary_triggered', 'error', error.message);
 
@@ -197,25 +188,8 @@ export function ComponentErrorBoundary({
   );
 }
 
-// Hook for imperatively showing error boundary
-export function useErrorHandler() {
-  const addError = useErrorStore((state) => state.addError);
-
-  return (error: unknown) => {
-    const errorRecord = createErrorRecord(error, 'runtime', 'high');
-    addError(errorRecord);
-    
-    // Track error in analytics
-    trackEvent('error_handler_used', 'error', errorRecord.message);
-    
-    // Re-throw to trigger nearest error boundary
-    if (error instanceof Error) {
-      throw error;
-    } else {
-      throw new Error(errorRecord.message);
-    }
-  };
-}
+// Error handling for API calls is now managed by React Query
+// Use React Query's error handling: useMutation({ onError }) or useQuery({ onError })
 
 // Higher-order component for wrapping components with error boundary
 export function withErrorBoundary<P extends object>(

@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { ExclamationTriangleIcon, ArrowPathIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useErrorStore, createErrorRecord } from '@/stores/error';
 import { trackEvent } from '@/lib/analytics';
 
 export default function ContactError({
@@ -13,23 +12,15 @@ export default function ContactError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const addError = useErrorStore((state) => state.addError);
-
   useEffect(() => {
-    // Log error to error store
-    const errorRecord = createErrorRecord(error, 'runtime', 'medium');
-    addError({
-      ...errorRecord,
-      metadata: {
-        ...errorRecord.metadata,
-        digest: error.digest,
-        route: 'contact',
-      },
-    });
-
     // Track in analytics
     trackEvent('route_error', 'error', `contact: ${error.message}`);
-  }, [error, addError]);
+    
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Contact page error:', error);
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">

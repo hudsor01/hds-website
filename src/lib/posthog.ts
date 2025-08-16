@@ -1,4 +1,5 @@
 import posthog from 'posthog-js';
+import { logger } from './logger';
 import type { 
   AnalyticsProperties, 
   WebVitalMetric,
@@ -15,7 +16,9 @@ export function initializePostHog() {
   const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
 
   if (!apiKey) {
-    console.warn('PostHog API key not found');
+    if (process.env.NODE_ENV === 'development') {
+      logger.warn('PostHog API key not found');
+    }
     return;
   }
 
@@ -65,7 +68,7 @@ export const trackEvent = (eventName: string, properties?: AnalyticsProperties) 
     try {
       posthog.capture(eventName, properties);
     } catch (error) {
-      console.warn('PostHog tracking error:', error);
+      logger.warn('PostHog tracking error', { error });
     }
   }
 };

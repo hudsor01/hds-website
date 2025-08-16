@@ -21,15 +21,13 @@ npm run start             # Start production server
 
 # Quality & Analysis
 npm run lint              # ESLint checking
+npm run typecheck         # TypeScript type checking
 npm run check:bundle      # Analyze bundle size
-npm run test:performance  # Run Lighthouse performance test
 ```
 
 ### Utility Commands
 ```bash
 npm run generate-sitemap    # Generate sitemap.xml
-npm run setup:https        # Setup local HTTPS certificates
-npm run optimize:images    # Optimize images in public folder
 ```
 
 ## Architecture & Structure
@@ -51,7 +49,6 @@ The contact form triggers automated email sequences:
 
 #### Analytics & Monitoring
 Multi-platform analytics setup:
-- **Google Analytics 4**: Conversion tracking, custom events
 - **PostHog**: Product analytics, feature flags, session recordings  
 - **Vercel Analytics**: Core Web Vitals, performance monitoring
 - **Custom Web Vitals**: Real user monitoring via API endpoint
@@ -63,6 +60,10 @@ Multi-platform analytics setup:
 - **Bundle Analysis**: Webpack bundle analyzer integration
 - **Caching Strategy**: Multi-level caching (CDN, browser, ISR)
 
+#### State Management
+- **Zustand**: For client-side state management
+- **React Hook Form**: Form state and validation
+- **Zod**: Schema validation for forms and API endpoints
 
 ### Security & Headers
 Comprehensive security implemented via:
@@ -72,17 +73,36 @@ Comprehensive security implemented via:
 - **CORS configuration**: API route protection
 - **CSP**: Content Security Policy via Vercel config
 
-## Environment Variables
+## Environment Variables & Secret Management
 
-### Required
+### Secret Management System
+We use `dotenv-cli` for secure environment variable management:
+- **Never expose keys**: All scripts use dotenv-cli to load secrets
+- **Environment separation**: Different .env files for dev/test/prod
+- **Validation**: Run `npm run env:validate` to check configuration
+- **Documentation**: See `/docs/SECRET_MANAGEMENT.md` for full guide
+
+### Quick Setup
+```bash
+# Initial setup - creates .env.local from template
+npm run env:setup
+
+# Validate your configuration
+npm run env:validate
+
+# All npm scripts automatically load correct environment
+npm run dev          # Uses .env.local
+npm run test:e2e     # Uses .env.test
+npm run build        # Uses .env.production
+```
+
+### Required Variables
 ```bash
 RESEND_API_KEY=             # Email sending via Resend
 ```
 
 ### Analytics & Monitoring
 ```bash
-NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4
-GA4_API_SECRET=             # GA4 Measurement Protocol
 NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
 NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host URL
 ```
@@ -92,13 +112,16 @@ NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host URL
 GOOGLE_SITE_VERIFICATION=   # Google Search Console
 ```
 
+### GitHub Actions Setup
+See `/docs/GITHUB_SECRETS_SETUP.md` for CI/CD secret configuration
+
 ## Contact Form Flow
 1. Form submission triggers `/api/contact` endpoint
 2. **Validation**: Server-side validation with rate limiting  
 3. **Email sending**: Admin notification + client welcome
 4. **Lead scoring**: High-intent detection for consultation requests
 5. **Sequence scheduling**: Automated nurturing emails via Resend
-6. **Analytics**: Conversion events sent to GA4/PostHog
+6. **Analytics**: Conversion events sent to PostHog
 
 ## Performance Considerations
 - **Bundle optimization**: Tree shaking, code splitting

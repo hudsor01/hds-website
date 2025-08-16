@@ -18,18 +18,48 @@ export const metadata: Metadata = {
 const projects = [
   {
     id: 1,
-    title: 'E-Commerce Platform Overhaul',
-    description: 'Complete redesign and development of a high-traffic e-commerce platform with custom inventory management and real-time analytics.',
-    technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Stripe', 'AWS'],
-    results: ['340% increase in conversion rate', '$2.1M additional revenue', '98.9% uptime'],
+    title: 'TenantFlow - Property Management Platform',
+    description: 'Complete property management solution with tenant portals, maintenance tracking, automated rent collection, and comprehensive analytics dashboard.',
+    technologies: ['Next.js 15', 'React 19', 'TypeScript', 'Prisma', 'PostgreSQL', 'Stripe', 'Vercel'],
+    results: ['500+ properties managed', '99.8% uptime', '85% reduction in admin overhead', '$1.2M+ rent processed'],
+    category: 'PropTech',
+    image: '/portfolio/tenantflow.jpg',
+    liveUrl: 'https://tenantflow.app',
+    caseStudyUrl: '#',
+    featured: true,
+    year: '2024',
+    status: 'Live'
+  },
+  {
+    id: 2,
+    title: 'Ink37 Tattoos - Studio Management & Booking',
+    description: 'Modern tattoo studio website with online booking, artist portfolios, aftercare guidance, and client management system.',
+    technologies: ['Next.js 15', 'React 19', 'TypeScript', 'Supabase', 'Stripe', 'Vercel'],
+    results: ['50+ weekly bookings', '300% increase in online inquiries', '98% client satisfaction', '4.9/5 rating'],
+    category: 'Creative',
+    image: '/portfolio/ink37tattoos.jpg',
+    liveUrl: 'https://ink37tattoos.com',
+    caseStudyUrl: '#',
+    featured: true,
+    year: '2024',
+    status: 'Live'
+  },
+  {
+    id: 3,
+    title: 'E-Commerce Platform Enhancement',
+    description: 'Custom e-commerce platform with advanced inventory management, real-time analytics, and performance optimization.',
+    technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Stripe', 'Redis'],
+    results: ['340% increase in conversion rate', '$850K additional revenue', '99.2% uptime'],
     category: 'E-Commerce',
     image: '/portfolio/ecommerce-platform.jpg',
     liveUrl: '#',
     caseStudyUrl: '#',
-    featured: true,
+    featured: false,
+    year: '2023',
+    status: 'Completed'
   },
   {
-    id: 2,
+    id: 4,
     title: 'Healthcare Management System',
     description: 'HIPAA-compliant patient management system with appointment scheduling, billing integration, and telemedicine capabilities.',
     technologies: ['React', 'Node.js', 'MongoDB', 'Socket.io', 'Docker'],
@@ -38,55 +68,23 @@ const projects = [
     image: '/portfolio/healthcare-system.jpg',
     liveUrl: '#',
     caseStudyUrl: '#',
-    featured: true,
+    featured: false,
+    year: '2023',
+    status: 'Completed'
   },
   {
-    id: 3,
+    id: 5,
     title: 'Real Estate CRM Platform',
     description: 'Custom CRM solution for real estate agencies with lead tracking, automated follow-ups, and performance analytics.',
     technologies: ['Vue.js', 'Express.js', 'MySQL', 'Redis', 'Twilio'],
-    results: ['45% more qualified leads', '200% faster response time', '$850K in closed deals'],
+    results: ['45% more qualified leads', '200% faster response time', '$650K in closed deals'],
     category: 'CRM',
     image: '/portfolio/real-estate-crm.jpg',
     liveUrl: '#',
     caseStudyUrl: '#',
     featured: false,
-  },
-  {
-    id: 4,
-    title: 'Financial Dashboard Analytics',
-    description: 'Real-time financial dashboard with predictive analytics, automated reporting, and risk assessment tools.',
-    technologies: ['React', 'Python', 'TensorFlow', 'PostgreSQL', 'D3.js'],
-    results: ['90% faster financial reporting', '25% risk reduction', '$500K cost savings'],
-    category: 'FinTech',
-    image: '/portfolio/financial-dashboard.jpg',
-    liveUrl: '#',
-    caseStudyUrl: '#',
-    featured: false,
-  },
-  {
-    id: 5,
-    title: 'Supply Chain Optimization',
-    description: 'AI-powered supply chain management system with inventory forecasting and automated procurement workflows.',
-    technologies: ['Angular', 'Spring Boot', 'Apache Kafka', 'Elasticsearch', 'ML Models'],
-    results: ['30% inventory reduction', '15% cost optimization', '99.8% order accuracy'],
-    category: 'Logistics',
-    image: '/portfolio/supply-chain.jpg',
-    liveUrl: '#',
-    caseStudyUrl: '#',
-    featured: false,
-  },
-  {
-    id: 6,
-    title: 'Educational Platform',
-    description: 'Comprehensive learning management system with video streaming, progress tracking, and collaborative tools.',
-    technologies: ['Next.js', 'Prisma', 'PostgreSQL', 'AWS S3', 'WebRTC'],
-    results: ['10,000+ active users', '95% completion rate', '4.8/5 user satisfaction'],
-    category: 'Education',
-    image: '/portfolio/educational-platform.jpg',
-    liveUrl: '#',
-    caseStudyUrl: '#',
-    featured: false,
+    year: '2023',
+    status: 'Completed'
   },
 ];
 
@@ -94,7 +92,7 @@ const projects = [
 
 export default function Portfolio() {
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-gradient-hero">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
@@ -135,8 +133,17 @@ export default function Portfolio() {
                 key={project.id}
                 className="group relative bg-black/80 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 hover:border-secondary-400/50 transition-all duration-500 hover:-translate-y-2"
               >
-                <div className="absolute top-4 right-4 text-xs uppercase tracking-wide text-secondary-400 font-bold">
-                  {project.category}
+                <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
+                  <div className="text-xs uppercase tracking-wide text-secondary-400 font-bold">
+                    {project.category}
+                  </div>
+                  <div className={`text-xs uppercase tracking-wide font-bold px-2 py-1 rounded ${
+                    project.status === 'Live' 
+                      ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                      : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                  }`}>
+                    {project.status} • {project.year}
+                  </div>
                 </div>
                 
                 <div className="mb-6">
@@ -218,11 +225,20 @@ export default function Portfolio() {
                   <div className="text-xs uppercase tracking-wide text-secondary-400 font-bold">
                     {project.category}
                   </div>
-                  {project.featured && (
-                    <div className="px-2 py-1 bg-accent-400/20 border border-accent-400/30 rounded text-xs text-accent-400 font-bold">
-                      FEATURED
+                  <div className="flex flex-col items-end gap-1">
+                    {project.featured && (
+                      <div className="px-2 py-1 bg-accent-400/20 border border-accent-400/30 rounded text-xs text-accent-400 font-bold">
+                        FEATURED
+                      </div>
+                    )}
+                    <div className={`text-xs uppercase tracking-wide font-bold px-2 py-1 rounded ${
+                      project.status === 'Live' 
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                        : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                    }`}>
+                      {project.status} • {project.year}
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 <h3 className="text-lg font-bold text-white mb-3 group-hover:text-secondary-400 transition-colors">
@@ -275,6 +291,6 @@ export default function Portfolio() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

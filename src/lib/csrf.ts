@@ -41,18 +41,4 @@ export function clearCSRFTokenCookie(response: NextResponse): void {
   response.cookies.delete(CSRF_TOKEN_COOKIE_NAME);
 }
 
-// Client-side function to get CSRF token from meta tag or generate one
-export function getCSRFToken(): string {
-  if (typeof window === 'undefined') {
-    return generateCSRFToken();
-  }
-  
-  // Try to get from meta tag first
-  const metaTag = document.querySelector('meta[name="csrf-token"]');
-  if (metaTag) {
-    return metaTag.getAttribute('content') || generateCSRFToken();
-  }
-  
-  // Generate a new one for client-side use
-  return generateCSRFToken();
-}
+// Client-side CSRF token handling is now managed by React Query (useCSRFToken hook)

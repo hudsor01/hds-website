@@ -49,6 +49,11 @@ class Logger {
   }
 
   private log(level: LogLevel, message: string, context?: LogContext) {
+    // Skip debug logs in production
+    if (level === 'debug' && !this.isDevelopment) {
+      return;
+    }
+
     const timestamp = new Date().toISOString();
     const sanitizedContext = context ? this.sanitize(context) : undefined;
     
@@ -62,23 +67,25 @@ class Logger {
       logData.context = sanitizedContext;
     }
 
-    // In production, you would send this to a logging service
-    // For now, we'll use console methods based on level
-    switch (level) {
-      case 'debug':
-        if (this.isDevelopment) {
+    // In production, structure logs for monitoring tools (Grafana/Prometheus)
+    // Only output in development or for errors/warnings
+    if (this.isDevelopment || level === 'error' || level === 'warn') {
+      switch (level) {
+        case 'debug':
           console.debug(logData);
-        }
-        break;
-      case 'info':
-        console.info(logData);
-        break;
-      case 'warn':
-        console.warn(logData);
-        break;
-      case 'error':
-        console.error(logData);
-        break;
+          break;
+        case 'info':
+          if (this.isDevelopment) {
+            console.info(logData);
+          }
+          break;
+        case 'warn':
+          console.warn(logData);
+          break;
+        case 'error':
+          console.error(logData);
+          break;
+      }
     }
   }
 

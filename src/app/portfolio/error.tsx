@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
-import { useErrorStore, createErrorRecord } from '@/stores/error';
 import { trackEvent } from '@/lib/analytics';
 
 export default function PortfolioError({
@@ -12,23 +11,16 @@ export default function PortfolioError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const addError = useErrorStore((state) => state.addError);
 
   useEffect(() => {
-    // Log error to error store
-    const errorRecord = createErrorRecord(error, 'runtime', 'low');
-    addError({
-      ...errorRecord,
-      metadata: {
-        ...errorRecord.metadata,
-        digest: error.digest,
-        route: 'portfolio',
-      },
-    });
-
     // Track in analytics
     trackEvent('route_error', 'error', `portfolio: ${error.message}`);
-  }, [error, addError]);
+    
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Portfolio page error:', error);
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">

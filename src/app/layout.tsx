@@ -5,7 +5,9 @@ import "@radix-ui/themes/styles.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeProvider as RadixThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeProvider } from "@/components/ThemeRefinements";
+import { QueryProvider } from "@/providers/QueryProvider";
 import { Theme } from '@radix-ui/themes';
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import WebVitalsReporting from "@/components/WebVitalsReporting";
@@ -13,6 +15,8 @@ import CookieConsent from "@/components/CookieConsent";
 import { ErrorBoundary, AsyncErrorBoundary } from "@/components/ErrorBoundary";
 import { ProgressBar } from "@/components/ProgressBar";
 import AccessibilityProvider from "@/components/AccessibilityProvider";
+import { PageTransition } from "@/components/PageTransition";
+import { ScrollProgress } from "@/components/ScrollAnimations";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -158,28 +162,35 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <Theme accentColor="cyan" grayColor="mauve" radius="medium" scaling="100%">
-            {/* <DefaultSeo /> */}
-            <AccessibilityProvider />
-            <ServiceWorkerRegistration />
-            <WebVitalsReporting />
-            <ProgressBar />
-            <AsyncErrorBoundary>
-            <ErrorBoundary>
-              <NavbarLight />
-              <main id="main-content" className="min-h-screen">
-                <ErrorBoundary>
-                  {children}
-                </ErrorBoundary>
-              </main>
-              <Footer />
-            </ErrorBoundary>
-            </AsyncErrorBoundary>
-            <Analytics />
-            <CookieConsent />
-          </Theme>
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <RadixThemeProvider>
+              <Theme accentColor="cyan" grayColor="mauve" radius="medium" scaling="100%">
+              {/* <DefaultSeo /> */}
+              <AccessibilityProvider />
+              <ServiceWorkerRegistration />
+              <WebVitalsReporting />
+              <ProgressBar />
+              <AsyncErrorBoundary>
+              <ErrorBoundary>
+                <ScrollProgress />
+                <NavbarLight />
+                <PageTransition>
+                  <div id="main-content" className="min-h-screen pt-16">
+                    <ErrorBoundary>
+                      {children}
+                    </ErrorBoundary>
+                  </div>
+                </PageTransition>
+                <Footer />
+              </ErrorBoundary>
+              </AsyncErrorBoundary>
+              <Analytics />
+              <CookieConsent />
+            </Theme>
+            </RadixThemeProvider>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

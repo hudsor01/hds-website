@@ -1,31 +1,17 @@
-import { Metadata } from "next";
-import { SEO_CONFIG } from "@/utils/seo";
+'use client';
+
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-// Lazy load components to reduce initial bundle
+// Lazy load the heavy ContactFormLight component to reduce initial bundle size
 const ContactFormLight = dynamic(() => import('@/components/ContactFormLight'), {
-  loading: () => <ContactFormSkeleton />
+  loading: () => <ContactFormSkeleton />,
+  ssr: false // Contact form doesn't need SSR
 });
 
 const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
   loading: () => <MapSkeleton />
 });
-
-// Loading skeletons
-function ContactFormSkeleton() {
-  return (
-    <div className="space-y-6 animate-pulse">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="h-12 bg-gray-800 rounded-lg"></div>
-        <div className="h-12 bg-gray-800 rounded-lg"></div>
-      </div>
-      <div className="h-12 bg-gray-800 rounded-lg"></div>
-      <div className="h-32 bg-gray-800 rounded-lg"></div>
-      <div className="h-12 bg-gray-800 rounded-lg"></div>
-    </div>
-  );
-}
 
 function MapSkeleton() {
   return (
@@ -33,37 +19,31 @@ function MapSkeleton() {
   );
 }
 
-// Next.js 15: SSR meta for SEO/TTFB
-export const metadata: Metadata = {
-  title: SEO_CONFIG.contact.title,
-  description: SEO_CONFIG.contact.description,
-  keywords: SEO_CONFIG.contact.keywords,
-  openGraph: {
-    title: SEO_CONFIG.contact.ogTitle ?? SEO_CONFIG.contact.title,
-    description: SEO_CONFIG.contact.ogDescription ?? SEO_CONFIG.contact.description,
-    url: SEO_CONFIG.contact.canonical,
-    images: [
-      {
-        url: SEO_CONFIG.contact.ogImage ?? "",
-        alt: SEO_CONFIG.contact.title,
-      },
-    ],
-  },
-  alternates: {
-    canonical: SEO_CONFIG.contact.canonical,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    "max-snippet": -1,
-    "max-image-preview": "large",
-    "max-video-preview": -1,
-  },
-  other: {
-    // JSON-LD structured data for SSR
-    "ld+json": JSON.stringify(SEO_CONFIG.contact.structuredData),
-  },
-};
+function ContactFormSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Name fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+        <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+      </div>
+      {/* Email */}
+      <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+      {/* Company */}
+      <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+      {/* Service select */}
+      <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+      {/* Budget select */}
+      <div className="h-12 bg-gray-800/50 rounded-lg"></div>
+      {/* Message textarea */}
+      <div className="h-32 bg-gray-800/50 rounded-lg"></div>
+      {/* Submit button */}
+      <div className="h-12 bg-cyan-500/20 rounded-lg border border-cyan-500/30"></div>
+    </div>
+  );
+}
+
+// Client Component - metadata handled by layout
 
 export default function ContactPage() {
   return (
@@ -100,9 +80,7 @@ export default function ContactPage() {
             {/* Right Column - Contact Form */}
             <div className="order-1 lg:order-2">
               <div className="bg-gray-900/90 backdrop-blur-sm border border-cyan-400/20 rounded-xl p-8 shadow-2xl">
-                <Suspense fallback={<ContactFormSkeleton />}>
-                  <ContactFormLight />
-                </Suspense>
+                <ContactFormLight />
               </div>
             </div>
           </div>

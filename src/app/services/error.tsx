@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useErrorStore, createErrorRecord } from '@/stores/error';
 import { trackEvent } from '@/lib/analytics';
 
 export default function ServicesError({
@@ -13,23 +12,16 @@ export default function ServicesError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const addError = useErrorStore((state) => state.addError);
 
   useEffect(() => {
-    // Log error to error store
-    const errorRecord = createErrorRecord(error, 'runtime', 'medium');
-    addError({
-      ...errorRecord,
-      metadata: {
-        ...errorRecord.metadata,
-        digest: error.digest,
-        route: 'services',
-      },
-    });
-
     // Track in analytics
     trackEvent('route_error', 'error', `services: ${error.message}`);
-  }, [error, addError]);
+    
+    // Log to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Services page error:', error);
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">
