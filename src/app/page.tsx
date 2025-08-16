@@ -152,10 +152,10 @@ export default function HomePage() {
             </h2>
             
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Witness the <strong className="text-secondary-400 glow-cyan">architectural brilliance</strong> behind these 
-              <strong className="text-accent-400"> revenue-generating digital empires</strong>. 
-              Each platform represents months of strategic development, cutting-edge technology, 
-              and <strong className="text-white">pure engineering excellence</strong> that transforms industries.
+              Witness the <strong className="text-secondary-400 glow-cyan">craftsmanship</strong> behind these 
+              <strong className="text-accent-400"> modern web applications</strong>. 
+              Each project showcases responsive design, blazing-fast performance, 
+              and <strong className="text-white">clean code architecture</strong> built with the latest technologies.
             </p>
             
             <div className="flex justify-center gap-8 mt-8 text-sm">

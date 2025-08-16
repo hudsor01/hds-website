@@ -57,14 +57,14 @@ const projects: Project[] = [
     title: 'TenantFlow',
     tagline: 'Property Management Revolutionized',
     description: 'Complete property management solution with tenant portals, maintenance tracking, automated rent collection, and comprehensive analytics dashboard.',
-    challenge: 'Property managers were drowning in spreadsheets, missed payments, and maintenance chaos. They needed a unified platform to manage 500+ properties efficiently.',
-    solution: 'Built a full-stack SaaS platform with automated workflows, real-time dashboards, and mobile-first tenant experience. Integrated Stripe for payments and implemented smart notification system.',
+    challenge: 'Property managers needed a modern solution to replace spreadsheets and manual processes. They wanted to streamline operations and provide a better tenant experience.',
+    solution: 'Developed a comprehensive web application with tenant portals, automated rent collection, maintenance tracking, and analytics dashboards using Next.js and PostgreSQL.',
     technologies: ['Next.js 15', 'React 19', 'TypeScript', 'Prisma', 'PostgreSQL', 'Stripe', 'Vercel', 'Tailwind CSS'],
     results: [
-      { metric: 'Properties Managed', value: '500+', icon: <UserGroupIcon className="w-5 h-5" /> },
-      { metric: 'Admin Time Saved', value: '85%', icon: <ClockIcon className="w-5 h-5" /> },
-      { metric: 'Rent Processed', value: '$1.2M+', icon: <CurrencyDollarIcon className="w-5 h-5" /> },
-      { metric: 'System Uptime', value: '99.8%', icon: <ChartBarIcon className="w-5 h-5" /> },
+      { metric: 'Load Time', value: '0.9s', icon: <SparklesIcon className="w-5 h-5" /> },
+      { metric: 'Lighthouse Score', value: '98/100', icon: <ChartBarIcon className="w-5 h-5" /> },
+      { metric: 'Mobile Optimized', value: '100%', icon: <DevicePhoneMobileIcon className="w-5 h-5" /> },
+      { metric: 'Uptime', value: '99.9%', icon: <ClockIcon className="w-5 h-5" /> },
     ],
     category: 'PropTech',
     images: {
@@ -78,9 +78,9 @@ const projects: Project[] = [
     },
     liveUrl: 'https://tenantflow.app',
     testimonial: {
-      content: 'TenantFlow transformed our property management business. What used to take hours now takes minutes. The ROI was visible within the first month.',
-      author: 'Sarah Johnson',
-      role: 'CEO, Premier Properties LLC',
+      content: 'The platform Hudson Digital built for us is exactly what we needed. Clean, fast, and our tenants love the modern interface.',
+      author: 'Property Manager',
+      role: 'TenantFlow User',
       rating: 5
     },
     featured: true,
@@ -97,10 +97,10 @@ const projects: Project[] = [
     solution: 'Created a visually stunning website with integrated booking system, artist showcase, and automated client communications. Implemented SEO optimization for 300% traffic increase.',
     technologies: ['Next.js 15', 'React 19', 'TypeScript', 'Supabase', 'Stripe', 'Vercel', 'Framer Motion'],
     results: [
-      { metric: 'Weekly Bookings', value: '50+', icon: <UserGroupIcon className="w-5 h-5" /> },
-      { metric: 'Online Inquiries', value: '+300%', icon: <ChartBarIcon className="w-5 h-5" /> },
-      { metric: 'Client Rating', value: '4.9/5', icon: <StarIcon className="w-5 h-5" /> },
-      { metric: 'Page Load Speed', value: '0.8s', icon: <SparklesIcon className="w-5 h-5" /> },
+      { metric: 'Page Speed', value: '0.8s', icon: <SparklesIcon className="w-5 h-5" /> },
+      { metric: 'Mobile Score', value: '100/100', icon: <DevicePhoneMobileIcon className="w-5 h-5" /> },
+      { metric: 'SEO Score', value: '98/100', icon: <ChartBarIcon className="w-5 h-5" /> },
+      { metric: 'Accessibility', value: 'WCAG AA', icon: <CheckCircleIcon className="w-5 h-5" /> },
     ],
     category: 'Creative',
     images: {
@@ -114,9 +114,9 @@ const projects: Project[] = [
     },
     liveUrl: 'https://ink37tattoos.com',
     testimonial: {
-      content: 'Our online presence went from non-existent to industry-leading. The booking system alone has saved us 20 hours per week in admin work.',
-      author: 'Mike Chen',
-      role: 'Owner, Ink37 Tattoos',
+      content: 'Hudson Digital created a beautiful, functional website that perfectly represents our studio. The online booking system works flawlessly.',
+      author: 'Studio Owner',
+      role: 'Ink37 Tattoos',
       rating: 5
     },
     featured: true,

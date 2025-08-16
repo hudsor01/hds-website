@@ -44,10 +44,10 @@ export const metadata: Metadata = {
 
 // Stats to showcase at the top
 const impactStats = [
-  { label: 'Revenue Generated', value: '$3.7M+', icon: <ChartBarIcon className="w-6 h-6" /> },
-  { label: 'Efficiency Gains', value: '85%', icon: <RocketLaunchIcon className="w-6 h-6" /> },
-  { label: 'Client Satisfaction', value: '4.9/5', icon: <TrophyIcon className="w-6 h-6" /> },
-  { label: 'Projects Delivered', value: '50+', icon: <SparklesIcon className="w-6 h-6" /> },
+  { label: 'Projects Delivered', value: '15+', icon: <SparklesIcon className="w-6 h-6" /> },
+  { label: 'Page Load Speed', value: '<1s', icon: <RocketLaunchIcon className="w-6 h-6" /> },
+  { label: 'Client Satisfaction', value: '5.0', icon: <TrophyIcon className="w-6 h-6" /> },
+  { label: 'Uptime Guarantee', value: '99.9%', icon: <ChartBarIcon className="w-6 h-6" /> },
 ];
 
 export default function Portfolio() {
@@ -77,9 +77,9 @@ export default function Portfolio() {
           </h1>
           
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
-            Real projects. Real results. See how we've transformed businesses with 
-            <strong className="text-cyan-400"> cutting-edge web solutions</strong> that deliver 
-            <strong className="text-green-400"> measurable ROI</strong>.
+            Modern web applications built with the latest technologies. See how we create 
+            <strong className="text-cyan-400"> fast, scalable solutions</strong> that 
+            <strong className="text-green-400"> elevate your digital presence</strong>.
           </p>
 
           {/* Impact Stats */}
@@ -119,10 +119,10 @@ export default function Portfolio() {
           
           <div className="p-6 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl hover:border-cyan-500/50 transition-all duration-300">
             <div className="text-4xl mb-4">📈</div>
-            <h3 className="text-xl font-bold text-white mb-2">Proven ROI</h3>
+            <h3 className="text-xl font-bold text-white mb-2">Modern Stack</h3>
             <p className="text-gray-400">
-              Our clients see average returns of 300% within the first year. 
-              We focus on metrics that matter to your business.
+              Built with Next.js, React, TypeScript, and cloud-native technologies. 
+              Your project will use the latest, most reliable tools.
             </p>
           </div>
           
