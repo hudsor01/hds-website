@@ -360,5 +360,5 @@ If you already have Prometheus/Grafana:
 1. Set up Alertmanager for notifications
 2. Configure long-term storage (Thanos, Cortex)
 3. Add custom business metrics
-4. Integrate with PagerDuty/Slack
+4. Integrate with email alerting
 5. Set up distributed tracing (Jaeger/Tempo)

@@ -71,12 +71,3 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.deployment-url }}
 
-      - name: Notify on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: 'Production deployment failed!'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
