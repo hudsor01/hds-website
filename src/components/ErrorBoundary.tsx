@@ -3,7 +3,7 @@
 import { ComponentType, ReactNode, useState, ErrorInfo as ReactErrorInfo } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
-import { trackEvent } from '@/lib/analytics';
+import { trackEvent } from '@/lib/unified-analytics';
 // Error handling is now managed by React Query for API calls
 
 interface ErrorFallbackProps {
@@ -128,7 +128,7 @@ export function ErrorBoundary({
 }: ErrorBoundaryProps) {
   const handleError = (error: Error, errorInfo: ReactErrorInfo) => {
     // Track error in analytics
-    trackEvent('error_boundary_triggered', 'error', error.message);
+    trackEvent('error_boundary_triggered', { category: 'error', message: error.message });
 
     // Call custom error handler if provided
     onError?.(error, errorInfo);
@@ -140,7 +140,7 @@ export function ErrorBoundary({
   };
 
   const handleReset = () => {
-    trackEvent('error_boundary_reset', 'error', 'manual_reset');
+    trackEvent('error_boundary_reset', { category: 'error', action: 'manual_reset' });
     onReset?.();
   };
 

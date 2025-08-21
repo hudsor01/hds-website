@@ -2,12 +2,18 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { FeatureFlagWrapper, FEATURE_FLAGS } from '@/lib/feature-flags';
+// import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
-// Lazy load the heavy ContactFormLight component to reduce initial bundle size
-const ContactFormLight = dynamic(() => import('@/components/ContactFormLight'), {
+// Lazy load the contact form components from consolidated file
+const ContactForm = dynamic(() => import('@/components/ContactForm'), {
   loading: () => <ContactFormSkeleton />,
   ssr: false // Contact form doesn't need SSR
 });
+
+// For now, use the same component for both variants
+const ContactFormLight = ContactForm;
+const ContactFormV2 = ContactForm;
 
 const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
   loading: () => <MapSkeleton />
@@ -46,43 +52,113 @@ function ContactFormSkeleton() {
 // Client Component - metadata handled by layout
 
 export default function ContactPage() {
+  // Track page view and business events
+  // usePageTracking();
+  // const { trackServiceInterest } = useBusinessTracking();
+
   return (
-    <main className="min-h-screen bg-gradient-primary">
-      {/* Simple gradient background - no complex animations */}
-      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 -z-10" />
-      
-      {/* Single accent gradient */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl -z-10" />
-      
-      {/* Header */}
-      <section className="relative py-16">
-        <div className="max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <h1 className="text-5xl font-black text-white mb-6 glow-cyan">Let&apos;s Build Something Legendary</h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Ready to dominate your market? Tell us about your vision and let&apos;s engineer a solution that crushes the competition.
-          </p>
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Hero Content */}
+            <div className="space-y-8">
+              <div>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
+                  💬 Let&apos;s Connect
+                </span>
+              </div>
+
+              <div>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none tracking-tight">
+                  <span className="inline-block">Ready to</span>
+                  <br />
+                  <span className="inline-block bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Transform</span>
+                  <br />
+                  <span className="inline-block">Your Business?</span>
+                </h1>
+              </div>
+
+              <div>
+                <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
+                  Let&apos;s discuss your vision and create a custom solution that drives real results for your business.
+                </p>
+              </div>
+
+              {/* Contact Info */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 text-gray-300">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 flex items-center justify-center">
+                    📧
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Email</p>
+                    <p>hello@hudsondigitalsolutions.com</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4 text-gray-300">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 flex items-center justify-center">
+                    ⏱️
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Response Time</p>
+                    <p>Within 24 hours</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Contact Form */}
+            <div className="relative">
+              <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5" />
+                <div className="relative z-10">
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-white mb-2">Start Your Project</h2>
+                    <p className="text-gray-400">Tell us about your needs and we&apos;ll get back to you quickly.</p>
+                  </div>
+                  
+                  <FeatureFlagWrapper 
+                    flag={FEATURE_FLAGS.CONTACT_FORM_V2}
+                    fallback={<ContactFormLight />}
+                  >
+                    <ContactFormV2 />
+                  </FeatureFlagWrapper>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-      
-      {/* Contact Form Section - Two Column Layout */}
-      <section className="relative py-12">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Left Column - Google Map */}
-            <div className="order-2 lg:order-1">
-              <div className="sticky top-24">
-                <Suspense fallback={<MapSkeleton />}>
-                  <GoogleMap />
-                </Suspense>
-              </div>
-            </div>
-            
-            {/* Right Column - Contact Form */}
-            <div className="order-1 lg:order-2">
-              <div className="bg-gray-900/90 backdrop-blur-sm border border-cyan-400/20 rounded-xl p-8 shadow-2xl">
-                <ContactFormLight />
-              </div>
-            </div>
+
+      {/* Map Section */}
+      <section className="relative py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Visit Our Office
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Located in the heart of Florida&apos;s tech corridor, ready to serve clients worldwide.
+            </p>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-4">
+            <Suspense fallback={<MapSkeleton />}>
+              <GoogleMap />
+            </Suspense>
           </div>
         </div>
       </section>

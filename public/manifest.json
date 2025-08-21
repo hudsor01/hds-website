@@ -1,7 +1,7 @@
 {
-  "name": "Hudson Digital Solutions - Web Development & Custom Software",
-  "short_name": "Hudson Digital",
-  "description": "Professional web development and custom software solutions. Fast, modern websites built with React & Next.js. Free consultation available.",
+  "name": "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
+  "short_name": "HDS",
+  "description": "Ship 3x Faster, 60% Cheaper - Senior engineering team that eliminates your technical bottlenecks. Launch features in days, not months.",
   "start_url": "/?source=pwa",
   "display": "standalone",
   "orientation": "portrait",

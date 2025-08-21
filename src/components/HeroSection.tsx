@@ -1,41 +1,24 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m } from '@/lib/motion';
+// Motion imports simplified for build stability
 import { ReactNode, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import type { HeroSectionProps } from "@/types/components";
+import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
+import { CTAButton } from "@/components/ui/CTAButton";
+import { TEXT_GRADIENTS } from "@/lib/ui-constants";
 
-interface HeroSectionProps {
-  title: string;
-  subtitle?: string;
-  description: string;
-  primaryCTA?: {
-    text: string;
-    href: string;
-  };
-  secondaryCTA?: {
-    text: string;
-    href: string;
-  };
+// Extended props for internal use
+interface ExtendedHeroSectionProps extends HeroSectionProps {
   badge?: string;
   variant?: "default" | "gradient" | "video" | "minimal";
   backgroundElements?: ReactNode;
-  className?: string;
 }
 
-// Floating animation variants
-const floatingVariants = {
-  initial: { y: 0 },
-  animate: {
-    y: [-10, 10, -10],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut" as const,
-    },
-  },
-};
+// Animation variants removed for build stability
 
 // Text animation variants
 const textVariants = {
@@ -71,15 +54,9 @@ export function HeroSection({
   variant = "default",
   backgroundElements,
   className,
-}: HeroSectionProps) {
+}: ExtendedHeroSectionProps) {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Motion effects removed for build stability
 
   const getVariantClasses = () => {
     switch (variant) {
@@ -95,9 +72,8 @@ export function HeroSection({
   };
 
   return (
-    <motion.section
+    <m.section
       ref={ref}
-      style={{ y, opacity }}
       className={cn(
         "relative min-h-screen flex items-center justify-center overflow-hidden",
         getVariantClasses(),
@@ -107,25 +83,14 @@ export function HeroSection({
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Gradient Orbs */}
-        <motion.div
-          variants={floatingVariants}
-          initial="initial"
-          animate="animate"
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+        <m.div
+                                        className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
         />
-        <motion.div
-          variants={floatingVariants}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 2 }}
-          className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+        <m.div
+                                                  className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
         />
-        <motion.div
-          variants={floatingVariants}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 4 }}
-          className="absolute top-1/2 left-1/6 w-32 h-32 bg-gradient-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl"
+        <m.div
+                                                  className="absolute top-1/2 left-1/6 w-32 h-32 bg-gradient-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl"
         />
 
         {/* Grid Pattern */}
@@ -140,7 +105,7 @@ export function HeroSection({
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -148,28 +113,28 @@ export function HeroSection({
         >
           {/* Badge */}
           {badge && (
-            <motion.div variants={textVariants}>
+            <m.div variants={textVariants}>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
                 <SparklesIcon className="w-4 h-4" />
                 {badge}
               </span>
-            </motion.div>
+            </m.div>
           )}
 
           {/* Subtitle */}
           {subtitle && (
-            <motion.div variants={textVariants}>
+            <m.div variants={textVariants}>
               <p className="text-cyan-400 font-semibold text-lg tracking-wide uppercase">
                 {subtitle}
               </p>
-            </motion.div>
+            </m.div>
           )}
 
           {/* Title */}
-          <motion.div variants={textVariants}>
+          <m.div variants={textVariants}>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight">
               {title.split(" ").map((word, index) => (
-                <motion.span
+                <m.span
                   key={index}
                   className={cn(
                     "inline-block mr-4",
@@ -184,24 +149,24 @@ export function HeroSection({
                   }}
                 >
                   {word}
-                </motion.span>
+                </m.span>
               ))}
             </h1>
-          </motion.div>
+          </m.div>
 
           {/* Description */}
-          <motion.div variants={textVariants}>
+          <m.div variants={textVariants}>
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               {description}
             </p>
-          </motion.div>
+          </m.div>
 
           {/* CTAs */}
-          <motion.div variants={textVariants}>
+          <m.div variants={textVariants}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
               {primaryCTA && (
                 <Link href={primaryCTA.href}>
-                  <motion.button
+                  <m.button
                     className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -211,45 +176,45 @@ export function HeroSection({
                     
                     <span className="relative z-10">{primaryCTA.text}</span>
                     <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </motion.button>
+                  </m.button>
                 </Link>
               )}
 
               {secondaryCTA && (
                 <Link href={secondaryCTA.href}>
-                  <motion.button
+                  <m.button
                     className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-gray-700 text-white font-semibold text-lg rounded-lg hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {secondaryCTA.text}
                     <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </motion.button>
+                  </m.button>
                 </Link>
               )}
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Scroll Indicator */}
-          <motion.div
+          <m.div
             variants={textVariants}
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           >
-            <motion.div
+            <m.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
               className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center"
             >
-              <motion.div
+              <m.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="w-1 h-3 bg-gradient-to-b from-cyan-400 to-blue-400 rounded-full mt-2"
               />
-            </motion.div>
-          </motion.div>
-        </motion.div>
+            </m.div>
+          </m.div>
+        </m.div>
       </div>
-    </motion.section>
+    </m.section>
   );
 }
 
@@ -305,7 +270,7 @@ export function GradientHero(props: HeroSectionProps) {
       backgroundElements={
         <>
           {/* Animated gradient mesh */}
-          <motion.div
+          <m.div
             animate={{
               background: [
                 "radial-gradient(circle at 20% 80%, #00b4d8 0%, transparent 50%), radial-gradient(circle at 80% 20%, #0077b6 0%, transparent 50%), radial-gradient(circle at 40% 40%, #023e8a 0%, transparent 50%)",

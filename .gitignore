@@ -46,19 +46,29 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Test files
+# Test files and directories
+__tests__/
 test-*.html
 test-*.ts
 test-*.js
 *-test-suite.ts
 *-test-report.*
 *-test-summary.md
+scripts/test-*.ts
+scripts/demo-*.ts
+e2e/test-*.spec.ts
+e2e/*-test-*.spec.ts
+e2e/fixtures/test-*
+e2e/helpers/test-*
 
 # Visual test screenshots
 visual-test-screenshots/
+.playwright-mcp/
+e2e/dark-design-visual-test.spec.ts-snapshots/
 
 # Test results directory
 test-results/
+playwright-report/
 
 # Manual testing guides
 manual-testing-guide.md
@@ -80,6 +90,10 @@ temp/
 *.swo
 *~
 
+# Development portfolio assets (until ready for production)
+public/portfolio/ink37tattoos*
+public/portfolio/tenantflow*
+
 # Backup files
 *.bak
 *.backup
@@ -100,8 +114,28 @@ public/sitemap.xml
 
 # Development documentation with sensitive info
 docs/ROADMAP.md
+docs/DISCORD_WEBHOOK_SETUP.md
+docs/GRAFANA_POSTHOG_SETUP.md
+docs/BUSINESS_INTELLIGENCE_SETUP.md
+docs/MONITORING_SETUP_PROMPT.md
+docs/GITHUB_SECRETS_SETUP.md
+docs/cloudflare-tunnel-config.yml
+docs/docker-compose-grafana.yml
 scripts/generate-sitemap.ts
+scripts/generate-metrics-token.js
+scripts/test-discord-webhook.sh
 .trae/
+
+# Development planning documents
+PRD.md
+PROJECT_PLAN.md
+COMPREHENSIVE_TEST_REPORT.md
+TEST_COVERAGE_REPORT.md
+*_TEST_SUMMARY.md
+*_COVERAGE_ANALYSIS.md
+
+# Temporary development pages
+src/app/test/
 
 # Playwright Test
 /test-results/

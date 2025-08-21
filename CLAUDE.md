@@ -6,6 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a modern business website for Hudson Digital Solutions built with Next.js 15, React 19, and TypeScript. It's a high-performance marketing site with contact forms, analytics, and automated email sequences.
 
+## Key Development Principles
+
+### Core Principles to Follow
+1. **YAGNI (You Aren't Gonna Need It)**: Don't add abstraction until proven necessary
+2. **KISS (Keep It Simple)**: Direct implementations over complex patterns
+3. **DRY (Don't Repeat Yourself)**: Use decorators and interceptors for cross-cutting concerns
+4. **Single Responsibility**: Each service handles one domain entity
+5. **Explicit over Implicit**: Clear, direct code over "clever" abstractions
+
+These principles guide all development decisions. Prioritize simplicity and maintainability over premature optimization. Avoid over-engineering solutions before requirements are clear.
+
 ## Development Commands
 
 ### Core Commands
@@ -16,8 +27,10 @@ npm run dev:https         # Start development server with HTTPS
 
 # Build & Production
 npm run build             # Production build
+npm run build:local       # Build with local env
 npm run build:analyze     # Build with bundle analyzer
 npm run start             # Start production server
+npm run start:local       # Start production server with local env
 
 # Quality & Analysis
 npm run lint              # ESLint checking
@@ -25,9 +38,45 @@ npm run typecheck         # TypeScript type checking
 npm run check:bundle      # Analyze bundle size
 ```
 
+### Testing Commands
+```bash
+# E2E Testing (Playwright)
+npm run test:e2e          # Run all e2e tests
+npm run test:e2e:ui       # Run e2e tests with UI mode
+npm run test:e2e:fast     # Run chromium tests only (fast)
+npm run test:e2e:a11y     # Run accessibility tests only
+npm run test:e2e:animations # Run animation performance tests
+npm run test:e2e:report   # Show test report
+npm run test:e2e:install  # Install Playwright browsers
+npm run test:update-snapshots # Update visual snapshots
+
+# Unit Testing (Jest)
+npm run test:unit         # Run unit tests
+npm run test:unit:watch   # Run tests in watch mode
+npm run test:unit:coverage # Run tests with coverage
+
+# Combined Testing
+npm run test:all          # Run lint, typecheck, unit and fast e2e
+npm run test:ci           # Full CI test suite
+```
+
 ### Utility Commands
 ```bash
-npm run generate-sitemap    # Generate sitemap.xml
+# Environment & Setup
+npm run env:setup         # Create .env.local from template
+npm run env:validate      # Validate environment variables
+
+# Database
+npm run db:types:generate # Generate Supabase types
+
+# Image Optimization
+npm run optimize:images   # Optimize all images
+npm run optimize:portfolio # Optimize portfolio images
+
+# Maintenance
+npm run clean             # Clean all build artifacts
+npm run clean:test        # Clean test reports
+npm run generate-sitemap  # Generate sitemap.xml
 ```
 
 ## Architecture & Structure
@@ -144,11 +193,32 @@ See `/docs/GITHUB_SECRETS_SETUP.md` for CI/CD secret configuration
 
 ## Testing Contact Form
 Three methods available:
-1. **Live site**: `/contact` page
-2. **Test HTML**: `http://localhost:3000/test-contact-form.html`  
+1. **Live site**: `https://hudsondigitalsolutions.com/contact`
+2. **Local development**: `http://localhost:3000/contact`  
 3. **Script**: `npx tsx test-contact-form.ts`
 
 All emails sent to `hello@hudsondigitalsolutions.com`
+
+## Testing Strategy
+
+### E2E Testing (Playwright)
+- **Test structure**: Tests in `/e2e` directory
+- **Page objects**: Reusable selectors in `/e2e/page-objects`
+- **Helpers**: Test utilities in `/e2e/helpers`
+- **Projects**: Multiple browser configurations (Chrome, Firefox, Safari, Mobile)
+- **Animation tests**: Special project for testing animations with GPU acceleration
+- **Accessibility tests**: Tagged with `@accessibility` for isolated runs
+
+### Unit Testing (Jest)
+- **Test location**: `__tests__` directory and `*.test.ts` files
+- **Coverage**: Configured for `src/**` excluding type definitions
+- **Environment**: Node test environment with ts-jest
+
+### CI/CD Pipeline
+- **GitHub Actions**: Automated testing on push/PR
+- **Parallel jobs**: Quality checks run in parallel
+- **E2E in CI**: Full browser test suite with retries
+- **Performance monitoring**: Automated Lighthouse checks
 
 ## Key Libraries & Dependencies
 - **Next.js 15**: App Router, Edge Runtime, Image Optimization
@@ -157,4 +227,7 @@ All emails sent to `hello@hudsondigitalsolutions.com`
 - **Resend**: Email sending and automation
 - **PostHog**: Product analytics platform
 - **@vercel/analytics**: Performance monitoring
+- **Playwright**: E2E testing framework
+- **Jest**: Unit testing framework
+- **dotenv-cli**: Environment variable management
 

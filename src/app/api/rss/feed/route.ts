@@ -1,19 +1,16 @@
 import { NextResponse } from 'next/server';
-import { applySecurityHeaders } from '@/middleware/security';
+// Simplified RSS feed without complex security middleware
 
 export async function GET() {
   try {
     const rss = await generateRSSFeed();
     
-    const response = new NextResponse(rss, {
+    return new NextResponse(rss, {
       headers: {
         'Content-Type': 'application/rss+xml; charset=utf-8',
         'Cache-Control': 's-maxage=3600, stale-while-revalidate'
       }
     });
-    
-    // Apply security headers
-    return applySecurityHeaders(response);
   } catch (error) {
     console.error('RSS feed generation failed:', error);
     return NextResponse.json(

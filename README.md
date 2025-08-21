@@ -41,10 +41,10 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
 The contact form sends emails to: **hello@hudsondigitalsolutions.com**
 
-### Method 1: Using the Test HTML Page
-1. Start the development server: `npm run dev`
-2. Open `http://localhost:3000/test-contact-form.html` in your browser
-3. Fill out and submit the form
+### Method 1: Using the Live Site
+1. Go to `https://hudsondigitalsolutions.com/contact`
+2. Fill out the form with real information
+3. Submit and check for confirmation
 4. Check your email at hello@hudsondigitalsolutions.com
 
 ### Method 2: Using the Test Script
@@ -52,10 +52,10 @@ The contact form sends emails to: **hello@hudsondigitalsolutions.com**
 npx tsx test-contact-form.ts
 ```
 
-### Method 3: Using the Live Site
-1. Go to `/contact` page
-2. Fill out the form with real information
-3. Submit and check for confirmation
+### Method 3: Using Local Development
+1. Start the development server: `npm run dev`
+2. Open `http://localhost:3000/contact` in your browser
+3. Fill out and submit the form
 
 ## Email Features
 

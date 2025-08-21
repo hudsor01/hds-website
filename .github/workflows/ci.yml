@@ -1,102 +1,76 @@
-name: CI
+name: CI Pipeline
 
 on:
   push:
     branches: [main, develop]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
   NODE_VERSION: '22.x'
-  PNPM_VERSION: 8
+  NEXT_TELEMETRY_DISABLED: 1
+  CI: true
 
 jobs:
-  # Quick quality checks that run in parallel
-  quality:
-    name: Code Quality
+  # ============================================
+  # STAGE 1: Setup and Dependencies
+  # ============================================
+  setup:
+    name: Setup Dependencies
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        task: [lint, typecheck]
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        id: npm-cache
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Run ${{ matrix.task }}
-        run: npm run ${{ matrix.task }}
-
-  # Build job with heavy caching
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Generate cache key
+        id: cache-key
+        run: |
+          echo "key=${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Cache dependencies
+      - name: Cache node_modules
+        id: cache-node-modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: node_modules
+          key: ${{ steps.cache-key.outputs.key }}-modules
           restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Cache Next.js build
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-            ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ steps.cache-key.outputs.key }}-
 
       - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
 
-      - name: Build application
-        run: npm run build
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-
-      - name: Upload build artifacts
+      - name: Upload node_modules
         uses: actions/upload-artifact@v4
         with:
-          name: nextjs-build
-          path: .next
+          name: node-modules
+          path: node_modules
           retention-days: 1
 
-  # Analyze bundle size
-  bundle-analysis:
-    name: Bundle Analysis
+  # ============================================
+  # STAGE 2: Parallel Quality Checks
+  # ============================================
+  lint:
+    name: Lint Code
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
+    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,24 +80,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Download build artifacts
+      - name: Download node_modules
         uses: actions/download-artifact@v4
         with:
-          name: nextjs-build
-          path: .next
+          name: node-modules
+          path: node_modules
 
-      - name: Analyze bundle
-        uses: transferwise/actions-next-bundle-analyzer@v2
-        with:
-          workflow-id: ci.yml
-          base-branch: main
+      - name: Run ESLint
+        run: npm run lint
 
-  # Performance testing
-  lighthouse:
-    name: Lighthouse CI
+  typecheck:
+    name: TypeScript Check
     runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
+    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -133,29 +102,55 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Download build artifacts
+      - name: Download node_modules
         uses: actions/download-artifact@v4
         with:
-          name: nextjs-build
-          path: .next
+          name: node-modules
+          path: node_modules
 
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v11
+      - name: Run TypeScript check
+        run: npm run typecheck
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          urls: |
-            http://localhost:3000
-            http://localhost:3000/contact
-            http://localhost:3000/services
-          uploadArtifacts: true
-          temporaryPublicStorage: true
+          node-version: ${{ env.NODE_VERSION }}
 
-  # Security scanning
-  security:
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Run unit tests with coverage
+        run: npm run test:unit:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+  security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -164,24 +159,317 @@ jobs:
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
-      - name: Upload Trivy scan results
+      - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
 
-  # All checks must pass
-  ci-success:
-    name: CI Success
+  # ============================================
+  # STAGE 3: Build Application
+  # ============================================
+  build:
+    name: Build Application
     runs-on: ubuntu-latest
-    needs: [quality, build, security]
+    needs: [lint, typecheck, unit-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+            .next/static
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/*.[jt]s', '**/*.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+          retention-days: 1
+
+      - name: Check bundle size
+        run: |
+          # Simple bundle size check
+          echo "Checking bundle sizes..."
+          find .next -name "*.js" -size +200k -exec echo "Large bundle detected: {}" \;
+
+  # ============================================
+  # STAGE 4: E2E Testing (Parallel)
+  # ============================================
+  e2e-setup:
+    name: E2E Test Setup
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Upload Playwright cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-cache
+          path: ~/.cache/ms-playwright
+          retention-days: 1
+
+  e2e-tests:
+    name: E2E Tests - ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    needs: [build, e2e-setup]
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit, mobile-chrome, mobile-safari]
+        include:
+          - project: chromium
+            shard: 1/3
+          - project: chromium
+            shard: 2/3
+          - project: chromium
+            shard: 3/3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+
+      - name: Download Playwright cache
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-cache
+          path: ~/.cache/ms-playwright
+
+      - name: Install system dependencies
+        run: npx playwright install-deps ${{ matrix.project == 'webkit' && 'webkit' || matrix.project == 'firefox' && 'firefox' || 'chromium' }}
+
+      - name: Run E2E tests
+        run: |
+          if [[ "${{ matrix.project }}" == "chromium" ]]; then
+            npx playwright test --project=chromium --shard=${{ matrix.shard }}
+          elif [[ "${{ matrix.project }}" == "mobile-chrome" ]]; then
+            npx playwright test --project="Mobile Chrome"
+          elif [[ "${{ matrix.project }}" == "mobile-safari" ]]; then
+            npx playwright test --project="Mobile Safari"
+          else
+            npx playwright test --project=${{ matrix.project }}
+          fi
+        env:
+          PLAYWRIGHT_WORKERS: 2
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+          NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.project }}-${{ matrix.shard || '1' }}
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================
+  # STAGE 5: Performance Testing
+  # ============================================
+  lighthouse:
+    name: Lighthouse Performance
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+
+      - name: Start server
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000 -t 30000
+        env:
+          NODE_ENV: production
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000
+            http://localhost:3000/contact
+            http://localhost:3000/services
+            http://localhost:3000/portfolio
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+
+      - name: Comment results on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = require('./lighthouse-results.json');
+            const summary = results.map(r => 
+              `- ${r.url}: Performance ${r.scores.performance}, A11y ${r.scores.accessibility}`
+            ).join('\n');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### 🏎️ Lighthouse Results\n\n${summary}`
+            });
+
+  # ============================================
+  # STAGE 6: Bundle Analysis
+  # ============================================
+  bundle-analysis:
+    name: Bundle Size Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
+      - name: Analyze bundle
+        run: npm run build:analyze > bundle-report.txt 2>&1
+
+      - name: Comment bundle size on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('bundle-report.txt', 'utf8');
+            const summary = report.match(/First Load JS.*$/gm)?.slice(0, 5).join('\n') || 'No bundle data';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### 📦 Bundle Size Report\n\n\`\`\`\n${summary}\n\`\`\``
+            });
+
+  # ============================================
+  # Final Status Check
+  # ============================================
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, unit-tests, security-scan, build, e2e-tests]
     if: always()
     steps:
-      - name: Check if all jobs passed
+      - name: Check job statuses
         run: |
           if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
-            echo "One or more jobs failed"
+            echo "❌ One or more CI checks failed"
             exit 1
+          elif [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "⚠️ CI was cancelled"
+            exit 1
+          else
+            echo "✅ All CI checks passed successfully!"
           fi
-          echo "All checks passed!"
+
+      - name: Post final status to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ job.status }}' === 'success' ? '✅' : '❌';
+            const message = status === '✅' 
+              ? 'All CI checks passed!' 
+              : 'Some CI checks failed. Please review the logs.';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ${status} CI Pipeline Status\n\n${message}`
+            });

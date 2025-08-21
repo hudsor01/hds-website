@@ -54,7 +54,7 @@ export function manageFocus() {
     const lastFocused = document.activeElement;
     if (lastFocused) {
       // Store reference for potential restoration
-      console.log('Storing last focused element:', lastFocused);
+      // Focus element stored for restoration
     }
   })
 
@@ -169,9 +169,9 @@ export function announceMessage(
 // Color contrast validation
 export function validateColorContrast() {
   // This is a basic implementation - in production you'd use a proper contrast library
-  const checkContrast = (foreground: string, background: string) => {
+  const checkContrast = (_foreground: string, _background: string) => {
     // Simplified contrast check - implement proper WCAG AA/AAA validation
-    console.log(`Checking contrast between ${foreground} and ${background}`)
+    // Checking contrast between colors
   }
 
   // Check common color combinations
