@@ -4,9 +4,9 @@
  */
 
 import { ComponentProps, forwardRef } from 'react';
+import Image from 'next/image';
 import type { 
   MotionProps, 
-  ViewportConfig, 
   UseScrollReturn, 
   UseTransformReturn,
   TransformInput,
@@ -50,9 +50,19 @@ export const m = {
   span: forwardRef<HTMLSpanElement, ComponentProps<'span'> & MotionProps>((props, ref) => 
     <span ref={ref} {...filterMotionProps(props)} />
   ),
-  img: forwardRef<HTMLImageElement, ComponentProps<'img'> & MotionProps>((props, ref) => 
-    <img ref={ref} {...filterMotionProps(props)} alt={props.alt || ""} />
-  ),
+  img: forwardRef<HTMLImageElement, ComponentProps<'img'> & MotionProps>((props, ref) => {
+    const { src, alt, width, height, ...rest } = props;
+    return (
+      <Image
+        ref={ref as React.Ref<HTMLImageElement>}
+        src={(src as string) || ''}
+        alt={alt || ''}
+        width={(width as number) || 100}
+        height={(height as number) || 100}
+        {...filterMotionProps(rest)}
+      />
+    );
+  }),
   video: forwardRef<HTMLVideoElement, ComponentProps<'video'> & MotionProps>((props, ref) => 
     <video ref={ref} {...filterMotionProps(props)} />
   ),
@@ -77,7 +87,7 @@ m.button.displayName = 'motion.button';
 m.blockquote.displayName = 'motion.blockquote';
 
 // Stub motion hooks
-export const useScroll = (_options?: ViewportConfig): UseScrollReturn => ({
+export const useScroll = (): UseScrollReturn => ({
   scrollY: { get: () => 0 },
   scrollYProgress: { get: () => 0 },
 });

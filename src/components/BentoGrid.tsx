@@ -3,6 +3,7 @@
 // Motion import removed for build stability
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import type { BentoGridProps, BentoCardProps } from "@/types/components";
 
 // Animation variants removed for build stability
@@ -227,11 +228,13 @@ export function BentoImageCard({
   return (
     <BentoCard {...props} className="p-0 overflow-hidden">
       <div className="relative h-full">
-        <img
+        <Image
           src={src}
           alt={alt}
-          className="w-full h-full object-cover"
-                            />
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
         
         {overlay && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

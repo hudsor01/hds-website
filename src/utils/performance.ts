@@ -53,6 +53,8 @@ export function addResourceHints() {
 // Note: Service Worker registration is handled by ServiceWorkerRegistration.tsx component
 
 // Web Vitals tracking
+let _clsValue = 0 // Track cumulative layout shift
+
 export function trackWebVitals() {
   // Core Web Vitals tracking would go here
   // This is a placeholder for actual implementation
@@ -60,7 +62,7 @@ export function trackWebVitals() {
     // Track LCP
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
-      const _lastEntry = entries[entries.length - 1]
+      // Track LCP entry for performance monitoring
       // LCP tracking would be implemented here
     }).observe({ entryTypes: ['largest-contentful-paint'] })
 
@@ -68,14 +70,14 @@ export function trackWebVitals() {
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries()
       entries.forEach((entry) => {
-        const _fidEntry = entry as FIDEntry
+        // Track FID entry for performance monitoring
         // FID tracking would be implemented here
       })
     }).observe({ entryTypes: ['first-input'] })
 
     // Track CLS
     new PerformanceObserver((entryList) => {
-      let _clsValue = 0
+      // Track CLS value for performance monitoring
       const entries = entryList.getEntries()
       entries.forEach((entry) => {
         const clsEntry = entry as CLSEntry
