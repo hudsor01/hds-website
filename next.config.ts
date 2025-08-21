@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Temporarily disable TypeScript checking for fast build
+  // Enable TypeScript checking for production builds
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
   // Simple image optimization
