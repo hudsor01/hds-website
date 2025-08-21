@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import type { Testimonial, TestimonialCarouselProps, PanInfo, AnimatePresenceProps } from "@/types/components";
+import type { Testimonial, TestimonialCarouselProps, AnimatePresenceProps } from "@/types/components";
 
 // AnimatePresence stub for removed framer-motion dependency
 const AnimatePresence = ({ children }: AnimatePresenceProps) => <>{children}</>;
