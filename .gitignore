@@ -39,6 +39,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# direnv
+.envrc
+
 # vercel
 .vercel
 
@@ -89,10 +92,6 @@ temp/
 *.swp
 *.swo
 *~
-
-# Development portfolio assets (until ready for production)
-public/portfolio/ink37tattoos*
-public/portfolio/tenantflow*
 
 # Backup files
 *.bak
