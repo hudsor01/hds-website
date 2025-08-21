@@ -1,22 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import "@radix-ui/themes/styles.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
-import { ThemeProvider as RadixThemeProvider } from "@/components/providers/ThemeProvider";
-import { ThemeProvider } from "@/components/ThemeRefinements";
-import { QueryProvider } from "@/providers/QueryProvider";
-import { Theme } from '@radix-ui/themes';
-import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
-import WebVitalsReporting from "@/components/WebVitalsReporting";
-import CookieConsent from "@/components/CookieConsent";
-import { ErrorBoundary, AsyncErrorBoundary } from "@/components/ErrorBoundary";
-import { ProgressBar } from "@/components/ProgressBar";
-import AccessibilityProvider from "@/components/AccessibilityProvider";
-import { PageTransition } from "@/components/PageTransition";
-import { ScrollProgress } from "@/components/ScrollAnimations";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -46,13 +33,13 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Hudson Digital Solutions - Premium Web Development & Custom Software",
-  description: "Transform your business with expert web development, React applications, and custom software solutions. 98% success rate, proven ROI. Get your free consultation today.",
-  keywords: "web development, React development, custom software, Next.js, TypeScript, web applications, business automation, performance optimization, SEO",
+  title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
+  description: "Senior engineering team that eliminates your technical bottlenecks. Launch features in days, not months. 250% average ROI. Get your free roadmap.",
+  keywords: "technical consulting, B2B SaaS development, React experts, Next.js development, scale engineering team, technical bottlenecks, fractional CTO, ship features faster",
   metadataBase: new URL('https://hudsondigitalsolutions.com'),
   openGraph: {
-    title: "Hudson Digital Solutions - Premium Web Development",
-    description: "Expert web development and custom software solutions with proven ROI",
+    title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
+    description: "Senior engineering team that eliminates your technical bottlenecks. 250% average ROI.",
     url: "https://hudsondigitalsolutions.com",
     siteName: "Hudson Digital Solutions",
     images: [
@@ -68,8 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hudson Digital Solutions - Premium Web Development",
-    description: "Expert web development and custom software solutions with proven ROI",
+    title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
+    description: "Senior engineering team that eliminates your technical bottlenecks. 250% average ROI.",
     images: ["/HDS-Logo.jpeg"],
   },
   robots: {
@@ -163,35 +150,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <QueryProvider>
-          <ThemeProvider>
-            <RadixThemeProvider>
-              <Theme accentColor="cyan" grayColor="mauve" radius="medium" scaling="100%">
-              {/* <DefaultSeo /> */}
-              <AccessibilityProvider />
-              <ServiceWorkerRegistration />
-              <WebVitalsReporting />
-              <ProgressBar />
-              <AsyncErrorBoundary>
-              <ErrorBoundary>
-                <ScrollProgress />
-                <NavbarLight />
-                <PageTransition>
-                  <div id="main-content" className="min-h-screen pt-16">
-                    <ErrorBoundary>
-                      {children}
-                    </ErrorBoundary>
-                  </div>
-                </PageTransition>
-                <Footer />
-              </ErrorBoundary>
-              </AsyncErrorBoundary>
-              <Analytics />
-              <CookieConsent />
-            </Theme>
-            </RadixThemeProvider>
-          </ThemeProvider>
-        </QueryProvider>
+        {/* <ThemeProvider> */}
+          <NavbarLight />
+          <div id="main-content" className="min-h-screen pt-16">
+            {children}
+          </div>
+          <Footer />
+          <Analytics />
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

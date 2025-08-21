@@ -30,11 +30,29 @@ export function verifyCSRFToken(tokenFromHeader: string, request: NextRequest): 
     return false;
   }
   
-  // Use timing-safe comparison to prevent timing attacks
-  return crypto.timingSafeEqual(
-    Buffer.from(tokenFromCookie, 'hex'),
-    Buffer.from(tokenFromHeader, 'hex')
-  );
+  // Normalize tokens to ensure they're valid hex strings
+  const normalizedCookie = tokenFromCookie.trim();
+  const normalizedHeader = tokenFromHeader.trim();
+  
+  // Check if both are valid hex strings and same length
+  if (!/^[a-f0-9]+$/i.test(normalizedCookie) || !/^[a-f0-9]+$/i.test(normalizedHeader)) {
+    return false;
+  }
+  
+  if (normalizedCookie.length !== normalizedHeader.length) {
+    return false;
+  }
+  
+  try {
+    // Use timing-safe comparison to prevent timing attacks
+    return crypto.timingSafeEqual(
+      Buffer.from(normalizedCookie, 'hex'),
+      Buffer.from(normalizedHeader, 'hex')
+    );
+  } catch {
+    // If buffer creation fails, tokens are invalid
+    return false;
+  }
 }
 
 export function clearCSRFTokenCookie(response: NextResponse): void {

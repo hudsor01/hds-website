@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { ExclamationTriangleIcon, ArrowPathIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { trackEvent } from '@/lib/analytics';
+// Removed analytics import for simplified build
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -38,9 +38,6 @@ export default function ErrorPage({ error, reset, pageType }: ErrorPageProps) {
   const errorConfig = errorMessages[pageType];
 
   useEffect(() => {
-    // Track in analytics
-    trackEvent('route_error', 'error', `${pageType}: ${error.message}`);
-    
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
       console.error(`${pageType} page error:`, error);

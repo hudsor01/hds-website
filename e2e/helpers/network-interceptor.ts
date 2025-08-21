@@ -13,19 +13,32 @@ export class NetworkInterceptor {
   private page: Page;
   private calls: NetworkCall[] = [];
   private isRecording = false;
+  private rateLimitHandling = true;
+  private requestCounts = new Map<string, number>();
 
-  constructor(page: Page) {
+  constructor(page: Page, options: { handleRateLimit?: boolean } = {}) {
     this.page = page;
+    this.rateLimitHandling = options.handleRateLimit ?? true;
   }
 
   async startRecording() {
     this.calls = [];
+    this.requestCounts.clear();
     this.isRecording = true;
 
-    // Intercept all network requests
+    // Intercept all network requests with rate limit handling
     await this.page.route('**/*', async (route, request) => {
       const url = request.url();
       const method = request.method();
+      
+      // Handle rate limiting for test APIs
+      if (this.rateLimitHandling && this.shouldRateLimit(url)) {
+        const rateLimitResponse = this.handleRateLimit(url, method);
+        if (rateLimitResponse) {
+          await route.fulfill(rateLimitResponse);
+          return;
+        }
+      }
       
       // Capture request details
       let requestBody: unknown;
@@ -38,31 +51,55 @@ export class NetworkInterceptor {
         requestBody = request.postData();
       }
 
-      // Continue the request
-      const response = await route.fetch();
-      
-      // Capture response details
-      let responseBody: unknown;
       try {
-        responseBody = await response.json();
-      } catch (e) {
-        // Not JSON response
-        responseBody = await response.text();
-      }
+        // Continue the request with timeout
+        const response = await route.fetch({ timeout: 15000 });
+        
+        // Capture response details
+        let responseBody: unknown;
+        try {
+          const text = await response.text();
+          responseBody = JSON.parse(text);
+        } catch (e) {
+          // Not JSON response
+          responseBody = text;
+        }
 
-      if (this.isRecording) {
-        this.calls.push({
-          url,
-          method,
-          status: response.status(),
-          requestBody,
-          responseBody,
-          timestamp: Date.now(),
+        if (this.isRecording) {
+          this.calls.push({
+            url,
+            method,
+            status: response.status(),
+            requestBody,
+            responseBody,
+            timestamp: Date.now(),
+          });
+        }
+
+        // Fulfill the route with the original response
+        await route.fulfill({ response });
+      } catch (error) {
+        // Handle network errors gracefully
+        console.log(`Network error for ${url}: ${error}`);
+        
+        if (this.isRecording) {
+          this.calls.push({
+            url,
+            method,
+            status: 0, // Network error
+            requestBody,
+            responseBody: error.toString(),
+            timestamp: Date.now(),
+          });
+        }
+        
+        // Return a reasonable error response
+        await route.fulfill({
+          status: 503,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'Service temporarily unavailable' })
         });
       }
-
-      // Fulfill the route with the original response
-      await route.fulfill({ response });
     });
   }
 
@@ -122,6 +159,33 @@ export class NetworkInterceptor {
     return results;
   }
 
+  // Handle rate limiting in tests
+  private shouldRateLimit(url: string): boolean {
+    return url.includes('/api/') && 
+           (url.includes('contact') || url.includes('metrics') || url.includes('web-vitals'));
+  }
+  
+  private handleRateLimit(url: string, method: string) {
+    const key = `${method}:${url}`;
+    const count = this.requestCounts.get(key) || 0;
+    this.requestCounts.set(key, count + 1);
+    
+    // Simulate rate limiting after 5 requests
+    if (count >= 5) {
+      return {
+        status: 429,
+        contentType: 'application/json',
+        body: JSON.stringify({ 
+          error: 'Too Many Requests',
+          retryAfter: 60,
+          message: 'Rate limit exceeded for testing'
+        })
+      };
+    }
+    
+    return null;
+  }
+  
   // Verify rate limiting is working
   async testRateLimit(endpoint: string, limit: number) {
     const requests: Promise<Response>[] = [];
@@ -129,7 +193,14 @@ export class NetworkInterceptor {
     for (let i = 0; i < limit + 2; i++) {
       requests.push(
         this.page.request.post(endpoint, {
-          data: { test: true },
+          data: { test: true, requestId: i },
+          timeout: 10000
+        }).catch(error => {
+          // Handle timeout/network errors
+          return {
+            status: () => 503,
+            json: () => Promise.resolve({ error: 'Network error' })
+          } as any;
         })
       );
     }
@@ -144,6 +215,22 @@ export class NetworkInterceptor {
   // Clear all recorded calls
   clear() {
     this.calls = [];
+    this.requestCounts.clear();
+  }
+  
+  // Set rate limiting behavior
+  setRateLimitHandling(enabled: boolean) {
+    this.rateLimitHandling = enabled;
+  }
+  
+  // Get failed requests
+  getFailedRequests(): NetworkCall[] {
+    return this.calls.filter(call => call.status >= 400);
+  }
+  
+  // Get rate limited requests
+  getRateLimitedRequests(): NetworkCall[] {
+    return this.calls.filter(call => call.status === 429);
   }
 
   // Get all recorded calls

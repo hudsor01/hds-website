@@ -1,28 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+// import { brand } from "@/lib/brand";
 import { 
   EnvelopeIcon,
-  PhoneIcon,
-  MapPinIcon,
-  ArrowUpIcon
+  ArrowUpIcon,
+  RocketLaunchIcon,
+  ClockIcon,
+  CheckCircleIcon
 } from "@heroicons/react/24/outline";
 import { useCallback, useEffect, useState } from "react";
 
 const footerLinks = {
-  company: [
-    { name: "About", href: "/about" },
-    { name: "Services", href: "/services" },
-    { name: "Portfolio", href: "/portfolio" },
-    { name: "Blog", href: "/blog" },
+  solutions: [
+    { name: "Ship Features Faster", href: "/services" },
+    { name: "Fix Revenue Leaks", href: "/services" },
+    { name: "Scale Without Breaking", href: "/services" },
+    { name: "View Case Studies", href: "/portfolio" },
   ],
-  support: [
+  company: [
+    { name: "About Us", href: "/about" },
+    { name: "Our Process", href: "/services" },
+    { name: "Pricing", href: "/pricing" },
     { name: "Contact", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Privacy", href: "/privacy" },
-    { name: "Terms", href: "/terms" },
   ],
 };
 
@@ -56,26 +57,7 @@ const socialLinks = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5 },
-  },
-};
+// Removed unused animation variants
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -95,70 +77,75 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative mt-auto">
-      {/* Glassmorphism background */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900/95 to-transparent" />
-      <div className="absolute inset-0 backdrop-blur-xl" />
+    <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">
+      {/* Dark background matching homepage */}
+      <div className="absolute inset-0" style={{ backgroundColor: '#020718' }} />
       
-      {/* Animated top border */}
-      <div className="absolute top-0 left-0 right-0 h-[1px]">
-        <div className="h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse" />
-      </div>
+      {/* Top border */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gray-800/50" />
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={containerVariants}
-        className="relative"
-      >
+      <div className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             {/* Brand Section */}
-            <motion.div variants={itemVariants} className="md:col-span-1">
-              <div className="mb-4">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  Hudson Digital
-                </h3>
-                <p className="text-gray-400 text-sm mt-2">
-                  Transforming ideas into digital excellence
+            <div className="md:col-span-1">
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <RocketLaunchIcon className="w-7 h-7 text-cyan-400" />
+                  <h3 className="text-xl font-bold text-white">
+                    HDS
+                  </h3>
+                </div>
+                <p className="text-cyan-400 text-sm font-semibold mb-2">
+                  Ship 3x Faster, 60% Cheaper
+                </p>
+                <p className="text-gray-400 text-sm">
+                  We eliminate technical bottlenecks so you can focus on growth
                 </p>
               </div>
               
-              {/* Contact Info */}
-              <div className="space-y-3">
-                <motion.a
-                  href="mailto:hello@hudsondigitalsolutions.com"
-                  className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group"
-                  whileHover={{ x: 5 }}
-                >
-                  <EnvelopeIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm">hello@hudsondigital.com</span>
-                </motion.a>
-                
-                <motion.a
-                  href="tel:+1234567890"
-                  className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group"
-                  whileHover={{ x: 5 }}
-                >
-                  <PhoneIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm">+1 (234) 567-890</span>
-                </motion.a>
-                
-                <motion.div
-                  className="flex items-center gap-2 text-gray-400 group"
-                  whileHover={{ x: 5 }}
-                >
-                  <MapPinIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm">New York, USA</span>
-                </motion.div>
+              {/* Quick Stats */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-gray-300">
+                  <CheckCircleIcon className="h-4 w-4 text-cyan-400" />
+                  <span className="text-sm">50+ Projects Delivered</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <CheckCircleIcon className="h-4 w-4 text-cyan-400" />
+                  <span className="text-sm">250% Average ROI</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <ClockIcon className="h-4 w-4 text-cyan-400" />
+                  <span className="text-sm">Response within 2 hours</span>
+                </div>
               </div>
-            </motion.div>
+            </div>
+
+            {/* Solutions Links */}
+            <div className="md:col-span-1">
+              <nav aria-label="Solutions navigation">
+                <h4 className="text-white font-semibold mb-4">Solutions</h4>
+                <ul className="space-y-2" role="list">
+                {footerLinks.solutions.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-block relative group"
+                    >
+                      <span>{link.name}</span>
+                      <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-400 transition-all duration-300 group-hover:w-full" />
+                    </Link>
+                  </li>
+                ))}
+                </ul>
+              </nav>
+            </div>
 
             {/* Company Links */}
-            <motion.div variants={itemVariants} className="md:col-span-1">
-              <h4 className="text-white font-semibold mb-4">Company</h4>
-              <ul className="space-y-2">
+            <div className="md:col-span-1">
+              <nav aria-label="Company navigation">
+                <h4 className="text-white font-semibold mb-4">Company</h4>
+                <ul className="space-y-2" role="list">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
                     <Link
@@ -170,80 +157,48 @@ export default function Footer() {
                     </Link>
                   </li>
                 ))}
-              </ul>
-            </motion.div>
+                </ul>
+              </nav>
+            </div>
 
-            {/* Support Links */}
-            <motion.div variants={itemVariants} className="md:col-span-1">
-              <h4 className="text-white font-semibold mb-4">Support</h4>
-              <ul className="space-y-2">
-                {footerLinks.support.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-block relative group"
-                    >
-                      <span>{link.name}</span>
-                      <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-400 transition-all duration-300 group-hover:w-full" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Newsletter Section */}
-            <motion.div variants={itemVariants} className="md:col-span-1">
-              <h4 className="text-white font-semibold mb-4">Stay Updated</h4>
+            {/* CTA Section */}
+            <div className="md:col-span-1">
+              <h4 className="text-white font-semibold mb-4">Ready to Ship Faster?</h4>
               <p className="text-gray-400 text-sm mb-4">
-                Subscribe to our newsletter for the latest updates and insights.
+                Get your free technical roadmap and see how we can help you ship 3x faster.
               </p>
               
-              <form className="space-y-3">
-                <div className="relative">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className={cn(
-                      "w-full px-4 py-2 rounded-lg",
-                      "bg-white/10 backdrop-blur-md",
-                      "border border-white/20",
-                      "text-white placeholder-gray-500",
-                      "focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent",
-                      "transition-all duration-200"
-                    )}
-                  />
-                </div>
-                
-                <motion.button
-                  type="submit"
-                  className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+              <div className="space-y-3">
+                <Link
+                  href="/contact"
+                  className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-center hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
                 >
-                  Subscribe
-                </motion.button>
-              </form>
-            </motion.div>
+                  Get Free Roadmap
+                </Link>
+                
+                <a
+                  href="mailto:hello@hudsondigitalsolutions.com"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-gray-600 text-gray-300 hover:text-white hover:border-cyan-400 hover:bg-cyan-400/5 transition-all duration-200"
+                >
+                  <EnvelopeIcon className="h-4 w-4" />
+                  <span className="text-sm">hello@hudsondigitalsolutions.com</span>
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Bottom Section */}
           <div className="border-t border-white/10 pt-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               {/* Copyright */}
-              <motion.div
-                variants={itemVariants}
-                className="text-gray-500 text-sm"
-              >
+              <div className="text-gray-500 text-sm">
                 © {currentYear} Hudson Digital Solutions. All rights reserved.
-              </motion.div>
+              </div>
 
               {/* Social Links */}
-              <motion.div
-                variants={itemVariants}
-                className="flex items-center gap-3"
-              >
+              <div className="flex items-center gap-3">
                 {socialLinks.map((social) => (
-                  <motion.a
+                  <a
                     key={social.name}
                     href={social.href}
                     target="_blank"
@@ -256,21 +211,17 @@ export default function Footer() {
                       "hover:bg-white/10 hover:border-cyan-400/50",
                       "transition-all duration-300 group"
                     )}
-                    whileHover={{ y: -3, scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={`Follow us on ${social.name}`}
+                    aria-label={`Follow us on ${social.name} (opens in new tab)`}
+                    title={`Visit our ${social.name} page (opens in new tab)`}
                   >
-                    <span className="sr-only">{social.name}</span>
+                    <span className="sr-only">{social.name} (opens in new tab)</span>
                     {social.icon}
-                  </motion.a>
+                  </a>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Legal Links */}
-              <motion.div
-                variants={itemVariants}
-                className="flex items-center gap-4 text-sm"
-              >
+              <div className="flex items-center gap-4 text-sm">
                 <Link
                   href="/privacy"
                   className="text-gray-500 hover:text-cyan-400 transition-colors"
@@ -284,36 +235,30 @@ export default function Footer() {
                 >
                   Terms of Service
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Scroll to Top Button */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={scrollToTop}
-            className={cn(
-              "fixed bottom-8 right-8 z-40",
-              "p-3 rounded-full",
-              "bg-gradient-to-r from-cyan-500 to-blue-500",
-              "text-black shadow-lg",
-              "hover:shadow-cyan-500/25",
-              "focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent"
-            )}
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Scroll to top"
-          >
-            <ArrowUpIcon className="h-5 w-5" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className={cn(
+            "fixed bottom-8 right-8 z-40",
+            "p-3 rounded-full",
+            "bg-gradient-to-r from-cyan-500 to-blue-500",
+            "text-black shadow-lg",
+            "hover:shadow-cyan-500/25",
+            "focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent",
+            "transition-all duration-200"
+          )}
+          aria-label="Scroll to top"
+        >
+          <ArrowUpIcon className="h-5 w-5" />
+        </button>
+      )}
     </footer>
   );
 }

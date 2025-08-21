@@ -1,55 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+// Motion import removed for build stability
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import type { BentoGridProps, BentoCardProps } from "@/types/components";
 
-interface BentoGridProps {
-  children: ReactNode;
-  columns?: 2 | 3 | 4 | 5 | 6;
-  gap?: "sm" | "md" | "lg";
-  className?: string;
-}
-
-interface BentoCardProps {
-  children: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
-  span?: {
-    col?: number;
-    row?: number;
-  };
-  className?: string;
-  gradient?: boolean;
-  hover?: boolean;
-  delay?: number;
-}
-
-// Animation variants
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-    scale: 0.95,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-    },
-  },
-};
+// Animation variants removed for build stability
 
 export function BentoGrid({ 
   children, 
@@ -72,10 +28,7 @@ export function BentoGrid({
   };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+    <div
       className={cn(
         "grid auto-rows-min",
         columnClasses[columns],
@@ -84,7 +37,7 @@ export function BentoGrid({
       )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -95,7 +48,6 @@ export function BentoCard({
   className,
   gradient = false,
   hover = true,
-  delay = 0,
 }: BentoCardProps) {
   const sizeClasses = {
     sm: "p-4 min-h-[120px]",
@@ -104,20 +56,12 @@ export function BentoCard({
     xl: "p-10 min-h-[400px]",
   };
 
-  const spanClasses = span ? {
-    ...(span.col && { [`col-span-${span.col}`]: true }),
-    ...(span.row && { [`row-span-${span.row}`]: true }),
-  } : {};
+  const spanClasses = span ? 
+    `${span.col ? `col-span-${span.col}` : ''} ${span.row ? `row-span-${span.row}` : ''}`.trim() 
+    : '';
 
   return (
-    <motion.div
-      variants={cardVariants}
-      transition={{ delay }}
-      whileHover={hover ? { 
-        scale: 1.02, 
-        y: -5,
-        transition: { duration: 0.3 }
-      } : undefined}
+    <div
       className={cn(
         "relative rounded-2xl overflow-hidden",
         "bg-white/5 dark:bg-black/20",
@@ -139,7 +83,7 @@ export function BentoCard({
       <div className="relative z-10 h-full flex flex-col">
         {children}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -164,13 +108,11 @@ export function BentoFeatureCard({
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           {icon && (
-            <motion.div 
+            <div 
               className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
             >
               {icon}
-            </motion.div>
+            </div>
           )}
         </div>
 
@@ -183,16 +125,13 @@ export function BentoFeatureCard({
           {stats && stats.length > 0 && (
             <div className="grid grid-cols-2 gap-3 mb-4">
               {stats.map((stat, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 + 0.3 }}
                   className="text-center"
                 >
                   <div className="text-xl font-bold text-cyan-400">{stat.value}</div>
                   <div className="text-xs text-gray-500">{stat.label}</div>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
@@ -238,19 +177,11 @@ export function BentoStatsCard({
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <p className="text-sm text-gray-400 mb-2">{label}</p>
-            <motion.div 
+            <div 
               className="text-3xl font-bold text-white"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ 
-                type: "spring",
-                stiffness: 200,
-                damping: 15,
-                delay: 0.2 
-              }}
             >
               {value}
-            </motion.div>
+            </div>
           </div>
           
           {icon && (
@@ -264,17 +195,14 @@ export function BentoStatsCard({
         </div>
         
         {trend && (
-          <motion.div 
+          <div 
             className={cn(
               "mt-4 text-sm font-medium",
               trend.isPositive ? "text-green-400" : "text-red-400"
             )}
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
           >
             {trend.isPositive ? "↗" : "↘"} {Math.abs(trend.value)}%
-          </motion.div>
+          </div>
         )}
       </div>
     </BentoCard>
@@ -299,13 +227,11 @@ export function BentoImageCard({
   return (
     <BentoCard {...props} className="p-0 overflow-hidden">
       <div className="relative h-full">
-        <motion.img
+        <img
           src={src}
           alt={alt}
           className="w-full h-full object-cover"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        />
+                            />
         
         {overlay && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -342,14 +268,12 @@ export function BentoInteractiveCard({
         onClick && "cursor-pointer"
       )}
     >
-      <motion.div
+      <div
         onClick={onClick}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
         className="h-full"
       >
         {children}
-      </motion.div>
+      </div>
     </BentoCard>
   );
 }
@@ -370,18 +294,16 @@ export function BentoVideoCard({
   return (
     <BentoCard {...props} className="p-0 overflow-hidden">
       <div className="relative h-full">
-        <motion.video
+        <video
           autoPlay
           muted
           loop
           playsInline
           poster={posterSrc}
           className="w-full h-full object-cover"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4 }}
-        >
+                            >
           <source src={videoSrc} type="video/mp4" />
-        </motion.video>
+        </video>
         
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         

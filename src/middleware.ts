@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
+// Use Web Crypto API for Edge runtime compatibility
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -21,7 +22,7 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl;
 
   // Add security headers using centralized configuration
-  applySecurityHeaders(response, process.env.NODE_ENV === 'production');
+  applySecurityHeaders(response);
 
   // Add performance headers
   response.headers.set('X-Request-Time', Date.now().toString());
@@ -34,6 +35,35 @@ export function middleware(request: NextRequest) {
       { status: 301 }
     );
   }
+
+  // Security: Block common attack patterns
+  const userAgent = request.headers.get('user-agent') || '';
+  const suspiciousPatterns = [
+    /sqlmap/i,
+    /nikto/i, 
+    /nessus/i,
+    /masscan/i,
+    /zmap/i,
+    /nmap/i,
+    /gobuster/i,
+    /dirb/i
+  ];
+
+  if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
+    return new NextResponse('Blocked', { status: 403 });
+  }
+
+  // Security: Rate limiting for specific endpoints (basic protection)
+  const pathname = url.pathname;
+  if (pathname.startsWith('/api/contact')) {
+    // Add rate limiting headers for monitoring
+    response.headers.set('X-Endpoint-Type', 'contact-api');
+  }
+
+  // Security: Add nonce for CSP (if needed for inline scripts)
+  // Use Web Crypto API compatible with Edge runtime
+  const nonce = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
+  response.headers.set('X-CSP-Nonce', nonce);
 
   // Remove preload headers since fonts are from Google and CSS paths are dynamic
 

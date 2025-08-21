@@ -137,9 +137,9 @@ function optimizeInternalLinking() {
 }
 
 // Submit URL to Google for indexing (requires Search Console API)
-export function requestGoogleIndexing(url: string) {
+export function requestGoogleIndexing(_url: string) {
   // This would require proper Google Search Console API integration
-  console.log(`Requesting Google indexing for: ${url}`)
+  // Request indexing for URL implementation would go here
 
   // In production, implement Google Indexing API:
   // https://developers.google.com/search/apis/indexing-api/v3/quickstart
@@ -191,7 +191,7 @@ export function trackCoreWebVitalsForSEO() {
       const lastEntry = entries[entries.length - 1]
 
       if (lastEntry.startTime > 2500) {
-        console.warn('LCP is poor for SEO:', lastEntry.startTime)
+        // LCP is poor for SEO - should be optimized
       }
     }).observe({ entryTypes: ['largest-contentful-paint'] })
 
@@ -211,7 +211,7 @@ export function trackCoreWebVitalsForSEO() {
       })
 
       if (clsValue > 0.1) {
-        console.warn('CLS is poor for SEO:', clsValue)
+        // CLS is poor for SEO - should be optimized
       }
     }).observe({ entryTypes: ['layout-shift'] })
   }
