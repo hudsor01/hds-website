@@ -116,7 +116,7 @@ export default function ConversionToolkitPage() {
       <section className="py-16 bg-gradient-primary">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black text-white mb-4">What's Inside the Toolkit</h2>
+            <h2 className="text-3xl font-black text-white mb-4">What&apos;s Inside the Toolkit</h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
               Complete set of tools and templates to systematically improve your conversion rates
             </p>
@@ -185,7 +185,7 @@ export default function ConversionToolkitPage() {
           <div className="mt-12 grid md:grid-cols-2 gap-8">
             <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
               <blockquote className="text-gray-300 italic mb-4">
-                "The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups."
+                &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -200,7 +200,7 @@ export default function ConversionToolkitPage() {
 
             <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
               <blockquote className="text-gray-300 italic mb-4">
-                "The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter."
+                &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -274,14 +274,14 @@ export default function ConversionToolkitPage() {
               </form>
 
               <p className="text-xs text-gray-500 mt-4">
-                No spam. We'll only send you valuable conversion optimization insights.
+                No spam. We&apos;ll only send you valuable conversion optimization insights.
               </p>
             </div>
 
             <div className="mt-8 pt-8 border-t border-gray-700">
               <h3 className="text-lg font-bold text-white mb-4">Want Professional Implementation?</h3>
               <p className="text-gray-300 mb-4">
-                Our conversion optimization specialists can implement these strategies for you. We've helped 150+ businesses achieve an average 340% ROI.
+                Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped 150+ businesses achieve an average 340% ROI.
               </p>
               <Link
                 href="/contact"

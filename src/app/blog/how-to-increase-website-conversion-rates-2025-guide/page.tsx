@@ -210,14 +210,14 @@ export default function ConversionGuidePost() {
                 
                 <p>The average website conversion rate is just <strong className="text-cyan-400">2.35%</strong>. That means 97 out of every 100 visitors leave without taking action.</p>
                 
-                <p>But here's what most business owners don't realize: <strong className="text-white">The difference between a 2% and 6% conversion rate isn't just mathematical—it's transformational.</strong></p>
+                <p>But here&apos;s what most business owners don&apos;t realize: <strong className="text-white">The difference between a 2% and 6% conversion rate isn&apos;t just mathematical—it&apos;s transformational.</strong></p>
                 
                 <p>If your site gets 10,000 monthly visitors:</p>
                 
                 <ul className="space-y-2 ml-6">
                   <li>At 2% conversion: 200 leads/month</li>
                   <li>At 6% conversion: 600 leads/month</li>
-                  <li><strong className="text-green-400">That's 400 additional leads per month from the same traffic.</strong></li>
+                  <li><strong className="text-green-400">That&apos;s 400 additional leads per month from the same traffic.</strong></li>
                 </ul>
 
                 <p>This guide reveals the 15 strategies that consistently drive these results for our clients at Hudson Digital Solutions.</p>
@@ -231,7 +231,7 @@ export default function ConversionGuidePost() {
                 <ul className="space-y-2 ml-6">
                   <li><strong className="text-white">Critical Resource Loading:</strong> Prioritize above-the-fold content</li>
                   <li><strong className="text-white">Image Optimization:</strong> WebP format with progressive loading</li>
-                  <li><strong className="text-white">Code Splitting:</strong> Load only what's needed for each page</li>
+                  <li><strong className="text-white">Code Splitting:</strong> Load only what&apos;s needed for each page</li>
                   <li><strong className="text-white">CDN Implementation:</strong> Serve content from global edge locations</li>
                 </ul>
 
@@ -243,7 +243,7 @@ export default function ConversionGuidePost() {
                 
                 <p><strong className="text-cyan-400">Impact: 20-35% conversion increase</strong></p>
                 
-                <p>Users decide within 50 milliseconds whether they'll stay or leave. Your above-the-fold content must immediately communicate:</p>
+                <p>Users decide within 50 milliseconds whether they&apos;ll stay or leave. Your above-the-fold content must immediately communicate:</p>
                 
                 <ul className="space-y-2 ml-6">
                   <li>What you offer (clarity)</li>
@@ -270,17 +270,17 @@ export default function ConversionGuidePost() {
                 <p><strong className="text-white">Color Psychology:</strong></p>
                 <ul className="space-y-2 ml-6">
                   <li>Orange: Creates urgency and enthusiasm</li>
-                  <li>Green: Suggests "go" and safety</li>
+                  <li>Green: Suggests &quot;go&quot; and safety</li>
                   <li>Red: Demands attention but can signal danger</li>
                   <li>Blue: Builds trust but may reduce urgency</li>
                 </ul>
 
                 <p><strong className="text-white">Copy Psychology:</strong></p>
                 <ul className="space-y-2 ml-6">
-                  <li>"Get My Free Guide" → Personal ownership</li>
-                  <li>"Start My 30-Day Trial" → Commitment and timeframe</li>
-                  <li>"Join 50,000+ Subscribers" → Social proof integration</li>
-                  <li>"Yes, I Want to Save $500" → Affirmation and specific benefit</li>
+                  <li>&quot;Get My Free Guide&quot; → Personal ownership</li>
+                  <li>&quot;Start My 30-Day Trial&quot; → Commitment and timeframe</li>
+                  <li>&quot;Join 50,000+ Subscribers&quot; → Social proof integration</li>
+                  <li>&quot;Yes, I Want to Save $500&quot; → Affirmation and specific benefit</li>
                 </ul>
 
                 <h2 className="text-3xl font-bold text-white mb-4 mt-12">Strategy 4: Mobile-First Conversion Optimization</h2>
@@ -303,10 +303,10 @@ export default function ConversionGuidePost() {
                 <p>Social proof reduces risk and builds confidence. Effective implementations:</p>
                 
                 <ul className="space-y-2 ml-6">
-                  <li><strong className="text-white">Customer Count:</strong> "Join 50,000+ satisfied customers"</li>
-                  <li><strong className="text-white">Recent Activity:</strong> "127 people bought this in the last 24 hours"</li>
+                  <li><strong className="text-white">Customer Count:</strong> &quot;Join 50,000+ satisfied customers&quot;</li>
+                  <li><strong className="text-white">Recent Activity:</strong> &quot;127 people bought this in the last 24 hours&quot;</li>
                   <li><strong className="text-white">Expert Endorsements:</strong> Industry authority testimonials</li>
-                  <li><strong className="text-white">Media Mentions:</strong> "As featured in..." sections</li>
+                  <li><strong className="text-white">Media Mentions:</strong> &quot;As featured in...&quot; sections</li>
                   <li><strong className="text-white">User-Generated Content:</strong> Customer photos and reviews</li>
                 </ul>
 
@@ -386,7 +386,7 @@ export default function ConversionGuidePost() {
                 <ul className="space-y-2 ml-6">
                   <li><strong className="text-white">Discount Offers:</strong> Last-chance savings opportunities</li>
                   <li><strong className="text-white">Content Upgrades:</strong> Valuable resources in exchange for email</li>
-                  <li><strong className="text-white">Feedback Requests:</strong> Understand why they're leaving</li>
+                  <li><strong className="text-white">Feedback Requests:</strong> Understand why they&apos;re leaving</li>
                   <li><strong className="text-white">Alternative Options:</strong> Different products or service tiers</li>
                 </ul>
 
@@ -406,7 +406,7 @@ export default function ConversionGuidePost() {
                 <p>Simplify decision-making by reducing choices, clarifying options, and streamlining user paths.</p>
 
                 <h3 className="text-2xl font-bold text-cyan-400 mb-3 mt-8">14. Recovery Campaign Integration</h3>
-                <p>Email and retargeting campaigns to re-engage visitors who didn't convert initially.</p>
+                <p>Email and retargeting campaigns to re-engage visitors who didn&apos;t convert initially.</p>
 
                 <h3 className="text-2xl font-bold text-cyan-400 mb-3 mt-8">15. Analytics-Driven Optimization</h3>
                 <p>Use data to identify drop-off points, high-performing pages, and optimization opportunities.</p>
@@ -439,7 +439,7 @@ export default function ConversionGuidePost() {
 
                 <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to 3x Your Conversion Rates?</h3>
-                  <p className="text-gray-300 mb-6">Our CRO specialists have helped 200+ businesses achieve these results. Let's optimize your site for maximum conversions.</p>
+                  <p className="text-gray-300 mb-6">Our CRO specialists have helped 200+ businesses achieve these results. Let&apos;s optimize your site for maximum conversions.</p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"

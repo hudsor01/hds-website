@@ -4,21 +4,21 @@
  */
 
 export interface PostHogMock {
-  init: (apiKey: string, config?: any) => void;
-  capture: (event: string, properties?: any) => void;
-  identify: (userId: string, properties?: any) => void;
+  init: (apiKey: string, config?: Record<string, unknown>) => void;
+  capture: (event: string, properties?: Record<string, unknown>) => void;
+  identify: (userId: string, properties?: Record<string, unknown>) => void;
   reset: () => void;
   isFeatureEnabled: (flag: string) => boolean;
 }
 
 const postHogMock: PostHogMock = {
-  init: (apiKey: string, config?: any) => {
-    console.log('PostHog mock initialized with key:', apiKey);
+  init: (apiKey: string, config?: Record<string, unknown>) => {
+    console.log('PostHog mock initialized with key:', apiKey, config);
   },
-  capture: (event: string, properties?: any) => {
+  capture: (event: string, properties?: Record<string, unknown>) => {
     console.log('PostHog event:', event, properties);
   },
-  identify: (userId: string, properties?: any) => {
+  identify: (userId: string, properties?: Record<string, unknown>) => {
     console.log('PostHog identify:', userId, properties);
   },
   reset: () => {

@@ -178,7 +178,7 @@ export default function WebsiteChecklistPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-black text-white mb-4">Checklist Preview</h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              Get a glimpse of what's inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
+              Get a glimpse of what&apos;s inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
             </p>
           </div>
 
@@ -276,7 +276,7 @@ export default function WebsiteChecklistPage() {
 
               <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
                 <blockquote className="text-gray-300 italic mb-3">
-                  "This checklist helped us identify 12 critical issues we didn't even know we had. Revenue increased 180% in 8 weeks."
+                  &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
                 <div className="text-cyan-400 font-semibold">— Sarah M., E-commerce Director</div>
               </div>

@@ -159,15 +159,15 @@ export default function WebsiteCostGuidePost() {
                   </ul>
                 </div>
 
-                <h2 className="text-3xl font-bold text-white mb-4">The Real Question Isn't "How Much?"</h2>
+                <h2 className="text-3xl font-bold text-white mb-4">The Real Question Isn&apos;t &quot;How Much?&quot;</h2>
                 
-                <p>Every day, small business owners ask: <strong className="text-cyan-400">"How much does a website cost?"</strong></p>
+                <p>Every day, small business owners ask: <strong className="text-cyan-400">&quot;How much does a website cost?&quot;</strong></p>
                 
-                <p>But that's the wrong question.</p>
+                <p>But that&apos;s the wrong question.</p>
                 
-                <p>The right question is: <strong className="text-white">"What's the return on investment for each website option, and which choice positions my business for growth?"</strong></p>
+                <p>The right question is: <strong className="text-white">&quot;What&apos;s the return on investment for each website option, and which choice positions my business for growth?&quot;</strong></p>
                 
-                <p>After helping 150+ small businesses navigate this decision, I've learned that the cheapest option is rarely the most economical, and the most expensive isn't always the best value.</p>
+                <p>After helping 150+ small businesses navigate this decision, I&apos;ve learned that the cheapest option is rarely the most economical, and the most expensive isn&apos;t always the best value.</p>
 
                 <p>This guide breaks down the true costs, hidden expenses, and ROI potential of each approach so you can make an informed investment decision.</p>
 
@@ -195,8 +195,8 @@ export default function WebsiteCostGuidePost() {
                 </ul>
 
                 <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-lg p-6 my-6">
-                  <p><strong className="text-yellow-400">Reality Check:</strong> DIY builders promise "professional websites in hours," but most small business owners spend 40-80 hours learning the platform, creating content, and troubleshooting issues.</p>
-                  <p className="mt-2">At $50/hour (conservative business owner value), that's $2,000-4,000 in opportunity cost.</p>
+                  <p><strong className="text-yellow-400">Reality Check:</strong> DIY builders promise &quot;professional websites in hours,&quot; but most small business owners spend 40-80 hours learning the platform, creating content, and troubleshooting issues.</p>
+                  <p className="mt-2">At $50/hour (conservative business owner value), that&apos;s $2,000-4,000 in opportunity cost.</p>
                 </div>
 
                 <p><strong className="text-white">Best For:</strong></p>
@@ -326,7 +326,7 @@ export default function WebsiteCostGuidePost() {
                 
                 <h3 className="text-2xl font-bold text-cyan-400 mb-3 mt-8">Choose DIY When:</h3>
                 <ul className="space-y-2 ml-6">
-                  <li>You're validating a business concept</li>
+                  <li>You&apos;re validating a business concept</li>
                   <li>Budget is extremely limited ($0-2,000)</li>
                   <li>You have technical skills and time</li>
                   <li>Website needs are very simple</li>
@@ -359,7 +359,7 @@ export default function WebsiteCostGuidePost() {
                 <ul className="space-y-2 ml-6">
                   <li>Spending 40+ hours without progress</li>
                   <li>Website looks obviously template-based</li>
-                  <li>Can't integrate necessary business tools</li>
+                  <li>Can&apos;t integrate necessary business tools</li>
                   <li>Loading speed is consistently slow</li>
                 </ul>
 
@@ -376,7 +376,7 @@ export default function WebsiteCostGuidePost() {
                 <ul className="space-y-2 ml-6">
                   <li>No discovery process or strategy session</li>
                   <li>Cookie-cutter pricing without customization</li>
-                  <li>Can't explain technical decisions</li>
+                  <li>Can&apos;t explain technical decisions</li>
                   <li>No ongoing support options</li>
                   <li>Pressure tactics or unrealistic promises</li>
                 </ul>
@@ -385,18 +385,18 @@ export default function WebsiteCostGuidePost() {
                 
                 <p><strong className="text-white">AI Integration Costs:</strong> Expect to see $500-2,000 add-ons for AI-powered features like chatbots, content generation, and personalization.</p>
                 
-                <p><strong className="text-white">Performance Requirements:</strong> Google's emphasis on Core Web Vitals means performance optimization is becoming non-negotiable, adding $1,000-3,000 to professional projects.</p>
+                <p><strong className="text-white">Performance Requirements:</strong> Google&apos;s emphasis on Core Web Vitals means performance optimization is becoming non-negotiable, adding $1,000-3,000 to professional projects.</p>
                 
                 <p><strong className="text-white">Security Compliance:</strong> Increased data privacy regulations mean security features will add $500-1,500 to professional websites.</p>
 
                 <h2 className="text-3xl font-bold text-white mb-4 mt-12">Making the Investment Decision</h2>
                 
-                <p>The best website investment isn't about finding the cheapest option—it's about maximizing return on investment.</p>
+                <p>The best website investment isn&apos;t about finding the cheapest option—it&apos;s about maximizing return on investment.</p>
                 
                 <p><strong className="text-cyan-400">Ask yourself:</strong></p>
                 <ul className="space-y-2 ml-6">
                   <li>How much revenue do I lose to poor first impressions?</li>
-                  <li>What's the value of one additional customer per month?</li>
+                  <li>What&apos;s the value of one additional customer per month?</li>
                   <li>How much time am I willing to spend on website management?</li>
                   <li>What are my growth goals for the next 2-3 years?</li>
                 </ul>

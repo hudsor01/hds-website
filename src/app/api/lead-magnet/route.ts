@@ -31,7 +31,7 @@ const LEAD_MAGNETS = {
   }
 };
 
-function validateLeadMagnetForm(body: any) {
+function validateLeadMagnetForm(body: Record<string, unknown>) {
   const errors: Record<string, string> = {};
 
   // Validate email
@@ -57,9 +57,9 @@ function validateLeadMagnetForm(body: any) {
     isValid,
     errors,
     data: isValid ? {
-      email: body.email.toLowerCase().trim(),
-      firstName: body.firstName.trim(),
-      resource: body.resource
+      email: (body.email as string).toLowerCase().trim(),
+      firstName: (body.firstName as string).trim(),
+      resource: body.resource as string
     } : null
   };
 }
