@@ -4,7 +4,7 @@
  */
 
 import { Resend } from 'resend';
-import { EMAIL_SEQUENCES, processEmailTemplate, type EmailSequenceStep } from './email-sequences';
+import { EMAIL_SEQUENCES, processEmailTemplate } from './email-sequences';
 import { escapeHtml, sanitizeEmailHeader } from './security-utils';
 
 interface ScheduledEmail {
@@ -66,7 +66,10 @@ export function scheduleEmailSequence(
 
     scheduledEmailsQueue.push(scheduledEmail);
     
-    console.log(`Scheduled email: ${step.subject} for ${recipientEmail} on ${scheduledFor.toISOString()}`);
+    // Log only in development, not during tests
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Scheduled email: ${step.subject} for ${recipientEmail} on ${scheduledFor.toISOString()}`);
+    }
   });
 
   // In production, you would insert these into a database table like:

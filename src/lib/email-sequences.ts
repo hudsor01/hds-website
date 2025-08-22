@@ -34,73 +34,29 @@ export interface LeadScoreFactors {
   source?: string;
 }
 
+// Simple lead scoring based on basic contact info
 export function calculateLeadScore(factors: LeadScoreFactors): number {
-  let score = 0;
+  let score = 30; // Base score for any inquiry
 
-  // Email domain scoring
-  if (factors.email.includes('@gmail.com') || factors.email.includes('@yahoo.com') || factors.email.includes('@outlook.com')) {
-    score += 10; // Personal email
-  } else {
-    score += 25; // Business email likely
+  // Business email gets higher score
+  const isBusinessEmail = !factors.email.includes('@gmail.com') && 
+                         !factors.email.includes('@yahoo.com') && 
+                         !factors.email.includes('@outlook.com');
+  if (isBusinessEmail) {
+    score += 25;
   }
 
-  // Company information
+  // Company name provided
   if (factors.company && factors.company.length > 2) {
-    score += 20;
+    score += 25;
   }
 
   // Phone number provided
   if (factors.phone && factors.phone.length > 9) {
-    score += 15;
-  }
-
-  // Service interest scoring
-  const serviceScores: Record<string, number> = {
-    'Custom Software': 30,
-    'Web Applications': 25,
-    'Strategic Consulting': 35,
-    'E-commerce Development': 25,
-    'API Development': 20,
-    'Performance Optimization': 15,
-    'Other': 5
-  };
-  
-  if (factors.service && serviceScores[factors.service]) {
-    score += serviceScores[factors.service];
-  }
-
-  // Message content analysis
-  const urgencyKeywords = ['urgent', 'asap', 'immediately', 'quickly', 'soon', 'deadline'];
-  const budgetKeywords = ['budget', 'investment', 'cost', 'price', 'quote'];
-  const qualityKeywords = ['enterprise', 'professional', 'scalable', 'robust', 'high-quality'];
-  const timelineKeywords = ['timeline', 'when can', 'how long', 'schedule', 'start'];
-
-  const messageWords = factors.message.toLowerCase().split(' ');
-  
-  if (urgencyKeywords.some(keyword => messageWords.includes(keyword))) {
     score += 20;
   }
-  
-  if (budgetKeywords.some(keyword => messageWords.includes(keyword))) {
-    score += 15;
-  }
-  
-  if (qualityKeywords.some(keyword => messageWords.includes(keyword))) {
-    score += 25;
-  }
-  
-  if (timelineKeywords.some(keyword => messageWords.includes(keyword))) {
-    score += 10;
-  }
 
-  // Message length (longer messages often indicate higher intent)
-  if (factors.message.length > 200) {
-    score += 10;
-  } else if (factors.message.length < 50) {
-    score -= 5;
-  }
-
-  return Math.max(0, Math.min(100, score)); // Clamp between 0 and 100
+  return Math.min(100, score); // Cap at 100
 }
 
 // Email sequence templates

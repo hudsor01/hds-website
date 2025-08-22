@@ -243,11 +243,20 @@ export function respectReducedMotion() {
 
 // Initialize all accessibility features
 export function initAccessibilityFeatures() {
-  addSkipToMainLink()
-  manageFocus()
-  enhanceKeyboardNavigation()
-  setupLiveRegions()
-  enhanceFormAccessibility()
-  respectReducedMotion()
-  validateColorContrast()
+  // Only run in browser environment
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return
+  }
+
+  try {
+    addSkipToMainLink()
+    manageFocus()
+    enhanceKeyboardNavigation()
+    setupLiveRegions()
+    enhanceFormAccessibility()
+    respectReducedMotion()
+    validateColorContrast()
+  } catch (error) {
+    console.warn('Accessibility features initialization failed:', error)
+  }
 }
