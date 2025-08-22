@@ -169,9 +169,11 @@ export function announceMessage(
 // Color contrast validation
 export function validateColorContrast() {
   // This is a basic implementation - in production you'd use a proper contrast library
-  const checkContrast = (_foreground: string, _background: string) => {
+  const checkContrast = (color1: string, color2: string) => {
     // Simplified contrast check - implement proper WCAG AA/AAA validation
-    // Checking contrast between colors
+    // In a real implementation, you would calculate the actual contrast ratio
+    // between color1 and color2 and validate against WCAG standards
+    console.debug(`Checking contrast between ${color1} and ${color2}`)
   }
 
   // Check common color combinations
@@ -241,11 +243,20 @@ export function respectReducedMotion() {
 
 // Initialize all accessibility features
 export function initAccessibilityFeatures() {
-  addSkipToMainLink()
-  manageFocus()
-  enhanceKeyboardNavigation()
-  setupLiveRegions()
-  enhanceFormAccessibility()
-  respectReducedMotion()
-  validateColorContrast()
+  // Only run in browser environment
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return
+  }
+
+  try {
+    addSkipToMainLink()
+    manageFocus()
+    enhanceKeyboardNavigation()
+    setupLiveRegions()
+    enhanceFormAccessibility()
+    respectReducedMotion()
+    validateColorContrast()
+  } catch (error) {
+    console.warn('Accessibility features initialization failed:', error)
+  }
 }

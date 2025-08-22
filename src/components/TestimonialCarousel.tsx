@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import type { Testimonial, TestimonialCarouselProps, PanInfo, AnimatePresenceProps } from "@/types/components";
+import type { Testimonial, TestimonialCarouselProps, AnimatePresenceProps } from "@/types/components";
 
 // AnimatePresence stub for removed framer-motion dependency
 const AnimatePresence = ({ children }: AnimatePresenceProps) => <>{children}</>;
@@ -125,6 +125,17 @@ export function TestimonialCarousel({
         className={className}
       />
     );
+  }
+
+  // Handle empty testimonials
+  if (testimonials.length === 0) {
+    return (
+      <div className={cn("relative max-w-6xl mx-auto", className)}>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800/50 p-8 md:p-12">
+          <p className="text-center text-gray-400">No testimonials available</p>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -36,6 +36,28 @@ const blogPosts = [
     featured: true,
     tags: ["Business Strategy", "Web Development", "Digital Marketing"],
     author: "Hudson Digital Solutions"
+  },
+  {
+    id: "2",
+    title: "How to Increase Website Conversion Rates: 2025 Complete Guide",
+    slug: "how-to-increase-website-conversion-rates-2025-guide",
+    excerpt: "15 proven strategies to boost your website conversion rates by 300%+. From UX optimization to psychology-based design, real case studies and actionable tactics that drive results.",
+    publishedAt: "2024-02-15",
+    readingTime: 15,
+    featured: true,
+    tags: ["Conversion Optimization", "UX Design", "Web Performance"],
+    author: "Hudson Digital Solutions"
+  },
+  {
+    id: "3",
+    title: "Small Business Website Cost 2025: Complete Pricing Guide",
+    slug: "small-business-website-cost-2025",
+    excerpt: "Complete breakdown of website costs for small businesses in 2025. Compare DIY vs professional options, ROI analysis, hidden costs, and how to choose the right investment level for your business growth.",
+    publishedAt: "2024-03-01",
+    readingTime: 14,
+    featured: false,
+    tags: ["Small Business", "Web Development", "Pricing", "ROI"],
+    author: "Hudson Digital Solutions"
   }
 ];
 
@@ -221,7 +243,7 @@ export default function BlogPage() {
               <div className="glass-morphism bg-black/80 border border-gray-700 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-white mb-4">Topics</h3>
                 <div className="flex flex-wrap gap-2">
-                  {["Business Strategy", "Web Development", "Digital Marketing", "Performance", "ROI", "Competitive Advantage"].map((topic) => (
+                  {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
                     <span
                       key={topic}
                       className="text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors cursor-pointer"

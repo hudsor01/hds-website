@@ -1,5 +1,5 @@
 // Performance optimization utilities
-import type { CLSEntry, FIDEntry } from '@/types/performance'
+import type { CLSEntry } from '@/types/performance'
 
 // Lazy loading for images
 export function setupLazyLoading() {
@@ -53,29 +53,27 @@ export function addResourceHints() {
 // Note: Service Worker registration is handled by ServiceWorkerRegistration.tsx component
 
 // Web Vitals tracking
+let _clsValue = 0 // Track cumulative layout shift - used in CLS observer
+
 export function trackWebVitals() {
   // Core Web Vitals tracking would go here
   // This is a placeholder for actual implementation
   if ('PerformanceObserver' in window) {
     // Track LCP
-    new PerformanceObserver((entryList) => {
-      const entries = entryList.getEntries()
-      const _lastEntry = entries[entries.length - 1]
+    new PerformanceObserver(() => {
+      // Track LCP entry for performance monitoring
       // LCP tracking would be implemented here
     }).observe({ entryTypes: ['largest-contentful-paint'] })
 
     // Track FID
-    new PerformanceObserver((entryList) => {
-      const entries = entryList.getEntries()
-      entries.forEach((entry) => {
-        const _fidEntry = entry as FIDEntry
-        // FID tracking would be implemented here
-      })
+    new PerformanceObserver(() => {
+      // Track FID entry for performance monitoring
+      // FID tracking would be implemented here
     }).observe({ entryTypes: ['first-input'] })
 
     // Track CLS
     new PerformanceObserver((entryList) => {
-      let _clsValue = 0
+      // Track CLS value for performance monitoring
       const entries = entryList.getEntries()
       entries.forEach((entry) => {
         const clsEntry = entry as CLSEntry
@@ -83,38 +81,27 @@ export function trackWebVitals() {
           _clsValue += clsEntry.value
         }
       })
-      // CLS tracking would be implemented here
+      // Log current CLS value for monitoring
+      console.debug('Current CLS value:', _clsValue)
     }).observe({ entryTypes: ['layout-shift'] })
   }
 }
 
-// Image optimization helpers
+// Simple image helpers - use Next.js Image component instead of complex optimization
 export function createOptimizedImage(
   src: string,
   alt: string,
   className?: string,
 ) {
+  // Simple image element - Next.js Image component handles optimization automatically
   const img = document.createElement('img')
   img.alt = alt
   img.loading = 'lazy'
   img.decoding = 'async'
+  img.src = src
   if (className) img.className = className
 
-  // Use modern formats if supported
-  if (supportsWebP()) {
-    img.src = src.replace(/\.(jpg|jpeg|png)$/i, '.webp')
-  } else {
-    img.src = src
-  }
-
   return img
-}
-
-function supportsWebP(): boolean {
-  const canvas = document.createElement('canvas')
-  canvas.width = 1
-  canvas.height = 1
-  return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0
 }
 
 // Preload critical routes

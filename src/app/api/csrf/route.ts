@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { generateCSRFToken } from '@/lib/csrf';
 import { applySecurityHeaders } from '@/lib/security-headers';
 
@@ -7,7 +7,7 @@ import { applySecurityHeaders } from '@/lib/security-headers';
  * Returns a CSRF token for form submissions
  * Token is also set as a secure HTTP-only cookie
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const token = generateCSRFToken();
     

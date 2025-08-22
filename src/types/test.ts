@@ -3,7 +3,8 @@
  * Types for E2E tests, performance monitoring, and test utilities
  */
 
-import { Page, Request, Response, ConsoleMessage } from '@playwright/test';
+// Playwright types imported for re-export
+export type { Page, Request, Response, ConsoleMessage } from '@playwright/test';
 
 // Performance Monitoring Types
 export interface NetworkRequest {

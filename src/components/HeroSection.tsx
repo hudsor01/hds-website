@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { HeroSectionProps } from "@/types/components";
-import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
-import { CTAButton } from "@/components/ui/CTAButton";
-import { TEXT_GRADIENTS } from "@/lib/ui-constants";
+// Removed unused imports - these components can be imported when needed
+// import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
+// import { CTAButton } from "@/components/ui/CTAButton";
+// import { TEXT_GRADIENTS } from "@/lib/ui-constants";
 
 // Extended props for internal use
 interface ExtendedHeroSectionProps extends HeroSectionProps {
