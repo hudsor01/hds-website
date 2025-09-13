@@ -166,7 +166,7 @@ export default function Home() {
 
         const payPeriod: PayPeriod = {
           period: i + 1,
-          payDate: payDates[i],
+          payDate: payDates[i] || `2024-01-01`, // Fallback date if undefined
           hours: paystubData.hoursPerPeriod,
           grossPay,
           federalTax,
@@ -236,8 +236,36 @@ export default function Home() {
   }
 
   // Render individual pay stub
-  if (documentType === 'paystub' && resultsVisible) {
+ if (documentType === 'paystub' && resultsVisible) {
     const selectedPayPeriod = paystubData.payPeriods[selectedPeriod - 1]
+    
+    // Handle case where selectedPayPeriod is undefined
+    if (!selectedPayPeriod) {
+      return (
+        <div>
+          <div style={{ padding: '20px', textAlign: 'center', backgroundColor: '#f8f9fa' }}>
+            <button
+              onClick={backToForm}
+              style={{
+                padding: '10px 20px',
+                marginRight: '10px',
+                backgroundColor: '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              ← Back to Form
+            </button>
+          </div>
+          <div style={{ padding: '20px', textAlign: 'center' }}>
+            <p>Pay period data not available. Please generate payroll records first.</p>
+          </div>
+        </div>
+      )
+    }
+    
     const ytdTotals = {
       grossPay: paystubData.totals.grossPay * (selectedPeriod / 26),
       federalTax: paystubData.totals.federalTax * (selectedPeriod / 26),
@@ -970,7 +998,7 @@ export default function Home() {
                   borderLeft: '4px solid #ffc107'
                 }}>
                   <span>Box 3 - Social security wages:</span>
-                  <span>{formatCurrency(Math.min(paystubData.totals.grossPay, TAX_DATA[paystubData.taxYear].ssWageBase))}</span>
+                  <span>{formatCurrency(Math.min(paystubData.totals.grossPay, TAX_DATA[paystubData.taxYear]?.ssWageBase || 0))}</span>
                 </div>
                 <div style={{
                   display: 'flex',
