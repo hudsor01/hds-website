@@ -6,7 +6,11 @@
 import { Resend } from "resend";
 import { EMAIL_SEQUENCES, processEmailTemplate } from "./email-sequences";
 import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
-import type { InternalScheduledEmail, EmailQueueStats, EmailProcessResult } from '@/types/utils';
+import type {
+  InternalScheduledEmail,
+  EmailQueueStats,
+  EmailProcessResult,
+} from "@/types/utils";
 
 // In a real implementation, this would be stored in a database
 // For demo purposes, we'll use in-memory storage with comments on database structure
@@ -57,7 +61,7 @@ export function scheduleEmailSequence(
 
     // Log only in development, not during tests
     if (process.env.NODE_ENV === "development") {
-      console.log(
+      console.warn(
         `Scheduled email: ${
           step.subject
         } for ${recipientEmail} on ${scheduledFor.toISOString()}`
@@ -91,7 +95,7 @@ export async function processPendingEmails(): Promise<void> {
     (email) => email.status === "pending" && email.scheduledFor <= now
   );
 
-  console.log(`Processing ${pendingEmails.length} pending emails...`);
+  console.warn(`Processing ${pendingEmails.length} pending emails...`);
 
   for (const scheduledEmail of pendingEmails) {
     try {

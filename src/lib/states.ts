@@ -1,69 +1,91 @@
 // US States tax information for 2025
-import type { StateInfo } from '@/types/paystub'
+import type { StateInfo } from "@/types/paystub";
 
 // States with NO income tax (9 states)
 export const NO_INCOME_TAX_STATES: StateInfo[] = [
-  { name: 'Alaska', code: 'AK', hasIncomeTax: false },
-  { name: 'Florida', code: 'FL', hasIncomeTax: false },
-  { name: 'Nevada', code: 'NV', hasIncomeTax: false },
-  { name: 'New Hampshire', code: 'NH', hasIncomeTax: false },
-  { name: 'South Dakota', code: 'SD', hasIncomeTax: false },
-  { name: 'Tennessee', code: 'TN', hasIncomeTax: false },
-  { name: 'Texas', code: 'TX', hasIncomeTax: false },
-  { name: 'Washington', code: 'WA', hasIncomeTax: false },
-  { name: 'Wyoming', code: 'WY', hasIncomeTax: false }
-]
+  { name: "Alaska", code: "AK", abbreviation: "AK", hasIncomeTax: false },
+  { name: "Florida", code: "FL", abbreviation: "FL", hasIncomeTax: false },
+  { name: "Nevada", code: "NV", abbreviation: "NV", hasIncomeTax: false },
+  {
+    name: "New Hampshire",
+    code: "NH",
+    abbreviation: "NH",
+    hasIncomeTax: false,
+  },
+  { name: "South Dakota", code: "SD", abbreviation: "SD", hasIncomeTax: false },
+  { name: "Tennessee", code: "TN", abbreviation: "TN", hasIncomeTax: false },
+  { name: "Texas", code: "TX", abbreviation: "TX", hasIncomeTax: false },
+  { name: "Washington", code: "WA", abbreviation: "WA", hasIncomeTax: false },
+  { name: "Wyoming", code: "WY", abbreviation: "WY", hasIncomeTax: false },
+];
 
 // States WITH income tax (41 states + DC)
 export const INCOME_TAX_STATES: StateInfo[] = [
-  { name: 'Alabama', code: 'AL', hasIncomeTax: true },
-  { name: 'Arizona', code: 'AZ', hasIncomeTax: true },
-  { name: 'Arkansas', code: 'AR', hasIncomeTax: true },
-  { name: 'California', code: 'CA', hasIncomeTax: true },
-  { name: 'Colorado', code: 'CO', hasIncomeTax: true },
-  { name: 'Connecticut', code: 'CT', hasIncomeTax: true },
-  { name: 'Delaware', code: 'DE', hasIncomeTax: true },
-  { name: 'District of Columbia', code: 'DC', hasIncomeTax: true },
-  { name: 'Georgia', code: 'GA', hasIncomeTax: true },
-  { name: 'Hawaii', code: 'HI', hasIncomeTax: true },
-  { name: 'Idaho', code: 'ID', hasIncomeTax: true },
-  { name: 'Illinois', code: 'IL', hasIncomeTax: true },
-  { name: 'Indiana', code: 'IN', hasIncomeTax: true },
-  { name: 'Iowa', code: 'IA', hasIncomeTax: true },
-  { name: 'Kansas', code: 'KS', hasIncomeTax: true },
-  { name: 'Kentucky', code: 'KY', hasIncomeTax: true },
-  { name: 'Louisiana', code: 'LA', hasIncomeTax: true },
-  { name: 'Maine', code: 'ME', hasIncomeTax: true },
-  { name: 'Maryland', code: 'MD', hasIncomeTax: true },
-  { name: 'Massachusetts', code: 'MA', hasIncomeTax: true },
-  { name: 'Michigan', code: 'MI', hasIncomeTax: true },
-  { name: 'Minnesota', code: 'MN', hasIncomeTax: true },
-  { name: 'Mississippi', code: 'MS', hasIncomeTax: true },
-  { name: 'Missouri', code: 'MO', hasIncomeTax: true },
-  { name: 'Montana', code: 'MT', hasIncomeTax: true },
-  { name: 'Nebraska', code: 'NE', hasIncomeTax: true },
-  { name: 'New Jersey', code: 'NJ', hasIncomeTax: true },
-  { name: 'New Mexico', code: 'NM', hasIncomeTax: true },
-  { name: 'New York', code: 'NY', hasIncomeTax: true },
-  { name: 'North Carolina', code: 'NC', hasIncomeTax: true },
-  { name: 'North Dakota', code: 'ND', hasIncomeTax: true },
-  { name: 'Ohio', code: 'OH', hasIncomeTax: true },
-  { name: 'Oklahoma', code: 'OK', hasIncomeTax: true },
-  { name: 'Oregon', code: 'OR', hasIncomeTax: true },
-  { name: 'Pennsylvania', code: 'PA', hasIncomeTax: true },
-  { name: 'Rhode Island', code: 'RI', hasIncomeTax: true },
-  { name: 'South Carolina', code: 'SC', hasIncomeTax: true },
-  { name: 'Utah', code: 'UT', hasIncomeTax: true },
-  { name: 'Vermont', code: 'VT', hasIncomeTax: true },
-  { name: 'Virginia', code: 'VA', hasIncomeTax: true },
-  { name: 'West Virginia', code: 'WV', hasIncomeTax: true },
-  { name: 'Wisconsin', code: 'WI', hasIncomeTax: true }
-]
+  { name: "Alabama", code: "AL", abbreviation: "AL", hasIncomeTax: true },
+  { name: "Arizona", code: "AZ", abbreviation: "AZ", hasIncomeTax: true },
+  { name: "Arkansas", code: "AR", abbreviation: "AR", hasIncomeTax: true },
+  { name: "California", code: "CA", abbreviation: "CA", hasIncomeTax: true },
+  { name: "Colorado", code: "CO", abbreviation: "CO", hasIncomeTax: true },
+  { name: "Connecticut", code: "CT", abbreviation: "CT", hasIncomeTax: true },
+  { name: "Delaware", code: "DE", abbreviation: "DE", hasIncomeTax: true },
+  {
+    name: "District of Columbia",
+    code: "DC",
+    abbreviation: "DC",
+    hasIncomeTax: true,
+  },
+  { name: "Georgia", code: "GA", abbreviation: "GA", hasIncomeTax: true },
+  { name: "Hawaii", code: "HI", abbreviation: "HI", hasIncomeTax: true },
+  { name: "Idaho", code: "ID", abbreviation: "ID", hasIncomeTax: true },
+  { name: "Illinois", code: "IL", abbreviation: "IL", hasIncomeTax: true },
+  { name: "Indiana", code: "IN", abbreviation: "IN", hasIncomeTax: true },
+  { name: "Iowa", code: "IA", abbreviation: "IA", hasIncomeTax: true },
+  { name: "Kansas", code: "KS", abbreviation: "KS", hasIncomeTax: true },
+  { name: "Kentucky", code: "KY", abbreviation: "KY", hasIncomeTax: true },
+  { name: "Louisiana", code: "LA", abbreviation: "LA", hasIncomeTax: true },
+  { name: "Maine", code: "ME", abbreviation: "ME", hasIncomeTax: true },
+  { name: "Maryland", code: "MD", abbreviation: "MD", hasIncomeTax: true },
+  { name: "Massachusetts", code: "MA", abbreviation: "MA", hasIncomeTax: true },
+  { name: "Michigan", code: "MI", abbreviation: "MI", hasIncomeTax: true },
+  { name: "Minnesota", code: "MN", abbreviation: "MN", hasIncomeTax: true },
+  { name: "Mississippi", code: "MS", abbreviation: "MS", hasIncomeTax: true },
+  { name: "Missouri", code: "MO", abbreviation: "MO", hasIncomeTax: true },
+  { name: "Montana", code: "MT", abbreviation: "MT", hasIncomeTax: true },
+  { name: "Nebraska", code: "NE", abbreviation: "NE", hasIncomeTax: true },
+  { name: "New Jersey", code: "NJ", abbreviation: "NJ", hasIncomeTax: true },
+  { name: "New Mexico", code: "NM", abbreviation: "NM", hasIncomeTax: true },
+  { name: "New York", code: "NY", abbreviation: "NY", hasIncomeTax: true },
+  {
+    name: "North Carolina",
+    code: "NC",
+    abbreviation: "NC",
+    hasIncomeTax: true,
+  },
+  { name: "North Dakota", code: "ND", abbreviation: "ND", hasIncomeTax: true },
+  { name: "Ohio", code: "OH", abbreviation: "OH", hasIncomeTax: true },
+  { name: "Oklahoma", code: "OK", abbreviation: "OK", hasIncomeTax: true },
+  { name: "Oregon", code: "OR", abbreviation: "OR", hasIncomeTax: true },
+  { name: "Pennsylvania", code: "PA", abbreviation: "PA", hasIncomeTax: true },
+  { name: "Rhode Island", code: "RI", abbreviation: "RI", hasIncomeTax: true },
+  {
+    name: "South Carolina",
+    code: "SC",
+    abbreviation: "SC",
+    hasIncomeTax: true,
+  },
+  { name: "Utah", code: "UT", abbreviation: "UT", hasIncomeTax: true },
+  { name: "Vermont", code: "VT", abbreviation: "VT", hasIncomeTax: true },
+  { name: "Virginia", code: "VA", abbreviation: "VA", hasIncomeTax: true },
+  { name: "West Virginia", code: "WV", abbreviation: "WV", hasIncomeTax: true },
+  { name: "Wisconsin", code: "WI", abbreviation: "WI", hasIncomeTax: true },
+];
 
 // Combined list for dropdown
-export const ALL_STATES = [...NO_INCOME_TAX_STATES, ...INCOME_TAX_STATES].sort((a, b) => a.name.localeCompare(b.name))
+export const ALL_STATES = [...NO_INCOME_TAX_STATES, ...INCOME_TAX_STATES].sort(
+  (a, b) => a.name.localeCompare(b.name)
+);
 
 // Helper function to get state info
 export const getStateInfo = (code: string): StateInfo | undefined => {
-  return ALL_STATES.find(state => state.code === code)
-}
+  return ALL_STATES.find((state) => state.code === code);
+};

@@ -34,9 +34,9 @@ const NavbarLight = memo(function NavbarLight() {
   }, [pathname]);
 
   return (
-    <nav 
+    <nav
       className="fixed top-0 left-0 right-0 z-50 shadow-lg shadow-black/10 border-b border-gray-800/50"
-      style={{ backgroundColor: '#020718' }}
+      style={{ backgroundColor: 'var(--color-nav-dark)' }}
       role="navigation"
       aria-label="Main navigation"
     >
@@ -141,7 +141,7 @@ const NavbarLight = memo(function NavbarLight() {
           id="mobile-menu"
         >
           {/* Mobile menu background */}
-          <div className="absolute inset-0 border-b border-gray-800/50" style={{ backgroundColor: '#020718' }} />
+          <div className="absolute inset-0 border-b border-gray-800/50" style={{ backgroundColor: 'var(--color-nav-dark)' }} />
           
           <div className="relative px-4 pt-2 pb-4 space-y-1" role="menu" aria-label="Mobile navigation">
             {navigation.map((item) => (

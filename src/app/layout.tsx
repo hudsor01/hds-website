@@ -138,8 +138,8 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         
         {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#22d3ee" />
-        <meta name="msapplication-TileColor" content="#22d3ee" />
+        <meta name="theme-color" content="#0891b2" />
+        <meta name="msapplication-TileColor" content="#0891b2" />
         <meta name="msapplication-TileImage" content="/HDS-Logo.jpeg" />
         
         {/* Mobile-specific optimizations */}

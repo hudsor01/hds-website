@@ -1,7 +1,5 @@
 // Custom image loader for optimized mobile performance
-import type { ImageLoaderProps, ImageSizes, ImagePreset, LazyLoadConfig } from '@/types/utils';
-
-export type { ImageLoaderProps };
+import type { ImageSizes, ImagePreset, LazyLoadConfig } from '@/types/utils';
 
 // Image sizes for responsive loading
 export const IMAGE_SIZES: Record<string, ImageSizes> = {
@@ -30,7 +28,11 @@ export function generateSrcSet(src: string, sizes: number[]): string {
 }
 
 // Default image loader with optimization
-export default function imageLoader({ src, width, quality }: ImageLoaderProps) {
+export default function imageLoader({ src, width, quality }: {
+  src: string;
+  width: number;
+  quality?: number;
+}) {
   // For external images, return as-is
   if (src.startsWith('http://') || src.startsWith('https://')) {
     return src;
