@@ -46,7 +46,6 @@ export class FeatureFlags {
     try {
       // const isEnabled = isFeatureEnabled(flagKey);
       const isEnabled = Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue) || false;
-      console.debug(`Feature flag ${flagKey}: ${isEnabled}`);
       return isEnabled;
     } catch (error) {
       console.warn(`Error checking feature flag ${flagKey}`, error);
@@ -61,7 +60,6 @@ export class FeatureFlags {
     try {
       // const value = getFeatureFlag(flagKey);
       const value = FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
-      console.debug(`Feature flag ${flagKey} value:`, value);
       return value;
     } catch (error) {
       console.warn(`Error getting feature flag ${flagKey} value`, error);
@@ -122,7 +120,7 @@ export class FeatureFlags {
    */
   static logAllFlags(): void {
     const flags = this.getAllFlags();
-    console.info('Current feature flag states:', flags);
+    console.warn('Current feature flag states:', flags);
   }
 }
 
@@ -155,7 +153,11 @@ export function useFeatureFlag(flagKey: FeatureFlagKey): boolean {
 
 // Higher-order component for conditional rendering based on feature flags
 
-export function FeatureFlagWrapper({ flag, fallback = null, children }: FeatureFlagWrapperProps) {
+export function FeatureFlagWrapper({ flag, fallback = null, children }: {
+  flag: FeatureFlagKey;
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   const isEnabled = useFeatureFlag(flag);
   
   return <>{isEnabled ? children : fallback}</>;

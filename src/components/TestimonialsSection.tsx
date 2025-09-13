@@ -1,7 +1,7 @@
 "use client";
 
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
-import { Testimonial } from "@/types/components";
+import type { Testimonial } from "@/types/components";
 import { m } from "@/lib/motion";
 import { StarIcon, UserIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
@@ -102,7 +102,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 p-6">
+                  <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-purple-500/10 p-6">
                     {/* Rating Stars */}
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">

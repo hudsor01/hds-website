@@ -83,7 +83,7 @@ export function enhanceKeyboardNavigation() {
   const focusStyle = document.createElement('style')
   focusStyle.textContent = `
     .focus-visible:focus {
-      outline: 2px solid #22d3ee !important;
+      outline: 2px solid #0891b2 !important;
       outline-offset: 2px !important;
     }
     
@@ -178,7 +178,7 @@ export function validateColorContrast() {
 
   // Check common color combinations
   checkContrast('#ffffff', '#09090b') // White on black
-  checkContrast('#22d3ee', '#09090b') // Cyan on black
+  checkContrast('#0891b2', '#09090b') // Cyan on black
   checkContrast('#4ade80', '#09090b') // Green on black
 }
 

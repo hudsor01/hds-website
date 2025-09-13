@@ -30,11 +30,6 @@
     padding: 10px !important;
   }
 
-  .bg-gradient-to-r.from-green-600.to-green-700.text-white {
-    background: #2e7d32 !important;
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
-  }
 
   /* Ensure tables fit on page */
   table {

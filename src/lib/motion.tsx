@@ -6,13 +6,38 @@
 import { forwardRef } from 'react';
 import type { ComponentProps } from 'react';
 import Image from 'next/image';
-import type { 
-  MotionProps, 
-  UseScrollReturn, 
+import type {
+  UseScrollReturn,
   UseTransformReturn,
   TransformInput,
-  TransformOutput 
+  TransformOutput
 } from '@/types/motion';
+
+// Inline MotionProps type for React 19
+import type { AnimationTarget, TransitionConfig, Variant, ViewportConfig } from '@/types/motion';
+
+type MotionProps = {
+  initial?: AnimationTarget;
+  animate?: AnimationTarget;
+  exit?: AnimationTarget;
+  variants?: Record<string, Variant>;
+  transition?: TransitionConfig;
+  whileHover?: AnimationTarget;
+  whileTap?: AnimationTarget;
+  whileInView?: AnimationTarget;
+  whileDrag?: AnimationTarget;
+  whileFocus?: AnimationTarget;
+  drag?: boolean | 'x' | 'y';
+  dragConstraints?: Record<string, unknown> | HTMLElement | SVGElement;
+  dragElastic?: boolean | number;
+  dragMomentum?: boolean;
+  layoutId?: string;
+  layout?: boolean | 'position' | 'size';
+  layoutDependency?: React.DependencyList;
+  viewport?: ViewportConfig;
+  custom?: number | Record<string, string | number | boolean>;
+  onDragEnd?: () => void;
+};
 
 // Motion props that should be filtered out
 const motionProps = [

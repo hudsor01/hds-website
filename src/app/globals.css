@@ -7,8 +7,8 @@
   /* CSS Variables for theming */
   --color-background: #ffffff;
   --color-foreground: #171717;
-  --color-primary: #22d3ee;
-  --color-secondary: #0ea5e9;
+  --color-primary: #0891b2;
+  --color-secondary: #22d3ee;
   --color-accent: #10b981;
   --color-destructive: #ef4444;
   --color-muted: #f3f4f6;
@@ -19,6 +19,7 @@
   --color-foreground-dark: #f9fafb;
   --color-muted-dark: #18181b;
   --color-border-dark: #27272a;
+  --color-nav-dark: #020718;
 
   /* Font families */
   --font-sans: var(--font-geist-sans);

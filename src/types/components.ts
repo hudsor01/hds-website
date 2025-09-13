@@ -1,5 +1,4 @@
 // Component type definitions
-import type { PaystubData } from './paystub';
 
 export interface NavigationItem {
   name: string;
