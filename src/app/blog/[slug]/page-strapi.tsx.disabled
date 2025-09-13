@@ -1,0 +1,317 @@
+/**
+ * Dynamic Blog Post Page with Strapi Integration
+ * This file shows how to integrate Strapi CMS with your existing blog
+ * Rename this file to page.tsx when Strapi is ready
+ */
+
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { getBlogPost, getRelatedPosts, getStrapiImageUrl, formatStrapiDate, type StrapiPost } from '@/lib/strapi';
+import StrapiRichText from '@/components/StrapiRichText';
+import { trackEvent } from '@/lib/analytics';
+
+interface BlogPostPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  // Fetch post from Strapi
+  const post = await getBlogPost(params.slug);
+  
+  if (!post) {
+    notFound();
+  }
+
+  // Fetch related posts
+  const relatedPosts = await getRelatedPosts(
+    params.slug,
+    post.attributes.category?.data?.attributes?.slug,
+    3
+  );
+
+  const { title, content, excerpt, publishedAt, author, category, tags, featuredImage } = post.attributes;
+
+  return (
+    <main className="min-h-screen bg-gradient-primary">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]" />
+        </div>
+
+        <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+          {/* Breadcrumb */}
+          <nav className="mb-8">
+            <ol className="flex items-center space-x-2 text-sm text-gray-400">
+              <li>
+                <Link href="/" className="hover:text-cyan-400 transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>/</li>
+              <li>
+                <Link href="/blog" className="hover:text-cyan-400 transition-colors">
+                  Blog
+                </Link>
+              </li>
+              {category?.data && (
+                <>
+                  <li>/</li>
+                  <li className="text-cyan-400">
+                    {category.data.attributes.name}
+                  </li>
+                </>
+              )}
+            </ol>
+          </nav>
+
+          {/* Article Header */}
+          <header className="text-center mb-12">
+            <h1 className="text-4xl lg:text-5xl font-black text-white mb-6 leading-tight">
+              {title}
+            </h1>
+            
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              {excerpt}
+            </p>
+
+            {/* Meta Information */}
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
+              {author?.data && (
+                <div className="flex items-center gap-2">
+                  {author.data.attributes.avatar?.data && (
+                    <Image
+                      src={getStrapiImageUrl(author.data.attributes.avatar.data.attributes.url)}
+                      alt={author.data.attributes.name}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
+                  <span>By {author.data.attributes.name}</span>
+                </div>
+              )}
+              
+              <time dateTime={publishedAt}>
+                {formatStrapiDate(publishedAt)}
+              </time>
+
+              {category?.data && (
+                <span className="px-3 py-1 bg-cyan-400/10 text-cyan-400 rounded-full">
+                  {category.data.attributes.name}
+                </span>
+              )}
+            </div>
+          </header>
+
+          {/* Featured Image */}
+          {featuredImage?.data && (
+            <div className="relative mb-12 rounded-2xl overflow-hidden">
+              <Image
+                src={getStrapiImageUrl(featuredImage.data.attributes.url)}
+                alt={featuredImage.data.attributes.alternativeText || title}
+                width={featuredImage.data.attributes.width || 1200}
+                height={featuredImage.data.attributes.height || 600}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Article Content */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
+          <article className="mb-16">
+            <StrapiRichText 
+              content={content} 
+              className="prose-invert prose-cyan"
+            />
+          </article>
+
+          {/* Tags */}
+          {tags?.data && tags.data.length > 0 && (
+            <div className="mb-12">
+              <h3 className="text-lg font-semibold text-white mb-4">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {tags.data.map((tag) => (
+                  <span
+                    key={tag.attributes?.slug}
+                    className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm"
+                  >
+                    {tag.attributes?.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Author Bio */}
+          {author?.data?.attributes.bio && (
+            <div className="mb-12 p-6 bg-gray-800/50 rounded-xl border border-gray-700">
+              <div className="flex items-start gap-4">
+                {author.data.attributes.avatar?.data && (
+                  <Image
+                    src={getStrapiImageUrl(author.data.attributes.avatar.data.attributes.url)}
+                    alt={author.data.attributes.name}
+                    width={64}
+                    height={64}
+                    className="rounded-full shrink-0"
+                  />
+                )}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    About {author.data.attributes.name}
+                  </h3>
+                  <p className="text-gray-300">
+                    {author.data.attributes.bio}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CTA Section */}
+          <div className="bg-linear-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-xl p-8 mb-12 text-center">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Ready to Transform Your Website?
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Let&apos;s discuss how we can implement these strategies for your business.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
+              onClick={() => trackEvent('cta_click', { 
+                location: 'blog_post_bottom',
+                post_slug: params.slug 
+              })}
+            >
+              Get Your Free Consultation
+            </Link>
+          </div>
+
+          {/* Related Posts */}
+          {relatedPosts.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-8">Related Articles</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {relatedPosts.map((relatedPost) => (
+                  <RelatedPostCard key={relatedPost.id} post={relatedPost} />
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// Related Post Card Component
+function RelatedPostCard({ post }: { post: StrapiPost }) {
+  const { title, slug, excerpt, featuredImage, category, publishedAt } = post.attributes;
+
+  return (
+    <article className="bg-gray-800/50 border border-gray-700 rounded-xl overflow-hidden hover:border-cyan-400/50 transition-all duration-300">
+      {featuredImage?.data && (
+        <div className="relative h-48 overflow-hidden">
+          <Image
+            src={getStrapiImageUrl(featuredImage.data.attributes.url)}
+            alt={featuredImage.data.attributes.alternativeText || title}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+      
+      <div className="p-6">
+        {category?.data && (
+          <span className="inline-block px-2 py-1 bg-cyan-400/10 text-cyan-400 text-xs rounded-full mb-2">
+            {category.data.attributes.name}
+          </span>
+        )}
+        
+        <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+          <Link 
+            href={`/blog/${slug}`}
+            className="hover:text-cyan-400 transition-colors"
+          >
+            {title}
+          </Link>
+        </h3>
+        
+        <p className="text-gray-400 text-sm mb-4 line-clamp-3">
+          {excerpt}
+        </p>
+        
+        <div className="text-xs text-gray-500">
+          {formatStrapiDate(publishedAt)}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const post = await getBlogPost(params.slug);
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  const { title, excerpt, seo, featuredImage } = post.attributes;
+  const metaTitle = seo?.metaTitle || title;
+  const metaDescription = seo?.metaDescription || excerpt;
+  const ogImage = seo?.metaImage?.data?.attributes?.url || featuredImage?.data?.attributes?.url;
+
+  return {
+    title: metaTitle,
+    description: metaDescription,
+    keywords: seo?.keywords,
+    openGraph: {
+      title: metaTitle,
+      description: metaDescription,
+      type: 'article',
+      ...(ogImage && {
+        images: [
+          {
+            url: getStrapiImageUrl(ogImage),
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description: metaDescription,
+      ...(ogImage && {
+        images: [getStrapiImageUrl(ogImage)],
+      }),
+    },
+  };
+}
+
+// Generate static params for all blog posts
+export async function generateStaticParams() {
+  try {
+    const { posts } = await getBlogPosts({ pageSize: 100 });
+    return posts.map((post) => ({
+      slug: post.attributes.slug,
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params:', error);
+    return [];
+  }
+}
