@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import { applySecurityHeaders } from './src/lib/security-headers';
 
 const nextConfig: NextConfig = {
   // Performance optimizations

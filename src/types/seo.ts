@@ -11,6 +11,19 @@ export interface SEOMetaData {
   structuredData?: object
 }
 
+export interface SEOConfig {
+  title: string;
+  description: string;
+  keywords: string[];
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  canonical?: string;
+  noindex?: boolean;
+  structuredData?: object;
+  additionalKeywords?: string[];
+}
+
 export interface StructuredData {
   '@context': string
   '@type': string

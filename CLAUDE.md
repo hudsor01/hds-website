@@ -2,232 +2,353 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## MANDATORY RULES - NO EXCEPTIONS
 
-This is a modern business website for Hudson Digital Solutions built with Next.js 15, React 19, and TypeScript. It's a high-performance marketing site with contact forms, analytics, and automated email sequences.
+### NO EMOJIS RULE
+- Never use emojis in communication unless user explicitly requests them
+- Never use emojis in code, comments, or file content
+- Use Lucide Icons or Heroicons instead for visual elements in UI components
+- Keep all responses professional and emoji-free
+- Focus on clear, direct technical communication
 
-## Key Development Principles
+### CORE PRINCIPLES
+- **DRY**: Search before writing (`rg "functionName"`). Consolidate code reused ≥2 places
+- **KISS**: Choose simplest solution. Delete code instead of adding when possible
+- **SOLID**: Single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion
+- **NO ABSTRACTIONS**: Use native platform features directly. No wrappers, factories, or custom layers
+- **PRODUCTION MINDSET**: Security first, platform-native, performance-conscious, reliability-focused
 
-### Core Principles to Follow
-1. **YAGNI (You Aren't Gonna Need It)**: Don't add abstraction until proven necessary
-2. **KISS (Keep It Simple)**: Direct implementations over complex patterns
-3. **DRY (Don't Repeat Yourself)**: Use decorators and interceptors for cross-cutting concerns
-4. **Single Responsibility**: Each service handles one domain entity
-5. **Explicit over Implicit**: Clear, direct code over "clever" abstractions
+### NATIVE PLATFORM REPLACEMENTS
+- **Auth**: Next.js Auth or simple session management
+- **Storage**: Vercel Blob or native file handling
+- **Email**: Resend API
+- **Validation**: Zod schemas or native JavaScript validation
+- **Data**: Native fetch API
+- **Forms**: Native form handling or React Hook Form
+- **State**: React useState/useReducer (avoid complex state management)
+- **Styles**: Tailwind classes
+- **Components**: Radix/ShadCN base components
+- **Dates**: date-fns
+- **HTTP**: Native fetch
 
-These principles guide all development decisions. Prioritize simplicity and maintainability over premature optimization. Avoid over-engineering solutions before requirements are clear.
+### UI COMPONENT PATTERNS
+- **Buttons**: Native button + Tailwind or Radix Button
+- **Forms**: Native form elements + validation
+- **Modals**: Radix Dialog when needed
+- **Dropdowns**: Radix Select
+- **Loading**: Simple CSS animations
+- **Layouts**: CSS Grid + Flexbox + Tailwind
+- **Animations**: Tailwind transitions (avoid complex animation libraries)
+- **Themes**: CSS custom properties
+- **Responsive**: Tailwind responsive prefixes
+
+### BEFORE EVERY CHANGE
+1. Does this exist? (Search first!)
+2. Can I use native platform feature?
+3. Can I delete code instead?
+4. Is this the simplest solution?
+5. Will another developer understand immediately?
+6. Does this follow accessibility standards?
+7. Is this predictable and consistent?
 
 ## Development Commands
 
 ### Core Commands
-```bash
-# Development
-npm run dev                # Start development server
-npm run dev:https         # Start development server with HTTPS
-
-# Build & Production
-npm run build             # Production build
-npm run build:local       # Build with local env
-npm run build:analyze     # Build with bundle analyzer
-npm run start             # Start production server
-npm run start:local       # Start production server with local env
-
-# Quality & Analysis
-npm run lint              # ESLint checking
-npm run typecheck         # TypeScript type checking
-npm run check:bundle      # Analyze bundle size
-```
+- `npm run dev` - Start development server with .env.local (localhost:3000)
+- `npm run build` - Build production application with .env.production
+- `npm run build:local` - Build with .env.local for local testing
+- `npm run build:analyze` - Build with bundle analyzer for performance optimization
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint for code quality checks
+- `npm run typecheck` - Run TypeScript type checking
 
 ### Testing Commands
-```bash
-# E2E Testing (Playwright)
-npm run test:e2e          # Run all e2e tests
-npm run test:e2e:ui       # Run e2e tests with UI mode
-npm run test:e2e:fast     # Run chromium tests only (fast)
-npm run test:e2e:a11y     # Run accessibility tests only
-npm run test:e2e:animations # Run animation performance tests
-npm run test:e2e:report   # Show test report
-npm run test:e2e:install  # Install Playwright browsers
-npm run test:update-snapshots # Update visual snapshots
+- `npm run test:unit` - Run Jest unit tests
+- `npm run test:unit:watch` - Run Jest unit tests in watch mode
+- `npm run test:unit:coverage` - Run Jest unit tests with coverage report
+- `npm run test:e2e` - Run all Playwright e2e tests
+- `npm run test:e2e:ui` - Run Playwright tests with UI mode
+- `npm run test:e2e:fast` - Run fast e2e tests (chromium only)
+- `npm run test:e2e:a11y` - Run accessibility-specific e2e tests
+- `npm run test:e2e:report` - Show Playwright test report
+- `npm run test:all` - Run lint, typecheck, unit tests, and fast e2e tests
+- `npm run test:ci` - Full test suite for CI (includes all e2e tests)
 
-# Unit Testing (Jest)
-npm run test:unit         # Run unit tests
-npm run test:unit:watch   # Run tests in watch mode
-npm run test:unit:coverage # Run tests with coverage
+### Development Workflow
+- Use `npm run dev` for local development with hot reload
+- Always run `npm run lint` and `npm run typecheck` before commits to ensure code quality
+- Use `npm run test:all` to run all checks before pushing
+- Use `npm run build:local` to verify production build works with your local environment
 
-# Combined Testing
-npm run test:all          # Run lint, typecheck, unit and fast e2e
-npm run test:ci           # Full CI test suite
+## Project Architecture
+
+### Technology Stack
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4.x
+- **UI Components**: Custom components with Heroicons
+- **Email Service**: Resend for transactional emails
+- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
+- **CMS**: Ghost CMS for blog content
+- **Calendar**: Cal.com integration
+- **Performance**: Web Vitals tracking, Core Web Vitals optimization
+
+### Directory Structure
 ```
-
-### Utility Commands
-```bash
-# Environment & Setup
-npm run env:setup         # Create .env.local from template
-npm run env:validate      # Validate environment variables
-
-# Database
-npm run db:types:generate # Generate Supabase types
-
-# Image Optimization
-npm run optimize:images   # Optimize all images
-npm run optimize:portfolio # Optimize portfolio images
-
-# Maintenance
-npm run clean             # Clean all build artifacts
-npm run clean:test        # Clean test reports
-npm run generate-sitemap  # Generate sitemap.xml
+src/
+├── app/                    # Next.js App Router pages and API routes
+│   ├── (tools)/           # Route group for internal tools
+│   │   └── paystub-generator/ # Paystub generator tool
+│   ├── layout.tsx         # Root layout with fonts and metadata
+│   ├── page.tsx           # Home page
+│   ├── about/page.tsx     # About page
+│   ├── contact/page.tsx   # Contact page
+│   ├── services/page.tsx  # Services page
+│   ├── portfolio/page.tsx # Portfolio showcase page
+│   ├── pricing/page.tsx   # Pricing information page
+│   ├── privacy/page.tsx   # Privacy policy page
+│   ├── testimonials/page.tsx # Customer testimonials page
+│   ├── resources/         # Lead magnets and resources
+│   ├── blog/              # Blog pages with static content
+│   │   ├── page.tsx       # Blog listing
+│   │   └── [slug]/page.tsx # Individual blog posts
+│   ├── robots.ts          # Dynamic robots.txt generation
+│   ├── sitemap.ts         # Dynamic sitemap generation
+│   └── api/               # API routes
+│       ├── contact/route.ts # Contact form handler
+│       ├── lead-magnet/route.ts # Lead magnet downloads
+│       ├── process-emails/route.ts # Email processing
+│       ├── csrf/route.ts  # CSRF token endpoint
+│       └── rss/feed/route.ts # RSS feed generation
+├── components/            # Reusable UI components
+│   ├── layout/
+│   │   ├── Navbar.tsx     # Main navigation (client component)
+│   │   └── Footer.tsx     # Site footer
+│   ├── ContactForm.tsx    # Contact form with validation and analytics
+│   ├── CalendarWidget.tsx # Cal.com integration widget
+│   ├── ThemeToggle.tsx    # Dark/light mode toggle
+│   ├── Analytics.tsx      # Analytics tracking components
+│   ├── AccessibilityProvider.tsx # Accessibility features provider
+│   ├── CookieConsent.tsx  # GDPR cookie consent management
+│   ├── ErrorBoundary.tsx  # React error boundary component
+│   ├── LoadingStates.tsx  # Loading indicators and states
+│   ├── ServiceWorkerRegistration.tsx # PWA service worker
+│   └── WebVitalsReporting.tsx # Core Web Vitals monitoring
+├── contexts/              # React contexts
+│   └── ThemeContext.tsx   # Theme management
+├── hooks/                 # Custom React hooks
+│   └── useTouchInteractions.ts # Touch interaction handling
+├── lib/                   # Core utilities and integrations
+│   ├── analytics.ts       # Multi-platform analytics tracking
+│   ├── seo.ts            # SEO configuration with schema markup
+│   ├── email-sequences.ts # Automated email nurturing sequences
+│   ├── ghost.ts          # Ghost CMS API integration
+│   ├── posthog.ts        # PostHog analytics configuration
+│   ├── image-loader.ts   # Next.js image optimization
+│   └── analytics.ts.bak  # Backup of analytics configuration
+├── types/                 # TypeScript type definitions
+│   ├── seo.ts            # SEO metadata types and interfaces
+│   ├── accessibility.ts  # Accessibility compliance types
+│   ├── performance.ts    # Performance monitoring types
+│   ├── components.ts     # Component prop and state types
+│   └── ghost.d.ts        # Ghost CMS API response types
+└── utils/                 # Utility functions
+    ├── seo.ts            # SEO optimization utilities
+    ├── accessibility.ts  # Accessibility helper functions
+    ├── performance.ts    # Performance measurement utilities
+    └── crawling.ts       # Web crawling and indexing utilities
+tests/                     # Test files
+├── unit/                  # Jest unit tests
+│   ├── validation.test.ts # Form validation tests
+│   ├── states.test.ts     # State management tests
+│   └── storage.test.ts    # Storage utility tests
+└── e2e/                   # Playwright end-to-end tests
+    ├── form-functionality.spec.ts # Contact form tests
+    ├── pdf-generation.spec.ts     # PDF generation tests
+    └── localStorage-persistence.spec.ts # Storage persistence tests
 ```
-
-## Architecture & Structure
-
-### Next.js App Router Structure
-- **Pages**: All routes in `src/app/` using App Router
-- **API Routes**: RESTful endpoints in `src/app/api/`
-- **Components**: Reusable UI components in `src/components/`
-- **Layouts**: Shared layout components in `src/components/layout/`
 
 ### Key Architectural Patterns
 
-#### Email System Architecture
-The contact form triggers automated email sequences:
-1. **Admin notification** to `hello@hudsondigitalsolutions.com`
-2. **Client welcome email** with immediate nurturing sequence
-3. **Lead scoring** determines sequence type (welcome vs consultation)
-4. **Templates** in `src/lib/email-sequences.ts` with conditional logic
+#### Multi-Platform Analytics Integration
+- **Google Analytics 4**: Page views, conversions, custom events
+- **PostHog**: Product analytics, feature flags, session recordings
+- **Vercel Analytics**: Core Web Vitals, speed insights
+- Unified tracking through `src/lib/analytics.ts`
+- Comprehensive event tracking: form submissions, scroll depth, time on page
+- Web Vitals monitoring (LCP, FID, CLS) with automatic reporting
 
-#### Analytics & Monitoring
-Multi-platform analytics setup:
-- **PostHog**: Product analytics, feature flags, session recordings  
-- **Vercel Analytics**: Core Web Vitals, performance monitoring
-- **Custom Web Vitals**: Real user monitoring via API endpoint
+#### SEO and Performance Optimization
+- Centralized SEO config in `src/lib/seo.ts`
+- Rich schema markup (Organization, Service, LocalBusiness, Person)
+- Dynamic keyword generation and meta descriptions
+- OpenGraph and Twitter Card optimization
+- Performance-first approach with Next.js Image optimization
+- Core Web Vitals tracking and optimization
 
-#### Performance Optimization
-- **Edge Runtime**: API routes use Edge Runtime where possible
-- **Image Optimization**: WebP/AVIF formats with long caching
-- **Code Splitting**: Modular imports for icons and components
-- **Bundle Analysis**: Webpack bundle analyzer integration
-- **Caching Strategy**: Multi-level caching (CDN, browser, ISR)
+#### Email Marketing and Lead Nurturing
+- Automated email sequences in `src/lib/email-sequences.ts`
+- Multiple nurturing flows: welcome series, consultation follow-up, long-term nurturing
+- Resend integration for transactional emails
+- Lead scoring and high-intent detection
+- Conversion tracking across all touchpoints
 
-#### State Management
-- **Zustand**: For client-side state management
-- **React Hook Form**: Form state and validation
-- **Zod**: Schema validation for forms and API endpoints
+#### Content Management and Blog
+- Static blog content (not Ghost CMS)
+- Individual blog posts as static pages
+- RSS feed generation via API route
+- Static generation for optimal performance
+- Lead magnet integration for downloads
 
-### Security & Headers
-Comprehensive security implemented via:
-- **Next.js config headers**: Security headers applied globally
-- **Middleware**: Additional security and performance headers
-- **HTTPS enforcement**: Production redirects, HSTS
-- **CORS configuration**: API route protection
-- **CSP**: Content Security Policy via Vercel config
+#### Component Architecture
+- **Layout Components**: Navbar, Footer in `src/components/layout/`
+- **Form Components**: ContactForm with validation and analytics
+- **Integration Components**: CalendarWidget, ThemeToggle
+- **Client Components**: Use `"use client"` directive for interactive components
+- **Server Components**: Default for static content and SEO
 
-## Environment Variables & Secret Management
+#### TypeScript Configuration
+- Path aliases configured: `@/*` maps to `src/*`
+- Strict TypeScript settings enabled
+- Component-specific path aliases for better imports
+- Comprehensive type definitions for all integrations
 
-### Secret Management System
-We use `dotenv-cli` for secure environment variable management:
-- **Never expose keys**: All scripts use dotenv-cli to load secrets
-- **Environment separation**: Different .env files for dev/test/prod
-- **Validation**: Run `npm run env:validate` to check configuration
-- **Documentation**: See `/docs/SECRET_MANAGEMENT.md` for full guide
+#### Styling and Theme System
+- Tailwind CSS 4.x with custom theme configuration
+- Dark/light mode support with system preference detection
+- CSS custom properties for theming
+- Responsive design patterns with mobile-first approach
+- Custom gradient and glow effects for brand identity
 
-### Quick Setup
+#### Progressive Web App (PWA) Features
+- Service worker registration for offline functionality
+- Manifest.json configuration for app-like experience
+- Caching strategies for improved performance
+- Offline page fallback for network failures
+- App icon and splash screen configurations
+
+#### Cron Jobs and Background Processing
+- Email queue processing via `/api/cron/process-email-queue`
+- Automated sitemap updates via `/api/cron/update-sitemap`
+- RSS feed generation at `/api/rss/feed`
+- Background analytics data processing
+- Scheduled maintenance tasks
+
+### Business Context and Features
+- **Company**: Hudson Digital Solutions
+- **Brand Colors**: Cyan-based palette with gradients
+- **Design Language**: Modern, tech-focused with terminal/coding aesthetics
+- **Target Audience**: Businesses needing web development and digital solutions
+- **Contact Form**: Sends to hello@hudsondigitalsolutions.com with automated nurturing
+- **Calendar Integration**: Cal.com widget for consultation bookings
+- **Lead Nurturing**: Automated email sequences for different user intents
+
+### Development Guidelines
+- Use Next.js App Router patterns (not Pages Router)
+- Implement proper TypeScript types for all components
+- Follow accessibility best practices with ARIA labels
+- Optimize for SEO with structured data and metadata
+- Use server components by default, client components only when needed
+- Maintain responsive design across all screen sizes
+- Follow the existing brand aesthetic and color scheme
+- Always test contact form functionality before deployment
+- Monitor Core Web Vitals and optimize for performance
+- Use analytics tracking for all user interactions
+
+### Environment Variables Required
 ```bash
-# Initial setup - creates .env.local from template
-npm run env:setup
+# Email
+RESEND_API_KEY=             # Resend API key for email sending
 
-# Validate your configuration
-npm run env:validate
-
-# All npm scripts automatically load correct environment
-npm run dev          # Uses .env.local
-npm run test:e2e     # Uses .env.test
-npm run build        # Uses .env.production
-```
-
-### Required Variables
-```bash
-RESEND_API_KEY=             # Email sending via Resend
-```
-
-### Analytics & Monitoring
-```bash
+# Analytics & Monitoring
+NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4 ID
+GA4_API_SECRET=             # GA4 Measurement Protocol API secret
 NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
-NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host URL
+NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host (default: https://app.posthog.com)
+
+# SEO
+GOOGLE_SITE_VERIFICATION=   # Google Search Console verification
+
+# Security
+CSRF_SECRET=                # CSRF token secret for form security
 ```
 
-### SEO & Verification
-```bash
-GOOGLE_SITE_VERIFICATION=   # Google Search Console
-```
+### Configuration Files
+- `next.config.ts` - Next.js configuration with image optimization and security headers
+- `tsconfig.json` - TypeScript configuration with path aliases
+- `eslint.config.mjs` - ESLint configuration using Next.js presets
+- `postcss.config.mjs` - PostCSS configuration for Tailwind
+- `tailwind.config.js` - Tailwind CSS configuration
+- `vercel.json` - Vercel deployment configuration with performance optimizations
 
-### GitHub Actions Setup
-See `/docs/GITHUB_SECRETS_SETUP.md` for CI/CD secret configuration
+### Testing Strategy
 
-## Contact Form Flow
-1. Form submission triggers `/api/contact` endpoint
-2. **Validation**: Server-side validation with rate limiting  
-3. **Email sending**: Admin notification + client welcome
-4. **Lead scoring**: High-intent detection for consultation requests
-5. **Sequence scheduling**: Automated nurturing emails via Resend
-6. **Analytics**: Conversion events sent to PostHog
+#### Unit Testing
+- Jest configured for unit tests in `tests/unit/`
+- Tests for validation, state management, and utility functions
+- Coverage reporting available with `npm run test:unit:coverage`
+- Watch mode for development: `npm run test:unit:watch`
 
-## Performance Considerations
-- **Bundle optimization**: Tree shaking, code splitting
-- **Image handling**: Next.js Image component with optimization
-- **Font loading**: Google Fonts with display swap
-- **Critical CSS**: Inlined critical styles
-- **Service Worker**: PWA capabilities with offline support
+#### E2E Testing Setup
+- Playwright configured for comprehensive end-to-end testing
+- Tests in `tests/e2e/` directory
+- Multi-browser testing (Chrome, Firefox, Safari)
+- Mobile device testing (iPhone, Pixel)
+- Accessibility testing with axe-core
+- Performance and animation-specific test suites
+- Visual regression testing capabilities
 
-## TypeScript Architecture
-- **Strict mode**: Full TypeScript strict mode enabled
-- **Path mapping**: `@/` alias for `src/` directory
-- **Type definitions**: Custom types in `src/types/`
-- **API types**: Shared between frontend and backend
+#### Performance Testing
+- Core Web Vitals monitoring with automated reports
+- Bundle analysis available with `ANALYZE=true npm run build`
+- Performance regression testing included in CI/CD
+- Real User Monitoring (RUM) data collection
 
-## Deployment (Vercel)
-- **Edge functions**: Contact API and analytics on Edge Runtime
-- **Regional deployment**: US East (iad1) for performance
-- **Build optimization**: Webpack customizations, memory limits
-- **Environment**: Node.js 20.x with optimized memory allocation
+### Performance and Monitoring
+- Real User Monitoring (RUM) with Web Vitals tracking
+- Performance budgets and optimization
+- Error tracking and debugging
+- Lead attribution and marketing campaign tracking
+- Comprehensive analytics dashboard integration
 
-## Testing Contact Form
-Three methods available:
-1. **Live site**: `https://hudsondigitalsolutions.com/contact`
-2. **Local development**: `http://localhost:3000/contact`  
-3. **Script**: `npx tsx test-contact-form.ts`
+### Key Development Patterns
 
-All emails sent to `hello@hudsondigitalsolutions.com`
+#### File-based Routing Architecture
+- Uses Next.js 15 App Router (not Pages Router)
+- Route handlers in `app/api/` for server-side logic
+- Dynamic routes: `[slug]` for blog posts, `[tag]` for blog tags
+- Special files: `layout.tsx`, `page.tsx`, `robots.ts`, `sitemap.ts`
+- Client components marked with `"use client"` directive
 
-## Testing Strategy
+#### Data Flow and State Management
+- Server components for static content and SEO optimization
+- Client components for interactive features (forms, navigation)
+- React Context for theme management (`ThemeContext.tsx`)
+- Custom hooks for reusable stateful logic (`useTouchInteractions.ts`)
+- Type-safe APIs with comprehensive TypeScript definitions
 
-### E2E Testing (Playwright)
-- **Test structure**: Tests in `/e2e` directory
-- **Page objects**: Reusable selectors in `/e2e/page-objects`
-- **Helpers**: Test utilities in `/e2e/helpers`
-- **Projects**: Multiple browser configurations (Chrome, Firefox, Safari, Mobile)
-- **Animation tests**: Special project for testing animations with GPU acceleration
-- **Accessibility tests**: Tagged with `@accessibility` for isolated runs
+#### Integration Architecture
+- Multi-platform analytics unified through `src/lib/analytics.ts`
+- Email automation orchestrated via `src/lib/email-sequences.ts`
+- Ghost CMS headless integration for blog content
+- PostHog for advanced product analytics and feature flags
+- Resend for transactional email delivery
 
-### Unit Testing (Jest)
-- **Test location**: `__tests__` directory and `*.test.ts` files
-- **Coverage**: Configured for `src/**` excluding type definitions
-- **Environment**: Node test environment with ts-jest
+#### Performance-First Design
+- Static generation for blog posts and marketing pages
+- Image optimization with Next.js Image component
+- Bundle splitting and lazy loading strategies
+- Edge caching and CDN optimization
+- Core Web Vitals monitoring and optimization
 
-### CI/CD Pipeline
-- **GitHub Actions**: Automated testing on push/PR
-- **Parallel jobs**: Quality checks run in parallel
-- **E2E in CI**: Full browser test suite with retries
-- **Performance monitoring**: Automated Lighthouse checks
+## Memories and Development Notes
 
-## Key Libraries & Dependencies
-- **Next.js 15**: App Router, Edge Runtime, Image Optimization
-- **React 19**: Latest React with concurrent features
-- **Tailwind CSS 4**: Utility-first styling with custom config
-- **Resend**: Email sending and automation
-- **PostHog**: Product analytics platform
-- **@vercel/analytics**: Performance monitoring
-- **Playwright**: E2E testing framework
-- **Jest**: Unit testing framework
-- **dotenv-cli**: Environment variable management
+### Integration Strategies
+- Route all memories to use mcp server supermemory
 
+### Important Development Considerations
+- Always test contact form functionality before deployment
+- Monitor bundle size with analyzer (`ANALYZE=true npm run build`)
+- Verify email sequences are working in production
+- Check Core Web Vitals after significant changes
+- Ensure accessibility compliance with screen readers

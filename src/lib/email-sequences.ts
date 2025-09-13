@@ -3,36 +3,7 @@
  * Automated follow-up sequences for different types of leads
  */
 
-export interface EmailSequenceStep {
-  id: string;
-  subject: string;
-  content: string;
-  delayDays: number;
-  conditions?: {
-    leadScore?: { min?: number; max?: number };
-    source?: string[];
-    hasDownloaded?: boolean;
-  };
-}
-
-export interface EmailSequence {
-  id: string;
-  name: string;
-  description: string;
-  steps: EmailSequenceStep[];
-}
-
-// Lead scoring system
-export interface LeadScoreFactors {
-  email: string;
-  firstName: string;
-  lastName?: string;
-  company?: string;
-  phone?: string;
-  message: string;
-  service?: string;
-  source?: string;
-}
+import type { EmailSequence, LeadScoreFactors } from '@/types/analytics';
 
 // Simple lead scoring based on basic contact info
 export function calculateLeadScore(factors: LeadScoreFactors): number {
@@ -270,11 +241,11 @@ Beautiful design is important, but it means nothing if your website doesn't:
 • Support your business growth
 
 Here's what actually matters:
-✅ Strategic user experience design
-✅ Conversion rate optimization
-✅ Performance optimization
-✅ Clear value proposition
-✅ Trust-building elements
+• Strategic user experience design
+• Conversion rate optimization
+• Performance optimization
+• Clear value proposition
+• Trust-building elements
 
 I wrote a detailed article about this: "Beyond 'Just Works': Why Businesses Need Websites That Dominate"
 

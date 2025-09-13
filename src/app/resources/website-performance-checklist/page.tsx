@@ -1,6 +1,7 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowDownTrayIcon, CheckCircleIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { BarChart3, Zap, Target } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Free Website Performance Checklist 2025 - Download PDF | Hudson Digital",
@@ -87,7 +88,7 @@ const checklistItems = [
   {
     category: "Analytics & Tracking",
     items: [
-      "Google Analytics configured",
+      "PostHog analytics configured",
       "Goal tracking setup",
       "Conversion events defined",
       "Heat mapping active",
@@ -222,7 +223,7 @@ export default function WebsiteChecklistPage() {
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-green-400 text-xl">📊</span>
+                  <BarChart3 className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">Data-Driven Results</h3>
@@ -232,7 +233,7 @@ export default function WebsiteChecklistPage() {
 
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-cyan-400 text-xl">⚡</span>
+                  <Zap className="w-6 h-6 text-cyan-400" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">Quick Implementation</h3>
@@ -242,7 +243,7 @@ export default function WebsiteChecklistPage() {
 
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-purple-400 text-xl">🎯</span>
+                  <Target className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">ROI-Focused</h3>

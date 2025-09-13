@@ -3,7 +3,8 @@
  * Replaces framer-motion components with regular HTML elements
  */
 
-import { ComponentProps, forwardRef } from 'react';
+import { forwardRef } from 'react';
+import type { ComponentProps } from 'react';
 import Image from 'next/image';
 import type { 
   MotionProps, 
@@ -93,5 +94,6 @@ export const useScroll = (): UseScrollReturn => ({
 });
 
 export const useTransform = (_value: UseScrollReturn['scrollY'], _input: TransformInput, output: TransformOutput): UseTransformReturn => {
-  return { get: () => output[0] };
+  // Ensure we never return `undefined` — use a safe fallback so the return type is string | number
+  return { get: () => (output[0] ?? 0) };
 };

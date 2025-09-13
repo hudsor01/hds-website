@@ -3,33 +3,7 @@
  * Integrates PostHog and custom analytics tracking
  */
 
-interface EventProperties {
-  [key: string]: string | number | boolean | undefined | null;
-}
-
-interface PageViewProperties {
-  url?: string;
-  referrer?: string;
-  title?: string;
-  path?: string;
-  search?: string;
-  hash?: string;
-}
-
-interface UserProperties {
-  email?: string;
-  name?: string;
-  company?: string;
-  plan?: string;
-  [key: string]: string | number | boolean | undefined;
-}
-
-interface PostHogLike {
-  init: (key: string, config: Record<string, unknown>) => void;
-  capture: (event: string, properties?: Record<string, unknown>) => void;
-  identify: (userId: string, properties?: Record<string, unknown>) => void;
-  reset: () => void;
-}
+import type { EventProperties, PageViewProperties, UserProperties, PostHogLike } from '@/types/analytics';
 
 class AnalyticsManager {
   private posthog: PostHogLike | null = null;
@@ -46,7 +20,7 @@ class AnalyticsManager {
     try {
       // PostHog initialization
       if (process.env.NEXT_PUBLIC_POSTHOG_KEY && typeof window !== 'undefined') {
-        const posthogLib = await import('./posthog-mock');
+        const posthogLib = await import('posthog-js');
         this.posthog = posthogLib.default;
         
         (this.posthog as PostHogLike).init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
@@ -145,17 +119,6 @@ class AnalyticsManager {
     };
 
     this.trackEvent('conversion', conversionData);
-
-    // Send to Google Analytics if available
-    const windowWithGtag = window as Window & { gtag?: (...args: unknown[]) => void };
-    if (typeof window !== 'undefined' && windowWithGtag.gtag) {
-      windowWithGtag.gtag('event', 'conversion', {
-        send_to: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-        value: value,
-        currency: 'USD',
-        ...properties,
-      });
-    }
   }
 
   /**

@@ -119,12 +119,12 @@ export default function HomePage() {
                   {/* Terminal Content */}
                   <div className="p-6 font-mono text-sm space-y-2" role="log">
                     <div className="text-cyan-400">$ npm run deploy --production</div>
-                    <div className="text-gray-300">✓ Build completed in 1.8s</div>
-                    <div className="text-gray-300">✓ Tests passed (147/147)</div>
-                    <div className="text-gray-300">✓ Security scan clean</div>
-                    <div className="text-blue-400">→ Deploying to production...</div>
-                    <div className="text-green-400">✓ Deployment successful</div>
-                    <div className="text-yellow-400">🚀 Live at https://client-app.com</div>
+                    <div className="text-gray-300">[OK] Build completed in 1.8s</div>
+                    <div className="text-gray-300">[OK] Tests passed (147/147)</div>
+                    <div className="text-gray-300">[OK] Security scan clean</div>
+                    <div className="text-blue-400">&gt; Deploying to production...</div>
+                    <div className="text-green-400">[OK] Deployment successful</div>
+                    <div className="text-yellow-400">[LIVE] at https://client-app.com</div>
                     
                     <div className="pt-2 space-y-1">
                       <div className="text-cyan-300">Performance: 100/100</div>

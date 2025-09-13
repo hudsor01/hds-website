@@ -17,7 +17,15 @@ export interface TransitionConfig {
   mass?: number;
   velocity?: number;
   repeat?: number;
-  [key: string]: unknown;
+  repeatType?: 'loop' | 'reverse' | 'mirror';
+  repeatDelay?: number;
+  times?: number[];
+  when?: string;
+  staggerChildren?: number;
+  delayChildren?: number;
+  x?: { type?: string; stiffness?: number; damping?: number; duration?: number; };
+  opacity?: { type?: string; stiffness?: number; damping?: number; duration?: number; };
+  scale?: { type?: string; stiffness?: number; damping?: number; duration?: number; };
 }
 
 // Animation target state (permissive for stub implementation)
@@ -27,12 +35,32 @@ export interface AnimationTarget {
   scale?: number | number[];
   rotate?: number | number[];
   opacity?: number | number[];
-  [key: string]: unknown;
+  translateX?: number | string;
+  translateY?: number | string;
+  translateZ?: number | string;
+  rotateX?: number | string;
+  rotateY?: number | string;
+  rotateZ?: number | string;
+  scaleX?: number;
+  scaleY?: number;
+  scaleZ?: number;
+  skewX?: number | string;
+  skewY?: number | string;
+  backgroundColor?: string;
+  background?: string;
+  color?: string;
+  borderRadius?: number | string;
+  boxShadow?: string;
+  filter?: string;
+  backdropFilter?: string;
+  zIndex?: number;
+  transformOrigin?: string;
+  transformStyle?: string;
+  transition?: TransitionConfig;
 }
 
-// Variant definition (permissive for stub implementation)  
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Variant = AnimationTarget | ((custom?: any) => AnimationTarget);
+// Variant definition (permissive for stub implementation)
+export type Variant = AnimationTarget | ((custom?: number | Record<string, string | number | boolean>) => AnimationTarget);
 export type Variants = Record<string, Variant>;
 
 // Drag constraints
@@ -50,29 +78,6 @@ export interface ViewportConfig {
   margin?: string;
 }
 
-// Motion component props
-export interface MotionProps {
-  initial?: AnimationTarget | string | boolean;
-  animate?: AnimationTarget | string;
-  exit?: AnimationTarget | string;
-  variants?: Variants;
-  transition?: TransitionConfig;
-  whileHover?: AnimationTarget | string;
-  whileTap?: AnimationTarget | string;
-  whileInView?: AnimationTarget | string;
-  whileDrag?: AnimationTarget | string;
-  whileFocus?: AnimationTarget | string;
-  drag?: boolean | 'x' | 'y';
-  dragConstraints?: DragConstraints;
-  dragElastic?: boolean | number;
-  dragMomentum?: boolean;
-  layoutId?: string;
-  layout?: boolean | 'position' | 'size';
-  layoutDependency?: React.DependencyList;
-  viewport?: ViewportConfig;
-  custom?: Record<string, unknown> | number | string;
-  onDragEnd?: () => void;
-}
 
 // Scroll hook return type
 export interface ScrollMotionValue {

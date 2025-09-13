@@ -1,6 +1,6 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -219,10 +219,10 @@ export default function BlogPost() {
               <p>Most agencies will tell you that a &quot;good enough&quot; website is sufficient. They&apos;ll deliver something that checks all the obvious boxes:</p>
               
               <ul className="space-y-2 ml-6">
-                <li className="flex items-center gap-2"><span className="text-green-400">✅</span> Mobile responsive</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✅</span> Contact form that works</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✅</span> Basic SEO setup</li>
-                <li className="flex items-center gap-2"><span className="text-green-400">✅</span> Decent loading speed</li>
+                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Mobile responsive</li>
+                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Contact form that works</li>
+                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Basic SEO setup</li>
+                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Decent loading speed</li>
               </ul>
               
               <p><strong className="text-cyan-400">But here&apos;s what they won&apos;t tell you:</strong> Every one of your competitors has the exact same checklist.</p>

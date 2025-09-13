@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
@@ -97,7 +97,6 @@ export default function PrivacyPage() {
               <div className="text-gray-300 space-y-4">
                 <p>Our website uses third-party services that may collect information:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>Google Analytics:</strong> Website traffic analysis</li>
                   <li><strong>PostHog:</strong> Product analytics and user experience optimization</li>
                   <li><strong>Vercel Analytics:</strong> Performance monitoring</li>
                   <li><strong>Resend:</strong> Email communications</li>

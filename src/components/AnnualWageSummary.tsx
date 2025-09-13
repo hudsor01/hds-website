@@ -1,7 +1,8 @@
 import React from 'react'
-import { formatCurrency, formatDate } from '@/lib/format-utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
 import { TAX_DATA } from '@/lib/paystub-data'
+import { FileText } from 'lucide-react'
 
 interface AnnualWageSummaryProps {
   employeeData: PaystubData
@@ -11,6 +12,10 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
   const handleSaveAsPDF = () => {
     window.print()
   }
+
+  // Add a safe lookup for the Social Security wage base to avoid possible undefined access
+  const ssWageBase = TAX_DATA[employeeData.taxYear]?.ssWageBase ?? employeeData.totals.grossPay
+  const socialSecurityWages = Math.min(employeeData.totals.grossPay, ssWageBase)
 
   return (
     <div style={{ position: 'relative' }}>
@@ -38,7 +43,8 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#047857'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#059669'}
         >
-          📄 Save as PDF
+          <FileText className="inline-block w-4 h-4 mr-2" />
+          Save as PDF
         </button>
       </div>
 
@@ -374,7 +380,7 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
             backgroundColor: 'white'
           }}>
             <strong>Box 3 - Social security wages:</strong><br/>
-            {formatCurrency(Math.min(employeeData.totals.grossPay, TAX_DATA[employeeData.taxYear].ssWageBase))}
+            {formatCurrency(socialSecurityWages)}
           </div>
 
           <div style={{

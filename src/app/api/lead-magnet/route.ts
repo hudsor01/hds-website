@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { 
@@ -81,7 +82,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
         
         <a href="https://hudsondigitalsolutions.com${resource.downloadUrl}" 
            style="display: inline-block; background: #22c55e; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-          📥 Download Now
+          Download Now
         </a>
       </div>
       
@@ -89,7 +90,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
         <h3 style="color: #1e293b; margin-bottom: 15px;">What's Next?</h3>
         
         <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0;">
-          <h4 style="color: #0891b2; margin-bottom: 10px;">🚀 Ready to Implement?</h4>
+          <h4 style="color: #0891b2; margin-bottom: 10px;">Ready to Implement?</h4>
           <p style="color: #64748b; margin-bottom: 15px;">
             Need help implementing these strategies? Our team has helped 150+ businesses achieve an average 340% ROI.
           </p>
@@ -100,7 +101,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
         </div>
         
         <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0;">
-          <h4 style="color: #0891b2; margin-bottom: 10px;">📚 More Resources</h4>
+          <h4 style="color: #0891b2; margin-bottom: 10px;">More Resources</h4>
           <p style="color: #64748b; margin-bottom: 15px;">
             Get strategic insights delivered to your inbox. No spam, just valuable content to grow your business.
           </p>
@@ -223,7 +224,7 @@ export async function POST(request: NextRequest) {
               },
               body: JSON.stringify({
                 embeds: [{
-                  title: '📥 New Lead Magnet Download',
+                  title: 'New Lead Magnet Download',
                   color: 0x22c55e, // Green color
                   fields: [
                     {

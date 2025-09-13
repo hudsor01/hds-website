@@ -17,16 +17,6 @@ export interface AnalyticsPayload {
   user_agent: string;
 }
 
-export interface ContactFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  service?: string;
-  bestTimeToContact?: string;
-  message: string;
-}
 
 export interface ContactResponse {
   success: boolean;
@@ -58,6 +48,10 @@ export interface ApiResponse<T = void> {
 
 // Rate Limiting Types
 // Import NextRequest from 'next/server' when using these types
+export interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
 export interface RateLimitConfig {
   windowMs: number; // Time window in milliseconds
   maxRequests: number; // Maximum requests per window

@@ -1,22 +1,10 @@
 // Feature flags management for PostHog
 import React, { useEffect, useState } from 'react';
 // import { getFeatureFlag, isFeatureEnabled } from './unified-analytics';
-import { logger } from './logger';
-
-// Feature flag keys - centralized for consistency
-export const FEATURE_FLAGS = {
-  CONTACT_FORM_V2: 'contact_form_v2',
-  WEB_VITALS_TRACKING: 'web_vitals_tracking', 
-  ENHANCED_LEAD_SCORING: 'enhanced_lead_scoring',
-  SESSION_RECORDING_ENABLED: 'session_recording_enabled',
-  PRICING_DISPLAY: 'pricing_display',
-} as const;
-
-// Type for feature flag keys
-export type FeatureFlagKey = typeof FEATURE_FLAGS[keyof typeof FEATURE_FLAGS];
+import { FEATURE_FLAGS, type FeatureFlagKey, type FeatureFlagConfig } from '@/types/utils';
 
 // Feature flag configuration for documentation and validation
-export const FEATURE_FLAG_CONFIG = {
+export const FEATURE_FLAG_CONFIG: Record<FeatureFlagKey, FeatureFlagConfig> = {
   [FEATURE_FLAGS.CONTACT_FORM_V2]: {
     description: 'A/B test new contact form with improved UX and validation',
     type: 'boolean' as const,
@@ -57,12 +45,12 @@ export class FeatureFlags {
   static isEnabled(flagKey: FeatureFlagKey): boolean {
     try {
       // const isEnabled = isFeatureEnabled(flagKey);
-      const isEnabled = FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
-      logger.debug(`Feature flag ${flagKey}: ${isEnabled}`);
+      const isEnabled = Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue) || false;
+      console.debug(`Feature flag ${flagKey}: ${isEnabled}`);
       return isEnabled;
     } catch (error) {
-      logger.warn(`Error checking feature flag ${flagKey}`, { error });
-      return FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
+      console.warn(`Error checking feature flag ${flagKey}`, error);
+      return Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue) || false;
     }
   }
 
@@ -73,10 +61,10 @@ export class FeatureFlags {
     try {
       // const value = getFeatureFlag(flagKey);
       const value = FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
-      logger.debug(`Feature flag ${flagKey} value:`, { value });
+      console.debug(`Feature flag ${flagKey} value:`, value);
       return value;
     } catch (error) {
-      logger.warn(`Error getting feature flag ${flagKey} value`, { error });
+      console.warn(`Error getting feature flag ${flagKey} value`, error);
       return FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
     }
   }
@@ -134,7 +122,7 @@ export class FeatureFlags {
    */
   static logAllFlags(): void {
     const flags = this.getAllFlags();
-    logger.info('Current feature flag states:', flags);
+    console.info('Current feature flag states:', flags);
   }
 }
 
@@ -166,12 +154,6 @@ export function useFeatureFlag(flagKey: FeatureFlagKey): boolean {
 }
 
 // Higher-order component for conditional rendering based on feature flags
-
-interface FeatureFlagWrapperProps {
-  flag: FeatureFlagKey;
-  fallback?: React.ReactNode;
-  children: React.ReactNode;
-}
 
 export function FeatureFlagWrapper({ flag, fallback = null, children }: FeatureFlagWrapperProps) {
   const isEnabled = useFeatureFlag(flag);
