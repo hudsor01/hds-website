@@ -100,7 +100,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
 
   if (isSubmitted) {
     return (
-      <div className={`bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
+      <div className={`bg-linear-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
             <div className="text-green-400 text-2xl">✓</div>
@@ -123,7 +123,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
   }
 
   return (
-    <div className={`bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
+    <div className={`bg-linear-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
       <div className="text-center mb-10">
         <div className="inline-flex items-center justify-center w-12 h-12 bg-cyan-500/20 rounded-full mb-4">
           <div className="w-6 h-6 bg-cyan-400 rounded-sm"></div>
@@ -252,7 +252,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 backdrop-blur-sm">
             <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <div className="w-5 h-5 text-red-400">⚠</div>
               </div>
               <p className="text-red-300 text-sm font-medium">{error}</p>
@@ -264,7 +264,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="group relative w-full overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/30 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98]"
+          className="group relative w-full overflow-hidden bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/30 disabled:cursor-not-allowed disabled:shadow-none transform hover:scale-[1.02] active:scale-[0.98]"
         >
           <div className="flex items-center justify-center space-x-3">
             {isSubmitting ? (
@@ -281,7 +281,7 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
           </div>
           
           {/* Shine effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
         </button>
       </form>
 

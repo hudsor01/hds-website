@@ -137,7 +137,7 @@ function optimizeInternalLinking() {
 }
 
 // Submit URL to Google for indexing (requires Search Console API)
-export function requestGoogleIndexing(_url: string) {
+export function requestGoogleIndexing() {
   // This would require proper Google Search Console API integration
   // Request indexing for URL implementation would go here
 

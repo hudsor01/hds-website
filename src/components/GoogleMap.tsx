@@ -26,7 +26,7 @@ export default function GoogleMap() {
         />
         
         {/* Overlay gradient for better integration */}
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent"></div>
       </div>
       
       <div className="mt-6 text-center">

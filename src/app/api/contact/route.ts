@@ -10,6 +10,13 @@ import {
   detectInjectionAttempt 
 } from '@/lib/security-utils';
 import { verifyCSRFToken } from '@/lib/csrf';
+import { 
+  calculateLeadScore, 
+  getEmailSequenceForLead, 
+  EMAIL_SEQUENCES, 
+  processEmailTemplate 
+} from '@/lib/email-sequences';
+import { scheduleEmailSequence } from '@/lib/scheduled-emails';
 import type { ContactFormData } from '@/types/api';
 
 // Initialize rate limiter for contact form
@@ -30,8 +37,8 @@ function getClientIP(request: NextRequest): string {
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-// Secure email template with HTML escaping
-function generateAdminNotificationHTML(data: ContactFormData): string {
+// Secure email template with HTML escaping and lead scoring
+function generateAdminNotificationHTML(data: ContactFormData, leadScore?: number, sequenceId?: string): string {
   // All user input is HTML-escaped to prevent injection
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -47,6 +54,15 @@ function generateAdminNotificationHTML(data: ContactFormData): string {
         ${data.bestTimeToContact ? `<p><strong>Best Time to Contact:</strong> ${escapeHtml(data.bestTimeToContact)}</p>` : ''}
       </div>
 
+      ${leadScore ? `
+      <div style="background: ${leadScore >= 70 ? '#dcfce7' : leadScore >= 40 ? '#fef3c7' : '#fef2f2'}; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h2 style="color: ${leadScore >= 70 ? '#15803d' : leadScore >= 40 ? '#d97706' : '#dc2626'};">Lead Intelligence</h2>
+        <p><strong>Lead Score:</strong> ${leadScore}/100 ${leadScore >= 70 ? '(HIGH PRIORITY)' : leadScore >= 40 ? '(QUALIFIED)' : '(NURTURE)'}</p>
+        <p><strong>Email Sequence:</strong> ${sequenceId || 'standard-prospect'}</p>
+        <p><strong>Recommended Action:</strong> ${leadScore >= 70 ? 'Schedule call within 24 hours' : leadScore >= 40 ? 'Follow up within 2-3 days' : 'Add to nurture sequence'}</p>
+      </div>
+      ` : ''}
+
       <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
         <h2>Message</h2>
         <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>
@@ -54,7 +70,8 @@ function generateAdminNotificationHTML(data: ContactFormData): string {
 
       <p style="margin-top: 30px; color: #64748b; font-size: 12px;">
         Submitted: ${new Date().toLocaleString()}<br>
-        Source: Hudson Digital Solutions Contact Form
+        Source: Hudson Digital Solutions Contact Form<br>
+        ${leadScore ? `Lead Score: ${leadScore}/100 | Sequence: ${sequenceId}` : ''}
       </p>
     </div>
   `
@@ -118,18 +135,59 @@ export async function POST(request: NextRequest) {
       // Log but still process if validation passed - the input is already sanitized
     }
     
-    // Step 6: Send admin notification email with sanitized headers
+    // Step 6: Calculate lead score and determine email sequence
+    const leadScore = calculateLeadScore({
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName || '',
+      company: data.company,
+      phone: data.phone,
+      message: data.message,
+      service: data.service,
+      source: 'contact-form'
+    });
+    
+    const sequenceId = getEmailSequenceForLead(leadScore, 'contact-form');
+    const sequence = EMAIL_SEQUENCES[sequenceId];
+    
+    // Prepare email variables for sequences
+    const emailVariables = {
+      firstName: data.firstName,
+      lastName: data.lastName || '',
+      company: data.company || 'your business',
+      service: data.service || 'web development',
+      email: data.email
+    };
+    
+    // Step 7: Send admin notification email with lead score
     if (resend) {
       try {
         // Sanitize email subject to prevent header injection
-        const safeSubject = sanitizeEmailHeader(`New Project Inquiry - ${data.firstName} ${data.lastName}`);
+        const safeSubject = sanitizeEmailHeader(`New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`);
         
+        // Send admin notification with lead scoring info
         await resend.emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: ['hello@hudsondigitalsolutions.com'],
           subject: safeSubject,
-          html: generateAdminNotificationHTML(data)
-        })
+          html: generateAdminNotificationHTML(data, leadScore, sequenceId)
+        });
+        
+        // Send immediate welcome/follow-up email to prospect based on sequence
+        const firstStep = sequence.steps.find(step => step.delayDays === 0);
+        if (firstStep) {
+          const processedContent = processEmailTemplate(firstStep.content, emailVariables);
+          const processedSubject = processEmailTemplate(firstStep.subject, emailVariables);
+          
+          await resend.emails.send({
+            from: 'Richard Hudson <hello@hudsondigitalsolutions.com>',
+            to: [data.email],
+            subject: sanitizeEmailHeader(processedSubject),
+            html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+              ${processedContent.split('\n').map(line => `<p>${escapeHtml(line)}</p>`).join('')}
+            </div>`
+          });
+        }
         
         // Send Discord notification if webhook URL is configured
         if (process.env.DISCORD_WEBHOOK_URL) {
@@ -150,8 +208,8 @@ export async function POST(request: NextRequest) {
                       inline: true
                     },
                     {
-                      name: 'Details',
-                      value: `**Service:** ${escapeHtml(data.service || 'Not specified')}\n**Company:** ${escapeHtml(data.company || 'Not specified')}\n**Best Time:** ${escapeHtml(data.bestTimeToContact || 'Not specified')}`,
+                      name: 'Details & Score',
+                      value: `**Lead Score:** ${leadScore}/100\n**Service:** ${escapeHtml(data.service || 'Not specified')}\n**Company:** ${escapeHtml(data.company || 'Not specified')}\n**Sequence:** ${sequenceId}`,
                       inline: true
                     },
                     {
@@ -181,6 +239,14 @@ export async function POST(request: NextRequest) {
           success: true
         })
         
+        // Schedule follow-up emails in the sequence (after successful email send)
+        scheduleEmailSequence(
+          data.email,
+          `${data.firstName} ${data.lastName}`,
+          sequenceId,
+          emailVariables
+        );
+        
         return applySecurityHeaders(response)
         
       } catch (emailError) {
@@ -193,6 +259,14 @@ export async function POST(request: NextRequest) {
         )
       }
     } else {
+      // Schedule follow-up emails even if email service is not configured
+      scheduleEmailSequence(
+        data.email,
+        `${data.firstName} ${data.lastName}`,
+        sequenceId,
+        emailVariables
+      );
+      
       return NextResponse.json(
         { error: 'Email service not configured' },
         { status: 500 }

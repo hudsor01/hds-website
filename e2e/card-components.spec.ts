@@ -133,7 +133,7 @@ test.describe('Modernized Card Components', () => {
       
       // Check for gradient background and hover effects
       const cardClasses = await statCard.getAttribute('class');
-      expect(cardClasses).toContain('bg-gradient-to-br');
+      expect(cardClasses).toContain('bg-linear-to-br');
       expect(cardClasses).toContain('transition-all');
       expect(cardClasses).toContain('duration-300');
       

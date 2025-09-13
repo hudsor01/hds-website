@@ -1,15 +1,118 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import 'tailwindcss';
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Tailwind CSS v4 custom utilities for undefined classes */
+@utility glass-light {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Brand color utilities */
+@utility text-brand-cyan {
+  color: #22d3ee;
+}
+
+@utility text-brand-blue {
+  color: #0ea5e9;
+}
+
+@utility bg-brand-cyan {
+  background-color: #22d3ee;
+}
+
+@utility bg-brand-blue {
+  background-color: #0ea5e9;
+}
+
+/* Hover utilities need to be applied via CSS not @utility */
+
+/* Extended color utilities */
+@utility text-accent-400 {
+  color: #4ade80;
+}
+
+@utility text-warning-400 {
+  color: #fb923c;
+}
+
+@utility text-secondary-400 {
+  color: #22d3ee;
+}
+
+@utility bg-secondary-400 {
+  background-color: #22d3ee;
+}
+
+/* Hover states handled by Tailwind's built-in utilities */
+
+@utility bg-secondary-400-10 {
+  background-color: rgba(34, 211, 238, 0.1);
+}
+
+@utility bg-secondary-400-40 {
+  background-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Group hover states handled by Tailwind's built-in utilities */
+
+/* Gradient utilities */
+@utility bg-gradient-accent {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+@utility bg-gradient-secondary {
+  background: linear-gradient(135deg, #22d3ee, #0891b2);
+}
+
+@utility bg-gradient-warning {
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+}
+
+/* Shadow utilities */
+@utility shadow-accent-500-30 {
+  box-shadow:
+    0 10px 15px -3px rgba(34, 197, 94, 0.3),
+    0 4px 6px -2px rgba(34, 197, 94, 0.05);
+}
+
+@utility shadow-warning-500-30 {
+  box-shadow:
+    0 10px 15px -3px rgba(251, 146, 60, 0.3),
+    0 4px 6px -2px rgba(251, 146, 60, 0.05);
+}
+
+@utility shadow-secondary-500-30 {
+  box-shadow:
+    0 10px 15px -3px rgba(34, 211, 238, 0.3),
+    0 4px 6px -2px rgba(34, 211, 238, 0.05);
+}
+
+/* Hover shadow effects handled by Tailwind's built-in utilities */
+
+/* Font family fix for roboto-flex */
+@utility font-roboto-flex {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* Comprehensive Accessibility and Focus Management */
+
+/* Custom focus ring utilities */
+@utility focus-ring {
+  outline: 2px solid var(--color-cyan-400);
+  outline-offset: 2px;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 /* Light mode colors */
@@ -49,27 +152,27 @@ body {
 
 /* Dark mode utilities */
 .bg-gradient-hero {
-  @apply bg-gradient-to-br from-black via-gray-900 to-black;
+  @apply bg-linear-to-br from-black via-gray-900 to-black;
 }
 
 .dark .bg-gradient-hero {
-  @apply bg-gradient-to-br from-black via-gray-900 to-black;
+  @apply bg-linear-to-br from-black via-gray-900 to-black;
 }
 
 .light .bg-gradient-hero {
-  @apply bg-gradient-to-br from-slate-100 via-gray-100 to-white;
+  @apply bg-linear-to-br from-slate-100 via-gray-100 to-white;
 }
 
 .bg-gradient-primary {
-  @apply bg-gradient-to-b from-gray-900 to-black;
+  @apply bg-linear-to-b from-gray-900 to-black;
 }
 
 .dark .bg-gradient-primary {
-  @apply bg-gradient-to-b from-gray-900 to-black;
+  @apply bg-linear-to-b from-gray-900 to-black;
 }
 
 .light .bg-gradient-primary {
-  @apply bg-gradient-to-b from-gray-50 to-white;
+  @apply bg-linear-to-b from-gray-50 to-white;
 }
 
 /* Glass morphism effects */
@@ -87,11 +190,11 @@ body {
 
 /* Text gradients */
 .text-gradient-neon {
-  @apply bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent;
+  @apply bg-linear-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent;
 }
 
 .text-gradient-secondary {
-  @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
+  @apply bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
 }
 
 /* Glow effects */
@@ -193,103 +296,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-500 dark:bg-gray-500;
-}
-
-/* Tailwind CSS v4 custom utilities for undefined classes */
-@utility glass-light {
-  backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Brand color utilities */
-@utility text-brand-cyan {
-  color: #22d3ee;
-}
-
-@utility text-brand-blue {
-  color: #0ea5e9;
-}
-
-@utility bg-brand-cyan {
-  background-color: #22d3ee;
-}
-
-@utility bg-brand-blue {
-  background-color: #0ea5e9;
-}
-
-/* Hover utilities need to be applied via CSS not @utility */
-
-/* Extended color utilities */
-@utility text-accent-400 {
-  color: #4ade80;
-}
-
-@utility text-warning-400 {
-  color: #fb923c;
-}
-
-@utility text-secondary-400 {
-  color: #22d3ee;
-}
-
-@utility bg-secondary-400 {
-  background-color: #22d3ee;
-}
-
-/* Hover states handled by Tailwind's built-in utilities */
-
-@utility bg-secondary-400-10 {
-  background-color: rgba(34, 211, 238, 0.1);
-}
-
-@utility bg-secondary-400-40 {
-  background-color: rgba(34, 211, 238, 0.4);
-}
-
-/* Group hover states handled by Tailwind's built-in utilities */
-
-/* Gradient utilities */
-@utility bg-gradient-accent {
-  background: linear-gradient(135deg, #4ade80, #22c55e);
-}
-
-@utility bg-gradient-secondary {
-  background: linear-gradient(135deg, #22d3ee, #0891b2);
-}
-
-@utility bg-gradient-warning {
-  background: linear-gradient(135deg, #fb923c, #ea580c);
-}
-
-/* Shadow utilities */
-@utility shadow-accent-500-30 {
-  box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3), 0 4px 6px -2px rgba(34, 197, 94, 0.05);
-}
-
-@utility shadow-warning-500-30 {
-  box-shadow: 0 10px 15px -3px rgba(251, 146, 60, 0.3), 0 4px 6px -2px rgba(251, 146, 60, 0.05);
-}
-
-@utility shadow-secondary-500-30 {
-  box-shadow: 0 10px 15px -3px rgba(34, 211, 238, 0.3), 0 4px 6px -2px rgba(34, 211, 238, 0.05);
-}
-
-/* Hover shadow effects handled by Tailwind's built-in utilities */
-
-/* Font family fix for roboto-flex */
-@utility font-roboto-flex {
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
-  font-weight: 700;
-}
-
-/* Comprehensive Accessibility and Focus Management */
-
-/* Custom focus ring utilities */
-@utility focus-ring {
-  outline: 2px solid theme("colors.cyan.400");
-  outline-offset: 2px;
 }
 
 /* Global focus management */

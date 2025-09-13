@@ -85,7 +85,7 @@ const process = [
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+    <main className="min-h-screen bg-linear-to-br from-slate-950 via-gray-900 to-slate-950">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Elements */}
@@ -102,9 +102,9 @@ export default function ServicesPage() {
             <div>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight">
                 <span className="inline-block mr-4">Technical</span>
-                <span className="inline-block mr-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Services</span>
+                <span className="inline-block mr-4 bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Services</span>
                 <span className="inline-block mr-4">That</span>
-                <span className="inline-block mr-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Scale</span>
+                <span className="inline-block mr-4 bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Scale</span>
               </h1>
             </div>
 
@@ -117,8 +117,8 @@ export default function ServicesPage() {
             <div>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
                 <Link href="/contact">
-                  <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+                    <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     <span className="relative z-10">Start Your Project</span>
                     <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -140,7 +140,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Our Services
               </span>
             </h2>
@@ -158,7 +158,7 @@ export default function ServicesPage() {
                   className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300"
                 >
                   <div className="flex items-center mb-6">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${service.gradient}/20 border border-cyan-500/30`}>
+                    <div className={`p-3 rounded-xl bg-linear-to-br ${service.gradient}/20 border border-cyan-500/30`}>
                       <Icon className="h-8 w-8 text-cyan-400" />
                     </div>
                   </div>
@@ -174,8 +174,8 @@ export default function ServicesPage() {
                   <div className="space-y-3 mb-8">
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
-                        <div className="flex-shrink-0 mr-3 mt-1">
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center">
+                        <div className="shrink-0 mr-3 mt-1">
+                          <div className="w-5 h-5 rounded-full bg-linear-to-r from-green-400 to-emerald-500 flex items-center justify-center">
                             <CheckIcon className="h-3 w-3 text-black" />
                           </div>
                         </div>
@@ -190,7 +190,7 @@ export default function ServicesPage() {
                   
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-to-r hover:from-cyan-500/30 hover:to-purple-500/30 hover:border-cyan-400 transition-all duration-300"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-linear-to-r hover:from-cyan-500/30 hover:to-purple-500/30 hover:border-cyan-400 transition-all duration-300"
                   >
                     Get Started
                     <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -206,7 +206,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Proven Results
               </span>
             </h2>
@@ -233,7 +233,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Our Process
               </span>
             </h2>
@@ -265,10 +265,10 @@ export default function ServicesPage() {
       {/* CTA Section */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 text-center bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
+          <div className="relative z-10 text-center bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
               Ready to accelerate 
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 {" "}your growth?
               </span>
             </h2>
@@ -280,9 +280,9 @@ export default function ServicesPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-linear-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
