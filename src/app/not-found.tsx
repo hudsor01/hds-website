@@ -19,7 +19,7 @@ export default function NotFound() {
       <div className="max-w-2xl mx-auto text-center">
         {/* 404 Visual */}
         <div className="mb-12">
-          <h1 className="text-8xl lg:text-9xl font-black text-transparent bg-gradient-to-r from-secondary-400 to-accent-400 bg-clip-text mb-4">
+          <h1 className="text-8xl lg:text-9xl font-black text-transparent bg-linear-to-r from-secondary-400 to-accent-400 bg-clip-text mb-4">
             404
           </h1>
           <div className="w-32 h-1 bg-gradient-secondary mx-auto rounded-full glow-cyan"></div>

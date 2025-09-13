@@ -126,7 +126,7 @@ export default function ConversionToolkitPage() {
             {toolkitItems.map((item, index) => (
               <div key={index} className="glass-morphism bg-black/60 border border-gray-700 rounded-xl p-8 hover:border-cyan-300/50 transition-all duration-300">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-cyan-400/20 to-green-400/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-linear-to-br from-cyan-400/20 to-green-400/20 rounded-lg flex items-center justify-center shrink-0">
                     <item.icon className="w-6 h-6 text-cyan-400" />
                   </div>
                   <div className="flex-1">
@@ -135,7 +135,7 @@ export default function ConversionToolkitPage() {
                     <ul className="space-y-2">
                       {item.items.map((subItem, subIndex) => (
                         <li key={subIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                          <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                          <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                           {subItem}
                         </li>
                       ))}
@@ -188,7 +188,7 @@ export default function ConversionToolkitPage() {
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 bg-linear-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
                   M
                 </div>
                 <div>
@@ -203,7 +203,7 @@ export default function ConversionToolkitPage() {
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 bg-linear-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
                   S
                 </div>
                 <div>

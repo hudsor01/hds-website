@@ -194,7 +194,7 @@ export default function WebsiteChecklistPage() {
                 <ul className="space-y-2">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                      <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -221,7 +221,7 @@ export default function WebsiteChecklistPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center shrink-0">
                   <span className="text-green-400 text-xl">📊</span>
                 </div>
                 <div>
@@ -231,7 +231,7 @@ export default function WebsiteChecklistPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center shrink-0">
                   <span className="text-cyan-400 text-xl">⚡</span>
                 </div>
                 <div>
@@ -241,7 +241,7 @@ export default function WebsiteChecklistPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center shrink-0">
                   <span className="text-purple-400 text-xl">🎯</span>
                 </div>
                 <div>
@@ -252,7 +252,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-green-400/20 to-cyan-400/20 border border-green-400/30 rounded-lg p-6">
+              <div className="bg-linear-to-r from-green-400/20 to-cyan-400/20 border border-green-400/30 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-white mb-3">Real Client Results</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">

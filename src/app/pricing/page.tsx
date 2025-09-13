@@ -167,7 +167,7 @@ export default function PricingPage() {
                   <ul className="space-y-3">
                     {tier.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <CheckIcon className="w-5 h-5 text-accent-400 mt-0.5 flex-shrink-0" />
+                        <CheckIcon className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
                         <span className="text-gray-300 text-sm">{feature}</span>
                       </li>
                     ))}
@@ -182,7 +182,7 @@ export default function PricingPage() {
                     <ul className="space-y-3">
                       {tier.notIncluded.map((item, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <XMarkIcon className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                          <XMarkIcon className="w-5 h-5 text-gray-500 mt-0.5 shrink-0" />
                           <span className="text-gray-400 text-sm">{item}</span>
                         </li>
                       ))}

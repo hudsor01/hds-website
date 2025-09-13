@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 const ASPECT_RATIOS = {
   square: "aspect-square",
   video: "aspect-video", 
-  portrait: "aspect-[3/4]",
-  landscape: "aspect-[4/3]"
+  portrait: "aspect-3/4",
+  landscape: "aspect-4/3"
 } as const;
 
 const BASE_CONTAINER_CLASSES = 'relative overflow-hidden rounded-lg';
