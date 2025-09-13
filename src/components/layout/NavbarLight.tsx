@@ -16,6 +16,7 @@ import {
 const navigation: NavigationItem[] = [
   { name: "Services", href: "/services" },
   { name: "Portfolio", href: "/portfolio" },
+  { name: "Tools", href: "/paystub-generator" },
   { name: "About", href: "/about" },
   { name: "Pricing", href: "/pricing" },
 ];
