@@ -209,7 +209,7 @@ async function sendScheduledEmail(
     scheduledEmail.status = "sent";
     scheduledEmail.sentAt = new Date();
 
-    console.log(
+    console.warn(
       `Sent scheduled email: ${processedSubject} to ${scheduledEmail.recipientEmail}`
     );
   } catch (error) {
@@ -256,7 +256,7 @@ export function cancelEmailSequence(
       )
   );
 
-  console.log(
+  console.warn(
     `Cancelled scheduled emails for ${recipientEmail}${
       sequenceId ? ` in sequence ${sequenceId}` : ""
     }`
