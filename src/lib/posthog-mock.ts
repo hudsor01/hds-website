@@ -13,19 +13,19 @@ export interface PostHogMock {
 
 const postHogMock: PostHogMock = {
   init: (apiKey: string, config?: Record<string, unknown>) => {
-    console.log('PostHog mock initialized with key:', apiKey, config);
+    console.warn('PostHog mock initialized with key:', apiKey, config);
   },
   capture: (event: string, properties?: Record<string, unknown>) => {
-    console.log('PostHog event:', event, properties);
+    console.warn('PostHog event:', event, properties);
   },
   identify: (userId: string, properties?: Record<string, unknown>) => {
-    console.log('PostHog identify:', userId, properties);
+    console.warn('PostHog identify:', userId, properties);
   },
   reset: () => {
-    console.log('PostHog reset');
+    console.warn('PostHog reset');
   },
   isFeatureEnabled: (flag: string) => {
-    console.log('PostHog feature flag check:', flag);
+    console.warn('PostHog feature flag check:', flag);
     return false;
   }
 };
