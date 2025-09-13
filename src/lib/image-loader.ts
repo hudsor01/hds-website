@@ -1,12 +1,10 @@
 // Custom image loader for optimized mobile performance
-export interface ImageLoaderProps {
-  src: string;
-  width: number;
-  quality?: number;
-}
+import type { ImageLoaderProps, ImageSizes, ImagePreset, LazyLoadConfig } from '@/types/utils';
+
+export type { ImageLoaderProps };
 
 // Image sizes for responsive loading
-export const IMAGE_SIZES = {
+export const IMAGE_SIZES: Record<string, ImageSizes> = {
   mobile: {
     small: 320,
     medium: 640,
@@ -64,14 +62,14 @@ export function generateSizesAttribute(): string {
 }
 
 // Lazy loading configuration
-export const LAZY_LOAD_CONFIG = {
+export const LAZY_LOAD_CONFIG: LazyLoadConfig = {
   root: null,
   rootMargin: '50px',
   threshold: 0.01,
 };
 
 // Image optimization presets
-export const IMAGE_PRESETS = {
+export const IMAGE_PRESETS: Record<string, ImagePreset> = {
   thumbnail: {
     width: 150,
     height: 150,

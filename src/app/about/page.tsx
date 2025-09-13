@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { SEO_CONFIG } from "@/utils/seo";
 import Link from "next/link";
 import { 
@@ -12,26 +12,26 @@ import {
   BoltIcon,
   ArrowRightIcon
 } from "@heroicons/react/24/outline";
-import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
+import { BackgroundPattern } from "@/components/BackgroundPattern";
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
-  title: SEO_CONFIG.about.title,
-  description: SEO_CONFIG.about.description,
-  keywords: SEO_CONFIG.about.keywords,
+  title: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions',
+  description: SEO_CONFIG.about?.description || 'Learn about Hudson Digital Solutions',
+  keywords: SEO_CONFIG.about?.keywords || [],
   openGraph: {
-    title: SEO_CONFIG.about.ogTitle ?? SEO_CONFIG.about.title,
-    description: SEO_CONFIG.about.ogDescription ?? SEO_CONFIG.about.description,
-    url: SEO_CONFIG.about.canonical,
+    title: SEO_CONFIG.about?.ogTitle ?? SEO_CONFIG.about?.title ?? 'About Hudson Digital Solutions',
+    description: SEO_CONFIG.about?.ogDescription ?? SEO_CONFIG.about?.description ?? 'Learn about Hudson Digital Solutions',
+    url: SEO_CONFIG.about?.canonical || '',
     images: [
       {
-        url: SEO_CONFIG.about.ogImage ?? "",
-        alt: SEO_CONFIG.about.title,
+        url: SEO_CONFIG.about?.ogImage ?? "",
+        alt: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions',
       },
     ],
   },
   alternates: {
-    canonical: SEO_CONFIG.about.canonical,
+    canonical: SEO_CONFIG.about?.canonical || '',
   },
   robots: {
     index: true,
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   other: {
     // JSON-LD structured data for SSR
-    "ld+json": JSON.stringify(SEO_CONFIG.about.structuredData),
+    "ld+json": JSON.stringify(SEO_CONFIG.about?.structuredData || {}),
   },
 };
 
@@ -57,7 +57,7 @@ export default function AboutPage() {
           <div className="space-y-8">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
-                ⚡ Our Story
+                Our Story
               </span>
             </div>
 

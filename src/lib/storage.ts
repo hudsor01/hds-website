@@ -1,5 +1,5 @@
 // localStorage utilities for Next.js with SSR safety
-import type { StoredFormData } from '@/types/storage'
+import type { StoredFormData } from '@/types/paystub'
 
 const STORAGE_KEY = 'paystub-form-data'
 

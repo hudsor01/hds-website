@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Environment files
+.env*
+
+# Logs
+*.log
+
+# Test results
+coverage
+test-results
+playwright-report
+
+# Generated files
+.vercel
+.turbo
+
+# Tailwind output
+**/*.css.map

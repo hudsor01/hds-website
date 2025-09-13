@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 

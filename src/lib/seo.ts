@@ -1,17 +1,6 @@
 // Enhanced SEO utilities for maximum organic reach
 
-export interface SEOConfig {
-  title: string;
-  description: string;
-  keywords: string[];
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImage?: string;
-  canonical?: string;
-  noindex?: boolean;
-  structuredData?: object;
-  additionalKeywords?: string[];
-}
+import type { SEOConfig } from '@/types/seo';
 
 // Base keywords that should appear across the site for SEO authority
 export const BASE_KEYWORDS = [

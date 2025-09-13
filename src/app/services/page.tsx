@@ -1,8 +1,9 @@
 'use client';
 
 import { ArrowRightIcon, CheckIcon, CogIcon, CodeBracketIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+import { Search, ClipboardList, Zap, Rocket } from 'lucide-react';
 import Link from "next/link";
-import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
+import { BackgroundPattern } from "@/components/BackgroundPattern";
 
 const services = [
   {
@@ -61,25 +62,25 @@ const process = [
     step: "01",
     title: "Discovery",
     description: "Deep dive into your business requirements, technical challenges, and growth objectives.",
-    icon: "🔍",
+    icon: Search,
   },
   {
     step: "02", 
     title: "Strategy",
     description: "Develop a comprehensive technical strategy with clear timelines and success metrics.",
-    icon: "📋",
+    icon: ClipboardList,
   },
   {
     step: "03",
     title: "Development",
     description: "Build your solution using best practices, modern technologies, and scalable architecture.",
-    icon: "⚡",
+    icon: Zap,
   },
   {
     step: "04",
     title: "Launch",
     description: "Deploy, monitor, and optimize your solution for maximum impact and performance.",
-    icon: "🚀",
+    icon: Rocket,
   },
 ];
 
@@ -95,7 +96,7 @@ export default function ServicesPage() {
           <div className="space-y-8">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
-                ⚡ Professional Services
+                Professional Services
               </span>
             </div>
 
@@ -248,7 +249,11 @@ export default function ServicesPage() {
                 key={index}
                 className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 text-center"
               >
-                <div className="text-6xl mb-4">{step.icon}</div>
+                <div className="mb-4 flex justify-center">
+                  <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex items-center justify-center">
+                    <step.icon className="w-8 h-8 text-cyan-400" />
+                  </div>
+                </div>
                 <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
                 <h3 className="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
                   {step.title}

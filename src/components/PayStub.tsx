@@ -1,6 +1,7 @@
 import React from 'react'
-import { formatCurrency, formatDate } from '@/lib/format-utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PayPeriod, PaystubData } from '@/types/paystub'
+import { FileText } from 'lucide-react'
 
 interface PayStubProps {
   payPeriod: PayPeriod
@@ -45,7 +46,8 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#047857'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#059669'}
         >
-          📄 Save as PDF
+          <FileText className="inline-block w-4 h-4 mr-2" />
+          Save as PDF
         </button>
       </div>
 

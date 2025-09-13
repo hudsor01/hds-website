@@ -1,4 +1,5 @@
 // Component type definitions
+import type { PaystubData } from './paystub';
 
 export interface NavigationItem {
   name: string;
@@ -41,28 +42,9 @@ export interface ContactInfo {
   link: string;
 }
 
-export interface HeroSectionProps {
-  title: string;
-  subtitle?: string;
-  description: string;
-  primaryCTA?: {
-    text: string;
-    href: string;
-  };
-  secondaryCTA?: {
-    text: string;
-    href: string;
-  };
-  className?: string;
-  showBackground?: boolean;
-}
 
-export interface ServiceCardProps {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  features: string[];
-}
+
+
 
 // Testimonial types
 export interface Testimonial {
@@ -76,74 +58,33 @@ export interface Testimonial {
   featured?: boolean;
 }
 
-export interface TestimonialCarouselProps {
-  testimonials: Testimonial[];
-  autoPlay?: boolean;
-  autoPlayInterval?: number;
-  variant?: "default" | "cards" | "minimal" | "centered";
-  showRating?: boolean;
-  showNavigation?: boolean;
-  showDots?: boolean;
-  className?: string;
-}
 
 // PanInfo for drag interactions (framer-motion stub)
-export interface PanInfo { 
-  offset: { x: number; y: number }; 
-  velocity: { x: number; y: number }; 
+export interface PanInfo {
+  offset: { x: number; y: number };
+  velocity: { x: number; y: number };
 }
 
-// Bento Grid Components
-export interface BentoGridProps {
-  children: React.ReactNode;
-  columns?: 2 | 3 | 4 | 5 | 6;
-  gap?: "sm" | "md" | "lg";
-  className?: string;
+
+
+
+export interface CustomSelectOption {
+  value: string;
+  label: string;
 }
 
-export interface BentoCardProps {
-  children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
-  span?: {
-    col?: number;
-    row?: number;
-  };
-  className?: string;
-  gradient?: boolean;
-  hover?: boolean;
+
+
+
+
+
+// Touch Interaction State
+export interface TouchState {
+  isTouching: boolean;
+  touchStart: { x: number; y: number } | null;
+  touchEnd: { x: number; y: number } | null;
+  swipeDirection: "left" | "right" | "up" | "down" | null;
 }
 
-// Error Boundary Components
-export interface ErrorFallbackProps {
-  error: Error;
-  resetErrorBoundary: () => void;
-}
-
-export interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ComponentType<ErrorFallbackProps>;
-}
-
-// Loading State Components
-export interface LoadingStateProps {
-  title?: string;
-  message?: string;
-  variant?: 'spinner' | 'pulse' | 'dots';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-// Error Page Components
-export interface ErrorPageProps {
-  statusCode?: number;
-  title?: string;
-  message?: string;
-}
-
-// AnimatePresence stub props
-export interface AnimatePresenceProps {
-  children: React.ReactNode;
-  initial?: boolean;
-  custom?: number;
-  mode?: 'wait' | 'sync' | 'popLayout';
-}
+// Utility Types
+export type FeatureFlagKey = string;

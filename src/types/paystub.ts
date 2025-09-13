@@ -1,61 +1,102 @@
-// Paystub-related types and interfaces
+/**
+ * Consolidated Paystub-Related Types
+ * Includes form data, validation, storage, and state types
+ */
 
-export type FilingStatus = 'single' | 'marriedJoint' | 'marriedSeparate' | 'headOfHousehold' | 'qualifyingSurvivingSpouse'
+// US States types
+export interface StateInfo {
+  abbreviation: string;
+  name: string;
+  code: string;
+  hasIncomeTax: boolean;
+}
+
+// Form validation types
+export interface ValidationResult {
+  isValid: boolean;
+  message?: string;
+}
+
+export interface FormErrors {
+  employeeName?: string;
+  hourlyRate?: string;
+  hoursPerPeriod?: string;
+}
+
+// localStorage types
+export interface StoredFormData {
+  employeeName: string;
+  employeeId: string;
+  employerName: string;
+  hourlyRate: number;
+  hoursPerPeriod: number;
+  filingStatus: string;
+  taxYear: number;
+  state?: string;
+}
+
+// Paystub core types
+export type FilingStatus =
+  | "single"
+  | "marriedJoint"
+  | "marriedSeparate"
+  | "headOfHousehold"
+  | "qualifyingSurvivingSpouse";
 
 export interface TaxBracket {
-  limit: number
-  rate: number
+  limit: number;
+  rate: number;
 }
 
 export interface TaxData {
-  ssWageBase: number
-  ssRate: number
-  medicareRate: number
-  additionalMedicareRate: number
+  ssWageBase: number;
+  ssRate: number;
+  medicareRate: number;
+  additionalMedicareRate: number;
   additionalMedicareThreshold: {
-    single: number
-    marriedJoint: number
-    marriedSeparate: number
-    headOfHousehold: number
-    qualifyingSurvivingSpouse: number
-  }
+    single: number;
+    marriedJoint: number;
+    marriedSeparate: number;
+    headOfHousehold: number;
+    qualifyingSurvivingSpouse: number;
+  };
   federalBrackets: {
-    single: TaxBracket[]
-    marriedJoint: TaxBracket[]
-    marriedSeparate: TaxBracket[]
-    headOfHousehold: TaxBracket[]
-    qualifyingSurvivingSpouse: TaxBracket[]
-  }
+    single: TaxBracket[];
+    marriedJoint: TaxBracket[];
+    marriedSeparate: TaxBracket[];
+    headOfHousehold: TaxBracket[];
+    qualifyingSurvivingSpouse: TaxBracket[];
+  };
 }
 
 export interface PayPeriod {
-  period: number
-  payDate: string
-  hours: number
-  grossPay: number
-  federalTax: number
-  socialSecurity: number
-  medicare: number
-  otherDeductions: number
-  netPay: number
+  period: number;
+  payDate: string;
+  hours: number;
+  grossPay: number;
+  federalTax: number;
+  socialSecurity: number;
+  medicare: number;
+  otherDeductions: number;
+  netPay: number;
 }
 
 export interface PaystubData {
-  employeeName: string
-  employeeId: string
-  employerName: string
-  hourlyRate: number
-  hoursPerPeriod: number
-  filingStatus: FilingStatus
-  taxYear: number
-  payPeriods: PayPeriod[]
+  employeeName: string;
+  employeeId: string;
+  employerName: string;
+  hourlyRate: number;
+  hoursPerPeriod: number;
+  filingStatus: FilingStatus;
+  taxYear: number;
+  payPeriods: PayPeriod[];
   totals: {
-    hours: number
-    grossPay: number
-    federalTax: number
-    socialSecurity: number
-    medicare: number
-    otherDeductions: number
-    netPay: number
-  }
+    hours: number;
+    grossPay: number;
+    federalTax: number;
+    socialSecurity: number;
+    medicare: number;
+    otherDeductions: number;
+    netPay: number;
+  };
 }

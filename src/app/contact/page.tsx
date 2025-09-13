@@ -2,7 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { FeatureFlagWrapper, FEATURE_FLAGS } from '@/lib/feature-flags';
+import { useFeatureFlag } from '@/lib/feature-flags';
+import { FEATURE_FLAGS } from '@/types/utils';
+import { Mail, Clock } from 'lucide-react';
 // import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
 // Lazy load the contact form components from consolidated file
@@ -52,6 +54,7 @@ function ContactFormSkeleton() {
 // Client Component - metadata handled by layout
 
 export default function ContactPage() {
+  const contactFormV2Enabled = useFeatureFlag(FEATURE_FLAGS.CONTACT_FORM_V2);
   // Track page view and business events
   // usePageTracking();
   // const { trackServiceInterest } = useBusinessTracking();
@@ -74,7 +77,7 @@ export default function ContactPage() {
             <div className="space-y-8">
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
-                  💬 Let&apos;s Connect
+                  Let&apos;s Connect
                 </span>
               </div>
 
@@ -98,7 +101,7 @@ export default function ContactPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 text-gray-300">
                   <div className="w-12 h-12 rounded-full bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 flex items-center justify-center">
-                    📧
+                    <Mail className="w-6 h-6" />
                   </div>
                   <div>
                     <p className="font-semibold text-white">Email</p>
@@ -108,7 +111,7 @@ export default function ContactPage() {
                 
                 <div className="flex items-center gap-4 text-gray-300">
                   <div className="w-12 h-12 rounded-full bg-linear-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 flex items-center justify-center">
-                    ⏱️
+                    <Clock className="w-6 h-6" />
                   </div>
                   <div>
                     <p className="font-semibold text-white">Response Time</p>
@@ -128,18 +131,13 @@ export default function ContactPage() {
                     <p className="text-gray-400">Tell us about your needs and we&apos;ll get back to you quickly.</p>
                   </div>
                   
-                  <FeatureFlagWrapper 
-                    flag={FEATURE_FLAGS.CONTACT_FORM_V2}
-                    fallback={<ContactFormLight />}
-                  >
-                    <ContactFormV2 />
-                  </FeatureFlagWrapper>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                  {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
 
       {/* Map Section */}
       <section className="relative py-20 px-4">

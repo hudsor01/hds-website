@@ -3,20 +3,9 @@
  * Consolidates inline interfaces from form components, hooks, and utilities
  */
 
-// Loading State Types
-export interface LoadingState {
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  error?: string | null;
-}
-
-export interface UseLoadingStateOptions {
-  autoReset?: boolean;
-  resetDelay?: number;
-  onSuccess?: () => void;
-  onError?: (error: string) => void;
-}
+// Loading State Types (importing from hooks to avoid duplication)
+import type { LoadingState, UseLoadingStateOptions } from './hooks'
+export type { LoadingState, UseLoadingStateOptions };
 
 // Form Submission States
 export type FormSubmissionState = 
@@ -35,56 +24,6 @@ export interface FormState {
   message?: string | null;
 }
 
-// Form Field Types
-export interface FormFieldProps {
-  label: string;
-  name: string;
-  type?: 'text' | 'email' | 'tel' | 'password' | 'url';
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  autoComplete?: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  error?: string;
-  helpText?: string;
-  variant?: 'default' | 'glass' | 'solid';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-export interface FormSelectProps {
-  label: string;
-  name: string;
-  options: Array<{
-    value: string;
-    label: string;
-    disabled?: boolean;
-  }>;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  error?: string;
-  helpText?: string;
-  variant?: 'default' | 'glass' | 'solid';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-export interface FormTextAreaProps {
-  label: string;
-  name: string;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  rows?: number;
-  maxLength?: number;
-  error?: string;
-  helpText?: string;
-  variant?: 'default' | 'glass' | 'solid';
-  size?: 'sm' | 'md' | 'lg';
-  resize?: 'none' | 'y' | 'x' | 'both';
-  className?: string;
-}
 
 // Form Validation Types
 export interface FieldValidation {
@@ -167,4 +106,27 @@ export interface MultiStepFormState {
   progress: number; // 0-100
   canGoNext: boolean;
   canGoPrevious: boolean;
+}
+
+// Zod-derived form types
+export type ContactFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  service?: string;
+  bestTimeToContact?: string;
+  message: string;
+};
+
+export type NewsletterSignupData = {
+  email: string;
+};
+
+// Contact form validation result
+export interface ContactValidationResult {
+  isValid: boolean;
+  data?: ContactFormData;
+  errors?: Record<string, string>;
 }

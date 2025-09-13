@@ -1,5 +1,5 @@
 // US States tax information for 2025
-import type { StateInfo } from '@/types/states'
+import type { StateInfo } from '@/types/paystub'
 
 // States with NO income tax (9 states)
 export const NO_INCOME_TAX_STATES: StateInfo[] = [

@@ -1,6 +1,7 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowDownTrayIcon, CheckCircleIcon, ChartBarIcon, CogIcon } from "@heroicons/react/24/outline";
+import { TrendingUp, DollarSign, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Free Conversion Optimization Toolkit 2025 - Templates & Guides | Hudson Digital",
@@ -159,7 +160,7 @@ export default function ConversionToolkitPage() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-green-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📈</span>
+                <TrendingUp className="w-8 h-8 text-green-400" />
               </div>
               <div className="text-3xl font-bold text-green-400 mb-2">340%</div>
               <div className="text-gray-300">Average conversion increase</div>
@@ -167,7 +168,7 @@ export default function ConversionToolkitPage() {
             
             <div className="text-center">
               <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💰</span>
+                <DollarSign className="w-8 h-8 text-cyan-400" />
               </div>
               <div className="text-3xl font-bold text-cyan-400 mb-2">$185K</div>
               <div className="text-gray-300">Average revenue increase</div>
@@ -175,7 +176,7 @@ export default function ConversionToolkitPage() {
             
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-400/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">⏱️</span>
+                <Clock className="w-8 h-8 text-purple-400" />
               </div>
               <div className="text-3xl font-bold text-purple-400 mb-2">8 weeks</div>
               <div className="text-gray-300">Average time to results</div>

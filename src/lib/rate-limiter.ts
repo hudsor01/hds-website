@@ -1,7 +1,4 @@
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
+import type { RateLimitEntry } from '@/types/api';
 
 export class RateLimiter {
   private store: Map<string, RateLimitEntry> = new Map();

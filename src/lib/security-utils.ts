@@ -3,6 +3,8 @@
  * Implements defense-in-depth approach to prevent injection attacks
  */
 
+import type { ContactValidationResult } from '@/types/forms';
+
 /**
  * Escape HTML special characters to prevent XSS attacks
  * @param text - Raw user input text
@@ -150,24 +152,9 @@ export function isValidTimePreference(time: string): boolean {
  * @param data - Raw form data
  * @returns Validation result with sanitized data or errors
  */
-export interface ValidationResult {
-  isValid: boolean;
-  data?: ContactFormData;
-  errors?: Record<string, string>;
-}
 
-interface ContactFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  service: string;
-  bestTimeToContact: string;
-  message: string;
-}
 
-export function validateContactForm(data: unknown): ValidationResult {
+export function validateContactForm(data: unknown): ContactValidationResult {
   const errors: Record<string, string> = {};
   
   // Type check - ensure data is an object

@@ -1,6 +1,7 @@
 'use client';
 
-import { ComponentType, ReactNode, useState, ErrorInfo as ReactErrorInfo } from 'react';
+import { useState } from 'react';
+import type { ComponentType, ReactNode, ErrorInfo as ReactErrorInfo } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackError } from '@/lib/analytics';

@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
+import { Providers } from "@/components/providers";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -150,14 +151,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {/* <ThemeProvider> */}
+        <Providers>
           <NavbarLight />
           <div id="main-content" className="min-h-screen pt-16">
             {children}
           </div>
           <Footer />
           <Analytics />
-        {/* </ThemeProvider> */}
+        </Providers>
       </body>
     </html>
   );

@@ -47,7 +47,7 @@ export interface UseApiClientOptions {
   headers?: Record<string, string>;
 }
 
-export interface ApiRequestConfig<T = unknown> {
+export interface ApiRequestConfig<T = Record<string, unknown>> {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: Record<string, string>;
   body?: T;
@@ -102,17 +102,19 @@ export interface TouchGesture {
 }
 
 export interface UseTouchInteractionsOptions {
-  enableSwipe?: boolean;
-  enablePinch?: boolean;
-  enableRotate?: boolean;
+  onSwipeLeft?: () => void;
+  onSwipeRight?: () => void;
+  onSwipeUp?: () => void;
+  onSwipeDown?: () => void;
+  onTap?: () => void;
+  onDoubleTap?: () => void;
+  onLongPress?: () => void;
   swipeThreshold?: number;
-  onSwipe?: (direction: string) => void;
-  onPinch?: (scale: number) => void;
-  onRotate?: (angle: number) => void;
+  longPressDelay?: number;
 }
 
 // Realtime Hook Types
-export interface UseRealtimeOptions<T = unknown> {
+export interface UseRealtimeOptions<T = Record<string, unknown>> {
   channel: string;
   event?: string;
   schema?: string;
@@ -122,7 +124,7 @@ export interface UseRealtimeOptions<T = unknown> {
   onDelete?: (payload: T) => void;
 }
 
-export interface UseRealtimeReturn<T = unknown> {
+export interface UseRealtimeReturn<T = Record<string, unknown>> {
   data: T[];
   loading: boolean;
   error: string | null;
@@ -150,7 +152,7 @@ export interface UseDebounceOptions {
 }
 
 // Function type for debounce/throttle
-export type DebouncableFunction = (...args: unknown[]) => unknown;
+export type DebouncableFunction = (...args: (string | number | boolean | object)[]) => string | number | boolean | void;
 
 export interface UseDebounceReturn<T extends DebouncableFunction> {
   debouncedFunction: T;
