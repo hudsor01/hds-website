@@ -30,8 +30,8 @@ export function CTAButton({
   const baseClasses = "group relative inline-flex items-center gap-3 font-bold rounded-lg overflow-hidden transition-all duration-300 transform disabled:cursor-not-allowed disabled:opacity-50";
   
   const variantClasses = {
-    primary: "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105",
-    secondary: "bg-gradient-to-r from-purple-500 to-pink-600 text-white hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105",
+    primary: "bg-linear-to-r from-cyan-500 to-blue-600 text-white hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105",
+    secondary: "bg-linear-to-r from-purple-500 to-pink-600 text-white hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105",
     ghost: "border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black hover:shadow-xl hover:shadow-cyan-400/50"
   };
   
@@ -42,7 +42,7 @@ export function CTAButton({
   };
 
   const shimmerEffect = showShimmer ? (
-    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+    <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
   ) : null;
 
   const content = (

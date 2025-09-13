@@ -150,7 +150,7 @@ export const brand = {
 
 // Helper function to get gradient classes
 export const getGradient = (type: keyof typeof brand.colors.gradients) => {
-  return `bg-gradient-to-r ${brand.colors.gradients[type]}`;
+  return `bg-linear-to-r ${brand.colors.gradients[type]}`;
 };
 
 // Helper function to get consistent button styles
@@ -159,7 +159,7 @@ export const getButtonStyles = (variant: 'primary' | 'secondary' | 'ghost') => {
   
   switch (variant) {
     case 'primary':
-      return `${base} px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/25`;
+      return `${base} px-6 py-3 bg-linear-to-r from-cyan-500 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/25`;
     case 'secondary':
       return `${base} px-6 py-3 border-2 border-gray-600 text-white hover:border-cyan-400 hover:bg-cyan-400/5`;
     case 'ghost':

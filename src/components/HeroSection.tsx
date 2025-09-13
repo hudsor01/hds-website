@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import { ArrowRightIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { HeroSectionProps } from "@/types/components";
-import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
-import { CTAButton } from "@/components/ui/CTAButton";
-import { TEXT_GRADIENTS } from "@/lib/ui-constants";
+// Removed unused imports - these components can be imported when needed
+// import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
+// import { CTAButton } from "@/components/ui/CTAButton";
+// import { TEXT_GRADIENTS } from "@/lib/ui-constants";
 
 // Extended props for internal use
 interface ExtendedHeroSectionProps extends HeroSectionProps {
@@ -61,13 +62,13 @@ export function HeroSection({
   const getVariantClasses = () => {
     switch (variant) {
       case "gradient":
-        return "bg-gradient-to-br from-gray-900 via-black to-blue-900/50";
+        return "bg-linear-to-br from-gray-900 via-black to-blue-900/50";
       case "video":
         return "bg-black relative overflow-hidden";
       case "minimal":
         return "bg-white dark:bg-gray-900";
       default:
-        return "bg-gradient-to-br from-gray-900 via-black to-gray-900";
+        return "bg-linear-to-br from-gray-900 via-black to-gray-900";
     }
   };
 
@@ -84,19 +85,19 @@ export function HeroSection({
       <div className="absolute inset-0 pointer-events-none">
         {/* Gradient Orbs */}
         <m.div
-                                        className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+                                        className="absolute top-1/4 right-1/4 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
         />
         <m.div
-                                                  className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+                                                  className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
         />
         <m.div
-                                                  className="absolute top-1/2 left-1/6 w-32 h-32 bg-gradient-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl"
+                                                  className="absolute top-1/2 left-1/6 w-32 h-32 bg-linear-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl"
         />
 
         {/* Grid Pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
         </div>
 
         {/* Custom Background Elements */}
@@ -138,7 +139,7 @@ export function HeroSection({
                   key={index}
                   className={cn(
                     "inline-block mr-4",
-                    index % 2 === 1 && "bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"
+                    index % 2 === 1 && "bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"
                   )}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -167,12 +168,12 @@ export function HeroSection({
               {primaryCTA && (
                 <Link href={primaryCTA.href}>
                   <m.button
-                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden"
+                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {/* Shimmer effect */}
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     
                     <span className="relative z-10">{primaryCTA.text}</span>
                     <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -208,7 +209,7 @@ export function HeroSection({
               <m.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="w-1 h-3 bg-gradient-to-b from-cyan-400 to-blue-400 rounded-full mt-2"
+                className="w-1 h-3 bg-linear-to-b from-cyan-400 to-blue-400 rounded-full mt-2"
               />
             </m.div>
           </m.div>
@@ -256,7 +257,7 @@ export function MinimalHero(props: HeroSectionProps) {
       {...props}
       variant="minimal"
       backgroundElements={
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800" />
+        <div className="absolute inset-0 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800" />
       }
     />
   );

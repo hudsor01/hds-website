@@ -8,11 +8,11 @@ import type { SEOMetaData } from '@/types/seo'
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
   home: {
     title:
-      'Hudson Digital Solutions - Premium Web Development & Digital Strategy',
+      'Hudson Digital Solutions - Professional Web Development & Business Growth Strategy 2025',
     description:
-      'Transform your business with Hudson Digital Solutions. Expert web development, custom software, and digital strategy services. 98% success rate, $5K+ projects. Get your free consultation today.',
+      'Transform your business with Hudson Digital Solutions. Expert web development, conversion optimization, and digital dominance strategies. 340% average ROI, $5K+ projects. Get your free consultation today.',
     keywords:
-      'web development, custom software, digital strategy, Vue.js, React, TypeScript, web applications, business automation, ROI optimization, Hudson Digital',
+      'web development 2025, business website development, conversion rate optimization, website ROI optimization, Next.js development, React development, TypeScript applications, digital marketing strategy, small business website, professional web design, business growth website',
     ogImage: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
     canonical: 'https://hudsondigitalsolutions.com/',
     structuredData: {
@@ -38,14 +38,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 
   services: {
     title:
-      'Web Development Services - Custom Software & Digital Solutions | Hudson Digital',
+      'Professional Web Development Services 2025 - Custom Business Solutions | Hudson Digital',
     description:
-      'Professional web development services: Vue.js & React apps, custom software, API development, and performance optimization. Starting at $5K with 98% success rate.',
+      'Professional web development services: Next.js & React apps, conversion optimization, custom software, and performance optimization. Starting at $5K with 340% average ROI.',
     keywords:
-      'web development services, custom software development, Vue.js development, React development, API development, web applications, TypeScript development',
-    ogTitle: 'Professional Web Development Services | Hudson Digital',
+      'web development services 2025, professional website development, conversion rate optimization services, Next.js development, React development, small business web development, custom software development, website performance optimization, business growth website, digital marketing integration',
+    ogTitle: 'Professional Web Development Services 2025 | Hudson Digital',
     ogDescription:
-      'Expert web development: Vue.js, React, custom software solutions. 98% success rate, proven ROI. Starting at $5K.',
+      'Expert web development: Next.js, React, conversion optimization, custom software solutions. 340% average ROI, proven results. Starting at $5K.',
     canonical: 'https://hudsondigitalsolutions.com/services',
     structuredData: {
       '@context': 'https://schema.org',
@@ -66,14 +66,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   },
 
   about: {
-    title: 'About Hudson Digital Solutions - Expert Web Development Team',
+    title: 'About Hudson Digital Solutions - Expert Web Development & Growth Strategy Team',
     description:
-      'Meet the Hudson Digital team. Experienced web developers specializing in Vue.js, React, and custom software solutions. 5+ years experience, 50+ successful projects.',
+      'Meet the Hudson Digital team. Experienced web developers specializing in Next.js, React, conversion optimization, and business growth strategies. 150+ successful projects, 340% average ROI.',
     keywords:
-      'about Hudson Digital, web development team, Vue.js experts, React developers, software engineering team',
-    ogTitle: 'About Hudson Digital Solutions - Expert Development Team',
+      'about Hudson Digital, web development team, Next.js experts, React developers, conversion optimization specialists, business growth strategists, professional web development team',
+    ogTitle: 'About Hudson Digital Solutions - Expert Development & Growth Team',
     ogDescription:
-      'Experienced web development team with 5+ years expertise in Vue.js, React, and custom software solutions.',
+      'Experienced web development team specializing in Next.js, React, conversion optimization, and business growth strategies. 150+ projects, 340% average ROI.',
     canonical: 'https://hudsondigitalsolutions.com/about',
     structuredData: {
       '@context': 'https://schema.org',
@@ -85,14 +85,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   },
 
   contact: {
-    title: 'Contact Hudson Digital Solutions - Get Your Free Consultation',
+    title: 'Contact Hudson Digital Solutions - Get Your Free Strategy Consultation',
     description:
-      'Ready to transform your business? Contact Hudson Digital Solutions for a free consultation. Response within 4 hours. Email: hello@hudsondigitalsolutions.com',
+      'Ready to dominate your market? Contact Hudson Digital Solutions for a free strategy consultation. Response within 4 hours. Transform your business with proven results. Email: hello@hudsondigitalsolutions.com',
     keywords:
-      'contact Hudson Digital, free consultation, web development quote, custom software consultation, project inquiry',
-    ogTitle: 'Contact Hudson Digital - Free Consultation Available',
+      'contact Hudson Digital, free consultation, web development quote, business strategy consultation, conversion optimization quote, professional web development consultation, project inquiry, business growth strategy',
+    ogTitle: 'Contact Hudson Digital - Free Strategy Consultation Available',
     ogDescription:
-      'Get your free consultation today. Response within 4 hours. Transform your business with expert web development.',
+      'Get your free strategy consultation today. Response within 4 hours. Transform your business with expert web development and growth strategies.',
     canonical: 'https://hudsondigitalsolutions.com/contact',
     structuredData: {
       '@context': 'https://schema.org',

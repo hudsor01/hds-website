@@ -82,7 +82,7 @@ export default function Footer() {
       <div className="absolute inset-0" style={{ backgroundColor: '#020718' }} />
       
       {/* Top border */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gray-800/50" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gray-800/50" />
 
       <div className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
@@ -133,7 +133,7 @@ export default function Footer() {
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-block relative group"
                     >
                       <span>{link.name}</span>
-                      <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-400 transition-all duration-300 group-hover:w-full" />
+                      <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-400 transition-all duration-300 group-hover:w-full" />
                     </Link>
                   </li>
                 ))}
@@ -153,7 +153,7 @@ export default function Footer() {
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-block relative group"
                     >
                       <span>{link.name}</span>
-                      <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-cyan-400 transition-all duration-300 group-hover:w-full" />
+                      <span className="absolute bottom-0 left-0 w-0 h-px bg-cyan-400 transition-all duration-300 group-hover:w-full" />
                     </Link>
                   </li>
                 ))}
@@ -171,7 +171,7 @@ export default function Footer() {
               <div className="space-y-3">
                 <Link
                   href="/contact"
-                  className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-center hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+                  className="block w-full px-4 py-3 rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold text-center hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
                 >
                   Get Free Roadmap
                 </Link>
@@ -248,7 +248,7 @@ export default function Footer() {
           className={cn(
             "fixed bottom-8 right-8 z-40",
             "p-3 rounded-full",
-            "bg-gradient-to-r from-cyan-500 to-blue-500",
+            "bg-linear-to-r from-cyan-500 to-blue-500",
             "text-black shadow-lg",
             "hover:shadow-cyan-500/25",
             "focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent",

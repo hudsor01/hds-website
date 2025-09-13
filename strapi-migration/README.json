@@ -1,0 +1,18 @@
+{
+  "totalPosts": 2,
+  "categories": 2,
+  "tags": 7,
+  "files": [
+    "categories.json - Create these categories in Strapi first",
+    "tags.json - Create these tags in Strapi first",
+    "how-to-increase-website-conversion-rates-2025-guide.json - Blog post data",
+    "small-business-website-cost-2025.json - Blog post data"
+  ],
+  "instructions": [
+    "1. Set up Strapi with BlogPost, Category, and Tag content types",
+    "2. Import categories and tags first",
+    "3. Import blog posts and link to categories/tags by ID",
+    "4. Upload featured images to Strapi Media Library",
+    "5. Test the API endpoints with your Next.js app"
+  ]
+}

@@ -3,6 +3,7 @@
 // Motion import removed for build stability
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import type { BentoGridProps, BentoCardProps } from "@/types/components";
 
 // Animation variants removed for build stability
@@ -76,7 +77,7 @@ export function BentoCard({
     >
       {/* Gradient overlay */}
       {gradient && (
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-blue-500/10 pointer-events-none" />
       )}
       
       {/* Content */}
@@ -109,7 +110,7 @@ export function BentoFeatureCard({
         <div className="flex items-start justify-between mb-4">
           {icon && (
             <div 
-              className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30"
+              className="p-3 rounded-xl bg-linear-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30"
             >
               {icon}
             </div>
@@ -186,7 +187,7 @@ export function BentoStatsCard({
           
           {icon && (
             <div className={cn(
-              "p-2 rounded-lg bg-gradient-to-br border",
+              "p-2 rounded-lg bg-linear-to-br border",
               colorClasses[color]
             )}>
               {icon}
@@ -227,14 +228,16 @@ export function BentoImageCard({
   return (
     <BentoCard {...props} className="p-0 overflow-hidden">
       <div className="relative h-full">
-        <img
+        <Image
           src={src}
           alt={alt}
-          className="w-full h-full object-cover"
-                            />
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
         
         {overlay && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
         )}
         
         {(title || description) && (
@@ -305,7 +308,7 @@ export function BentoVideoCard({
           <source src={videoSrc} type="video/mp4" />
         </video>
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
         
         {(title || description) && (
           <div className="absolute bottom-0 left-0 right-0 p-6">
