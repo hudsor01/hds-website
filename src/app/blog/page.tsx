@@ -80,7 +80,7 @@ export default function BlogPage() {
       <section className="relative bg-gradient-hero py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-[length:80px_80px]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-size-[80px_80px]"></div>
         </div>
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">

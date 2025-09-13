@@ -57,15 +57,15 @@ export default function ContactPage() {
   // const { trackServiceInterest } = useBusinessTracking();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+    <main className="min-h-screen bg-linear-to-br from-slate-950 via-gray-900 to-slate-950">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-[length:60px_60px]" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,7 +82,7 @@ export default function ContactPage() {
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none tracking-tight">
                   <span className="inline-block">Ready to</span>
                   <br />
-                  <span className="inline-block bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Transform</span>
+                  <span className="inline-block bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Transform</span>
                   <br />
                   <span className="inline-block">Your Business?</span>
                 </h1>
@@ -97,7 +97,7 @@ export default function ContactPage() {
               {/* Contact Info */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4 text-gray-300">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 flex items-center justify-center">
                     📧
                   </div>
                   <div>
@@ -107,7 +107,7 @@ export default function ContactPage() {
                 </div>
                 
                 <div className="flex items-center gap-4 text-gray-300">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-linear-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30 flex items-center justify-center">
                     ⏱️
                   </div>
                   <div>
@@ -121,7 +121,7 @@ export default function ContactPage() {
             {/* Right Column - Contact Form */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5" />
+                <div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 to-purple-500/5" />
                 <div className="relative z-10">
                   <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-white mb-2">Start Your Project</h2>
@@ -146,7 +146,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Visit Our Office
               </span>
             </h2>

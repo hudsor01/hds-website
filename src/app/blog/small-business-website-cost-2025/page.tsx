@@ -403,7 +403,7 @@ export default function WebsiteCostGuidePost() {
 
                 <p>A $10,000 professional website that generates $100,000 in additional revenue is infinitely more valuable than a $1,000 site that generates $5,000.</p>
 
-                <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
+                <div className="bg-linear-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to Make the Right Investment?</h3>
                   <p className="text-gray-300 mb-6">Get a custom website cost estimate based on your specific business needs and growth goals.</p>
                   <Link

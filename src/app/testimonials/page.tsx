@@ -117,7 +117,7 @@ export default function TestimonialsPage() {
               {/* Author */}
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                       <span className="text-blue-600 font-semibold text-sm">
                         {testimonial.name.split(' ').map(n => n[0]).join('')}

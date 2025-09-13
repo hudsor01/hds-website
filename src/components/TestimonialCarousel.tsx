@@ -131,7 +131,7 @@ export function TestimonialCarousel({
   if (testimonials.length === 0) {
     return (
       <div className={cn("relative max-w-6xl mx-auto", className)}>
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800/50 p-8 md:p-12">
+        <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800/50 p-8 md:p-12">
           <p className="text-center text-gray-400">No testimonials available</p>
         </div>
       </div>
@@ -141,7 +141,7 @@ export function TestimonialCarousel({
   return (
     <div className={cn("relative max-w-6xl mx-auto", className)}>
       {/* Main Carousel */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800/50">
+      <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-gray-800/50">
         <AnimatePresence initial={false} custom={direction}>
           <m.div
             key={current}
