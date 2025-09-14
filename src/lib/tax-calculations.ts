@@ -1,13 +1,13 @@
 import type { TaxData } from "@/types/paystub";
-import { TAX_DATA } from "./paystub-data";
+import { getCurrentTaxData } from "./paystub-utils";
 
 export const calculateFederalTax = (
   grossPay: number,
   filingStatus: keyof TaxData["federalBrackets"],
   annualGross: number,
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -75,9 +75,9 @@ export const calculateFederalTax = (
 export const calculateSocialSecurity = (
   grossPay: number,
   ytdGross: number,
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -98,9 +98,9 @@ export const calculateMedicare = (
   grossPay: number,
   ytdGross: number,
   filingStatus: keyof TaxData["additionalMedicareThreshold"],
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -110,7 +110,7 @@ export const calculateMedicare = (
   const threshold =
     yearData.additionalMedicareThreshold?.[filingStatus] ||
     yearData.additionalMedicareThreshold?.single ||
-    TAX_DATA[2024]?.additionalMedicareThreshold?.single ||
+    getCurrentTaxData()?.additionalMedicareThreshold?.single ||
     0;
 
   const medicare = grossPay * medicareRate;

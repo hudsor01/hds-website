@@ -102,7 +102,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-purple-500/10 p-6">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 p-6">
                     {/* Rating Stars */}
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">

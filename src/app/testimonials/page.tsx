@@ -86,10 +86,10 @@ export default function TestimonialsPage() {
       <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl text-balance">
               Client Success Stories
             </h1>
-            <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto text-pretty">
               See what our clients say about working with Hudson Digital Solutions
             </p>
           </div>
@@ -98,11 +98,15 @@ export default function TestimonialsPage() {
 
       {/* Testimonials Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8
+                  md:grid md:gap-8
+                  flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible
+                  -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200
+                        snap-center flex-shrink-0 w-80 md:w-auto"
             >
               {/* Rating */}
               <div className="mb-4">
@@ -110,7 +114,7 @@ export default function TestimonialsPage() {
               </div>
 
               {/* Content */}
-              <blockquote className="text-gray-700 mb-6">
+              <blockquote className="text-gray-700 mb-6 text-pretty">
                 &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
@@ -148,10 +152,10 @@ export default function TestimonialsPage() {
       <div className="bg-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl text-balance">
               Ready to Join Our Success Stories?
             </h2>
-            <p className="mt-4 text-xl text-blue-100 max-w-2xl mx-auto">
+            <p className="mt-4 text-xl text-blue-100 max-w-2xl mx-auto text-pretty">
               Let&apos;s discuss how we can help your business achieve its goals.
             </p>
             <div className="mt-8">

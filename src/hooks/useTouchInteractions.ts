@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import type { UseTouchInteractionsOptions } from '@/types/hooks';
-import type { TouchState } from '@/types/utils';
+import type { TouchState } from '@/types/common';
 
 
 export function useTouchInteractions(

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { formatDateLong } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy",
@@ -61,14 +62,6 @@ const blogPosts = [
   }
 ];
 
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
 
 export default function BlogPage() {
   const featuredPosts = blogPosts.filter(post => post.featured);
@@ -88,10 +81,10 @@ export default function BlogPage() {
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6">
+          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6 text-balance">
             Business <span className="text-gradient-neon glow-cyan">Strategy</span> Blog
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -102,20 +95,23 @@ export default function BlogPage() {
         <section className="py-16 bg-gradient-primary">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-black text-white mb-4">Featured Article</h2>
-              <p className="text-gray-300">Essential reading for ambitious business owners</p>
+              <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Article</h2>
+              <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8
+                      md:grid md:gap-8
+                      flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible
+                      -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
               {featuredPosts.map((post) => (
-                <article key={post.id} className="group relative lg:col-span-2">
-                  <div className="glass-morphism bg-black/80 border border-cyan-200 rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105">
+                <article key={post.id} className="group relative lg:col-span-2 snap-center flex-shrink-0 w-80 md:w-auto">
+                  <div className="glass-morphism bg-black/80 border border-cyan-200 rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform">
                     
                     <div className="p-8">
                       <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
                         <span className="flex items-center gap-1">
                           <CalendarDaysIcon className="w-4 h-4" />
-                          {formatDate(post.publishedAt)}
+                          {formatDateLong(post.publishedAt)}
                         </span>
                         <span className="flex items-center gap-1">
                           <ClockIcon className="w-4 h-4" />
@@ -126,11 +122,11 @@ export default function BlogPage() {
                         </span>
                       </div>
                       
-                      <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                      <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
                         {post.title}
                       </h3>
                       
-                      <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+                      <p className="text-gray-300 mb-6 text-lg leading-relaxed text-pretty">
                         {post.excerpt}
                       </p>
                       
@@ -166,8 +162,8 @@ export default function BlogPage() {
             {/* Main Content */}
             <div className="flex-1">
               <div className="text-center lg:text-left mb-12">
-                <h2 className="text-3xl font-black text-white mb-4">All Articles</h2>
-                <p className="text-gray-300">Strategic insights for business growth and digital dominance</p>
+                <h2 className="text-3xl font-black text-white mb-4 text-balance">All Articles</h2>
+                <p className="text-gray-300 text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
               <div className="space-y-8">
@@ -178,7 +174,7 @@ export default function BlogPage() {
                         <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
                           <span className="flex items-center gap-1">
                             <CalendarDaysIcon className="w-4 h-4" />
-                            {formatDate(post.publishedAt)}
+                            {formatDateLong(post.publishedAt)}
                           </span>
                           <span className="flex items-center gap-1">
                             <ClockIcon className="w-4 h-4" />
@@ -187,13 +183,13 @@ export default function BlogPage() {
                           <span className="text-gray-500">By {post.author}</span>
                         </div>
                         
-                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors text-balance">
                           <Link href={`/blog/${post.slug}`}>
                             {post.title}
                           </Link>
                         </h3>
                         
-                        <p className="text-gray-300 mb-4 line-clamp-3 leading-relaxed">
+                        <p className="text-gray-300 mb-4 line-clamp-3 leading-relaxed text-pretty">
                           {post.excerpt}
                         </p>
                         
@@ -224,8 +220,8 @@ export default function BlogPage() {
             <aside className="w-full lg:w-80 space-y-8">
               {/* Newsletter Signup */}
               <div className="glass-morphism bg-black/80 border border-cyan-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4">Stay Updated</h3>
-                <p className="text-gray-300 mb-4">Get strategic insights delivered to your inbox.</p>
+                <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
+                <p className="text-gray-300 mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
                 <div className="space-y-3">
                   <input
                     type="email"
@@ -241,7 +237,7 @@ export default function BlogPage() {
 
               {/* Topics */}
               <div className="glass-morphism bg-black/80 border border-gray-700 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4">Topics</h3>
+                <h3 className="text-xl font-bold text-white mb-4 text-balance">Topics</h3>
                 <div className="flex flex-wrap gap-2">
                   {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
                     <span
@@ -256,8 +252,8 @@ export default function BlogPage() {
 
               {/* CTA */}
               <div className="glass-morphism bg-black/80 border border-green-200 rounded-xl p-6 text-center">
-                <h3 className="text-xl font-bold text-white mb-4">Ready to Dominate Your Market?</h3>
-                <p className="text-gray-300 mb-4">Let&apos;s engineer your competitive advantage.</p>
+                <h3 className="text-xl font-bold text-white mb-4 text-balance">Ready to Dominate Your Market?</h3>
+                <p className="text-gray-300 mb-4 text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
                   className="inline-block bg-green-400 text-black font-semibold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors"

@@ -4,7 +4,7 @@
  */
 
 import { Resend } from "resend";
-import { EMAIL_SEQUENCES, processEmailTemplate } from "./email-sequences";
+import { getEmailSequences, processEmailTemplate } from "./email-utils";
 import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
 import type {
   InternalScheduledEmail,
@@ -29,28 +29,25 @@ export function scheduleEmailSequence(
   sequenceId: string,
   variables: Record<string, string>
 ): void {
-  const sequence = EMAIL_SEQUENCES[sequenceId];
+  const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
+  const sequence = sequences[sequenceId];
   if (!sequence) {
     console.error(`Email sequence not found: ${sequenceId}`);
     return;
   }
 
-  // Schedule each step in the sequence
-  sequence.steps.forEach((step) => {
-    if (step.delayDays === 0) {
-      // Skip immediate emails as they're handled in the contact form
-      return;
-    }
-
+  // Since we simplified to single-template sequences, we'll schedule a follow-up
+  // email for 3 days from now (if it's not the welcome email)
+  if (sequenceId !== 'standard-welcome') {
     const scheduledFor = new Date();
-    scheduledFor.setDate(scheduledFor.getDate() + step.delayDays);
+    scheduledFor.setDate(scheduledFor.getDate() + 3); // 3 days follow-up
 
     const scheduledEmail: InternalScheduledEmail = {
-      id: `${recipientEmail}-${sequenceId}-${step.id}-${Date.now()}`,
+      id: `${recipientEmail}-${sequenceId}-followup-${Date.now()}`,
       recipientEmail,
       recipientName,
       sequenceId,
-      stepId: step.id,
+      stepId: 'followup',
       scheduledFor,
       variables,
       status: "pending",
@@ -63,11 +60,11 @@ export function scheduleEmailSequence(
     if (process.env.NODE_ENV === "development") {
       console.warn(
         `Scheduled email: ${
-          step.subject
+          sequence.subject
         } for ${recipientEmail} on ${scheduledFor.toISOString()}`
       );
     }
-  });
+  }
 
   // In production, you would insert these into a database table like:
   // CREATE TABLE scheduled_emails (
@@ -122,7 +119,8 @@ async function sendScheduledEmail(
     return;
   }
 
-  const sequence = EMAIL_SEQUENCES[scheduledEmail.sequenceId];
+  const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
+  const sequence = sequences[scheduledEmail.sequenceId];
 
   // Guard against missing sequence to satisfy TypeScript and avoid runtime errors
   if (!sequence) {
@@ -134,22 +132,15 @@ async function sendScheduledEmail(
     return;
   }
 
-  const step = sequence.steps.find((s) => s.id === scheduledEmail.stepId);
-
-  if (!step) {
-    scheduledEmail.status = "failed";
-    scheduledEmail.error = "Email step not found";
-    return;
-  }
-
+  // With simplified sequences, we just use the main sequence template
   try {
     // Process template variables
     const processedSubject = processEmailTemplate(
-      step.subject,
+      sequence.subject,
       scheduledEmail.variables
     );
     const processedContent = processEmailTemplate(
-      step.content,
+      sequence.content,
       scheduledEmail.variables
     );
 

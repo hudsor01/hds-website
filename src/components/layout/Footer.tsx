@@ -171,7 +171,7 @@ export default function Footer() {
               <div className="space-y-3">
                 <Link
                   href="/contact"
-                  className="block w-full px-4 py-3 rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold text-center hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+                  className="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold text-center hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
                 >
                   Get Free Roadmap
                 </Link>
@@ -248,7 +248,7 @@ export default function Footer() {
           className={cn(
             "fixed bottom-8 right-8 z-40",
             "p-3 rounded-full",
-            "bg-linear-to-r from-cyan-500 to-blue-500",
+            "bg-gradient-to-r from-cyan-500 to-blue-500",
             "text-black shadow-lg",
             "hover:shadow-cyan-500/25",
             "focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent",

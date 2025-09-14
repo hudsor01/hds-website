@@ -18,20 +18,20 @@ export function BackgroundPattern({
       {/* Floating gradient orbs */}
       {showGradients && (
         <>
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
           
           {/* Additional orbs for hero variant */}
           {variant === 'hero' && (
             <>
-              <div className="absolute top-1/2 left-1/6 w-32 h-32 bg-linear-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl" />
-              <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-linear-to-r from-orange-500/15 to-red-500/15 rounded-full blur-3xl" />
+              <div className="absolute top-1/2 left-1/6 w-32 h-32 bg-gradient-to-r from-green-500/20 to-cyan-500/20 rounded-full blur-2xl" />
+              <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-gradient-to-r from-orange-500/15 to-red-500/15 rounded-full blur-3xl" />
             </>
           )}
           
           {/* Smaller accents for minimal variant */}
           {variant === 'minimal' && (
-            <div className="absolute top-1/3 right-1/2 w-24 h-24 bg-linear-to-r from-cyan-500/15 to-blue-500/15 rounded-full blur-xl" />
+            <div className="absolute top-1/3 right-1/2 w-24 h-24 bg-gradient-to-r from-cyan-500/15 to-blue-500/15 rounded-full blur-xl" />
           )}
         </>
       )}

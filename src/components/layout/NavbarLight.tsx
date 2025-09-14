@@ -52,7 +52,7 @@ const NavbarLight = memo(function NavbarLight() {
               aria-label="Hudson Digital Solutions - Home"
             >
               <div className="relative">
-                <RocketLaunchIcon className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <RocketLaunchIcon className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform will-change-transform" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1">
@@ -104,7 +104,7 @@ const NavbarLight = memo(function NavbarLight() {
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm rounded-lg overflow-hidden hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
+                className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm rounded-lg overflow-hidden hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
                 aria-label="Get your free roadmap"
               >
                 <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
@@ -174,7 +174,7 @@ const NavbarLight = memo(function NavbarLight() {
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="block w-full text-center px-4 py-3 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+                className="block w-full text-center px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
               >
                 Get Free Roadmap
               </Link>

@@ -96,7 +96,7 @@ export interface ValidationError {
   code?: string;
 }
 
-export interface ValidationResult {
+export interface ApiValidationResult {
   isValid: boolean;
   errors: ValidationError[];
 }

@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-linear-to-br from-slate-950 via-gray-900 to-slate-950">
+    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <BackgroundPattern variant="hero" />
@@ -62,14 +62,14 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
                 <span className="inline-block mr-4">Built for</span>
-                <span className="inline-block mr-4 bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Excellence</span>
+                <span className="inline-block mr-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Excellence</span>
               </h1>
             </div>
 
-            <div>
-              <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            <div className="typography">
+              <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed text-pretty">
                 Crafting digital solutions with the precision of master engineers and the vision of business leaders.
               </p>
             </div>
@@ -81,14 +81,16 @@ export default function AboutPage() {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-balance">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Our Story
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Built from experience, driven by results, and focused on your success.
-            </p>
+            <div className="typography">
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto text-pretty">
+                Built from experience, driven by results, and focused on your success.
+              </p>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
@@ -97,7 +99,7 @@ export default function AboutPage() {
               <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-cyan-400 transition-colors">
                 Built from Experience
               </h3>
-              <div className="space-y-6 text-gray-300 leading-relaxed">
+              <div className="space-y-6 text-gray-300 leading-relaxed typography">
                 <p>
                   Hudson Digital was forged in the fires of enterprise-level challenges. With a foundation built on{" "}
                   <strong className="text-cyan-400">$3.7M+ in revenue impact</strong>, we don&apos;t just build websites—we engineer business transformation tools.
@@ -117,7 +119,7 @@ export default function AboutPage() {
             <div className="space-y-8">
               <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-linear-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
                     <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
@@ -131,7 +133,7 @@ export default function AboutPage() {
 
               <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-purple-400/50 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-linear-to-br from-purple-400/20 to-pink-500/20 border border-purple-500/30">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-500/20 border border-purple-500/30">
                     <EyeIcon className="w-8 h-8 text-purple-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors">
@@ -151,12 +153,12 @@ export default function AboutPage() {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-balance">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Technical Arsenal
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto text-pretty">
               Forged through enterprise-level battles, refined through startup agility, and sharpened by revenue-focused engineering.
             </p>
           </div>
@@ -164,7 +166,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-linear-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
                   <CodeBracketIcon className="w-6 h-6 text-cyan-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">Development</h3>
@@ -179,7 +181,7 @@ export default function AboutPage() {
 
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-linear-to-br from-emerald-400/20 to-green-500/20 border border-emerald-500/30">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-400/20 to-green-500/20 border border-emerald-500/30">
                   <ChartBarIcon className="w-6 h-6 text-emerald-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">Analytics</h3>
@@ -194,7 +196,7 @@ export default function AboutPage() {
 
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:border-orange-400/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-linear-to-br from-orange-400/20 to-red-500/20 border border-orange-500/30">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-orange-400/20 to-red-500/20 border border-orange-500/30">
                   <BoltIcon className="w-6 h-6 text-orange-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-colors">Operations</h3>
@@ -209,7 +211,7 @@ export default function AboutPage() {
 
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:border-purple-400/50 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-linear-to-br from-purple-400/20 to-pink-500/20 border border-purple-500/30">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-500/20 border border-purple-500/30">
                   <ShieldCheckIcon className="w-6 h-6 text-purple-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">Security</h3>
@@ -229,12 +231,12 @@ export default function AboutPage() {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-balance">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Meet the Architect
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto text-pretty">
               Hudson Digital Solutions was born from a simple realization: businesses don&apos;t need more technology—they need the right technology, implemented correctly.
             </p>
           </div>
@@ -280,12 +282,12 @@ export default function AboutPage() {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-balance">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 Engineering Principles
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto text-pretty">
               The core beliefs that drive every line of code, every design decision, and every strategic recommendation.
             </p>
           </div>
@@ -293,7 +295,7 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-linear-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-blue-500/20 border border-cyan-500/30">
                   <LightBulbIcon className="w-8 h-8 text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">Performance First</h3>
@@ -305,7 +307,7 @@ export default function AboutPage() {
 
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-emerald-400/50 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-linear-to-br from-emerald-400/20 to-green-500/20 border border-emerald-500/30">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-green-500/20 border border-emerald-500/30">
                   <ChartBarIcon className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">Data Driven</h3>
@@ -317,7 +319,7 @@ export default function AboutPage() {
 
             <div className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-orange-400/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-linear-to-br from-orange-400/20 to-red-500/20 border border-orange-500/30">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-400/20 to-red-500/20 border border-orange-500/30">
                   <CogIcon className="w-8 h-8 text-orange-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors">Scalable Architecture</h3>
@@ -333,24 +335,24 @@ export default function AboutPage() {
       {/* Call to Action */}
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 text-center bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
+          <div className="relative z-10 text-center glass-section p-12 md:p-16">
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6 text-balance">
               Ready to engineer 
-              <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 {" "}your success?
               </span>
             </h2>
             
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10 text-pretty">
               Stop settling for ordinary. Let&apos;s build something that doesn&apos;t just work—it dominates.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-linear-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform"
               >
-                <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
