@@ -1,6 +1,6 @@
 'use client'
 
-import { NO_INCOME_TAX_STATES, INCOME_TAX_STATES } from '@/lib/states'
+import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
 import type { PaystubData, FilingStatus } from '@/types/paystub'
 import type { FormErrors } from '@/types/paystub'
 
@@ -176,7 +176,7 @@ export function PaystubForm({
             >
               <option value="">Select State</option>
               <optgroup label="No State Income Tax">
-                {NO_INCOME_TAX_STATES.map((state) => (
+                {getNoIncomeTaxStates().map((state) => (
                   // use string properties from StateInfo so <option> value/key are strings
                   <option key={state.abbreviation ?? state.name} value={state.name}>
                     {state.name}
@@ -184,7 +184,7 @@ export function PaystubForm({
                 ))}
               </optgroup>
               <optgroup label="State Income Tax">
-                {INCOME_TAX_STATES.map((state) => (
+                {getIncomeTaxStates().map((state) => (
                   <option key={state.abbreviation ?? state.name} value={state.name}>
                     {state.name}
                   </option>

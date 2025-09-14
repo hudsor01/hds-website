@@ -21,6 +21,7 @@ export const contactFormSchema = z.object({
   service: serviceOptionsSchema.optional(),
   budget: budgetOptionsSchema.optional(),
   timeline: timelineOptionsSchema.optional(),
+  bestTimeToContact: z.string().optional(),
   message: messageSchema,
   // Anti-spam fields
   honeypot: z.string().max(0, 'Invalid submission').optional(),
@@ -89,10 +90,6 @@ export const contactFormResponseSchema = apiResponseSchema(
   })
 );
 
-// Validation helper functions
-export function validateContactForm(data: unknown) {
-  return contactFormSchema.safeParse(data);
-}
 
 export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
   const factors = {

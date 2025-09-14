@@ -110,10 +110,3 @@ export interface MultiStepFormState {
 
 // Import enhanced types from schemas
 export type { ContactFormData, LeadScoring } from '@/lib/schemas/contact';
-
-// Contact form validation result (updated for Zod)
-export interface ContactValidationResult {
-  isValid: boolean;
-  data?: ContactFormData;
-  errors?: Record<string, string>;
-}

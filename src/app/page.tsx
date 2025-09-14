@@ -39,7 +39,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-linear-to-b from-slate-950 via-gray-900 to-slate-950">
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-gray-900 to-slate-950">
       {/* Hero Section - Content-First Layout */}
       <section className="relative py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -51,7 +51,7 @@ export default function HomePage() {
                 <div>
                   <h1 className="text-4xl md:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6 text-balance">
                     <span className="block">Stop Losing Revenue to</span>
-                    <span className="block bg-linear-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                    <span className="block bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                       Technical Bottlenecks
                     </span>
                     <span className="block text-3xl md:text-4xl xl:text-5xl font-bold text-gray-300 mt-2">
@@ -69,7 +69,7 @@ export default function HomePage() {
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link href="/contact">
-                    <button className="group relative inline-flex items-center gap-3 px-9 py-4 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-base rounded-lg overflow-hidden hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300">
+                    <button className="group relative inline-flex items-center gap-3 px-9 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base rounded-lg overflow-hidden hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300">
                       <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                       <span className="relative">See Your ROI in 30 Days</span>
                       <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -102,8 +102,8 @@ export default function HomePage() {
             <div className="lg:col-span-2 mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-3xl" />
-                <div className="absolute top-4 right-4 w-32 h-32 bg-linear-to-br from-blue-500/30 to-cyan-500/30 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-3xl" />
+                <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-blue-500/30 to-cyan-500/30 rounded-full blur-2xl animate-pulse" />
                 
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
@@ -168,7 +168,7 @@ export default function HomePage() {
               >
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 rounded-xl bg-linear-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 group-hover:scale-110 transition-transform duration-300 will-change-transform">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 group-hover:scale-110 transition-transform duration-300 will-change-transform">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
                     <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
@@ -185,7 +185,7 @@ export default function HomePage() {
                   <div className="space-y-3">
                     {solution.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center space-x-3">
-                        <div className="w-2 h-2 rounded-full bg-linear-to-r from-cyan-400 to-blue-500" />
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500" />
                         <span className="text-sm text-gray-300">{feature}</span>
                       </div>
                     ))}
@@ -198,11 +198,11 @@ export default function HomePage() {
       </section>
 
       {/* Results Section */}
-      <section className="py-20 px-4 bg-linear-to-r from-gray-900/50 to-gray-800/50">
+      <section className="py-20 px-4 bg-gradient-to-r from-gray-900/50 to-gray-800/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 typography">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
-              <span className="bg-linear-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                 Proven Impact
               </span>
             </h2>
@@ -242,7 +242,7 @@ export default function HomePage() {
             
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
               Your competitors ship faster.
-              <span className="block bg-linear-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent mt-2">
+              <span className="block bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent mt-2">
                 Why don&apos;t you?
               </span>
             </h2>
@@ -255,7 +255,7 @@ export default function HomePage() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
-                <button className="group relative inline-flex items-center gap-3 px-10 py-5 bg-linear-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
+                <button className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300">
                   <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <span className="relative">Get Your Free Roadmap</span>
                   <ArrowRightIcon className="w-6 h-6 group-hover:translate-x-1 transition-transform" />

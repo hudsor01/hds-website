@@ -75,19 +75,19 @@ export default function PortfolioPage() {
   return (
     <>
       <Analytics />
-      <main className="min-h-screen bg-linear-to-br from-slate-950 via-gray-900 to-slate-950 text-white">
+      <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 text-white">
         {/* Animated background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob will-change-transform"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 will-change-transform"></div>
         </div>
 
         {/* Hero Section */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
             <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
             <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
           </div>
@@ -102,14 +102,14 @@ export default function PortfolioPage() {
               </div>
 
               <div>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
                   <span className="inline-block mr-4">Our</span>
-                  <span className="inline-block mr-4 bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Portfolio</span>
+                  <span className="inline-block mr-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Portfolio</span>
                 </h1>
               </div>
 
-              <div>
-                <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              <div className="typography">
+                <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed text-pretty">
                   Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.
                 </p>
               </div>
@@ -117,8 +117,8 @@ export default function PortfolioPage() {
               <div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
                   <Link href="/contact">
-                    <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
-                      <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform">
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                       <span className="relative z-10">Start Your Project</span>
                       <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -163,24 +163,27 @@ export default function PortfolioPage() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-                <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                   Featured Projects
                 </span>
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Real projects delivering measurable results for clients across industries.
-              </p>
+              <div className="typography">
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  Real projects delivering measurable results for clients across industries.
+                </p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {/* Desktop Grid / Mobile Horizontal Scroll */}
+            <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className={`group relative ${project.featured ? 'md:col-span-2' : ''}`}
+                  className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
                 >
                   <div className="relative h-full overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300">
                     {/* Project Header */}
-                    <div className={`${project.featured ? 'h-80' : 'h-64'} bg-linear-to-br ${project.gradient} relative overflow-hidden`}>
+                    <div className={`${project.featured ? 'h-80' : 'h-64'} bg-gradient-to-br ${project.gradient} relative overflow-hidden`}>
                       <div className="absolute inset-0 bg-black/20" />
                       
                       {/* Grid pattern overlay */}
@@ -206,7 +209,7 @@ export default function PortfolioPage() {
                         <Link 
                           href={project.link}
                           target="_blank"
-                          className="group/btn inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                          className="group/btn inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform"
                         >
                           View Live Site
                           <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
@@ -216,9 +219,11 @@ export default function PortfolioPage() {
 
                     {/* Project Details */}
                     <div className="p-8">
-                      <p className="text-gray-300 leading-relaxed mb-8 text-lg">
-                        {project.description}
-                      </p>
+                      <div className="typography mb-8">
+                        <p className="text-gray-300 leading-relaxed text-lg">
+                          {project.description}
+                        </p>
+                      </div>
 
                       {/* Stats Grid */}
                       <div className="grid grid-cols-3 gap-6 mb-8">
@@ -252,24 +257,26 @@ export default function PortfolioPage() {
         {/* CTA Section */}
         <section className="relative py-20 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="relative z-10 text-center bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
+            <div className="relative z-10 text-center bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
               <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
                 Ready to create your 
-                <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                   {" "}success story?
                 </span>
               </h2>
               
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
-                Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
-              </p>
+              <div className="typography">
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+                  Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
+                </p>
+              </div>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
                   href="/contact"
-                  className="group relative inline-flex items-center gap-3 px-10 py-5 bg-linear-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                  className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform"
                 >
-                  <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
                   <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>

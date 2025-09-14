@@ -1,7 +1,7 @@
 import React from 'react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
-import { TAX_DATA } from '@/lib/paystub-data'
+import { getCurrentTaxData } from '@/lib/paystub-utils'
 import { FileText } from 'lucide-react'
 
 interface AnnualWageSummaryProps {
@@ -14,7 +14,7 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
   }
 
   // Add a safe lookup for the Social Security wage base to avoid possible undefined access
-  const ssWageBase = TAX_DATA[employeeData.taxYear]?.ssWageBase ?? employeeData.totals.grossPay
+  const ssWageBase = getCurrentTaxData()?.ssWageBase ?? employeeData.totals.grossPay
   const socialSecurityWages = Math.min(employeeData.totals.grossPay, ssWageBase)
 
   return (

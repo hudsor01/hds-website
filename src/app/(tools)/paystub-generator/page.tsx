@@ -3,15 +3,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
 import type { PaystubData, PayPeriod, TaxData, FilingStatus } from '@/types/paystub'
-import { PAY_DATES, TAX_DATA } from '@/lib/paystub-data'
+import { getPayDatesForYear, getCurrentTaxData } from '@/lib/paystub-utils'
 import { calculateFederalTax, calculateSocialSecurity, calculateMedicare } from '@/lib/tax-calculations'
-import { formatCurrency, formatDate } from '@/lib/format-utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import { PayStub } from '@/components/PayStub'
 import { AnnualWageSummary } from '@/components/AnnualWageSummary'
 import { saveFormData, loadFormData, clearFormData } from '@/lib/storage'
 import { validateForm } from '@/lib/validation'
-import { NO_INCOME_TAX_STATES, INCOME_TAX_STATES } from '@/lib/states'
-import type { FormErrors } from '@/types/validation'
+import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
+import type { FormErrors } from '@/types/common'
 
 export default function Home() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -139,7 +139,7 @@ export default function Home() {
 
     try {
       const grossPay = paystubData.hourlyRate * paystubData.hoursPerPeriod
-      const payDates = (PAY_DATES as Record<number, string[]>)[paystubData.taxYear] || PAY_DATES[2024]
+      const payDates = getPayDatesForYear(paystubData.taxYear)
       const annualGross = grossPay * 26
 
       const totals = {
@@ -602,14 +602,14 @@ export default function Home() {
               >
                 <option value="">Select state...</option>
                 <optgroup label="No State Income Tax">
-                  {NO_INCOME_TAX_STATES.map(state => (
+                  {getNoIncomeTaxStates().map(state => (
                     <option key={state.code} value={state.code}>
                       {state.name} (No state tax)
                     </option>
                   ))}
                 </optgroup>
                 <optgroup label="States with Income Tax">
-                  {INCOME_TAX_STATES.map(state => (
+                  {getIncomeTaxStates().map(state => (
                     <option key={state.code} value={state.code}>
                       {state.name}
                     </option>
@@ -998,7 +998,7 @@ export default function Home() {
                   borderLeft: '4px solid #ffc107'
                 }}>
                   <span>Box 3 - Social security wages:</span>
-                  <span>{formatCurrency(Math.min(paystubData.totals.grossPay, TAX_DATA[paystubData.taxYear]?.ssWageBase || 0))}</span>
+                  <span>{formatCurrency(Math.min(paystubData.totals.grossPay, getCurrentTaxData()?.ssWageBase || 0))}</span>
                 </div>
                 <div style={{
                   display: 'flex',

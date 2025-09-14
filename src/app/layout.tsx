@@ -3,9 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
 import { Providers } from "@/components/providers";
-import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
+import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -106,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         {/* Critical mobile-first meta tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes" />
@@ -157,6 +158,7 @@ export default function RootLayout({
             {children}
           </div>
           <Footer />
+          <ScrollToTop />
           <Analytics />
         </Providers>
       </body>

@@ -8,8 +8,8 @@ import type {
   FilingStatus,
   TaxData,
 } from "@/types/paystub";
-import type { FormErrors } from "@/types/paystub";
-import { PAY_DATES } from "@/lib/paystub-data";
+import type { FormErrors } from "@/types/common";
+import { getPayDatesForYear } from "@/lib/paystub-utils";
 import {
   calculateFederalTax,
   calculateSocialSecurity,
@@ -154,9 +154,7 @@ export function usePaystubGenerator() {
 
     try {
       const grossPay = paystubData.hourlyRate * paystubData.hoursPerPeriod;
-      const payDates =
-        (PAY_DATES as Record<number, string[]>)[paystubData.taxYear] ||
-        PAY_DATES[2024];
+      const payDates = getPayDatesForYear(paystubData.taxYear);
       const annualGross = grossPay * 26;
 
       const totals = {

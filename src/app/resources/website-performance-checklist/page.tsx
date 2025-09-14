@@ -253,7 +253,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-linear-to-r from-green-400/20 to-cyan-400/20 border border-green-400/30 rounded-lg p-6">
+              <div className="bg-gradient-to-r from-green-400/20 to-cyan-400/20 border border-green-400/30 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-white mb-3">Real Client Results</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">

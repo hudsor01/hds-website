@@ -19,7 +19,7 @@ export default function NotFound() {
       <div className="max-w-2xl mx-auto text-center">
         {/* 404 Visual */}
         <div className="mb-12">
-          <h1 className="text-8xl lg:text-9xl font-black text-transparent bg-linear-to-r from-secondary-400 to-accent-400 bg-clip-text mb-4">
+          <h1 className="text-8xl lg:text-9xl font-black text-transparent bg-gradient-to-r from-secondary-400 to-accent-400 bg-clip-text mb-4">
             404
           </h1>
           <div className="w-32 h-1 bg-gradient-secondary mx-auto rounded-full glow-cyan"></div>
@@ -88,8 +88,8 @@ export default function NotFound() {
           </div>
         </div>
         {/* Background Elements */}
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse will-change-transform"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000 will-change-transform"></div>
       </div>
     </div>
   );

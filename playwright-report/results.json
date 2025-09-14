@@ -4,8 +4,8 @@
     "rootDir": "/Users/richard/Developer/business-website/e2e",
     "forbidOnly": false,
     "fullyParallel": true,
-    "globalSetup": "/Users/richard/Developer/business-website/e2e/helpers/global-setup.ts",
-    "globalTeardown": "/Users/richard/Developer/business-website/e2e/helpers/global-teardown.ts",
+    "globalSetup": null,
+    "globalTeardown": null,
     "globalTimeout": 600000,
     "grep": {},
     "grepInvert": null,
@@ -23,14 +23,8 @@
         "html",
         {
           "outputFolder": "playwright-report",
-          "open": "never",
-          "host": "localhost",
-          "port": 9323
+          "open": "never"
         }
-      ],
-      [
-        "html",
-        null
       ],
       [
         "json",
@@ -181,40 +175,31 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.54.2",
+    "version": "1.55.0",
     "workers": 1,
     "webServer": {
       "command": "npm run dev",
       "port": 3000,
       "reuseExistingServer": true,
-      "stdout": "pipe",
-      "stderr": "pipe",
       "timeout": 180000,
       "env": {
         "NODE_ENV": "test",
         "PORT": "3000",
         "NEXT_PUBLIC_POSTHOG_KEY": "",
         "DISABLE_ANALYTICS_IN_TESTS": "true"
-      },
-      "retries": 3
+      }
     }
   },
   "suites": [],
   "errors": [
     {
-      "message": "Error: browserType.launch: Executable doesn't exist at /Users/richard/Library/Caches/ms-playwright/chromium_headless_shell-1181/chrome-mac/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
-      "stack": "Error: browserType.launch: Executable doesn't exist at /Users/richard/Library/Caches/ms-playwright/chromium_headless_shell-1181/chrome-mac/headless_shell\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝\n    at globalSetup (/Users/richard/Developer/business-website/e2e/helpers/global-setup.ts:7:34)",
-      "location": {
-        "file": "/Users/richard/Developer/business-website/e2e/helpers/global-setup.ts",
-        "column": 34,
-        "line": 7
-      },
-      "snippet": "\u001b[90m   at \u001b[39mhelpers/global-setup.ts:7\n\n   5 |\n   6 |   // Create a browser instance for setup tasks\n>  7 |   const browser = await chromium.launch();\n     |                                  ^\n   8 |   const context = await browser.newContext();\n   9 |   const page = await context.newPage();\n  10 |"
+      "message": "Error: No tests found",
+      "stack": "Error: No tests found"
     }
   ],
   "stats": {
-    "startTime": "2025-09-13T03:57:07.560Z",
-    "duration": 30.44799999999998,
+    "startTime": "2025-09-14T15:39:08.863Z",
+    "duration": 12.007999999999981,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,

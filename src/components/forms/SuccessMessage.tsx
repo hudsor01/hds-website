@@ -9,7 +9,7 @@ interface SuccessMessageProps {
 
 export function SuccessMessage({ onReset, className = '' }: SuccessMessageProps) {
   return (
-    <div className={`bg-linear-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
+    <div className={`bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-8 ${className}`}>
       <div className="text-center">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
           <CheckIcon className="w-8 h-8 text-green-400" />
