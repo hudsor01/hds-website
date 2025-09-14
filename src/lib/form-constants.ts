@@ -1,13 +1,29 @@
 export const SERVICE_OPTIONS = [
   { value: '', label: 'Select a Service' },
-  { value: 'website-development', label: 'Website Development' },
-  { value: 'e-commerce', label: 'E-Commerce Solutions' },
-  { value: 'web-application', label: 'Web Application' },
-  { value: 'ui-ux-design', label: 'UI/UX Design' },
-  { value: 'seo-optimization', label: 'SEO Optimization' },
-  { value: 'maintenance', label: 'Maintenance & Support' },
-  { value: 'consulting', label: 'Technical Consulting' },
+  { value: 'website', label: 'Website Development' },
+  { value: 'webapp', label: 'Web Application' },
+  { value: 'ecommerce', label: 'E-Commerce Solutions' },
+  { value: 'optimization', label: 'Website Optimization' },
+  { value: 'consultation', label: 'Technical Consulting' },
   { value: 'other', label: 'Other' }
+]
+
+export const BUDGET_OPTIONS = [
+  { value: '', label: 'Select Budget Range' },
+  { value: '5-10K', label: '$5,000 - $10,000' },
+  { value: '10-25K', label: '$10,000 - $25,000' },
+  { value: '25-50K', label: '$25,000 - $50,000' },
+  { value: '50K+', label: '$50,000+' },
+  { value: 'tbd', label: 'To be determined' }
+]
+
+export const TIMELINE_OPTIONS = [
+  { value: '', label: 'Select Timeline' },
+  { value: 'ASAP', label: 'ASAP (Rush job)' },
+  { value: '1 month', label: 'Within 1 month' },
+  { value: '1-3 months', label: '1-3 months' },
+  { value: '3-6 months', label: '3-6 months' },
+  { value: '6+ months', label: '6+ months' }
 ]
 
 export const TIME_OPTIONS = [

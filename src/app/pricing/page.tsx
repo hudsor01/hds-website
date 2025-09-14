@@ -124,14 +124,18 @@ export default function PricingPage() {
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-6">
-            INVESTMENT
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-6 text-balance">
+            <span className="inline-block">Transparent</span>
+            <span className="inline-block mx-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Investment</span>
+            <span className="inline-block">Pricing</span>
           </h1>
           
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Quality development that <strong className="text-secondary-400 glow-cyan">drives real business results</strong>. 
-            No hidden fees, no surprises - just <strong className="text-accent-400 glow-green">transparent pricing</strong> for exceptional work.
-          </p>
+          <div className="typography">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed text-pretty">
+              Quality development that <strong className="text-secondary-400 glow-cyan">drives real business results</strong>.
+              No hidden fees, no surprises - just <strong className="text-accent-400 glow-green">transparent pricing</strong> for exceptional work.
+            </p>
+          </div>
         </div>
 
         {/* Pricing Cards */}
@@ -154,9 +158,9 @@ export default function PricingPage() {
               )}
 
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+                <h3 className="text-2xl font-bold text-white mb-2 text-balance">{tier.name}</h3>
                 <div className="text-3xl font-black text-secondary-400 mb-4">{tier.price}</div>
-                <p className="text-gray-300 text-sm">{tier.description}</p>
+                <p className="text-gray-300 text-sm text-pretty">{tier.description}</p>
               </div>
 
               <div className="space-y-4 mb-8">
@@ -208,19 +212,23 @@ export default function PricingPage() {
         {/* FAQ Section */}
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-white mb-4 text-balance">
               Frequently Asked <span className="text-secondary-400">Questions</span>
             </h2>
-            <p className="text-gray-300">
-              Everything you need to know about our pricing and process
-            </p>
+            <div className="typography">
+              <p className="text-gray-300 text-pretty">
+                Everything you need to know about our pricing and process
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-black/60 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
-                <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                <h3 className="text-lg font-semibold text-white mb-3 text-balance">{faq.question}</h3>
+                <div className="typography">
+                  <p className="text-gray-300 leading-relaxed text-pretty">{faq.answer}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -228,13 +236,15 @@ export default function PricingPage() {
 
         {/* CTA Section */}
         <div className="text-center mt-20 p-12 bg-black/80 backdrop-blur-xl border border-gray-800 rounded-2xl">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4 text-balance">
             Ready to Start Your Project?
           </h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Get a free consultation and detailed project estimate. No commitments, 
-            just expert advice on bringing your vision to life.
-          </p>
+          <div className="typography">
+            <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-pretty">
+              Get a free consultation and detailed project estimate. No commitments,
+              just expert advice on bringing your vision to life.
+            </p>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact"

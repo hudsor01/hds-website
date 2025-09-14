@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { ContactFormSchema } from '@/lib/validation'
-import type { ContactFormData } from '@/types/forms'
+import { contactFormSchema } from '@/lib/schemas/contact'
+import type { ContactFormData } from '@/lib/schemas/contact'
 import { useCSRFToken, useSubmitContactForm } from '@/hooks/useContactForm'
 import { SERVICE_OPTIONS, TIME_OPTIONS } from '@/lib/form-constants'
 import { FormField } from './forms/FormField'
@@ -25,13 +25,14 @@ export default function ContactForm({ className = '' }: { className?: string }) 
       email: '',
       phone: '',
       company: '',
-      service: '',
-      bestTimeToContact: '',
+      service: undefined,
+      budget: undefined,
+      timeline: undefined,
       message: ''
     } satisfies ContactFormData,
     validators: {
       onChange: ({ value }) => {
-        const result = ContactFormSchema.safeParse(value)
+        const result = contactFormSchema.safeParse(value)
         if (!result.success) {
           return result.error.format()
         }
@@ -192,7 +193,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
                   name="service"
                   required
                   value={field.state.value}
-                  onChange={(value) => field.handleChange(value)}
+                  onChange={(value) => field.handleChange(value as ContactFormData['service'])}
                   options={SERVICE_OPTIONS}
                 />
               </FormField>

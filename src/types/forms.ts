@@ -108,23 +108,10 @@ export interface MultiStepFormState {
   canGoPrevious: boolean;
 }
 
-// Zod-derived form types
-export type ContactFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  company?: string;
-  service?: string;
-  bestTimeToContact?: string;
-  message: string;
-};
+// Import enhanced types from schemas
+export type { ContactFormData, LeadScoring } from '@/lib/schemas/contact';
 
-export type NewsletterSignupData = {
-  email: string;
-};
-
-// Contact form validation result
+// Contact form validation result (updated for Zod)
 export interface ContactValidationResult {
   isValid: boolean;
   data?: ContactFormData;

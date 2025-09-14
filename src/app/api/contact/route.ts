@@ -7,18 +7,17 @@ import { recordContactFormSubmission } from "@/lib/metrics";
 import {
   escapeHtml,
   sanitizeEmailHeader,
-  validateContactForm,
   detectInjectionAttempt,
 } from "@/lib/security-utils";
 import { verifyCSRFToken } from "@/lib/csrf";
 import {
-  calculateLeadScore,
-  getEmailSequenceForLead,
   EMAIL_SEQUENCES,
   processEmailTemplate,
 } from "@/lib/email-sequences";
 import { scheduleEmailSequence } from "@/lib/scheduled-emails";
-import type { ContactFormData } from "@/types/forms";
+import { validateRequestWithZod } from "@/lib/validation";
+import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact";
+import type { ContactFormData } from "@/lib/schemas/contact";
 
 // Initialize rate limiter for contact form
 const rateLimiter = new RateLimiter();
@@ -85,10 +84,13 @@ function generateAdminNotificationHTML(
             : ""
         }
         ${
-          data.bestTimeToContact
-            ? `<p><strong>Best Time to Contact:</strong> ${escapeHtml(
-                data.bestTimeToContact
-              )}</p>`
+          data.budget
+            ? `<p><strong>Budget:</strong> ${escapeHtml(data.budget)}</p>`
+            : ""
+        }
+        ${
+          data.timeline
+            ? `<p><strong>Timeline:</strong> ${escapeHtml(data.timeline)}</p>`
             : ""
         }
       </div>
@@ -171,28 +173,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Step 3: Parse request body
-    let body;
-    try {
-      body = await request.json();
-    } catch {
+    // Step 3: Validate request body with enhanced Zod schema
+    const validation = await validateRequestWithZod(request, contactFormSchema);
+
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "Invalid request format" },
+        { error: "Validation failed", errors: validation.errors, message: validation.message },
         { status: 400 }
       );
     }
 
-    // Step 4: Comprehensive validation and sanitization
-    const validation = validateContactForm(body);
-
-    if (!validation.isValid) {
-      return NextResponse.json(
-        { error: "Validation failed", errors: validation.errors },
-        { status: 400 }
-      );
-    }
-
-    const data = validation.data as ContactFormData;
+    const data = validation.data;
 
     // Step 5: Detect potential injection attempts for monitoring
     const fieldsToCheck = [
@@ -211,19 +202,11 @@ export async function POST(request: NextRequest) {
       // Log but still process if validation passed - the input is already sanitized
     }
 
-    // Step 6: Calculate lead score and determine email sequence
-    const leadScore = calculateLeadScore({
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName || "",
-      company: data.company,
-      phone: data.phone,
-      message: data.message,
-      service: data.service,
-      source: "contact-form",
-    });
+    // Step 6: Calculate lead score using enhanced algorithm
+    const leadScoring = scoreLeadFromContactData(data);
+    const leadScore = leadScoring.score;
 
-    const sequenceId = getEmailSequenceForLead(leadScore, "contact-form");
+    const sequenceId = leadScoring.sequenceType;
     const sequence = EMAIL_SEQUENCES[sequenceId];
 
     // Prepare email variables for sequences
