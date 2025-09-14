@@ -32,8 +32,8 @@ export function calculateLeadScore(factors: LeadScoreFactors): number {
 
 // Email sequence templates
 export const EMAIL_SEQUENCES: Record<string, EmailSequence> = {
-  // High-value prospect sequence (lead score 70+)
-  'high-value-prospect': {
+  // High-value consultation sequence (high budget + urgent timeline)
+  'high-value-consultation': {
     id: 'high-value-prospect',
     name: 'High-Value Prospect Sequence',
     description: 'Personalized sequence for high-scoring leads',
@@ -116,8 +116,8 @@ Richard Hudson`
     ]
   },
 
-  // Standard prospect sequence (lead score 40-69)
-  'standard-prospect': {
+  // Targeted service consultation sequence (specific service + high budget/urgent timeline)
+  'targeted-service-consultation': {
     id: 'standard-prospect',
     name: 'Standard Prospect Sequence',
     description: 'General nurturing sequence for qualified leads',
@@ -195,8 +195,8 @@ Richard Hudson`
     ]
   },
 
-  // Educational sequence for lower-scoring leads
-  'educational-nurture': {
+  // Enterprise nurture sequence (company but lower urgency/budget)
+  'enterprise-nurture': {
     id: 'educational-nurture',
     name: 'Educational Nurture Sequence',
     description: 'Value-first sequence for early-stage prospects',
@@ -292,8 +292,8 @@ Richard Hudson`
     ]
   },
 
-  // Lead magnet follow-up sequence
-  'lead-magnet-followup': {
+  // Standard welcome sequence (default for lower scoring leads)
+  'standard-welcome': {
     id: 'lead-magnet-followup',
     name: 'Lead Magnet Follow-up Sequence',
     description: 'Nurture sequence for lead magnet downloads',

@@ -40,16 +40,16 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-linear-to-b from-slate-950 via-gray-900 to-slate-950">
-      {/* Hero Section - Split Layout */}
-      <section className="relative min-h-screen flex items-center py-20">
+      {/* Hero Section - Content-First Layout */}
+      <section className="relative py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+          <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
             
             {/* Left Side - Content */}
-            <div className="lg:pr-8">
+            <div className="lg:col-span-3 lg:pr-8">
               <div className="space-y-8">
                 <div>
-                  <h1 className="text-4xl md:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6">
+                  <h1 className="text-4xl md:text-6xl xl:text-7xl font-black text-white leading-[1.1] mb-6 text-balance">
                     <span className="block">Stop Losing Revenue to</span>
                     <span className="block bg-linear-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                       Technical Bottlenecks
@@ -60,22 +60,24 @@ export default function HomePage() {
                   </h1>
                 </div>
 
-                <p className="text-xl text-gray-300 leading-relaxed max-w-2xl">
-                  We build and scale your technical operations in weeks, not months. 
-                  No hiring delays. No training costs. Just proven senior talent ready to execute.
-                </p>
+                <div className="typography">
+                  <p className="text-xl text-gray-300 leading-relaxed max-w-2xl text-pretty">
+                    We build and scale your technical operations in weeks, not months.
+                    No hiring delays. No training costs. Just proven senior talent ready to execute.
+                  </p>
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link href="/contact">
-                    <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-lg overflow-hidden hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300">
+                    <button className="group relative inline-flex items-center gap-3 px-9 py-4 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-base rounded-lg overflow-hidden hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300">
                       <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                       <span className="relative">See Your ROI in 30 Days</span>
                       <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
-                  
+
                   <Link href="/portfolio">
-                    <button className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-gray-600 text-white font-semibold rounded-lg hover:border-cyan-400 hover:bg-cyan-400/5 transition-all duration-300">
+                    <button className="group inline-flex items-center gap-3 px-9 py-4 border-2 border-gray-600 text-white font-medium text-base rounded-lg hover:border-cyan-400 hover:bg-cyan-400/5 transition-all duration-300">
                       View Case Studies
                       <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -97,16 +99,16 @@ export default function HomePage() {
             </div>
 
             {/* Right Side - Terminal Display */}
-            <div className="mt-16 lg:mt-0">
+            <div className="lg:col-span-2 mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-3xl" />
                 <div className="absolute top-4 right-4 w-32 h-32 bg-linear-to-br from-blue-500/30 to-cyan-500/30 rounded-full blur-2xl animate-pulse" />
                 
                 {/* Terminal Window */}
-                <div className="relative bg-linear-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden">
+                <div className="relative glass-card-light overflow-hidden">
                   {/* Terminal Header */}
-                  <div className="bg-gray-900/80 border-b border-gray-700/50 px-4 py-3 flex items-center justify-between">
+                  <div className="bg-gray-900/80 border-b border-gray-700/50 px-4 py-3 flex-between">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-red-500" />
                       <div className="w-3 h-3 rounded-full bg-yellow-500" />
@@ -147,24 +149,26 @@ export default function HomePage() {
       {/* Solutions Grid */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 typography">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
               How We Solve Your Biggest Problems
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Three ways we help SaaS companies go from struggling to scaling
-            </p>
+            <div className="typography">
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                Three ways we help SaaS companies go from struggling to scaling
+              </p>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             {solutions.map((solution, index) => (
               <div 
                 key={index}
-                className="group relative bg-linear-to-br from-gray-900/50 to-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-500"
+                className="group relative glass-card-light p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-500"
               >
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 rounded-xl bg-linear-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 group-hover:scale-110 transition-transform duration-300">
+                    <div className="p-3 rounded-xl bg-linear-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 group-hover:scale-110 transition-transform duration-300 will-change-transform">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
                     <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
@@ -172,9 +176,11 @@ export default function HomePage() {
                     </h3>
                   </div>
                   
-                  <p className="text-gray-400 leading-relaxed">
-                    {solution.description}
-                  </p>
+                  <div className="typography">
+                    <p className="text-gray-400 leading-relaxed">
+                      {solution.description}
+                    </p>
+                  </div>
                   
                   <div className="space-y-3">
                     {solution.features.map((feature, featureIndex) => (
@@ -194,26 +200,28 @@ export default function HomePage() {
       {/* Results Section */}
       <section className="py-20 px-4 bg-linear-to-r from-gray-900/50 to-gray-800/50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 typography">
             <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
               <span className="bg-linear-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                 Proven Impact
               </span>
             </h2>
-            <p className="text-xl text-gray-400">Numbers don&apos;t lie - our clients see real results</p>
+            <div className="typography">
+              <p className="text-xl text-gray-400">Numbers don&apos;t lie - our clients see real results</p>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {results.map((result, index) => (
               <div 
                 key={index}
-                className="text-center group hover:scale-105 transition-transform duration-300"
+                className="text-center group hover:scale-105 transition-transform duration-300 will-change-transform"
               >
-                <div className="bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 group-hover:border-cyan-400/50 transition-all duration-300">
-                  <div className="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                <div className="glass-card-light p-6 lg:p-8 group-hover:border-cyan-400/50 transition-all duration-300">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 group-hover:text-cyan-400 transition-colors">
                     {result.metric}
                   </div>
-                  <div className="text-lg font-semibold text-gray-300 mb-1">
+                  <div className="text-base lg:text-lg font-semibold text-gray-300 mb-2">
                     {result.label}
                   </div>
                   <div className="text-sm text-gray-500">
@@ -229,7 +237,7 @@ export default function HomePage() {
       {/* Final CTA */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
+          <div className="glass-section p-12 md:p-16">
             <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
             
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">
@@ -239,9 +247,11 @@ export default function HomePage() {
               </span>
             </h2>
             
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-              Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
-            </p>
+            <div className="typography">
+              <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
+              </p>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">

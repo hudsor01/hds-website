@@ -1,6 +1,140 @@
-// Form validation utilities
-import { z } from 'zod'
-import type { ValidationResult, FormErrors } from '@/types/paystub'
+// Enhanced form validation utilities using Zod
+import { z } from 'zod';
+import type { NextRequest } from 'next/server';
+import type { ValidationResult, FormErrors } from '@/types/paystub';
+
+// Type for Zod validation results formatted for forms
+export type ZodFormErrors<T> = {
+  [K in keyof T]?: string[];
+};
+
+// Convert Zod errors to form-friendly format
+export function formatZodErrors<T>(error: z.ZodError): ZodFormErrors<T> {
+  const formattedErrors: ZodFormErrors<T> = {};
+
+  error.issues.forEach((issue) => {
+    const path = issue.path.join('.');
+    if (!formattedErrors[path as keyof T]) {
+      formattedErrors[path as keyof T] = [];
+    }
+    formattedErrors[path as keyof T]!.push(issue.message);
+  });
+
+  return formattedErrors;
+}
+
+// Validate request body with Zod schema
+export async function validateRequestWithZod<T>(
+  request: NextRequest,
+  schema: z.ZodSchema<T>
+): Promise<{
+  success: true;
+  data: T;
+} | {
+  success: false;
+  errors: ZodFormErrors<T>;
+  message: string;
+}> {
+  try {
+    const body = await request.json();
+    const result = schema.safeParse(body);
+
+    if (result.success) {
+      return { success: true, data: result.data };
+    }
+
+    return {
+      success: false,
+      errors: formatZodErrors<T>(result.error),
+      message: 'Validation failed',
+    };
+  } catch {
+    return {
+      success: false,
+      errors: {} as ZodFormErrors<T>,
+      message: 'Invalid request body',
+    };
+  }
+}
+
+// Validate data with Zod schema (non-request)
+export function validateWithZod<T>(
+  data: unknown,
+  schema: z.ZodSchema<T>
+): {
+  success: true;
+  data: T;
+} | {
+  success: false;
+  errors: ZodFormErrors<T>;
+  message: string;
+} {
+  const result = schema.safeParse(data);
+
+  if (result.success) {
+    return { success: true, data: result.data };
+  }
+
+  return {
+    success: false,
+    errors: formatZodErrors<T>(result.error),
+    message: 'Validation failed',
+  };
+}
+
+// Helper to create API response with Zod validation
+export function createValidatedResponse<T>(
+  result: { success: true; data: T } | { success: false; errors: ZodFormErrors<T>; message: string },
+  successMessage?: string
+) {
+  if (result.success) {
+    return Response.json({
+      success: true,
+      message: successMessage || 'Success',
+      data: result.data,
+    });
+  }
+
+  return Response.json({
+    success: false,
+    message: result.message,
+    errors: result.errors,
+  }, { status: 400 });
+}
+
+// Enhanced sanitization using Zod transforms
+export const sanitizedStringSchema = z
+  .string()
+  .transform((val) => val.trim())
+  .transform((val) => {
+    // Remove potentially dangerous patterns
+    return val
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/javascript:/gi, '') // Remove javascript: protocol
+      .replace(/on\w+\s*=/gi, '') // Remove event handlers
+      .replace(/script\b/gi, '') // Remove script references
+      .replace(/eval\s*\(/gi, '') // Remove eval
+      .replace(/expression\s*\(/gi, ''); // Remove CSS expressions
+  });
+
+// Common field transformations
+export const transformers = {
+  toLowerCase: (val: string) => val.toLowerCase(),
+  toUpperCase: (val: string) => val.toUpperCase(),
+  trim: (val: string) => val.trim(),
+  removeWhitespace: (val: string) => val.replace(/\s/g, ''),
+  normalizePhone: (val: string) => val.replace(/[^\d+]/g, ''),
+  normalizeUrl: (val: string) => {
+    if (!val.startsWith('http://') && !val.startsWith('https://')) {
+      return `https://${val}`;
+    }
+    return val;
+  },
+};
+
+// =============================================================================
+// PAYSTUB GENERATOR VALIDATION - Keeping existing functionality
+// =============================================================================
 
 // Validate employee name
 export const validateEmployeeName = (value: string): ValidationResult => {
@@ -35,7 +169,7 @@ export const validateHoursPerPeriod = (value: number): ValidationResult => {
   return { isValid: true }
 }
 
-// Validate entire form
+// Validate entire paystub form
 export const validateForm = (data: {
   employeeName: string
   hourlyRate: number
@@ -64,65 +198,3 @@ export const validateForm = (data: {
 
   return { isValid, errors }
 }
-
-// Contact Form Validation Schema
-export const ContactFormSchema = z.object({
-  firstName: z.string()
-    .min(1, 'First name is required')
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name must be less than 50 characters'),
-
-  lastName: z.string()
-    .min(1, 'Last name is required')
-    .min(2, 'Last name must be at least 2 characters')
-    .max(50, 'Last name must be less than 50 characters'),
-
-  email: z.string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address')
-    .max(100, 'Email must be less than 100 characters'),
-
-  phone: z.string()
-    .optional()
-    .refine(
-      (val) => !val || /^[\+]?[1-9][\d]{0,15}$/.test(val.replace(/[\s\-\(\)]/g, '')),
-      'Please enter a valid phone number'
-    ),
-
-  company: z.string()
-    .optional()
-    .refine(
-      (val) => !val || val.length <= 100,
-      'Company name must be less than 100 characters'
-    ),
-
-  service: z.string()
-    .min(1, 'Please select a service')
-    .refine(
-      (val) => ['Custom Development', 'Revenue Operations', 'Partnership Management', 'Other'].includes(val),
-      'Please select a valid service option'
-    ),
-
-  bestTimeToContact: z.string()
-    .min(1, 'Please select your preferred contact time')
-    .refine(
-      (val) => ['Morning (9 AM - 12 PM)', 'Afternoon (12 PM - 5 PM)', 'Evening (5 PM - 8 PM)', 'Anytime'].includes(val),
-      'Please select a valid contact time'
-    ),
-
-  message: z.string()
-    .min(1, 'Message is required')
-    .min(10, 'Message must be at least 10 characters')
-    .max(1000, 'Message must be less than 1000 characters')
-})
-
-// Newsletter signup validation
-export const NewsletterSignupSchema = z.object({
-  email: z.string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address')
-})
-
-// Export types derived from Zod schemas
-export type ContactFormData = z.infer<typeof ContactFormSchema>;
-export type NewsletterSignupData = z.infer<typeof NewsletterSignupSchema>;
