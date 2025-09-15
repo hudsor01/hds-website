@@ -4,13 +4,21 @@
  */
 
 import { Resend } from "resend";
-import { getEmailSequences, processEmailTemplate } from "./email-utils";
-import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
 import type {
   InternalScheduledEmail,
   EmailQueueStats,
   EmailProcessResult,
 } from "@/types/utils";
+import { createServerLogger } from "@/lib/logger";
+import { getEmailSequences, processEmailTemplate } from "./email-utils";
+import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
+
+// Create logger instance for email operations
+const emailLogger = createServerLogger();
+emailLogger.setContext({
+  component: 'scheduled-emails',
+  service: 'email-queue'
+});
 
 // In a real implementation, this would be stored in a database
 // For demo purposes, we'll use in-memory storage with comments on database structure
@@ -32,7 +40,11 @@ export function scheduleEmailSequence(
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
   const sequence = sequences[sequenceId];
   if (!sequence) {
-    console.error(`Email sequence not found: ${sequenceId}`);
+    emailLogger.error('Email sequence not found', {
+      sequenceId,
+      recipientEmail,
+      availableSequences: Object.keys(sequences)
+    });
     return;
   }
 
@@ -56,14 +68,17 @@ export function scheduleEmailSequence(
 
     scheduledEmailsQueue.push(scheduledEmail);
 
-    // Log only in development, not during tests
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        `Scheduled email: ${
-          sequence.subject
-        } for ${recipientEmail} on ${scheduledFor.toISOString()}`
-      );
-    }
+    // Log email scheduling with metrics
+    emailLogger.info('Email scheduled for delivery', {
+      emailId: scheduledEmail.id,
+      recipientEmail,
+      recipientName,
+      sequenceId,
+      subject: sequence.subject,
+      scheduledFor: scheduledFor.toISOString(),
+      daysFromNow: 3,
+      queueSize: scheduledEmailsQueue.length
+    });
   }
 
   // In production, you would insert these into a database table like:
@@ -92,16 +107,23 @@ export async function processPendingEmails(): Promise<void> {
     (email) => email.status === "pending" && email.scheduledFor <= now
   );
 
-  console.warn(`Processing ${pendingEmails.length} pending emails...`);
+  emailLogger.info('Starting email queue processing', {
+    pendingCount: pendingEmails.length,
+    totalQueueSize: scheduledEmailsQueue.length,
+    processTime: now.toISOString()
+  });
 
   for (const scheduledEmail of pendingEmails) {
     try {
       await sendScheduledEmail(scheduledEmail);
     } catch (error) {
-      console.error(
-        `Failed to process scheduled email ${scheduledEmail.id}:`,
-        error
-      );
+      emailLogger.error('Failed to process scheduled email', {
+        emailId: scheduledEmail.id,
+        recipientEmail: scheduledEmail.recipientEmail,
+        sequenceId: scheduledEmail.sequenceId,
+        scheduledFor: scheduledEmail.scheduledFor.toISOString(),
+        error: error instanceof Error ? error.message : String(error)
+      });
     }
   }
 }
@@ -113,9 +135,15 @@ async function sendScheduledEmail(
   scheduledEmail: InternalScheduledEmail
 ): Promise<void> {
   if (!resend) {
-    console.warn("Resend not configured, skipping email send");
+    const errorMsg = "Email service not configured";
+    emailLogger.warn('Resend API not configured', {
+      emailId: scheduledEmail.id,
+      recipientEmail: scheduledEmail.recipientEmail,
+      environment: process.env.NODE_ENV,
+      hasApiKey: !!process.env.RESEND_API_KEY
+    });
     scheduledEmail.status = "failed";
-    scheduledEmail.error = "Email service not configured";
+    scheduledEmail.error = errorMsg;
     return;
   }
 
@@ -124,25 +152,30 @@ async function sendScheduledEmail(
 
   // Guard against missing sequence to satisfy TypeScript and avoid runtime errors
   if (!sequence) {
+    const errorMsg = `Email sequence not found: ${scheduledEmail.sequenceId}`;
     scheduledEmail.status = "failed";
-    scheduledEmail.error = `Email sequence not found: ${scheduledEmail.sequenceId}`;
-    console.error(
-      `Failed to send scheduled email ${scheduledEmail.id}: sequence ${scheduledEmail.sequenceId} not found`
-    );
+    scheduledEmail.error = errorMsg;
+    emailLogger.error('Email sequence missing during send', {
+      emailId: scheduledEmail.id,
+      recipientEmail: scheduledEmail.recipientEmail,
+      missingSequenceId: scheduledEmail.sequenceId,
+      availableSequences: Object.keys(sequences)
+    });
     return;
   }
 
   // With simplified sequences, we just use the main sequence template
+  // Process template variables (moved outside try block for error logging)
+  const processedSubject = processEmailTemplate(
+    sequence.subject,
+    scheduledEmail.variables
+  );
+  const processedContent = processEmailTemplate(
+    sequence.content,
+    scheduledEmail.variables
+  );
+
   try {
-    // Process template variables
-    const processedSubject = processEmailTemplate(
-      sequence.subject,
-      scheduledEmail.variables
-    );
-    const processedContent = processEmailTemplate(
-      sequence.content,
-      scheduledEmail.variables
-    );
 
     // Convert plain text to HTML
     const htmlContent = `
@@ -200,18 +233,29 @@ async function sendScheduledEmail(
     scheduledEmail.status = "sent";
     scheduledEmail.sentAt = new Date();
 
-    console.warn(
-      `Sent scheduled email: ${processedSubject} to ${scheduledEmail.recipientEmail}`
-    );
+    emailLogger.info('Email sent successfully', {
+      emailId: scheduledEmail.id,
+      recipientEmail: scheduledEmail.recipientEmail,
+      recipientName: scheduledEmail.recipientName,
+      subject: processedSubject,
+      sequenceId: scheduledEmail.sequenceId,
+      sentAt: scheduledEmail.sentAt.toISOString(),
+      processingTime: scheduledEmail.sentAt.getTime() - scheduledEmail.createdAt.getTime()
+    });
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
     scheduledEmail.status = "failed";
-    scheduledEmail.error =
-      error instanceof Error ? error.message : "Unknown error";
+    scheduledEmail.error = errorMsg;
 
-    console.error(
-      `Failed to send scheduled email to ${scheduledEmail.recipientEmail}:`,
-      error
-    );
+    emailLogger.error('Email delivery failed', {
+      emailId: scheduledEmail.id,
+      recipientEmail: scheduledEmail.recipientEmail,
+      subject: processedSubject,
+      sequenceId: scheduledEmail.sequenceId,
+      errorMessage: errorMsg,
+      errorStack: error instanceof Error ? error.stack : undefined,
+      retryRecommended: true
+    });
 
     // In production, you might want to retry failed emails or alert administrators
   }
@@ -247,11 +291,19 @@ export function cancelEmailSequence(
       )
   );
 
-  console.warn(
-    `Cancelled scheduled emails for ${recipientEmail}${
-      sequenceId ? ` in sequence ${sequenceId}` : ""
-    }`
-  );
+  const cancelledCount = scheduledEmailsQueue.filter(
+    (email) =>
+      email.recipientEmail === recipientEmail &&
+      email.status === "pending" &&
+      (!sequenceId || email.sequenceId === sequenceId)
+  ).length;
+
+  emailLogger.info('Email sequence cancelled', {
+    recipientEmail,
+    sequenceId: sequenceId || 'all',
+    cancelledCount,
+    remainingQueueSize: scheduledEmailsQueue.length
+  });
 }
 
 /**
@@ -271,7 +323,11 @@ export async function processEmailsEndpoint(): Promise<EmailProcessResult> {
       errors: afterStats.failed - beforeStats.failed,
     };
   } catch (error) {
-    console.error("Error processing email queue:", error);
+    emailLogger.error('Email queue processing failed', {
+      beforeStats,
+      error: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined
+    });
     return {
       success: false,
       processed: 0,

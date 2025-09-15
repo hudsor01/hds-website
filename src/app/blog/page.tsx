@@ -73,18 +73,18 @@ export default function BlogPage() {
       <section className="relative bg-gradient-hero py-24 overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.05)_50%,transparent_51%)] bg-size-[80px_80px]"></div>
+          <div className="absolute inset-0 grid-pattern-subtle"></div>
         </div>
         
-        <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
+        <div className="relative container-wide text-center">
+          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6 text-balance">
-            Business <span className="text-gradient-neon glow-cyan">Strategy</span> Blog
+          <h1 className="text-clamp-xl font-black text-white mb-6 text-balance">
+            Business <span className="gradient-text">Strategy</span> Blog
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto text-pretty">
+          <p className="text-xl text-gray-300 container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function BlogPage() {
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
         <section className="py-16 bg-gradient-primary">
-          <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Article</h2>
               <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
@@ -105,15 +105,15 @@ export default function BlogPage() {
                       -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
               {featuredPosts.map((post) => (
                 <article key={post.id} className="group relative lg:col-span-2 snap-center flex-shrink-0 w-80 md:w-auto">
-                  <div className="glass-morphism bg-black/80 border border-cyan-200 rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform">
+                  <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
                     
                     <div className="p-8">
-                      <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
-                        <span className="flex items-center gap-1">
+                      <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
+                        <span className="flex flex-center gap-1">
                           <CalendarDaysIcon className="w-4 h-4" />
                           {formatDateLong(post.publishedAt)}
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="flex flex-center gap-1">
                           <ClockIcon className="w-4 h-4" />
                           {post.readingTime} min read
                         </span>
@@ -122,7 +122,7 @@ export default function BlogPage() {
                         </span>
                       </div>
                       
-                      <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
+                      <h3 className="text-responsive-md font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
                         {post.title}
                       </h3>
                       
@@ -132,7 +132,7 @@ export default function BlogPage() {
                       
                       <div className="flex flex-wrap gap-2 mb-6">
                         {post.tags.map((tag) => (
-                          <span key={tag} className="flex items-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
+                          <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
                             <TagIcon className="w-3 h-3" />
                             {tag}
                           </span>
@@ -141,7 +141,7 @@ export default function BlogPage() {
                       
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-semibold text-lg"
+                        className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
                       >
                         Read Full Article
                         <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -157,7 +157,7 @@ export default function BlogPage() {
 
       {/* All Posts */}
       <section className="py-16 bg-gradient-primary">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="container-wide">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Content */}
             <div className="flex-1">
@@ -169,14 +169,14 @@ export default function BlogPage() {
               <div className="space-y-8">
                 {allPosts.map((post) => (
                   <article key={post.id} className="group">
-                    <div className="glass-morphism bg-black/80 border border-gray-700 rounded-xl p-6 hover:border-cyan-300 transition-all duration-300">
+                    <div className="glass-card rounded-xl p-6 hover:border-cyan-300 transition-all duration-300">
                       <div className="flex flex-col">
-                        <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
-                          <span className="flex items-center gap-1">
+                        <div className="flex flex-center gap-4 text-sm text-gray-400 mb-3">
+                          <span className="flex flex-center gap-1">
                             <CalendarDaysIcon className="w-4 h-4" />
                             {formatDateLong(post.publishedAt)}
                           </span>
-                          <span className="flex items-center gap-1">
+                          <span className="flex flex-center gap-1">
                             <ClockIcon className="w-4 h-4" />
                             {post.readingTime} min read
                           </span>
@@ -195,7 +195,7 @@ export default function BlogPage() {
                         
                         <div className="flex flex-wrap gap-2 mb-4">
                           {post.tags.map((tag) => (
-                            <span key={tag} className="flex items-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
+                            <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
                               <TagIcon className="w-3 h-3" />
                               {tag}
                             </span>
@@ -204,7 +204,7 @@ export default function BlogPage() {
                         
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-semibold"
+                          className="inline-flex flex-center gap-2 link-primary font-semibold"
                         >
                           Read Full Article
                           <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -219,16 +219,16 @@ export default function BlogPage() {
             {/* Sidebar */}
             <aside className="w-full lg:w-80 space-y-8">
               {/* Newsletter Signup */}
-              <div className="glass-morphism bg-black/80 border border-cyan-200 rounded-xl p-6">
+              <div className="glass-card rounded-xl p-6">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
                 <p className="text-gray-300 mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
                 <div className="space-y-3">
                   <input
                     type="email"
                     placeholder="Your email address"
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400"
+                    className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring"
                   />
-                  <button className="w-full bg-cyan-400 text-black font-semibold py-2 rounded-lg hover:bg-cyan-500 transition-colors">
+                  <button className="w-full cta-primary">
                     Subscribe
                   </button>
                 </div>
@@ -236,7 +236,7 @@ export default function BlogPage() {
               </div>
 
               {/* Topics */}
-              <div className="glass-morphism bg-black/80 border border-gray-700 rounded-xl p-6">
+              <div className="glass-card rounded-xl p-6">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">Topics</h3>
                 <div className="flex flex-wrap gap-2">
                   {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
@@ -251,7 +251,7 @@ export default function BlogPage() {
               </div>
 
               {/* CTA */}
-              <div className="glass-morphism bg-black/80 border border-green-200 rounded-xl p-6 text-center">
+              <div className="glass-card rounded-xl p-6 text-center">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">Ready to Dominate Your Market?</h3>
                 <p className="text-gray-300 mb-4 text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link

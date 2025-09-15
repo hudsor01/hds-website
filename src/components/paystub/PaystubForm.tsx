@@ -1,8 +1,7 @@
 'use client'
 
 import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
-import type { PaystubData, FilingStatus } from '@/types/paystub'
-import type { FormErrors } from '@/types/paystub'
+import type { PaystubData, FilingStatus , FormErrors } from '@/types/paystub'
 
 interface PaystubFormProps {
   paystubData: PaystubData
@@ -26,7 +25,7 @@ export function PaystubForm({
   isGenerating
 }: PaystubFormProps) {
   return (
-    <div className="p-8 font-sans max-w-[900px] mx-auto">
+    <div className="p-8 font-sans container-narrow">
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">
         Professional Pay Stub Generator
       </h1>
@@ -178,15 +177,15 @@ export function PaystubForm({
               <optgroup label="No State Income Tax">
                 {getNoIncomeTaxStates().map((state) => (
                   // use string properties from StateInfo so <option> value/key are strings
-                  <option key={state.abbreviation ?? state.name} value={state.name}>
-                    {state.name}
+                  <option key={state.value} value={state.label}>
+                    {state.label}
                   </option>
                 ))}
               </optgroup>
               <optgroup label="State Income Tax">
                 {getIncomeTaxStates().map((state) => (
-                  <option key={state.abbreviation ?? state.name} value={state.name}>
-                    {state.name}
+                  <option key={state.value} value={state.label}>
+                    {state.label}
                   </option>
                 ))}
               </optgroup>
@@ -196,14 +195,14 @@ export function PaystubForm({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-4 justify-center">
+      <div className="flex-center gap-4">
         <button
           onClick={onGenerate}
           disabled={isGenerating}
-          className={`px-8 py-3 text-white rounded-md text-base font-semibold transition-all shadow-sm ${
+          className={`button-base px-8 py-3 text-white rounded-md text-base transition-smooth ${
             isGenerating
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              : 'cta-primary'
           }`}
         >
           {isGenerating ? 'Generating...' : 'Generate Pay Stubs'}
@@ -211,7 +210,7 @@ export function PaystubForm({
 
         <button
           onClick={onClear}
-          className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-md text-base font-semibold cursor-pointer transition-all shadow-sm"
+          className="button-base px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-md text-base transition-smooth"
         >
           Clear Form
         </button>

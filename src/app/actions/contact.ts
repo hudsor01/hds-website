@@ -1,14 +1,14 @@
 'use server'
 
+import { headers } from "next/headers"
 import { Resend } from "resend"
 import { RateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/security-utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
-import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
-import type { ContactFormData } from "@/lib/schemas/contact"
-import { headers } from "next/headers"
+import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
+import { createServerLogger, castError } from "@/lib/logger"
 
 // Initialize rate limiter
 const rateLimiter = new RateLimiter()
@@ -28,11 +28,15 @@ async function getClientIP(): Promise<string> {
   const forwardedFor = headersList.get("x-forwarded-for")
   if (forwardedFor) {
     const first = forwardedFor.split(",")[0]?.trim()
-    if (first) return first
+    if (first) {
+      return first
+    }
   }
 
   const realIp = headersList.get("x-real-ip")
-  if (realIp?.trim()) return realIp.trim()
+  if (realIp?.trim()) {
+    return realIp.trim()
+  }
 
   return "unknown"
 }
@@ -99,7 +103,10 @@ export async function submitContactForm(
   _prevState: ContactFormState | null,
   formData: FormData
 ): Promise<ContactFormState> {
+  const logger = createServerLogger(`contact-form-${Date.now()}`);
+
   try {
+    logger.info('Contact form submission started');
     // Step 1: Rate limiting
     const clientIP = await getClientIP()
     const isLimited = await rateLimiter.checkLimit(
@@ -143,7 +150,7 @@ export async function submitContactForm(
     )
 
     if (suspiciousActivity) {
-      console.warn("Potential injection attempt detected from IP:", clientIP)
+      logger.warn("Potential injection attempt detected", { clientIP, fields: fieldsToCheck })
     }
 
     // Step 4: Calculate lead score
@@ -231,7 +238,7 @@ export async function submitContactForm(
               }),
             })
           } catch (discordError) {
-            console.error("Failed to send Discord notification:", discordError)
+            logger.error("Failed to send Discord notification", castError(discordError))
           }
         }
 
@@ -246,12 +253,18 @@ export async function submitContactForm(
           emailVariables
         )
 
+        logger.info('Contact form submission successful', {
+          email: data.email,
+          leadScore,
+          sequenceId
+        });
+
         return {
           success: true,
           message: "Thank you! Your message has been sent successfully."
         }
       } catch (emailError) {
-        console.error("Failed to send email:", emailError)
+        logger.error("Failed to send email", castError(emailError))
         recordContactFormSubmission(false)
         return {
           success: false,
@@ -270,13 +283,19 @@ export async function submitContactForm(
       // In test environment, still consider it successful if validation passed
       recordContactFormSubmission(true)
 
+      logger.info('Contact form submission successful (test mode)', {
+        email: data.email,
+        leadScore,
+        sequenceId
+      });
+
       return {
         success: true,
         message: "Form submitted successfully (test mode - email service not configured)"
       }
     }
   } catch (error) {
-    console.error("Contact form error:", error)
+    logger.error("Contact form error", castError(error))
     recordContactFormSubmission(false)
     return {
       success: false,

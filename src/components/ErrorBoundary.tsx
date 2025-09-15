@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import type { ComponentType, ReactNode, ErrorInfo as ReactErrorInfo } from 'react';
+import { useState, type ComponentType, type ReactNode, type ErrorInfo as ReactErrorInfo } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackError } from '@/lib/analytics';
+import { logger, castError } from '@/lib/logger';
 // Error handling is now managed by React Query for API calls
 
 interface ErrorFallbackProps {
@@ -24,7 +24,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
   const [copied, setCopied] = useState(false);
 
   const copyErrorDetails = async () => {
-    if (!error) return;
+    if (!error) {return;}
     
     const errorDetails = `Error: ${error.message}\n\nStack Trace:\n${error.stack}\n\nTimestamp: ${new Date().toISOString()}\nUser Agent: ${navigator.userAgent}\nURL: ${window.location.href}`;
     
@@ -33,14 +33,14 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy error details:', err);
+      logger.error('Failed to copy error details to clipboard', castError(err));
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-hero flex-center p-6">
       <div className="max-w-md w-full text-center">
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-red-500/20">
+        <div className="glass-card p-8 border border-red-500/20">
           <ExclamationTriangleIcon className="w-16 h-16 text-red-400 mx-auto mb-6" />
           
           <h2 className="text-2xl font-bold text-white mb-4">
@@ -53,7 +53,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           
           {error && (
             <details className="text-left mb-6 p-4 bg-black/30 rounded-lg border border-red-500/20">
-              <summary className="text-red-400 cursor-pointer mb-2 flex items-center justify-between">
+              <summary className="text-red-400 cursor-pointer mb-2 flex-between">
                 <span>Error Details</span>
                 <button
                   onClick={copyErrorDetails}
@@ -68,7 +68,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                 </button>
               </summary>
               <div className="mt-3">
-                <pre className="text-xs text-gray-300 overflow-auto whitespace-pre-wrap">
+                <pre className="text-xs text-gray-300 overflow-auto scrollbar-hide whitespace-pre-wrap">
                   {error.message}
                   {'\n'}
                   {error.stack}
@@ -76,7 +76,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                 <div className="mt-3 pt-3 border-t border-red-500/20">
                   <button
                     onClick={copyErrorDetails}
-                    className="flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                    className="flex items-center gap-2 text-xs link-primary"
                   >
                     {copied ? (
                       <>
@@ -95,10 +95,10 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
             </details>
           )}
           
-          <div className="flex justify-center">
+          <div className="flex-center">
             <button
               onClick={resetErrorBoundary}
-              className="flex items-center justify-center gap-2 bg-cyan-400 text-black font-bold py-3 px-6 rounded-lg hover:bg-cyan-300 transition-colors"
+              className="cta-primary flex items-center gap-2"
             >
               <ArrowPathIcon className="w-5 h-5" />
               Try Again
@@ -109,7 +109,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
             Need help? Contact us at{' '}
             <a 
               href="mailto:hello@hudsondigitalsolutions.com" 
-              className="text-cyan-400 hover:text-cyan-300"
+              className="link-primary"
             >
               hello@hudsondigitalsolutions.com
             </a>
@@ -134,10 +134,19 @@ export function ErrorBoundary({
     // Call custom error handler if provided
     onError?.(error, errorInfo);
 
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error Boundary Caught:', error, errorInfo);
-    }
+    // Log error with structured context
+    logger.error('Error Boundary Caught', {
+      error: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      },
+      componentStack: errorInfo.componentStack,
+      errorBoundary: 'React Error Boundary',
+      timestamp: new Date().toISOString(),
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'unknown'
+    });
   };
 
   const handleReset = () => {
@@ -177,7 +186,7 @@ export function ComponentErrorBoundary({
           </p>
           <button
             onClick={resetErrorBoundary}
-            className="mt-2 text-xs text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300 underline"
+            className="mt-2 text-xs text-yellow-600 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300 link-hover"
           >
             Retry
           </button>

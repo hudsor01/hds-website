@@ -1,6 +1,6 @@
-import { describe, test, expect, beforeAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { describe, test, expect, beforeAll } from 'vitest';
 
 describe('Tailwind CSS Utility Classes', () => {
   let globalsCss: string;
@@ -157,7 +157,6 @@ describe('Component Class Usage', () => {
     test('should use snap classes in scrollable sections', () => {
       const files = [
         'src/app/portfolio/page.tsx',
-        'src/app/testimonials/page.tsx',
         'src/app/blog/page.tsx'
       ];
 
@@ -169,8 +168,7 @@ describe('Component Class Usage', () => {
 
     test('should use scrollbar-hide for mobile scroll containers', () => {
       const files = [
-        'src/app/portfolio/page.tsx',
-        'src/app/testimonials/page.tsx'
+        'src/app/portfolio/page.tsx'
       ];
 
       files.forEach(file => {
@@ -190,7 +188,7 @@ describe('Component Class Usage', () => {
       // Count occurrences of accent-cyan-500
       const matches = contactForm.match(/accent-cyan-500/g);
       expect(matches).toBeTruthy();
-      expect(matches!.length).toBeGreaterThanOrEqual(5); // Should be on multiple inputs
+      expect(matches?.length ?? 0).toBeGreaterThanOrEqual(5); // Should be on multiple inputs
     });
   });
 
@@ -201,7 +199,7 @@ describe('Component Class Usage', () => {
         'utf-8'
       );
 
-      expect(layout).toContain('className="scroll-smooth"');
+      expect(layout).toMatch(/className="[^"]*scroll-smooth[^"]*"/);
     });
 
     test('should include ScrollToTop component in layout', () => {

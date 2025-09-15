@@ -22,16 +22,16 @@ export function PaystubNavigation({
       <div className="mb-5">
         <button
           onClick={onBackToForm}
-          className="px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm cursor-pointer mr-2.5 transition-colors"
+          className="button-base px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm mr-2.5 transition-smooth"
         >
           ← Back to Form
         </button>
 
         <button
           onClick={() => setDocumentType('paystub')}
-          className={`px-5 py-2.5 rounded-md text-sm cursor-pointer mr-2.5 transition-colors ${
+          className={`button-base px-5 py-2.5 rounded-md text-sm mr-2.5 transition-smooth ${
             documentType === 'paystub'
-              ? 'bg-blue-600 text-white'
+              ? 'cta-primary'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -40,9 +40,9 @@ export function PaystubNavigation({
 
         <button
           onClick={() => setDocumentType('annual')}
-          className={`px-5 py-2.5 rounded-md text-sm cursor-pointer transition-colors ${
+          className={`button-base px-5 py-2.5 rounded-md text-sm transition-smooth ${
             documentType === 'annual'
-              ? 'bg-blue-600 text-white'
+              ? 'cta-primary'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -69,7 +69,7 @@ export function PaystubNavigation({
 
       <button
         onClick={onPrint}
-        className="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm cursor-pointer transition-colors"
+        className="button-base px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition-smooth"
       >
         Print {documentType === 'paystub' ? 'Pay Stub' : 'W-2 Summary'}
       </button>

@@ -10,12 +10,12 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto">
+        <div className="container-wide">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
+            <h1 className="text-responsive-lg gradient-text font-black mb-6">
               Privacy Policy
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-responsive-md text-gray-300">
               Your privacy matters to us. Learn how we handle your data.
             </p>
             <p className="text-sm text-gray-400 mt-2">
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <div className="bg-black/80 backdrop-blur-xl border border-gray-800 rounded-2xl p-8 space-y-8">
+          <div className="glass-card p-8 typography">
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">Information We Collect</h2>
               <div className="text-gray-300 space-y-4">

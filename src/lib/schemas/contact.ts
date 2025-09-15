@@ -103,19 +103,19 @@ export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
 
   // Calculate score
   let score = 0;
-  if (factors.hasHighBudget) score += 30;
-  if (factors.hasUrgentTimeline) score += 20;
-  if (factors.hasSpecificService) score += 15;
-  if (factors.hasCompany) score += 15;
-  if (factors.hasPhone) score += 10;
-  if (factors.messageLength > 100) score += 10;
+  if (factors.hasHighBudget) {score += 30;}
+  if (factors.hasUrgentTimeline) {score += 20;}
+  if (factors.hasSpecificService) {score += 15;}
+  if (factors.hasCompany) {score += 15;}
+  if (factors.hasPhone) {score += 10;}
+  if (factors.messageLength > 100) {score += 10;}
 
   // Determine category
   let category: LeadScoring['category'];
-  if (score >= 70) category = 'high-value';
-  else if (score >= 45) category = 'qualified';
-  else if (score >= 20) category = 'standard';
-  else category = 'low';
+  if (score >= 70) {category = 'high-value';}
+  else if (score >= 45) {category = 'qualified';}
+  else if (score >= 20) {category = 'standard';}
+  else {category = 'low';}
 
   // Determine sequence type
   let sequenceType: LeadScoring['sequenceType'];

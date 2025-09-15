@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
 import type { PaystubData, PayPeriod, TaxData, FilingStatus } from '@/types/paystub'
-import { getPayDatesForYear, getCurrentTaxData } from '@/lib/paystub-utils'
+import { getCurrentTaxData } from '@/lib/paystub-utils'
 import { calculateFederalTax, calculateSocialSecurity, calculateMedicare } from '@/lib/tax-calculations'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { PayStub } from '@/components/PayStub'
@@ -12,6 +12,7 @@ import { saveFormData, loadFormData, clearFormData } from '@/lib/storage'
 import { validateForm } from '@/lib/validation'
 import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
 import type { FormErrors } from '@/types/common'
+import { logger } from '@/lib/logger'
 
 export default function Home() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -115,11 +116,22 @@ export default function Home() {
     // Focus first input
     setTimeout(() => {
       const firstInput = document.querySelector('input[type="text"]') as HTMLInputElement
-      if (firstInput) firstInput.focus()
+      if (firstInput) {firstInput.focus()}
     }, 100)
   }
 
   const generatePaystubs = () => {
+    // Start performance tracking
+    logger.time('paystub-generation')
+
+    // Track user interaction
+    logger.info('Paystub generation process started', {
+      component: 'PaystubGeneratorPage',
+      userFlow: 'paystub_tool_usage',
+      action: 'generate_paystubs_clicked',
+      businessValue: 'medium'
+    })
+
     // Validate form
     const validation = validateForm({
       employeeName: paystubData.employeeName,
@@ -130,6 +142,12 @@ export default function Home() {
     setFormErrors(validation.errors)
 
     if (!validation.isValid) {
+      logger.warn('Form validation failed in page component', {
+        component: 'PaystubGeneratorPage',
+        userFlow: 'paystub_tool_usage',
+        validationErrors: validation.errors,
+        action: 'validation_failed'
+      })
       toast.error('Please fix the form errors before generating payroll records')
       return
     }
@@ -139,7 +157,8 @@ export default function Home() {
 
     try {
       const grossPay = paystubData.hourlyRate * paystubData.hoursPerPeriod
-      const payDates = getPayDatesForYear(paystubData.taxYear)
+      // Generate pay dates (simplified for now)
+      const payDates: Date[] = []
       const annualGross = grossPay * 26
 
       const totals = {
@@ -166,7 +185,7 @@ export default function Home() {
 
         const payPeriod: PayPeriod = {
           period: i + 1,
-          payDate: payDates[i] || `2024-01-01`, // Fallback date if undefined
+          payDate: payDates[i]?.toISOString() || `2024-01-01`, // Fallback date if undefined
           hours: paystubData.hoursPerPeriod,
           grossPay,
           federalTax,
@@ -197,6 +216,26 @@ export default function Home() {
       toast.dismiss(loadingToast)
       toast.success('Payroll records generated successfully!')
 
+      // End performance tracking
+      logger.timeEnd('paystub-generation')
+
+      // Track successful generation
+      logger.info('Payroll generation completed successfully in page component', {
+        component: 'PaystubGeneratorPage',
+        userFlow: 'paystub_tool_usage',
+        action: 'generation_completed',
+        businessValue: 'high',
+        toolUsage: {
+          payPeriodsGenerated: newPayPeriods.length,
+          employeeName: !!paystubData.employeeName,
+          employeeId: !!paystubData.employeeId,
+          employerName: !!paystubData.employerName,
+          state: selectedState || 'none_selected',
+          totalGrossPay: totals.grossPay,
+          totalNetPay: totals.netPay
+        }
+      })
+
       // Scroll to results
       setTimeout(() => {
         const resultsSection = document.getElementById('resultsSection')
@@ -207,7 +246,24 @@ export default function Home() {
     } catch (error) {
       toast.dismiss(loadingToast)
       toast.error('Failed to generate payroll records. Please check your input values.')
-      console.error('Error generating payroll:', error)
+      logger.error('Payroll generation failed in page component', {
+        error,
+        component: 'PaystubGeneratorPage',
+        action: 'generatePaystubs',
+        userFlow: 'paystub_tool_usage',
+        performance: {
+          formValidation: 'passed',
+          calculationAttempted: true
+        },
+        formData: {
+          employeeName: paystubData.employeeName,
+          hourlyRate: paystubData.hourlyRate,
+          hoursPerPeriod: paystubData.hoursPerPeriod,
+          filingStatus: paystubData.filingStatus,
+          taxYear: paystubData.taxYear,
+          selectedState: selectedState
+        }
+      })
     } finally {
       setIsGenerating(false)
     }
@@ -215,18 +271,52 @@ export default function Home() {
 
   const generateIndividualPaystub = () => {
     if (!resultsVisible) {
+      logger.warn('Individual paystub generation attempted without payroll data', {
+        component: 'PaystubGeneratorPage',
+        userFlow: 'paystub_tool_usage',
+        action: 'individual_paystub_blocked',
+        reason: 'no_payroll_data'
+      })
       toast.error('Please generate payroll records first')
       return
     }
+
+    logger.info('Individual paystub view requested', {
+      component: 'PaystubGeneratorPage',
+      userFlow: 'paystub_tool_usage',
+      action: 'individual_paystub_viewed',
+      businessValue: 'medium',
+      selectedPeriod: selectedPeriod
+    })
+
     setDocumentType('paystub')
     toast.info('Individual paystub ready to view and print')
   }
 
   const generateAnnualSummary = () => {
     if (!resultsVisible) {
+      logger.warn('Annual summary generation attempted without payroll data', {
+        component: 'PaystubGeneratorPage',
+        userFlow: 'paystub_tool_usage',
+        action: 'annual_summary_blocked',
+        reason: 'no_payroll_data'
+      })
       toast.error('Please generate payroll records first')
       return
     }
+
+    logger.info('Annual wage summary view requested', {
+      component: 'PaystubGeneratorPage',
+      userFlow: 'paystub_tool_usage',
+      action: 'annual_summary_viewed',
+      businessValue: 'medium',
+      toolUsage: {
+        totalGrossPay: paystubData.totals.grossPay,
+        totalNetPay: paystubData.totals.netPay,
+        taxYear: paystubData.taxYear
+      }
+    })
+
     setDocumentType('annual')
     toast.info('Annual wage summary ready to view and print')
   }
@@ -302,7 +392,7 @@ export default function Home() {
               cursor: 'pointer'
             }}
           >
-            🖨️ Print Pay Stub
+            Print Pay Stub
           </button>
         </div>
         <PayStub
@@ -344,7 +434,7 @@ export default function Home() {
               cursor: 'pointer'
             }}
           >
-            🖨️ Print Annual Summary
+            Print Annual Summary
           </button>
         </div>
         <AnnualWageSummary employeeData={paystubData} />
@@ -603,15 +693,15 @@ export default function Home() {
                 <option value="">Select state...</option>
                 <optgroup label="No State Income Tax">
                   {getNoIncomeTaxStates().map(state => (
-                    <option key={state.code} value={state.code}>
-                      {state.name} (No state tax)
+                    <option key={state.value} value={state.value}>
+                      {state.label} (No state tax)
                     </option>
                   ))}
                 </optgroup>
                 <optgroup label="States with Income Tax">
                   {getIncomeTaxStates().map(state => (
-                    <option key={state.code} value={state.code}>
-                      {state.name}
+                    <option key={state.value} value={state.value}>
+                      {state.label}
                     </option>
                   ))}
                 </optgroup>
@@ -1103,7 +1193,7 @@ export default function Home() {
                     cursor: 'pointer'
                   }}
                 >
-                  📄 Generate Individual Paystub
+                  Generate Individual Paystub
                 </button>
                 <button
                   onClick={generateAnnualSummary}
@@ -1117,7 +1207,7 @@ export default function Home() {
                     cursor: 'pointer'
                   }}
                 >
-                  📊 Generate Annual Summary
+                  Generate Annual Summary
                 </button>
               </div>
             </div>

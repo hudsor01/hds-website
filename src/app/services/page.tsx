@@ -3,6 +3,7 @@
 import { ArrowRightIcon, CheckIcon, CogIcon, CodeBracketIcon, ChartBarIcon } from "@heroicons/react/24/outline";
 import { Search, ClipboardList, Zap, Rocket } from 'lucide-react';
 import Link from "next/link";
+import { CTAButton } from '@/components/cta-button';
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 
 const services = [
@@ -18,7 +19,7 @@ const services = [
     ],
     pricing: "Starting at $5,000",
     icon: CodeBracketIcon,
-    gradient: "from-cyan-400 to-blue-500",
+    gradient: "bg-gradient-secondary",
   },
   {
     title: "Custom Solutions",
@@ -32,7 +33,7 @@ const services = [
     ],
     pricing: "Starting at $8,000",
     icon: CogIcon,
-    gradient: "from-purple-400 to-pink-500",
+    gradient: "bg-gradient-decorative-purple",
   },
   {
     title: "Strategic Consulting",
@@ -46,7 +47,7 @@ const services = [
     ],
     pricing: "Starting at $2,000",
     icon: ChartBarIcon,
-    gradient: "from-emerald-400 to-cyan-500",
+    gradient: "bg-gradient-secondary",
   },
 ];
 
@@ -86,51 +87,44 @@ const process = [
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+    <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex-center overflow-hidden">
         {/* Background Elements */}
         <BackgroundPattern variant="default" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
           <div className="space-y-8">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
 
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
+              <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
                 <span className="inline-block">Technical</span>
-                <span className="inline-block mx-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Services</span>
+                <span className="inline-block mx-4 gradient-text">Services</span>
                 <span className="inline-block">That</span>
-                <span className="inline-block ml-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Scale</span>
+                <span className="inline-block ml-4 gradient-text">Scale</span>
               </h1>
             </div>
 
             <div className="typography">
-              <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed text-pretty">
+              <p className="large text-muted-foreground container-wide leading-relaxed text-pretty">
                 Expert technical solutions designed to accelerate your business growth without the overhead of full-time development teams.
               </p>
             </div>
 
             <div>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
-                <Link href="/contact">
-                  <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform">
-                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    <span className="relative z-10">Start Your Project</span>
-                    <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
+              <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
+                <CTAButton href="/contact" variant="primary" size="lg">
+                  Start Your Project
+                </CTAButton>
 
-                <Link href="/portfolio">
-                  <button className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-gray-700 text-white font-semibold text-lg rounded-lg hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300">
-                    View Our Work
-                    <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
+                <CTAButton href="/portfolio" variant="secondary" size="lg">
+                  View Our Work
+                </CTAButton>
               </div>
             </div>
           </div>
@@ -138,15 +132,15 @@ export default function ServicesPage() {
       </section>
       {/* Services Section */}
       <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              <span className="gradient-text">
                 Our Services
               </span>
             </h2>
             <div className="typography">
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="large muted container-narrow">
                 Comprehensive technical solutions tailored to your business needs.
               </p>
             </div>
@@ -158,10 +152,10 @@ export default function ServicesPage() {
               return (
                 <div
                   key={index}
-                  className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300"
+                  className="group relative glass-card-light p-8 card-hover-glow transition-all duration-300"
                 >
-                  <div className="flex items-center mb-6">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${service.gradient}/20 border border-cyan-500/30`}>
+                  <div className="flex-center mb-6">
+                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
                       <Icon className="h-8 w-8 text-cyan-400" />
                     </div>
                   </div>
@@ -171,7 +165,7 @@ export default function ServicesPage() {
                   </h3>
                   
                   <div className="typography mb-6">
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="muted leading-relaxed">
                       {service.description}
                     </p>
                   </div>
@@ -180,11 +174,11 @@ export default function ServicesPage() {
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
-                          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 flex items-center justify-center">
+                          <div className="w-5 h-5 rounded-full bg-gradient-secondary flex-center">
                             <CheckIcon className="h-3 w-3 text-black" />
                           </div>
                         </div>
-                        <p className="text-gray-300 group-hover:text-white transition-colors duration-300">{feature}</p>
+                        <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">{feature}</p>
                       </div>
                     ))}
                   </div>
@@ -195,7 +189,7 @@ export default function ServicesPage() {
                   
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-to-r hover:from-cyan-500/30 hover:to-purple-500/30 hover:border-cyan-400 transition-all duration-300"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300"
                   >
                     Get Started
                     <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -208,15 +202,15 @@ export default function ServicesPage() {
       </section>
       {/* Stats Section */}
       <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              <span className="gradient-text">
                 Proven Results
               </span>
             </h2>
             <div className="typography">
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="large muted container-narrow">
                 Our track record speaks for itself - delivering exceptional results for clients across industries.
               </p>
             </div>
@@ -226,10 +220,10 @@ export default function ServicesPage() {
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 text-center"
+                className="relative glass-card-light p-8 card-hover-glow transition-all duration-300 text-center"
               >
                 <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-gray-400">{stat.label}</div>
+                <div className="small muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -237,15 +231,15 @@ export default function ServicesPage() {
       </section>
       {/* Process Section */}
       <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              <span className="gradient-text">
                 Our Process
               </span>
             </h2>
             <div className="typography">
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="large text-muted-foreground container-narrow">
                 A proven methodology that ensures successful project delivery every time.
               </p>
             </div>
@@ -255,10 +249,10 @@ export default function ServicesPage() {
             {process.map((step, index) => (
               <div
                 key={index}
-                className="group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 text-center"
+                className="group relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
               >
                 <div className="mb-4 flex justify-center">
-                  <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
                     <step.icon className="w-8 h-8 text-cyan-400" />
                   </div>
                 </div>
@@ -267,7 +261,7 @@ export default function ServicesPage() {
                   {step.title}
                 </h3>
                 <div className="typography">
-                  <p className="text-gray-400 group-hover:text-gray-300 transition-colors">
+                  <p className="muted group-hover:text-muted-foreground transition-colors">
                     {step.description}
                   </p>
                 </div>
@@ -279,27 +273,27 @@ export default function ServicesPage() {
 
       {/* CTA Section */}
       <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="container-wide">
           <div className="relative z-10 text-center glass-section p-12 md:p-16">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
+            <h2 className="text-responsive-md font-black text-white mb-6">
               Ready to accelerate 
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="gradient-text">
                 {" "}your growth?
               </span>
             </h2>
             
             <div className="typography">
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+              <p className="large muted container-narrow mb-10">
                 Let&apos;s discuss your specific technical needs and create a custom solution that drives real results for your business.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row flex-center gap-4">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 will-change-transform"
+                className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>

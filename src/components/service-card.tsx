@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from 'react'
-import { Icon } from './icon'
 import { cn } from '@/lib/utils'
+import { Icon } from './icon'
 
 interface ServiceCardProps {
   title: string
@@ -17,16 +17,20 @@ export function ServiceCard({
   description,
   features,
   icon,
-  gradient = "from-cyan-400 to-blue-500",
+  gradient = "bg-gradient-secondary",
   pricing,
   className
 }: ServiceCardProps) {
   return (
-    <div className={cn("group glass-card-light p-8 hover:border-cyan-400/50 transition-all duration-300", className)}>
+    <div className={cn("group glass-card-light p-8 card-hover-glow transition-smooth", className)}>
       <div className="space-y-6">
         {/* Icon and Title */}
         <div className="flex items-center space-x-4">
-          <div className={`p-3 rounded-xl bg-gradient-to-br ${gradient.replace('to-', 'to-').replace('from-', 'from-')} bg-opacity-20 border border-current border-opacity-30 group-hover:scale-110 transition-transform duration-300 will-change-transform`}>
+          <div className={cn(
+            "p-3 rounded-xl bg-opacity-20 border border-current border-opacity-30",
+            "hover-lift transition-smooth will-change-transform",
+            gradient.startsWith('bg-gradient-') ? gradient : `bg-gradient-to-br ${gradient}`
+          )}>
             <Icon icon={icon} size="lg" className="text-white" />
           </div>
           <h3 className="text-xl font-bold text-white">{title}</h3>

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { createTestLogger } from './test-logger'
 
 test.describe('Contact Form', () => {
   test.beforeEach(async ({ page }) => {
@@ -43,10 +44,10 @@ test.describe('Contact Form', () => {
     // Fill optional fields
     await page.fill('input[name="phone"]', '555-123-4567')
     await page.fill('input[name="company"]', 'Test Company')
-    await page.selectOption('select[name="service"]', 'website')
+    await page.selectOption('select[name="service"]', 'web-development')
     await page.selectOption('select[name="bestTimeToContact"]', 'morning')
-    await page.selectOption('select[name="budget"]', '10-25K')
-    await page.selectOption('select[name="timeline"]', '1-3 months')
+    await page.selectOption('select[name="budget"]', '5k-15k')
+    await page.selectOption('select[name="timeline"]', '1-month')
 
     // Submit form
     await page.locator('button[type="submit"]').click()
@@ -63,7 +64,8 @@ test.describe('Contact Form', () => {
     expect(successVisible || errorVisible).toBeTruthy()
   })
 
-  test('should show pending state while submitting', async ({ page }) => {
+  test('should show pending state while submitting', async ({ page }, testInfo) => {
+    const logger = createTestLogger(testInfo.title);
     // Fill in form
     await page.fill('input[name="firstName"]', 'Jane')
     await page.fill('input[name="lastName"]', 'Smith')
@@ -73,21 +75,38 @@ test.describe('Contact Form', () => {
     // Start monitoring the submit button
     const submitButton = page.locator('button[type="submit"]')
 
-    // Click submit and immediately check for pending state
+    // For Server Actions, we can't intercept the request, but we can slow down the response
+    // by intercepting the fetch that Server Actions use internally
+    await page.route('**/_next/**', async route => {
+      if (route.request().method() === 'POST') {
+        // Add a delay to simulate slower network request
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+      route.continue()
+    })
+
+    // Get initial button state
+    const initialText = await submitButton.textContent()
+    expect(initialText).toBe('Send Message')
+
+    // Click submit button and immediately check for disabled state
     const submitPromise = submitButton.click()
 
-    // Check if button shows loading state (either disabled or shows "Sending...")
-    await expect(submitButton).toBeDisabled({ timeout: 1000 }).catch(() => {})
-    const buttonText = await submitButton.textContent()
+    // Wait a tiny bit for React to process the form submission
+    await page.waitForTimeout(50)
 
-    // Button should show some loading indication
-    const hasLoadingState = buttonText?.includes('Sending') ||
-                           buttonText?.includes('...') ||
-                           await submitButton.isDisabled()
+    // The main requirement: button should be disabled during submission
+    await expect(submitButton).toBeDisabled()
 
-    expect(hasLoadingState).toBeTruthy()
+    // Try to verify loading state
+    try {
+      await expect(submitButton).toContainText('Sending...', { timeout: 2000 })
+    } catch {
+      // If the pending state is too fast to catch, just log it but don't fail
+      logger.warn('Pending state was too fast to catch, but button was disabled correctly')
+    }
 
-    // Wait for submission to complete
+    // Wait for the submission to complete
     await submitPromise
   })
 

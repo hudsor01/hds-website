@@ -1,4 +1,4 @@
-import { defineConfig, devices, ReporterDescription } from "@playwright/test";
+import { defineConfig, devices, type ReporterDescription } from "@playwright/test";
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -53,7 +53,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL:
       process.env.PLAYWRIGHT_TEST_BASE_URL ||
-      "https://hudsondigitalsolutions.com",
+      "http://localhost:3000",
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: process.env.CI ? "retain-on-failure" : "on-first-retry",
     /* Take screenshot on failure */

@@ -1,4 +1,6 @@
 // Accessibility utilities and enhancements
+import { logger } from '@/lib/logger';
+import analytics from '@/lib/analytics';
 
 // Skip to main content link
 export function addSkipToMainLink() {
@@ -170,10 +172,24 @@ export function announceMessage(
 export function validateColorContrast() {
   // This is a basic implementation - in production you'd use a proper contrast library
   const checkContrast = (color1: string, color2: string) => {
-    // Simplified contrast check - implement proper WCAG AA/AAA validation
-    // In a real implementation, you would calculate the actual contrast ratio
-    // between color1 and color2 and validate against WCAG standards
-    console.warn(`Checking contrast between ${color1} and ${color2}`);
+    // Track color contrast validation for accessibility monitoring
+    logger.info('Accessibility - color contrast validation', {
+      operation: 'contrast_check',
+      foregroundColor: color1,
+      backgroundColor: color2,
+      recommendation: 'implement_wcag_validation',
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      timestamp: Date.now()
+    });
+
+    // Send accessibility event to PostHog
+    if (typeof window !== 'undefined' && analytics) {
+      analytics.trackEvent('accessibility_contrast_check', {
+        foreground_color: color1,
+        background_color: color2,
+        page_url: window.location.href
+      });
+    }
   };
 
   // Check common color combinations
@@ -257,6 +273,32 @@ export function initAccessibilityFeatures() {
     respectReducedMotion();
     validateColorContrast();
   } catch (error) {
-    console.warn("Accessibility features initialization failed:", error);
+    logger.error('Accessibility features initialization failed', {
+      operation: 'init_accessibility',
+      error: error instanceof Error ? {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      } : String(error),
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+      features: [
+        'skip_to_main',
+        'focus_management',
+        'keyboard_navigation',
+        'live_regions',
+        'form_accessibility',
+        'reduced_motion',
+        'color_contrast'
+      ]
+    });
+
+    // Track accessibility initialization errors
+    if (typeof window !== 'undefined' && analytics) {
+      analytics.trackEvent('accessibility_init_error', {
+        error_message: error instanceof Error ? error.message : String(error),
+        page_url: window.location.href
+      });
+    }
   }
 }

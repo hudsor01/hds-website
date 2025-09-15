@@ -1,42 +1,50 @@
 // Native states utilities - logic only, no data bloat
 
 import statesData from '@/data/states.json'
-import type { PaystubStateInfo } from '@/types/paystub'
+
+/**
+ * Get all states options
+ */
+export function getAllStatesOptions() {
+  return statesData.states
+}
 
 /**
  * Get all states sorted alphabetically
  */
-export function getAllStates(): PaystubStateInfo[] {
-  const allStates = [...statesData.noIncomeTax, ...statesData.withIncomeTax]
-  return allStates.sort((a, b) => a.name.localeCompare(b.name))
+export function getAllStates() {
+  return statesData.states.sort((a, b) => a.label.localeCompare(b.label))
 }
 
 /**
  * Get states with no income tax
  */
-export function getNoIncomeTaxStates(): PaystubStateInfo[] {
-  return statesData.noIncomeTax
+export function getNoIncomeTaxStates() {
+  // This would need to be expanded with actual tax data
+  return statesData.states.filter(state =>
+    ['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(state.value)
+  )
 }
 
 /**
  * Get states with income tax
  */
-export function getIncomeTaxStates(): PaystubStateInfo[] {
-  return statesData.withIncomeTax
+export function getIncomeTaxStates() {
+  return statesData.states.filter(state =>
+    !['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(state.value)
+  )
 }
 
 /**
  * Get state info by code
  */
-export function getStateInfo(code: string): PaystubStateInfo | undefined {
-  const allStates = getAllStates()
-  return allStates.find((state) => state.code === code)
+export function getStateInfo(code: string) {
+  return statesData.states.find((state) => state.value === code)
 }
 
 /**
  * Check if state has income tax
  */
 export function stateHasIncomeTax(code: string): boolean {
-  const state = getStateInfo(code)
-  return state?.hasIncomeTax ?? true
+  return !['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(code)
 }

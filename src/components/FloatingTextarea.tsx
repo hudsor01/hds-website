@@ -33,8 +33,8 @@ export default function FloatingTextarea({
 
   // Simplify nested ternary for label color
   const getLabelColor = () => {
-    if (isFocused && shouldFloat) return 'text-cyan-400'
-    if (shouldFloat) return 'text-gray-300'
+    if (isFocused && shouldFloat) {return 'text-cyan-400'}
+    if (shouldFloat) {return 'text-gray-300'}
     return ''
   }
 
@@ -55,17 +55,17 @@ export default function FloatingTextarea({
         disabled={disabled}
         rows={rows}
         className={`
-          peer w-full px-4 pt-6 pb-2 
+          peer w-full px-4 pt-6 pb-2
           bg-gray-800/50 border rounded-lg
           text-white placeholder-transparent resize-none
           transition-all duration-200 ease-in-out
-          ${disabled 
-            ? 'border-gray-700 cursor-not-allowed opacity-50' 
+          ${disabled
+            ? 'border-gray-700 cursor-not-allowed opacity-50'
             : isFocused
               ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
               : 'border-gray-600 hover:border-gray-500'
           }
-          focus:outline-none
+          focus-ring
         `}
         placeholder={placeholder}
       />

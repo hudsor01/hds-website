@@ -108,9 +108,7 @@ describe('ScrollToTop Component', () => {
       expect(button).toHaveClass('bottom-8');
       expect(button).toHaveClass('right-8');
       expect(button).toHaveClass('z-50');
-      expect(button).toHaveClass('bg-gradient-to-r');
-      expect(button).toHaveClass('from-cyan-500');
-      expect(button).toHaveClass('to-blue-500');
+      expect(button).toHaveClass('bg-gradient-primary');
       expect(button).toHaveClass('will-change-transform');
     });
   });
