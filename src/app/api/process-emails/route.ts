@@ -1,25 +1,33 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import {
   processEmailsEndpoint,
   getEmailQueueStats,
 } from "@/lib/scheduled-emails";
 import { applySecurityHeaders } from "@/lib/security-headers";
+import { createServerLogger, castError } from "@/lib/logger";
 
 // This endpoint would typically be called by a cron job or scheduled task
 // In production, you'd want to secure this endpoint with authentication
 
 export async function POST(request: NextRequest) {
+  const logger = createServerLogger('process-emails-cron');
+
   try {
+    logger.info('Processing emails cron job started');
     // In production, add authentication here
     const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || "development-only";
+    const expectedToken = process.env.CRON_SECRET;
+
+    if (!expectedToken) {
+      logger.error("CRON_SECRET environment variable is not set");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
 
     if (authHeader !== `Bearer ${expectedToken}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.warn("Processing scheduled emails...");
+    logger.info("Processing scheduled emails", { authHeader: authHeader ? 'Bearer ***' : 'none' });
 
     const result = await processEmailsEndpoint();
 
@@ -32,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     return applySecurityHeaders(response);
   } catch (error) {
-    console.error("Email processing API error:", error);
+    logger.error("Email processing API error", castError(error));
 
     const response = NextResponse.json(
       {
@@ -48,10 +56,18 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const logger = createServerLogger('email-stats');
+
   try {
+    logger.info('Email stats requested');
     // Simple endpoint to check email queue status
     const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || "development-only";
+    const expectedToken = process.env.CRON_SECRET;
+
+    if (!expectedToken) {
+      logger.error("CRON_SECRET environment variable is not set");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
 
     if (authHeader !== `Bearer ${expectedToken}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -66,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     return applySecurityHeaders(response);
   } catch (error) {
-    console.error("Email stats API error:", error);
+    logger.error("Email stats API error", castError(error));
 
     const response = NextResponse.json(
       { error: "Failed to get email stats" },

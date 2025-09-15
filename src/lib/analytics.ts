@@ -9,6 +9,7 @@ import type {
   UserProperties,
   PostHogLike,
 } from "@/types/analytics";
+import { logger } from './logger';
 
 class AnalyticsManager {
   private posthog: PostHogLike | null = null;
@@ -32,7 +33,7 @@ class AnalyticsManager {
         this.posthog = posthogLib.default;
 
         (this.posthog as PostHogLike).init(
-          process.env.NEXT_PUBLIC_POSTHOG_KEY!,
+          process.env.NEXT_PUBLIC_POSTHOG_KEY,
           {
             api_host:
               process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
@@ -49,14 +50,19 @@ class AnalyticsManager {
         );
       }
     } catch (error) {
-      console.error("Failed to initialize analytics:", error);
+      logger.error("Failed to initialize analytics", {
+        error,
+        posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ? 'present' : 'missing',
+        host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'default',
+        environment: process.env.NODE_ENV
+      });
     }
   }
 
   private processQueue() {
     while (this.queue.length > 0) {
       const action = this.queue.shift();
-      if (action) action();
+      if (action) {action();}
     }
   }
 
@@ -83,10 +89,14 @@ class AnalyticsManager {
         this.sendToBackend(eventName, properties);
       }
 
-      // Console logging in development
-      if (process.env.NODE_ENV === "development") {
-        console.warn(`[Analytics] Event: ${eventName}`, properties);
-      }
+      // Structured logging for development and production
+      logger.info('Analytics Event Tracked', {
+        eventName,
+        properties,
+        analyticsProvider: 'PostHog',
+        initialized: this.initialized,
+        queueLength: this.queue.length
+      });
     });
   }
 
@@ -230,7 +240,12 @@ class AnalyticsManager {
         }),
       });
     } catch (error) {
-      console.error("Failed to send analytics to backend:", error);
+      logger.error("Failed to send analytics to backend", {
+        error,
+        eventName,
+        properties,
+        endpoint: '/api/analytics'
+      });
     }
   }
 

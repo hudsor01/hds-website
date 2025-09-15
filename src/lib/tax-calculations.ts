@@ -27,7 +27,7 @@ export const calculateFederalTax = (
 
   for (let i = 0; i < brackets.length; i++) {
     const bracket = brackets[i];
-    if (!bracket) continue;
+    if (!bracket) {continue;}
 
     const bracketLimit = bracket.limit === Infinity ? Infinity : bracket.limit;
 
@@ -85,7 +85,7 @@ export const calculateSocialSecurity = (
   const ssRate = yearData.ssRate;
   const ssWageBase = yearData.ssWageBase;
 
-  if (ytdGross >= ssWageBase) return 0;
+  if (ytdGross >= ssWageBase) {return 0;}
 
   if (ytdGross + grossPay > ssWageBase) {
     return (ssWageBase - ytdGross) * ssRate;

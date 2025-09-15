@@ -188,7 +188,7 @@ export function trackCoreWebVitalsForSEO() {
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       // Guard against empty entries array
-      if (entries.length === 0) return;
+      if (entries.length === 0) {return;}
 
       const lastEntry = entries[entries.length - 1];
       // Narrow the type and ensure startTime exists and is a number

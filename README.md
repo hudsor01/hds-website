@@ -4,16 +4,16 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
 ## Features
 
-- 🚀 **Next.js 15** with App Router
-- 🎨 **Tailwind CSS** for styling
-- 🌓 **Dark Mode** with system preference detection
-- 📧 **Contact Form** with Resend email integration
-- 📝 **Ghost CMS** blog integration
-- 📅 **Cal.com** scheduling widget
-- 📈 **SEO Optimized** with dynamic sitemaps and schema markup
-- 📊 **Google Analytics 4** with conversion tracking
-- 🔄 **Lead Nurturing** automated email sequences
-- ⚡ **Performance Optimized** for Core Web Vitals
+- **Next.js 15** with App Router
+- **Tailwind CSS** for styling
+- **Dark Mode** with system preference detection
+- **Contact Form** with Resend email integration
+- **Ghost CMS** blog integration
+- **Cal.com** scheduling widget
+- **SEO Optimized** with dynamic sitemaps and schema markup
+- **Google Analytics 4** with conversion tracking
+- **Lead Nurturing** automated email sequences
+- **Performance Optimized** for Core Web Vitals
 
 ## Setup
 

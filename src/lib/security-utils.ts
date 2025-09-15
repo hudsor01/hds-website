@@ -9,7 +9,7 @@
  * @returns HTML-escaped safe text
  */
 export function escapeHtml(text: string): string {
-  if (typeof text !== 'string') return '';
+  if (typeof text !== 'string') {return '';}
   
   const htmlEscapeMap: Record<string, string> = {
     '&': '&amp;',
@@ -32,7 +32,7 @@ export function escapeHtml(text: string): string {
  * @returns Sanitized text safe for email headers
  */
 export function sanitizeEmailHeader(text: string): string {
-  if (typeof text !== 'string') return '';
+  if (typeof text !== 'string') {return '';}
   
   // Remove all control characters including newlines, carriage returns, null bytes
   return text
@@ -51,7 +51,7 @@ export function sanitizeEmailHeader(text: string): string {
  * @returns True if potential injection detected
  */
 export function detectInjectionAttempt(input: string): boolean {
-  if (typeof input !== 'string') return false;
+  if (typeof input !== 'string') {return false;}
   
   const injectionPatterns = [
     // XSS patterns

@@ -15,11 +15,11 @@ export const SECURITY_HEADERS = {
   // Enforce HTTPS (HSTS)
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   
-  // Content Security Policy
+  // Content Security Policy - Hardened for production
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com https://app.posthog.com https://us.i.posthog.com https://fonts.googleapis.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "script-src 'self' https://vercel.live https://va.vercel-scripts.com https://app.posthog.com https://us.i.posthog.com https://fonts.googleapis.com 'nonce-{nonce}' 'unsafe-eval'",
+    "style-src 'self' https://fonts.googleapis.com 'nonce-{nonce}' 'unsafe-inline'",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
     "media-src 'self' https:",
@@ -55,11 +55,15 @@ export const SECURITY_HEADERS = {
   ].join(', ')
 } as const
 
-// Apply headers to NextResponse
-export function applySecurityHeaders(response: Response) {
+// Apply headers to NextResponse with nonce support
+export function applySecurityHeaders(response: Response, nonce?: string) {
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+    // Replace nonce placeholder if CSP header and nonce provided
+    if (key === 'Content-Security-Policy' && nonce) {
+      value = value.replace(/{nonce}/g, nonce);
+    }
     response.headers.set(key, value);
   });
-  
+
   return response;
 }

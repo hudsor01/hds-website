@@ -1,8 +1,8 @@
 import React from 'react'
+import { FileText } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
 import { getCurrentTaxData } from '@/lib/paystub-utils'
-import { FileText } from 'lucide-react'
 
 interface AnnualWageSummaryProps {
   employeeData: PaystubData

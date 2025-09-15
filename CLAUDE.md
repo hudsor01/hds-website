@@ -30,6 +30,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Components**: Radix/ShadCN base components
 - **Dates**: date-fns
 - **HTTP**: Native fetch
+- **Logging**: Unified logger with PostHog + Vercel integration (`@/lib/logger`)
 
 ### UI COMPONENT PATTERNS
 - **Buttons**: Native button + Tailwind or Radix Button
@@ -50,6 +51,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 5. Will another developer understand immediately?
 6. Does this follow accessibility standards?
 7. Is this predictable and consistent?
+
+### LOGGING STANDARDS
+- **NEVER use console.log/info/debug** - Use `logger` from `@/lib/logger`
+- **Use structured logging**: Include context, user IDs, request IDs
+- **PostHog Integration**: All logs become trackable analytics events
+- **Vercel Integration**: Structured JSON logs in production dashboard
+- **Error Tracking**: Rich error context with stack traces and user sessions
+
+```typescript
+import { logger } from '@/lib/logger';
+
+// Replace console.log with:
+logger.info('User action', { userId: 123, action: 'click' });
+logger.error('API failed', error);
+logger.debug('Debug info'); // Only in development
+
+// Performance tracking:
+logger.time('api-call');
+// ... API call
+logger.timeEnd('api-call'); // Tracked in PostHog
+
+// Context for user sessions:
+logger.setContext({ userId: 'user-123', plan: 'premium' });
+```
 
 ## Development Commands
 

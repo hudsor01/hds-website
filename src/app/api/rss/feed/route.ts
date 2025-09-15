@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
+import { createServerLogger, castError } from '@/lib/logger';
 // Simplified RSS feed without complex security middleware
 
 export async function GET() {
+  const logger = createServerLogger('rss-feed');
+
   try {
+    logger.info('RSS feed generation requested');
     const rss = await generateRSSFeed();
     
     return new NextResponse(rss, {
@@ -12,7 +16,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error('RSS feed generation failed:', error);
+    logger.error('RSS feed generation failed', castError(error));
     return NextResponse.json(
       { error: 'Failed to generate RSS feed' },
       { status: 500 }

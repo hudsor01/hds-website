@@ -14,7 +14,7 @@ interface CTAButtonProps {
 
 const variants = {
   primary: "cta-primary",
-  secondary: "border border-gray-700 text-gray-300 hover:text-white hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-500/10 bg-transparent"
+  secondary: "cta-secondary button-hover-glow"
 }
 
 const sizes = {
@@ -32,23 +32,25 @@ export function CTAButton({
   showArrow = true,
   external = false
 }: CTAButtonProps) {
-  const baseClasses = "group relative inline-flex items-center gap-2 font-bold rounded-lg transition-all duration-300"
+  const baseClasses = "button-base group relative gap-2 font-bold will-change-transform focus-ring"
 
   const LinkComponent = external ? 'a' : Link
   const linkProps = external
-    ? { href, target: "_blank", rel: "noopener noreferrer" }
-    : { href }
-
-  return (
-    <LinkComponent
-      {...linkProps}
-      className={cn(
+    ? { href, target: "_blank", rel: "noopener noreferrer", className: cn(
         baseClasses,
         variants[variant],
         sizes[size],
         className
-      )}
-    >
+      ) }
+    : { href, className: cn(
+        baseClasses,
+        variants[variant],
+        sizes[size],
+        className
+      ) }
+
+  return (
+    <LinkComponent {...linkProps}>
       <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
       <span className="relative">{children}</span>
       {showArrow && (

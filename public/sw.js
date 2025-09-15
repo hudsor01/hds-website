@@ -49,7 +49,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // Skip non-GET requests
-  if (request.method !== 'GET') return;
+  if (request.method !== 'GET') {return;}
 
   // Skip admin, API routes, and development assets
   if (url.pathname.startsWith('/api/') || 
@@ -177,5 +177,5 @@ self.addEventListener('notificationclick', (event) => {
 async function syncContactForms() {
   // This would sync any offline form submissions
   // Implementation depends on your offline storage strategy
-  console.log('Syncing contact forms...');
+  console.warn('Syncing contact forms...');
 }

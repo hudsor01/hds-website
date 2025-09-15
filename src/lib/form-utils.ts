@@ -20,19 +20,19 @@ export function getServiceOptions() {
  * Get budget options for dropdowns
  */
 export function getBudgetOptions() {
-  return formOptions.budgets
+  return formOptions.budget
 }
 
 /**
  * Get timeline options for dropdowns
  */
 export function getTimelineOptions() {
-  return formOptions.timelines
+  return formOptions.timeline
 }
 
 /**
  * Get contact time options for dropdowns
  */
 export function getContactTimeOptions() {
-  return formOptions.contactTimes
+  return formOptions.contactTime
 }

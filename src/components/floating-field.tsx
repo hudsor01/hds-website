@@ -9,14 +9,14 @@ const useFloatingFieldStyles = (value: string, isFocused: boolean, disabled: boo
   const isActive = isFocused || hasValue
 
   const getLabelColor = () => {
-    if (disabled) return 'text-gray-500'
-    if (isActive) return 'text-cyan-400'
+    if (disabled) {return 'text-gray-500'}
+    if (isActive) {return 'text-cyan-400'}
     return 'text-gray-400'
   }
 
   const getFieldClasses = () => cn(
     "w-full px-4 py-3 bg-transparent border-2 rounded-lg transition-all duration-200 placeholder-transparent peer",
-    "focus:outline-none focus:ring-0",
+    "focus-ring",
     disabled
       ? "border-gray-700 text-gray-500 cursor-not-allowed"
       : isActive

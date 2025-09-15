@@ -4,10 +4,17 @@ import payDates from '@/data/pay-dates.json'
 import type { TaxData } from '@/types/paystub'
 
 /**
- * Get pay dates for a specific year
+ * Get pay frequencies options
  */
-export function getPayDatesForYear(year: number): string[] {
-  return payDates[year as unknown as keyof typeof payDates] || payDates["2024"] || []
+export function getPayFrequencies() {
+  return payDates.payFrequencies
+}
+
+/**
+ * Get default periods for pay frequency
+ */
+export function getDefaultPeriods() {
+  return payDates.defaultPeriods
 }
 
 /**

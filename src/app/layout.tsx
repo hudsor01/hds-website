@@ -5,7 +5,6 @@ import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
-import { Providers } from "@/components/providers";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 const geistSans = Geist({
@@ -107,7 +106,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+    <html lang="en" suppressHydrationWarning className="dark scroll-smooth">
       <head>
         {/* Critical mobile-first meta tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes" />
@@ -149,18 +148,16 @@ export default function RootLayout({
         <meta name="MobileOptimized" content="320" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <Providers>
-          <NavbarLight />
-          <div id="main-content" className="min-h-screen pt-16">
-            {children}
-          </div>
-          <Footer />
-          <ScrollToTop />
-          <Analytics />
-        </Providers>
+        <NavbarLight />
+        <div id="main-content" className="min-h-screen pt-16">
+          {children}
+        </div>
+        <Footer />
+        <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   );
