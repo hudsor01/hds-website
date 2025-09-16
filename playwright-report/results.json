@@ -212,6 +212,887 @@
   },
   "suites": [
     {
+      "title": "component-classes-verification.spec.ts",
+      "file": "component-classes-verification.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Component Classes Visual Verification",
+          "file": "component-classes-verification.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify globals.css component classes are working",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3048,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should verify globals.css component classes are working] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] 📸 Screenshot: Hero section visual verification -> test-results/homepage-hero.png\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ⚠️ Found 0 flex-center elements\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ⚠️ Found 0 glass card elements\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ⚠️ Found 0 CTA buttons\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ⚠️ Found 0 container elements\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ⚠️ Found 0 responsive text elements\n"
+                        },
+                        {
+                          "text": "[should verify globals.css component classes are working] ✅ Test completed: Homepage component classes verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:35.429Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "379b8645200a5e49e434-253839df18ed68b7be16",
+              "file": "component-classes-verification.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "should verify contact form component classes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2500,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should verify contact form component classes] Step 1: Navigating to contact page\n"
+                        },
+                        {
+                          "text": "[should verify contact form component classes] Step 2: Waiting for contact page to load\n"
+                        },
+                        {
+                          "text": "[should verify contact form component classes] 📸 Screenshot: Contact form component classes -> test-results/contact-form.png\n"
+                        },
+                        {
+                          "text": "[should verify contact form component classes] ✅ Found 27 elements with focus-ring class\n"
+                        },
+                        {
+                          "text": "[should verify contact form component classes] ✅ Found 40 elements with smooth transitions\n"
+                        },
+                        {
+                          "text": "[should verify contact form component classes] ✅ Test completed: Contact form component classes verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:38.681Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "379b8645200a5e49e434-e859b97e092c63c8c726",
+              "file": "component-classes-verification.spec.ts",
+              "line": 69,
+              "column": 7
+            },
+            {
+              "title": "should verify services page component classes",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2113,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should verify services page component classes] Step 1: Navigating to services page\n"
+                        },
+                        {
+                          "text": "[should verify services page component classes] Step 2: Waiting for services page to load\n"
+                        },
+                        {
+                          "text": "[should verify services page component classes] 📸 Screenshot: Services page component classes -> test-results/services-page.png\n"
+                        },
+                        {
+                          "text": "[should verify services page component classes] ✅ Found 12 elements with hover effects\n"
+                        },
+                        {
+                          "text": "[should verify services page component classes] ✅ Test completed: Services page component classes verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:41.186Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "379b8645200a5e49e434-66d8e0250d036ffa1c96",
+              "file": "component-classes-verification.spec.ts",
+              "line": 99,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "contact-form.spec.ts",
+      "file": "contact-form.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Contact Form",
+          "file": "contact-form.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display contact form with all fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 893,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:43.307Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-3a8adf40bad9ab51d28e",
+              "file": "contact-form.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "should show validation errors for empty required fields",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:44.206Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-1c1df2f7171807a36592",
+              "file": "contact-form.spec.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should successfully submit form with valid data",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1518,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:45.099Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-9fa2f8d86317ff20c25b",
+              "file": "contact-form.spec.ts",
+              "line": 37,
+              "column": 7
+            },
+            {
+              "title": "should show pending state while submitting",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3350,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should show pending state while submitting] ⚠️ Could not verify pending state or form completion\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:46.623Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-372c288350d9c7c89ee4",
+              "file": "contact-form.spec.ts",
+              "line": 67,
+              "column": 7
+            },
+            {
+              "title": "should handle rate limiting gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6007,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:49.981Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-891029388f4bf2bb0ac1",
+              "file": "contact-form.spec.ts",
+              "line": 123,
+              "column": 7
+            },
+            {
+              "title": "should preserve form data on validation error",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2224,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:56.004Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "19bfce10c51128c14abd-52dcf72e76b46e984c00",
+              "file": "contact-form.spec.ts",
+              "line": 153,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "dark-theme-verification.spec.ts",
+      "file": "dark-theme-verification.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Homepage Dark Theme Verification",
+          "file": "dark-theme-verification.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display dark hero background instead of bright blue/cyan gradient",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2326,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] Step 3: Setting page to dark color scheme\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] 📸 Screenshot: Full page dark theme -> test-results/homepage-dark-theme-full.png\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] 📸 Screenshot: Hero section dark theme -> test-results/hero-section-dark-theme.png\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element classes: min-h-screen bg-gradient-hero\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element computed background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element background-image: none\n"
+                        },
+                        {
+                          "text": "[should display dark hero background instead of bright blue/cyan gradient] Step 4: Verified dark colors are present in background gradient\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:47:58.240Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9575bcd1fb3f20dc8cfc-eeb93532b49f9c3ac71f",
+              "file": "dark-theme-verification.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "should maintain terminal/code aesthetic with dark colors",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1627,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43",
+                        "location": {
+                          "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                          "column": 43,
+                          "line": 111
+                        },
+                        "snippet": "  109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800\n  110 |\n> 111 |       expect(containsDarkSecondaryColors).toBe(true);\n      |                                           ^\n  112 |       logger.step('Verified secondary gradients use dark colors');\n  113 |     }\n  114 |     logger.complete('Terminal/code aesthetic verification completed');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                            "column": 43,
+                            "line": 111
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800\n  110 |\n> 111 |       expect(containsDarkSecondaryColors).toBe(true);\n      |                                           ^\n  112 |       logger.step('Verified secondary gradients use dark colors');\n  113 |     }\n  114 |     logger.complete('Terminal/code aesthetic verification completed');\n    at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 3: Setting page to dark color scheme\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] 🔍 main heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] 🔍 secondary gradient background-image: none\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:48:00.577Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/richard/Developer/business-website/test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/richard/Developer/business-website/test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                        "column": 43,
+                        "line": 111
+                      }
+                    },
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1424,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43",
+                        "location": {
+                          "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                          "column": 43,
+                          "line": 111
+                        },
+                        "snippet": "  109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800\n  110 |\n> 111 |       expect(containsDarkSecondaryColors).toBe(true);\n      |                                           ^\n  112 |       logger.step('Verified secondary gradients use dark colors');\n  113 |     }\n  114 |     logger.complete('Terminal/code aesthetic verification completed');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                            "column": 43,
+                            "line": 111
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800\n  110 |\n> 111 |       expect(containsDarkSecondaryColors).toBe(true);\n      |                                           ^\n  112 |       logger.step('Verified secondary gradients use dark colors');\n  113 |     }\n  114 |     logger.complete('Terminal/code aesthetic verification completed');\n    at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] Step 3: Setting page to dark color scheme\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] 🔍 main heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper\n"
+                        },
+                        {
+                          "text": "[should maintain terminal/code aesthetic with dark colors] 🔍 secondary gradient background-image: none\n"
+                        }
+                      ],
+                      "retry": 1,
+                      "startTime": "2025-09-16T03:48:02.646Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/richard/Developer/business-website/test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/richard/Developer/business-website/test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/richard/Developer/business-website/test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts",
+                        "column": 43,
+                        "line": 111
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9575bcd1fb3f20dc8cfc-670231164990ecaa098b",
+              "file": "dark-theme-verification.spec.ts",
+              "line": 77,
+              "column": 7
+            },
+            {
+              "title": "should capture and analyze color scheme of key elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1868,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 3: Setting page to dark color scheme\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 4: Analyzing overall color scheme\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] 🔍 body background-color: rgba(0, 0, 0, 0)\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] 🔍 navigation background-color: rgba(0, 0, 0, 0)\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] 📸 Screenshot: Final dark theme verification -> test-results/dark-theme-verification-complete.png\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] ✅ Test completed: Dark theme verification completed successfully\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 5: Screenshots saved to test-results/ directory\n"
+                        },
+                        {
+                          "text": "[should capture and analyze color scheme of key elements] Step 6: Hero section should now display dark gray/slate gradient instead of bright cyan/blue\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:48:04.558Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9575bcd1fb3f20dc8cfc-89610f6280ab6d55ffba",
+              "file": "dark-theme-verification.spec.ts",
+              "line": 117,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "hero-text-visibility.spec.ts",
+      "file": "hero-text-visibility.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Hero Text Visibility",
+          "file": "hero-text-visibility.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display all hero text elements correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1291,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should display all hero text elements correctly] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] 🔍 hero heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] ⚠️ Found 0 gradient text elements (.bg-gradient-to-r)\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] ✅ Found 12 cyan text elements\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] ✅ Found 1 transparent text elements\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] 📸 Screenshot: Hero text visibility verification -> hero-text-visibility.png\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] Step 3: Hero text element has dimensions: 296.59375x37\n"
+                        },
+                        {
+                          "text": "[should display all hero text elements correctly] ✅ Test completed: Hero text elements verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:48:06.522Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d8d9642480d7c23f0939-bfb51a8ad54ac9df7a17",
+              "file": "hero-text-visibility.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "should have proper gradient classes applied",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1264,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should have proper gradient classes applied] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should have proper gradient classes applied] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should have proper gradient classes applied] ✅ Found 3 elements with gradient-text class (expected: 1) - PASS\n"
+                        },
+                        {
+                          "text": "[should have proper gradient classes applied] Step 3: Verified gradient text has proper CSS classes\n"
+                        },
+                        {
+                          "text": "[should have proper gradient classes applied] ✅ Test completed: Gradient classes verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:48:07.822Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d8d9642480d7c23f0939-83066d060d992299c86e",
+              "file": "hero-text-visibility.spec.ts",
+              "line": 76,
+              "column": 7
+            },
+            {
+              "title": "should not have any invisible text due to CSS issues",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1357,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "[should not have any invisible text due to CSS issues] Step 1: Navigating to homepage\n"
+                        },
+                        {
+                          "text": "[should not have any invisible text due to CSS issues] Step 2: Waiting for page to load\n"
+                        },
+                        {
+                          "text": "[should not have any invisible text due to CSS issues] 🔍 invisible text analysis elements found: []\n"
+                        },
+                        {
+                          "text": "[should not have any invisible text due to CSS issues] ✅ Test completed: CSS visibility verification completed\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2025-09-16T03:48:09.092Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d8d9642480d7c23f0939-b7a7d646d41287e90a17",
+              "file": "hero-text-visibility.spec.ts",
+              "line": 111,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "tailwind-enhancements.spec.ts",
       "file": "tailwind-enhancements.spec.ts",
       "column": 0,
@@ -226,11 +1107,341 @@
           "specs": [],
           "suites": [
             {
+              "title": "Text Balancing",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 4,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should have text-balance on headings",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 474,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:10.458Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-f27021461abe200d559d",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 5,
+                  "column": 9
+                },
+                {
+                  "title": "should have text-pretty on descriptions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 677,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:10.938Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-401fa9f3e31568fe4b2a",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 14,
+                  "column": 9
+                },
+                {
+                  "title": "should apply text-balance across all major pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 1303,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:11.622Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-b3bf866aeffbd7fee098",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 23,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Will-Change Optimizations",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 35,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should have will-change-transform on hover elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 439,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:12.931Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-829da984b9b3a11c4796",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 36,
+                  "column": 9
+                },
+                {
+                  "title": "should optimize performance for animated elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 814,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:13.376Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-16acc397b702b1ec85a8",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 45,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Scroll Snap Implementation",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 55,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should have scroll snap on mobile testimonials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 978,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:14.202Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-5bafa9bff51022d99ba8",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should have horizontal scroll on mobile portfolio",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 635,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:15.186Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-0a79e9eebb209657ee9c",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 69,
+                  "column": 9
+                },
+                {
+                  "title": "should hide scrollbar on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 641,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:15.826Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-877a441dccea0d0f420f",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 78,
+                  "column": 9
+                }
+              ]
+            },
+            {
               "title": "Smooth Scrolling",
               "file": "tailwind-enhancements.spec.ts",
               "line": 88,
               "column": 8,
               "specs": [
+                {
+                  "title": "should have scroll-smooth on html element",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 694,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:16.472Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-d9effc309891d51af624",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 89,
+                  "column": 9
+                },
                 {
                   "title": "should show scroll-to-top button when scrolled",
                   "ok": false,
@@ -244,10 +1455,10 @@
                       "projectName": "chromium",
                       "results": [
                         {
-                          "workerIndex": 0,
+                          "workerIndex": 2,
                           "parallelIndex": 0,
                           "status": "failed",
-                          "duration": 10953,
+                          "duration": 11394,
                           "error": {
                             "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
                             "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34",
@@ -271,7 +1482,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2025-09-16T01:11:01.423Z",
+                          "startTime": "2025-09-16T03:48:17.175Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -292,10 +1503,10 @@
                           }
                         },
                         {
-                          "workerIndex": 1,
+                          "workerIndex": 3,
                           "parallelIndex": 0,
                           "status": "failed",
-                          "duration": 11012,
+                          "duration": 11163,
                           "error": {
                             "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
                             "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34",
@@ -319,7 +1530,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 1,
-                          "startTime": "2025-09-16T01:11:12.789Z",
+                          "startTime": "2025-09-16T03:48:28.946Z",
                           "annotations": [],
                           "attachments": [
                             {
@@ -352,6 +1563,738 @@
                   "file": "tailwind-enhancements.spec.ts",
                   "line": 97,
                   "column": 9
+                },
+                {
+                  "title": "scroll-to-top button should have proper styling",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 6212,
+                          "error": {
+                            "message": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n",
+                            "stack": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 20,
+                              "line": 126
+                            },
+                            "snippet": "  124 |\n  125 |       const button = page.locator('button[aria-label=\"Scroll to top\"]').first();\n> 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });\n      |                    ^\n  127 |       const buttonClass = await button.getAttribute('class');\n  128 |\n  129 |       expect(buttonClass).toContain('fixed');"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 20,
+                                "line": 126
+                              },
+                              "message": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n\n\n  124 |\n  125 |       const button = page.locator('button[aria-label=\"Scroll to top\"]').first();\n> 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });\n      |                    ^\n  127 |       const buttonClass = await button.getAttribute('class');\n  128 |\n  129 |       expect(buttonClass).toContain('fixed');\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:40.630Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 20,
+                            "line": 126
+                          }
+                        },
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 6434,
+                          "error": {
+                            "message": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n",
+                            "stack": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 20,
+                              "line": 126
+                            },
+                            "snippet": "  124 |\n  125 |       const button = page.locator('button[aria-label=\"Scroll to top\"]').first();\n> 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });\n      |                    ^\n  127 |       const buttonClass = await button.getAttribute('class');\n  128 |\n  129 |       expect(buttonClass).toContain('fixed');"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 20,
+                                "line": 126
+                              },
+                              "message": "TimeoutError: locator.waitFor: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]').first() to be visible\u001b[22m\n\n\n  124 |\n  125 |       const button = page.locator('button[aria-label=\"Scroll to top\"]').first();\n> 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });\n      |                    ^\n  127 |       const buttonClass = await button.getAttribute('class');\n  128 |\n  129 |       expect(buttonClass).toContain('fixed');\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2025-09-16T03:48:47.377Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 20,
+                            "line": 126
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-2a30032f6f4cf3eb703c",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 120,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Form Accessibility & Accent Colors",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 137,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should have accent-cyan-500 on form inputs",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 544,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:54.645Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-e32730fa770f121c4491",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 138,
+                  "column": 9
+                },
+                {
+                  "title": "should have accent color on textarea",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 894,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:55.294Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-7eb92b127f543cac8c94",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 147,
+                  "column": 9
+                },
+                {
+                  "title": "should have accent color on select elements",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 472,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:56.194Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-4ad422cf70d59cb01ded",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 155,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Motion Preferences",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 165,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should respect prefers-reduced-motion",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 437,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:56.670Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-fd499637dbe2e2deadf0",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 166,
+                  "column": 9
+                },
+                {
+                  "title": "should disable hover scales with reduced motion",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 464,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:57.111Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-83fab5146551c9cca65f",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should disable will-change with reduced motion",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 451,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:57.582Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-723dc5aadd1630aa7596",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 216,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Responsive Behavior",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 237,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "scroll snap should only apply on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 654,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:58.039Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-61de0b2271e51d76b5f5",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "text sizes should be responsive",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 571,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 41,
+                              "line": 272
+                            },
+                            "snippet": "  270 |\n  271 |       // Desktop font should be larger\n> 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));\n      |                                         ^\n  273 |     });\n  274 |   });\n  275 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 41,
+                                "line": 272
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m\n\n  270 |\n  271 |       // Desktop font should be larger\n> 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));\n      |                                         ^\n  273 |     });\n  274 |   });\n  275 |\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:48:58.699Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 41,
+                            "line": 272
+                          }
+                        },
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 960,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 41,
+                              "line": 272
+                            },
+                            "snippet": "  270 |\n  271 |       // Desktop font should be larger\n> 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));\n      |                                         ^\n  273 |     });\n  274 |   });\n  275 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 41,
+                                "line": 272
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m32\u001b[39m\nReceived:   \u001b[31m32\u001b[39m\n\n  270 |\n  271 |       // Desktop font should be larger\n> 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));\n      |                                         ^\n  273 |     });\n  274 |   });\n  275 |\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2025-09-16T03:48:59.585Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 41,
+                            "line": 272
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-a4422115511d8bb2c8aa",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 255,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Performance Optimizations",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 276,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should have optimized animations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 529,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:49:01.096Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-498753003d73d1390cb5",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 277,
+                  "column": 9
+                },
+                {
+                  "title": "should use will-change sparingly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 569,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:49:01.718Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-20fc0a02e2a115a68dc7",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 285,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Accessibility Compliance",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 297,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "scroll-to-top button should be accessible",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 15910,
+                          "error": {
+                            "message": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
+                            "stack": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 38,
+                              "line": 306
+                            },
+                            "snippet": "  304 |\n  305 |       // Check ARIA label\n> 306 |       const ariaLabel = await button.getAttribute('aria-label');\n      |                                      ^\n  307 |       expect(ariaLabel).toBe('Scroll to top');\n  308 |\n  309 |       // Check keyboard accessibility"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 38,
+                                "line": 306
+                              },
+                              "message": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n\n  304 |\n  305 |       // Check ARIA label\n> 306 |       const ariaLabel = await button.getAttribute('aria-label');\n      |                                      ^\n  307 |       expect(ariaLabel).toBe('Scroll to top');\n  308 |\n  309 |       // Check keyboard accessibility\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T03:49:02.294Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 38,
+                            "line": 306
+                          }
+                        },
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 16141,
+                          "error": {
+                            "message": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
+                            "stack": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 38,
+                              "line": 306
+                            },
+                            "snippet": "  304 |\n  305 |       // Check ARIA label\n> 306 |       const ariaLabel = await button.getAttribute('aria-label');\n      |                                      ^\n  307 |       expect(ariaLabel).toBe('Scroll to top');\n  308 |\n  309 |       // Check keyboard accessibility"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 38,
+                                "line": 306
+                              },
+                              "message": "TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n\n  304 |\n  305 |       // Check ARIA label\n> 306 |       const ariaLabel = await button.getAttribute('aria-label');\n      |                                      ^\n  307 |       expect(ariaLabel).toBe('Scroll to top');\n  308 |\n  309 |       // Check keyboard accessibility\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2025-09-16T03:49:18.645Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 38,
+                            "line": 306
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-e7541d1a8974e1b2464d",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 298,
+                  "column": 9
+                },
+                {
+                  "title": "form elements should have proper focus states",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 60000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "661ae7dfc36d6f3581be-62d8d9d643c56bfde06b",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 318,
+                  "column": 9
                 }
               ]
             }
@@ -360,13 +2303,17 @@
       ]
     }
   ],
-  "errors": [],
+  "errors": [
+    {
+      "message": "\u001b[31mTesting stopped early after 5 maximum allowed failures.\u001b[39m"
+    }
+  ],
   "stats": {
-    "startTime": "2025-09-16T01:11:01.161Z",
-    "duration": 22825.988,
-    "expected": 0,
-    "skipped": 0,
-    "unexpected": 1,
+    "startTime": "2025-09-16T03:47:34.806Z",
+    "duration": 120200.425,
+    "expected": 32,
+    "skipped": 1,
+    "unexpected": 5,
     "flaky": 0
   }
 }
