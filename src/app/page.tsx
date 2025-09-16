@@ -38,12 +38,12 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen">
       {/* Hero Section - Content-First Layout */}
-      <section className="relative py-20 lg:py-32">
+      <section className="relative py-20 lg:py-32 bg-gradient-hero">
         <div className="container-wide sm:px-6 lg:px-8 w-full">
           <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
-            
+
             {/* Left Side - Content */}
             <div className="lg:col-span-3 lg:pr-8">
               <div className="space-y-8">
@@ -70,7 +70,7 @@ export default function HomePage() {
                   <CTAButton href="/contact" variant="primary" size="lg">
                     See Your ROI in 30 Days
                   </CTAButton>
-                  <CTAButton href="/portfolio" variant="secondary" size="lg">
+                  <CTAButton href="/portfolio" variant="primary" size="lg">
                     View Case Studies
                   </CTAButton>
                 </div>
@@ -94,8 +94,8 @@ export default function HomePage() {
               <div className="relative">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 bg-gradient-hero-20 rounded-3xl blur-3xl" />
-                <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-primary-30 rounded-full blur-2xl animate-pulse transform-gpu" />
-                
+                <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-primary-30 rounded-full blur-2xl" />
+
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
                   {/* Terminal Header */}
@@ -106,9 +106,9 @@ export default function HomePage() {
                       <div className="w-3 h-3 rounded-full bg-green-500" />
                     </div>
                     <div className="text-xs text-muted-foreground font-mono">hudson-deploy.sh</div>
-                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse transform-gpu" />
+                    <div className="w-3 h-3 bg-green-400 rounded-full" />
                   </div>
-                  
+
                   {/* Terminal Content */}
                   <div className="p-6 font-mono text-sm space-y-2" role="log">
                     <div className="text-cyan-400">$ npm run deploy --production</div>
@@ -118,16 +118,16 @@ export default function HomePage() {
                     <div className="text-blue-400">&gt; Deploying to production...</div>
                     <div className="text-green-400">[OK] Deployment successful</div>
                     <div className="text-yellow-400">[LIVE] at https://client-app.com</div>
-                    
+
                     <div className="pt-2 space-y-1">
                       <div className="text-cyan-300">Performance: 100/100</div>
                       <div className="text-cyan-300">Accessibility: 100/100</div>
                       <div className="text-cyan-300">SEO: 98/100</div>
                     </div>
-                    
-                    <div className="text-cyan-400 animate-pulse transform-gpu mt-4">
+
+                    <div className="text-cyan-400 mt-4">
                       <span className="inline-block">$</span>
-                      <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse transform-gpu" />
+                      <span className="inline-block w-2 h-4 bg-cyan-400 ml-1" />
                     </div>
                   </div>
                 </div>
@@ -135,10 +135,13 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Subtle transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/20 to-black/40 pointer-events-none"></div>
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-black/40">
         <div className="container-wide">
           <div className="text-center mb-16 typography">
             <h2 className="text-responsive-md font-black text-white mb-4">
@@ -188,39 +191,78 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Results Section */}
-      <section className="py-20 px-4 bg-gradient-secondary">
-        <div className="container-wide">
-          <div className="text-center mb-16 typography">
-            <h2 className="text-responsive-md font-black text-white mb-4">
-              <span className="gradient-text">
+      {/* Results Section - Enhanced */}
+      <section className="relative py-20 px-4 bg-gradient-secondary overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-600/5" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
+
+        <div className="container-wide relative">
+          <div className="text-center mb-20 typography">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              <span className="gradient-text relative">
                 Proven Impact
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
               </span>
             </h2>
-            <div className="typography">
-              <p className="large muted">Numbers don&apos;t lie - our clients see real results</p>
+
+            <div className="typography max-w-2xl mx-auto">
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
+              </p>
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {results.map((result, index) => (
-              <div 
+              <div
                 key={index}
-                className="text-center group hover-lift will-change-transform transition-smooth"
+                className="text-center group relative"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="glass-card-light p-6 lg:p-8 card-hover-glow transition-smooth">
-                  <div className="text-responsive-lg font-black text-white mb-3 group-hover:text-cyan-400 transition-smooth">
-                    {result.metric}
+                {/* Card with enhanced styling */}
+                <div className="relative glass-card-light p-8 lg:p-10 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+
+                  {/* Metric with enhanced styling */}
+                  <div className="relative mb-4">
+                    <div className="text-4xl lg:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-all duration-300 font-mono">
+                      {result.metric}
+                    </div>
+                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                   </div>
-                  <div className="text-base lg:text-lg font-semibold text-muted-foreground mb-2">
+
+                  {/* Label with enhanced typography */}
+                  <div className="text-lg font-bold text-gray-200 mb-3 group-hover:text-white transition-colors duration-300">
                     {result.label}
                   </div>
-                  <div className="text-responsive-sm text-muted-foreground">
+
+                  {/* Period with accent styling */}
+                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
                     {result.period}
                   </div>
+
+                  {/* Subtle glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-400/5 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 </div>
+
+                {/* Connecting dots for visual flow */}
+                {index < results.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
+                    <div className="w-3 h-0.5 bg-gradient-to-r from-cyan-400/50 to-transparent"></div>
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+
+          {/* Bottom accent section */}
+          <div className="text-center mt-16 pt-8 border-t border-gray-700/30">
+            <p className="text-gray-400 text-sm font-medium">
+              Join <span className="text-cyan-400 font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
+            </p>
           </div>
         </div>
       </section>
