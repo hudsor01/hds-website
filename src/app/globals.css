@@ -376,10 +376,10 @@
     line-height: 1;
   }
 
-@media (min-width: 1024px) {
-  .typography h1:not(.not-typography h1) {
-    font-size: var(--text-5xl);
-    line-height: var(--text-5xl--line-height);
+  @media (min-width: 1024px) {
+    .typography h1:not(.not-typography h1) {
+      font-size: var(--text-5xl);
+      line-height: var(--text-5xl--line-height);
     }
   }
 }
