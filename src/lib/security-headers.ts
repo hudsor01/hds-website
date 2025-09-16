@@ -27,7 +27,7 @@ export const SECURITY_HEADERS = {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}`,
+    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com${process.env.NEXT_PUBLIC_SUPABASE_URL ? ' ' + process.env.NEXT_PUBLIC_SUPABASE_URL : ''}`,
     "worker-src 'self' blob:",
     "child-src 'none'",
     "manifest-src 'self'"
@@ -42,7 +42,7 @@ export const SECURITY_HEADERS = {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}`,
+    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com${process.env.NEXT_PUBLIC_SUPABASE_URL ? ' ' + process.env.NEXT_PUBLIC_SUPABASE_URL : ''}`,
     "worker-src 'self' blob:",
     "child-src 'none'",
     "manifest-src 'self'",
