@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { formatDateLong } from "@/lib/utils";
+// eslint-disable-next-line import/order
+import { formatDateLong } from "@/lib/utils"
+import { ArrowRightIcon, CalendarDaysIcon, ClockIcon, TagIcon } from "@heroicons/react/24/outline"
+import type { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy",
@@ -75,7 +76,7 @@ export default function BlogPage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
         </div>
-        
+
         <div className="relative container-wide text-center">
           <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
@@ -98,15 +99,12 @@ export default function BlogPage() {
               <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Article</h2>
               <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
             </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8
-                      md:grid md:gap-8
-                      flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible
-                      -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
+
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible md:mx-0 md:px-0">
               {featuredPosts.map((post) => (
                 <article key={post.id} className="group relative lg:col-span-2 snap-center flex-shrink-0 w-80 md:w-auto">
                   <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
-                    
+
                     <div className="p-8">
                       <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
                         <span className="flex flex-center gap-1">
@@ -121,15 +119,15 @@ export default function BlogPage() {
                           FEATURED
                         </span>
                       </div>
-                      
+
                       <h3 className="text-responsive-md font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
                         {post.title}
                       </h3>
-                      
+
                       <p className="text-gray-300 mb-6 text-lg leading-relaxed text-pretty">
                         {post.excerpt}
                       </p>
-                      
+
                       <div className="flex flex-wrap gap-2 mb-6">
                         {post.tags.map((tag) => (
                           <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
@@ -138,7 +136,7 @@ export default function BlogPage() {
                           </span>
                         ))}
                       </div>
-                      
+
                       <Link
                         href={`/blog/${post.slug}`}
                         className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
@@ -182,17 +180,17 @@ export default function BlogPage() {
                           </span>
                           <span className="text-gray-500">By {post.author}</span>
                         </div>
-                        
+
                         <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors text-balance">
                           <Link href={`/blog/${post.slug}`}>
                             {post.title}
                           </Link>
                         </h3>
-                        
+
                         <p className="text-gray-300 mb-4 line-clamp-3 leading-relaxed text-pretty">
                           {post.excerpt}
                         </p>
-                        
+
                         <div className="flex flex-wrap gap-2 mb-4">
                           {post.tags.map((tag) => (
                             <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
@@ -201,7 +199,7 @@ export default function BlogPage() {
                             </span>
                           ))}
                         </div>
-                        
+
                         <Link
                           href={`/blog/${post.slug}`}
                           className="inline-flex flex-center gap-2 link-primary font-semibold"
