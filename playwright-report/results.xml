@@ -1,173 +1,85 @@
-<testsuites id="" name="" tests="3" failures="2" skipped="0" errors="0" time="28.930983">
-<testsuite name="hero-text-visibility.spec.ts" timestamp="2025-09-15T22:36:45.759Z" hostname="chromium" tests="3" failures="2" skipped="0" time="26.718" errors="0">
-<testcase name="Hero Text Visibility › should display all hero text elements correctly" classname="hero-text-visibility.spec.ts" time="22.849">
-<failure message="hero-text-visibility.spec.ts:5:7 should display all hero text elements correctly" type="FAILURE">
-<![CDATA[  [chromium] › hero-text-visibility.spec.ts:5:7 › Hero Text Visibility › should display all hero text elements correctly 
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="22.825988000000002">
+<testsuite name="tailwind-enhancements.spec.ts" timestamp="2025-09-16T01:11:01.177Z" hostname="chromium" tests="1" failures="1" skipped="0" time="21.965" errors="0">
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › should show scroll-to-top button when scrolled" classname="tailwind-enhancements.spec.ts" time="21.965">
+<failure message="tailwind-enhancements.spec.ts:97:9 should show scroll-to-top button when scrolled" type="FAILURE">
+<![CDATA[  [chromium] › tailwind-enhancements.spec.ts:97:9 › Tailwind CSS Enhancements › Smooth Scrolling › should show scroll-to-top button when scrolled 
 
     Error: expect(locator).toBeVisible() failed
 
-    Locator:  locator('h1').first()
+    Locator:  locator('button[aria-label="Scroll to top"]')
     Expected: visible
     Received: <element(s) not found>
     Timeout:  10000ms
 
     Call log:
       - Expect "toBeVisible" with timeout 10000ms
-      - waiting for locator('h1').first()
+      - waiting for locator('button[aria-label="Scroll to top"]')
 
 
-      15 |     // Check main heading is visible
-      16 |     const mainHeading = page.locator('h1').first();
-    > 17 |     await expect(mainHeading).toBeVisible();
-         |                               ^
-      18 |
-      19 |     // Check for text content
-      20 |     const headingText = await mainHeading.textContent();
-        at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31
+      107 |
+      108 |       // Button should appear
+    > 109 |       await expect(scrollButton).toBeVisible();
+          |                                  ^
+      110 |
+      111 |       // Click button
+      112 |       await scrollButton.click();
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/test-failed-1.png
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/error-context.md
+    Error Context: ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/error-context.md
 
     Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
 
     Error: expect(locator).toBeVisible() failed
 
-    Locator:  locator('h1').first()
+    Locator:  locator('button[aria-label="Scroll to top"]')
     Expected: visible
     Received: <element(s) not found>
     Timeout:  10000ms
 
     Call log:
       - Expect "toBeVisible" with timeout 10000ms
-      - waiting for locator('h1').first()
+      - waiting for locator('button[aria-label="Scroll to top"]')
 
 
-      15 |     // Check main heading is visible
-      16 |     const mainHeading = page.locator('h1').first();
-    > 17 |     await expect(mainHeading).toBeVisible();
-         |                               ^
-      18 |
-      19 |     // Check for text content
-      20 |     const headingText = await mainHeading.textContent();
-        at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31
+      107 |
+      108 |       // Button should appear
+    > 109 |       await expect(scrollButton).toBeVisible();
+          |                                  ^
+      110 |
+      111 |       // Click button
+      112 |       await scrollButton.click();
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/test-failed-1.png
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/error-context.md
+    Error Context: ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/error-context.md
 
     attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/trace.zip
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip
     Usage:
 
-        npx playwright show-trace ../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/trace.zip
+        npx playwright show-trace ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 ]]>
 </failure>
 <system-out>
-<![CDATA[[should display all hero text elements correctly] Step 1: Navigating to homepage
-[should display all hero text elements correctly] Step 2: Waiting for page to load
+<![CDATA[
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/test-failed-1.png]]
 
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/test-failed-1.png]]
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/error-context.md]]
 
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/error-context.md]]
-[should display all hero text elements correctly] Step 1: Navigating to homepage
-[should display all hero text elements correctly] Step 2: Waiting for page to load
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/test-failed-1.png]]
 
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/test-failed-1.png]]
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/error-context.md]]
 
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/error-context.md]]
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/trace.zip]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Hero Text Visibility › should have proper gradient classes applied" classname="hero-text-visibility.spec.ts" time="2.6">
-<failure message="hero-text-visibility.spec.ts:76:7 should have proper gradient classes applied" type="FAILURE">
-<![CDATA[  [chromium] › hero-text-visibility.spec.ts:76:7 › Hero Text Visibility › should have proper gradient classes applied 
-
-    Error: expect(received).toBeGreaterThan(expected)
-
-    Expected: > 0
-    Received:   0
-
-      88 |
-      89 |     // Verify at least one gradient text exists
-    > 90 |     expect(count).toBeGreaterThan(0);
-         |                   ^
-      91 |
-      92 |     if (count > 0) {
-      93 |       const firstGradient = gradientTextElements.first();
-        at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/error-context.md
-
-    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
-
-    Error: expect(received).toBeGreaterThan(expected)
-
-    Expected: > 0
-    Received:   0
-
-      88 |
-      89 |     // Verify at least one gradient text exists
-    > 90 |     expect(count).toBeGreaterThan(0);
-         |                   ^
-      91 |
-      92 |     if (count > 0) {
-      93 |       const firstGradient = gradientTextElements.first();
-        at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/error-context.md
-
-    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
-    ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/trace.zip
-    Usage:
-
-        npx playwright show-trace ../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/trace.zip
-
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[[should have proper gradient classes applied] Step 1: Navigating to homepage
-[should have proper gradient classes applied] Step 2: Waiting for page to load
-[should have proper gradient classes applied] ⚠️ Found 0 elements with gradient-text class (expected: 1) - FAIL
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/test-failed-1.png]]
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/error-context.md]]
-[should have proper gradient classes applied] Step 1: Navigating to homepage
-[should have proper gradient classes applied] Step 2: Waiting for page to load
-[should have proper gradient classes applied] ⚠️ Found 0 elements with gradient-text class (expected: 1) - FAIL
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/test-failed-1.png]]
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/error-context.md]]
-
-[[ATTACHMENT|../test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/trace.zip]]
-]]>
-</system-out>
-</testcase>
-<testcase name="Hero Text Visibility › should not have any invisible text due to CSS issues" classname="hero-text-visibility.spec.ts" time="1.269">
-<system-out>
-<![CDATA[[should not have any invisible text due to CSS issues] Step 1: Navigating to homepage
-[should not have any invisible text due to CSS issues] Step 2: Waiting for page to load
-[should not have any invisible text due to CSS issues] 🔍 invisible text analysis elements found: []
-[should not have any invisible text due to CSS issues] ✅ Test completed: CSS visibility verification completed
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip]]
 ]]>
 </system-out>
 </testcase>
