@@ -6,11 +6,24 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/types/database'
 
-const supabaseUrl = 'https://bholhbfdqbdpfhmrzhbv.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJob2xoYmZkcWJkcGZobXJ6aGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NTkyNjMsImV4cCI6MjA3MTAzNTI2M30.r06VbWsaX1R-8PCTmttWTc7WI4tESSmyfwbyCZX5-lY'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+// Only validate in runtime, not during build
+if (typeof window !== 'undefined' || process.env.NODE_ENV === 'development') {
+  if (!supabaseUrl) {
+    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_URL')
+  }
+  if (!supabaseAnonKey) {
+    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY')
+  }
+}
 
 // Main Supabase client for standard operations
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient<Database>(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder',
+  {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -24,8 +37,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 
 // Admin client for server-side operations (webhooks, cron, queues)
 export const supabaseAdmin = createClient<Database>(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  supabaseUrl || 'https://placeholder.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
   {
     auth: {
       autoRefreshToken: false,
