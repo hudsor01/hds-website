@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
   const clientIp = getClientIp(request);
 
   // Generate nonce for CSP
-  const nonce = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
+  const nonce = Math.random().toString(36).substring(2, 18);
 
   // Add security headers using centralized configuration with nonce
   applySecurityHeaders(response, nonce);
