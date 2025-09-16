@@ -51,7 +51,6 @@ export function CTAButton({
 
   return (
     <LinkComponent {...linkProps}>
-      <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
       <span className="relative">{children}</span>
       {showArrow && (
         <ArrowRightIcon className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

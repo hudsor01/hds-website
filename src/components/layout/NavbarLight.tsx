@@ -51,7 +51,7 @@ const NavbarLight = memo(function NavbarLight() {
               aria-label="Hudson Digital Solutions - Home"
             >
               <div className="relative">
-                <RocketLaunchIcon className="w-8 h-8 text-cyan-400 hover-lift will-change-transform transition-smooth" />
+                <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1">
@@ -106,16 +106,15 @@ const NavbarLight = memo(function NavbarLight() {
                 className="button-base group cta-primary gap-2 overflow-hidden button-hover-glow"
                 aria-label="Get your free roadmap"
               >
-                <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="relative">Start Shipping Faster</span>
-                <ArrowRightIcon className="relative w-4 h-4 group-hover:translate-x-0.5 transition-smooth" />
+                <ArrowRightIcon className="relative w-4 h-4" />
               </Link>
             </div>
 
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring transition-smooth will-change-transform"
+              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"

@@ -206,9 +206,6 @@ export default function PricingPage() {
                       : 'cta-secondary button-hover-glow'
                   }`}
                 >
-                  {tier.popular && (
-                    <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  )}
                   <span className="relative">{tier.cta}</span>
                 </Link>
               </div>
@@ -261,7 +258,6 @@ export default function PricingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
                 <button className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden will-change-transform">
-                  <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <span className="relative">Get Free Consultation</span>
                 </button>
               </Link>
