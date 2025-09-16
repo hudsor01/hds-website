@@ -38,9 +38,9 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section - Content-First Layout */}
-      <section className="relative py-20 lg:py-32 bg-gradient-hero">
+    <main className="min-h-screen bg-gradient-hero">
+      {/* Hero Section - Seamless Layout */}
+      <section className="relative py-20 lg:py-32">
         <div className="container-wide sm:px-6 lg:px-8 w-full">
           <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
 
@@ -135,13 +135,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Subtle transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-black/20 to-black/40 pointer-events-none"></div>
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-20 px-4 bg-black/40">
+      <section className="py-20 px-4">
         <div className="container-wide">
           <div className="text-center mb-16 typography">
             <h2 className="text-responsive-md font-black text-white mb-4">
