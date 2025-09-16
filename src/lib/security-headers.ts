@@ -15,8 +15,23 @@ export const SECURITY_HEADERS = {
   // Enforce HTTPS (HSTS)
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   
-  // Content Security Policy - Hardened for production
-  'Content-Security-Policy': [
+  // Content Security Policy - Relaxed for development, strict for production
+  'Content-Security-Policy': process.env.NODE_ENV === 'development' ? [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com https://app.posthog.com https://us.i.posthog.com https://fonts.googleapis.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https: blob:",
+    "media-src 'self' https:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}`,
+    "worker-src 'self' blob:",
+    "child-src 'none'",
+    "manifest-src 'self'"
+  ].join('; ') : [
     "default-src 'self'",
     "script-src 'self' https://vercel.live https://va.vercel-scripts.com https://app.posthog.com https://us.i.posthog.com https://fonts.googleapis.com 'nonce-{nonce}' 'unsafe-eval'",
     "style-src 'self' https://fonts.googleapis.com 'nonce-{nonce}' 'unsafe-inline'",
@@ -27,7 +42,7 @@ export const SECURITY_HEADERS = {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com",
+    `connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}`,
     "worker-src 'self' blob:",
     "child-src 'none'",
     "manifest-src 'self'",
