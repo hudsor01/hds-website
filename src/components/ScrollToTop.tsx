@@ -8,12 +8,16 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
+      // Lower threshold for easier testing and better UX
+      if (window.scrollY > 200) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
+
+    // Check initial scroll position
+    toggleVisibility();
 
     window.addEventListener('scroll', toggleVisibility);
 

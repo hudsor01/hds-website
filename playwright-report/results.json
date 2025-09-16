@@ -212,342 +212,148 @@
   },
   "suites": [
     {
-      "title": "hero-text-visibility.spec.ts",
-      "file": "hero-text-visibility.spec.ts",
+      "title": "tailwind-enhancements.spec.ts",
+      "file": "tailwind-enhancements.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Hero Text Visibility",
-          "file": "hero-text-visibility.spec.ts",
-          "line": 4,
+          "title": "Tailwind CSS Enhancements",
+          "file": "tailwind-enhancements.spec.ts",
+          "line": 3,
           "column": 6,
-          "specs": [
+          "specs": [],
+          "suites": [
             {
-              "title": "should display all hero text elements correctly",
-              "ok": false,
-              "tags": [],
-              "tests": [
+              "title": "Smooth Scrolling",
+              "file": "tailwind-enhancements.spec.ts",
+              "line": 88,
+              "column": 8,
+              "specs": [
                 {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "title": "should show scroll-to-top button when scrolled",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 11494,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31",
-                        "location": {
-                          "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                          "column": 31,
-                          "line": 17
-                        },
-                        "snippet": "  15 |     // Check main heading is visible\n  16 |     const mainHeading = page.locator('h1').first();\n> 17 |     await expect(mainHeading).toBeVisible();\n     |                               ^\n  18 |\n  19 |     // Check for text content\n  20 |     const headingText = await mainHeading.textContent();"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                            "column": 31,
-                            "line": 17
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n\n\n  15 |     // Check main heading is visible\n  16 |     const mainHeading = page.locator('h1').first();\n> 17 |     await expect(mainHeading).toBeVisible();\n     |                               ^\n  18 |\n  19 |     // Check for text content\n  20 |     const headingText = await mainHeading.textContent();\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[should display all hero text elements correctly] Step 1: Navigating to homepage\n"
-                        },
-                        {
-                          "text": "[should display all hero text elements correctly] Step 2: Waiting for page to load\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-09-15T22:36:46.047Z",
+                      "timeout": 60000,
                       "annotations": [],
-                      "attachments": [
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium/error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                        "column": 31,
-                        "line": 17
-                      }
-                    },
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 11355,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31",
-                        "location": {
-                          "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                          "column": 31,
-                          "line": 17
-                        },
-                        "snippet": "  15 |     // Check main heading is visible\n  16 |     const mainHeading = page.locator('h1').first();\n> 17 |     await expect(mainHeading).toBeVisible();\n     |                               ^\n  18 |\n  19 |     // Check for text content\n  20 |     const headingText = await mainHeading.textContent();"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                            "column": 31,
-                            "line": 17
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 10953,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 34,
+                              "line": 109
+                            },
+                            "snippet": "  107 |\n  108 |       // Button should appear\n> 109 |       await expect(scrollButton).toBeVisible();\n      |                                  ^\n  110 |\n  111 |       // Click button\n  112 |       await scrollButton.click();"
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n\n\n  15 |     // Check main heading is visible\n  16 |     const mainHeading = page.locator('h1').first();\n> 17 |     await expect(mainHeading).toBeVisible();\n     |                               ^\n  18 |\n  19 |     // Check for text content\n  20 |     const headingText = await mainHeading.textContent();\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:17:31"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[should display all hero text elements correctly] Step 1: Navigating to homepage\n"
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 34,
+                                "line": 109
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n\n  107 |\n  108 |       // Button should appear\n> 109 |       await expect(scrollButton).toBeVisible();\n      |                                  ^\n  110 |\n  111 |       // Click button\n  112 |       await scrollButton.click();\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2025-09-16T01:11:01.423Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 34,
+                            "line": 109
+                          }
                         },
                         {
-                          "text": "[should display all hero text elements correctly] Step 2: Waiting for page to load\n"
+                          "workerIndex": 1,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 11012,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34",
+                            "location": {
+                              "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                              "column": 34,
+                              "line": 109
+                            },
+                            "snippet": "  107 |\n  108 |       // Button should appear\n> 109 |       await expect(scrollButton).toBeVisible();\n      |                                  ^\n  110 |\n  111 |       // Click button\n  112 |       await scrollButton.click();"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                                "column": 34,
+                                "line": 109
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('button[aria-label=\"Scroll to top\"]')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('button[aria-label=\"Scroll to top\"]')\u001b[22m\n\n\n  107 |\n  108 |       // Button should appear\n> 109 |       await expect(scrollButton).toBeVisible();\n      |                                  ^\n  110 |\n  111 |       // Click button\n  112 |       await scrollButton.click();\n    at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 1,
+                          "startTime": "2025-09-16T01:11:12.789Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/error-context.md"
+                            },
+                            {
+                              "name": "trace",
+                              "contentType": "application/zip",
+                              "path": "/Users/richard/Developer/business-website/test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts",
+                            "column": 34,
+                            "line": 109
+                          }
                         }
                       ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-09-15T22:36:58.135Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--704b3-ero-text-elements-correctly-chromium-retry1/trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                        "column": 31,
-                        "line": 17
-                      }
+                      "status": "unexpected"
                     }
                   ],
-                  "status": "unexpected"
+                  "id": "661ae7dfc36d6f3581be-99fe0380cf4c31211b31",
+                  "file": "tailwind-enhancements.spec.ts",
+                  "line": 97,
+                  "column": 9
                 }
-              ],
-              "id": "d8d9642480d7c23f0939-bfb51a8ad54ac9df7a17",
-              "file": "hero-text-visibility.spec.ts",
-              "line": 5,
-              "column": 7
-            },
-            {
-              "title": "should have proper gradient classes applied",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1312,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19",
-                        "location": {
-                          "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                          "column": 19,
-                          "line": 90
-                        },
-                        "snippet": "  88 |\n  89 |     // Verify at least one gradient text exists\n> 90 |     expect(count).toBeGreaterThan(0);\n     |                   ^\n  91 |\n  92 |     if (count > 0) {\n  93 |       const firstGradient = gradientTextElements.first();"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                            "column": 19,
-                            "line": 90
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  88 |\n  89 |     // Verify at least one gradient text exists\n> 90 |     expect(count).toBeGreaterThan(0);\n     |                   ^\n  91 |\n  92 |     if (count > 0) {\n  93 |       const firstGradient = gradientTextElements.first();\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[should have proper gradient classes applied] Step 1: Navigating to homepage\n"
-                        },
-                        {
-                          "text": "[should have proper gradient classes applied] Step 2: Waiting for page to load\n"
-                        },
-                        {
-                          "text": "[should have proper gradient classes applied] ⚠️ Found 0 elements with gradient-text class (expected: 1) - FAIL\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-09-15T22:37:09.919Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium/error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                        "column": 19,
-                        "line": 90
-                      }
-                    },
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1288,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19",
-                        "location": {
-                          "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                          "column": 19,
-                          "line": 90
-                        },
-                        "snippet": "  88 |\n  89 |     // Verify at least one gradient text exists\n> 90 |     expect(count).toBeGreaterThan(0);\n     |                   ^\n  91 |\n  92 |     if (count > 0) {\n  93 |       const firstGradient = gradientTextElements.first();"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                            "column": 19,
-                            "line": 90
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  88 |\n  89 |     // Verify at least one gradient text exists\n> 90 |     expect(count).toBeGreaterThan(0);\n     |                   ^\n  91 |\n  92 |     if (count > 0) {\n  93 |       const firstGradient = gradientTextElements.first();\n    at /Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts:90:19"
-                        }
-                      ],
-                      "stdout": [
-                        {
-                          "text": "[should have proper gradient classes applied] Step 1: Navigating to homepage\n"
-                        },
-                        {
-                          "text": "[should have proper gradient classes applied] Step 2: Waiting for page to load\n"
-                        },
-                        {
-                          "text": "[should have proper gradient classes applied] ⚠️ Found 0 elements with gradient-text class (expected: 1) - FAIL\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 1,
-                      "startTime": "2025-09-15T22:37:11.614Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/Users/richard/Developer/business-website/test-results/hero-text-visibility-Hero--d6ede-er-gradient-classes-applied-chromium-retry1/trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/Users/richard/Developer/business-website/e2e/hero-text-visibility.spec.ts",
-                        "column": 19,
-                        "line": 90
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "d8d9642480d7c23f0939-83066d060d992299c86e",
-              "file": "hero-text-visibility.spec.ts",
-              "line": 76,
-              "column": 7
-            },
-            {
-              "title": "should not have any invisible text due to CSS issues",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1269,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "[should not have any invisible text due to CSS issues] Step 1: Navigating to homepage\n"
-                        },
-                        {
-                          "text": "[should not have any invisible text due to CSS issues] Step 2: Waiting for page to load\n"
-                        },
-                        {
-                          "text": "[should not have any invisible text due to CSS issues] 🔍 invisible text analysis elements found: []\n"
-                        },
-                        {
-                          "text": "[should not have any invisible text due to CSS issues] ✅ Test completed: CSS visibility verification completed\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-09-15T22:37:13.298Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d8d9642480d7c23f0939-b7a7d646d41287e90a17",
-              "file": "hero-text-visibility.spec.ts",
-              "line": 111,
-              "column": 7
+              ]
             }
           ]
         }
@@ -556,11 +362,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-15T22:36:45.747Z",
-    "duration": 28930.983,
-    "expected": 1,
+    "startTime": "2025-09-16T01:11:01.161Z",
+    "duration": 22825.988,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 2,
+    "unexpected": 1,
     "flaky": 0
   }
 }

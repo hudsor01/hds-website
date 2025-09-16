@@ -64,7 +64,6 @@
 		"react-dom": "^19.1.1",
 		"react-error-boundary": "^6.0.0",
 		"resend": "^6.0.3",
-		"shadcn-prose": "^1.2.1",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.3.1",
 		"zod": "^4.1.8",
