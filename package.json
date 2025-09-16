@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "dotenv -e .env.local -- next dev",
 		"dev:https": "dotenv -e .env.local -- cross-env HTTPS=true next dev",
-		"build": "dotenv -e .env.production -- next build",
+		"build": "next build",
 		"build:local": "dotenv -e .env.local -- next build",
 		"build:analyze": "dotenv -e .env.production -- cross-env ANALYZE=true next build",
 		"start": "dotenv -e .env.production -- next start",
