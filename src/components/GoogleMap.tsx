@@ -4,7 +4,7 @@ export default function GoogleMap() {
   return (
     <div className="w-full">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-4 glow-cyan">
+        <h2 className="text-3xl font-bold text-white mb-4">
           Dallas-Fort Worth Metroplex
         </h2>
         <p className="text-gray-300 text-lg">
@@ -26,7 +26,7 @@ export default function GoogleMap() {
         />
         
         {/* Overlay gradient for better integration */}
-        <div className="absolute inset-0 pointer-events-none bg-linear-to-t from-black/20 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 pointer-events-none overlay-gradient-light"></div>
       </div>
       
       <div className="mt-6 text-center">

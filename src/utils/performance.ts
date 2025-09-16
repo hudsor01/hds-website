@@ -1,5 +1,7 @@
 // Performance optimization utilities
 import type { CLSEntry } from "@/types/performance";
+import { logger } from '@/lib/logger';
+import analytics from '@/lib/analytics';
 
 // Lazy loading for images
 export function setupLazyLoading() {
@@ -81,8 +83,29 @@ export function trackWebVitals() {
           _clsValue += clsEntry.value;
         }
       });
-      // Log current CLS value for monitoring
-      console.warn("Current CLS value:", _clsValue);
+      // Track CLS value with structured logging and analytics
+      logger.info('Core Web Vitals - CLS measurement', {
+        metric: 'cls',
+        value: _clsValue,
+        threshold: _clsValue > 0.1 ? 'poor' : _clsValue > 0.05 ? 'needs-improvement' : 'good',
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+        viewport: typeof window !== 'undefined' ? {
+          width: window.innerWidth,
+          height: window.innerHeight
+        } : null,
+        timestamp: Date.now()
+      });
+
+      // Send to PostHog for performance analytics
+      if (typeof window !== 'undefined' && analytics) {
+        analytics.trackEvent('web_vitals_cls', {
+          cls_value: _clsValue,
+          performance_rating: _clsValue > 0.1 ? 'poor' : _clsValue > 0.05 ? 'needs-improvement' : 'good',
+          page_url: window.location.href,
+          viewport_width: window.innerWidth,
+          viewport_height: window.innerHeight
+        });
+      }
     }).observe({ entryTypes: ["layout-shift"] });
   }
 }
@@ -99,7 +122,7 @@ export function createOptimizedImage(
   img.loading = "lazy";
   img.decoding = "async";
   img.src = src;
-  if (className) img.className = className;
+  if (className) {img.className = className;}
 
   return img;
 }

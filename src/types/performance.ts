@@ -1,6 +1,6 @@
 // Performance monitoring type definitions
 
-export interface WebVitalMetric {
+export interface PerformanceWebVitalMetric {
   name: 'CLS' | 'FCP' | 'FID' | 'LCP' | 'TTFB'
   value: number
   rating: 'good' | 'needs-improvement' | 'poor'

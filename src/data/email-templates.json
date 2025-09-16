@@ -1,0 +1,14 @@
+{
+  "welcome": {
+    "subject": "Thanks for reaching out - let's discuss your project",
+    "content": "Hi {{firstName}},\n\nThanks for contacting Hudson Digital Solutions. We'll get back to you within 24 hours.\n\nBest regards,\nThe HDS Team"
+  },
+  "consultation": {
+    "subject": "Your free consultation is ready",
+    "content": "Hi {{firstName}},\n\nI'd love to discuss your {{service}} needs and show you how we can help {{company}} achieve better results.\n\nSchedule a call: https://hudsondigitalsolutions.com/contact\n\nBest,\nRichard Hudson"
+  },
+  "follow-up": {
+    "subject": "Following up on your project inquiry",
+    "content": "Hi {{firstName}},\n\nI wanted to follow up on your inquiry about {{service}}. Are you still looking for help with your project?\n\nBest,\nRichard"
+  }
+}

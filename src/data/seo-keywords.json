@@ -1,0 +1,36 @@
+{
+  "base": [
+    "web development",
+    "custom software",
+    "React development",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "website design",
+    "web applications",
+    "digital solutions",
+    "software engineering",
+    "business automation",
+    "performance optimization"
+  ],
+  "location": [
+    "web developer",
+    "software developer",
+    "web development company",
+    "custom software development",
+    "React developer",
+    "remote web developer"
+  ],
+  "services": {
+    "web-development": [
+      "custom web application development",
+      "responsive website design",
+      "progressive web apps"
+    ],
+    "consulting": [
+      "technical consulting",
+      "software architecture",
+      "performance auditing"
+    ]
+  }
+}

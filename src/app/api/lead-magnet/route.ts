@@ -1,12 +1,12 @@
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import { 
-  escapeHtml, 
+import {
+  escapeHtml,
   sanitizeEmailHeader,
-  detectInjectionAttempt 
+  detectInjectionAttempt
 } from '@/lib/security-utils';
+import { createServerLogger, castError } from '@/lib/logger';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -161,7 +161,13 @@ function generateAdminNotificationEmail(data: { email: string; firstName: string
 }
 
 export async function POST(request: NextRequest) {
+  const logger = createServerLogger('lead-magnet-api');
+
   try {
+    logger.info('Lead magnet request received', {
+      method: request.method,
+      url: request.url
+    });
     // Parse request body
     let body;
     try {
@@ -175,22 +181,32 @@ export async function POST(request: NextRequest) {
     
     // Validate form data
     const validation = validateLeadMagnetForm(body);
-    
+
     if (!validation.isValid) {
       return NextResponse.json(
         { error: 'Validation failed', errors: validation.errors },
         { status: 400 }
       );
     }
-    
-    const data = validation.data!;
+
+    // TypeScript: validation.data is guaranteed to be non-null when isValid is true
+    const data = validation.data;
+    if (!data) {
+      return NextResponse.json(
+        { error: 'Invalid validation state' },
+        { status: 500 }
+      );
+    }
     
     // Check for suspicious activity
     const fieldsToCheck = [data.firstName, data.email];
     const suspiciousActivity = fieldsToCheck.some(field => detectInjectionAttempt(field));
     
     if (suspiciousActivity) {
-      console.warn('Potential injection attempt detected in lead magnet form:', data.email);
+      logger.warn('Potential injection attempt detected in lead magnet form', {
+        email: data.email,
+        fields: fieldsToCheck
+      });
     }
     
     // Send emails if Resend is configured
@@ -246,7 +262,7 @@ export async function POST(request: NextRequest) {
               })
             });
           } catch (discordError) {
-            console.error('Failed to send Discord notification:', discordError);
+            logger.error('Failed to send Discord notification', castError(discordError));
           }
         }
         
@@ -259,7 +275,7 @@ export async function POST(request: NextRequest) {
         return applySecurityHeaders(response);
         
       } catch (emailError) {
-        console.error('Failed to send lead magnet emails:', emailError);
+        logger.error('Failed to send lead magnet emails', castError(emailError));
         
         // Still return success with download URL even if email fails
         const response = NextResponse.json({
@@ -282,7 +298,7 @@ export async function POST(request: NextRequest) {
     }
     
   } catch (error) {
-    console.error('Lead magnet API error:', error);
+    logger.error('Lead magnet API error', castError(error));
     
     const response = NextResponse.json(
       { error: 'An unexpected error occurred. Please try again later.' },

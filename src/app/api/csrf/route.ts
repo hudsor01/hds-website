@@ -1,37 +1,29 @@
 import { NextResponse } from 'next/server';
-import { generateCSRFToken } from '@/lib/csrf';
+import { generateCsrfToken } from '@/lib/csrf';
 import { applySecurityHeaders } from '@/lib/security-headers';
+import { createServerLogger, castError } from '@/lib/logger';
 
-/**
- * GET /api/csrf
- * Returns a CSRF token for form submissions
- * Token is also set as a secure HTTP-only cookie
- */
 export async function GET() {
+  const logger = createServerLogger('csrf-token');
+
   try {
-    const token = generateCSRFToken();
-    
-    const response = NextResponse.json(
-      { token },
-      { status: 200 }
-    );
-    
-    // Set CSRF token as HTTP-only, secure cookie
-    response.cookies.set('csrf-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60, // 1 hour
-      path: '/'
+    logger.info('CSRF token generation requested');
+    const token = generateCsrfToken();
+
+    const response = NextResponse.json({
+      token,
+      message: 'CSRF token generated successfully'
     });
-    
+
     return applySecurityHeaders(response);
   } catch (error) {
-    console.error('CSRF token generation error:', error);
-    
-    return NextResponse.json(
-      { error: 'Failed to generate security token' },
+    logger.error('CSRF token generation failed', castError(error));
+
+    const response = NextResponse.json(
+      { error: 'Failed to generate CSRF token' },
       { status: 500 }
     );
+
+    return applySecurityHeaders(response);
   }
 }

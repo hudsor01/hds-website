@@ -3,9 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
-import { Providers } from "@/components/providers";
-import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
+import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "Hudson Digital Solutions",
     images: [
       {
-        url: "/HDS-Logo.jpeg",
+        url: "/HDS-Logo.webp",
         width: 1200,
         height: 630,
         alt: "Hudson Digital Solutions",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
     description: "Senior engineering team that eliminates your technical bottlenecks. 250% average ROI.",
-    images: ["/HDS-Logo.jpeg"],
+    images: ["/HDS-Logo.webp"],
   },
   robots: {
     index: true,
@@ -106,7 +106,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark scroll-smooth">
       <head>
         {/* Critical mobile-first meta tags */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=yes" />
@@ -128,11 +128,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/HDS-Logo.jpeg" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/HDS-Logo.jpeg" />
+        <link rel="apple-touch-icon" href="/HDS-Logo.webp" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/HDS-Logo.webp" />
         
         {/* Splash screens for iOS */}
-        <link rel="apple-touch-startup-image" href="/HDS-Logo.jpeg" />
+        <link rel="apple-touch-startup-image" href="/HDS-Logo.webp" />
         
         {/* Manifest for PWA */}
         <link rel="manifest" href="/manifest.json" />
@@ -140,7 +140,7 @@ export default function RootLayout({
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#0891b2" />
         <meta name="msapplication-TileColor" content="#0891b2" />
-        <meta name="msapplication-TileImage" content="/HDS-Logo.jpeg" />
+        <meta name="msapplication-TileImage" content="/HDS-Logo.webp" />
         
         {/* Mobile-specific optimizations */}
         <meta name="format-detection" content="telephone=no" />
@@ -148,17 +148,16 @@ export default function RootLayout({
         <meta name="MobileOptimized" content="320" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <Providers>
-          <NavbarLight />
-          <div id="main-content" className="min-h-screen pt-16">
-            {children}
-          </div>
-          <Footer />
-          <Analytics />
-        </Providers>
+        <NavbarLight />
+        <div id="main-content" className="min-h-screen pt-16">
+          {children}
+        </div>
+        <Footer />
+        <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   );

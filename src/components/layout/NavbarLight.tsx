@@ -2,16 +2,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, memo, useCallback, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import type { NavigationItem } from "@/types/components";
-// import { brand } from "@/lib/brand";
-
 import { 
   Bars3Icon, 
   XMarkIcon,
   RocketLaunchIcon,
   ArrowRightIcon
 } from "@heroicons/react/24/outline";
+import { cn } from "@/lib/utils";
+import type { NavigationItem } from "@/types/components";
+// import { brand } from "@/lib/brand";
+
 
 const navigation: NavigationItem[] = [
   { name: "Services", href: "/services" },
@@ -36,27 +36,26 @@ const NavbarLight = memo(function NavbarLight() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 shadow-lg shadow-black/10 border-b border-gray-800/50"
-      style={{ backgroundColor: 'var(--color-nav-dark)' }}
+      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="relative container-wide sm:px-6 lg:px-8">
+        <div className="flex-between h-16">
           {/* Logo - Simplified and Professional */}
           <div className="flex items-center gap-8">
             <Link 
               href="/" 
-              className="group flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:ring-offset-2 focus:ring-offset-transparent rounded-lg"
+              className="group flex items-center gap-2.5 focus-ring rounded-lg"
               aria-label="Hudson Digital Solutions - Home"
             >
               <div className="relative">
-                <RocketLaunchIcon className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
+                <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-lg font-bold text-white">
+                  <span className="text-lg font-bold text-foreground">
                     Hudson Digital Solutions
                   </span>
                 </div>
@@ -73,10 +72,10 @@ const NavbarLight = memo(function NavbarLight() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                    pathname === item.href 
-                      ? "text-cyan-400 bg-cyan-400/10" 
-                      : "text-gray-300 hover:text-white hover:bg-white/5"
+                    "px-4 py-2 text-sm font-medium rounded-lg transition-smooth",
+                    pathname === item.href
+                      ? "text-cyan-400 bg-cyan-400/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                   role="menuitem"
                   aria-current={pathname === item.href ? "page" : undefined}
@@ -93,7 +92,7 @@ const NavbarLight = memo(function NavbarLight() {
             {/* Secondary CTA - Talk to Sales */}
             <Link
               href="/contact"
-              className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
             >
               Talk to Sales
               <ArrowRightIcon className="w-3.5 h-3.5" />
@@ -104,19 +103,18 @@ const NavbarLight = memo(function NavbarLight() {
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-bold text-sm rounded-lg overflow-hidden hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300"
+                className="button-base group cta-primary gap-2 overflow-hidden button-hover-glow"
                 aria-label="Get your free roadmap"
               >
-                <span className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="relative">Start Shipping Faster</span>
-                <ArrowRightIcon className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRightIcon className="relative w-4 h-4" />
               </Link>
             </div>
 
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden relative p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
+              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -135,15 +133,15 @@ const NavbarLight = memo(function NavbarLight() {
         </div>
       </div>
 
-      {/* Mobile menu - Simplified */}
+      {/* Mobile menu - Floating style */}
       {mobileMenuOpen && (
         <div
           className="md:hidden"
           id="mobile-menu"
         >
-          {/* Mobile menu background */}
-          <div className="absolute inset-0 border-b border-gray-800/50" style={{ backgroundColor: 'var(--color-nav-dark)' }} />
-          
+          {/* Mobile menu background - transparent floating */}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
+
           <div className="relative px-4 pt-2 pb-4 space-y-1" role="menu" aria-label="Mobile navigation">
             {navigation.map((item) => (
               <Link
@@ -151,10 +149,10 @@ const NavbarLight = memo(function NavbarLight() {
                 href={item.href}
                 onClick={() => handleNavClick()}
                 className={cn(
-                  "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200",
+                  "block px-4 py-3 rounded-lg text-base font-medium transition-smooth",
                   pathname === item.href
                     ? "bg-cyan-400/10 text-cyan-400"
-                    : "text-gray-300 hover:bg-white/5 hover:text-white"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
                 role="menuitem"
                 aria-current={pathname === item.href ? "page" : undefined}
@@ -167,14 +165,14 @@ const NavbarLight = memo(function NavbarLight() {
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="block w-full text-center px-4 py-3 text-gray-300 font-medium rounded-lg hover:bg-white/5 hover:text-white transition-all duration-200"
+                className="block w-full text-center px-4 py-3 text-muted-foreground font-medium rounded-lg hover:bg-accent hover:text-foreground transition-smooth"
               >
                 Talk to Sales
               </Link>
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="block w-full text-center px-4 py-3 bg-linear-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200"
+                className="block w-full text-center cta-primary"
               >
                 Get Free Roadmap
               </Link>

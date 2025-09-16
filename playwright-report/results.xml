@@ -1,0 +1,537 @@
+<testsuites id="" name="" tests="38" failures="5" skipped="1" errors="0" time="120.20042500000001">
+<testsuite name="component-classes-verification.spec.ts" timestamp="2025-09-16T03:47:35.118Z" hostname="chromium" tests="3" failures="0" skipped="0" time="7.661" errors="0">
+<testcase name="Component Classes Visual Verification › should verify globals.css component classes are working" classname="component-classes-verification.spec.ts" time="3.048">
+<system-err>
+<![CDATA[[should verify globals.css component classes are working] Step 1: Navigating to homepage
+[should verify globals.css component classes are working] Step 2: Waiting for page to load
+[should verify globals.css component classes are working] 📸 Screenshot: Hero section visual verification -> test-results/homepage-hero.png
+[should verify globals.css component classes are working] ⚠️ Found 0 flex-center elements
+[should verify globals.css component classes are working] ⚠️ Found 0 glass card elements
+[should verify globals.css component classes are working] ⚠️ Found 0 CTA buttons
+[should verify globals.css component classes are working] ⚠️ Found 0 container elements
+[should verify globals.css component classes are working] ⚠️ Found 0 responsive text elements
+[should verify globals.css component classes are working] ✅ Test completed: Homepage component classes verification completed
+]]>
+</system-err>
+</testcase>
+<testcase name="Component Classes Visual Verification › should verify contact form component classes" classname="component-classes-verification.spec.ts" time="2.5">
+<system-err>
+<![CDATA[[should verify contact form component classes] Step 1: Navigating to contact page
+[should verify contact form component classes] Step 2: Waiting for contact page to load
+[should verify contact form component classes] 📸 Screenshot: Contact form component classes -> test-results/contact-form.png
+[should verify contact form component classes] ✅ Found 27 elements with focus-ring class
+[should verify contact form component classes] ✅ Found 40 elements with smooth transitions
+[should verify contact form component classes] ✅ Test completed: Contact form component classes verification completed
+]]>
+</system-err>
+</testcase>
+<testcase name="Component Classes Visual Verification › should verify services page component classes" classname="component-classes-verification.spec.ts" time="2.113">
+<system-err>
+<![CDATA[[should verify services page component classes] Step 1: Navigating to services page
+[should verify services page component classes] Step 2: Waiting for services page to load
+[should verify services page component classes] 📸 Screenshot: Services page component classes -> test-results/services-page.png
+[should verify services page component classes] ✅ Found 12 elements with hover effects
+[should verify services page component classes] ✅ Test completed: Services page component classes verification completed
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="contact-form.spec.ts" timestamp="2025-09-16T03:47:35.118Z" hostname="chromium" tests="6" failures="0" skipped="0" time="14.879" errors="0">
+<testcase name="Contact Form › should display contact form with all fields" classname="contact-form.spec.ts" time="0.893">
+</testcase>
+<testcase name="Contact Form › should show validation errors for empty required fields" classname="contact-form.spec.ts" time="0.887">
+</testcase>
+<testcase name="Contact Form › should successfully submit form with valid data" classname="contact-form.spec.ts" time="1.518">
+</testcase>
+<testcase name="Contact Form › should show pending state while submitting" classname="contact-form.spec.ts" time="3.35">
+<system-err>
+<![CDATA[[should show pending state while submitting] ⚠️ Could not verify pending state or form completion
+]]>
+</system-err>
+</testcase>
+<testcase name="Contact Form › should handle rate limiting gracefully" classname="contact-form.spec.ts" time="6.007">
+</testcase>
+<testcase name="Contact Form › should preserve form data on validation error" classname="contact-form.spec.ts" time="2.224">
+</testcase>
+</testsuite>
+<testsuite name="dark-theme-verification.spec.ts" timestamp="2025-09-16T03:47:35.118Z" hostname="chromium" tests="3" failures="1" skipped="0" time="7.245" errors="0">
+<testcase name="Homepage Dark Theme Verification › should display dark hero background instead of bright blue/cyan gradient" classname="dark-theme-verification.spec.ts" time="2.326">
+<system-err>
+<![CDATA[[should display dark hero background instead of bright blue/cyan gradient] Step 1: Navigating to homepage
+[should display dark hero background instead of bright blue/cyan gradient] Step 2: Waiting for page to load
+[should display dark hero background instead of bright blue/cyan gradient] Step 3: Setting page to dark color scheme
+[should display dark hero background instead of bright blue/cyan gradient] 📸 Screenshot: Full page dark theme -> test-results/homepage-dark-theme-full.png
+[should display dark hero background instead of bright blue/cyan gradient] 📸 Screenshot: Hero section dark theme -> test-results/hero-section-dark-theme.png
+[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element classes: min-h-screen bg-gradient-hero
+[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element computed background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+[should display dark hero background instead of bright blue/cyan gradient] 🔍 main element background-image: none
+[should display dark hero background instead of bright blue/cyan gradient] Step 4: Verified dark colors are present in background gradient
+]]>
+</system-err>
+</testcase>
+<testcase name="Homepage Dark Theme Verification › should maintain terminal/code aesthetic with dark colors" classname="dark-theme-verification.spec.ts" time="3.051">
+<failure message="dark-theme-verification.spec.ts:77:7 should maintain terminal/code aesthetic with dark colors" type="FAILURE">
+<![CDATA[  [chromium] › dark-theme-verification.spec.ts:77:7 › Homepage Dark Theme Verification › should maintain terminal/code aesthetic with dark colors 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800
+      110 |
+    > 111 |       expect(containsDarkSecondaryColors).toBe(true);
+          |                                           ^
+      112 |       logger.step('Verified secondary gradients use dark colors');
+      113 |     }
+      114 |     logger.complete('Terminal/code aesthetic verification completed');
+        at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      109 |         secondaryStyle.includes('rgb(39, 39, 42)');   // zinc-800
+      110 |
+    > 111 |       expect(containsDarkSecondaryColors).toBe(true);
+          |                                           ^
+      112 |       logger.step('Verified secondary gradients use dark colors');
+      113 |     }
+      114 |     logger.complete('Terminal/code aesthetic verification completed');
+        at /Users/richard/Developer/business-website/e2e/dark-theme-verification.spec.ts:111:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/dark-theme-verification-Ho-50f85--aesthetic-with-dark-colors-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[[should maintain terminal/code aesthetic with dark colors] Step 1: Navigating to homepage
+[should maintain terminal/code aesthetic with dark colors] Step 2: Waiting for page to load
+[should maintain terminal/code aesthetic with dark colors] Step 3: Setting page to dark color scheme
+[should maintain terminal/code aesthetic with dark colors] 🔍 main heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper
+[should maintain terminal/code aesthetic with dark colors] 🔍 secondary gradient background-image: none
+[should maintain terminal/code aesthetic with dark colors] Step 1: Navigating to homepage
+[should maintain terminal/code aesthetic with dark colors] Step 2: Waiting for page to load
+[should maintain terminal/code aesthetic with dark colors] Step 3: Setting page to dark color scheme
+[should maintain terminal/code aesthetic with dark colors] 🔍 main heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper
+[should maintain terminal/code aesthetic with dark colors] 🔍 secondary gradient background-image: none
+]]>
+</system-err>
+</testcase>
+<testcase name="Homepage Dark Theme Verification › should capture and analyze color scheme of key elements" classname="dark-theme-verification.spec.ts" time="1.868">
+<system-err>
+<![CDATA[[should capture and analyze color scheme of key elements] Step 1: Navigating to homepage
+[should capture and analyze color scheme of key elements] Step 2: Waiting for page to load
+[should capture and analyze color scheme of key elements] Step 3: Setting page to dark color scheme
+[should capture and analyze color scheme of key elements] Step 4: Analyzing overall color scheme
+[should capture and analyze color scheme of key elements] 🔍 body background-color: rgba(0, 0, 0, 0)
+[should capture and analyze color scheme of key elements] 🔍 navigation background-color: rgba(0, 0, 0, 0)
+[should capture and analyze color scheme of key elements] 📸 Screenshot: Final dark theme verification -> test-results/dark-theme-verification-complete.png
+[should capture and analyze color scheme of key elements] ✅ Test completed: Dark theme verification completed successfully
+[should capture and analyze color scheme of key elements] Step 5: Screenshots saved to test-results/ directory
+[should capture and analyze color scheme of key elements] Step 6: Hero section should now display dark gray/slate gradient instead of bright cyan/blue
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="hero-text-visibility.spec.ts" timestamp="2025-09-16T03:47:35.118Z" hostname="chromium" tests="3" failures="0" skipped="0" time="3.912" errors="0">
+<testcase name="Hero Text Visibility › should display all hero text elements correctly" classname="hero-text-visibility.spec.ts" time="1.291">
+<system-err>
+<![CDATA[[should display all hero text elements correctly] Step 1: Navigating to homepage
+[should display all hero text elements correctly] Step 2: Waiting for page to load
+[should display all hero text elements correctly] 🔍 hero heading text content: Stop Losing Revenue toTechnical BottlenecksShip 3x Faster, 60% Cheaper
+[should display all hero text elements correctly] ⚠️ Found 0 gradient text elements (.bg-gradient-to-r)
+[should display all hero text elements correctly] ✅ Found 12 cyan text elements
+[should display all hero text elements correctly] ✅ Found 1 transparent text elements
+[should display all hero text elements correctly] 📸 Screenshot: Hero text visibility verification -> hero-text-visibility.png
+[should display all hero text elements correctly] Step 3: Hero text element has dimensions: 296.59375x37
+[should display all hero text elements correctly] ✅ Test completed: Hero text elements verification completed
+]]>
+</system-err>
+</testcase>
+<testcase name="Hero Text Visibility › should have proper gradient classes applied" classname="hero-text-visibility.spec.ts" time="1.264">
+<system-err>
+<![CDATA[[should have proper gradient classes applied] Step 1: Navigating to homepage
+[should have proper gradient classes applied] Step 2: Waiting for page to load
+[should have proper gradient classes applied] ✅ Found 3 elements with gradient-text class (expected: 1) - PASS
+[should have proper gradient classes applied] Step 3: Verified gradient text has proper CSS classes
+[should have proper gradient classes applied] ✅ Test completed: Gradient classes verification completed
+]]>
+</system-err>
+</testcase>
+<testcase name="Hero Text Visibility › should not have any invisible text due to CSS issues" classname="hero-text-visibility.spec.ts" time="1.357">
+<system-err>
+<![CDATA[[should not have any invisible text due to CSS issues] Step 1: Navigating to homepage
+[should not have any invisible text due to CSS issues] Step 2: Waiting for page to load
+[should not have any invisible text due to CSS issues] 🔍 invisible text analysis elements found: []
+[should not have any invisible text due to CSS issues] ✅ Test completed: CSS visibility verification completed
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="tailwind-enhancements.spec.ts" timestamp="2025-09-16T03:47:35.118Z" hostname="chromium" tests="23" failures="4" skipped="1" time="80.454" errors="0">
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should have text-balance on headings" classname="tailwind-enhancements.spec.ts" time="0.474">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should have text-pretty on descriptions" classname="tailwind-enhancements.spec.ts" time="0.677">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should apply text-balance across all major pages" classname="tailwind-enhancements.spec.ts" time="1.303">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Will-Change Optimizations › should have will-change-transform on hover elements" classname="tailwind-enhancements.spec.ts" time="0.439">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Will-Change Optimizations › should optimize performance for animated elements" classname="tailwind-enhancements.spec.ts" time="0.814">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should have scroll snap on mobile testimonials" classname="tailwind-enhancements.spec.ts" time="0.978">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should have horizontal scroll on mobile portfolio" classname="tailwind-enhancements.spec.ts" time="0.635">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should hide scrollbar on mobile" classname="tailwind-enhancements.spec.ts" time="0.641">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › should have scroll-smooth on html element" classname="tailwind-enhancements.spec.ts" time="0.694">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › should show scroll-to-top button when scrolled" classname="tailwind-enhancements.spec.ts" time="22.557">
+<failure message="tailwind-enhancements.spec.ts:97:9 should show scroll-to-top button when scrolled" type="FAILURE">
+<![CDATA[  [chromium] › tailwind-enhancements.spec.ts:97:9 › Tailwind CSS Enhancements › Smooth Scrolling › should show scroll-to-top button when scrolled 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('button[aria-label="Scroll to top"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('button[aria-label="Scroll to top"]')
+
+
+      107 |
+      108 |       // Button should appear
+    > 109 |       await expect(scrollButton).toBeVisible();
+          |                                  ^
+      110 |
+      111 |       // Click button
+      112 |       await scrollButton.click();
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('button[aria-label="Scroll to top"]')
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('button[aria-label="Scroll to top"]')
+
+
+      107 |
+      108 |       // Button should appear
+    > 109 |       await expect(scrollButton).toBeVisible();
+          |                                  ^
+      110 |
+      111 |       // Click button
+      112 |       await scrollButton.click();
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:109:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-221cc-to-top-button-when-scrolled-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › scroll-to-top button should have proper styling" classname="tailwind-enhancements.spec.ts" time="12.646">
+<failure message="tailwind-enhancements.spec.ts:120:9 scroll-to-top button should have proper styling" type="FAILURE">
+<![CDATA[  [chromium] › tailwind-enhancements.spec.ts:120:9 › Tailwind CSS Enhancements › Smooth Scrolling › scroll-to-top button should have proper styling 
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('button[aria-label="Scroll to top"]').first() to be visible
+
+
+      124 |
+      125 |       const button = page.locator('button[aria-label="Scroll to top"]').first();
+    > 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });
+          |                    ^
+      127 |       const buttonClass = await button.getAttribute('class');
+      128 |
+      129 |       expect(buttonClass).toContain('fixed');
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.waitFor: Timeout 5000ms exceeded.
+    Call log:
+      - waiting for locator('button[aria-label="Scroll to top"]').first() to be visible
+
+
+      124 |
+      125 |       const button = page.locator('button[aria-label="Scroll to top"]').first();
+    > 126 |       await button.waitFor({ state: 'visible', timeout: 5000 });
+          |                    ^
+      127 |       const buttonClass = await button.getAttribute('class');
+      128 |
+      129 |       expect(buttonClass).toContain('fixed');
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:126:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-28496--should-have-proper-styling-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent-cyan-500 on form inputs" classname="tailwind-enhancements.spec.ts" time="0.544">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent color on textarea" classname="tailwind-enhancements.spec.ts" time="0.894">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent color on select elements" classname="tailwind-enhancements.spec.ts" time="0.472">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should respect prefers-reduced-motion" classname="tailwind-enhancements.spec.ts" time="0.437">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should disable hover scales with reduced motion" classname="tailwind-enhancements.spec.ts" time="0.464">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should disable will-change with reduced motion" classname="tailwind-enhancements.spec.ts" time="0.451">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Responsive Behavior › scroll snap should only apply on mobile" classname="tailwind-enhancements.spec.ts" time="0.654">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Responsive Behavior › text sizes should be responsive" classname="tailwind-enhancements.spec.ts" time="1.531">
+<failure message="tailwind-enhancements.spec.ts:255:9 text sizes should be responsive" type="FAILURE">
+<![CDATA[  [chromium] › tailwind-enhancements.spec.ts:255:9 › Tailwind CSS Enhancements › Responsive Behavior › text sizes should be responsive 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 32
+    Received:   32
+
+      270 |
+      271 |       // Desktop font should be larger
+    > 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));
+          |                                         ^
+      273 |     });
+      274 |   });
+      275 |
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 32
+    Received:   32
+
+      270 |
+      271 |       // Desktop font should be larger
+    > 272 |       expect(parseInt(desktopFontSize)).toBeGreaterThan(parseInt(mobileFontSize));
+          |                                         ^
+      273 |     });
+      274 |   });
+      275 |
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:272:41
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-da89d--sizes-should-be-responsive-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Performance Optimizations › should have optimized animations" classname="tailwind-enhancements.spec.ts" time="0.529">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Performance Optimizations › should use will-change sparingly" classname="tailwind-enhancements.spec.ts" time="0.569">
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Accessibility Compliance › scroll-to-top button should be accessible" classname="tailwind-enhancements.spec.ts" time="32.051">
+<failure message="tailwind-enhancements.spec.ts:298:9 scroll-to-top button should be accessible" type="FAILURE">
+<![CDATA[  [chromium] › tailwind-enhancements.spec.ts:298:9 › Tailwind CSS Enhancements › Accessibility Compliance › scroll-to-top button should be accessible 
+
+    TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('button[aria-label="Scroll to top"]')
+
+
+      304 |
+      305 |       // Check ARIA label
+    > 306 |       const ariaLabel = await button.getAttribute('aria-label');
+          |                                      ^
+      307 |       expect(ariaLabel).toBe('Scroll to top');
+      308 |
+      309 |       // Check keyboard accessibility
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: locator.getAttribute: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('button[aria-label="Scroll to top"]')
+
+
+      304 |
+      305 |       // Check ARIA label
+    > 306 |       const ariaLabel = await button.getAttribute('aria-label');
+          |                                      ^
+      307 |       expect(ariaLabel).toBe('Scroll to top');
+      308 |
+      309 |       // Check keyboard accessibility
+        at /Users/richard/Developer/business-website/e2e/tailwind-enhancements.spec.ts:306:38
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/tailwind-enhancements-Tail-8b31e-button-should-be-accessible-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Accessibility Compliance › form elements should have proper focus states" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

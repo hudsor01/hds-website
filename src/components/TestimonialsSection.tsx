@@ -1,9 +1,8 @@
 "use client";
 
+import { StarIcon, UserIcon } from "@heroicons/react/24/solid";
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
 import type { Testimonial } from "@/types/components";
-import { m } from "@/lib/motion";
-import { StarIcon, UserIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
 
 const testimonials: Testimonial[] = [
@@ -63,32 +62,21 @@ const testimonials: Testimonial[] = [
 export function TestimonialsSection({ className }: { className?: string }) {
   return (
     <section className={`py-16 px-4 sm:px-6 lg:px-8 ${className || ""}`}>
-      <div className="max-w-7xl mx-auto">
+      <div className="container-wide">
         {/* Section Header */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-12">
+          <h2 className="text-responsive-lg font-bold text-white mb-4">
             What Our Clients Say
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-lg container-narrow">
             Don't just take our word for it. Here's what business owners and teams
             have to say about working with Hudson Digital Solutions.
           </p>
-        </m.div>
+        </div>
 
         {/* Testimonials Grid */}
-        <m.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <BentoGrid className="max-w-6xl mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div>
+          <BentoGrid className="container-wide grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((testimonial) => (
               <BentoCard
                 key={testimonial.id}
@@ -102,7 +90,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 via-transparent to-purple-500/10 p-6">
+                  <div className="absolute inset-0 bg-gradient-hero-10 p-6">
                     {/* Rating Stars */}
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">
@@ -111,7 +99,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                             key={i}
                             className={cn(
                               "w-4 h-4",
-                              i < testimonial.rating! ? "text-yellow-400" : "text-gray-600"
+                              i < (testimonial.rating || 0) ? "text-yellow-400" : "text-gray-600"
                             )}
                           />
                         ))}
@@ -119,7 +107,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     )}
 
                     {/* Testimonial Content */}
-                    <blockquote className="text-gray-300 leading-relaxed mb-6 text-sm lg:text-base">
+                    <blockquote className="text-gray-300 leading-relaxed mb-6 text-responsive-sm">
                       "{testimonial.content}"
                     </blockquote>
 
@@ -135,7 +123,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
               />
             ))}
           </BentoGrid>
-        </m.div>
+        </div>
       </div>
     </section>
   );

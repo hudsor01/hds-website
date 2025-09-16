@@ -1,73 +1,96 @@
-import type { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
+import { createHmac, randomBytes } from 'crypto';
 
-const CSRF_TOKEN_COOKIE_NAME = "csrf-token";
-const CSRF_TOKEN_LENGTH = 32;
-const CSRF_TOKEN_MAX_AGE = 60 * 60 * 24; // 24 hours
+// CSRF token generation and validation
+// Using built-in crypto module - no external dependencies needed
 
-export function generateCSRFToken(): string {
-  return crypto.randomBytes(CSRF_TOKEN_LENGTH).toString("hex");
-}
+const CSRF_SECRET = process.env.CSRF_SECRET || randomBytes(32).toString('hex');
+const TOKEN_LENGTH = 32;
+const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
 
-export function setCSRFTokenCookie(
-  response: NextResponse,
-  token: string
-): void {
-  response.cookies.set(CSRF_TOKEN_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: CSRF_TOKEN_MAX_AGE,
-    path: "/",
-  });
-}
+// Store tokens in memory (for single instance)
+// In production with multiple instances, use Redis or database
+const tokenStore = new Map<string, { token: string; expires: number }>();
 
-export function getCSRFTokenFromCookie(
-  request: NextRequest
-): string | undefined {
-  return request.cookies.get(CSRF_TOKEN_COOKIE_NAME)?.value;
-}
+// Clean up expired tokens every 10 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of tokenStore.entries()) {
+    if (value.expires < now) {
+      tokenStore.delete(key);
+    }
+  }
+}, 10 * 60 * 1000);
 
-export function verifyCSRFToken(
-  tokenFromHeader: string,
-  request: NextRequest
-): boolean {
-  const tokenFromCookie = getCSRFTokenFromCookie(request);
+export function generateCsrfToken(sessionId?: string): string {
+  const token = randomBytes(TOKEN_LENGTH).toString('hex');
+  const expires = Date.now() + TOKEN_EXPIRY;
 
-  if (!tokenFromCookie || !tokenFromHeader) {
-    return false;
+  // Create a signed token
+  const signature = createHmac('sha256', CSRF_SECRET)
+    .update(token)
+    .digest('hex');
+
+  const signedToken = `${token}.${signature}`;
+
+  // Store token with session ID if provided
+  if (sessionId) {
+    tokenStore.set(sessionId, { token: signedToken, expires });
   }
 
-  // Normalize tokens to ensure they're valid hex strings
-  const normalizedCookie = tokenFromCookie.trim();
-  const normalizedHeader = tokenFromHeader.trim();
-
-  // Check if both are valid hex strings and same length
-  if (
-    !/^[a-f0-9]+$/i.test(normalizedCookie) ||
-    !/^[a-f0-9]+$/i.test(normalizedHeader)
-  ) {
-    return false;
-  }
-
-  if (normalizedCookie.length !== normalizedHeader.length) {
-    return false;
-  }
-
-  try {
-    // Use timing-safe comparison to prevent timing attacks
-    return crypto.timingSafeEqual(
-      Buffer.from(normalizedCookie, "hex"),
-      Buffer.from(normalizedHeader, "hex")
-    );
-  } catch {
-    // If buffer creation fails, tokens are invalid
-    return false;
-  }
+  return signedToken;
 }
 
-export function clearCSRFTokenCookie(response: NextResponse): void {
-  response.cookies.delete(CSRF_TOKEN_COOKIE_NAME);
+export function validateCsrfToken(token: string, sessionId?: string): boolean {
+  if (!token) {return false;}
+
+  // Check token format
+  const parts = token.split('.');
+  if (parts.length !== 2) {return false;}
+
+  const [tokenPart, signature] = parts;
+  if (!tokenPart || !signature) {return false;}
+
+  // Verify signature
+  const expectedSignature = createHmac('sha256', CSRF_SECRET)
+    .update(tokenPart)
+    .digest('hex');
+
+  if (signature !== expectedSignature) {return false;}
+
+  // If session ID provided, check stored token
+  if (sessionId) {
+    const stored = tokenStore.get(sessionId);
+    if (!stored) {return false;}
+    if (stored.token !== token) {return false;}
+    if (stored.expires < Date.now()) {
+      tokenStore.delete(sessionId);
+      return false;
+    }
+  }
+
+  return true;
 }
 
-// Client-side CSRF token handling is now managed by React Query (useCSRFToken hook)
+// Get CSRF token from request headers or body
+export function getCsrfTokenFromRequest(request: Request): string | null {
+  // Check header first (preferred)
+  const headerToken = request.headers.get('X-CSRF-Token');
+  if (headerToken) {return headerToken;}
+
+  // For form submissions, would need to parse body
+  // This is handled in individual route handlers
+  return null;
+}
+
+// Middleware helper to validate CSRF for mutations
+export async function validateCsrfForMutation(request: Request): Promise<boolean> {
+  // Skip CSRF for safe methods
+  if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+    return true;
+  }
+
+  const token = getCsrfTokenFromRequest(request);
+  if (!token) {return false;}
+
+  return validateCsrfToken(token);
+}

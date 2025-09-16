@@ -1,0 +1,27 @@
+{
+  "services": [
+    { "value": "web-development", "label": "Web Development" },
+    { "value": "custom-software", "label": "Custom Software" },
+    { "value": "consulting", "label": "Strategic Consulting" },
+    { "value": "other", "label": "Other" }
+  ],
+  "contactTime": [
+    { "value": "morning", "label": "Morning (9AM - 12PM)" },
+    { "value": "afternoon", "label": "Afternoon (12PM - 5PM)" },
+    { "value": "evening", "label": "Evening (5PM - 8PM)" },
+    { "value": "anytime", "label": "Any time" }
+  ],
+  "budget": [
+    { "value": "under-5k", "label": "Under $5,000" },
+    { "value": "5k-15k", "label": "$5,000 - $15,000" },
+    { "value": "15k-50k", "label": "$15,000 - $50,000" },
+    { "value": "50k-plus", "label": "$50,000+" }
+  ],
+  "timeline": [
+    { "value": "asap", "label": "ASAP" },
+    { "value": "1-month", "label": "Within 1 month" },
+    { "value": "3-months", "label": "Within 3 months" },
+    { "value": "6-months", "label": "Within 6 months" },
+    { "value": "flexible", "label": "Flexible timeline" }
+  ]
+}

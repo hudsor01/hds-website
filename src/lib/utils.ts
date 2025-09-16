@@ -36,3 +36,16 @@ export function formatDate(
 ): string {
   return new Date(date).toLocaleDateString('en-US', options)
 }
+
+/**
+ * Format a date string with long month names
+ * @param date - The date to format
+ * @returns Formatted date string with long month names
+ */
+export function formatDateLong(date: string): string {
+  return formatDate(date, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
