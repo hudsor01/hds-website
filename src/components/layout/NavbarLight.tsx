@@ -36,7 +36,7 @@ const NavbarLight = memo(function NavbarLight() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-card shadow-lg shadow-black/10 border-b border-border blur-backdrop"
+      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -133,15 +133,15 @@ const NavbarLight = memo(function NavbarLight() {
         </div>
       </div>
 
-      {/* Mobile menu - Simplified */}
+      {/* Mobile menu - Floating style */}
       {mobileMenuOpen && (
         <div
           className="md:hidden"
           id="mobile-menu"
         >
-          {/* Mobile menu background */}
-          <div className="absolute inset-0 bg-card border-b border-border" />
-          
+          {/* Mobile menu background - transparent floating */}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
+
           <div className="relative px-4 pt-2 pb-4 space-y-1" role="menu" aria-label="Mobile navigation">
             {navigation.map((item) => (
               <Link
