@@ -1,13 +1,13 @@
 import type { TaxData } from "@/types/paystub";
-import { TAX_DATA } from "./paystub-data";
+import { getCurrentTaxData } from "./paystub-utils";
 
 export const calculateFederalTax = (
   grossPay: number,
   filingStatus: keyof TaxData["federalBrackets"],
   annualGross: number,
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -27,7 +27,7 @@ export const calculateFederalTax = (
 
   for (let i = 0; i < brackets.length; i++) {
     const bracket = brackets[i];
-    if (!bracket) continue;
+    if (!bracket) {continue;}
 
     const bracketLimit = bracket.limit === Infinity ? Infinity : bracket.limit;
 
@@ -75,9 +75,9 @@ export const calculateFederalTax = (
 export const calculateSocialSecurity = (
   grossPay: number,
   ytdGross: number,
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -85,7 +85,7 @@ export const calculateSocialSecurity = (
   const ssRate = yearData.ssRate;
   const ssWageBase = yearData.ssWageBase;
 
-  if (ytdGross >= ssWageBase) return 0;
+  if (ytdGross >= ssWageBase) {return 0;}
 
   if (ytdGross + grossPay > ssWageBase) {
     return (ssWageBase - ytdGross) * ssRate;
@@ -98,9 +98,9 @@ export const calculateMedicare = (
   grossPay: number,
   ytdGross: number,
   filingStatus: keyof TaxData["additionalMedicareThreshold"],
-  year: number
+  _year?: number
 ) => {
-  const yearData = TAX_DATA[year] || TAX_DATA[2024];
+  const yearData = getCurrentTaxData();
   if (!yearData) {
     return 0;
   }
@@ -110,7 +110,7 @@ export const calculateMedicare = (
   const threshold =
     yearData.additionalMedicareThreshold?.[filingStatus] ||
     yearData.additionalMedicareThreshold?.single ||
-    TAX_DATA[2024]?.additionalMedicareThreshold?.single ||
+    getCurrentTaxData()?.additionalMedicareThreshold?.single ||
     0;
 
   const medicare = grossPay * medicareRate;

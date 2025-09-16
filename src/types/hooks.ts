@@ -63,13 +63,13 @@ export interface UseAnalyticsOptions {
   sessionId?: string;
 }
 
-// Analytics property value types
-export type AnalyticsPropertyValue = string | number | boolean | null | undefined | Date | AnalyticsPropertyValue[] | { [key: string]: AnalyticsPropertyValue };
+// Hooks analytics property value types (recursive with Date support)
+export type HooksAnalyticsPropertyValue = string | number | boolean | null | undefined | Date | HooksAnalyticsPropertyValue[] | { [key: string]: HooksAnalyticsPropertyValue };
 
 export interface UseAnalyticsReturn {
-  track: (event: string, properties?: Record<string, AnalyticsPropertyValue>) => void;
-  identify: (userId: string, traits?: Record<string, AnalyticsPropertyValue>) => void;
-  page: (name?: string, properties?: Record<string, AnalyticsPropertyValue>) => void;
+  track: (event: string, properties?: Record<string, HooksAnalyticsPropertyValue>) => void;
+  identify: (userId: string, traits?: Record<string, HooksAnalyticsPropertyValue>) => void;
+  page: (name?: string, properties?: Record<string, HooksAnalyticsPropertyValue>) => void;
   reset: () => void;
 }
 
@@ -80,7 +80,7 @@ export interface UseWebVitalsOptions {
   enabledMetrics?: Array<'CLS' | 'FCP' | 'FID' | 'LCP' | 'TTFB' | 'INP'>;
 }
 
-export interface WebVitalMetric {
+export interface HooksWebVitalMetric {
   name: string;
   value: number;
   rating: 'good' | 'needs-improvement' | 'poor';

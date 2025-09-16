@@ -1,6 +1,6 @@
 // Form validation types
 
-export interface ValidationResult {
+export interface FormValidationResult {
   isValid: boolean
   message?: string
 }

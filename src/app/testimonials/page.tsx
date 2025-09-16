@@ -1,46 +1,54 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { StarIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid'
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
   title: 'Client Testimonials | Hudson Digital Solutions',
-  description: 'Read what our clients say about our custom development, revenue operations, and partnership management services.',
+  description: 'Read what our clients say about working with Hudson Digital Solutions. Real success stories from real businesses.',
+  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies'
 }
 
 const testimonials = [
   {
     id: 1,
-    name: 'Sarah Chen',
+    name: 'Michael Chen',
     company: 'TechStart Inc.',
     role: 'CTO',
-    content: 'Hudson Digital Solutions delivered exactly what we needed. Their full-stack development expertise helped us launch our SaaS platform on time and within budget.',
+    content: 'Hudson Digital Solutions delivered beyond our expectations. They transformed our MVP into a scalable platform that handles 100K+ users.',
     rating: 5,
-    service: 'Custom Development'
+    service: 'SaaS Development',
+    highlight: '10x Performance'
   },
   {
     id: 2,
-    name: 'Michael Rodriguez',
-    company: 'Growth Dynamics',
-    role: 'VP of Sales',
-    content: 'The revenue operations consulting was transformative for our business. Our lead conversion improved by 40% after implementing their Salesforce optimization.',
+    name: 'Sarah Johnson',
+    company: 'E-Commerce Plus',
+    role: 'CEO',
+    content: 'The team\'s expertise in Next.js and modern web technologies helped us achieve a 60% improvement in conversion rates.',
     rating: 5,
-    service: 'Revenue Operations'
+    service: 'E-Commerce Platform',
+    highlight: '60% More Sales'
   },
   {
     id: 3,
-    name: 'Jennifer Kim',
-    company: 'Partnership Pro',
-    role: 'Head of Partnerships',
-    content: 'Their partnership management expertise streamlined our entire partner onboarding process. What used to take weeks now happens in days.',
+    name: 'David Martinez',
+    company: 'Wellness App Co',
+    role: 'Product Manager',
+    content: 'From concept to launch in just 8 weeks. The efficiency and quality of work was exceptional.',
     rating: 5,
-    service: 'Partnership Management'
+    service: 'Mobile App Backend',
+    highlight: '8 Week Launch'
   },
   {
     id: 4,
-    name: 'David Thompson',
-    company: 'Innovate Solutions',
+    name: 'Emily Thompson',
+    company: 'FinTech Solutions',
     role: 'Founder',
     content: 'Professional, reliable, and technically excellent. Hudson Digital Solutions understood our vision and brought it to life with clean, scalable code.',
     rating: 5,
-    service: 'Custom Development'
+    service: 'Custom Development',
+    highlight: 'Zero Downtime'
   },
   {
     id: 5,
@@ -49,7 +57,8 @@ const testimonials = [
     role: 'Operations Manager',
     content: 'The SalesLoft integration and automation setup has saved us countless hours. Our sales team is more productive than ever.',
     rating: 5,
-    service: 'Revenue Operations'
+    service: 'Revenue Operations',
+    highlight: '40 Hours/Week Saved'
   },
   {
     id: 6,
@@ -58,22 +67,19 @@ const testimonials = [
     role: 'CEO',
     content: 'Excellent communication throughout the project. They delivered a robust partner management system that scales with our growing business.',
     rating: 5,
-    service: 'Partnership Management'
+    service: 'Partnership Management',
+    highlight: '3x Partner Growth'
   }
 ]
 
 const StarRating = ({ rating }: { rating: number }) => {
   return (
-    <div className="flex space-x-1">
+    <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
-        <svg
+        <StarIcon
           key={i}
-          className={`w-5 h-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
+          className={`w-5 h-5 ${i < rating ? 'text-cyan-400' : 'text-muted-foreground'}`}
+        />
       ))}
     </div>
   )
@@ -81,90 +87,157 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function TestimonialsPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-              Client Success Stories
-            </h1>
-            <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-              See what our clients say about working with Hudson Digital Solutions
-            </p>
+    <div className="min-h-screen bg-gradient-hero">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-4">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full"></div>
+          <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
+        </div>
+
+        <div className="relative z-10 container-wide">
+          <div className="text-center space-y-6">
+            <div>
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-sm font-medium inline-block">
+                Client Success Stories
+              </span>
+            </div>
+
+            <div>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
+                <span className="inline-block">Real</span>
+                <span className="inline-block mx-4 gradient-text">Results</span>
+                <span className="inline-block">Real Clients</span>
+              </h1>
+            </div>
+
+            <div className="typography">
+              <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
+                Don't just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="py-12 px-4 border-y border-border">
+        <div className="container-wide">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-responsive-lg font-black text-cyan-400">100%</div>
+              <div className="text-sm text-muted-foreground mt-1">Client Satisfaction</div>
+            </div>
+            <div className="text-center">
+              <div className="text-responsive-lg font-black text-cyan-400">50+</div>
+              <div className="text-sm text-muted-foreground mt-1">Projects Delivered</div>
+            </div>
+            <div className="text-center">
+              <div className="text-responsive-lg font-black text-cyan-400">3.5x</div>
+              <div className="text-sm text-muted-foreground mt-1">Average ROI</div>
+            </div>
+            <div className="text-center">
+              <div className="text-responsive-lg font-black text-cyan-400">24hr</div>
+              <div className="text-sm text-muted-foreground mt-1">Response Time</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Testimonials Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
-            >
-              {/* Rating */}
-              <div className="mb-4">
-                <StarRating rating={testimonial.rating} />
-              </div>
+      <section className="py-20 px-4">
+        <div className="container-wide">
+          <div className="text-center mb-16">
+            <h2 className="text-clamp-xl font-black text-white mb-6">
+              <span className="gradient-text">
+                What Our Clients Say
+              </span>
+            </h2>
+            <p className="text-xl text-muted-foreground container-narrow">
+              Every testimonial represents a business that chose excellence over mediocrity
+            </p>
+          </div>
 
-              {/* Content */}
-              <blockquote className="text-gray-700 mb-6">
-                &ldquo;{testimonial.content}&rdquo;
-              </blockquote>
-
-              {/* Author */}
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex items-center">
-                  <div className="shrink-0">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-semibold text-sm">
-                        {testimonial.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {testimonial.role}, {testimonial.company}
-                    </p>
-                  </div>
+          <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-8 scrollbar-hide">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.id}
+                className="glass-card-light p-8 card-hover-glow transition-all duration-300 snap-center flex-shrink-0 w-[90vw] md:w-auto"
+              >
+                {/* Rating */}
+                <div className="mb-4">
+                  <StarRating rating={testimonial.rating} />
                 </div>
-                <div className="mt-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {testimonial.service}
+
+                {/* Highlight Badge */}
+                <div className="mb-6">
+                  <span className="px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 text-sm font-semibold">
+                    {testimonial.highlight}
                   </span>
                 </div>
+
+                {/* Quote */}
+                <div className="mb-6">
+                  <ChatBubbleLeftEllipsisIcon className="w-8 h-8 text-cyan-400/30 mb-3" />
+                  <p className="text-muted-foreground leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
+                </div>
+
+                {/* Client Info */}
+                <div className="border-t border-border pt-6">
+                  <div className="font-semibold text-white">
+                    {testimonial.name}
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    {testimonial.role} at {testimonial.company}
+                  </div>
+                  <div className="text-xs text-cyan-400 mt-2">
+                    {testimonial.service}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* CTA Section */}
-      <div className="bg-blue-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              Ready to Join Our Success Stories?
+      <section className="py-20 px-4">
+        <div className="container-wide">
+          <div className="glass-section p-12 md:p-16 text-center">
+            <h2 className="text-clamp-xl font-black text-white mb-6">
+              Ready to be our next
+              <span className="block gradient-text mt-2">
+                success story?
+              </span>
             </h2>
-            <p className="mt-4 text-xl text-blue-100 max-w-2xl mx-auto">
-              Let&apos;s discuss how we can help your business achieve its goals.
-            </p>
-            <div className="mt-8">
-              <a
+
+            <div className="typography">
+              <p className="text-xl text-gray-300 container-narrow mb-10">
+                Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
                 href="/contact"
-                className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-gray-50 transition-colors duration-200"
+                className="group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg"
               >
-                Start Your Project
-              </a>
+                Start Your Transformation
+                <ArrowRightIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link
+                href="/portfolio"
+                className="inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200"
+              >
+                View Portfolio
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

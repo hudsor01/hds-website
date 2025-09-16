@@ -3,16 +3,16 @@
  * Includes form data, validation, storage, and state types
  */
 
-// US States types
-export interface StateInfo {
+// Paystub US States types (includes abbreviation)
+export interface PaystubStateInfo {
   abbreviation: string;
   name: string;
   code: string;
   hasIncomeTax: boolean;
 }
 
-// Form validation types
-export interface ValidationResult {
+// Paystub form validation types
+export interface PaystubValidationResult {
   isValid: boolean;
   message?: string;
 }

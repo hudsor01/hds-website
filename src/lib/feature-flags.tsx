@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 // import { getFeatureFlag, isFeatureEnabled } from './unified-analytics';
 import { FEATURE_FLAGS, type FeatureFlagKey, type FeatureFlagConfig } from '@/types/utils';
+import { logger } from './logger';
+import analytics from './analytics';
 
 // Feature flag configuration for documentation and validation
 export const FEATURE_FLAG_CONFIG: Record<FeatureFlagKey, FeatureFlagConfig> = {
@@ -48,7 +50,25 @@ export class FeatureFlags {
       const isEnabled = Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue) || false;
       return isEnabled;
     } catch (error) {
-      console.warn(`Error checking feature flag ${flagKey}`, error);
+      logger.warn('Feature flag check failed', {
+        operation: 'check_flag',
+        flagKey,
+        error: error instanceof Error ? error.message : String(error),
+        defaultValue: Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue),
+        config: FEATURE_FLAG_CONFIG[flagKey],
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown'
+      });
+
+      // Track feature flag errors for analytics
+      if (typeof window !== 'undefined' && analytics) {
+        analytics.trackEvent('feature_flag_error', {
+          flag_key: flagKey,
+          operation: 'check',
+          error_message: error instanceof Error ? error.message : String(error),
+          fallback_value: Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue)
+        });
+      }
+
       return Boolean(FEATURE_FLAG_CONFIG[flagKey]?.defaultValue) || false;
     }
   }
@@ -62,7 +82,25 @@ export class FeatureFlags {
       const value = FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
       return value;
     } catch (error) {
-      console.warn(`Error getting feature flag ${flagKey} value`, error);
+      logger.warn('Feature flag value retrieval failed', {
+        operation: 'get_value',
+        flagKey,
+        error: error instanceof Error ? error.message : String(error),
+        defaultValue: FEATURE_FLAG_CONFIG[flagKey]?.defaultValue,
+        config: FEATURE_FLAG_CONFIG[flagKey],
+        url: typeof window !== 'undefined' ? window.location.href : 'unknown'
+      });
+
+      // Track feature flag errors for analytics
+      if (typeof window !== 'undefined' && analytics) {
+        analytics.trackEvent('feature_flag_error', {
+          flag_key: flagKey,
+          operation: 'get_value',
+          error_message: error instanceof Error ? error.message : String(error),
+          fallback_value: FEATURE_FLAG_CONFIG[flagKey]?.defaultValue
+        });
+      }
+
       return FEATURE_FLAG_CONFIG[flagKey]?.defaultValue || false;
     }
   }
@@ -116,11 +154,29 @@ export class FeatureFlags {
   }
 
   /**
-   * Log all feature flag states for debugging
+   * Log all feature flag states for debugging and analytics
    */
   static logAllFlags(): void {
     const flags = this.getAllFlags();
-    console.warn('Current feature flag states:', flags);
+
+    logger.info('Feature flags state snapshot', {
+      operation: 'log_all_flags',
+      flags,
+      flagCount: Object.keys(flags).length,
+      enabledFlags: Object.entries(flags).filter(([, value]) => Boolean(value)).map(([key]) => key),
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      timestamp: Date.now()
+    });
+
+    // Track feature flag usage patterns for analytics
+    if (typeof window !== 'undefined' && analytics) {
+      analytics.trackEvent('feature_flags_snapshot', {
+        total_flags: Object.keys(flags).length,
+        enabled_flags: Object.entries(flags).filter(([, value]) => Boolean(value)).length,
+        flag_states: JSON.stringify(flags),
+        page_url: window.location.href
+      });
+    }
   }
 }
 

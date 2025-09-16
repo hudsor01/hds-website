@@ -1,0 +1,14 @@
+{
+  "payFrequencies": [
+    { "value": "weekly", "label": "Weekly" },
+    { "value": "biweekly", "label": "Bi-weekly" },
+    { "value": "semimonthly", "label": "Semi-monthly" },
+    { "value": "monthly", "label": "Monthly" }
+  ],
+  "defaultPeriods": {
+    "weekly": 52,
+    "biweekly": 26,
+    "semimonthly": 24,
+    "monthly": 12
+  }
+}

@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-
 import type { UseTouchInteractionsOptions } from '@/types/hooks';
-import type { TouchState } from '@/types/utils';
+import type { TouchState } from '@/types/common';
 
 
 export function useTouchInteractions(
@@ -33,7 +32,7 @@ export function useTouchInteractions(
 
   useEffect(() => {
     const element = elementRef.current;
-    if (!element) return;
+    if (!element) {return;}
 
     let startX = 0;
     let startY = 0;
@@ -42,7 +41,7 @@ export function useTouchInteractions(
 
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches && e.touches[0];
-      if (!touch) return; // guard against undefined touch
+      if (!touch) {return;} // guard against undefined touch
       startX = touch.clientX;
       startY = touch.clientY;
 
@@ -71,7 +70,7 @@ export function useTouchInteractions(
       }
 
       const touch = e.touches && e.touches[0];
-      if (!touch) return; // guard against undefined touch
+      if (!touch) {return;} // guard against undefined touch
       endX = touch.clientX;
       endY = touch.clientY;
     };
@@ -196,16 +195,16 @@ export function usePullToRefresh(onRefresh: () => Promise<void>) {
     const handleTouchStart = (e: TouchEvent) => {
       if (window.scrollY === 0) {
         const touch = e.touches && e.touches[0];
-        if (!touch) return;
+        if (!touch) {return;}
         startY = touch.clientY;
       }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!startY) return;
+      if (!startY) {return;}
 
       const touch = e.touches && e.touches[0];
-      if (!touch) return;
+      if (!touch) {return;}
 
       currentY = touch.clientY;
       const distance = currentY - startY;

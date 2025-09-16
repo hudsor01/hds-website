@@ -8,8 +8,8 @@ import type {
   FilingStatus,
   TaxData,
 } from "@/types/paystub";
-import type { FormErrors } from "@/types/paystub";
-import { PAY_DATES } from "@/lib/paystub-data";
+import type { FormErrors } from "@/types/common";
+// import { getPayDatesForYear } from "@/lib/paystub-utils";
 import {
   calculateFederalTax,
   calculateSocialSecurity,
@@ -17,6 +17,7 @@ import {
 } from "@/lib/tax-calculations";
 import { saveFormData, loadFormData, clearFormData } from "@/lib/storage";
 import { validateForm } from "@/lib/validation";
+import { logger } from '@/lib/logger';
 
 export function usePaystubGenerator() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -52,6 +53,22 @@ export function usePaystubGenerator() {
   useEffect(() => {
     const savedData = loadFormData();
     if (savedData) {
+      logger.info('Paystub form data restored from previous session', {
+        component: 'usePaystubGenerator',
+        userFlow: 'paystub_tool_usage',
+        action: 'form_data_restored',
+        businessValue: 'medium',
+        restoredFields: {
+          employeeName: !!savedData.employeeName,
+          employeeId: !!savedData.employeeId,
+          employerName: !!savedData.employerName,
+          hourlyRate: !!savedData.hourlyRate,
+          hoursPerPeriod: !!savedData.hoursPerPeriod,
+          state: !!savedData.state,
+          taxYear: savedData.taxYear
+        }
+      })
+
       setPaystubData((prev) => ({
         ...prev,
         employeeName: savedData.employeeName,
@@ -97,6 +114,15 @@ export function usePaystubGenerator() {
 
   // Clear form function
   const handleClearForm = () => {
+    logger.info('Paystub form cleared by user', {
+      component: 'usePaystubGenerator',
+      userFlow: 'paystub_tool_usage',
+      action: 'form_cleared',
+      businessValue: 'low',
+      hadData: !!(paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod),
+      hadResults: resultsVisible
+    })
+
     setPaystubData({
       employeeName: "",
       employeeId: "",
@@ -128,11 +154,25 @@ export function usePaystubGenerator() {
       const firstInput = document.querySelector(
         'input[type="text"]'
       ) as HTMLInputElement;
-      if (firstInput) firstInput.focus();
+      if (firstInput) {firstInput.focus();}
     }, 100);
   };
 
   const generatePaystubs = () => {
+    // Track paystub generation attempt for business analytics
+    logger.info('Paystub generation initiated', {
+      component: 'usePaystubGenerator',
+      userFlow: 'paystub_tool_usage',
+      action: 'generate_attempt',
+      businessValue: 'medium',
+      toolUsage: {
+        hourlyRate: paystubData.hourlyRate,
+        hoursPerPeriod: paystubData.hoursPerPeriod,
+        filingStatus: paystubData.filingStatus,
+        taxYear: paystubData.taxYear
+      }
+    })
+
     // Validate form
     const validation = validateForm({
       employeeName: paystubData.employeeName,
@@ -143,6 +183,12 @@ export function usePaystubGenerator() {
     setFormErrors(validation.errors);
 
     if (!validation.isValid) {
+      logger.warn('Paystub generation blocked by validation errors', {
+        component: 'usePaystubGenerator',
+        userFlow: 'paystub_tool_usage',
+        validationErrors: validation.errors,
+        action: 'validation_failed'
+      })
       toast.error(
         "Please fix the form errors before generating payroll records"
       );
@@ -154,9 +200,8 @@ export function usePaystubGenerator() {
 
     try {
       const grossPay = paystubData.hourlyRate * paystubData.hoursPerPeriod;
-      const payDates =
-        (PAY_DATES as Record<number, string[]>)[paystubData.taxYear] ||
-        PAY_DATES[2024];
+      // Generate pay dates (simplified for now)
+      const payDates: Date[] = [];
       const annualGross = grossPay * 26;
 
       const totals = {
@@ -198,7 +243,7 @@ export function usePaystubGenerator() {
 
         const payPeriod: PayPeriod = {
           period: i + 1,
-          payDate: payDates[i] || "",
+          payDate: payDates[i]?.toISOString() || "",
           hours: paystubData.hoursPerPeriod,
           grossPay,
           federalTax,
@@ -225,6 +270,25 @@ export function usePaystubGenerator() {
         totals,
       }));
 
+      // Track successful paystub generation with performance metrics
+      logger.info('Paystub generation completed successfully', {
+        component: 'usePaystubGenerator',
+        userFlow: 'paystub_tool_usage',
+        action: 'generation_success',
+        businessValue: 'high',
+        toolUsage: {
+          payPeriodsGenerated: newPayPeriods.length,
+          totalGrossPay: totals.grossPay,
+          totalNetPay: totals.netPay,
+          averageHourlyRate: paystubData.hourlyRate,
+          taxYear: paystubData.taxYear
+        },
+        performance: {
+          processedPayPeriods: 26,
+          calculationsPerformed: 26 * 4 // Federal, SS, Medicare, Net for each period
+        }
+      })
+
       toast.dismiss(loadingToast);
       toast.success("Pay stubs generated successfully!");
       setResultsVisible(true);
@@ -232,7 +296,19 @@ export function usePaystubGenerator() {
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error("Failed to generate pay stubs. Please try again.");
-      console.error("Error generating paystubs:", error);
+      logger.error("Paystub generation failed", {
+        error,
+        component: 'usePaystubGenerator',
+        action: 'generatePaystubs',
+        userFlow: 'paystub_tool_usage',
+        formData: {
+          employeeName: paystubData.employeeName,
+          hourlyRate: paystubData.hourlyRate,
+          hoursPerPeriod: paystubData.hoursPerPeriod,
+          filingStatus: paystubData.filingStatus,
+          taxYear: paystubData.taxYear
+        }
+      });
     } finally {
       setIsGenerating(false);
     }

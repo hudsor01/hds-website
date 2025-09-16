@@ -123,13 +123,13 @@ export default function WebsiteChecklistPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
+          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
             <DocumentTextIcon className="w-5 h-5" />
             Free Resource
           </div>
           
-          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6">
-            Website Performance <span className="text-gradient-neon glow-cyan">Checklist</span>
+          <h1 className="text-clamp-xl font-black text-white mb-6">
+            Website Performance <span className="gradient-text">Checklist</span>
           </h1>
           
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
@@ -139,14 +139,14 @@ export default function WebsiteChecklistPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
               href="#download"
-              className="inline-flex items-center gap-2 bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-lg"
+              className="inline-flex flex-center gap-2 bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-lg"
             >
               <ArrowDownTrayIcon className="w-5 h-5" />
               Download Free Checklist
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
+              className="inline-flex flex-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
             >
               Get Professional Audit
             </Link>
@@ -185,9 +185,9 @@ export default function WebsiteChecklistPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {checklistItems.map((section, index) => (
-              <div key={section.category} className="glass-morphism bg-black/60 border border-gray-700 rounded-xl p-6 hover:border-cyan-300/50 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-cyan-400 text-black rounded-full flex items-center justify-center text-sm font-bold">
+              <div key={section.category} className="glass-card rounded-xl p-6 hover:border-cyan-300/50 transition-all duration-300">
+                <h3 className="text-xl font-bold text-white mb-4 flex flex-center gap-2">
+                  <span className="w-8 h-8 bg-cyan-400 text-black rounded-full flex-center text-sm font-bold">
                     {index + 1}
                   </span>
                   {section.category}
@@ -222,7 +222,7 @@ export default function WebsiteChecklistPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-400/20 rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-green-400/20 rounded-lg flex-center shrink-0">
                   <BarChart3 className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
@@ -232,7 +232,7 @@ export default function WebsiteChecklistPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex-center shrink-0">
                   <Zap className="w-6 h-6 text-cyan-400" />
                 </div>
                 <div>
@@ -242,7 +242,7 @@ export default function WebsiteChecklistPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex-center shrink-0">
                   <Target className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
@@ -253,7 +253,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-linear-to-r from-green-400/20 to-cyan-400/20 border border-green-400/30 rounded-lg p-6">
+              <div className="bg-gradient-secondary-20 border border-green-400/30 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-white mb-3">Real Client Results</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
@@ -275,7 +275,7 @@ export default function WebsiteChecklistPage() {
                 </div>
               </div>
 
-              <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
+              <div className="glass-card-light rounded-lg p-6">
                 <blockquote className="text-gray-300 italic mb-3">
                   &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
@@ -289,7 +289,7 @@ export default function WebsiteChecklistPage() {
       {/* Download Section */}
       <section id="download" className="py-16 bg-gradient-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-morphism bg-black/80 border border-green-200 rounded-2xl p-8 lg:p-12 text-center">
+          <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
             <DocumentTextIcon className="w-16 h-16 text-green-400 mx-auto mb-6" />
             
             <h2 className="text-3xl font-black text-white mb-4">
@@ -311,7 +311,7 @@ export default function WebsiteChecklistPage() {
                     name="email"
                     placeholder="Enter your business email"
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
                   />
                 </div>
                 
@@ -321,13 +321,13 @@ export default function WebsiteChecklistPage() {
                     name="firstName"
                     placeholder="First name"
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-2"
                 >
                   <ArrowDownTrayIcon className="w-5 h-5" />
                   Get My Free Checklist
@@ -346,7 +346,7 @@ export default function WebsiteChecklistPage() {
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
+                className="inline-flex flex-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
               >
                 Get Professional Help
               </Link>

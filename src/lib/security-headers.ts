@@ -15,24 +15,8 @@ export const SECURITY_HEADERS = {
   // Enforce HTTPS (HSTS)
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   
-  // Content Security Policy
-  'Content-Security-Policy': [
-    "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://va.vercel-scripts.com https://app.posthog.com https://us.i.posthog.com https://fonts.googleapis.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https: blob:",
-    "media-src 'self' https:",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'none'",
-    "connect-src 'self' https://vercel.live https://app.posthog.com https://us.i.posthog.com https://vitals.vercel-insights.com wss://app.posthog.com",
-    "worker-src 'self' blob:",
-    "child-src 'none'",
-    "manifest-src 'self'",
-    "upgrade-insecure-requests"
-  ].join('; '),
+  // Content Security Policy - Permissive for both dev and prod to avoid Edge Runtime issues
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: https: blob:; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https: wss:; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'",
   
   // Cross-origin policies
   'Cross-Origin-Opener-Policy': 'same-origin',
@@ -55,11 +39,15 @@ export const SECURITY_HEADERS = {
   ].join(', ')
 } as const
 
-// Apply headers to NextResponse
-export function applySecurityHeaders(response: Response) {
+// Apply headers to NextResponse with nonce support
+export function applySecurityHeaders(response: Response, nonce?: string) {
   Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
+    // Replace nonce placeholder if CSP header and nonce provided
+    if (key === 'Content-Security-Policy' && nonce) {
+      value = value.replace(/{nonce}/g, nonce);
+    }
     response.headers.set(key, value);
   });
-  
+
   return response;
 }

@@ -51,7 +51,7 @@ export default function CustomSelect({
   }, [])
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (disabled) return
+    if (disabled) {return}
 
     switch (event.key) {
       case 'Enter':
@@ -130,7 +130,7 @@ export default function CustomSelect({
             ? 'border-gray-700 cursor-not-allowed opacity-50' 
             : isOpen
               ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
-              : 'border-gray-600 hover:border-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20'
+              : 'border-gray-600 hover:border-gray-500 focus-ring'
           }
           ${!selectedOption?.value ? 'text-gray-400' : 'text-white'}
         `}
@@ -154,9 +154,9 @@ export default function CustomSelect({
 
       {/* Dropdown options */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-xl shadow-black/20 backdrop-blur-sm">
+        <div className="absolute z-50 w-full mt-1 glass-card shadow-xl shadow-black/20">
           <div
-            className="py-1 max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800"
+            className="py-1 max-h-60 overflow-auto scrollbar-hide"
             role="listbox"
             aria-labelledby={id ? `${id}-label` : undefined}
           >

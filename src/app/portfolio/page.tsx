@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@/components/Analytics';
 // Removed motion animations for simplified build
-import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 
 const projects = [
   {
@@ -12,7 +12,7 @@ const projects = [
     category: "SaaS Platform",
     description: "Modern property management platform helping landlords streamline operations, tenant communications, and financial tracking with automated workflows.",
     image: "/portfolio/tenantflow.jpg",
-    gradient: "from-blue-500 to-indigo-600",
+    gradient: "bg-gradient-primary",
     stats: {
       properties: "1K+",
       efficiency: "+300%",
@@ -28,7 +28,7 @@ const projects = [
     category: "Business Website",
     description: "Premium tattoo studio website featuring artist portfolios, online booking system, and customer gallery with modern design aesthetics.",
     image: "/portfolio/ink37.jpg",
-    gradient: "from-purple-500 to-pink-600",
+    gradient: "bg-gradient-decorative-purple",
     stats: {
       bookings: "+180%",
       engagement: "4.8/5",
@@ -43,7 +43,7 @@ const projects = [
     category: "Personal Portfolio",
     description: "Professional portfolio showcasing leadership experience, technical expertise, and project management capabilities with clean, modern design.",
     image: "/portfolio/richard-portfolio.jpg",
-    gradient: "from-green-500 to-emerald-600",
+    gradient: "bg-gradient-secondary",
     stats: {
       projects: "50+",
       experience: "10+ years",
@@ -58,7 +58,7 @@ const projects = [
     category: "Business Website",
     description: "Company website showcasing full-stack development, revenue operations, and partnership management services with conversion-optimized design.",
     image: "/portfolio/hudson-digital.jpg",
-    gradient: "from-cyan-500 to-blue-600",
+    gradient: "bg-gradient-primary",
     stats: {
       leads: "+250%",
       performance: "98/100",
@@ -75,7 +75,7 @@ export default function PortfolioPage() {
   return (
     <>
       <Analytics />
-      <main className="min-h-screen bg-linear-to-br from-slate-950 via-gray-900 to-slate-950 text-white">
+      <main className="min-h-screen bg-gradient-hero text-white">
         {/* Animated background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -83,49 +83,48 @@ export default function PortfolioPage() {
         </div>
 
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-linear-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
-            <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(34,211,238,0.1)_50%,transparent_51%)] bg-size-[60px_60px]" />
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-primary-20 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-decorative-purple rounded-full blur-3xl" />
+            <div className="absolute inset-0 grid-pattern" />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
             <div className="space-y-8">
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm backdrop-blur-sm">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
                   <SparklesIcon className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
               </div>
 
               <div>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
                   <span className="inline-block mr-4">Our</span>
-                  <span className="inline-block mr-4 bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Portfolio</span>
+                  <span className="inline-block mr-4 gradient-text">Portfolio</span>
                 </h1>
               </div>
 
-              <div>
-                <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              <div className="typography">
+                <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
                   Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.
                 </p>
               </div>
 
               <div>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
+                <div className="flex flex-col sm:flex-row flex-center gap-4 mt-12">
                   <Link href="/contact">
-                    <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
-                      <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
+                      <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                       <span className="relative z-10">Start Your Project</span>
                       <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
 
                   <Link href="/services">
-                    <button className="group inline-flex items-center gap-3 px-8 py-4 border-2 border-gray-700 text-white font-semibold text-lg rounded-lg hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300">
+                    <button className="button-base group cta-secondary button-hover-glow px-8 py-4 text-lg font-semibold focus-ring">
                       View Services
                       <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -138,7 +137,7 @@ export default function PortfolioPage() {
 
         {/* Stats Section */}
         <section className="relative py-20 px-4">
-          <div className="max-w-7xl mx-auto">
+          <div className="container-wide">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
               {[
                 { value: "10+", label: "Projects Delivered" },
@@ -148,10 +147,10 @@ export default function PortfolioPage() {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 text-center"
+                  className="relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
                 >
                   <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
-                  <div className="text-gray-400">{stat.label}</div>
+                  <div className="text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -160,41 +159,43 @@ export default function PortfolioPage() {
 
         {/* Portfolio Projects */}
         <section className="relative py-20 px-4">
-          <div className="max-w-7xl mx-auto">
+          <div className="container-wide">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-                <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <h2 className="text-clamp-xl font-black text-white mb-6">
+                <span className="gradient-text">
                   Featured Projects
                 </span>
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Real projects delivering measurable results for clients across industries.
-              </p>
+              <div className="typography">
+                <p className="text-xl text-muted-foreground container-narrow">
+                  Real projects delivering measurable results for clients across industries.
+                </p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {/* Desktop Grid / Mobile Horizontal Scroll */}
+            <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className={`group relative ${project.featured ? 'md:col-span-2' : ''}`}
+                  className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
                 >
-                  <div className="relative h-full overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300">
+                  <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
                     {/* Project Header */}
-                    <div className={`${project.featured ? 'h-80' : 'h-64'} bg-linear-to-br ${project.gradient} relative overflow-hidden`}>
+                    <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient} relative overflow-hidden`}>
                       <div className="absolute inset-0 bg-black/20" />
                       
                       {/* Grid pattern overlay */}
-                      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.05)_50%,transparent_51%)] bg-size-[20px_20px]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(0deg,transparent_49%,rgba(255,255,255,0.05)_50%,transparent_51%)] bg-size-[20px_20px]" />
+                      <div className="absolute inset-0 grid-pattern-light" />
                       
                       <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-sm mb-4 mx-auto">
+                        <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
                           <CodeBracketIcon className="w-4 h-4" />
                           {project.category}
                         </div>
-                        <h3 className="text-3xl md:text-4xl font-black mb-3">{project.title}</h3>
+                        <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
                         {project.featured && (
-                          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
+                          <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
                             <SparklesIcon className="w-4 h-4" />
                             Featured Project
                           </span>
@@ -202,11 +203,11 @@ export default function PortfolioPage() {
                       </div>
                       
                       {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
                         <Link 
                           href={project.link}
                           target="_blank"
-                          className="group/btn inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-cyan-500 to-blue-500 text-black font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                          className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu"
                         >
                           View Live Site
                           <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
@@ -216,9 +217,11 @@ export default function PortfolioPage() {
 
                     {/* Project Details */}
                     <div className="p-8">
-                      <p className="text-gray-300 leading-relaxed mb-8 text-lg">
-                        {project.description}
-                      </p>
+                      <div className="typography mb-8">
+                        <p className="text-gray-300 leading-relaxed text-lg">
+                          {project.description}
+                        </p>
+                      </div>
 
                       {/* Stats Grid */}
                       <div className="grid grid-cols-3 gap-6 mb-8">
@@ -235,7 +238,7 @@ export default function PortfolioPage() {
                         {project.tech.map((tech) => (
                           <span 
                             key={tech}
-                            className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                            className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
                           >
                             {tech}
                           </span>
@@ -251,32 +254,34 @@ export default function PortfolioPage() {
 
         {/* CTA Section */}
         <section className="relative py-20 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="relative z-10 text-center bg-linear-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-3xl p-12 md:p-16">
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-                Ready to create your 
-                <span className="bg-linear-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <div className="container-wide">
+            <div className="relative z-10 text-center glass-section p-12 md:p-16">
+              <h2 className="text-clamp-xl font-black text-white mb-6">
+                Ready to create your
+                <span className="gradient-text">
                   {" "}success story?
                 </span>
               </h2>
               
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
-                Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
-              </p>
+              <div className="typography">
+                <p className="text-xl text-gray-300 container-narrow mb-10">
+                  Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row flex-center gap-4">
                 <Link
                   href="/contact"
-                  className="group relative inline-flex items-center gap-3 px-10 py-5 bg-linear-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105"
+                  className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
                 >
-                  <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
                   <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 
                 <Link
                   href="/services"
-                  className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl"
                 >
                   View Services
                   <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

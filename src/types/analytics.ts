@@ -89,14 +89,14 @@ export interface PostHogLike {
 }
 
 // Analytics event property types
-export type AnalyticsPropertyValue = string | number | boolean | null | undefined;
+export type BasicAnalyticsPropertyValue = string | number | boolean | null | undefined;
 
 export interface AnalyticsProperties {
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | AnalyticsProperties;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | AnalyticsProperties;
 }
 
-// Web Vitals metric type
-export interface WebVitalMetric {
+// Analytics Web Vitals metric type
+export interface AnalyticsWebVitalMetric {
   name: string;
   value: number;
   rating?: string;
@@ -110,7 +110,7 @@ export interface FormSubmissionData {
   success: boolean;
   errorMessage?: string;
   submissionTime?: number;
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | undefined;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | undefined;
 }
 
 // Scheduling widget tracking types
@@ -119,7 +119,7 @@ export interface SchedulingWidgetData {
   duration?: number;
   selectedDate?: string;
   selectedTime?: string;
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | undefined;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | undefined;
 }
 
 // Conversion funnel tracking types
@@ -128,7 +128,7 @@ export interface ConversionFunnelData {
   stepNumber?: number;
   dropOffRate?: number;
   timeOnStep?: number;
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | undefined;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | undefined;
 }
 
 // User traits for identification
@@ -138,7 +138,7 @@ export interface UserTraits {
   company?: string;
   plan?: string;
   createdAt?: Date | string;
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | Date | undefined;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | Date | undefined;
 }
 
 // Group properties
@@ -147,5 +147,5 @@ export interface GroupProperties {
   industry?: string;
   employees?: number;
   plan?: string;
-  [key: string]: AnalyticsPropertyValue | AnalyticsPropertyValue[] | undefined;
+  [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | undefined;
 }

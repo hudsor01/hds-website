@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export const metadata: Metadata = {
   title: 'Pricing | Hudson Digital Solutions',
@@ -106,151 +106,171 @@ const faqs = [
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-gradient-hero">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-      </div>
+    <main className="min-h-screen bg-gradient-hero">
+      {/* Hero Section */}
+      <section className="relative py-20 lg:py-32">
+        <div className="container-wide sm:px-6 lg:px-8 w-full">
+          <div className="text-center">
 
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
-            <span className="text-gray-400 uppercase tracking-wider text-sm font-semibold">
-              TRANSPARENT PRICING
-            </span>
-            <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
+            {/* Professional Badge */}
+            <div className="inline-block mb-8">
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-sm font-medium">
+                Transparent Pricing
+              </span>
+            </div>
+
+            {/* Hero Heading */}
+            <h1 className="text-clamp-2xl font-black text-white leading-[1.1] mb-6 text-balance">
+              <span className="block">Quality</span>
+              <span className="block gradient-text">
+                Investment
+              </span>
+              <span className="block text-responsive-lg font-bold text-muted-foreground mt-2">
+                Transparent Pricing
+              </span>
+            </h1>
+
+            <div className="typography">
+              <p className="text-xl text-muted-foreground leading-relaxed container-narrow text-pretty">
+                Quality development that drives real business results. No hidden fees, no surprises - just transparent pricing for exceptional work.
+              </p>
+            </div>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-6">
-            INVESTMENT
-          </h1>
-          
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Quality development that <strong className="text-secondary-400 glow-cyan">drives real business results</strong>. 
-            No hidden fees, no surprises - just <strong className="text-accent-400 glow-green">transparent pricing</strong> for exceptional work.
-          </p>
         </div>
+      </section>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`relative bg-black/80 backdrop-blur-xl border rounded-2xl p-8 ${
-                tier.popular 
-                  ? 'border-secondary-400 ring-2 ring-secondary-400/20' 
-                  : 'border-gray-800 hover:border-gray-700'
-              } transition-all duration-300`}
-            >
-              {tier.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-secondary-400 text-black px-4 py-2 rounded-full text-sm font-bold">
-                    MOST POPULAR
-                  </span>
-                </div>
-              )}
+      {/* Pricing Cards */}
+      <section className="py-20 px-4">
+        <div className="container-wide">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {pricingTiers.map((tier) => (
+              <div
+                key={tier.name}
+                className={`group relative glass-card-light p-8 card-hover-glow transition-all duration-500 ${
+                  tier.popular ? 'border-cyan-400/50 shadow-xl shadow-cyan-500/10' : ''
+                }`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-gradient-primary text-white px-4 py-2 rounded-full text-sm font-bold">
+                      MOST POPULAR
+                    </span>
+                  </div>
+                )}
 
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
-                <div className="text-3xl font-black text-secondary-400 mb-4">{tier.price}</div>
-                <p className="text-gray-300 text-sm">{tier.description}</p>
-              </div>
-
-              <div className="space-y-4 mb-8">
-                <div>
-                  <h4 className="text-sm uppercase tracking-wide text-gray-400 font-bold mb-3">
-                    What&apos;s Included
-                  </h4>
-                  <ul className="space-y-3">
-                    {tier.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
-                        <CheckIcon className="w-5 h-5 text-accent-400 mt-0.5 shrink-0" />
-                        <span className="text-gray-300 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-2 text-balance group-hover:text-cyan-400 transition-colors">{tier.name}</h3>
+                  <div className="text-3xl font-black gradient-text mb-4">{tier.price}</div>
+                  <div className="typography">
+                    <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
+                  </div>
                 </div>
 
-                {tier.notIncluded.length > 0 && (
+                <div className="space-y-6 mb-8">
                   <div>
-                    <h4 className="text-sm uppercase tracking-wide text-gray-400 font-bold mb-3 mt-6">
-                      Not Included
+                    <h4 className="text-sm uppercase tracking-wide text-muted-foreground font-bold mb-4">
+                      What&apos;s Included
                     </h4>
                     <ul className="space-y-3">
-                      {tier.notIncluded.map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-3">
-                          <XMarkIcon className="w-5 h-5 text-gray-500 mt-0.5 shrink-0" />
-                          <span className="text-gray-400 text-sm">{item}</span>
+                      {tier.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start space-x-3">
+                          <div className="w-2 h-2 rounded-full bg-gradient-secondary mt-2" />
+                          <span className="text-sm text-muted-foreground">{feature}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                )}
-              </div>
 
-              <Link
-                href={tier.href}
-                className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
-                  tier.popular
-                    ? 'bg-secondary-400 text-black hover:bg-secondary-400/90'
-                    : 'border border-gray-600 text-gray-300 hover:border-secondary-400 hover:text-secondary-400'
-                }`}
-              >
-                {tier.cta}
-              </Link>
-            </div>
-          ))}
-        </div>
+                  {tier.notIncluded.length > 0 && (
+                    <div>
+                      <h4 className="text-sm uppercase tracking-wide text-muted-foreground font-bold mb-4 mt-6">
+                        Not Included
+                      </h4>
+                      <ul className="space-y-3">
+                        {tier.notIncluded.map((item, idx) => (
+                          <li key={idx} className="flex items-start space-x-3">
+                            <XMarkIcon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
 
-        {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Frequently Asked <span className="text-secondary-400">Questions</span>
-            </h2>
-            <p className="text-gray-300">
-              Everything you need to know about our pricing and process
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-black/60 backdrop-blur-lg border border-gray-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
-                <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                <Link
+                  href={tier.href}
+                  className={`button-base group w-full px-8 py-4 font-bold text-base rounded-lg overflow-hidden ${
+                    tier.popular
+                      ? 'cta-primary hover:shadow-xl hover:shadow-cyan-500/30'
+                      : 'cta-secondary button-hover-glow'
+                  }`}
+                >
+                  <span className="relative">{tier.cta}</span>
+                </Link>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* CTA Section */}
-        <div className="text-center mt-20 p-12 bg-black/80 backdrop-blur-xl border border-gray-800 rounded-2xl">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Start Your Project?
-          </h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-            Get a free consultation and detailed project estimate. No commitments, 
-            just expert advice on bringing your vision to life.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center px-8 py-4 bg-secondary-400 text-black font-bold rounded-lg hover:bg-secondary-400/90 transition-all duration-300"
-            >
-              Get Free Consultation
-            </Link>
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center justify-center px-8 py-4 border border-gray-600 text-gray-300 font-semibold rounded-lg hover:border-secondary-400 hover:text-secondary-400 transition-all duration-300"
-            >
-              View Our Work
-            </Link>
+      {/* FAQ Section */}
+      <section className="py-20 px-4">
+        <div className="container-wide">
+          <div className="text-center mb-16 typography">
+            <h2 className="text-responsive-lg font-black text-white mb-4">
+              Frequently Asked <span className="gradient-text">Questions</span>
+            </h2>
+            <div className="typography">
+              <p className="text-xl text-gray-400">
+                Everything you need to know about our pricing and process
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {faqs.map((faq, index) => (
+              <div key={index} className="glass-card-light p-8 hover:border-cyan-400/50 transition-all duration-300">
+                <h3 className="text-xl font-bold text-white mb-4 text-balance">{faq.question}</h3>
+                <div className="typography">
+                  <p className="text-gray-400 leading-relaxed text-pretty">{faq.answer}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-20 px-4">
+        <div className="container-wide text-center">
+          <div className="glass-section p-12 md:p-16">
+            <h2 className="text-responsive-lg font-black text-white mb-6">
+              Ready to Start Your Project?
+            </h2>
+
+            <div className="typography">
+              <p className="text-xl text-gray-300 mb-10 container-narrow">
+                Get a free consultation and detailed project estimate. No commitments, just expert advice on bringing your vision to life.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact">
+                <button className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden will-change-transform">
+                  <span className="relative">Get Free Consultation</span>
+                </button>
+              </Link>
+
+              <Link href="/portfolio">
+                <button className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl will-change-transform">
+                  View Our Work
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

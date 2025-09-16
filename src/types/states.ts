@@ -1,6 +1,6 @@
-// US States types
+// General US States types
 
-export interface StateInfo {
+export interface USStateInfo {
   name: string
   code: string
   hasIncomeTax: boolean

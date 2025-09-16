@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
-// Use Web Crypto API for Edge runtime compatibility
+import { getClientIp, trackIpRequest } from '@/lib/rate-limit';
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -20,9 +19,16 @@ export const config = {
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const url = request.nextUrl;
+  const clientIp = getClientIp(request);
 
-  // Add security headers using centralized configuration
-  applySecurityHeaders(response);
+  // Generate nonce for CSP
+  const nonce = Math.random().toString(36).substring(2, 18);
+
+  // Add security headers using centralized configuration with nonce
+  applySecurityHeaders(response, nonce);
+
+  // Store nonce in header for use in components
+  response.headers.set('X-CSP-Nonce', nonce);
 
   // Add performance headers
   response.headers.set('X-Request-Time', Date.now().toString());
@@ -53,17 +59,30 @@ export function middleware(request: NextRequest) {
     return new NextResponse('Blocked', { status: 403 });
   }
 
-  // Security: Rate limiting for specific endpoints (basic protection)
+  // Rate limiting for API endpoints
   const pathname = url.pathname;
-  if (pathname.startsWith('/api/contact')) {
+  if (pathname.startsWith('/api/')) {
+    // Check rate limit
+    const endpoint = pathname.split('/').slice(0, 3).join('/');
+    const isAllowed = trackIpRequest(clientIp, endpoint);
+
+    if (!isAllowed) {
+      return new NextResponse('Too Many Requests', {
+        status: 429,
+        headers: {
+          'Retry-After': '60',
+          'X-RateLimit-Limit': '60',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': new Date(Date.now() + 60000).toISOString()
+        }
+      });
+    }
+
     // Add rate limiting headers for monitoring
-    response.headers.set('X-Endpoint-Type', 'contact-api');
+    response.headers.set('X-RateLimit-Limit', '60');
+    response.headers.set('X-Client-IP', clientIp);
   }
 
-  // Security: Add nonce for CSP (if needed for inline scripts)
-  // Use Web Crypto API compatible with Edge runtime
-  const nonce = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
-  response.headers.set('X-CSP-Nonce', nonce);
 
   // Remove preload headers since fonts are from Google and CSS paths are dynamic
 
@@ -96,14 +115,6 @@ export function middleware(request: NextRequest) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token');
   }
 
-  // A/B testing for performance optimizations
-  const testGroup = Math.random() > 0.5 ? 'A' : 'B';
-  response.cookies.set('perf-test-group', testGroup, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-  });
 
   // Add timing header for performance monitoring
   response.headers.set('Server-Timing', `middleware;dur=${Date.now() - parseInt(response.headers.get('X-Request-Time') || '0')}`);
