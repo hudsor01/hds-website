@@ -1,6 +1,6 @@
+import { ArrowRightIcon, ClockIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { Post } from "@/types/ghost-types";
-import { ArrowRightIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { formatDateLong } from "@/lib/utils";
 
 interface RelatedPostsProps {
@@ -9,7 +9,9 @@ interface RelatedPostsProps {
 }
 
 export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPostsProps) {
-  if (posts.length === 0) return null;
+  if (posts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 bg-gradient-primary">
@@ -21,6 +23,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
               <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300">
                 {post.feature_image && (
                   <div className="relative h-48 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={post.feature_image}
                       alt={post.feature_image_alt || post.title}

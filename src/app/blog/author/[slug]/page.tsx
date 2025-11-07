@@ -81,6 +81,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       <section className="relative bg-gradient-hero py-16 overflow-hidden">
         {author.cover_image && (
           <div className="absolute inset-0 opacity-20">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={author.cover_image}
               alt={author.name}
@@ -101,6 +102,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
           {author.profile_image && (
             <div className="flex justify-center mb-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={author.profile_image}
                 alt={author.name}
@@ -168,7 +170,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post: any) => (
+              {posts.map((post) => (
                 <BlogPostCard key={post.id} post={post} />
               ))}
             </div>

@@ -7,7 +7,9 @@ interface TagListProps {
 }
 
 export function TagList({ tags, title = "Topics" }: TagListProps) {
-  if (tags.length === 0) return null;
+  if (tags.length === 0) {
+    return null;
+  }
 
   return (
     <div className="glass-card rounded-xl p-6">

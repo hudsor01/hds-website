@@ -1,6 +1,6 @@
 import GhostContentAPI from '@tryghost/content-api';
-import { logger } from './logger';
 import type { Post, Tag, Author, Settings, BrowseOptions } from '@/types/ghost-types';
+import { logger } from './logger';
 
 if (!process.env.GHOST_API_URL || !process.env.GHOST_CONTENT_API_KEY) {
   logger.error('Ghost API credentials are not configured', {

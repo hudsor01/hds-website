@@ -1,6 +1,6 @@
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import type { Author } from "@/types/ghost-types";
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
 
 interface AuthorCardProps {
   author: Author;
@@ -11,6 +11,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
     <div className="glass-card rounded-xl p-6">
       <div className="flex gap-4">
         {author.profile_image && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={author.profile_image}
             alt={author.name}

@@ -17,6 +17,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
       <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
         {post.feature_image && (
           <div className="relative h-48 md:h-64 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.feature_image}
               alt={post.feature_image_alt || post.title}
@@ -54,7 +55,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
 
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
-              {tags.slice(0, 3).map((tag: any) => (
+              {tags.slice(0, 3).map((tag) => (
                 <Link
                   key={tag.id}
                   href={`/blog/tag/${tag.slug}`}
@@ -70,6 +71,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
           {author && (
             <div className="flex flex-center gap-2 text-sm text-gray-500 mb-4">
               {author.profile_image && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={author.profile_image}
                   alt={author.name}
