@@ -1,8 +1,8 @@
-// eslint-disable-next-line import/order
-import { formatDateLong } from "@/lib/utils"
-import { ArrowRightIcon, CalendarDaysIcon, ClockIcon, TagIcon } from "@heroicons/react/24/outline"
-import type { Metadata } from "next"
-import Link from "next/link"
+import type { Metadata } from "next";
+import Link from "next/link";
+import { getPosts, getFeaturedPosts, getTags } from "@/lib/ghost";
+import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { TagList } from "@/components/blog/TagList";
 
 export const metadata: Metadata = {
   title: "Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy",
@@ -26,47 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
-// Blog posts data - add more posts here as you create them
-const blogPosts = [
-  {
-    id: "1",
-    title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate",
-    slug: "beyond-just-works-why-businesses-need-websites-that-dominate",
-    excerpt: "The brutal truth about why most business websites fail to deliver results—and what ambitious companies do differently. Discover why 'good enough' websites cost you revenue and how digital dominance creates competitive advantages.",
-    publishedAt: "2024-01-31",
-    readingTime: 12,
-    featured: true,
-    tags: ["Business Strategy", "Web Development", "Digital Marketing"],
-    author: "Hudson Digital Solutions"
-  },
-  {
-    id: "2",
-    title: "How to Increase Website Conversion Rates: 2025 Complete Guide",
-    slug: "how-to-increase-website-conversion-rates-2025-guide",
-    excerpt: "15 proven strategies to boost your website conversion rates by 300%+. From UX optimization to psychology-based design, real case studies and actionable tactics that drive results.",
-    publishedAt: "2024-02-15",
-    readingTime: 15,
-    featured: true,
-    tags: ["Conversion Optimization", "UX Design", "Web Performance"],
-    author: "Hudson Digital Solutions"
-  },
-  {
-    id: "3",
-    title: "Small Business Website Cost 2025: Complete Pricing Guide",
-    slug: "small-business-website-cost-2025",
-    excerpt: "Complete breakdown of website costs for small businesses in 2025. Compare DIY vs professional options, ROI analysis, hidden costs, and how to choose the right investment level for your business growth.",
-    publishedAt: "2024-03-01",
-    readingTime: 14,
-    featured: false,
-    tags: ["Small Business", "Web Development", "Pricing", "ROI"],
-    author: "Hudson Digital Solutions"
-  }
-];
+export const revalidate = 60;
 
+export default async function BlogPage() {
+  const [featuredPosts, allPostsResult, tags] = await Promise.all([
+    getFeaturedPosts(3),
+    getPosts({ limit: 10 }),
+    getTags(),
+  ]);
 
-export default function BlogPage() {
-  const featuredPosts = blogPosts.filter(post => post.featured);
-  const allPosts = blogPosts;
+  const allPosts = allPostsResult.posts;
 
   return (
     <main className="min-h-screen bg-gradient-primary">
@@ -96,57 +65,13 @@ export default function BlogPage() {
         <section className="py-16 bg-gradient-primary">
           <div className="container-wide">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Article</h2>
+              <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Articles</h2>
               <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
-            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible md:mx-0 md:px-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredPosts.map((post) => (
-                <article key={post.id} className="group relative lg:col-span-2 snap-center flex-shrink-0 w-80 md:w-auto">
-                  <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
-
-                    <div className="p-8">
-                      <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
-                        <span className="flex flex-center gap-1">
-                          <CalendarDaysIcon className="w-4 h-4" />
-                          {formatDateLong(post.publishedAt)}
-                        </span>
-                        <span className="flex flex-center gap-1">
-                          <ClockIcon className="w-4 h-4" />
-                          {post.readingTime} min read
-                        </span>
-                        <span className="px-3 py-1 bg-cyan-400 text-black text-xs font-bold rounded-full">
-                          FEATURED
-                        </span>
-                      </div>
-
-                      <h3 className="text-responsive-md font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
-                        {post.title}
-                      </h3>
-
-                      <p className="text-gray-300 mb-6 text-lg leading-relaxed text-pretty">
-                        {post.excerpt}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {post.tags.map((tag) => (
-                          <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
-                            <TagIcon className="w-3 h-3" />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
-                      >
-                        Read Full Article
-                        <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
-                  </div>
-                </article>
+                <BlogPostCard key={post.id} post={post} featured />
               ))}
             </div>
           </div>
@@ -164,54 +89,17 @@ export default function BlogPage() {
                 <p className="text-gray-300 text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
-              <div className="space-y-8">
-                {allPosts.map((post) => (
-                  <article key={post.id} className="group">
-                    <div className="glass-card rounded-xl p-6 hover:border-cyan-300 transition-all duration-300">
-                      <div className="flex flex-col">
-                        <div className="flex flex-center gap-4 text-sm text-gray-400 mb-3">
-                          <span className="flex flex-center gap-1">
-                            <CalendarDaysIcon className="w-4 h-4" />
-                            {formatDateLong(post.publishedAt)}
-                          </span>
-                          <span className="flex flex-center gap-1">
-                            <ClockIcon className="w-4 h-4" />
-                            {post.readingTime} min read
-                          </span>
-                          <span className="text-gray-500">By {post.author}</span>
-                        </div>
-
-                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors text-balance">
-                          <Link href={`/blog/${post.slug}`}>
-                            {post.title}
-                          </Link>
-                        </h3>
-
-                        <p className="text-gray-300 mb-4 line-clamp-3 leading-relaxed text-pretty">
-                          {post.excerpt}
-                        </p>
-
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {post.tags.map((tag) => (
-                            <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
-                              <TagIcon className="w-3 h-3" />
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          className="inline-flex flex-center gap-2 link-primary font-semibold"
-                        >
-                          Read Full Article
-                          <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
+              {allPosts.length === 0 ? (
+                <div className="glass-card rounded-xl p-8 text-center">
+                  <p className="text-gray-300 text-lg">No articles found. Check back soon for new content!</p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {allPosts.map((post) => (
+                    <BlogPostCard key={post.id} post={post} />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -234,19 +122,7 @@ export default function BlogPage() {
               </div>
 
               {/* Topics */}
-              <div className="glass-card rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Topics</h3>
-                <div className="flex flex-wrap gap-2">
-                  {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
-                    <span
-                      key={topic}
-                      className="text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors cursor-pointer"
-                    >
-                      {topic}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              {tags.length > 0 && <TagList tags={tags} />}
 
               {/* CTA */}
               <div className="glass-card rounded-xl p-6 text-center">
