@@ -137,7 +137,7 @@ export function calculateLeaseComparison(input: VehicleInputs): LeaseComparisonR
     const vehicleValueAtLeaseEnd = estimatedResidual;
     const remainingLoanBalance = calculateRemainingLoanBalance(
       input.purchasePrice - input.downPayment,
-      input.interestRate / 120,
+      input.interestRate / 1200,
       input.loanTermMonths,
       input.leaseTerm || 36
     );

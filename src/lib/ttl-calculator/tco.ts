@@ -52,7 +52,7 @@ export function calculateAnnualFuelCost(input: VehicleInputs): number {
   if (input.isElectric) {
     // Electric vehicle: miles per year / miles per kWh * electricity rate ($/kWh)
     const milesPerKwh = 3.5; // Average EV efficiency
-    return (input.milesPerYear || 12000) / milesPerKwh * (input.electricityRate || 0.13) * 12;
+    return (input.milesPerYear || 12000) / milesPerKwh * (input.electricityRate || 0.13);
   } else {
     // Gas vehicle: miles per year / mpg * gas price
     return (input.milesPerYear || 12000) / (input.mpg || 25) * (input.gasPrice || 3.0);
