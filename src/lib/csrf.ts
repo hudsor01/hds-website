@@ -2,7 +2,7 @@
 import { createHmac, randomBytes } from 'crypto';
 
 const CSRF_SECRET = process.env.CSRF_SECRET || randomBytes(32).toString('hex');
-const TOKEN_LENGTH = 18;
+const TOKEN_LENGTH = 32;
 const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
 
 export function generateCsrfToken(): string {
