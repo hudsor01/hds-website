@@ -9,7 +9,7 @@ import pluginQuery from "@tanstack/eslint-plugin-query";
 
 export default tseslint.config(
   {
-    ignores: [".next/**", ".vercel/**", "node_modules/**", "out/**", ".turbo/**", "coverage/**", "playwright-report/**", "test-results/**", "next-env.d.ts", "tests/vitest-setup.d.ts"],
+    ignores: [".next/**", ".vercel/**", "node_modules/**", "out/**", ".turbo/**", "coverage/**", "playwright-report/**", "test-results/**", "e2e/**", "next-env.d.ts", "tests/vitest-setup.d.ts"],
   },
   {
     files: ["**/*.{js,mjs,cjs,tsx}"],
