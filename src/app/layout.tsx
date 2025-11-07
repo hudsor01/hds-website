@@ -5,6 +5,7 @@ import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
+import ClientProviders from "@/components/ClientProviders";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 const geistSans = Geist({
@@ -151,13 +152,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <NavbarLight />
-        <div id="main-content" className="min-h-screen pt-16">
-          {children}
-        </div>
-        <Footer />
-        <ScrollToTop />
-        <Analytics />
+        <ClientProviders>
+          <NavbarLight />
+          <div id="main-content" className="min-h-screen pt-16">
+            {children}
+          </div>
+          <Footer />
+          <ScrollToTop />
+          <Analytics />
+        </ClientProviders>
       </body>
     </html>
   );

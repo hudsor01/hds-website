@@ -2,13 +2,6 @@
 
 @import "tw-animate-css";
 
-/* Explicit source detection for better performance */
-@source "../components/**/*.{js,ts,jsx,tsx}";
-@source "../app/**/*.{js,ts,jsx,tsx}";
-@source "../lib/**/*.{js,ts,jsx,tsx}";
-
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   /* Core color palette using OKLCH for better color consistency */
   --color-background: oklch(1 0 0);
@@ -518,18 +511,6 @@ body::after {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
-}
-@layer base {
-/* Base styles */
-* {
-  border-color: var(--border);
-  outline-color: rgb(var(--ring) / 0.5);
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
 
   /* Color opacity utilities using modern syntax */
   .text-primary-50 {
@@ -544,16 +525,14 @@ body {
     border-color: oklch(from var(--color-primary) l c h / 0.3);
   }
 
-  /* Dark mode color adjustments */
-  .dark\:lighten-10 {
-    @apply dark:brightness-110;
+  .surface {
+    @apply bg-white;
   }
 
-  .dark\:darken-10 {
-    @apply dark:brightness-90;
+  .dark .surface {
+    @apply bg-gray-800;
   }
 
-  /* Text decoration utilities */
   .link-hover {
     @apply underline decoration-transparent hover:decoration-cyan-500 transition-colors duration-300;
   }
@@ -584,7 +563,6 @@ body {
 
   /* Advanced hover states with group variants */
   .card-hover {
-    position: relative;
     @apply hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-500;
   }
 
@@ -632,7 +610,10 @@ body {
 
   /* Data attribute styling */
   [data-state="active"] {
-    @apply bg-cyan-500/10 border-cyan-500 text-cyan-600 dark:text-cyan-400;
+    @apply bg-cyan-500/10 border-cyan-500 text-cyan-600;
+  }
+  .dark [data-state="active"] {
+    @apply text-cyan-400;
   }
 
   [data-state="inactive"] {
@@ -641,7 +622,10 @@ body {
 
   /* Aria attribute styling for accessibility */
   [aria-selected="true"] {
-    @apply bg-cyan-50 dark:bg-cyan-950 border-cyan-500;
+    @apply bg-cyan-50 border-cyan-500;
+  }
+  .dark [aria-selected="true"] {
+    @apply bg-cyan-950;
   }
 
   [aria-disabled="true"] {
@@ -650,12 +634,14 @@ body {
 
   /* Modern focus states */
   .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+    @apply focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2;
+  }
+  .dark .focus-ring {
+    @apply focus:ring-offset-gray-900;
   }
 
-  /* Selection styling */
-  .selection-cyan {
-    @apply selection:bg-cyan-200 selection:text-cyan-900 dark:selection:bg-cyan-800 dark:selection:text-cyan-100;
+  .dark .selection-cyan {
+    @apply selection:bg-cyan-800 selection:text-cyan-100;
   }
 
   /* Performance optimizations with will-change */

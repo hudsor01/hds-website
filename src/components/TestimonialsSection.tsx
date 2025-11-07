@@ -69,7 +69,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
             What Our Clients Say
           </h2>
           <p className="text-gray-400 text-lg container-narrow">
-            Don't just take our word for it. Here's what business owners and teams
+            Don&apos;t just take our word for it. Here&apos;s what business owners and teams
             have to say about working with Hudson Digital Solutions.
           </p>
         </div>
@@ -108,7 +108,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
 
                     {/* Testimonial Content */}
                     <blockquote className="text-gray-300 leading-relaxed mb-6 text-responsive-sm">
-                      "{testimonial.content}"
+                      &quot;{testimonial.content}&quot;
                     </blockquote>
 
                     {/* Author Info */}

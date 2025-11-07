@@ -1,8 +1,9 @@
-import React from 'react'
+import { randomBytes } from 'crypto'
 import { FileText } from 'lucide-react'
+import React from 'react'
+import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
-import { getCurrentTaxData } from '@/lib/paystub-utils'
 
 interface AnnualWageSummaryProps {
   employeeData: PaystubData
@@ -16,6 +17,10 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
   // Add a safe lookup for the Social Security wage base to avoid possible undefined access
   const ssWageBase = getCurrentTaxData()?.ssWageBase ?? employeeData.totals.grossPay
   const socialSecurityWages = Math.min(employeeData.totals.grossPay, ssWageBase)
+
+  const generateReferenceId = () => {
+    return randomBytes(6).toString('hex').substring(0, 9).toUpperCase();
+  };
 
   return (
     <div style={{ position: 'relative' }}>
@@ -502,7 +507,7 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
               year: 'numeric',
               month: 'long',
               day: 'numeric'
-            })} | <strong>Reference:</strong> AWS-{employeeData.taxYear}-{Math.random().toString(36).substr(2, 9).toUpperCase()}
+            })} | <strong>Reference:</strong> AWS-{employeeData.taxYear}-{generateReferenceId()}
           </div>
           <div style={{ marginTop: '5px' }}>
             This is an electronically generated document. No signature required for official use.

@@ -3,15 +3,15 @@
  * Handles delayed email sequences and automated follow-ups
  */
 
-import { Resend } from "resend";
+import { createServerLogger } from "@/lib/logger"
+import { escapeHtml, sanitizeEmailHeader } from "@/lib/utils"
 import type {
-  InternalScheduledEmail,
-  EmailQueueStats,
   EmailProcessResult,
-} from "@/types/utils";
-import { createServerLogger } from "@/lib/logger";
-import { getEmailSequences, processEmailTemplate } from "./email-utils";
-import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
+  EmailQueueStats,
+  InternalScheduledEmail,
+} from "@/types/utils"
+import { Resend } from "resend"
+import { getEmailSequences, processEmailTemplate } from "./email-utils"
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger();
@@ -181,7 +181,7 @@ async function sendScheduledEmail(
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333;">
         ${processedContent
-          .split("\\n\\n")
+          .split("\n\n")
           .map((paragraph) =>
             paragraph.startsWith("**") && paragraph.endsWith("**")
               ? `<h3 style="color: #0891b2; margin: 25px 0 15px 0;">${escapeHtml(
@@ -193,7 +193,7 @@ async function sendScheduledEmail(
                 )}</li>`
               : paragraph.includes("• ")
               ? `<ul style="margin: 15px 0; padding-left: 20px;">${paragraph
-                  .split("\\n")
+                  .split("\n")
                   .filter((line) => line.startsWith("• "))
                   .map(
                     (item) =>
@@ -201,11 +201,12 @@ async function sendScheduledEmail(
                         item.slice(2)
                       )}</li>`
                   )
-                  .join("")}</ul>`
+                  .join("")}
+                </ul>`
               : `<p style="margin: 15px 0;">${escapeHtml(paragraph)}</p>`
           )
           .join("")}
-        
+
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b;">
           <p style="margin: 0;">
             Richard Hudson<br>
@@ -214,7 +215,7 @@ async function sendScheduledEmail(
             <a href="https://hudsondigitalsolutions.com" style="color: #0891b2;">hudsondigitalsolutions.com</a>
           </p>
           <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
-            You received this email because you requested information from Hudson Digital Solutions. 
+            You received this email because you requested information from Hudson Digital Solutions.
             <a href="https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(
               scheduledEmail.recipientEmail
             )}" style="color: #0891b2;">Unsubscribe</a>
@@ -337,4 +338,4 @@ export async function processEmailsEndpoint(): Promise<EmailProcessResult> {
 }
 
 // Export for use in API routes or scheduled tasks
-export { scheduledEmailsQueue };
+export { scheduledEmailsQueue }

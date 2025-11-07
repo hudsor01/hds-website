@@ -5,6 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { submitContactForm, type ContactFormState } from '@/app/actions/contact'
 import { getServiceOptions, getContactTimeOptions, getBudgetOptions, getTimelineOptions } from '@/lib/form-utils'
 import { logger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
 
 // Submit button with built-in pending state
 function SubmitButton() {
@@ -31,7 +32,7 @@ function SubmitButton() {
 // Success Message Component
 function SuccessMessage({ onReset, className = '' }: { onReset: () => void; className?: string }) {
   return (
-    <div className={`glass-card border-green-700/50 text-center ${className}`}>
+    <div className={cn("glass-card p-6 rounded-xl border border-border border-green-700/50 text-center", className)}>
       <div className="mb-6">
         <svg className="w-16 h-16 mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -39,7 +40,7 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
       </div>
       <h2 className="text-responsive-md font-bold text-green-100 mb-4">Message Sent Successfully!</h2>
       <p className="text-green-200 mb-6">
-        Thank you for contacting us. We'll get back to you within 24 hours.
+        Thank you for contacting us. We&apos;ll get back to you within 24 hours.
       </p>
       <button
         onClick={onReset}
@@ -56,10 +57,10 @@ function FormHeader() {
   return (
     <div className="mb-8">
       <h2 className="text-responsive-md gradient-text mb-2">
-        Let's Build Something Amazing
+        Let&apos;s Build Something Amazing
       </h2>
       <p className="text-muted-foreground">
-        Tell us about your project and we'll get back to you within 24 hours.
+        Tell us about your project and we&apos;ll get back to you within 24 hours.
       </p>
     </div>
   )
