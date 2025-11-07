@@ -241,7 +241,7 @@ export default function PortfolioPage() {
             
             <div className="typography">
               <p className="text-xl text-gray-300 container-narrow mb-10">
-                Let's discuss how we can transform your business challenges into digital success stories.
+                Let&apos;s discuss how we can transform your business challenges into digital success stories.
               </p>
             </div>
             
