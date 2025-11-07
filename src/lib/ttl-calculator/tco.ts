@@ -40,7 +40,7 @@ function calculateMonthlyPayment(input: VehicleInputs): number {
   const months = input.loanTermMonths;
 
   if (monthlyRate === 0 || months === 0) {
-    return principal / months;
+    return months === 0 ? 0 : principal / months;
   }
 
   return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
