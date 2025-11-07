@@ -121,7 +121,7 @@ This ensures:
 
 This setup follows the principle: **Simple, Fast, Reliable**
 
-- **Simple**: No complex pre-commit hooks, just GitHub Actions
+- **Simple**: Minimal, focused pre-commit checks combined with comprehensive GitHub Actions
 - **Fast**: Only essential tests run on every push
 - **Reliable**: Catches real issues without false positives
 
