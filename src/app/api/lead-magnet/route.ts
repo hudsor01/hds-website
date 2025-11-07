@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import {
+import { 
   escapeHtml,
-  sanitizeEmailHeader,
-  detectInjectionAttempt
-} from '@/lib/security-utils';
+  detectInjectionAttempt,
+  sanitizeEmailHeader
+} from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;

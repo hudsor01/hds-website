@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, memo, useCallback, useEffect } from "react";
+import { useState, memo, useCallback, useEffect, useRef } from "react";
 import { 
   Bars3Icon, 
   XMarkIcon,
@@ -29,9 +29,15 @@ const NavbarLight = memo(function NavbarLight() {
     setMobileMenuOpen(false);
   }, []);
 
+  const pathnameRef = useRef(pathname);
+  
   // Close mobile menu on route change
   useEffect(() => {
-    setMobileMenuOpen(false);
+    if (pathnameRef.current !== pathname && mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+    pathnameRef.current = pathname;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   return (

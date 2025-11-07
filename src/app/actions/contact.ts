@@ -2,44 +2,21 @@
 
 import { headers } from "next/headers"
 import { Resend } from "resend"
-import { RateLimiter } from "@/lib/rate-limiter"
+import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
-import { escapeHtml, detectInjectionAttempt } from "@/lib/security-utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
 import { createServerLogger, castError } from "@/lib/logger"
-
-// Initialize rate limiter
-const rateLimiter = new RateLimiter()
-const CONTACT_FORM_LIMITS = {
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  maxRequests: 3, // 3 submissions per 15 minutes
-}
+import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
+import { supabase } from "@/lib/supabase"
 
 // Initialize Resend
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-// Get client IP from headers
-async function getClientIP(): Promise<string> {
-  const headersList = await headers()
-  const forwardedFor = headersList.get("x-forwarded-for")
-  if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim()
-    if (first) {
-      return first
-    }
-  }
 
-  const realIp = headersList.get("x-real-ip")
-  if (realIp?.trim()) {
-    return realIp.trim()
-  }
-
-  return "unknown"
-}
 
 // Generate admin notification email
 function generateAdminNotificationHTML(
@@ -108,12 +85,24 @@ export async function submitContactForm(
   try {
     logger.info('Contact form submission started');
     // Step 1: Rate limiting
-    const clientIP = await getClientIP()
-    const isLimited = await rateLimiter.checkLimit(
-      `contact-form:${clientIP}`,
-      CONTACT_FORM_LIMITS.maxRequests,
-      CONTACT_FORM_LIMITS.windowMs
-    )
+    const headersList = await headers();
+    const forwardedFor = headersList.get('x-forwarded-for');
+    let clientIP = '127.0.0.1';
+    
+    if (forwardedFor) {
+      const first = forwardedFor.split(',')[0]?.trim();
+      if (first) {
+        clientIP = first;
+      }
+    }
+
+    const realIp = headersList.get('x-real-ip');
+    if (realIp?.trim()) {
+      clientIP = realIp.trim();
+    }
+    
+    const identifier = `contact-form:${clientIP}`;
+    const isLimited = await unifiedRateLimiter.checkLimit(identifier, 'contactForm');
 
     if (isLimited) {
       return {
@@ -244,6 +233,46 @@ export async function submitContactForm(
 
         // Record successful submission
         recordContactFormSubmission(true)
+
+        // Save lead to database asynchronously (non-blocking)
+        void (async () => {
+          try {
+            const { error } = await supabase
+              .from('leads')
+              .insert([{
+                name: `${data.firstName} ${data.lastName}`,
+                email: data.email,
+                phone: data.phone || null,
+                company: data.company || null,
+                message: data.message,
+                source: 'contact_form',
+                status: 'new',
+                lead_score: leadScore,
+                consent_marketing: false, // Default value since not in form
+                consent_analytics: true,  // Default value since not in form
+                ip_address: clientIP,
+                user_agent: headersList.get('user-agent') || null,
+                referrer_url: headersList.get('referer') || null,
+                created_at: new Date().toISOString()
+              }]);
+
+            if (error) {
+              logger.error('Failed to save lead to database', { 
+                error: error.message, 
+                email: data.email 
+              });
+            } else {
+              logger.info('Lead saved to database successfully', { 
+                email: data.email 
+              });
+            }
+          } catch (dbError) {
+            logger.error('Database error when saving lead', { 
+              error: dbError instanceof Error ? dbError.message : String(dbError), 
+              email: data.email 
+            });
+          }
+        })();
 
         // Schedule follow-up emails
         scheduleEmailSequence(

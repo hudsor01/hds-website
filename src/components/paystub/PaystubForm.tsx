@@ -1,7 +1,7 @@
 'use client'
 
-import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
-import type { PaystubData, FilingStatus , FormErrors } from '@/types/paystub'
+import { getIncomeTaxStates, getNoIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
+import type { FilingStatus, FormErrors, PaystubData } from '@/types/paystub'
 
 interface PaystubFormProps {
   paystubData: PaystubData

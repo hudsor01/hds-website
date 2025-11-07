@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint (check only, no fixes)
+npm run lint
+
+# Run TypeScript type checking
+npm run typecheck
+
+# Run unit tests
+npm run test:unit

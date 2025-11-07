@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import { getClientIp, trackIpRequest } from '@/lib/rate-limit';
+import { getClientIp, unifiedRateLimiter, type RateLimitType, RATE_LIMIT_CONFIGS } from '@/lib/rate-limiter';
+import { validateCsrfForMutation } from '@/lib/csrf';
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -16,7 +17,7 @@ export const config = {
   ],
 };
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const url = request.nextUrl;
   const clientIp = getClientIp(request);
@@ -59,27 +60,43 @@ export function middleware(request: NextRequest) {
     return new NextResponse('Blocked', { status: 403 });
   }
 
+  // CSRF Protection
+  if (!await validateCsrfForMutation(request)) {
+    return new NextResponse('Invalid CSRF token', { status: 403 });
+  }
+
   // Rate limiting for API endpoints
   const pathname = url.pathname;
   if (pathname.startsWith('/api/')) {
+    // Determine rate limit type based on endpoint
+    let limitType: RateLimitType = 'api';
+    if (pathname.startsWith('/api/contact')) {
+      limitType = 'contactFormApi';
+    }
+
+    // Create rate limit identifier
+    const identifier = `${limitType}:${clientIp}:${pathname.split('/').slice(0, 3).join('/')}`;
+    
     // Check rate limit
-    const endpoint = pathname.split('/').slice(0, 3).join('/');
-    const isAllowed = trackIpRequest(clientIp, endpoint);
+    const isAllowed = await unifiedRateLimiter.checkLimit(identifier, limitType);
 
     if (!isAllowed) {
+      const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
       return new NextResponse('Too Many Requests', {
         status: 429,
         headers: {
           'Retry-After': '60',
-          'X-RateLimit-Limit': '60',
+          'X-RateLimit-Limit': RATE_LIMIT_CONFIGS[limitType].maxRequests.toString(),
           'X-RateLimit-Remaining': '0',
-          'X-RateLimit-Reset': new Date(Date.now() + 60000).toISOString()
+          'X-RateLimit-Reset': new Date(limitInfo.resetTime).toISOString()
         }
       });
     }
 
     // Add rate limiting headers for monitoring
-    response.headers.set('X-RateLimit-Limit', '60');
+    const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
+    response.headers.set('X-RateLimit-Limit', RATE_LIMIT_CONFIGS[limitType].maxRequests.toString());
+    response.headers.set('X-RateLimit-Remaining', limitInfo.remaining.toString());
     response.headers.set('X-Client-IP', clientIp);
   }
 
@@ -112,7 +129,7 @@ export function middleware(request: NextRequest) {
       : '*'
     );
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   }
 
 
