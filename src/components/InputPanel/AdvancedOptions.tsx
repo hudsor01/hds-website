@@ -1,6 +1,6 @@
 import { Plus, Settings } from 'lucide-react'
 import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 

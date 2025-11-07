@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 // Define validation schema using Zod
 const newsletterSchema = z.object({
