@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
