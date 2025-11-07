@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: post.meta_title || `${post.title} - Hudson Digital Solutions`,
     description: post.meta_description || post.excerpt || post.custom_excerpt,
-    keywords: post.tags?.map((tag: any) => tag.name).join(", "),
+    keywords: post.tags?.map((tag) => tag.name).join(", "),
     openGraph: {
       title: post.og_title || post.title,
       description: post.og_description || post.excerpt || post.custom_excerpt,
@@ -43,8 +43,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       type: "article",
       publishedTime: post.published_at,
       modifiedTime: post.updated_at,
-      authors: post.authors?.map((author: any) => author.name),
-      tags: post.tags?.map((tag: any) => tag.name),
+      authors: post.authors?.map((author) => author.name),
+      tags: post.tags?.map((tag) => tag.name),
     },
     twitter: {
       card: "summary_large_image",
@@ -79,7 +79,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const tags = post.tags || [];
   const primaryTag = post.primary_tag || tags[0];
 
-  let relatedPosts: any[] = [];
+  let relatedPosts: Awaited<ReturnType<typeof getPostsByTag>>['posts'] = [];
   if (primaryTag) {
     const relatedResult = await getPostsByTag(primaryTag.slug, { limit: 3 });
     relatedPosts = relatedResult.posts.filter((p) => p.id !== post.id).slice(0, 3);
@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Tags */}
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
-                {tags.map((tag: any) => (
+                {tags.map((tag) => (
                   <Link
                     key={tag.id}
                     href={`/blog/tag/${tag.slug}`}
@@ -149,6 +149,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {primaryAuthor && (
                 <div className="flex flex-center gap-2">
                   {primaryAuthor.profile_image && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={primaryAuthor.profile_image}
                       alt={primaryAuthor.name}
@@ -166,6 +167,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {post.feature_image && (
           <div className="container-wide py-8">
             <div className="relative aspect-video rounded-xl overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.feature_image}
                 alt={post.feature_image_alt || post.title}
