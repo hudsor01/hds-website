@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { StarIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@/components/Analytics';
+import { fetchJSON } from '@/lib/fetch-utils';
 
 
 // Define the testimonial type to match the API response
@@ -19,13 +20,10 @@ interface Testimonial {
   highlight: string;
 }
 
-// API service function to fetch testimonials
+// API service function to fetch testimonials with timeout
+// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 async function fetchTestimonials(): Promise<Testimonial[]> {
-  const response = await fetch('/api/testimonials');
-  if (!response.ok) {
-    throw new Error('Failed to fetch testimonials');
-  }
-  return response.json();
+  return fetchJSON<Testimonial[]>('/api/testimonials', {}, 10000);
 }
 
 export default function TestimonialsPage() {
