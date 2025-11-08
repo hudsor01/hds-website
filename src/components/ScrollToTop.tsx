@@ -1,27 +1,53 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ArrowUpIcon } from '@heroicons/react/24/outline';
 
+/**
+ * ScrollToTop component with throttled scroll listener
+ *
+ * Performance optimized per MDN best practices:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
+ *
+ * "scroll events can fire at a high rate" - throttling prevents
+ * performance degradation ("jank") during fast scrolling
+ */
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const tickingRef = useRef(false);
+  const lastScrollPositionRef = useRef(0);
 
   useEffect(() => {
-    const toggleVisibility = () => {
+    const toggleVisibility = (scrollPos: number) => {
       // Lower threshold for easier testing and better UX
-      if (window.scrollY > 200) {
+      if (scrollPos > 200) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
+    // Throttled scroll handler per MDN recommendation
+    // Uses setTimeout instead of requestAnimationFrame
+    const handleScroll = () => {
+      lastScrollPositionRef.current = window.scrollY;
+
+      if (!tickingRef.current) {
+        setTimeout(() => {
+          toggleVisibility(lastScrollPositionRef.current);
+          tickingRef.current = false;
+        }, 100); // Throttle to ~100ms (10fps) - good balance for scroll button
+        tickingRef.current = true;
+      }
+    };
+
     // Check initial scroll position
-    toggleVisibility();
+    toggleVisibility(window.scrollY);
 
-    window.addEventListener('scroll', toggleVisibility);
+    // Add scroll listener with passive option for better performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {

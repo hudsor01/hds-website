@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, memo, useCallback, useEffect, useRef } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import { 
   Bars3Icon, 
   XMarkIcon,
@@ -29,15 +29,16 @@ const NavbarLight = memo(function NavbarLight() {
     setMobileMenuOpen(false);
   }, []);
 
-  const pathnameRef = useRef(pathname);
-  
   // Close mobile menu on route change
+  // Bug fix: Properly synchronize with Next.js router (external state)
+  // https://react.dev/learn/synchronizing-with-effects
+  // https://react.dev/reference/react/useEffect
+  // Pathname from Next.js router is external state - this is the correct pattern
   useEffect(() => {
-    if (pathnameRef.current !== pathname && mobileMenuOpen) {
-      setMobileMenuOpen(false);
-    }
-    pathnameRef.current = pathname;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Close menu when navigating - React batches and skips if already false
+    // Disable set-state-in-effect as this IS synchronizing with external system
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMobileMenuOpen(false);
   }, [pathname]);
 
   return (

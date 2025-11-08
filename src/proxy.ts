@@ -1,3 +1,8 @@
+/**
+ * Next.js Proxy (formerly Middleware)
+ * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
+ * Official docs: https://nextjs.org/docs/messages/middleware-to-proxy
+ */
 import { NextResponse, type NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { getClientIp, unifiedRateLimiter, type RateLimitType, RATE_LIMIT_CONFIGS } from '@/lib/rate-limiter';
@@ -17,7 +22,7 @@ export const config = {
   ],
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const url = request.nextUrl;
   const clientIp = getClientIp(request);
