@@ -9,6 +9,7 @@ import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-typ
 import { ComparisonView } from './ComparisonView'
 import { InputPanel } from './InputPanel/InputPanel'
 import { ResultsPanel } from './ResultsPanel'
+import { logger } from '@/lib/logger'
 
 export function Calculator() {
   const {
@@ -34,7 +35,7 @@ export function Calculator() {
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error('Failed to save calculation:', error);
+      logger.error('Failed to save calculation', error as Error);
     }
  };
 
@@ -82,7 +83,7 @@ Monthly Payment:
         alert('Shareable link copied to clipboard!');
       })
       .catch(err => {
-        console.error('Failed to copy link: ', err);
+        logger.error('Failed to copy link', err as Error);
         prompt('Copy this link to share your calculation:', shareableUrl);
       });
   };
