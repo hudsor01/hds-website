@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -133,14 +134,8 @@ const breadcrumbSchema = {
 export default function BlogPost() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={structuredData} />
+      <JsonLd data={breadcrumbSchema} />
       <main className="min-h-screen bg-gradient-primary">
       {/* Hero Section */}
       <section className="relative bg-gradient-hero py-16 overflow-hidden">

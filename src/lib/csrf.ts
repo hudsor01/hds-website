@@ -9,7 +9,15 @@
 
 import { env } from '@/env';
 
-const CSRF_SECRET = env.CSRF_SECRET || 'default-secret-change-in-production';
+// CSRF secret must be set in production
+if (env.NODE_ENV === 'production' && !env.CSRF_SECRET) {
+  throw new Error(
+    'CSRF_SECRET environment variable must be set in production. ' +
+    'Generate a secure secret with: openssl rand -hex 32'
+  );
+}
+
+const CSRF_SECRET = env.CSRF_SECRET || 'dev-csrf-secret-not-for-production';
 const TOKEN_LENGTH = 18;
 const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
 

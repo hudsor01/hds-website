@@ -76,18 +76,23 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith('/api/')) {
     // Determine rate limit type based on endpoint
     let limitType: RateLimitType = 'api';
+
     if (pathname.startsWith('/api/contact')) {
       limitType = 'contactFormApi';
+    } else if (pathname.startsWith('/api/newsletter')) {
+      limitType = 'newsletter';
+    } else if (pathname.startsWith('/api/testimonials') || pathname.startsWith('/api/portfolio')) {
+      limitType = 'readOnlyApi';
     }
 
     // Create rate limit identifier
     const identifier = `${limitType}:${clientIp}:${pathname.split('/').slice(0, 3).join('/')}`;
-    
+
     // Check rate limit
     const isAllowed = await unifiedRateLimiter.checkLimit(identifier, limitType);
 
     if (!isAllowed) {
-      const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
+      const limitInfo = await unifiedRateLimiter.getLimitInfo(identifier, limitType);
       return new NextResponse('Too Many Requests', {
         status: 429,
         headers: {
@@ -100,7 +105,7 @@ export async function proxy(request: NextRequest) {
     }
 
     // Add rate limiting headers for monitoring
-    const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
+    const limitInfo = await unifiedRateLimiter.getLimitInfo(identifier, limitType);
     response.headers.set('X-RateLimit-Limit', RATE_LIMIT_CONFIGS[limitType].maxRequests.toString());
     response.headers.set('X-RateLimit-Remaining', limitInfo.remaining.toString());
     response.headers.set('X-Client-IP', clientIp);
