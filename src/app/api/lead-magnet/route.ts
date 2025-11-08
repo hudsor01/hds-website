@@ -1,12 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import { 
+import {
   escapeHtml,
   detectInjectionAttempt,
   sanitizeEmailHeader
 } from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
+import { fetchWithTimeout } from '@/lib/fetch-utils';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -230,10 +231,11 @@ export async function POST(request: NextRequest) {
           html: generateAdminNotificationEmail(data)
         });
         
-        // Send Discord notification if configured
+        // Send Discord notification if configured with timeout
+        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
         if (process.env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(process.env.DISCORD_WEBHOOK_URL, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -260,7 +262,7 @@ export async function POST(request: NextRequest) {
                   }
                 }]
               })
-            });
+            }, 5000); // 5s timeout for Discord webhook
           } catch (discordError) {
             logger.error('Failed to send Discord notification', castError(discordError));
           }

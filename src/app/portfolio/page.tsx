@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@/components/Analytics';
+import { fetchJSON } from '@/lib/fetch-utils';
 import './portfolio.css';
 
 // Define the project type to match the API response
@@ -22,13 +23,10 @@ interface PortfolioProject {
   featured?: boolean;
 }
 
-// API service function to fetch portfolio projects
+// API service function to fetch portfolio projects with timeout
+// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 async function fetchPortfolioProjects(): Promise<PortfolioProject[]> {
-  const response = await fetch('/api/portfolio/projects');
-  if (!response.ok) {
-    throw new Error('Failed to fetch portfolio projects');
-  }
-  return response.json();
+  return fetchJSON<PortfolioProject[]>('/api/portfolio/projects', {}, 10000);
 }
 
 export default function PortfolioPage() {

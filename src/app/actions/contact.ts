@@ -10,6 +10,7 @@ import { createServerLogger, castError } from "@/lib/logger"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { supabase, isSupabaseConfigured } from "@/lib/supabase"
 import { getResendClient, isResendConfigured } from "@/lib/resend-client"
+import { fetchWithTimeout } from "@/lib/fetch-utils"
 
 
 
@@ -183,10 +184,11 @@ export async function submitContactForm(
           })
         }
 
-        // Send Discord notification if configured
+        // Send Discord notification if configured with timeout
+        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
         if (process.env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(process.env.DISCORD_WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -222,7 +224,7 @@ export async function submitContactForm(
                   footer: { text: "Hudson Digital Solutions Contact Form" },
                 }],
               }),
-            })
+            }, 5000); // 5s timeout for Discord webhook
           } catch (discordError) {
             logger.error("Failed to send Discord notification", castError(discordError))
           }
