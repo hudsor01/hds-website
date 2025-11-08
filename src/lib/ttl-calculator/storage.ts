@@ -7,6 +7,11 @@ const STORAGE_KEY = 'texas-ttl-saved-calculations';
 const MAX_SAVED = 20;
 
 export function getSavedCalculations(): SavedCalculation[] {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return [];
+  }
+
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
@@ -17,7 +22,12 @@ export function getSavedCalculations(): SavedCalculation[] {
 }
 
 export function saveCalculation(input: VehicleInputs, name?: string): string {
- try {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    throw new Error('Cannot save calculations on server side');
+  }
+
+  try {
     const calculations = getSavedCalculations();
 
     // Calculate all results
@@ -66,6 +76,11 @@ export function loadCalculation(id: string): SavedCalculation | null {
 }
 
 export function deleteCalculation(id: string): void {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
     const calculations = getSavedCalculations();
     const filtered = calculations.filter(calc => calc.id !== id);
@@ -76,6 +91,11 @@ export function deleteCalculation(id: string): void {
 }
 
 export function clearAllCalculations(): void {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
@@ -84,6 +104,11 @@ export function clearAllCalculations(): void {
 }
 
 export function updateCalculationName(id: string, newName: string): void {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
     const calculations = getSavedCalculations();
     const updated = calculations.map(calc =>

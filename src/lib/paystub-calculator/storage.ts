@@ -12,6 +12,11 @@ interface PaystubFormData {
 }
 
 export function saveFormData(data: PaystubFormData): void {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
     localStorage.setItem(PAYSTUB_STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
@@ -20,6 +25,11 @@ export function saveFormData(data: PaystubFormData): void {
 }
 
 export function loadFormData(): PaystubFormData | null {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   try {
     const saved = localStorage.getItem(PAYSTUB_STORAGE_KEY);
     return saved ? JSON.parse(saved) : null;
@@ -30,6 +40,11 @@ export function loadFormData(): PaystubFormData | null {
 }
 
 export function clearFormData(): void {
+  // Check if we're in a browser environment to prevent SSR crashes
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
     localStorage.removeItem(PAYSTUB_STORAGE_KEY);
   } catch (error) {
