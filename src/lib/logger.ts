@@ -1,5 +1,5 @@
 /**
- * Unified Logger using PostHog, Vercel, and Supabase
+ * Unified Logger with Vercel and Supabase integration
  * Replaces console.log with structured logging that works in all environments
  */
 
@@ -35,10 +35,14 @@ class Logger {
   }
 
   private getSessionId(): string {
-    // Get PostHog session ID if available
-    if (typeof window !== 'undefined' && 'posthog' in window && window.posthog) {
-      const posthog = window.posthog as { get_session_id?: () => string | null };
-      return posthog.get_session_id?.() || 'no-session';
+    // Generate or retrieve session ID from sessionStorage
+    if (typeof window !== 'undefined') {
+      let sessionId = sessionStorage.getItem('app_session_id');
+      if (!sessionId) {
+        sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('app_session_id', sessionId);
+      }
+      return sessionId;
     }
     return 'no-session';
   }
@@ -83,7 +87,7 @@ class Logger {
         break;
     }
 
-    // Send to PostHog for analytics
+    // Send to analytics for tracking
     if (typeof window !== 'undefined' && analytics) {
       const analyticsData: Record<string, string | number | boolean | null | undefined> = {
         message,
@@ -188,7 +192,7 @@ class Logger {
       if (measure) {
         this.info(`Performance: ${label}`, { duration: measure.duration });
 
-        // Send to PostHog
+        // Send to analytics
         analytics.trackEvent('performance_measure', {
           label,
           duration: measure.duration,

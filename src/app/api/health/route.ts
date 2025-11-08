@@ -28,7 +28,6 @@ export async function GET(_request: NextRequest) {
     const envStatus = {
       RESEND_API_KEY: !!env.RESEND_API_KEY,
       NEXT_PUBLIC_GA_MEASUREMENT_ID: !!env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-      NEXT_PUBLIC_POSTHOG_KEY: !!env.NEXT_PUBLIC_POSTHOG_KEY
     };
 
     // Overall health status
