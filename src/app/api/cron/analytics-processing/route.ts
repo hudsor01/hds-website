@@ -6,6 +6,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
 import { getSupabaseAdmin, logCronExecution, enqueueLogProcessing } from '@/lib/supabase'
+import { env } from '@/env'
 
 const logger = createServerLogger('analytics-cron')
 
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Verify this is a legitimate cron request
     const authHeader = request.headers.get('authorization')
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
       logger.warn('Unauthorized cron request')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

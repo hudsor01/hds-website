@@ -10,6 +10,7 @@ import type {
   PostHogLike,
 } from "@/types/analytics";
 import { logger } from './logger';
+import { env } from '@/env';
 
 class AnalyticsManager {
   private posthog: PostHogLike | null = null;
@@ -26,17 +27,17 @@ class AnalyticsManager {
     try {
       // PostHog initialization
       if (
-        process.env.NEXT_PUBLIC_POSTHOG_KEY &&
+        env.NEXT_PUBLIC_POSTHOG_KEY &&
         typeof window !== "undefined"
       ) {
         const posthogLib = await import("posthog-js");
         this.posthog = posthogLib.default;
 
         (this.posthog as PostHogLike).init(
-          process.env.NEXT_PUBLIC_POSTHOG_KEY,
+          env.NEXT_PUBLIC_POSTHOG_KEY,
           {
             api_host:
-              process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
+              env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
             loaded: () => {
               this.initialized = true;
               this.processQueue();
@@ -52,9 +53,9 @@ class AnalyticsManager {
     } catch (error) {
       logger.error("Failed to initialize analytics", {
         error,
-        posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ? 'present' : 'missing',
-        host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'default',
-        environment: process.env.NODE_ENV
+        posthogKey: env.NEXT_PUBLIC_POSTHOG_KEY ? 'present' : 'missing',
+        host: env.NEXT_PUBLIC_POSTHOG_HOST || 'default',
+        environment: env.NODE_ENV
       });
     }
   }

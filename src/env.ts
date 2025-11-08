@@ -25,6 +25,7 @@ export const env = createEnv({
 
     // Security
     CSRF_SECRET: z.string().min(16).optional(),
+    CRON_SECRET: z.string().optional(),
 
     // Analytics
     GA4_API_SECRET: z.string().optional(),
@@ -34,6 +35,9 @@ export const env = createEnv({
 
     // Node environment
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+
+    // Package metadata (available at build time)
+    npm_package_version: z.string().optional(),
   },
 
   /**
@@ -61,9 +65,11 @@ export const env = createEnv({
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     CSRF_SECRET: process.env.CSRF_SECRET,
+    CRON_SECRET: process.env.CRON_SECRET,
     GA4_API_SECRET: process.env.GA4_API_SECRET,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     NODE_ENV: process.env.NODE_ENV,
+    npm_package_version: process.env.npm_package_version,
 
     // Client
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
