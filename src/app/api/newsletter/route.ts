@@ -3,11 +3,20 @@ import { createClient } from '@supabase/supabase-js';
 import type { NextRequest } from 'next/server';
 import { logger } from '@/lib/logger';
 import { detectInjectionAttempt } from '@/lib/utils';
+import { env } from '@/env';
+
+// Validate environment variables
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing required Supabase environment variables');
+}
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!, // Using service role key for admin privileges
+  supabaseUrl,
+  supabaseKey, // Using service role key for admin privileges
   {
     auth: {
       autoRefreshToken: false,

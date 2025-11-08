@@ -5,6 +5,7 @@ import {
 } from "@/lib/scheduled-emails";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { createServerLogger, castError } from "@/lib/logger";
+import { env } from "@/env";
 
 // This endpoint would typically be called by a cron job or scheduled task
 // In production, you'd want to secure this endpoint with authentication
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     logger.info('Processing emails cron job started');
     // In production, add authentication here
     const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET;
+    const expectedToken = env.CRON_SECRET;
 
     if (!expectedToken) {
       logger.error("CRON_SECRET environment variable is not set");
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
     logger.info('Email stats requested');
     // Simple endpoint to check email queue status
     const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET;
+    const expectedToken = env.CRON_SECRET;
 
     if (!expectedToken) {
       logger.error("CRON_SECRET environment variable is not set");

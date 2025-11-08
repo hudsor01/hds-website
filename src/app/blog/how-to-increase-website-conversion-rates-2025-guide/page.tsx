@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "How to Increase Website Conversion Rates: 2025 Complete Guide | Hudson Digital",
@@ -127,14 +128,8 @@ const breadcrumbSchema = {
 export default function ConversionGuidePost() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={structuredData} />
+      <JsonLd data={breadcrumbSchema} />
       <main className="min-h-screen bg-gradient-primary">
         {/* Hero Section */}
         <section className="relative bg-gradient-hero py-16 overflow-hidden">
@@ -144,22 +139,22 @@ export default function ConversionGuidePost() {
           
           <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
             {/* Back Link */}
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors"
             >
-              <ArrowLeftIcon className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
 
             {/* Post Meta */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
               <span className="flex items-center gap-1">
-                <CalendarDaysIcon className="w-4 h-4" />
+                <Calendar className="w-4 h-4" />
                 February 15, 2024
               </span>
               <span className="flex items-center gap-1">
-                <ClockIcon className="w-4 h-4" />
+                <Clock className="w-4 h-4" />
                 15 min read
               </span>
               <span>By Hudson Digital Solutions</span>
@@ -182,7 +177,7 @@ export default function ConversionGuidePost() {
                   key={tag}
                   className="flex items-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
                 >
-                  <TagIcon className="w-3 h-3" />
+                  <Tag className="w-3 h-3" />
                   {tag}
                 </span>
               ))}
@@ -445,7 +440,7 @@ export default function ConversionGuidePost() {
                     className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
                   >
                     Get Your Free CRO Audit
-                    <ArrowLeftIcon className="w-5 h-5 rotate-180" />
+                    <ArrowLeft className="w-5 h-5 rotate-180" />
                   </Link>
                 </div>
 

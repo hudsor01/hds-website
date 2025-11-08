@@ -6,6 +6,7 @@ import { calculateLeaseComparison } from '../lib/ttl-calculator/lease'
 import { clearAllCalculations, deleteCalculation, getSavedCalculations, saveCalculation } from '../lib/ttl-calculator/storage'
 import { calculateTCO } from '../lib/ttl-calculator/tco'
 import type { CalculationResults, SavedCalculation, VehicleInputs } from '../types/ttl-types'
+import { logger } from '@/lib/logger'
 
 // Helper function to ensure VehicleInputs has all required fields with defaults
 function ensureVehicleInputsComplete(input: Partial<VehicleInputs>): VehicleInputs {
@@ -48,7 +49,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       setSavedCalculations(calculations);
     } catch (err) {
       setError('Failed to load saved calculations');
-      console.error('Error loading saved calculations:', err);
+      logger.error('Error loading saved calculations:', err as Error);
     }
   }, []);
 
@@ -60,7 +61,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
         setSavedCalculations(calculations);
       } catch (err) {
         setError('Failed to load saved calculations');
-        console.error('Error loading saved calculations:', err);
+        logger.error('Error loading saved calculations:', err as Error);
       }
     };
     loadCalculations();
@@ -110,7 +111,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Calculation failed');
       setIsLoading(false);
-      console.error('Calculation error:', err);
+      logger.error('Calculation error:', err as Error);
     }
   }, [vehicleInput]);
 
@@ -137,7 +138,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       }
     } catch (err) {
       setError('Failed to load saved calculation');
-      console.error('Error loading saved calculation:', err);
+      logger.error('Error loading saved calculation:', err as Error);
     }
   }, []);
 
@@ -147,7 +148,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       loadSavedCalculations();
     } catch (err) {
       setError('Failed to delete calculation');
-      console.error('Error deleting calculation:', err);
+      logger.error('Error deleting calculation:', err as Error);
     }
   }, [loadSavedCalculations]);
 
@@ -157,7 +158,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       setSavedCalculations([]);
     } catch (err) {
       setError('Failed to clear calculations');
-      console.error('Error clearing calculations:', err);
+      logger.error('Error clearing calculations:', err as Error);
     }
   }, []);
 

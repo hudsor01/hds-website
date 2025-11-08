@@ -1,14 +1,17 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import { 
+import {
   escapeHtml,
   detectInjectionAttempt,
   sanitizeEmailHeader
 } from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
+import { fetchWithTimeout } from '@/lib/fetch-utils';
+import { generateLeadMagnetNotification, generateLeadMagnetWelcomeEmail } from '@/lib/email-templates';
+import { env } from '@/env';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 // Lead magnet resources configuration
 const LEAD_MAGNETS = {
@@ -65,100 +68,7 @@ function validateLeadMagnetForm(body: Record<string, unknown>) {
   };
 }
 
-// Generate welcome email with download link
-function generateLeadMagnetEmail(data: { email: string; firstName: string; resource: string }): string {
-  const resource = LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS];
-  
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #0891b2; margin-bottom: 10px;">Thank you, ${escapeHtml(data.firstName)}!</h1>
-        <p style="color: #64748b; font-size: 16px;">Your ${resource.title} is ready for download</p>
-      </div>
-      
-      <div style="background: #f1f5f9; padding: 30px; border-radius: 8px; text-align: center; margin: 30px 0;">
-        <h2 style="color: #1e293b; margin-bottom: 15px;">${resource.title}</h2>
-        <p style="color: #64748b; margin-bottom: 25px;">${resource.description}</p>
-        
-        <a href="https://hudsondigitalsolutions.com${resource.downloadUrl}" 
-           style="display: inline-block; background: #22c55e; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-          Download Now
-        </a>
-      </div>
-      
-      <div style="border-top: 1px solid #e2e8f0; padding-top: 30px; margin-top: 30px;">
-        <h3 style="color: #1e293b; margin-bottom: 15px;">What's Next?</h3>
-        
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0;">
-          <h4 style="color: #0891b2; margin-bottom: 10px;">Ready to Implement?</h4>
-          <p style="color: #64748b; margin-bottom: 15px;">
-            Need help implementing these strategies? Our team has helped 150+ businesses achieve an average 340% ROI.
-          </p>
-          <a href="https://hudsondigitalsolutions.com/contact" 
-             style="color: #0891b2; text-decoration: none; font-weight: bold;">
-            Schedule Your Free Strategy Call →
-          </a>
-        </div>
-        
-        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0;">
-          <h4 style="color: #0891b2; margin-bottom: 10px;">More Resources</h4>
-          <p style="color: #64748b; margin-bottom: 15px;">
-            Get strategic insights delivered to your inbox. No spam, just valuable content to grow your business.
-          </p>
-          <a href="https://hudsondigitalsolutions.com/blog" 
-             style="color: #0891b2; text-decoration: none; font-weight: bold;">
-            Read Our Latest Articles →
-          </a>
-        </div>
-      </div>
-      
-      <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-        <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">
-          Questions? Reply to this email or contact us at 
-          <a href="mailto:hello@hudsondigitalsolutions.com" style="color: #0891b2;">hello@hudsondigitalsolutions.com</a>
-        </p>
-        <p style="color: #94a3b8; font-size: 12px;">
-          Hudson Digital Solutions<br>
-          Professional Web Development & Business Growth Strategy
-        </p>
-      </div>
-    </div>
-  `;
-}
-
-// Generate admin notification
-function generateAdminNotificationEmail(data: { email: string; firstName: string; resource: string }): string {
-  const resource = LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS];
-  
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h1 style="color: #0891b2;">New Lead Magnet Download</h1>
-      
-      <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-        <h2>Lead Information</h2>
-        <p><strong>Name:</strong> ${escapeHtml(data.firstName)}</p>
-        <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
-        <p><strong>Resource Downloaded:</strong> ${resource.title}</p>
-        <p><strong>Download Time:</strong> ${new Date().toLocaleString()}</p>
-      </div>
-
-      <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
-        <h2>Recommended Follow-up Actions</h2>
-        <ul>
-          <li>Add to CRM/email marketing system</li>
-          <li>Tag as "${resource.title}" lead</li>
-          <li>Schedule follow-up email sequence</li>
-          <li>Consider for strategic consultation offer</li>
-        </ul>
-      </div>
-
-      <p style="margin-top: 30px; color: #64748b; font-size: 12px;">
-        Submitted: ${new Date().toLocaleString()}<br>
-        Source: Hudson Digital Solutions Lead Magnet System
-      </p>
-    </div>
-  `;
-}
+// Removed duplicate email template functions - now using shared templates from @/lib/email-templates
 
 export async function POST(request: NextRequest) {
   const logger = createServerLogger('lead-magnet-api');
@@ -219,21 +129,30 @@ export async function POST(request: NextRequest) {
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: [data.email],
           subject: sanitizeEmailHeader(`Your ${resource.title} is Ready for Download`),
-          html: generateLeadMagnetEmail(data)
+          html: generateLeadMagnetWelcomeEmail({
+            firstName: data.firstName,
+            resourceTitle: resource.title,
+            downloadUrl: `https://hudsondigitalsolutions.com${resource.downloadUrl}`
+          })
         });
-        
+
         // Send notification to admin
         await resend.emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: ['hello@hudsondigitalsolutions.com'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),
-          html: generateAdminNotificationEmail(data)
+          html: generateLeadMagnetNotification({
+            firstName: data.firstName,
+            email: data.email,
+            resourceTitle: resource.title
+          })
         });
         
-        // Send Discord notification if configured
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        // Send Discord notification if configured with timeout
+        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(env.DISCORD_WEBHOOK_URL, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -260,7 +179,7 @@ export async function POST(request: NextRequest) {
                   }
                 }]
               })
-            });
+            }, 5000); // 5s timeout for Discord webhook
           } catch (discordError) {
             logger.error('Failed to send Discord notification', castError(discordError));
           }

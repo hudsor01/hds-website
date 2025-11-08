@@ -10,8 +10,9 @@ import type {
   EmailQueueStats,
   InternalScheduledEmail,
 } from "@/types/utils"
-import { Resend } from "resend"
 import { getEmailSequences, processEmailTemplate } from "./email-utils"
+import { getResendClient, isResendConfigured } from "./resend-client"
+import { env } from "@/env"
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger();
@@ -23,10 +24,6 @@ emailLogger.setContext({
 // In a real implementation, this would be stored in a database
 // For demo purposes, we'll use in-memory storage with comments on database structure
 let scheduledEmailsQueue: InternalScheduledEmail[] = [];
-
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
 
 /**
  * Schedule email sequence for a new lead
@@ -134,18 +131,21 @@ export async function processPendingEmails(): Promise<void> {
 async function sendScheduledEmail(
   scheduledEmail: InternalScheduledEmail
 ): Promise<void> {
-  if (!resend) {
+  // Bug fix: Use resend-client singleton pattern instead of module-level null
+  if (!isResendConfigured()) {
     const errorMsg = "Email service not configured";
     emailLogger.warn('Resend API not configured', {
       emailId: scheduledEmail.id,
       recipientEmail: scheduledEmail.recipientEmail,
-      environment: process.env.NODE_ENV,
-      hasApiKey: !!process.env.RESEND_API_KEY
+      environment: env.NODE_ENV,
+      hasApiKey: isResendConfigured()
     });
     scheduledEmail.status = "failed";
     scheduledEmail.error = errorMsg;
     return;
   }
+
+  const resend = getResendClient();
 
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
   const sequence = sequences[scheduledEmail.sequenceId];

@@ -5,7 +5,8 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin, logCronExecution, enqueueLogProcessing } from '@/lib/supabase'
+import { getSupabaseAdmin, logCronExecution, enqueueLogProcessing } from '@/lib/supabase'
+import { env } from '@/env'
 
 const logger = createServerLogger('analytics-cron')
 
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Verify this is a legitimate cron request
     const authHeader = request.headers.get('authorization')
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
       logger.warn('Unauthorized cron request')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -62,6 +63,7 @@ export async function POST(request: NextRequest) {
 
 async function processWebVitals(): Promise<number> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Get unprocessed web vitals from last hour
     const { data: vitals, error } = await supabaseAdmin
       .from('web_vitals')
@@ -95,6 +97,7 @@ async function processWebVitals(): Promise<number> {
 
 async function processPageAnalytics(): Promise<number> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Get page views from last hour
     const { data: pageViews, error } = await supabaseAdmin
       .from('page_analytics')
@@ -135,6 +138,7 @@ async function processPageAnalytics(): Promise<number> {
 
 async function processCustomEvents(): Promise<number> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Get custom events from last hour
     const { data: events, error } = await supabaseAdmin
       .from('custom_events')
@@ -169,6 +173,7 @@ async function processCustomEvents(): Promise<number> {
 
 async function processLeadScoring(): Promise<number> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Get recent leads that need scoring updates
     const { data: leads, error } = await supabaseAdmin
       .from('leads')
@@ -227,6 +232,7 @@ async function processLeadScoring(): Promise<number> {
 
 async function processConversionFunnels(): Promise<number> {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Get funnel data from last hour
     const { data: funnelSteps, error } = await supabaseAdmin
       .from('conversion_funnel')

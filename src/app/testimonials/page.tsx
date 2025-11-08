@@ -1,10 +1,12 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import { StarIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { MessageCircle } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
+import { fetchJSON } from '@/lib/fetch-utils';
+import { StarRating } from '@/components/ui/StarRating';
+import { StatsBar } from '@/components/ui/StatsBar';
+import { CTASection } from '@/components/ui/CTASection';
 
 
 // Define the testimonial type to match the API response
@@ -19,13 +21,10 @@ interface Testimonial {
   highlight: string;
 }
 
-// API service function to fetch testimonials
+// API service function to fetch testimonials with timeout
+// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 async function fetchTestimonials(): Promise<Testimonial[]> {
-  const response = await fetch('/api/testimonials');
-  if (!response.ok) {
-    throw new Error('Failed to fetch testimonials');
-  }
-  return response.json();
+  return fetchJSON<Testimonial[]>('/api/testimonials', {}, 10000);
 }
 
 export default function TestimonialsPage() {
@@ -97,7 +96,7 @@ export default function TestimonialsPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Don't just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
+                Don&apos;t just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
               </p>
             </div>
           </div>
@@ -105,23 +104,15 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 px-4 border-y border-border">
-        <div className="container-wide">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: "100%", label: "Client Satisfaction" },
-              { value: "50+", label: "Projects Delivered" },
-              { value: "3.5x", label: "Average ROI" },
-              { value: "24hr", label: "Response Time" },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-responsive-lg font-black text-cyan-400">{stat.value}</div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsBar
+        variant="bordered"
+        stats={[
+          { value: "100%", label: "Client Satisfaction" },
+          { value: "50+", label: "Projects Delivered" },
+          { value: "3.5x", label: "Average ROI" },
+          { value: "24hr", label: "Response Time" },
+        ]}
+      />
 
       {/* Testimonials Grid */}
       <section className="py-20 px-4">
@@ -145,14 +136,7 @@ export default function TestimonialsPage() {
               >
                 {/* Rating */}
                 <div className="mb-4">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className={`w-5 h-5 ${i < testimonial.rating ? 'text-cyan-400' : 'text-muted-foreground'}`}
-                      />
-                    ))}
-                  </div>
+                  <StarRating rating={testimonial.rating} />
                 </div>
 
                 {/* Highlight Badge */}
@@ -164,9 +148,9 @@ export default function TestimonialsPage() {
 
                 {/* Quote */}
                 <div className="mb-6">
-                  <ChatBubbleLeftEllipsisIcon className="w-8 h-8 text-cyan-400/30 mb-3" />
+                  <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
                 </div>
 
@@ -189,41 +173,21 @@ export default function TestimonialsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container-wide">
-          <div className="glass-section p-12 md:p-16 text-center">
-            <h2 className="text-clamp-xl font-black text-white mb-6">
-              Ready to be our next
-              <span className="block gradient-text mt-2">
-                success story?
-              </span>
-            </h2>
-
-            <div className="typography">
-              <p className="text-xl text-gray-300 container-narrow mb-10">
-                Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg"
-              >
-                Start Your Transformation
-                <ArrowRightIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <Link
-                href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200"
-              >
-                View Portfolio
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection
+        title={
+          <>
+            Ready to be our next
+            <span className="block gradient-text mt-2">
+              success story?
+            </span>
+          </>
+        }
+        description="Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions."
+        buttons={[
+          { text: "Start Your Transformation", href: "/contact", variant: "primary" },
+          { text: "View Portfolio", href: "/portfolio", variant: "secondary" },
+        ]}
+      />
     </div>
   );
 }

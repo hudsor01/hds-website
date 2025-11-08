@@ -1,7 +1,13 @@
+/**
+ * Next.js Proxy (formerly Middleware)
+ * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
+ * Official docs: https://nextjs.org/docs/messages/middleware-to-proxy
+ */
 import { NextResponse, type NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { getClientIp, unifiedRateLimiter, type RateLimitType, RATE_LIMIT_CONFIGS } from '@/lib/rate-limiter';
 import { validateCsrfForMutation } from '@/lib/csrf';
+import { env } from '@/env';
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -17,7 +23,7 @@ export const config = {
   ],
 };
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const url = request.nextUrl;
   const clientIp = getClientIp(request);
@@ -35,7 +41,7 @@ export async function middleware(request: NextRequest) {
   response.headers.set('X-Request-Time', Date.now().toString());
 
   // Force HTTPS in production
-  if (process.env.NODE_ENV === 'production' && 
+  if (env.NODE_ENV === 'production' &&
       request.headers.get('x-forwarded-proto') === 'http') {
     return NextResponse.redirect(
       `https://${request.headers.get('host')}${request.nextUrl.pathname}${request.nextUrl.search}`,
@@ -70,18 +76,23 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/')) {
     // Determine rate limit type based on endpoint
     let limitType: RateLimitType = 'api';
+
     if (pathname.startsWith('/api/contact')) {
       limitType = 'contactFormApi';
+    } else if (pathname.startsWith('/api/newsletter')) {
+      limitType = 'newsletter';
+    } else if (pathname.startsWith('/api/testimonials') || pathname.startsWith('/api/portfolio')) {
+      limitType = 'readOnlyApi';
     }
 
     // Create rate limit identifier
     const identifier = `${limitType}:${clientIp}:${pathname.split('/').slice(0, 3).join('/')}`;
-    
+
     // Check rate limit
     const isAllowed = await unifiedRateLimiter.checkLimit(identifier, limitType);
 
     if (!isAllowed) {
-      const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
+      const limitInfo = await unifiedRateLimiter.getLimitInfo(identifier, limitType);
       return new NextResponse('Too Many Requests', {
         status: 429,
         headers: {
@@ -94,7 +105,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Add rate limiting headers for monitoring
-    const limitInfo = unifiedRateLimiter.getLimitInfo(identifier, limitType);
+    const limitInfo = await unifiedRateLimiter.getLimitInfo(identifier, limitType);
     response.headers.set('X-RateLimit-Limit', RATE_LIMIT_CONFIGS[limitType].maxRequests.toString());
     response.headers.set('X-RateLimit-Remaining', limitInfo.remaining.toString());
     response.headers.set('X-Client-IP', clientIp);
@@ -122,10 +133,10 @@ export async function middleware(request: NextRequest) {
   // API routes - no cache by default
   if (url.pathname.startsWith('/api')) {
     response.headers.set('Cache-Control', 'no-store, max-age=0');
-    
+
     // Add CORS headers for API routes
-    response.headers.set('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
-      ? 'https://hudsondigitalsolutions.com' 
+    response.headers.set('Access-Control-Allow-Origin', env.NODE_ENV === 'production'
+      ? 'https://hudsondigitalsolutions.com'
       : '*'
     );
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

@@ -78,16 +78,31 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
       // if (!response.ok) throw new Error('Signup failed');
       
       try {
-        // Make API call to newsletter endpoint
-        const response = await fetch('/api/newsletter', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-        
-        if (!response.ok) {
-          const result = await response.json();
-          throw new Error(result.error || 'Signup failed');
+        // Make API call to newsletter endpoint with timeout
+        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        try {
+          const response = await fetch('/api/newsletter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.error || 'Signup failed');
+          }
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+            throw new Error('Request timeout - please try again');
+          }
+          throw fetchError;
         }
         
         setSubmitted(true);

@@ -8,7 +8,9 @@ export async function GET() {
 
   try {
     logger.info('CSRF token generation requested');
-    const token = generateCsrfToken();
+    // Bug fix: generateCsrfToken() is async (uses Web Crypto API)
+    // Must await the promise to get the actual token
+    const token = await generateCsrfToken();
 
     const response = NextResponse.json({
       token,

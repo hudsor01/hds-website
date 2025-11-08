@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/order
 import { formatDateLong } from "@/lib/utils"
-import { ArrowRightIcon, CalendarDaysIcon, ClockIcon, TagIcon } from "@heroicons/react/24/outline"
+import { ArrowRight, Calendar, Clock, Tag } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 
@@ -108,11 +108,11 @@ export default function BlogPage() {
                     <div className="p-8">
                       <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
                         <span className="flex flex-center gap-1">
-                          <CalendarDaysIcon className="w-4 h-4" />
+                          <Calendar className="w-4 h-4" />
                           {formatDateLong(post.publishedAt)}
                         </span>
                         <span className="flex flex-center gap-1">
-                          <ClockIcon className="w-4 h-4" />
+                          <Clock className="w-4 h-4" />
                           {post.readingTime} min read
                         </span>
                         <span className="px-3 py-1 bg-cyan-400 text-black text-xs font-bold rounded-full">
@@ -131,7 +131,7 @@ export default function BlogPage() {
                       <div className="flex flex-wrap gap-2 mb-6">
                         {post.tags.map((tag) => (
                           <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
-                            <TagIcon className="w-3 h-3" />
+                            <Tag className="w-3 h-3" />
                             {tag}
                           </span>
                         ))}
@@ -142,7 +142,7 @@ export default function BlogPage() {
                         className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
                       >
                         Read Full Article
-                        <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </div>
                   </div>
@@ -171,11 +171,11 @@ export default function BlogPage() {
                       <div className="flex flex-col">
                         <div className="flex flex-center gap-4 text-sm text-gray-400 mb-3">
                           <span className="flex flex-center gap-1">
-                            <CalendarDaysIcon className="w-4 h-4" />
+                            <Calendar className="w-4 h-4" />
                             {formatDateLong(post.publishedAt)}
                           </span>
                           <span className="flex flex-center gap-1">
-                            <ClockIcon className="w-4 h-4" />
+                            <Clock className="w-4 h-4" />
                             {post.readingTime} min read
                           </span>
                           <span className="text-gray-500">By {post.author}</span>
@@ -194,7 +194,7 @@ export default function BlogPage() {
                         <div className="flex flex-wrap gap-2 mb-4">
                           {post.tags.map((tag) => (
                             <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
-                              <TagIcon className="w-3 h-3" />
+                              <Tag className="w-3 h-3" />
                               {tag}
                             </span>
                           ))}
@@ -205,7 +205,7 @@ export default function BlogPage() {
                           className="inline-flex flex-center gap-2 link-primary font-semibold"
                         >
                           Read Full Article
-                          <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
                       </div>
                     </div>
