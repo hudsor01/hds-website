@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface CTAButton {
@@ -50,7 +50,7 @@ export function CTASection({
                   {button.text}
                   {button.icon || (
                     isPrimary && (
-                      <ArrowRightIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     )
                   )}
                 </Link>

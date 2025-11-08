@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { ArrowUpIcon } from '@heroicons/react/24/outline';
+import { ArrowUp } from 'lucide-react';
 
 /**
  * ScrollToTop component with throttled scroll listener
@@ -65,7 +65,7 @@ export default function ScrollToTop() {
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gradient-primary text-white shadow-lg hover:shadow-xl hover:scale-110 transition-smooth will-change-transform transform-gpu focus-ring"
           aria-label="Scroll to top"
         >
-          <ArrowUpIcon className="w-6 h-6" />
+          <ArrowUp className="w-6 h-6" />
         </button>
       )}
     </>

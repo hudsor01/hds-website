@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -150,22 +150,22 @@ export default function BlogPost() {
         
         <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           {/* Back Link */}
-          <Link 
+          <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" />
             Back to Blog
           </Link>
 
           {/* Post Meta */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
             <span className="flex items-center gap-1">
-              <CalendarDaysIcon className="w-4 h-4" />
+              <Calendar className="w-4 h-4" />
               January 31, 2024
             </span>
             <span className="flex items-center gap-1">
-              <ClockIcon className="w-4 h-4" />
+              <Clock className="w-4 h-4" />
               12 min read
             </span>
             <span>By Hudson Digital Solutions</span>
@@ -188,7 +188,7 @@ export default function BlogPost() {
                 key={tag}
                 className="flex items-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
               >
-                <TagIcon className="w-3 h-3" />
+                <Tag className="w-3 h-3" />
                 {tag}
               </span>
             ))}
@@ -219,10 +219,10 @@ export default function BlogPost() {
               <p>Most agencies will tell you that a &quot;good enough&quot; website is sufficient. They&apos;ll deliver something that checks all the obvious boxes:</p>
               
               <ul className="space-y-2 ml-6">
-                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Mobile responsive</li>
-                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Contact form that works</li>
-                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Basic SEO setup</li>
-                <li className="flex items-center gap-2"><CheckIcon className="w-5 h-5 text-green-400" /> Decent loading speed</li>
+                <li className="flex items-center gap-2"><Check className="w-5 h-5 text-green-400" /> Mobile responsive</li>
+                <li className="flex items-center gap-2"><Check className="w-5 h-5 text-green-400" /> Contact form that works</li>
+                <li className="flex items-center gap-2"><Check className="w-5 h-5 text-green-400" /> Basic SEO setup</li>
+                <li className="flex items-center gap-2"><Check className="w-5 h-5 text-green-400" /> Decent loading speed</li>
               </ul>
               
               <p><strong className="text-cyan-400">But here&apos;s what they won&apos;t tell you:</strong> Every one of your competitors has the exact same checklist.</p>
@@ -357,7 +357,7 @@ export default function BlogPost() {
                   className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
                 >
                   Start Your Transformation
-                  <ArrowLeftIcon className="w-5 h-5 rotate-180" />
+                  <ArrowLeft className="w-5 h-5 rotate-180" />
                 </Link>
               </div>
               

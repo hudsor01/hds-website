@@ -1,4 +1,4 @@
-import { StarIcon } from '@heroicons/react/24/solid';
+import { Star } from 'lucide-react';
 
 interface StarRatingProps {
   rating: number;
@@ -24,11 +24,12 @@ export function StarRating({
   return (
     <div className="flex gap-1" role="img" aria-label={`${rating} out of ${maxRating} stars`}>
       {[...Array(maxRating)].map((_, i) => (
-        <StarIcon
+        <Star
           key={i}
           className={`${sizeClasses[size]} ${
             i < rating ? activeColor : inactiveColor
           }`}
+          fill={i < rating ? "currentColor" : "none"}
           aria-hidden="true"
         />
       ))}

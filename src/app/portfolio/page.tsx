@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+import { ExternalLink, Sparkles, Code, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import { fetchJSON } from '@/lib/fetch-utils';
 import { StatsBar } from '@/components/ui/StatsBar';
@@ -151,13 +151,13 @@ export default function PortfolioPage() {
                   
                   <div className="relative z-10 text-center">
                     <div className="inline-flex-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-sm mb-3">
-                      <CodeBracketIcon className="w-4 h-4" />
+                      <Code className="w-4 h-4" />
                       {project.category}
                     </div>
                     <h3 className="text-responsive-lg font-black text-white mb-2">{project.title}</h3>
                     {project.featured && (
                       <span className="inline-flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-400 text-sm font-medium">
-                        <SparklesIcon className="w-4 h-4" />
+                        <Sparkles className="w-4 h-4" />
                         Featured Project
                       </span>
                     )}
@@ -204,7 +204,7 @@ export default function PortfolioPage() {
                     className="group inline-flex-center gap-2 text-cyan-400 hover:text-cyan-300 font-semibold"
                   >
                     View Project
-                    <ArrowTopRightOnSquareIcon className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </Link>
                   
                   <Link
@@ -236,7 +236,7 @@ export default function PortfolioPage() {
             text: "Start Your Project",
             href: "/contact",
             variant: "primary",
-            icon: <RocketLaunchIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            icon: <Rocket className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           },
           { text: "View Services", href: "/services", variant: "secondary" },
         ]}
