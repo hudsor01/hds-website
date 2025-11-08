@@ -1,74 +1,18 @@
 'use server'
 
 import { headers } from "next/headers"
-import { Resend } from "resend"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
-import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
+import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
 import { createServerLogger, castError } from "@/lib/logger"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
-import { supabase } from "@/lib/supabase"
-
-// Initialize Resend
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null
-
-
-
-// Generate admin notification email
-function generateAdminNotificationHTML(
-  data: ContactFormData,
-  leadScore?: number,
-  sequenceId?: string
-): string {
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h1 style="color: #0891b2;">New Contact Form Submission</h1>
-
-      <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-        <h2>Contact Information</h2>
-        <p><strong>Name:</strong> ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}</p>
-        <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
-        ${data.phone ? `<p><strong>Phone:</strong> <a href="tel:${escapeHtml(data.phone)}">${escapeHtml(data.phone)}</a></p>` : ""}
-        ${data.company ? `<p><strong>Company:</strong> ${escapeHtml(data.company)}</p>` : ""}
-        ${data.service ? `<p><strong>Service Interest:</strong> ${escapeHtml(data.service)}</p>` : ""}
-        ${data.budget ? `<p><strong>Budget:</strong> ${escapeHtml(data.budget)}</p>` : ""}
-        ${data.timeline ? `<p><strong>Timeline:</strong> ${escapeHtml(data.timeline)}</p>` : ""}
-      </div>
-
-      ${leadScore ? `
-      <div style="background: ${leadScore >= 70 ? "#dcfce7" : leadScore >= 40 ? "#fef3c7" : "#fef2f2"}; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h2 style="color: ${leadScore >= 70 ? "#15803d" : leadScore >= 40 ? "#d97706" : "#dc2626"};">Lead Intelligence</h2>
-        <p><strong>Lead Score:</strong> ${leadScore}/100 ${
-          leadScore >= 70 ? "(HIGH PRIORITY)" : leadScore >= 40 ? "(QUALIFIED)" : "(NURTURE)"
-        }</p>
-        <p><strong>Email Sequence:</strong> ${sequenceId || "standard-welcome"}</p>
-        <p><strong>Recommended Action:</strong> ${
-          leadScore >= 70
-            ? "Schedule call within 24 hours"
-            : leadScore >= 40
-            ? "Follow up within 2-3 days"
-            : "Add to nurture sequence"
-        }</p>
-      </div>
-      ` : ""}
-
-      <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
-        <h2>Message</h2>
-        <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>
-      </div>
-
-      <p style="margin-top: 30px; color: #64748b; font-size: 12px;">
-        Submitted: ${new Date().toLocaleString()}<br>
-        Source: Hudson Digital Solutions Contact Form<br>
-        ${leadScore ? `Lead Score: ${leadScore}/100 | Sequence: ${sequenceId}` : ""}
-      </p>
-    </div>
-  `
-}
+import { supabase, isSupabaseConfigured } from "@/lib/supabase"
+import { getResendClient, isResendConfigured } from "@/lib/resend-client"
+import { fetchWithTimeout } from "@/lib/fetch-utils"
+import { generateContactFormNotification } from "@/lib/email-templates"
+import { env } from "@/env"
 
 export type ContactFormState = {
   success?: boolean
@@ -158,14 +102,28 @@ export async function submitContactForm(
     }
 
     // Step 5: Send emails
-    if (resend) {
+    if (isResendConfigured()) {
       try {
+        const resend = getResendClient();
+
         // Send admin notification
         await resend.emails.send({
           from: "Hudson Digital <noreply@hudsondigitalsolutions.com>",
           to: ["hello@hudsondigitalsolutions.com"],
           subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
-          html: generateAdminNotificationHTML(data, leadScore, sequenceId),
+          html: generateContactFormNotification({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            company: data.company,
+            service: data.service,
+            budget: data.budget,
+            timeline: data.timeline,
+            message: data.message,
+            leadScore,
+            sequenceId,
+          }),
         })
 
         // Send immediate welcome email to prospect
@@ -186,10 +144,11 @@ export async function submitContactForm(
           })
         }
 
-        // Send Discord notification if configured
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        // Send Discord notification if configured with timeout
+        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(env.DISCORD_WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -225,7 +184,7 @@ export async function submitContactForm(
                   footer: { text: "Hudson Digital Solutions Contact Form" },
                 }],
               }),
-            })
+            }, 5000); // 5s timeout for Discord webhook
           } catch (discordError) {
             logger.error("Failed to send Discord notification", castError(discordError))
           }
@@ -236,6 +195,14 @@ export async function submitContactForm(
 
         // Save lead to database asynchronously (non-blocking)
         void (async () => {
+          // Only save to database if Supabase is configured
+          if (!isSupabaseConfigured() || !supabase) {
+            logger.info('Skipping database save - Supabase not configured', {
+              email: data.email
+            });
+            return;
+          }
+
           try {
             const { error } = await supabase
               .from('leads')
@@ -257,19 +224,19 @@ export async function submitContactForm(
               }]);
 
             if (error) {
-              logger.error('Failed to save lead to database', { 
-                error: error.message, 
-                email: data.email 
+              logger.error('Failed to save lead to database', {
+                error: error.message,
+                email: data.email
               });
             } else {
-              logger.info('Lead saved to database successfully', { 
-                email: data.email 
+              logger.info('Lead saved to database successfully', {
+                email: data.email
               });
             }
           } catch (dbError) {
-            logger.error('Database error when saving lead', { 
-              error: dbError instanceof Error ? dbError.message : String(dbError), 
-              email: data.email 
+            logger.error('Database error when saving lead', {
+              error: dbError instanceof Error ? dbError.message : String(dbError),
+              email: data.email
             });
           }
         })();

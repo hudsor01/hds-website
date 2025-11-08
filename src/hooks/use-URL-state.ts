@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { vehicleInputSchema, type VehicleInput } from '../lib/schemas/schemas'
+import { logger } from '@/lib/logger'
 
 export function useURLState() {
   const [urlState, setUrlState] = useState<VehicleInput | null>(null);
@@ -22,7 +23,7 @@ export function useURLState() {
       try {
         urlParams = JSON.parse(decodeURIComponent(stateParam));
       } catch {
-        console.warn('Failed to parse state from URL');
+        logger.warn('Failed to parse state from URL');
         setUrlState(null);
         setIsLoading(false);
         return;
@@ -41,7 +42,7 @@ export function useURLState() {
         setUrlState(null);
       }
     } catch (error) {
-      console.warn('Error loading state from URL:', error);
+      logger.warn('Error loading state from URL:', { error: String(error) });
       setUrlState(null);
     } finally {
       setIsLoading(false);
@@ -64,7 +65,7 @@ export function useURLState() {
         window.history.pushState(null, '', newURL);
       }
     } catch (error) {
-      console.warn('Error saving state to URL:', error);
+      logger.warn('Error saving state to URL:', { error: String(error) });
     }
   }, []);
 
