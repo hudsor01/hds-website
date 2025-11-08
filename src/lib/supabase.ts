@@ -1,58 +1,174 @@
 /**
  * Supabase Client Configuration
- * Full-featured database integration with webhooks, cron, queues, and GraphQL
+ * Safe initialization with proper validation
+ *
+ * Official docs: https://supabase.com/docs/reference/javascript/initializing
+ *
+ * Bug fix: Validates environment variables before creating clients
+ * Prevents runtime failures from placeholder credentials
  */
 
 import { createClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/types/database'
 
+// Validate environment variables
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-// Only validate in runtime, not during build
-if (typeof window !== 'undefined' || process.env.NODE_ENV === 'development') {
-  if (!supabaseUrl) {
-    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_URL')
+/**
+ * Validate required Supabase credentials
+ * Throws descriptive error if missing
+ */
+function validateSupabaseCredentials(
+  url: string | undefined,
+  key: string | undefined,
+  keyName: string
+): { url: string; key: string } {
+  if (!url) {
+    throw new Error(
+      'NEXT_PUBLIC_SUPABASE_URL environment variable is not set. ' +
+      'Get this from your Supabase project dashboard.'
+    );
   }
-  if (!supabaseAnonKey) {
-    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY')
+
+  if (!key) {
+    throw new Error(
+      `${keyName} environment variable is not set. ` +
+      'Get this from your Supabase project dashboard.'
+    );
+  }
+
+  // Validate URL format
+  if (!url.startsWith('http')) {
+    throw new Error(
+      `Invalid Supabase URL: ${url}. Must start with https://`
+    );
+  }
+
+  return { url, key };
+}
+
+/**
+ * Create Supabase client with validation
+ * Only creates client if credentials are valid
+ */
+function createSupabaseClient() {
+  try {
+    const { url, key } = validateSupabaseCredentials(
+      supabaseUrl,
+      supabaseAnonKey,
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+    );
+
+    return createClient<Database>(url, key, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      },
+    });
+  } catch (error) {
+    // Log warning but don't crash the app during build
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Supabase client creation failed:', error);
+    }
+    // Return null to allow graceful degradation
+    return null;
+  }
+}
+
+/**
+ * Create admin Supabase client with service role key
+ * For server-side operations (webhooks, cron, queues)
+ */
+function createSupabaseAdminClient() {
+  try {
+    const { url } = validateSupabaseCredentials(
+      supabaseUrl,
+      supabaseAnonKey,
+      'NEXT_PUBLIC_SUPABASE_ANON_KEY'
+    );
+
+    if (!supabaseServiceKey) {
+      throw new Error(
+        'SUPABASE_SERVICE_ROLE_KEY environment variable is not set. ' +
+        'This is required for admin operations. ' +
+        'Get this from your Supabase project dashboard (Settings > API).'
+      );
+    }
+
+    return createClient<Database>(url, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Supabase admin client creation failed:', error);
+    }
+    return null;
   }
 }
 
 // Main Supabase client for standard operations
-export const supabase = createClient<Database>(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder',
-  {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
-})
+export const supabase = createSupabaseClient();
 
 // Admin client for server-side operations (webhooks, cron, queues)
-export const supabaseAdmin = createClient<Database>(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder',
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-)
+export const supabaseAdmin = createSupabaseAdminClient();
 
-// Database logging functions
+/**
+ * Check if Supabase is properly configured
+ */
+export function isSupabaseConfigured(): boolean {
+  return !!(supabaseUrl && supabaseAnonKey);
+}
+
+/**
+ * Check if admin Supabase is properly configured
+ */
+export function isSupabaseAdminConfigured(): boolean {
+  return !!(supabaseUrl && supabaseServiceKey);
+}
+
+/**
+ * Get Supabase client with runtime validation
+ * Throws if not configured
+ */
+export function getSupabaseClient() {
+  if (!supabase) {
+    throw new Error('Supabase client is not configured. Check environment variables.');
+  }
+  return supabase;
+}
+
+/**
+ * Get admin Supabase client with runtime validation
+ * Throws if not configured
+ */
+export function getSupabaseAdmin() {
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client is not configured. Check SUPABASE_SERVICE_ROLE_KEY.');
+  }
+  return supabaseAdmin;
+}
+
+// Re-export all the original functions with safe wrappers
 export async function logToDatabase(
   level: 'debug' | 'info' | 'warn' | 'error',
   message: string,
   context: Record<string, unknown> = {}
 ) {
+  if (!supabase) {
+    console.warn('Supabase not configured, skipping database log');
+    return;
+  }
+
   try {
     const logData = {
       endpoint: (context.endpoint as string) || 'unknown',
@@ -69,7 +185,6 @@ export async function logToDatabase(
 
     await supabase.from('api_logs').insert(logData)
   } catch (error) {
-    // Fallback to console if database logging fails
     console.error('Database logging failed:', error)
   }
 }
@@ -80,6 +195,10 @@ export async function logCustomEvent(
   sessionId?: string,
   userId?: string
 ) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     const eventData = {
       session_id: sessionId || null,
@@ -107,6 +226,10 @@ export async function logWebVitals(
   sessionId?: string,
   pagePath?: string
 ) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     const vitalsData = {
       session_id: sessionId || null,
@@ -125,12 +248,11 @@ export async function logWebVitals(
   }
 }
 
-// ========================================
-// ADVANCED SUPABASE FEATURES
-// ========================================
-
-// Realtime subscriptions for live analytics
+// Realtime subscriptions
 export function subscribeToLogs(callback: (payload: Record<string, unknown>) => void) {
+  if (!supabase) {
+    throw new Error('Supabase not configured');
+  }
   return supabase
     .channel('api_logs')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'api_logs' }, callback)
@@ -138,14 +260,22 @@ export function subscribeToLogs(callback: (payload: Record<string, unknown>) => 
 }
 
 export function subscribeToEvents(callback: (payload: Record<string, unknown>) => void) {
+  if (!supabase) {
+    throw new Error('Supabase not configured');
+  }
   return supabase
     .channel('custom_events')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'custom_events' }, callback)
     .subscribe()
 }
 
-// Queue system for background processing
+// Admin operations
 export async function enqueueLogProcessing(logData: Record<string, unknown>) {
+  if (!supabaseAdmin) {
+    console.warn('Supabase admin not configured, skipping log processing');
+    return;
+  }
+
   try {
     await supabaseAdmin.rpc('enqueue_log_processing', { log_data: logData })
   } catch (error) {
@@ -153,8 +283,11 @@ export async function enqueueLogProcessing(logData: Record<string, unknown>) {
   }
 }
 
-// GraphQL query for analytics
 export async function queryAnalytics(query: string, variables?: Record<string, unknown>) {
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin not configured for analytics queries');
+  }
+
   try {
     const { data, error } = await supabaseAdmin.rpc('graphql', {
       query,
@@ -169,8 +302,12 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
   }
 }
 
-// Webhook helpers for external integrations
 export async function triggerWebhook(eventType: string, payload: Record<string, unknown>) {
+  if (!supabaseAdmin) {
+    console.warn('Supabase admin not configured, skipping webhook');
+    return;
+  }
+
   try {
     await supabaseAdmin.rpc('trigger_webhook', {
       event_type: eventType,
@@ -181,8 +318,11 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
   }
 }
 
-// Lead scoring and analytics
 export async function updateLeadScore(leadId: string, score: number) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     await supabase
       .from('leads')
@@ -193,7 +333,6 @@ export async function updateLeadScore(leadId: string, score: number) {
   }
 }
 
-// Conversion funnel tracking
 export async function trackFunnelStep(
   sessionId: string,
   funnelName: string,
@@ -202,6 +341,10 @@ export async function trackFunnelStep(
   completed: boolean = false,
   properties?: Record<string, unknown>
 ) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     const funnelData = {
       session_id: sessionId,
@@ -221,7 +364,6 @@ export async function trackFunnelStep(
   }
 }
 
-// A/B testing integration
 export async function recordTestResult(
   testName: string,
   variantName: string,
@@ -231,6 +373,10 @@ export async function recordTestResult(
   sessionId?: string,
   userId?: string
 ) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     const testData = {
       test_name: testName,
@@ -250,7 +396,6 @@ export async function recordTestResult(
   }
 }
 
-// Page analytics with session tracking
 export async function trackPageView(
   path: string,
   title?: string,
@@ -258,6 +403,10 @@ export async function trackPageView(
   sessionId?: string,
   userId?: string
 ) {
+  if (!supabase) {
+    return;
+  }
+
   try {
     const pageData = {
       session_id: sessionId || null,
@@ -266,8 +415,8 @@ export async function trackPageView(
       title: title || document.title,
       referrer: referrer || document.referrer,
       user_agent: navigator.userAgent,
-      ip_address: null, // Will be populated by server
-      bounce: false, // Will be updated by duration tracking
+      ip_address: null,
+      bounce: false,
       timestamp: new Date().toISOString(),
     } satisfies Database['public']['Tables']['page_analytics']['Insert']
 
@@ -277,7 +426,6 @@ export async function trackPageView(
   }
 }
 
-// Cron job status tracking
 export async function logCronExecution(jobName: string, status: 'started' | 'completed' | 'failed', error?: string) {
   try {
     await logToDatabase('info', `Cron job ${jobName} ${status}`, {

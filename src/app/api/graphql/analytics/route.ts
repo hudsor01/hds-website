@@ -5,7 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin, queryAnalytics } from '@/lib/supabase'
+import { getSupabaseAdmin, queryAnalytics } from '@/lib/supabase'
 
 const logger = createServerLogger('graphql-analytics')
 
@@ -59,6 +59,7 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
 }
 
 async function getPageViews(variables: Record<string, unknown>) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '24h', limit = 100 } = variables
   const limitNum = typeof limit === 'number' ? limit : 100
 
@@ -129,6 +130,7 @@ async function getPageViews(variables: Record<string, unknown>) {
 }
 
 async function getWebVitals(variables: Record<string, unknown>) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '24h', metric = null } = variables
   const metricStr = typeof metric === 'string' ? metric : null
 
@@ -195,6 +197,7 @@ async function getWebVitals(variables: Record<string, unknown>) {
 }
 
 async function getLeadStats(variables: Record<string, unknown>) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '30d' } = variables
 
   const startTime = new Date()
@@ -257,6 +260,7 @@ async function getLeadStats(variables: Record<string, unknown>) {
 }
 
 async function getEventStats(variables: Record<string, unknown>) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '24h', category = null } = variables
   const categoryStr = typeof category === 'string' ? category : null
 
@@ -318,6 +322,7 @@ async function getEventStats(variables: Record<string, unknown>) {
 }
 
 async function getFunnelAnalytics(variables: Record<string, unknown>) {
+  const supabaseAdmin = getSupabaseAdmin();
   const { funnelName, timeRange = '7d' } = variables
   const funnelNameStr = typeof funnelName === 'string' ? funnelName : null
 

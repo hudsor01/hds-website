@@ -8,7 +8,7 @@ import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
 import { createServerLogger, castError } from "@/lib/logger"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
-import { supabase } from "@/lib/supabase"
+import { supabase, isSupabaseConfigured } from "@/lib/supabase"
 import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 
 
@@ -233,6 +233,14 @@ export async function submitContactForm(
 
         // Save lead to database asynchronously (non-blocking)
         void (async () => {
+          // Only save to database if Supabase is configured
+          if (!isSupabaseConfigured() || !supabase) {
+            logger.info('Skipping database save - Supabase not configured', {
+              email: data.email
+            });
+            return;
+          }
+
           try {
             const { error } = await supabase
               .from('leads')
@@ -254,19 +262,19 @@ export async function submitContactForm(
               }]);
 
             if (error) {
-              logger.error('Failed to save lead to database', { 
-                error: error.message, 
-                email: data.email 
+              logger.error('Failed to save lead to database', {
+                error: error.message,
+                email: data.email
               });
             } else {
-              logger.info('Lead saved to database successfully', { 
-                email: data.email 
+              logger.info('Lead saved to database successfully', {
+                email: data.email
               });
             }
           } catch (dbError) {
-            logger.error('Database error when saving lead', { 
-              error: dbError instanceof Error ? dbError.message : String(dbError), 
-              email: data.email 
+            logger.error('Database error when saving lead', {
+              error: dbError instanceof Error ? dbError.message : String(dbError),
+              email: data.email
             });
           }
         })();
