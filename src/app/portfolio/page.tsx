@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import { Analytics } from '@/components/Analytics';
 import { fetchJSON } from '@/lib/fetch-utils';
+import { StatsBar } from '@/components/ui/StatsBar';
+import { CTASection } from '@/components/ui/CTASection';
 import './portfolio.css';
 
 // Define the project type to match the API response
@@ -106,23 +108,15 @@ export default function PortfolioPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 px-4 border-y border-border">
-        <div className="container-wide">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: "100%", label: "Client Satisfaction" },
-              { value: "150+", label: "Projects Delivered" },
-              { value: "250%", label: "Average ROI" },
-              { value: "24hr", label: "Avg Response Time" },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-responsive-lg font-black text-cyan-400">{stat.value}</div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StatsBar
+        variant="bordered"
+        stats={[
+          { value: "100%", label: "Client Satisfaction" },
+          { value: "150+", label: "Projects Delivered" },
+          { value: "250%", label: "Average ROI" },
+          { value: "24hr", label: "Avg Response Time" },
+        ]}
+      />
 
       {/* Portfolio Projects */}
       <section className="py-20 px-4">
@@ -227,41 +221,26 @@ export default function PortfolioPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container-wide">
-          <div className="glass-section p-12 md:p-16 text-center">
-            <h2 className="text-clamp-xl font-black text-white mb-6">
-              Ready to start your
-              <span className="block gradient-text mt-2">
-                next success story?
-              </span>
-            </h2>
-            
-            <div className="typography">
-              <p className="text-xl text-gray-300 container-narrow mb-10">
-                Let&apos;s discuss how we can transform your business challenges into digital success stories.
-              </p>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="group inline-flex-center px-8 py-4 text-base font-bold text-black bg-gradient-secondary-hover rounded-lg"
-              >
-                Start Your Project
-                <RocketLaunchIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              
-              <Link
-                href="/services"
-                className="inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200"
-              >
-                View Services
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection
+        title={
+          <>
+            Ready to start your
+            <span className="block gradient-text mt-2">
+              next success story?
+            </span>
+          </>
+        }
+        description="Let's discuss how we can transform your business challenges into digital success stories."
+        buttons={[
+          {
+            text: "Start Your Project",
+            href: "/contact",
+            variant: "primary",
+            icon: <RocketLaunchIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          },
+          { text: "View Services", href: "/services", variant: "secondary" },
+        ]}
+      />
     </div>
   );
 }
