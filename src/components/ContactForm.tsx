@@ -1,19 +1,20 @@
 'use client';
 
-import { useForm } from '@tanstack/react-form';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { CheckCircle2, Loader2 } from 'lucide-react';
-import { submitContactForm } from '@/app/actions/contact';
-import {
-  getServiceOptions,
-  getContactTimeOptions,
-  getBudgetOptions,
-  getTimelineOptions,
-} from '@/lib/form-utils';
-import { logger } from '@/lib/logger';
-import { cn } from '@/lib/utils';
+import { submitContactForm } from '@/app/actions/contact'
+import
+  {
+    getBudgetOptions,
+    getContactTimeOptions,
+    getServiceOptions,
+    getTimelineOptions,
+  } from '@/lib/form-utils'
+import { logger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
+import { useForm } from '@tanstack/react-form'
+import { CheckCircle2, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 // Success Message Component
 function SuccessMessage({ onReset, className = '' }: { onReset: () => void; className?: string }) {
@@ -143,7 +144,7 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
             validators={{
               onChange: ({ value }) => {
                 const result = z.string().min(1, 'First name is required').min(2, 'First name must be at least 2 characters').safeParse(value);
-                return result.success ? undefined : (result.error.errors[0]?.message || 'Validation error');
+                return result.success ? undefined : (result.error.issues[0]?.message || 'Validation error');
               },
             }}
           >
@@ -175,7 +176,7 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
             validators={{
               onChange: ({ value }) => {
                 const result = z.string().min(1, 'Last name is required').min(2, 'Last name must be at least 2 characters').safeParse(value);
-                return result.success ? undefined : (result.error.errors[0]?.message || 'Validation error');
+                return result.success ? undefined : (result.error.issues[0]?.message || 'Validation error');
               },
             }}
           >
@@ -209,7 +210,7 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
           validators={{
             onChange: ({ value }) => {
               const result = z.string().min(1, 'Email is required').email('Please enter a valid email address').safeParse(value);
-              return result.success ? undefined : (result.error.errors[0]?.message || 'Validation error');
+              return result.success ? undefined : (result.error.issues[0]?.message || 'Validation error');
             },
           }}
         >
@@ -353,7 +354,7 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
           validators={{
             onChange: ({ value }) => {
               const result = z.string().min(1, 'Message is required').min(10, 'Message must be at least 10 characters').safeParse(value);
-              return result.success ? undefined : (result.error.errors[0]?.message || 'Validation error');
+              return result.success ? undefined : (result.error.issues[0]?.message || 'Validation error');
             },
           }}
         >
