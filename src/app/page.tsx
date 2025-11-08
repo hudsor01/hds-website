@@ -1,29 +1,29 @@
 import {
-  CodeBracketIcon,
-  CogIcon,
-  ChartBarIcon,
-  RocketLaunchIcon,
-  UserGroupIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+  Code,
+  Settings,
+  BarChart3,
+  Rocket,
+  Users,
+  Clock
+} from 'lucide-react';
 import { CTAButton } from '@/components/cta-button';
 
 export default function HomePage() {
   const solutions = [
     {
-      icon: CodeBracketIcon,
+      icon: Code,
       title: "Ship Features Faster",
       description: "Launch new features in days, not months. We handle the entire technical stack.",
       features: ["React/Next.js Development", "API & Database Architecture", "99.9% Uptime Guaranteed"]
     },
     {
-      icon: CogIcon,
+      icon: Settings,
       title: "Fix Revenue Leaks",
-      description: "Stop losing 30% of leads to broken processes. Automate everything that slows you down.", 
+      description: "Stop losing 30% of leads to broken processes. Automate everything that slows you down.",
       features: ["CRM Integration", "Lead Scoring Automation", "Real-time Analytics"]
     },
     {
-      icon: ChartBarIcon,
+      icon: BarChart3,
       title: "Scale Without Breaking",
       description: "Handle 10x growth without rebuilding. We future-proof your tech from day one.",
       features: ["Performance Audits", "Infrastructure Planning", "Cost Optimization"]
@@ -78,11 +78,11 @@ export default function HomePage() {
                 {/* Trust Indicators */}
                 <div className="flex-center gap-6 pt-8 border-t border-border">
                   <div className="flex-center gap-2 text-muted-foreground">
-                    <ClockIcon className="w-5 h-5 text-green-400" />
+                    <Clock className="w-5 h-5 text-green-400" />
                     <span className="small">Average 250% ROI</span>
                   </div>
                   <div className="flex-center gap-2 text-muted-foreground">
-                    <UserGroupIcon className="w-5 h-5 text-blue-400" />
+                    <Users className="w-5 h-5 text-blue-400" />
                     <span className="small">Zero onboarding time</span>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12 md:p-16">
-            <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+            <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
             
             <h2 className="text-responsive-md font-black text-white mb-6">
               Your competitors ship faster.

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChatBubbleLeftRightIcon, HomeIcon } from "@heroicons/react/24/solid";
+import { MessageSquare, Home } from "lucide-react";
 
 export const metadata = {
   title: "404 - Page Not Found | Hudson Digital Solutions",
@@ -42,7 +42,7 @@ export default function NotFound() {
               className="flex items-center gap-2 cta-primary text-lg shadow-lg shadow-cyan-500/25"
               aria-label="Return to homepage"
             >
-              <HomeIcon className="w-6 h-6" />
+              <Home className="w-6 h-6" />
               Return Home
             </button>
           </Link>
@@ -52,7 +52,7 @@ export default function NotFound() {
               className="flex items-center gap-2 border-2 border-green-400 text-white font-bold py-4 px-8 rounded-lg text-lg bg-green-400/10 hover:bg-green-400/20 blur-backdrop transition-all duration-300"
               aria-label="Contact us for help"
             >
-              <ChatBubbleLeftRightIcon className="w-6 h-6" />
+              <MessageSquare className="w-6 h-6" />
               Get Help
             </button>
           </Link>

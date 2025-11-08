@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
 import ClientProviders from "@/components/ClientProviders";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 const geistSans = Geist({
@@ -157,13 +160,17 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ClientProviders>
-          <NavbarLight />
-          <div id="main-content" className="min-h-screen pt-16">
-            {children}
-          </div>
-          <Footer />
-          <ScrollToTop />
-          <Analytics />
+          <ErrorBoundary>
+            <NavbarLight />
+            <div id="main-content" className="min-h-screen pt-16">
+              {children}
+            </div>
+            <Footer />
+            <ScrollToTop />
+            <Analytics />
+            <SpeedInsights />
+          </ErrorBoundary>
+          <Toaster position="top-right" richColors theme="dark" />
         </ClientProviders>
       </body>
     </html>

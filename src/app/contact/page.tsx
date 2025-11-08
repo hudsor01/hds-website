@@ -3,18 +3,12 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { Mail, Clock } from 'lucide-react';
-import { useFeatureFlag } from '@/lib/feature-flags';
-import { FEATURE_FLAGS } from '@/types/utils';
 // import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
-// Load the contact form - Server Actions need SSR
+// Load the TanStack contact form
 const ContactForm = dynamic(() => import('@/components/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
-
-// For now, use the same component for both variants
-const ContactFormLight = ContactForm;
-const ContactFormV2 = ContactForm;
 
 const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
   loading: () => <MapSkeleton />
@@ -53,7 +47,6 @@ function ContactFormSkeleton() {
 // Client Component - metadata handled by layout
 
 export default function ContactPage() {
-  const contactFormV2Enabled = useFeatureFlag(FEATURE_FLAGS.CONTACT_FORM_V2);
   // Track page view and business events
   // usePageTracking();
   // const { trackServiceInterest } = useBusinessTracking();
@@ -124,14 +117,7 @@ export default function ContactPage() {
               <div className="relative rounded-2xl overflow-hidden glass-card p-8 shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-hero-5" />
                 <div className="relative z-10">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-white mb-2 text-balance">Start Your Project</h2>
-                    <div className="typography">
-                      <p className="text-gray-400 text-pretty">Tell us about your needs and we&apos;ll get back to you quickly.</p>
-                    </div>
-                  </div>
-                  
-                  {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+                  <ContactForm />
                  </div>
                </div>
              </div>

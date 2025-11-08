@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid';
+import { MessageCircle } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import { fetchJSON } from '@/lib/fetch-utils';
 import { StarRating } from '@/components/ui/StarRating';
@@ -148,7 +148,7 @@ export default function TestimonialsPage() {
 
                 {/* Quote */}
                 <div className="mb-6">
-                  <ChatBubbleLeftEllipsisIcon className="w-8 h-8 text-cyan-400/30 mb-3" />
+                  <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
                     &ldquo;{testimonial.content}&rdquo;
                   </p>
