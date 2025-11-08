@@ -1,7 +1,6 @@
 'use server'
 
 import { headers } from "next/headers"
-import { Resend } from "resend"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
@@ -10,11 +9,7 @@ import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } fro
 import { createServerLogger, castError } from "@/lib/logger"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { supabase } from "@/lib/supabase"
-
-// Initialize Resend
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null
+import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 
 
 
@@ -158,8 +153,10 @@ export async function submitContactForm(
     }
 
     // Step 5: Send emails
-    if (resend) {
+    if (isResendConfigured()) {
       try {
+        const resend = getResendClient();
+
         // Send admin notification
         await resend.emails.send({
           from: "Hudson Digital <noreply@hudsondigitalsolutions.com>",

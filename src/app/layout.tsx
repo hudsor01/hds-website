@@ -13,6 +13,8 @@ const geistSans = Geist({
   subsets: ["latin"],
   display: 'swap',
   preload: true,
+  fallback: ['system-ui', 'arial'], // Graceful degradation if font fetch fails
+  adjustFontFallback: true,
 });
 
 const geistMono = Geist_Mono({
@@ -20,6 +22,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: 'swap',
   preload: true,
+  fallback: ['ui-monospace', 'Courier New', 'monospace'], // Graceful degradation
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
