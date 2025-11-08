@@ -5,6 +5,7 @@
 
 import analytics from './analytics';
 import { logToDatabase, logCustomEvent as _logCustomEvent } from './supabase';
+import { env } from '@/env';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -44,9 +45,9 @@ class Logger {
 
   private formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
     const timestamp = new Date().toISOString();
-    const env = process.env.NODE_ENV;
+    const currentEnv = env.NODE_ENV;
 
-    if (env === 'production') {
+    if (currentEnv === 'production') {
       // Structured JSON for Vercel logs
       return JSON.stringify({
         timestamp,
@@ -67,7 +68,7 @@ class Logger {
     // Console output based on level
     switch (level) {
       case 'debug':
-        if (process.env.NODE_ENV === 'development') {
+        if (env.NODE_ENV === 'development') {
           console.warn(formattedMessage, data || '');
         }
         break;
@@ -208,7 +209,7 @@ class Logger {
 
   // Table logging for development
   table(data: Record<string, unknown>) {
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.warn('[TABLE DATA]', JSON.stringify(data, null, 2));
     }
   }
@@ -246,7 +247,7 @@ export function createServerLogger(requestId?: string) {
   const serverLogger = Logger.getInstance();
   serverLogger.setContext({
     requestId,
-    environment: process.env.NODE_ENV,
+    environment: env.NODE_ENV,
     isServer: true
   });
   return serverLogger;

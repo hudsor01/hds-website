@@ -12,6 +12,7 @@ import { supabase, isSupabaseConfigured } from "@/lib/supabase"
 import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 import { fetchWithTimeout } from "@/lib/fetch-utils"
 import { generateContactFormNotification } from "@/lib/email-templates"
+import { env } from "@/env"
 
 export type ContactFormState = {
   success?: boolean
@@ -145,9 +146,9 @@ export async function submitContactForm(
 
         // Send Discord notification if configured with timeout
         // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetchWithTimeout(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(env.DISCORD_WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

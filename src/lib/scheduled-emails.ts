@@ -12,6 +12,7 @@ import type {
 } from "@/types/utils"
 import { getEmailSequences, processEmailTemplate } from "./email-utils"
 import { getResendClient, isResendConfigured } from "./resend-client"
+import { env } from "@/env"
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger();
@@ -136,7 +137,7 @@ async function sendScheduledEmail(
     emailLogger.warn('Resend API not configured', {
       emailId: scheduledEmail.id,
       recipientEmail: scheduledEmail.recipientEmail,
-      environment: process.env.NODE_ENV,
+      environment: env.NODE_ENV,
       hasApiKey: isResendConfigured()
     });
     scheduledEmail.status = "failed";

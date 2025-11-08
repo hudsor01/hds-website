@@ -7,7 +7,9 @@
  * Web Crypto API: https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
  */
 
-const CSRF_SECRET = process.env.CSRF_SECRET || 'default-secret-change-in-production';
+import { env } from '@/env';
+
+const CSRF_SECRET = env.CSRF_SECRET || 'default-secret-change-in-production';
 const TOKEN_LENGTH = 18;
 const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
 

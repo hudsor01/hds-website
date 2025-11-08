@@ -7,6 +7,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { getClientIp, unifiedRateLimiter, type RateLimitType, RATE_LIMIT_CONFIGS } from '@/lib/rate-limiter';
 import { validateCsrfForMutation } from '@/lib/csrf';
+import { env } from '@/env';
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -40,7 +41,7 @@ export async function proxy(request: NextRequest) {
   response.headers.set('X-Request-Time', Date.now().toString());
 
   // Force HTTPS in production
-  if (process.env.NODE_ENV === 'production' && 
+  if (env.NODE_ENV === 'production' &&
       request.headers.get('x-forwarded-proto') === 'http') {
     return NextResponse.redirect(
       `https://${request.headers.get('host')}${request.nextUrl.pathname}${request.nextUrl.search}`,
@@ -127,10 +128,10 @@ export async function proxy(request: NextRequest) {
   // API routes - no cache by default
   if (url.pathname.startsWith('/api')) {
     response.headers.set('Cache-Control', 'no-store, max-age=0');
-    
+
     // Add CORS headers for API routes
-    response.headers.set('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' 
-      ? 'https://hudsondigitalsolutions.com' 
+    response.headers.set('Access-Control-Allow-Origin', env.NODE_ENV === 'production'
+      ? 'https://hudsondigitalsolutions.com'
       : '*'
     );
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

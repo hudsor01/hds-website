@@ -9,8 +9,9 @@ import {
 import { createServerLogger, castError } from '@/lib/logger';
 import { fetchWithTimeout } from '@/lib/fetch-utils';
 import { generateLeadMagnetNotification, generateLeadMagnetWelcomeEmail } from '@/lib/email-templates';
+import { env } from '@/env';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 // Lead magnet resources configuration
 const LEAD_MAGNETS = {
@@ -149,9 +150,9 @@ export async function POST(request: NextRequest) {
         
         // Send Discord notification if configured with timeout
         // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetchWithTimeout(process.env.DISCORD_WEBHOOK_URL, {
+            await fetchWithTimeout(env.DISCORD_WEBHOOK_URL, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

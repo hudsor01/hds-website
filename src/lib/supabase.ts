@@ -10,11 +10,12 @@
 
 import { createClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/types/database'
+import { env } from '@/env'
 
 // Validate environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseServiceKey = env.SUPABASE_SERVICE_ROLE_KEY
 
 /**
  * Validate required Supabase credentials
@@ -74,7 +75,7 @@ function createSupabaseClient() {
     });
   } catch (error) {
     // Log warning but don't crash the app during build
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.warn('Supabase client creation failed:', error);
     }
     // Return null to allow graceful degradation
@@ -109,7 +110,7 @@ function createSupabaseAdminClient() {
       },
     });
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.warn('Supabase admin client creation failed:', error);
     }
     return null;

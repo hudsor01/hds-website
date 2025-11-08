@@ -9,6 +9,7 @@
  */
 
 import { Resend } from 'resend';
+import { env } from '@/env';
 
 let resendInstance: Resend | null = null;
 let initializationError: string | null = null;
@@ -29,7 +30,7 @@ export function getResendClient(): Resend {
   }
 
   // Validate API key
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = env.RESEND_API_KEY;
 
   if (!apiKey) {
     initializationError = 'RESEND_API_KEY environment variable is not set. Email sending is disabled.';
@@ -46,7 +47,7 @@ export function getResendClient(): Resend {
  * Returns boolean instead of throwing
  */
 export function isResendConfigured(): boolean {
-  return !!process.env.RESEND_API_KEY;
+  return !!env.RESEND_API_KEY;
 }
 
 /**
