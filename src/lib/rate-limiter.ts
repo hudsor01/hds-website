@@ -25,13 +25,22 @@ export type RateLimitType = keyof typeof RATE_LIMIT_CONFIGS;
 
 export class UnifiedRateLimiter {
   private store: Map<string, RateLimitEntry> = new Map();
-  private cleanupInterval: NodeJS.Timeout;
+  private cleanupInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     // Clean up expired entries every minute
+    // Per Node.js docs, intervals must be cleared to prevent memory leaks
+    // https://nodejs.org/api/process.html#event-beforeexit
     this.cleanupInterval = setInterval(() => {
       this.cleanup();
     }, 60000);
+
+    // Ensure cleanup on process exit (especially important in serverless)
+    if (typeof process !== 'undefined') {
+      process.on('beforeExit', () => {
+        this.destroy();
+      });
+    }
   }
 
   /**
@@ -115,6 +124,7 @@ export class UnifiedRateLimiter {
   destroy(): void {
     if (this.cleanupInterval) {
       clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
     }
     this.store.clear();
   }
