@@ -1,4 +1,5 @@
 // API service functions for TanStack Query
+import { logger } from '@/lib/logger';
 
 /**
  * Fetch with timeout using AbortController
@@ -72,7 +73,7 @@ export const apiService = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching portfolio projects:', error);
+      logger.error('Error fetching portfolio projects', error as Error);
       throw error;
     }
   },
@@ -87,7 +88,7 @@ export const apiService = {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching testimonials:', error);
+      logger.error('Error fetching testimonials', error as Error);
       throw error;
     }
   },
@@ -102,7 +103,7 @@ export const apiService = {
       const testimonials = await response.json();
       return testimonials.find((t: Testimonial) => t.id === id);
     } catch (error) {
-      console.error('Error fetching specific testimonial:', error);
+      logger.error('Error fetching specific testimonial', error as Error);
       throw error;
     }
   },
@@ -116,7 +117,7 @@ export const apiService = {
       }
       return await response.json();
     } catch (error) {
-      console.error('Error fetching specific portfolio project:', error);
+      logger.error('Error fetching specific portfolio project', error as Error);
       throw error;
     }
   }

@@ -26,6 +26,11 @@ export const env = createEnv({
     // Security
     CSRF_SECRET: z.string().min(16).optional(),
     CRON_SECRET: z.string().optional(),
+    SUPABASE_WEBHOOK_SECRET: z.string().optional(),
+
+    // Vercel KV for distributed rate limiting
+    KV_REST_API_URL: z.string().url().optional(),
+    KV_REST_API_TOKEN: z.string().optional(),
 
     // Analytics
     GA4_API_SECRET: z.string().optional(),
@@ -64,6 +69,9 @@ export const env = createEnv({
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
+    SUPABASE_WEBHOOK_SECRET: process.env.SUPABASE_WEBHOOK_SECRET,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GA4_API_SECRET: process.env.GA4_API_SECRET,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     NODE_ENV: process.env.NODE_ENV,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "How to Increase Website Conversion Rates: 2025 Complete Guide | Hudson Digital",
@@ -127,14 +128,8 @@ const breadcrumbSchema = {
 export default function ConversionGuidePost() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd data={structuredData} />
+      <JsonLd data={breadcrumbSchema} />
       <main className="min-h-screen bg-gradient-primary">
         {/* Hero Section */}
         <section className="relative bg-gradient-hero py-16 overflow-hidden">

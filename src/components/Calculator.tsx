@@ -10,6 +10,7 @@ import { ComparisonView } from './ComparisonView'
 import { InputPanel } from './InputPanel/InputPanel'
 import { ResultsPanel } from './ResultsPanel'
 import { logger } from '@/lib/logger'
+import { JsonLd } from '@/components/JsonLd'
 
 export function Calculator() {
   const {
@@ -335,25 +336,20 @@ Monthly Payment:
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Texas TTL Calculator" />
         <meta name="twitter:description" content="Calculate tax, title, license fees and monthly payments for vehicles in Texas" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              "name": "Texas TTL Calculator",
-              "description": "Calculate tax, title, license fees and monthly payments for vehicles in Texas",
-              "applicationCategory": "FinanceApplication",
-              "operatingSystem": "All",
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD"
-              }
-            })
-          }}
-        />
       </Head>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Texas TTL Calculator",
+        "description": "Calculate tax, title, license fees and monthly payments for vehicles in Texas",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }} />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
