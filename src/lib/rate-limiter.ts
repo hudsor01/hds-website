@@ -41,7 +41,7 @@ export class UnifiedRateLimiter {
   private store: Map<string, RateLimitEntry> = new Map();
   private cleanupInterval: NodeJS.Timeout | null = null;
   private useKV: boolean = false;
-  private kv: any = null;
+  private kv: typeof import('@vercel/kv').kv | null = null;
 
   constructor() {
     // Initialize Vercel KV if available
@@ -51,11 +51,14 @@ export class UnifiedRateLimiter {
       logger.info('KV not configured, using in-memory rate limiter (local dev only)');
       this.initializeInMemory();
     }
-  }
+ }
 
   private async initializeKV() {
     try {
-      const kvModule = await import('@vercel/kv');
+      // Use dynamic import with type assertion to avoid linting errors
+      const kvModule = await import('@vercel/kv').catch(() => {
+        throw new Error('Failed to import @vercel/kv');
+      });
       this.kv = kvModule.kv;
       this.useKV = true;
       logger.info('Distributed rate limiter initialized with Vercel KV');
