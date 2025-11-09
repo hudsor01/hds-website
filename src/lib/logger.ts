@@ -1,10 +1,11 @@
 /**
- * Unified Logger using PostHog, Vercel, and Supabase
+ * Unified Logger with Vercel and Supabase integration
  * Replaces console.log with structured logging that works in all environments
  */
 
 import analytics from './analytics';
 import { logToDatabase, logCustomEvent as _logCustomEvent } from './supabase';
+import { env } from '@/env';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -34,19 +35,23 @@ class Logger {
   }
 
   private getSessionId(): string {
-    // Get PostHog session ID if available
-    if (typeof window !== 'undefined' && 'posthog' in window && window.posthog) {
-      const posthog = window.posthog as { get_session_id?: () => string | null };
-      return posthog.get_session_id?.() || 'no-session';
+    // Generate or retrieve session ID from sessionStorage
+    if (typeof window !== 'undefined') {
+      let sessionId = sessionStorage.getItem('app_session_id');
+      if (!sessionId) {
+        sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        sessionStorage.setItem('app_session_id', sessionId);
+      }
+      return sessionId;
     }
     return 'no-session';
   }
 
   private formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
     const timestamp = new Date().toISOString();
-    const env = process.env.NODE_ENV;
+    const currentEnv = env.NODE_ENV;
 
-    if (env === 'production') {
+    if (currentEnv === 'production') {
       // Structured JSON for Vercel logs
       return JSON.stringify({
         timestamp,
@@ -67,7 +72,7 @@ class Logger {
     // Console output based on level
     switch (level) {
       case 'debug':
-        if (process.env.NODE_ENV === 'development') {
+        if (env.NODE_ENV === 'development') {
           console.warn(formattedMessage, data || '');
         }
         break;
@@ -82,7 +87,7 @@ class Logger {
         break;
     }
 
-    // Send to PostHog for analytics
+    // Send to analytics for tracking
     if (typeof window !== 'undefined' && analytics) {
       const analyticsData: Record<string, string | number | boolean | null | undefined> = {
         message,
@@ -187,7 +192,7 @@ class Logger {
       if (measure) {
         this.info(`Performance: ${label}`, { duration: measure.duration });
 
-        // Send to PostHog
+        // Send to analytics
         analytics.trackEvent('performance_measure', {
           label,
           duration: measure.duration,
@@ -208,7 +213,7 @@ class Logger {
 
   // Table logging for development
   table(data: Record<string, unknown>) {
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.warn('[TABLE DATA]', JSON.stringify(data, null, 2));
     }
   }
@@ -246,7 +251,7 @@ export function createServerLogger(requestId?: string) {
   const serverLogger = Logger.getInstance();
   serverLogger.setContext({
     requestId,
-    environment: process.env.NODE_ENV,
+    environment: env.NODE_ENV,
     isServer: true
   });
   return serverLogger;

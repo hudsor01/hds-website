@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from 'react'
-import { cn } from '@/lib/utils'
 import { Icon } from './icon'
+import { cn } from '@/lib/utils'
 
 interface ServiceCardProps {
   title: string

@@ -7,8 +7,59 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { createServerLogger } from '@/lib/logger'
 import { triggerWebhook } from '@/lib/supabase'
+import { env } from '@/env'
 
 const logger = createServerLogger('supabase-webhook')
+
+/**
+ * Verify webhook signature using HMAC SHA-256
+ * Uses Web Crypto API for Edge Runtime compatibility
+ */
+async function verifyWebhookSignature(
+  payload: string,
+  signature: string,
+  secret: string
+): Promise<boolean> {
+  const encoder = new TextEncoder()
+  const keyData = encoder.encode(secret)
+  const messageData = encoder.encode(payload)
+
+  // Import the secret key
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  )
+
+  // Sign the message
+  const signatureBuffer = await crypto.subtle.sign('HMAC', key, messageData)
+
+  // Convert to hex string
+  const computedSignature = Array.from(new Uint8Array(signatureBuffer))
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('')
+
+  // Constant-time comparison to prevent timing attacks
+  return timingSafeEqual(computedSignature, signature)
+}
+
+/**
+ * Constant-time string comparison to prevent timing attacks
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false
+  }
+
+  let result = 0
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  }
+
+  return result === 0
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,13 +73,37 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
 
-    // Verify webhook signature
+    // Verify webhook signature exists
     if (!signature) {
       logger.warn('Missing webhook signature')
       return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
     }
 
-    const payload = await request.json()
+    // Get webhook secret
+    const webhookSecret = env.SUPABASE_WEBHOOK_SECRET
+    if (!webhookSecret) {
+      logger.error('SUPABASE_WEBHOOK_SECRET not configured')
+      return NextResponse.json(
+        { error: 'Webhook verification not configured' },
+        { status: 500 }
+      )
+    }
+
+    // Get raw body for signature verification
+    const rawBody = await request.text()
+    const isValidSignature = await verifyWebhookSignature(
+      rawBody,
+      signature,
+      webhookSecret
+    )
+
+    if (!isValidSignature) {
+      logger.warn('Invalid webhook signature')
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+    }
+
+    // Parse payload after signature verification
+    const payload = JSON.parse(rawBody)
 
     logger.info('Processing webhook payload', {
       eventType,

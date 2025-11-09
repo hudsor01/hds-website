@@ -1,93 +1,76 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { StarIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Client Testimonials | Hudson Digital Solutions',
-  description: 'Read what our clients say about working with Hudson Digital Solutions. Real success stories from real businesses.',
-  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies'
+import { useQuery } from '@tanstack/react-query';
+import { MessageCircle } from 'lucide-react';
+import { Analytics } from '@/components/Analytics';
+import { fetchJSON } from '@/lib/fetch-utils';
+import { StarRating } from '@/components/ui/StarRating';
+import { StatsBar } from '@/components/ui/StatsBar';
+import { CTASection } from '@/components/ui/CTASection';
+
+
+// Define the testimonial type to match the API response
+interface Testimonial {
+  id: number;
+  name: string;
+  company: string;
+  role: string;
+  content: string;
+  rating: number;
+  service: string;
+  highlight: string;
 }
 
-const testimonials = [
-  {
-    id: 1,
-    name: 'Michael Chen',
-    company: 'TechStart Inc.',
-    role: 'CTO',
-    content: 'Hudson Digital Solutions delivered beyond our expectations. They transformed our MVP into a scalable platform that handles 100K+ users.',
-    rating: 5,
-    service: 'SaaS Development',
-    highlight: '10x Performance'
-  },
-  {
-    id: 2,
-    name: 'Sarah Johnson',
-    company: 'E-Commerce Plus',
-    role: 'CEO',
-    content: 'The team\'s expertise in Next.js and modern web technologies helped us achieve a 60% improvement in conversion rates.',
-    rating: 5,
-    service: 'E-Commerce Platform',
-    highlight: '60% More Sales'
-  },
-  {
-    id: 3,
-    name: 'David Martinez',
-    company: 'Wellness App Co',
-    role: 'Product Manager',
-    content: 'From concept to launch in just 8 weeks. The efficiency and quality of work was exceptional.',
-    rating: 5,
-    service: 'Mobile App Backend',
-    highlight: '8 Week Launch'
-  },
-  {
-    id: 4,
-    name: 'Emily Thompson',
-    company: 'FinTech Solutions',
-    role: 'Founder',
-    content: 'Professional, reliable, and technically excellent. Hudson Digital Solutions understood our vision and brought it to life with clean, scalable code.',
-    rating: 5,
-    service: 'Custom Development',
-    highlight: 'Zero Downtime'
-  },
-  {
-    id: 5,
-    name: 'Lisa Park',
-    company: 'Revenue Rocket',
-    role: 'Operations Manager',
-    content: 'The SalesLoft integration and automation setup has saved us countless hours. Our sales team is more productive than ever.',
-    rating: 5,
-    service: 'Revenue Operations',
-    highlight: '40 Hours/Week Saved'
-  },
-  {
-    id: 6,
-    name: 'James Wilson',
-    company: 'Partner Connect',
-    role: 'CEO',
-    content: 'Excellent communication throughout the project. They delivered a robust partner management system that scales with our growing business.',
-    rating: 5,
-    service: 'Partnership Management',
-    highlight: '3x Partner Growth'
-  }
-]
-
-const StarRating = ({ rating }: { rating: number }) => {
-  return (
-    <div className="flex gap-1">
-      {[...Array(5)].map((_, i) => (
-        <StarIcon
-          key={i}
-          className={`w-5 h-5 ${i < rating ? 'text-cyan-400' : 'text-muted-foreground'}`}
-        />
-      ))}
-    </div>
-  )
+// API service function to fetch testimonials with timeout
+// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+async function fetchTestimonials(): Promise<Testimonial[]> {
+  return fetchJSON<Testimonial[]>('/api/testimonials', {}, 10000);
 }
 
 export default function TestimonialsPage() {
+  const {
+    data: testimonials = [],
+    isLoading,
+    error
+  } = useQuery<Testimonial[]>({
+    queryKey: ['testimonials'],
+    queryFn: fetchTestimonials,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000,  // 10 minutes
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex-center">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mb-4"></div>
+          <p className="text-gray-300">Loading testimonials...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-hero text-white flex-center">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold mb-4">Error Loading Testimonials</h2>
+          <p className="text-gray-300 mb-4">{(error as Error).message}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-hero">
+      <Analytics />
+      
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4">
         <div className="absolute inset-0 overflow-hidden">
@@ -113,7 +96,7 @@ export default function TestimonialsPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Don't just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
+                Don&apos;t just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
               </p>
             </div>
           </div>
@@ -121,28 +104,15 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 px-4 border-y border-border">
-        <div className="container-wide">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">100%</div>
-              <div className="text-sm text-muted-foreground mt-1">Client Satisfaction</div>
-            </div>
-            <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">50+</div>
-              <div className="text-sm text-muted-foreground mt-1">Projects Delivered</div>
-            </div>
-            <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">3.5x</div>
-              <div className="text-sm text-muted-foreground mt-1">Average ROI</div>
-            </div>
-            <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">24hr</div>
-              <div className="text-sm text-muted-foreground mt-1">Response Time</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StatsBar
+        variant="bordered"
+        stats={[
+          { value: "100%", label: "Client Satisfaction" },
+          { value: "50+", label: "Projects Delivered" },
+          { value: "3.5x", label: "Average ROI" },
+          { value: "24hr", label: "Response Time" },
+        ]}
+      />
 
       {/* Testimonials Grid */}
       <section className="py-20 px-4">
@@ -178,9 +148,9 @@ export default function TestimonialsPage() {
 
                 {/* Quote */}
                 <div className="mb-6">
-                  <ChatBubbleLeftEllipsisIcon className="w-8 h-8 text-cyan-400/30 mb-3" />
+                  <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
                 </div>
 
@@ -203,41 +173,21 @@ export default function TestimonialsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="container-wide">
-          <div className="glass-section p-12 md:p-16 text-center">
-            <h2 className="text-clamp-xl font-black text-white mb-6">
-              Ready to be our next
-              <span className="block gradient-text mt-2">
-                success story?
-              </span>
-            </h2>
-
-            <div className="typography">
-              <p className="text-xl text-gray-300 container-narrow mb-10">
-                Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg"
-              >
-                Start Your Transformation
-                <ArrowRightIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <Link
-                href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200"
-              >
-                View Portfolio
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection
+        title={
+          <>
+            Ready to be our next
+            <span className="block gradient-text mt-2">
+              success story?
+            </span>
+          </>
+        }
+        description="Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions."
+        buttons={[
+          { text: "Start Your Transformation", href: "/contact", variant: "primary" },
+          { text: "View Portfolio", href: "/portfolio", variant: "secondary" },
+        ]}
+      />
     </div>
-  )
+  );
 }

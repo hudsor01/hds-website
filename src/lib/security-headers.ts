@@ -16,7 +16,7 @@ export const SECURITY_HEADERS = {
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
   
   // Content Security Policy - Permissive for both dev and prod to avoid Edge Runtime issues
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: https: blob:; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https: wss:; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'nonce-{nonce}' https:; style-src 'self' 'nonce-{nonce}' https:; font-src 'self' data: https:; img-src 'self' data: https: blob:; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https: wss:; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'; report-uri /api/csp-reports;",
   
   // Cross-origin policies
   'Cross-Origin-Opener-Policy': 'same-origin',

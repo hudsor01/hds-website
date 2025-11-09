@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerLogger, castError } from '@/lib/logger';
+import { env } from '@/env';
 
 // Health check endpoint for monitoring
 // Returns system status and basic metrics
@@ -12,7 +13,7 @@ export async function GET(_request: NextRequest) {
     // Check essential services
     const checks = {
       api: true,
-      environment: process.env.NODE_ENV,
+      environment: env.NODE_ENV,
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       memory: {
@@ -20,20 +21,14 @@ export async function GET(_request: NextRequest) {
         total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
         unit: 'MB'
       },
-      version: process.env.npm_package_version || '0.1.0'
+      version: env.npm_package_version || '0.1.0'
     };
 
     // Check environment variables (without exposing values)
-    const requiredEnvVars = [
-      'RESEND_API_KEY',
-      'NEXT_PUBLIC_GA_MEASUREMENT_ID',
-      'NEXT_PUBLIC_POSTHOG_KEY'
-    ];
-
-    const envStatus = requiredEnvVars.reduce((acc, varName) => {
-      acc[varName] = !!process.env[varName];
-      return acc;
-    }, {} as Record<string, boolean>);
+    const envStatus = {
+      RESEND_API_KEY: !!env.RESEND_API_KEY,
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: !!env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    };
 
     // Overall health status
     const allEnvVarsSet = Object.values(envStatus).every(v => v);

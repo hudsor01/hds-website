@@ -1,6 +1,6 @@
 "use client";
 
-import { StarIcon, UserIcon } from "@heroicons/react/24/solid";
+import { Star, User } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
 import type { Testimonial } from "@/types/components";
 import { cn } from "@/lib/utils";
@@ -69,7 +69,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
             What Our Clients Say
           </h2>
           <p className="text-gray-400 text-lg container-narrow">
-            Don't just take our word for it. Here's what business owners and teams
+            Don&apos;t just take our word for it. Here&apos;s what business owners and teams
             have to say about working with Hudson Digital Solutions.
           </p>
         </div>
@@ -85,7 +85,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                   "col-span-1",
                   testimonial.featured && "md:col-span-2"
                 )}
-                Icon={UserIcon}
+                Icon={User}
                 description={`${testimonial.role} at ${testimonial.company}`}
                 href="#"
                 cta="View Case Study"
@@ -95,12 +95,13 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <StarIcon
+                          <Star
                             key={i}
                             className={cn(
                               "w-4 h-4",
                               i < (testimonial.rating || 0) ? "text-yellow-400" : "text-gray-600"
                             )}
+                            fill={i < (testimonial.rating || 0) ? "currentColor" : "none"}
                           />
                         ))}
                       </div>
@@ -108,7 +109,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
 
                     {/* Testimonial Content */}
                     <blockquote className="text-gray-300 leading-relaxed mb-6 text-responsive-sm">
-                      "{testimonial.content}"
+                      &quot;{testimonial.content}&quot;
                     </blockquote>
 
                     {/* Author Info */}

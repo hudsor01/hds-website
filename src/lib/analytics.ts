@@ -1,18 +1,17 @@
 /**
  * Unified Analytics Module
- * Integrates PostHog and custom analytics tracking
+ * Simple analytics tracking with backend integration for critical events
  */
 
 import type {
   EventProperties,
   PageViewProperties,
   UserProperties,
-  PostHogLike,
 } from "@/types/analytics";
 import { logger } from './logger';
+import { env } from '@/env';
 
 class AnalyticsManager {
-  private posthog: PostHogLike | null = null;
   private initialized = false;
   private queue: Array<() => void> = [];
 
@@ -22,39 +21,19 @@ class AnalyticsManager {
     }
   }
 
-  private async initialize() {
+  private initialize() {
     try {
-      // PostHog initialization
-      if (
-        process.env.NEXT_PUBLIC_POSTHOG_KEY &&
-        typeof window !== "undefined"
-      ) {
-        const posthogLib = await import("posthog-js");
-        this.posthog = posthogLib.default;
+      // Mark as initialized immediately for simple tracking
+      this.initialized = true;
+      this.processQueue();
 
-        (this.posthog as PostHogLike).init(
-          process.env.NEXT_PUBLIC_POSTHOG_KEY,
-          {
-            api_host:
-              process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
-            loaded: () => {
-              this.initialized = true;
-              this.processQueue();
-            },
-            autocapture: true,
-            capture_pageview: true,
-            capture_pageleave: true,
-            disable_session_recording: false,
-            persistence: "localStorage",
-          }
-        );
-      }
+      logger.info('Analytics initialized', {
+        environment: env.NODE_ENV
+      });
     } catch (error) {
       logger.error("Failed to initialize analytics", {
         error,
-        posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ? 'present' : 'missing',
-        host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'default',
-        environment: process.env.NODE_ENV
+        environment: env.NODE_ENV
       });
     }
   }
@@ -79,11 +58,6 @@ class AnalyticsManager {
    */
   trackEvent(eventName: string, properties?: EventProperties) {
     this.executeOrQueue(() => {
-      // PostHog tracking
-      if (this.posthog) {
-        this.posthog.capture(eventName, properties);
-      }
-
       // Custom tracking for critical events
       if (eventName === "form_submission" || eventName === "lead_captured") {
         this.sendToBackend(eventName, properties);
@@ -93,7 +67,6 @@ class AnalyticsManager {
       logger.info('Analytics Event Tracked', {
         eventName,
         properties,
-        analyticsProvider: 'PostHog',
         initialized: this.initialized,
         queueLength: this.queue.length
       });
@@ -113,9 +86,7 @@ class AnalyticsManager {
         ...properties,
       };
 
-      if (this.posthog) {
-        this.posthog.capture("$pageview", pageData);
-      }
+      logger.info('Page view tracked', pageData);
     });
   }
 
@@ -124,9 +95,10 @@ class AnalyticsManager {
    */
   identify(userId: string, properties?: UserProperties) {
     this.executeOrQueue(() => {
-      if (this.posthog) {
-        this.posthog.identify(userId, properties);
-      }
+      logger.info('User identified', {
+        userId,
+        properties
+      });
     });
   }
 
@@ -253,9 +225,7 @@ class AnalyticsManager {
    * Reset user (logout)
    */
   reset() {
-    if (this.posthog) {
-      this.posthog.reset();
-    }
+    logger.info('Analytics reset');
   }
 }
 
