@@ -279,8 +279,8 @@ export class UnifiedRateLimiter {
 // Singleton instance
 export const unifiedRateLimiter = new UnifiedRateLimiter();
 
-// Helper function to get client IP from Request or NextRequest
-export function getClientIp(request: Request | NextRequest): string {
+// Helper function to get client IP from NextRequest
+export function getClientIp(request: NextRequest): string {
   const xff = request.headers.get('x-forwarded-for');
   if (xff) {
     const ip = xff.split(',')[0]?.trim();

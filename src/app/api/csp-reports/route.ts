@@ -1,5 +1,5 @@
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter'
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 // Define expected CSP report fields for validation
 const EXPECTED_CSP_FIELDS = [
@@ -9,7 +9,7 @@ const EXPECTED_CSP_FIELDS = [
   'original-policy',
   'document-uri',
   'source-file',
-  'line-number',
+  'line-number', "",
   'column-number',
   'effective-directive',
   'status-code',
@@ -18,13 +18,13 @@ const EXPECTED_CSP_FIELDS = [
 
 export async function POST(request: Request) {
   try {
-    // Rate limiting
-    const clientIp = getClientIp(request);
+    // Rate limiting - cast Request to NextRequest for compatibility
+    const clientIp = getClientIp(request as unknown as NextRequest);
     const identifier = `csp-report:${clientIp}`;
 
     const isAllowed = await unifiedRateLimiter.checkLimit(identifier, 'api');
     if (!isAllowed) {
-      return new NextResponse(null, { status: 429 });
+      return new Response(null, { status: 429 });
     }
 
     // Parse and validate request body
