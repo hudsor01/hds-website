@@ -1,8 +1,4 @@
-# Run lint (check only, no fixes)
-npm run lint
+#!/usr/bin/env bash
+set -e
 
-# Run TypeScript type checking
-npm run typecheck
-
-# Run unit tests
-npm run test:unit
+npm run lint && npm run typecheck && npm run test:unit
