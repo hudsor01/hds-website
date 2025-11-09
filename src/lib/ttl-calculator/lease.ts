@@ -1,4 +1,4 @@
-import type { LeaseComparisonResults, VehicleInputs } from '../../types/ttl-types'
+import type { LeaseComparisonResults, VehicleInputs } from '@/types/ttl-types'
 
 /**
  * Calculates the remaining loan balance after a certain number of payments
@@ -108,6 +108,26 @@ export function calculateLeasePayment(
   return (depreciation + rentCharge) / leaseTerm;
 }
 
+// Helper function to calculate monthly payment based on payment frequency
+function calculateBuyMonthlyPayment(
+  purchasePrice: number,
+  interestRate: number,
+  loanTermMonths: number,
+  paymentFrequency: string
+): number {
+ const monthlyRate = paymentFrequency === 'monthly'
+    ? interestRate / 1200
+    : interestRate / 240;
+  const effectiveTerm = paymentFrequency === 'monthly'
+    ? loanTermMonths
+    : loanTermMonths * 2;
+
+  const monthlyPayment = (monthlyRate * purchasePrice * Math.pow(1 + monthlyRate, effectiveTerm)) /
+    (Math.pow(1 + monthlyRate, effectiveTerm) - 1);
+
+  return paymentFrequency === 'monthly' ? monthlyPayment : monthlyPayment / 2;
+}
+
 export function calculateLeaseComparison(input: VehicleInputs): LeaseComparisonResults {
   if (!input.leaseMode) {
     // If not in lease mode, return a comparison based on lease options
@@ -125,11 +145,12 @@ export function calculateLeaseComparison(input: VehicleInputs): LeaseComparisonR
     const leaseTotalCost = leaseMonthlyPayment * (input.leaseTerm || 36) + (input.leaseDownPayment || 0);
 
     // Calculate buy payment (what's already calculated in main payment function)
-    const buyMonthlyPayment = input.paymentFrequency === 'monthly'
-      ? (input.interestRate / 1200) * input.purchasePrice * Math.pow(1 + (input.interestRate / 1200), input.loanTermMonths) /
-        (Math.pow(1 + (input.interestRate / 1200), input.loanTermMonths) - 1)
-      : ((input.interestRate / 2400) * input.purchasePrice * Math.pow(1 + (input.interestRate / 2400), input.loanTermMonths * 2) /
-        (Math.pow(1 + (input.interestRate / 2400), input.loanTermMonths * 2) - 1)) / 2;
+    const buyMonthlyPayment = calculateBuyMonthlyPayment(
+      input.purchasePrice,
+      input.interestRate,
+      input.loanTermMonths,
+      input.paymentFrequency
+    );
 
     const buyTotalCost = buyMonthlyPayment * input.loanTermMonths + input.downPayment;
 
@@ -181,11 +202,12 @@ export function calculateLeaseComparison(input: VehicleInputs): LeaseComparisonR
     const leaseTotalCost = leaseMonthlyPayment * (input.leaseTerm || 36) + (input.leaseDownPayment || 0);
 
     // Calculate buy option for comparison
-    const buyMonthlyPayment = input.paymentFrequency === 'monthly'
-      ? (input.interestRate / 1200) * input.purchasePrice * Math.pow(1 + (input.interestRate / 1200), input.loanTermMonths) /
-        (Math.pow(1 + (input.interestRate / 1200), input.loanTermMonths) - 1)
-      : ((input.interestRate / 2400) * input.purchasePrice * Math.pow(1 + (input.interestRate / 2400), input.loanTermMonths * 2) /
-        (Math.pow(1 + (input.interestRate / 2400), input.loanTermMonths * 2) - 1)) / 2;
+    const buyMonthlyPayment = calculateBuyMonthlyPayment(
+      input.purchasePrice,
+      input.interestRate,
+      input.loanTermMonths,
+      input.paymentFrequency
+    );
 
     const buyTotalCost = buyMonthlyPayment * input.loanTermMonths + input.downPayment;
 

@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for injection attempts
-    if (detectInjectionAttempt(body.email) || (body.firstName && detectInjectionAttempt(body.firstName as string))) {
+    if (detectInjectionAttempt(body.email, 'header') || (body.firstName && detectInjectionAttempt(body.firstName as string, 'header'))) {
       logger.warn('Potential injection attempt detected in newsletter signup', {
         email: body.email,
         firstName: body.firstName,
