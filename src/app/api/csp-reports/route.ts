@@ -19,7 +19,7 @@ const EXPECTED_CSP_FIELDS = [
 export async function POST(request: Request) {
   try {
     // Rate limiting
-    const clientIp = getClientIp(request as unknown as any);
+    const clientIp = getClientIp(request);
     const identifier = `csp-report:${clientIp}`;
 
     const isAllowed = await unifiedRateLimiter.checkLimit(identifier, 'api');
