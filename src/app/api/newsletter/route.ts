@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import type { NextRequest } from 'next/server';
-import { logger } from '@/lib/logger';
-import { detectInjectionAttempt } from '@/lib/utils';
-import { env } from '@/env';
+import { env } from '@/env'
+import { logger } from '@/lib/logger'
+import { detectInjectionAttempt } from '@/lib/utils'
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse, type NextRequest } from 'next/server'
 
 // Validate environment variables
 const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest) {
     // Get client IP from headers
     const forwardedFor = request.headers.get('x-forwarded-for');
     let clientIP = '127.0.0.1';
-    
+
     if (forwardedFor) {
       const first = forwardedFor.split(',')[0]?.trim();
       if (first) {
@@ -131,7 +130,7 @@ export async function POST(request: NextRequest) {
         userFlow: 'newsletter_subscription',
         action: 'POST_newsletter'
       });
-      
+
       // Check if it's a duplicate email error
       if (error.code === '23505') { // Unique violation code
         return NextResponse.json(
@@ -139,7 +138,7 @@ export async function POST(request: NextRequest) {
           { status: 200 } // Return 200 since they're already subscribed
         );
       }
-      
+
       return NextResponse.json(
         { error: 'Failed to save subscription' },
         { status: 500 }
@@ -223,9 +222,9 @@ export async function GET(request: NextRequest) {
       action: 'GET_subscribers'
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       subscribers: data,
-      count: data?.length || 0 
+      count: data?.length || 0
     });
   } catch (error) {
     logger.error('Error retrieving newsletter subscribers', {

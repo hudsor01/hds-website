@@ -1,35 +1,35 @@
 "use client";
 
+import { logger } from '@/lib/logger'
 import { useCallback, useEffect, useState } from 'react'
 import { calculatePayment, calculateTTL } from '../lib/ttl-calculator/calculator'
 import { calculateLeaseComparison } from '../lib/ttl-calculator/lease'
 import { clearAllCalculations, deleteCalculation, getSavedCalculations, saveCalculation } from '../lib/ttl-calculator/storage'
 import { calculateTCO } from '../lib/ttl-calculator/tco'
 import type { CalculationResults, SavedCalculation, VehicleInputs } from '../types/ttl-types'
-import { logger } from '@/lib/logger'
 
 // Helper function to ensure VehicleInputs has all required fields with defaults
 function ensureVehicleInputsComplete(input: Partial<VehicleInputs>): VehicleInputs {
   // Explicitly handle each field to ensure no undefined values in the final result
   const result: VehicleInputs = {
-    purchasePrice: input.purchasePrice != null ? input.purchasePrice : 30000,
-    tradeInValue: input.tradeInValue != null ? input.tradeInValue : 0,
-    vehicleWeight: input.vehicleWeight != null ? input.vehicleWeight : 4000,
-    isElectric: input.isElectric != null ? input.isElectric : false,
-    isNewVehicle: input.isNewVehicle != null ? input.isNewVehicle : true,
-    county: input.county != null && typeof input.county === 'string' ? input.county : 'Dallas',
-    loanTermMonths: input.loanTermMonths != null ? input.loanTermMonths : 60,
-    interestRate: input.interestRate != null ? input.interestRate : 6.5,
-    downPayment: input.downPayment != null ? input.downPayment : 5000,
-    paymentFrequency: input.paymentFrequency != null && typeof input.paymentFrequency === 'string' ? input.paymentFrequency : 'monthly',
-    zipCode: input.zipCode != null && typeof input.zipCode === 'string' ? input.zipCode : '75201',
-    loanStartDate: input.loanStartDate != null && typeof input.loanStartDate === 'string' ? input.loanStartDate : (new Date().toISOString().split('T')[0] as string),
-    leaseMileage: input.leaseMileage != null ? input.leaseMileage : 12000,
-    leaseBuyout: input.leaseBuyout != null ? input.leaseBuyout : 0,
-    residualValue: input.residualValue != null ? input.residualValue : 0,
-    moneyFactor: input.moneyFactor != null ? input.moneyFactor : 0,
+    purchasePrice: input.purchasePrice ?? 30000,
+    tradeInValue: input.tradeInValue ?? 0,
+    vehicleWeight: input.vehicleWeight ?? 4000,
+    isElectric: input.isElectric ?? false,
+    isNewVehicle: input.isNewVehicle ?? true,
+    county: typeof input.county === 'string' ? input.county : 'Dallas',
+    loanTermMonths: input.loanTermMonths ?? 60,
+    interestRate: input.interestRate ?? 6.5,
+    downPayment: input.downPayment ?? 5000,
+    paymentFrequency: typeof input.paymentFrequency === 'string' ? input.paymentFrequency : 'monthly',
+    zipCode: typeof input.zipCode === 'string' ? input.zipCode : '75201',
+    loanStartDate: typeof input.loanStartDate === 'string' ? input.loanStartDate : (new Date().toISOString().split('T')[0] as string),
+    leaseMileage: input.leaseMileage ?? 12000,
+    leaseBuyout: input.leaseBuyout ?? 0,
+    residualValue: input.residualValue ?? 0,
+    moneyFactor: input.moneyFactor ?? 0,
   };
-  
+
   return result;
 }
 
@@ -175,7 +175,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       } else if (field === 'zipCode' && (!value || typeof value !== 'string')) {
         safeValue = '75201';
       }
-      
+
       return {
         ...prev,
         [field]: safeValue

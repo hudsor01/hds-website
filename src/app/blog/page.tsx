@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/order
 import { formatDateLong } from "@/lib/utils"
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react"
 import type { Metadata } from "next"

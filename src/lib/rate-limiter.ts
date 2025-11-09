@@ -40,8 +40,8 @@ export type RateLimitType = keyof typeof RATE_LIMIT_CONFIGS;
 export class UnifiedRateLimiter {
   private store: Map<string, RateLimitEntry> = new Map();
   private cleanupInterval: NodeJS.Timeout | null = null;
-  private useKV: boolean = false;
-  private kv: any = null;
+ private useKV: boolean = false;
+  private kv: unknown | null = null;
 
   constructor() {
     // Initialize Vercel KV if available
@@ -51,7 +51,7 @@ export class UnifiedRateLimiter {
       logger.info('KV not configured, using in-memory rate limiter (local dev only)');
       this.initializeInMemory();
     }
- }
+  }
 
   private async initializeKV() {
     try {
@@ -103,15 +103,16 @@ export class UnifiedRateLimiter {
     identifier: string,
     maxRequests: number,
     windowMs: number
-  ): Promise<boolean> {
-    if (!this.kv) return false;
+ ): Promise<boolean> {
+    if (!this.kv) {return false;}
 
     const now = Date.now();
     const key = `ratelimit:${identifier}`;
+    const kv = this.kv as { get: (key: string) => Promise<unknown>; set: (key: string, value: unknown, options?: unknown) => Promise<unknown> };
 
     try {
       // Get current count and reset time
-      const data = await this.kv.get(key);
+      const data = await kv.get(key);
       const typedData = data as RateLimitEntry | null;
 
       if (!typedData || now > typedData.resetTime) {
@@ -121,7 +122,7 @@ export class UnifiedRateLimiter {
           resetTime: now + windowMs,
         };
         // Set with TTL to auto-expire
-        await this.kv.set(key, newEntry, {
+        await kv.set(key, newEntry, {
           px: windowMs,
         });
         return true;
@@ -134,8 +135,8 @@ export class UnifiedRateLimiter {
       // Increment count atomically
       typedData.count++;
       const ttl = typedData.resetTime - now;
-      await this.kv.set(key, typedData, {
-        px: Math.max(ttl, 1000), // At least 1 second TTL
+      await kv.set(key, typedData, {
+        px: Math.max(ttl, 100), // At least 1 second TTL
       });
 
       return true;
@@ -216,7 +217,7 @@ export class UnifiedRateLimiter {
     identifier: string,
     maxRequests: number,
     windowMs: number
-  ): Promise<{ remaining: number; resetTime: number; isLimited: boolean }> {
+ ): Promise<{ remaining: number; resetTime: number; isLimited: boolean }> {
     if (!this.kv) {
       return {
         remaining: maxRequests,
@@ -227,9 +228,10 @@ export class UnifiedRateLimiter {
 
     const now = Date.now();
     const key = `ratelimit:${identifier}`;
+    const kv = this.kv as { get: (key: string) => Promise<unknown>; set: (key: string, value: unknown, options?: unknown) => Promise<unknown> };
 
     try {
-      const data = await this.kv.get(key);
+      const data = await kv.get(key);
       const typedData = data as RateLimitEntry | null;
 
       if (!typedData || now > typedData.resetTime) {
