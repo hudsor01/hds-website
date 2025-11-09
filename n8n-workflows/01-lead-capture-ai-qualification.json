@@ -1,0 +1,365 @@
+{
+  "name": "01 - Lead Capture & AI Qualification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-capture",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-lead-capture",
+      "name": "Webhook: Contact Form",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-lead-capture"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "lead-firstName",
+              "name": "firstName",
+              "value": "={{ $json.firstName }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-lastName",
+              "name": "lastName",
+              "value": "={{ $json.lastName }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-email",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-company",
+              "name": "company",
+              "value": "={{ $json.company || 'Not Provided' }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-message",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-service",
+              "name": "service",
+              "value": "={{ $json.service || 'Not Specified' }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-budget",
+              "name": "budget",
+              "value": "={{ $json.budget || 'Not Specified' }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-timeline",
+              "name": "timeline",
+              "value": "={{ $json.timeline || 'Not Specified' }}",
+              "type": "string"
+            },
+            {
+              "id": "lead-source",
+              "name": "source",
+              "value": "contact_form",
+              "type": "string"
+            },
+            {
+              "id": "lead-timestamp",
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-lead-data",
+      "name": "Set: Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/generate",
+        "authentication": "none",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"Analyze this business inquiry and extract structured data:\\n\\nName: {{ $json.firstName }} {{ $json.lastName }}\\nEmail: {{ $json.email }}\\nCompany: {{ $json.company }}\\nService Interest: {{ $json.service }}\\nBudget: {{ $json.budget }}\\nTimeline: {{ $json.timeline }}\\nMessage: {{ $json.message }}\\n\\nExtract and return ONLY valid JSON (no markdown, no code blocks):\\n{\\n  \\\"intent\\\": \\\"website_redesign|new_website|consultation|maintenance|ecommerce|custom_app|automation|seo|other\\\",\\n  \\\"urgency\\\": \\\"immediate|1_month|1_3_months|3_6_months|exploring|unclear\\\",\\n  \\\"budget_signal\\\": \\\"low_under_5k|medium_5k_15k|high_15k_50k|enterprise_50k_plus|not_mentioned\\\",\\n  \\\"company_size\\\": \\\"solopreneur|small_1_10|medium_10_50|large_50_plus|enterprise_500_plus|unclear\\\",\\n  \\\"qualification_score\\\": 0-100,\\n  \\\"technical_complexity\\\": \\\"simple|moderate|complex|enterprise|unclear\\\",\\n  \\\"pain_points\\\": [\\\"array of 2-5 main problems\\\"],\\n  \\\"next_action\\\": \\\"send_pricing|schedule_call|send_portfolio|send_case_study|qualify_further|nurture\\\",\\n  \\\"sentiment\\\": \\\"enthusiastic|professional|frustrated|curious|skeptical\\\",\\n  \\\"summary\\\": \\\"one clear sentence summarizing the lead\\\",\\n  \\\"red_flags\\\": [\\\"any concerns like unrealistic budget, vague requirements, etc\\\"],\\n  \\\"opportunity_size\\\": \\\"small|medium|large|enterprise\\\"\\n}\",\n  \"stream\": false,\n  \"format\": \"json\"\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "ai-analyze-lead",
+      "name": "AI: Analyze Lead Intent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI response and extract JSON\nconst aiResponse = $input.item.json.response;\nlet aiAnalysis;\n\ntry {\n  // Try to parse as JSON directly\n  aiAnalysis = JSON.parse(aiResponse);\n} catch (e) {\n  // If that fails, try to extract JSON from markdown code blocks\n  const jsonMatch = aiResponse.match(/```json\\s*([\\s\\S]*?)\\s*```/) || \n                    aiResponse.match(/```\\s*([\\s\\S]*?)\\s*```/) ||\n                    aiResponse.match(/\\{[\\s\\S]*\\}/);\n  \n  if (jsonMatch) {\n    aiAnalysis = JSON.parse(jsonMatch[1] || jsonMatch[0]);\n  } else {\n    throw new Error('Could not extract JSON from AI response');\n  }\n}\n\n// Get lead data from previous node\nconst leadData = $('Set: Lead Data').item.json;\n\n// Determine email sequence based on qualification score\nlet sequenceType;\nif (aiAnalysis.qualification_score >= 70) {\n  sequenceType = 'high_intent';\n} else if (aiAnalysis.qualification_score >= 40) {\n  sequenceType = 'qualified';\n} else {\n  sequenceType = 'nurture';\n}\n\n// Return combined data\nreturn {\n  json: {\n    // Lead basic info\n    firstName: leadData.firstName,\n    lastName: leadData.lastName,\n    email: leadData.email,\n    company: leadData.company,\n    message: leadData.message,\n    service: leadData.service,\n    budget: leadData.budget,\n    timeline: leadData.timeline,\n    source: leadData.source,\n    timestamp: leadData.timestamp,\n    \n    // AI analysis\n    ai_intent: aiAnalysis.intent,\n    ai_urgency: aiAnalysis.urgency,\n    ai_budget_signal: aiAnalysis.budget_signal,\n    ai_company_size: aiAnalysis.company_size,\n    ai_qualification_score: aiAnalysis.qualification_score,\n    ai_technical_complexity: aiAnalysis.technical_complexity,\n    ai_pain_points: JSON.stringify(aiAnalysis.pain_points),\n    ai_next_action: aiAnalysis.next_action,\n    ai_sentiment: aiAnalysis.sentiment,\n    ai_summary: aiAnalysis.summary,\n    ai_red_flags: JSON.stringify(aiAnalysis.red_flags || []),\n    ai_opportunity_size: aiAnalysis.opportunity_size,\n    raw_ai_analysis: JSON.stringify(aiAnalysis),\n    \n    // Sequence type\n    sequence_type: sequenceType,\n    \n    // For Qdrant ID\n    lead_id: `${Date.now()}-${leadData.email.replace(/[^a-zA-Z0-9]/g, '-')}`\n  }\n};"
+      },
+      "id": "code-parse-ai",
+      "name": "Code: Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/embeddings",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"{{ $json.message }}\"\n}",
+        "options": {}
+      },
+      "id": "ai-generate-embedding",
+      "name": "AI: Generate Message Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO leads (\n  email,\n  first_name,\n  last_name,\n  company,\n  phone,\n  message,\n  service_interest,\n  budget_range,\n  timeline,\n  source,\n  ai_qualification_score,\n  ai_intent,\n  ai_urgency,\n  ai_budget_signal,\n  ai_company_size,\n  ai_technical_complexity,\n  ai_pain_points,\n  ai_next_action,\n  ai_sentiment,\n  ai_summary,\n  ai_red_flags,\n  ai_opportunity_size,\n  raw_ai_analysis,\n  sequence_type,\n  status,\n  created_at,\n  updated_at\n) VALUES (\n  '{{ $json.email }}',\n  '{{ $json.firstName }}',\n  '{{ $json.lastName }}',\n  '{{ $json.company }}',\n  NULL,\n  '{{ $json.message }}',\n  '{{ $json.service }}',\n  '{{ $json.budget }}',\n  '{{ $json.timeline }}',\n  '{{ $json.source }}',\n  {{ $json.ai_qualification_score }},\n  '{{ $json.ai_intent }}',\n  '{{ $json.ai_urgency }}',\n  '{{ $json.ai_budget_signal }}',\n  '{{ $json.ai_company_size }}',\n  '{{ $json.ai_technical_complexity }}',\n  '{{ $json.ai_pain_points }}',\n  '{{ $json.ai_next_action }}',\n  '{{ $json.ai_sentiment }}',\n  '{{ $json.ai_summary }}',\n  '{{ $json.ai_red_flags }}',\n  '{{ $json.ai_opportunity_size }}',\n  '{{ $json.raw_ai_analysis }}',\n  '{{ $json.sequence_type }}',\n  'new',\n  NOW(),\n  NOW()\n)\nRETURNING id;",
+        "options": {}
+      },
+      "id": "postgres-save-lead",
+      "name": "Postgres: Save Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1120, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://qdrant-service.ai-stack:6333/collections/leads/points",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"points\": [\n    {\n      \"id\": \"{{ $('Code: Parse AI Response').item.json.lead_id }}\",\n      \"vector\": {{ $json.embedding }},\n      \"payload\": {\n        \"email\": \"{{ $('Code: Parse AI Response').item.json.email }}\",\n        \"name\": \"{{ $('Code: Parse AI Response').item.json.firstName }} {{ $('Code: Parse AI Response').item.json.lastName }}\",\n        \"company\": \"{{ $('Code: Parse AI Response').item.json.company }}\",\n        \"qualification_score\": {{ $('Code: Parse AI Response').item.json.ai_qualification_score }},\n        \"intent\": \"{{ $('Code: Parse AI Response').item.json.ai_intent }}\",\n        \"urgency\": \"{{ $('Code: Parse AI Response').item.json.ai_urgency }}\",\n        \"budget_signal\": \"{{ $('Code: Parse AI Response').item.json.ai_budget_signal }}\",\n        \"summary\": \"{{ $('Code: Parse AI Response').item.json.ai_summary }}\",\n        \"timestamp\": \"{{ $('Code: Parse AI Response').item.json.timestamp }}\",\n        \"source\": \"contact_form\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "qdrant-store-embedding",
+      "name": "Qdrant: Store Lead Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.ai_qualification_score }}",
+              "operation": "largerEqual",
+              "value2": 75
+            }
+          ]
+        }
+      },
+      "id": "if-high-value-lead",
+      "name": "IF: High-Value Lead (75+)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"🔥 **HIGH-VALUE LEAD ALERT**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Code: Parse AI Response').item.json.firstName }} {{ $('Code: Parse AI Response').item.json.lastName }}\",\n      \"color\": 65280,\n      \"fields\": [\n        {\n          \"name\": \"Company\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.company }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Email\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.email }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"AI Score\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_qualification_score }}/100\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Intent\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_intent }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Urgency\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_urgency }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Budget Signal\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_budget_signal }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Next Action\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_next_action }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"AI Summary\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.ai_summary }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Message\",\n          \"value\": \"{{ $('Code: Parse AI Response').item.json.message.substring(0, 200) }}...\",\n          \"inline\": false\n        }\n      ],\n      \"timestamp\": \"{{ $('Code: Parse AI Response').item.json.timestamp }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-hot-lead",
+      "name": "Discord: Hot Lead Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $('Code: Parse AI Response').item.json.email }}\"],\n  \"subject\": \"Thanks for reaching out, {{ $('Code: Parse AI Response').item.json.firstName }}!\",\n  \"html\": \"<div style='font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;'><h2 style='color: #00D9FF;'>Thanks for contacting Hudson Digital Solutions!</h2><p>Hi {{ $('Code: Parse AI Response').item.json.firstName }},</p><p>I've received your inquiry about <strong>{{ $('Code: Parse AI Response').item.json.service }}</strong> and I'm excited to learn more about {{ $('Code: Parse AI Response').item.json.company }}.</p><p><strong>What happens next:</strong></p><ul><li>I'll personally review your message within 24 hours</li><li>I'll send you relevant case studies and portfolio examples</li><li>We can schedule a call to discuss your project in detail</li></ul><p>In the meantime, feel free to book a consultation call: <a href='https://cal.com/hudsondigital' style='color: #00D9FF;'>Schedule a Call</a></p><p>Best regards,<br>Hudson Digital Solutions Team</p></div>\"\n}",
+        "options": {}
+      },
+      "id": "resend-welcome-email",
+      "name": "Resend: Welcome Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Thank you! We'll be in touch within 24 hours.\",\n  \"lead_id\": \"{{ $('Postgres: Save Lead').item.json.id }}\",\n  \"ai_score\": {{ $('Code: Parse AI Response').item.json.ai_qualification_score }}\n}"
+      },
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1780, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Contact Form": {
+      "main": [
+        [
+          {
+            "node": "Set: Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set: Lead Data": {
+      "main": [
+        [
+          {
+            "node": "AI: Analyze Lead Intent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI: Generate Message Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Analyze Lead Intent": {
+      "main": [
+        [
+          {
+            "node": "Code: Parse AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Parse AI Response": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Save Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Generate Message Embedding": {
+      "main": [
+        [
+          {
+            "node": "Qdrant: Store Lead Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Save Lead": {
+      "main": [
+        [
+          {
+            "node": "IF: High-Value Lead (75+)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: High-Value Lead (75+)": {
+      "main": [
+        [
+          {
+            "node": "Discord: Hot Lead Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Resend: Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resend: Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Hot Lead Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-lead-capture-ai"
+  },
+  "id": "1",
+  "tags": []
+}

@@ -1,0 +1,277 @@
+{
+  "name": "06 - Lead Magnet Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-magnet-capture",
+        "options": {}
+      },
+      "id": "webhook-lead-magnet",
+      "name": "Webhook: Lead Magnet Capture",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-lead-magnet"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "email",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "firstName",
+              "name": "firstName",
+              "value": "={{ $json.firstName || $json.first_name || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "lastName",
+              "name": "lastName",
+              "value": "={{ $json.lastName || $json.last_name || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "leadMagnet",
+              "name": "leadMagnet",
+              "value": "={{ $json.leadMagnet || $json.resource_type || 'paystub-generator' }}",
+              "type": "string"
+            },
+            {
+              "id": "source",
+              "name": "source",
+              "value": "={{ $json.source || 'website-tool' }}",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-lead-data",
+      "name": "Set: Structure Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO leads (\n  email,\n  first_name,\n  last_name,\n  source,\n  lead_magnet_type,\n  status,\n  qualification_score,\n  created_at,\n  updated_at\n) VALUES (\n  '{{ $json.email }}',\n  '{{ $json.firstName }}',\n  '{{ $json.lastName }}',\n  '{{ $json.source }}',\n  '{{ $json.leadMagnet }}',\n  'lead_magnet',\n  35,\n  NOW(),\n  NOW()\n)\nON CONFLICT (email) \nDO UPDATE SET\n  lead_magnet_type = COALESCE(leads.lead_magnet_type, '{{ $json.leadMagnet }}'),\n  source = '{{ $json.source }}',\n  updated_at = NOW()\nRETURNING *;",
+        "options": {}
+      },
+      "id": "postgres-upsert-lead",
+      "name": "Postgres: Upsert Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [680, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/embeddings",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"Lead magnet download: {{ $('Set: Structure Lead Data').item.json.leadMagnet }} by {{ $('Set: Structure Lead Data').item.json.email }}\"\n}",
+        "options": {}
+      },
+      "id": "ai-generate-embedding",
+      "name": "AI: Generate Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://qdrant-service.ai-stack:6333/collections/leads/points",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"points\": [\n    {\n      \"id\": \"{{ $('Postgres: Upsert Lead').item.json.id }}\",\n      \"vector\": {{ $json.embedding }},\n      \"payload\": {\n        \"email\": \"{{ $('Set: Structure Lead Data').item.json.email }}\",\n        \"name\": \"{{ $('Set: Structure Lead Data').item.json.firstName }} {{ $('Set: Structure Lead Data').item.json.lastName }}\",\n        \"lead_magnet\": \"{{ $('Set: Structure Lead Data').item.json.leadMagnet }}\",\n        \"source\": \"{{ $('Set: Structure Lead Data').item.json.source }}\",\n        \"timestamp\": \"{{ $('Set: Structure Lead Data').item.json.timestamp }}\",\n        \"qualification_score\": 35,\n        \"intent\": \"lead_magnet_download\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "qdrant-store-lead",
+      "name": "Qdrant: Store Lead Vector",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determine which lead magnet template to use\nconst leadMagnet = $('Set: Structure Lead Data').item.json.leadMagnet;\nconst firstName = $('Set: Structure Lead Data').item.json.firstName;\nconst email = $('Set: Structure Lead Data').item.json.email;\n\n// Email template based on lead magnet type\nlet subject = '';\nlet emailContent = '';\n\nif (leadMagnet === 'paystub-generator') {\n  subject = 'Your Free Paystub Generator - Plus Business Automation Tips';\n  emailContent = `\n    <div style=\"font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h2 style=\"color: #00D9FF;\">Thanks for using our Paystub Generator!</h2>\n      \n      <p>Hi ${firstName || 'there'},</p>\n      \n      <p>I'm Richard Hudson, founder of Hudson Digital Solutions. Thanks for using our free paystub generator tool!</p>\n      \n      <p>I built this tool because I believe businesses should have access to simple, professional tools without the complexity or cost.</p>\n      \n      <h3>Quick question:</h3>\n      <p><strong>Are you tired of repetitive tasks eating up your day?</strong></p>\n      \n      <p>If generating paystubs manually is one of your pain points, you might be surprised how much more we can automate:</p>\n      \n      <ul>\n        <li>📧 <strong>Email workflows</strong> - Nurture leads while you sleep</li>\n        <li>📊 <strong>Data entry automation</strong> - Stop copy-pasting between systems</li>\n        <li>🤖 <strong>AI-powered lead qualification</strong> - Focus only on high-value prospects</li>\n        <li>📄 <strong>Document generation</strong> - Proposals, invoices, reports in seconds</li>\n        <li>🔗 <strong>System integrations</strong> - Connect your tools seamlessly</li>\n      </ul>\n      \n      <p>We've helped businesses save 15-20 hours per week by automating workflows like these.</p>\n      \n      <h3>Want to see what's possible?</h3>\n      \n      <p>I offer a free 30-minute automation audit where we'll:</p>\n      <ul>\n        <li>Identify your biggest time-wasting tasks</li>\n        <li>Show you exactly what can be automated</li>\n        <li>Give you a custom roadmap (no obligation)</li>\n      </ul>\n      \n      <p><a href=\"https://cal.com/hudsondigital\" style=\"display: inline-block; background: #00D9FF; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 16px 0;\">Book Your Free Automation Audit</a></p>\n      \n      <p>Not ready yet? No problem. Feel free to use our tools anytime.</p>\n      \n      <p>Best regards,<br>\n      Richard Hudson<br>\n      Founder, Hudson Digital Solutions<br>\n      <a href=\"mailto:hello@hudsondigitalsolutions.com\">hello@hudsondigitalsolutions.com</a></p>\n      \n      <p style=\"font-size: 0.9em; color: #6b7280; margin-top: 30px;\">P.S. - We're a boutique consultancy, not an agency. You'll work directly with me, not a junior team member. Every automation is custom-built for your specific needs.</p>\n    </div>\n  `;\n} else {\n  // Generic lead magnet template\n  subject = `Your ${leadMagnet} Resource - Hudson Digital Solutions`;\n  emailContent = `\n    <div style=\"font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h2 style=\"color: #00D9FF;\">Thanks for downloading ${leadMagnet}!</h2>\n      \n      <p>Hi ${firstName || 'there'},</p>\n      \n      <p>I'm Richard Hudson, founder of Hudson Digital Solutions. Thanks for your interest in our resources!</p>\n      \n      <p>I'm here to help if you have any questions about implementing these strategies for your business.</p>\n      \n      <p><a href=\"https://cal.com/hudsondigital\" style=\"display: inline-block; background: #00D9FF; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 16px 0;\">Schedule a Free Consultation</a></p>\n      \n      <p>Best regards,<br>\n      Richard Hudson<br>\n      Founder, Hudson Digital Solutions<br>\n      <a href=\"mailto:hello@hudsondigitalsolutions.com\">hello@hudsondigitalsolutions.com</a></p>\n    </div>\n  `;\n}\n\nreturn {\n  json: {\n    email: email,\n    firstName: firstName,\n    leadMagnet: leadMagnet,\n    subject: subject,\n    emailContent: emailContent\n  }\n};"
+      },
+      "id": "code-generate-email",
+      "name": "Code: Generate Email Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $json.email }}\"],\n  \"subject\": \"{{ $json.subject }}\",\n  \"html\": \"{{ $json.emailContent }}\"\n}",
+        "options": {}
+      },
+      "id": "resend-send-email",
+      "name": "Resend: Send Lead Magnet Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"🎁 **New Lead Magnet Download**\",\n  \"embeds\": [\n    {\n      \"title\": \"Lead Magnet Capture\",\n      \"description\": \"Someone downloaded a lead magnet from the website.\",\n      \"color\": 5814783,\n      \"fields\": [\n        {\n          \"name\": \"Email\",\n          \"value\": \"{{ $('Code: Generate Email Template').item.json.email }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Name\",\n          \"value\": \"{{ $('Code: Generate Email Template').item.json.firstName }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Lead Magnet\",\n          \"value\": \"{{ $('Code: Generate Email Template').item.json.leadMagnet }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Source\",\n          \"value\": \"{{ $('Set: Structure Lead Data').item.json.source }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Qualification Score\",\n          \"value\": \"35/100 (Lead Magnet)\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Next Step\",\n          \"value\": \"Follow-up email sequence initiated. Monitor for engagement.\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify",
+      "name": "Discord: Notify Lead Magnet Capture",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Lead captured successfully\",\n  \"leadId\": {{ $('Postgres: Upsert Lead').item.json.id }}\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2000, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Lead Magnet Capture": {
+      "main": [
+        [
+          {
+            "node": "Set: Structure Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set: Structure Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Upsert Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Upsert Lead": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Generate Embedding": {
+      "main": [
+        [
+          {
+            "node": "Qdrant: Store Lead Vector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant: Store Lead Vector": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate Email Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Email Template": {
+      "main": [
+        [
+          {
+            "node": "Resend: Send Lead Magnet Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Send Lead Magnet Email": {
+      "main": [
+        [
+          {
+            "node": "Discord: Notify Lead Magnet Capture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Lead Magnet Capture": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-lead-magnet"
+  },
+  "id": "6",
+  "tags": []
+}

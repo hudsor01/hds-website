@@ -1,0 +1,237 @@
+{
+  "name": "02 - AI Proposal Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-proposal",
+        "options": {}
+      },
+      "id": "webhook-generate-proposal",
+      "name": "Webhook: Generate Proposal",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-generate-proposal"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  l.*,\n  EXTRACT(DAY FROM (NOW() - l.created_at)) as days_since_contact\nFROM leads l\nWHERE l.id = {{ $json.lead_id }}\nLIMIT 1;",
+        "options": {}
+      },
+      "id": "postgres-get-lead",
+      "name": "Postgres: Get Lead Data",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://qdrant-service.ai-stack:6333/collections/completed_projects/points/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"should\": [\n      {\n        \"key\": \"industry\",\n        \"match\": {\n          \"value\": \"{{ $json.ai_intent }}\"\n        }\n      },\n      {\n        \"key\": \"service_type\",\n        \"match\": {\n          \"value\": \"{{ $json.service_interest }}\"\n        }\n      }\n    ]\n  },\n  \"limit\": 3,\n  \"with_payload\": true\n}",
+        "options": {}
+      },
+      "id": "qdrant-similar-projects",
+      "name": "Qdrant: Find Similar Projects",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"You are a professional proposal writer for Hudson Digital Solutions, a web development consultancy.\\n\\nCreate a comprehensive project proposal for:\\n\\nClient: {{ $('Postgres: Get Lead Data').item.json.first_name }} {{ $('Postgres: Get Lead Data').item.json.last_name }}\\nCompany: {{ $('Postgres: Get Lead Data').item.json.company }}\\nProject Type: {{ $('Postgres: Get Lead Data').item.json.ai_intent }}\\nBudget Signal: {{ $('Postgres: Get Lead Data').item.json.ai_budget_signal }}\\nTimeline: {{ $('Postgres: Get Lead Data').item.json.timeline }}\\n\\nClient Message:\\n{{ $('Postgres: Get Lead Data').item.json.message }}\\n\\nAI Analysis:\\nSummary: {{ $('Postgres: Get Lead Data').item.json.ai_summary }}\\nTechnical Complexity: {{ $('Postgres: Get Lead Data').item.json.ai_technical_complexity }}\\nPain Points: {{ $('Postgres: Get Lead Data').item.json.ai_pain_points }}\\n\\nSimilar Past Projects (for reference):\\n{{ $json.result }}\\n\\n---\\n\\nWrite a professional proposal with these sections:\\n\\n# PROPOSAL FOR {{ $('Postgres: Get Lead Data').item.json.company }}\\n\\n## EXECUTIVE SUMMARY\\n[2-3 paragraphs: Personalized greeting, show understanding of their needs, high-level solution overview]\\n\\n## YOUR CHALLENGE\\n[Describe their pain points in their words, show empathy and understanding]\\n\\n## OUR SOLUTION\\n[High-level approach, why it solves their problems]\\n\\n## SCOPE OF WORK\\n\\n### Phase 1: Discovery & Planning (Week 1-2)\\n- Detailed requirements gathering\\n- Technical architecture design\\n- Project timeline finalization\\n- Stakeholder alignment\\n\\n### Phase 2: Design (Week 3-4)\\n- Wireframing and UX design\\n- Visual design and branding\\n- Design review and iterations\\n- Final design approval\\n\\n### Phase 3: Development (Week 5-8)\\n- Frontend development\\n- Backend API development\\n- Database setup and optimization\\n- Third-party integrations\\n\\n### Phase 4: Testing & Quality Assurance (Week 9)\\n- Unit and integration testing\\n- Performance optimization\\n- Security audit\\n- User acceptance testing\\n\\n### Phase 5: Launch & Support (Week 10)\\n- Production deployment\\n- DNS and domain setup\\n- Training and documentation\\n- 30-day post-launch support\\n\\n## DELIVERABLES\\n[Specific list based on project type and requirements]\\n\\n## TIMELINE\\n**Estimated Duration:** 10-12 weeks from kickoff\\n**Key Milestones:**\\n- Week 2: Design approval\\n- Week 6: Development milestone review\\n- Week 9: Final QA complete\\n- Week 10: Launch\\n\\n## INVESTMENT\\n\\n**Project Fee:** [Calculate based on budget_signal - provide range]\\n- {{ $('Postgres: Get Lead Data').item.json.ai_budget_signal === 'enterprise_50k_plus' ? '$50,000 - $100,000' : $('Postgres: Get Lead Data').item.json.ai_budget_signal === 'high_15k_50k' ? '$15,000 - $50,000' : $('Postgres: Get Lead Data').item.json.ai_budget_signal === 'medium_5k_15k' ? '$8,000 - $15,000' : '$5,000 - $10,000' }}\\n\\n**Payment Terms:**\\n- 30% deposit to begin discovery\\n- 40% at development milestone (Week 5)\\n- 30% upon final delivery\\n\\n**Optional Add-Ons:**\\n- Ongoing maintenance: $500-2,000/month\\n- Additional features: Quoted separately\\n- Priority support: $1,500/month\\n\\n## WHY HUDSON DIGITAL SOLUTIONS\\n\\n### Proven Results\\n- $3.7M+ in revenue impact for clients\\n- 340% average ROI\\n- 5+ years in Revenue Operations\\n\\n### Relevant Experience\\n[Reference the similar projects found]\\n\\n### Our Approach\\n- Technology as investment, not expense\\n- Enterprise execution without enterprise overhead\\n- Ship 3x faster, 60% cheaper than traditional agencies\\n\\n## NEXT STEPS\\n\\n1. **Review this proposal** and note any questions\\n2. **Schedule a call** to discuss details: [Cal.com link]\\n3. **Finalize scope** and timeline\\n4. **Sign agreement** and begin discovery\\n\\n**Ready to move forward?** Book a consultation: https://cal.com/hudsondigital\\n\\n---\\n\\n**Questions?** Reply to this email - I read every message personally.\\n\\nBest regards,\\n\\nRichard Hudson\\nFounder, Hudson Digital Solutions\\nhello@hudsondigitalsolutions.com\\n\\n---\\n\\nWrite in professional but conversational tone. Be specific about deliverables. Show confidence without arrogance. Format in clean Markdown.\",\n  \"stream\": false\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "ai-generate-proposal",
+      "name": "AI: Generate Proposal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://stirling-pdf-service.tools:8080/api/v1/convert/markdown/pdf",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "fileInput",
+              "value": "={{ $json.response }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "proposal_pdf"
+            }
+          }
+        }
+      },
+      "id": "stirling-convert-pdf",
+      "name": "Stirling-PDF: Convert to PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $('Postgres: Get Lead Data').item.json.email }}\"],\n  \"subject\": \"Your Custom Proposal - {{ $('Postgres: Get Lead Data').item.json.company }}\",\n  \"html\": \"<div style='font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;'><h2 style='color: #00D9FF;'>Your Custom Proposal is Ready</h2><p>Hi {{ $('Postgres: Get Lead Data').item.json.first_name }},</p><p>Thank you for your interest in working with Hudson Digital Solutions!</p><p>I've personally reviewed your requirements for <strong>{{ $('Postgres: Get Lead Data').item.json.ai_intent }}</strong> and created a custom proposal tailored to {{ $('Postgres: Get Lead Data').item.json.company }}.</p><p><strong>What's Inside:</strong></p><ul><li>Detailed scope of work broken into phases</li><li>Project timeline with key milestones</li><li>Transparent pricing breakdown</li><li>Relevant case studies from similar projects</li><li>Our proven process and approach</li></ul><p>The proposal is attached as a PDF for your review.</p><p><strong>Ready to discuss?</strong> Let's schedule a call to go through the details and answer any questions:</p><p><a href='https://cal.com/hudsondigital' style='display: inline-block; background: #00D9FF; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 16px 0;'>Book Your Consultation Call</a></p><p>I'm excited about the possibility of working together to bring your vision to life.</p><p>Questions? Just reply to this email - I read every message personally.</p><p>Best regards,<br>Richard Hudson<br>Founder, Hudson Digital Solutions<br>hello@hudsondigitalsolutions.com</p></div>\",\n  \"attachments\": [\n    {\n      \"filename\": \"Proposal-{{ $('Postgres: Get Lead Data').item.json.company.replace(/[^a-zA-Z0-9]/g, '-') }}.pdf\",\n      \"content\": \"{{ $binary.proposal_pdf.data.toString('base64') }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "resend-send-proposal",
+      "name": "Resend: Email Proposal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE leads SET\n  proposal_generated_at = NOW(),\n  proposal_content = '{{ $('AI: Generate Proposal').item.json.response }}',\n  status = 'proposal_sent',\n  updated_at = NOW()\nWHERE id = {{ $('Postgres: Get Lead Data').item.json.id }};",
+        "options": {}
+      },
+      "id": "postgres-update-lead",
+      "name": "Postgres: Update Lead Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1560, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"📄 **Proposal Generated & Sent**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Postgres: Get Lead Data').item.json.company }}\",\n      \"description\": \"AI-generated proposal sent to {{ $('Postgres: Get Lead Data').item.json.first_name }} {{ $('Postgres: Get Lead Data').item.json.last_name }}\",\n      \"color\": 5814783,\n      \"fields\": [\n        {\n          \"name\": \"Email\",\n          \"value\": \"{{ $('Postgres: Get Lead Data').item.json.email }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Project Type\",\n          \"value\": \"{{ $('Postgres: Get Lead Data').item.json.ai_intent }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Budget Signal\",\n          \"value\": \"{{ $('Postgres: Get Lead Data').item.json.ai_budget_signal }}\",\n          \"inline\": true\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-proposal-sent",
+      "name": "Discord: Notify Proposal Sent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 500]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Generate Proposal": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Get Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Get Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Qdrant: Find Similar Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant: Find Similar Projects": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Proposal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Generate Proposal": {
+      "main": [
+        [
+          {
+            "node": "Stirling-PDF: Convert to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stirling-PDF: Convert to PDF": {
+      "main": [
+        [
+          {
+            "node": "Resend: Email Proposal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Email Proposal": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Update Lead Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord: Notify Proposal Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-proposal-gen"
+  },
+  "id": "2",
+  "tags": []
+}

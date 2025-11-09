@@ -1,0 +1,159 @@
+{
+  "name": "03 - Duplicate Lead Detection",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "check-duplicate",
+        "options": {}
+      },
+      "id": "webhook-check-duplicate",
+      "name": "Webhook: Check Duplicate",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-check-duplicate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/embeddings",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"{{ $json.message }}\"\n}",
+        "options": {}
+      },
+      "id": "ai-generate-embedding",
+      "name": "AI: Generate Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://qdrant-service.ai-stack:6333/collections/leads/points/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"vector\": {{ $json.embedding }},\n  \"limit\": 5,\n  \"score_threshold\": 0.85,\n  \"with_payload\": true\n}",
+        "options": {}
+      },
+      "id": "qdrant-search-similar",
+      "name": "Qdrant: Search Similar Leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.result.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "if-duplicates-found",
+      "name": "IF: Potential Duplicates",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract duplicate lead information\nconst duplicates = $input.item.json.result || [];\nconst newLead = $('Webhook: Check Duplicate').item.json;\n\nconst duplicateInfo = duplicates.map(dup => ({\n  email: dup.payload.email,\n  name: dup.payload.name,\n  company: dup.payload.company,\n  similarity: (dup.score * 100).toFixed(1),\n  timestamp: dup.payload.timestamp,\n  intent: dup.payload.intent,\n  qualification_score: dup.payload.qualification_score\n}));\n\nreturn {\n  json: {\n    new_lead_email: newLead.email,\n    new_lead_name: `${newLead.firstName} ${newLead.lastName}`,\n    new_lead_company: newLead.company,\n    duplicates: duplicateInfo,\n    duplicate_count: duplicates.length,\n    highest_similarity: duplicates.length > 0 ? (duplicates[0].score * 100).toFixed(1) : 0\n  }\n};"
+      },
+      "id": "code-format-duplicates",
+      "name": "Code: Format Duplicate Info",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"⚠️ **POTENTIAL DUPLICATE LEAD DETECTED**\",\n  \"embeds\": [\n    {\n      \"title\": \"New Lead: {{ $json.new_lead_name }}\",\n      \"description\": \"{{ $json.new_lead_email }} from {{ $json.new_lead_company }}\",\n      \"color\": 16776960,\n      \"fields\": [\n        {\n          \"name\": \"Duplicate Count\",\n          \"value\": \"{{ $json.duplicate_count }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Highest Similarity\",\n          \"value\": \"{{ $json.highest_similarity }}%\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Similar Past Leads\",\n          \"value\": \"{{ $json.duplicates.map(d => `• ${d.email} (${d.similarity}% match) - ${d.timestamp}`).join('\\\\n').substring(0, 1000) }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Action Required\",\n          \"value\": \"Review both leads before responding. May be:\n• Same person, different email\n• Same company, different contact\n• Similar inquiry, unrelated\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-duplicate-alert",
+      "name": "Discord: Duplicate Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 200]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Check Duplicate": {
+      "main": [
+        [
+          {
+            "node": "AI: Generate Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Generate Embedding": {
+      "main": [
+        [
+          {
+            "node": "Qdrant: Search Similar Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant: Search Similar Leads": {
+      "main": [
+        [
+          {
+            "node": "IF: Potential Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Potential Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Code: Format Duplicate Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Format Duplicate Info": {
+      "main": [
+        [
+          {
+            "node": "Discord: Duplicate Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-duplicate-detection"
+  },
+  "id": "3",
+  "tags": []
+}

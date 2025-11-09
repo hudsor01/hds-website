@@ -1,0 +1,323 @@
+{
+  "name": "04 - Weekly Lead Re-scoring",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 0"
+            }
+          ]
+        }
+      },
+      "id": "schedule-weekly",
+      "name": "Schedule: Every Sunday 9 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  id,\n  email,\n  first_name,\n  last_name,\n  company,\n  message,\n  ai_intent,\n  ai_urgency,\n  ai_budget_signal,\n  ai_pain_points,\n  ai_technical_complexity,\n  qualification_score,\n  status,\n  EXTRACT(DAY FROM (NOW() - created_at)) as days_since_created,\n  EXTRACT(DAY FROM (NOW() - last_contacted_at)) as days_since_contact\nFROM leads\nWHERE status IN ('new', 'contacted', 'qualified', 'proposal_sent')\n  AND qualification_score IS NOT NULL\nORDER BY qualification_score DESC;",
+        "options": {}
+      },
+      "id": "postgres-get-active-leads",
+      "name": "Postgres: Get Active Leads",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "id": "split-in-batches",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://qdrant-service.ai-stack:6333/collections/leads/points/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filter\": {\n    \"must\": [\n      {\n        \"key\": \"email\",\n        \"match\": {\n          \"value\": \"{{ $json.email }}\"\n        }\n      }\n    ]\n  },\n  \"limit\": 1,\n  \"with_payload\": true\n}",
+        "options": {}
+      },
+      "id": "qdrant-get-lead-activity",
+      "name": "Qdrant: Get Lead Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"You are a lead qualification expert for Hudson Digital Solutions, a web development consultancy.\\n\\nRe-analyze this lead based on their current status and time elapsed:\\n\\nOriginal Lead Information:\\n- Name: {{ $('Postgres: Get Active Leads').item.json.first_name }} {{ $('Postgres: Get Active Leads').item.json.last_name }}\\n- Company: {{ $('Postgres: Get Active Leads').item.json.company }}\\n- Email: {{ $('Postgres: Get Active Leads').item.json.email }}\\n- Original Message: {{ $('Postgres: Get Active Leads').item.json.message }}\\n\\nOriginal AI Analysis:\\n- Intent: {{ $('Postgres: Get Active Leads').item.json.ai_intent }}\\n- Urgency: {{ $('Postgres: Get Active Leads').item.json.ai_urgency }}\\n- Budget Signal: {{ $('Postgres: Get Active Leads').item.json.ai_budget_signal }}\\n- Technical Complexity: {{ $('Postgres: Get Active Leads').item.json.ai_technical_complexity }}\\n- Pain Points: {{ $('Postgres: Get Active Leads').item.json.ai_pain_points }}\\n- Original Score: {{ $('Postgres: Get Active Leads').item.json.qualification_score }}/100\\n\\nCurrent Status:\\n- Status: {{ $('Postgres: Get Active Leads').item.json.status }}\\n- Days Since Created: {{ $('Postgres: Get Active Leads').item.json.days_since_created }}\\n- Days Since Last Contact: {{ $('Postgres: Get Active Leads').item.json.days_since_contact }}\\n\\nRe-scoring Factors:\\n1. Time decay: Leads get colder over time (reduce score by 5-10 points per week without contact)\\n2. Status progression: proposal_sent > qualified > contacted > new (no change for positive movement)\\n3. Urgency degradation: urgent leads become less urgent after 7+ days\\n4. Budget signal decay: high budget signals may decrease if no follow-up\\n\\nProvide a new qualification score (0-100) and brief reasoning.\\n\\nRespond ONLY in valid JSON format:\\n{\\n  \\\"new_score\\\": <number 0-100>,\\n  \\\"score_change\\\": <positive or negative number>,\\n  \\\"reasoning\\\": \\\"<1-2 sentence explanation>\\\",\\n  \\\"recommendation\\\": \\\"<immediate_followup | schedule_followup | nurture | archive>\\\",\\n  \\\"urgency_adjusted\\\": \\\"<urgent | moderate | low>\\\"\\n}\",\n  \"stream\": false\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "ai-rescore-lead",
+      "name": "AI: Re-score Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI response\nconst aiResponse = JSON.parse($input.item.json.response);\nconst leadData = $('Postgres: Get Active Leads').item.json;\nconst originalScore = leadData.qualification_score;\nconst newScore = aiResponse.new_score;\nconst scoreChange = newScore - originalScore;\n\n// Determine if this lead became \"hot\" (crossed 75 threshold)\nconst becameHot = originalScore < 75 && newScore >= 75;\nconst becameCold = originalScore >= 75 && newScore < 75;\n\nreturn {\n  json: {\n    lead_id: leadData.id,\n    email: leadData.email,\n    name: `${leadData.first_name} ${leadData.last_name}`,\n    company: leadData.company,\n    original_score: originalScore,\n    new_score: newScore,\n    score_change: scoreChange,\n    reasoning: aiResponse.reasoning,\n    recommendation: aiResponse.recommendation,\n    urgency_adjusted: aiResponse.urgency_adjusted,\n    became_hot: becameHot,\n    became_cold: becameCold,\n    status: leadData.status,\n    days_since_contact: leadData.days_since_contact\n  }\n};"
+      },
+      "id": "code-process-rescore",
+      "name": "Code: Process Re-score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE leads SET\n  qualification_score = {{ $json.new_score }},\n  ai_urgency = '{{ $json.urgency_adjusted }}',\n  updated_at = NOW()\nWHERE id = {{ $json.lead_id }};",
+        "options": {}
+      },
+      "id": "postgres-update-score",
+      "name": "Postgres: Update Score",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1560, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.became_hot }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-became-hot",
+      "name": "IF: Became Hot Lead",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"🔥 **HOT LEAD ALERT - Re-scoring Update**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $json.name }} - {{ $json.company }}\",\n      \"description\": \"This lead just crossed the 75-point threshold during weekly re-scoring!\",\n      \"color\": 15548997,\n      \"fields\": [\n        {\n          \"name\": \"Score Change\",\n          \"value\": \"{{ $json.original_score }} → {{ $json.new_score }} ({{ $json.score_change > 0 ? '+' : '' }}{{ $json.score_change }})\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Current Status\",\n          \"value\": \"{{ $json.status }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Days Since Contact\",\n          \"value\": \"{{ $json.days_since_contact }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"AI Reasoning\",\n          \"value\": \"{{ $json.reasoning }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Recommendation\",\n          \"value\": \"{{ $json.recommendation }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Contact Info\",\n          \"value\": \"{{ $json.email }}\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-hot-lead-alert",
+      "name": "Discord: Hot Lead Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.became_cold }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-became-cold",
+      "name": "IF: Became Cold",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"❄️ **Lead Cooled Down - Re-scoring Update**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $json.name }} - {{ $json.company }}\",\n      \"description\": \"This lead dropped below 75 points during weekly re-scoring.\",\n      \"color\": 5814783,\n      \"fields\": [\n        {\n          \"name\": \"Score Change\",\n          \"value\": \"{{ $json.original_score }} → {{ $json.new_score }} ({{ $json.score_change }})\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Days Since Contact\",\n          \"value\": \"{{ $json.days_since_contact }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"AI Reasoning\",\n          \"value\": \"{{ $json.reasoning }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Recommendation\",\n          \"value\": \"{{ $json.recommendation }}\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-cold-lead-alert",
+      "name": "Discord: Cold Lead Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2220, 400]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule: Every Sunday 9 AM": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Get Active Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Get Active Leads": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Qdrant: Get Lead Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant: Get Lead Activity": {
+      "main": [
+        [
+          {
+            "node": "AI: Re-score Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: Re-score Lead": {
+      "main": [
+        [
+          {
+            "node": "Code: Process Re-score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Process Re-score": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Update Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Update Score": {
+      "main": [
+        [
+          {
+            "node": "IF: Became Hot Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Became Hot Lead": {
+      "main": [
+        [
+          {
+            "node": "Discord: Hot Lead Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF: Became Cold",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Hot Lead Alert": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Became Cold": {
+      "main": [
+        [
+          {
+            "node": "Discord: Cold Lead Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Cold Lead Alert": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-weekly-rescore"
+  },
+  "id": "4",
+  "tags": []
+}

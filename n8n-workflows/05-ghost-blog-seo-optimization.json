@@ -1,0 +1,260 @@
+{
+  "name": "05 - Ghost Blog SEO Optimization",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ghost-publish",
+        "options": {}
+      },
+      "id": "webhook-ghost-publish",
+      "name": "Webhook: Ghost Post Published",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-ghost-publish"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.post.current.url }}",
+        "options": {}
+      },
+      "id": "http-fetch-post-content",
+      "name": "HTTP: Fetch Post Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract text content from HTML\nconst html = $input.item.json.data;\nconst postData = $('Webhook: Ghost Post Published').item.json.post.current;\n\n// Simple HTML tag removal (n8n doesn't have DOM parser)\nconst textContent = html\n  .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '')\n  .replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '')\n  .replace(/<[^>]+>/g, ' ')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\n// Word count\nconst wordCount = textContent.split(/\\s+/).length;\n\n// Extract headings (approximate from title and structure)\nconst title = postData.title || '';\nconst excerpt = postData.excerpt || '';\nconst metaDescription = postData.meta_description || '';\n\nreturn {\n  json: {\n    post_id: postData.id,\n    post_url: postData.url,\n    post_title: title,\n    post_excerpt: excerpt,\n    post_slug: postData.slug,\n    meta_description: metaDescription,\n    canonical_url: postData.canonical_url || postData.url,\n    featured_image: postData.feature_image || '',\n    tags: (postData.tags || []).map(t => t.name).join(', '),\n    text_content: textContent.substring(0, 2000), // Limit for AI analysis\n    word_count: wordCount,\n    has_meta_description: metaDescription.length > 0,\n    meta_description_length: metaDescription.length\n  }\n};"
+      },
+      "id": "code-extract-content",
+      "name": "Code: Extract Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama-service.ai-stack:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"qwen3-vl-4b\",\n  \"prompt\": \"You are an SEO expert analyzing blog posts for Hudson Digital Solutions, a web development consultancy.\\n\\nAnalyze this blog post for SEO optimization:\\n\\nPost Title: {{ $json.post_title }}\\nURL Slug: {{ $json.post_slug }}\\nWord Count: {{ $json.word_count }}\\nTags: {{ $json.tags }}\\n\\nCurrent Meta Description ({{ $json.meta_description_length }} chars): {{ $json.meta_description }}\\n\\nPost Excerpt: {{ $json.post_excerpt }}\\n\\nContent Preview (first 2000 chars):\\n{{ $json.text_content }}\\n\\n---\\n\\nSEO Analysis Checklist:\\n1. Title optimization (60 chars max, includes target keyword)\\n2. Meta description (150-160 chars, compelling, includes CTA)\\n3. URL slug (short, keyword-rich, readable)\\n4. Content length (1500+ words ideal for technical content)\\n5. Keyword usage and density\\n6. Readability and structure\\n7. Internal/external link opportunities\\n8. Image alt text presence\\n\\nProvide:\\n- SEO score (0-100)\\n- Optimized meta description (if current is poor/missing)\\n- Suggested title improvements (if needed)\\n- Top 3 actionable recommendations\\n\\nRespond ONLY in valid JSON format:\\n{\\n  \\\"seo_score\\\": <number 0-100>,\\n  \\\"title_optimized\\\": <boolean>,\\n  \\\"meta_description_optimized\\\": <boolean>,\\n  \\\"suggested_meta_description\\\": \\\"<150-160 char meta description>\\\",\\n  \\\"suggested_title\\\": \\\"<improved title if needed, else empty string>\\\",\\n  \\\"primary_keyword\\\": \\\"<detected primary keyword>\\\",\\n  \\\"recommendations\\\": [\\n    \\\"<recommendation 1>\\\",\\n    \\\"<recommendation 2>\\\",\\n    \\\"<recommendation 3>\\\"\\n  ],\\n  \\\"content_quality\\\": \\\"<excellent | good | needs_improvement>\\\",\\n  \\\"readability_score\\\": <number 0-100>\\n}\",\n  \"stream\": false\n}",
+        "options": {
+          "timeout": 45000
+        }
+      },
+      "id": "ai-seo-analysis",
+      "name": "AI: SEO Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse AI SEO analysis\nconst aiResponse = JSON.parse($input.item.json.response);\nconst postData = $('Code: Extract Content').item.json;\n\n// Determine if we should auto-update Ghost post\nconst needsMetaUpdate = !postData.has_meta_description || postData.meta_description_length < 50;\nconst seoScore = aiResponse.seo_score;\n\nreturn {\n  json: {\n    post_id: postData.post_id,\n    post_url: postData.post_url,\n    post_title: postData.post_title,\n    current_meta_description: postData.meta_description,\n    seo_score: seoScore,\n    needs_meta_update: needsMetaUpdate,\n    suggested_meta_description: aiResponse.suggested_meta_description,\n    suggested_title: aiResponse.suggested_title,\n    primary_keyword: aiResponse.primary_keyword,\n    recommendations: aiResponse.recommendations,\n    content_quality: aiResponse.content_quality,\n    readability_score: aiResponse.readability_score,\n    title_optimized: aiResponse.title_optimized,\n    meta_description_optimized: aiResponse.meta_description_optimized\n  }\n};"
+      },
+      "id": "code-process-seo",
+      "name": "Code: Process SEO Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.seo_score }}",
+              "operation": "smaller",
+              "value2": 80
+            }
+          ]
+        }
+      },
+      "id": "if-needs-optimization",
+      "name": "IF: Needs Optimization (Score < 80)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"📊 **Blog SEO Analysis Report**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $json.post_title }}\",\n      \"url\": \"{{ $json.post_url }}\",\n      \"description\": \"SEO optimization recommendations for your latest blog post.\",\n      \"color\": {{ $json.seo_score >= 80 ? 5763719 : ($json.seo_score >= 60 ? 16776960 : 15548997) }},\n      \"fields\": [\n        {\n          \"name\": \"SEO Score\",\n          \"value\": \"{{ $json.seo_score }}/100\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Content Quality\",\n          \"value\": \"{{ $json.content_quality }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Readability\",\n          \"value\": \"{{ $json.readability_score }}/100\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Primary Keyword\",\n          \"value\": \"{{ $json.primary_keyword }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Current Meta Description\",\n          \"value\": \"{{ $json.current_meta_description || 'Not set' }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Suggested Meta Description\",\n          \"value\": \"{{ $json.suggested_meta_description }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Top Recommendations\",\n          \"value\": \"{{ $json.recommendations.map((r, i) => `${i+1}. ${r}`).join('\\\\n') }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Status\",\n          \"value\": \"{{ $json.title_optimized ? '✅' : '⚠️' }} Title | {{ $json.meta_description_optimized ? '✅' : '⚠️' }} Meta Description\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-seo-report",
+      "name": "Discord: SEO Report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needs_meta_update }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-auto-update-meta",
+      "name": "IF: Auto-Update Meta Description",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.GHOST_API_URL }}/ghost/api/admin/posts/{{ $json.post_id }}/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"posts\": [\n    {\n      \"meta_description\": \"{{ $json.suggested_meta_description }}\",\n      \"updated_at\": \"{{ new Date().toISOString() }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "ghost-update-meta",
+      "name": "Ghost: Update Meta Description",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "Ghost Admin API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"✅ **Auto-Updated Meta Description**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $json.post_title }}\",\n      \"description\": \"Meta description was automatically optimized.\",\n      \"color\": 5763719,\n      \"fields\": [\n        {\n          \"name\": \"Old Meta Description\",\n          \"value\": \"{{ $json.current_meta_description || 'Not set' }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"New Meta Description\",\n          \"value\": \"{{ $json.suggested_meta_description }}\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-meta-updated",
+      "name": "Discord: Meta Updated Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 400]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Ghost Post Published": {
+      "main": [
+        [
+          {
+            "node": "HTTP: Fetch Post Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP: Fetch Post Content": {
+      "main": [
+        [
+          {
+            "node": "Code: Extract Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Extract Content": {
+      "main": [
+        [
+          {
+            "node": "AI: SEO Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI: SEO Analysis": {
+      "main": [
+        [
+          {
+            "node": "Code: Process SEO Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Process SEO Results": {
+      "main": [
+        [
+          {
+            "node": "IF: Needs Optimization (Score < 80)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Needs Optimization (Score < 80)": {
+      "main": [
+        [
+          {
+            "node": "Discord: SEO Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF: Auto-Update Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Auto-Update Meta Description": {
+      "main": [
+        [
+          {
+            "node": "Ghost: Update Meta Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ghost: Update Meta Description": {
+      "main": [
+        [
+          {
+            "node": "Discord: Meta Updated Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-ghost-seo"
+  },
+  "id": "5",
+  "tags": []
+}
