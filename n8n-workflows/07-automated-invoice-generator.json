@@ -1,0 +1,232 @@
+{
+  "name": "07 - Automated Invoice Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-invoice",
+        "options": {}
+      },
+      "id": "webhook-generate-invoice",
+      "name": "Webhook: Generate Invoice Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-generate-invoice"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  l.id,\n  l.email,\n  l.first_name,\n  l.last_name,\n  l.company,\n  l.phone,\n  l.ai_intent as service_type,\n  l.ai_budget_signal as budget,\n  l.proposal_content,\n  l.created_at,\n  '{{ $json.invoice_amount }}' as invoice_amount,\n  '{{ $json.invoice_description }}' as invoice_description,\n  '{{ $json.payment_terms }}' as payment_terms,\n  '{{ $json.due_date }}' as due_date\nFROM leads l\nWHERE l.id = {{ $json.lead_id }};",
+        "options": {}
+      },
+      "id": "postgres-get-lead",
+      "name": "Postgres: Get Lead Details",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate invoice data\nconst leadData = $input.item.json;\nconst now = new Date();\nconst invoiceNumber = `HDS-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}-${String(leadData.id).padStart(5, '0')}`;\n\n// Calculate tax (assuming 8.5% sales tax)\nconst subtotal = parseFloat(leadData.invoice_amount);\nconst taxRate = 0.085;\nconst taxAmount = subtotal * taxRate;\nconst totalAmount = subtotal + taxAmount;\n\n// Format dates\nconst invoiceDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });\nconst dueDate = new Date(leadData.due_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });\n\n// Generate invoice HTML\nconst invoiceHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 40px; color: #333; }\n    .invoice-container { max-width: 800px; margin: 0 auto; }\n    .header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 3px solid #00D9FF; padding-bottom: 20px; }\n    .company-info { flex: 1; }\n    .company-name { font-size: 28px; font-weight: bold; color: #00D9FF; margin-bottom: 5px; }\n    .invoice-info { text-align: right; }\n    .invoice-number { font-size: 24px; font-weight: bold; color: #333; }\n    .billing-section { display: flex; justify-content: space-between; margin-bottom: 40px; }\n    .bill-to, .invoice-details { flex: 1; }\n    .section-title { font-weight: bold; color: #00D9FF; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }\n    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }\n    .items-table th { background: #00D9FF; color: #000; padding: 12px; text-align: left; font-weight: 600; }\n    .items-table td { padding: 12px; border-bottom: 1px solid #e5e5e5; }\n    .items-table tr:last-child td { border-bottom: 2px solid #00D9FF; }\n    .totals { text-align: right; margin-top: 20px; }\n    .totals-row { display: flex; justify-content: flex-end; padding: 8px 0; }\n    .totals-label { width: 150px; font-weight: 600; }\n    .totals-value { width: 150px; text-align: right; }\n    .total-row { font-size: 20px; font-weight: bold; color: #00D9FF; border-top: 2px solid #00D9FF; padding-top: 12px !important; margin-top: 12px; }\n    .payment-terms { margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; }\n    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5; text-align: center; color: #6b7280; font-size: 14px; }\n  </style>\n</head>\n<body>\n  <div class=\"invoice-container\">\n    <div class=\"header\">\n      <div class=\"company-info\">\n        <div class=\"company-name\">Hudson Digital Solutions</div>\n        <div>hello@hudsondigitalsolutions.com</div>\n        <div>www.hudsondigitalsolutions.com</div>\n      </div>\n      <div class=\"invoice-info\">\n        <div class=\"invoice-number\">INVOICE</div>\n        <div style=\"font-size: 18px; margin-top: 5px;\">${invoiceNumber}</div>\n        <div style=\"margin-top: 10px; color: #6b7280;\">Date: ${invoiceDate}</div>\n      </div>\n    </div>\n    \n    <div class=\"billing-section\">\n      <div class=\"bill-to\">\n        <div class=\"section-title\">Bill To</div>\n        <div style=\"font-size: 16px; font-weight: 600; margin-bottom: 5px;\">${leadData.first_name} ${leadData.last_name}</div>\n        <div>${leadData.company || ''}</div>\n        <div>${leadData.email}</div>\n        <div>${leadData.phone || ''}</div>\n      </div>\n      <div class=\"invoice-details\">\n        <div class=\"section-title\">Invoice Details</div>\n        <div><strong>Invoice Date:</strong> ${invoiceDate}</div>\n        <div><strong>Due Date:</strong> ${dueDate}</div>\n        <div><strong>Payment Terms:</strong> ${leadData.payment_terms || 'Net 30'}</div>\n        <div><strong>Service Type:</strong> ${leadData.service_type || 'Web Development'}</div>\n      </div>\n    </div>\n    \n    <table class=\"items-table\">\n      <thead>\n        <tr>\n          <th>Description</th>\n          <th style=\"text-align: center;\">Quantity</th>\n          <th style=\"text-align: right;\">Rate</th>\n          <th style=\"text-align: right;\">Amount</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>${leadData.invoice_description}</td>\n          <td style=\"text-align: center;\">1</td>\n          <td style=\"text-align: right;\">$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>\n          <td style=\"text-align: right;\">$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>\n        </tr>\n      </tbody>\n    </table>\n    \n    <div class=\"totals\">\n      <div class=\"totals-row\">\n        <div class=\"totals-label\">Subtotal:</div>\n        <div class=\"totals-value\">$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>\n      </div>\n      <div class=\"totals-row\">\n        <div class=\"totals-label\">Tax (8.5%):</div>\n        <div class=\"totals-value\">$${taxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>\n      </div>\n      <div class=\"totals-row total-row\">\n        <div class=\"totals-label\">Total:</div>\n        <div class=\"totals-value\">$${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>\n      </div>\n    </div>\n    \n    <div class=\"payment-terms\">\n      <div class=\"section-title\">Payment Instructions</div>\n      <p>Please make payment via bank transfer, check, or online payment portal.</p>\n      <p><strong>Bank Transfer:</strong> [Bank details here]</p>\n      <p><strong>Online Payment:</strong> Visit hudsondigitalsolutions.com/pay/${invoiceNumber.toLowerCase()}</p>\n      <p><strong>Questions?</strong> Contact us at hello@hudsondigitalsolutions.com</p>\n    </div>\n    \n    <div class=\"footer\">\n      <p>Thank you for your business!</p>\n      <p>Hudson Digital Solutions | Professional Web Development & Automation Services</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn {\n  json: {\n    lead_id: leadData.id,\n    invoice_number: invoiceNumber,\n    client_email: leadData.email,\n    client_name: `${leadData.first_name} ${leadData.last_name}`,\n    company: leadData.company,\n    subtotal: subtotal,\n    tax_amount: taxAmount,\n    total_amount: totalAmount,\n    invoice_date: invoiceDate,\n    due_date: dueDate,\n    payment_terms: leadData.payment_terms || 'Net 30',\n    invoice_html: invoiceHtml\n  }\n};"
+      },
+      "id": "code-generate-invoice",
+      "name": "Code: Generate Invoice HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://stirling-pdf-service.tools:8080/api/v1/convert/html/pdf",
+        "sendBody": true,
+        "specifyBody": "formData",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "fileInput",
+              "value": "={{ $json.invoice_html }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "stirling-convert-pdf",
+      "name": "Stirling-PDF: Convert to PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO invoices (\n  lead_id,\n  invoice_number,\n  invoice_date,\n  due_date,\n  subtotal,\n  tax_amount,\n  total_amount,\n  payment_terms,\n  status,\n  created_at,\n  updated_at\n) VALUES (\n  {{ $('Code: Generate Invoice HTML').item.json.lead_id }},\n  '{{ $('Code: Generate Invoice HTML').item.json.invoice_number }}',\n  NOW(),\n  '{{ $('Postgres: Get Lead Details').item.json.due_date }}',\n  {{ $('Code: Generate Invoice HTML').item.json.subtotal }},\n  {{ $('Code: Generate Invoice HTML').item.json.tax_amount }},\n  {{ $('Code: Generate Invoice HTML').item.json.total_amount }},\n  '{{ $('Code: Generate Invoice HTML').item.json.payment_terms }}',\n  'sent',\n  NOW(),\n  NOW()\n)\nRETURNING *;",
+        "options": {}
+      },
+      "id": "postgres-save-invoice",
+      "name": "Postgres: Save Invoice Record",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1120, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $('Code: Generate Invoice HTML').item.json.client_email }}\"],\n  \"subject\": \"Invoice {{ $('Code: Generate Invoice HTML').item.json.invoice_number }} from Hudson Digital Solutions\",\n  \"html\": \"<div style='font-family: system-ui, sans-serif; max-width: 600px;'><h2 style='color: #00D9FF;'>Invoice Ready</h2><p>Hi {{ $('Code: Generate Invoice HTML').item.json.client_name }},</p><p>Thank you for your business! Your invoice is attached to this email.</p><p><strong>Invoice Number:</strong> {{ $('Code: Generate Invoice HTML').item.json.invoice_number }}<br><strong>Amount Due:</strong> ${{ $('Code: Generate Invoice HTML').item.json.total_amount }}<br><strong>Due Date:</strong> {{ $('Code: Generate Invoice HTML').item.json.due_date }}</p><p>You can make payment via:</p><ul><li>Bank transfer (details in invoice)</li><li>Online payment: <a href='https://hudsondigitalsolutions.com/pay/{{ $('Code: Generate Invoice HTML').item.json.invoice_number }}'>Click here to pay</a></li></ul><p>If you have any questions, please don't hesitate to contact us.</p><p>Best regards,<br>Richard Hudson<br>Hudson Digital Solutions<br>hello@hudsondigitalsolutions.com</p></div>\",\n  \"attachments\": [\n    {\n      \"filename\": \"{{ $('Code: Generate Invoice HTML').item.json.invoice_number }}.pdf\",\n      \"content\": \"{{ $('Stirling-PDF: Convert to PDF').item.binary.data.data }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "resend-send-invoice",
+      "name": "Resend: Email Invoice to Client",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"💰 **Invoice Generated & Sent**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Code: Generate Invoice HTML').item.json.invoice_number }}\",\n      \"description\": \"Invoice has been generated and sent to the client.\",\n      \"color\": 5763719,\n      \"fields\": [\n        {\n          \"name\": \"Client\",\n          \"value\": \"{{ $('Code: Generate Invoice HTML').item.json.client_name }}{{ $('Code: Generate Invoice HTML').item.json.company ? ' - ' + $('Code: Generate Invoice HTML').item.json.company : '' }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Email\",\n          \"value\": \"{{ $('Code: Generate Invoice HTML').item.json.client_email }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Amount\",\n          \"value\": \"${{ $('Code: Generate Invoice HTML').item.json.total_amount }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Due Date\",\n          \"value\": \"{{ $('Code: Generate Invoice HTML').item.json.due_date }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Payment Terms\",\n          \"value\": \"{{ $('Code: Generate Invoice HTML').item.json.payment_terms }}\",\n          \"inline\": true\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify",
+      "name": "Discord: Notify Invoice Sent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"invoice_number\": \"{{ $('Code: Generate Invoice HTML').item.json.invoice_number }}\",\n  \"amount\": \"{{ $('Code: Generate Invoice HTML').item.json.total_amount }}\",\n  \"message\": \"Invoice generated and sent successfully\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1780, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Generate Invoice Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Get Lead Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Get Lead Details": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate Invoice HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Invoice HTML": {
+      "main": [
+        [
+          {
+            "node": "Stirling-PDF: Convert to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stirling-PDF: Convert to PDF": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Save Invoice Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Save Invoice Record": {
+      "main": [
+        [
+          {
+            "node": "Resend: Email Invoice to Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Email Invoice to Client": {
+      "main": [
+        [
+          {
+            "node": "Discord: Notify Invoice Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Invoice Sent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-invoice-generator"
+  },
+  "id": "7",
+  "tags": []
+}

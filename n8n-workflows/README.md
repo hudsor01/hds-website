@@ -99,6 +99,130 @@ Complete production-ready n8n workflows for automating lead capture, qualificati
 
 ---
 
+### 07 - Automated Invoice Generator
+**Trigger:** Webhook (`POST /webhook/generate-invoice`)
+**Purpose:** Generates professional PDF invoices and emails them to clients
+
+**Key Features:**
+- Fetches lead/client data from PostgreSQL
+- Generates professional HTML invoice with branding
+- Converts to PDF using Stirling-PDF
+- Calculates subtotal, tax (8.5%), and total automatically
+- Emails invoice PDF via Resend
+- Saves invoice record to database
+- Discord notification for tracking
+- No AI required - pure business automation
+
+**When to Use:** Manually trigger when deal is won or project milestone reached
+
+---
+
+### 08 - Ghost Blog Social Media Publisher
+**Trigger:** Webhook (`POST /webhook/ghost-social-publish`)
+**Purpose:** Auto-publishes blog posts to Twitter, LinkedIn, and Facebook
+
+**Key Features:**
+- Extracts post content from Ghost webhook
+- Generates platform-optimized social media posts
+- Twitter: 280 characters with hashtags
+- LinkedIn: Detailed post with article preview
+- Facebook: Formatted post with link
+- Posts to all platforms simultaneously
+- Logs social media activity in PostgreSQL
+- Discord notification with post summary
+- No AI required - rule-based content formatting
+
+**When to Use:** Configure Ghost webhook to trigger when post is published
+
+---
+
+### 09 - Lead Source Attribution Tracker
+**Trigger:** Webhook (`POST /webhook/track-attribution`)
+**Purpose:** Tracks marketing attribution and lead sources for ROI analysis
+
+**Key Features:**
+- Parses UTM parameters (source, medium, campaign, term, content)
+- Extracts referrer information and domain
+- Determines channel (Organic Search, Paid Search, Social, Email, Direct, Referral)
+- Detects device type, browser, and OS from user agent
+- Stores attribution data in PostgreSQL
+- Caches session data in Redis (30-minute TTL)
+- Updates lead records with attribution data
+- Discord notification for lead conversions
+- No AI required - algorithmic attribution classification
+
+**When to Use:** Call on every page load and form submission for complete attribution tracking
+
+---
+
+### 10 - Client Project Notification System
+**Trigger:** Webhook (`POST /webhook/project-milestone`)
+**Purpose:** Notifies clients and team when project milestones are reached
+
+**Key Features:**
+- Supports milestone types: kickoff, design_approved, development_complete, testing, launch
+- Fetches project details from PostgreSQL
+- Generates branded HTML email with progress bar
+- Sends client notification via Resend
+- Sends team notification via Discord
+- Logs milestone in database
+- Auto-marks project as complete on launch
+- Triggers portfolio update workflow on completion
+- No AI required - template-based notifications
+
+**When to Use:** Trigger manually or from project management system when milestones are reached
+
+---
+
+### 11 - Advanced Form Spam Protection
+**Trigger:** Webhook (`POST /webhook/validate-form-submission`)
+**Purpose:** Detects and blocks spam form submissions using 11 rule-based checks
+
+**Key Features:**
+- **11 spam detection checks:**
+  1. Honeypot field detection
+  2. Submission time analysis (bot speed detection)
+  3. Disposable email domain blacklist
+  4. Email format validation
+  5. Message quality analysis (length, links, keywords)
+  6. Excessive capitalization detection
+  7. Repeated character detection
+  8. Phone number validation
+  9. Name validation and keyboard pattern detection
+  10. User agent validation
+  11. Field repetition detection
+- Rate limiting with Redis (3 submissions per hour per email)
+- Spam score calculation (0-100)
+- Classification: legitimate, suspicious, likely_spam, definite_spam
+- Actions: accept, review, quarantine, reject
+- Discord alerts for quarantined submissions
+- Logs all submissions in PostgreSQL
+- No AI required - algorithmic spam detection
+
+**When to Use:** Call before processing any form submission (contact forms, lead magnets, etc.)
+
+---
+
+### 12 - Automated Portfolio Updater
+**Trigger:** Webhook (`POST /webhook/portfolio-update`)
+**Purpose:** Auto-generates portfolio case studies when projects are completed
+
+**Key Features:**
+- Fetches completed project data from PostgreSQL
+- Generates Markdown case study with structured content
+- Creates JSON-LD structured data for SEO
+- Commits portfolio file to GitHub repository
+- Triggers Vercel deployment automatically
+- Emails client notification with portfolio link
+- Discord notification for team
+- Pings Google sitemap for instant indexing
+- Marks project as published in database
+- No AI required - template-based content generation
+
+**When to Use:** Automatically triggered by workflow 10 when project reaches launch milestone
+
+---
+
 ## Installation Guide
 
 ### Prerequisites
@@ -114,7 +238,9 @@ Complete production-ready n8n workflows for automating lead capture, qualificati
 
 1. Open your n8n instance
 2. Go to **Workflows** > **Import from File**
-3. Import each JSON file in order (01 through 06)
+3. Import each JSON file in order (01 through 12)
+   - Workflows 01-06: AI-powered workflows (require Ollama and Qdrant)
+   - Workflows 07-12: Business automation workflows (no AI required)
 4. Workflows will be imported in inactive state
 
 ### Step 2: Configure Credentials
@@ -143,13 +269,49 @@ Create the following credentials in n8n:
 - **Header Name:** `Authorization`
 - **Value:** `Ghost your_admin_api_key`
 
+#### Redis (Workflows 09, 11)
+- **Type:** Redis
+- **Name:** `Redis`
+- **Host:** Your Redis host
+- **Port:** `6379`
+- **Database:** `0`
+- **Password:** Your Redis password (if applicable)
+
+#### Twitter OAuth2 (Workflow 08 only)
+- **Type:** OAuth2 API
+- **Name:** `Twitter OAuth2`
+- Configure with Twitter Developer Portal credentials
+
+#### LinkedIn OAuth2 (Workflow 08 only)
+- **Type:** OAuth2 API
+- **Name:** `LinkedIn OAuth2`
+- Configure with LinkedIn Developer credentials
+
+#### Facebook OAuth2 (Workflow 08 only)
+- **Type:** OAuth2 API
+- **Name:** `Facebook OAuth2`
+- Configure with Facebook Developer credentials
+
+#### GitHub Token (Workflow 12 only)
+- **Type:** HTTP Header Auth
+- **Name:** `GitHub Token`
+- **Header Name:** `Authorization`
+- **Value:** `token ghp_your_github_personal_access_token`
+
 ### Step 3: Set Environment Variables
 
 In n8n, configure these environment variables:
 
 ```bash
+# Required for all workflows
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url
-GHOST_API_URL=https://your-ghost-instance.com  # For workflow 05
+
+# Required for workflow 05 (Ghost SEO)
+GHOST_API_URL=https://your-ghost-instance.com
+
+# Required for workflow 12 (Portfolio Updater)
+VERCEL_DEPLOY_HOOK_ID=your_deploy_hook_id
+VERCEL_DEPLOY_HOOK_TOKEN=your_deploy_hook_token
 ```
 
 ### Step 4: Configure Services
@@ -518,5 +680,6 @@ LIMIT 20;
 ## Credits
 
 Created for **Hudson Digital Solutions** by Claude Code
-Version: 1.0.0
-Last Updated: 2025-11-09
+Version: 2.0.0
+Last Updated: 2025-11-10
+Total Workflows: 12 (6 AI-powered + 6 business automation)

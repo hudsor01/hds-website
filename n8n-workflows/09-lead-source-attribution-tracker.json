@@ -1,0 +1,224 @@
+{
+  "name": "09 - Lead Source Attribution Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "track-attribution",
+        "options": {}
+      },
+      "id": "webhook-track-attribution",
+      "name": "Webhook: Track Attribution",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "hds-track-attribution"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse and extract UTM parameters and attribution data\nconst data = $input.item.json;\n\n// Extract UTM parameters\nconst url = new URL(data.page_url || 'https://example.com');\nconst params = url.searchParams;\n\nconst utmSource = params.get('utm_source') || data.utm_source || 'direct';\nconst utmMedium = params.get('utm_medium') || data.utm_medium || 'none';\nconst utmCampaign = params.get('utm_campaign') || data.utm_campaign || '';\nconst utmTerm = params.get('utm_term') || data.utm_term || '';\nconst utmContent = params.get('utm_content') || data.utm_content || '';\n\n// Extract referrer information\nconst referrer = data.referrer || data.http_referer || '';\nlet referrerDomain = 'direct';\nlet referrerPath = '';\n\nif (referrer && referrer !== '') {\n  try {\n    const referrerUrl = new URL(referrer);\n    referrerDomain = referrerUrl.hostname.replace('www.', '');\n    referrerPath = referrerUrl.pathname;\n  } catch (e) {\n    referrerDomain = 'unknown';\n  }\n}\n\n// Determine channel based on source and medium\nfunction determineChannel(source, medium, referrer) {\n  // Direct traffic\n  if (source === 'direct' && medium === 'none') {\n    return 'Direct';\n  }\n  \n  // Organic search\n  const searchEngines = ['google', 'bing', 'yahoo', 'duckduckgo', 'baidu'];\n  if (medium === 'organic' || searchEngines.some(se => referrer.includes(se))) {\n    return 'Organic Search';\n  }\n  \n  // Paid search\n  if (medium === 'cpc' || medium === 'ppc' || medium === 'paid') {\n    return 'Paid Search';\n  }\n  \n  // Social media\n  const socialPlatforms = ['facebook', 'twitter', 'linkedin', 'instagram', 'youtube', 'tiktok', 'pinterest'];\n  if (medium === 'social' || socialPlatforms.some(sp => source.includes(sp) || referrer.includes(sp))) {\n    return 'Social Media';\n  }\n  \n  // Email\n  if (medium === 'email' || source === 'newsletter' || source === 'email') {\n    return 'Email';\n  }\n  \n  // Referral\n  if (medium === 'referral' || (referrer && referrer !== '')) {\n    return 'Referral';\n  }\n  \n  return 'Other';\n}\n\nconst channel = determineChannel(utmSource, utmMedium, referrerDomain);\n\n// Extract device and browser info\nconst userAgent = data.user_agent || '';\nlet deviceType = 'desktop';\nlet browser = 'unknown';\nlet os = 'unknown';\n\nif (userAgent) {\n  // Detect device\n  if (/mobile|android|iphone|ipad|ipod/i.test(userAgent)) {\n    deviceType = /ipad/i.test(userAgent) ? 'tablet' : 'mobile';\n  } else if (/tablet/i.test(userAgent)) {\n    deviceType = 'tablet';\n  }\n  \n  // Detect browser\n  if (/chrome/i.test(userAgent) && !/edge|edg/i.test(userAgent)) {\n    browser = 'Chrome';\n  } else if (/safari/i.test(userAgent) && !/chrome/i.test(userAgent)) {\n    browser = 'Safari';\n  } else if (/firefox/i.test(userAgent)) {\n    browser = 'Firefox';\n  } else if (/edge|edg/i.test(userAgent)) {\n    browser = 'Edge';\n  }\n  \n  // Detect OS\n  if (/windows/i.test(userAgent)) {\n    os = 'Windows';\n  } else if (/mac/i.test(userAgent)) {\n    os = 'macOS';\n  } else if (/linux/i.test(userAgent)) {\n    os = 'Linux';\n  } else if (/android/i.test(userAgent)) {\n    os = 'Android';\n  } else if (/ios|iphone|ipad/i.test(userAgent)) {\n    os = 'iOS';\n  }\n}\n\n// Generate session ID if not provided\nconst sessionId = data.session_id || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;\n\nreturn {\n  json: {\n    // Attribution data\n    session_id: sessionId,\n    user_id: data.user_id || null,\n    visitor_id: data.visitor_id || null,\n    \n    // UTM parameters\n    utm_source: utmSource,\n    utm_medium: utmMedium,\n    utm_campaign: utmCampaign,\n    utm_term: utmTerm,\n    utm_content: utmContent,\n    \n    // Referrer data\n    referrer: referrer,\n    referrer_domain: referrerDomain,\n    referrer_path: referrerPath,\n    \n    // Calculated channel\n    channel: channel,\n    \n    // Page data\n    page_url: data.page_url || '',\n    page_path: new URL(data.page_url || 'https://example.com').pathname,\n    page_title: data.page_title || '',\n    \n    // Device data\n    device_type: deviceType,\n    browser: browser,\n    os: os,\n    user_agent: userAgent,\n    \n    // Geo data (if provided)\n    country: data.country || null,\n    region: data.region || null,\n    city: data.city || null,\n    \n    // Timestamp\n    timestamp: new Date().toISOString(),\n    \n    // Lead conversion flag (if this is a lead)\n    is_lead: data.is_lead || false,\n    lead_id: data.lead_id || null\n  }\n};"
+      },
+      "id": "code-parse-attribution",
+      "name": "Code: Parse Attribution Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO attribution_data (\n  session_id,\n  user_id,\n  visitor_id,\n  utm_source,\n  utm_medium,\n  utm_campaign,\n  utm_term,\n  utm_content,\n  referrer,\n  referrer_domain,\n  referrer_path,\n  channel,\n  page_url,\n  page_path,\n  page_title,\n  device_type,\n  browser,\n  os,\n  user_agent,\n  country,\n  region,\n  city,\n  is_lead,\n  lead_id,\n  timestamp,\n  created_at\n) VALUES (\n  '{{ $json.session_id }}',\n  {{ $json.user_id ? \"'\" + $json.user_id + \"'\" : 'NULL' }},\n  {{ $json.visitor_id ? \"'\" + $json.visitor_id + \"'\" : 'NULL' }},\n  '{{ $json.utm_source }}',\n  '{{ $json.utm_medium }}',\n  '{{ $json.utm_campaign }}',\n  '{{ $json.utm_term }}',\n  '{{ $json.utm_content }}',\n  '{{ $json.referrer }}',\n  '{{ $json.referrer_domain }}',\n  '{{ $json.referrer_path }}',\n  '{{ $json.channel }}',\n  '{{ $json.page_url }}',\n  '{{ $json.page_path }}',\n  '{{ $json.page_title }}',\n  '{{ $json.device_type }}',\n  '{{ $json.browser }}',\n  '{{ $json.os }}',\n  '{{ $json.user_agent }}',\n  {{ $json.country ? \"'\" + $json.country + \"'\" : 'NULL' }},\n  {{ $json.region ? \"'\" + $json.region + \"'\" : 'NULL' }},\n  {{ $json.city ? \"'\" + $json.city + \"'\" : 'NULL' }},\n  {{ $json.is_lead }},\n  {{ $json.lead_id || 'NULL' }},\n  '{{ $json.timestamp }}',\n  NOW()\n)\nRETURNING *;",
+        "options": {}
+      },
+      "id": "postgres-save-attribution",
+      "name": "Postgres: Save Attribution Data",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [680, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "key": "=attribution:session:{{ $('Code: Parse Attribution Data').item.json.session_id }}",
+        "value": "={{ JSON.stringify($('Code: Parse Attribution Data').item.json) }}",
+        "ttl": 1800,
+        "options": {}
+      },
+      "id": "redis-cache-session",
+      "name": "Redis: Cache Session Data",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "redis": {
+          "id": "7",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $('Code: Parse Attribution Data').item.json.is_lead }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-is-lead",
+      "name": "IF: Is Lead Conversion",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE leads SET\n  utm_source = '{{ $('Code: Parse Attribution Data').item.json.utm_source }}',\n  utm_medium = '{{ $('Code: Parse Attribution Data').item.json.utm_medium }}',\n  utm_campaign = '{{ $('Code: Parse Attribution Data').item.json.utm_campaign }}',\n  utm_term = '{{ $('Code: Parse Attribution Data').item.json.utm_term }}',\n  utm_content = '{{ $('Code: Parse Attribution Data').item.json.utm_content }}',\n  referrer = '{{ $('Code: Parse Attribution Data').item.json.referrer }}',\n  channel = '{{ $('Code: Parse Attribution Data').item.json.channel }}',\n  device_type = '{{ $('Code: Parse Attribution Data').item.json.device_type }}',\n  browser = '{{ $('Code: Parse Attribution Data').item.json.browser }}',\n  updated_at = NOW()\nWHERE id = {{ $('Code: Parse Attribution Data').item.json.lead_id }};",
+        "options": {}
+      },
+      "id": "postgres-update-lead",
+      "name": "Postgres: Update Lead Attribution",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1340, 200],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"🎯 **New Lead Conversion Tracked**\",\n  \"embeds\": [\n    {\n      \"title\": \"Lead Attribution Data\",\n      \"description\": \"A visitor converted to a lead. Attribution data has been captured.\",\n      \"color\": 3447003,\n      \"fields\": [\n        {\n          \"name\": \"Channel\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.channel }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Source\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.utm_source }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Medium\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.utm_medium }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Campaign\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.utm_campaign || 'None' }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Referrer\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.referrer_domain }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Device\",\n          \"value\": \"{{ $('Code: Parse Attribution Data').item.json.device_type }} - {{ $('Code: Parse Attribution Data').item.json.browser }}\",\n          \"inline\": true\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify-lead",
+      "name": "Discord: Notify Lead Conversion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"session_id\": \"{{ $('Code: Parse Attribution Data').item.json.session_id }}\",\n  \"channel\": \"{{ $('Code: Parse Attribution Data').item.json.channel }}\",\n  \"attribution_captured\": true\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1340, 400]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Track Attribution": {
+      "main": [
+        [
+          {
+            "node": "Code: Parse Attribution Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Parse Attribution Data": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Save Attribution Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Save Attribution Data": {
+      "main": [
+        [
+          {
+            "node": "Redis: Cache Session Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis: Cache Session Data": {
+      "main": [
+        [
+          {
+            "node": "IF: Is Lead Conversion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Is Lead Conversion": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Update Lead Attribution",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Update Lead Attribution": {
+      "main": [
+        [
+          {
+            "node": "Discord: Notify Lead Conversion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Lead Conversion": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-attribution-tracker"
+  },
+  "id": "9",
+  "tags": []
+}

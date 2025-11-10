@@ -1,0 +1,281 @@
+{
+  "name": "12 - Automated Portfolio Updater",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "portfolio-update",
+        "options": {}
+      },
+      "id": "webhook-portfolio-update",
+      "name": "Webhook: Portfolio Update Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 400],
+      "webhookId": "hds-portfolio-update"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  p.*,\n  l.email as client_email,\n  l.first_name as client_first_name,\n  l.last_name as client_last_name,\n  l.company as client_company\nFROM projects p\nLEFT JOIN leads l ON p.lead_id = l.id\nWHERE p.id = {{ $json.project_id }} AND p.status = 'completed';",
+        "options": {}
+      },
+      "id": "postgres-get-project",
+      "name": "Postgres: Get Completed Project",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate portfolio case study content\nconst projectData = $input.item.json;\n\n// Generate URL-friendly slug\nfunction generateSlug(text) {\n  return text\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/^-+|-+$/g, '');\n}\n\nconst slug = generateSlug(projectData.project_name);\n\n// Generate technologies array\nconst technologies = projectData.technologies_used || [];\nconst technologiesString = Array.isArray(technologies) ? technologies.join(', ') : technologies;\n\n// Generate case study content\nconst caseStudyMarkdown = `---\ntitle: \"${projectData.project_name}\"\nclient: \"${projectData.client_name || projectData.client_company}\"\nindustry: \"${projectData.industry || 'Technology'}\"\nserviceType: \"${projectData.service_type || 'Web Development'}\"\ntechnologies: [${technologies.map(t => `\"${t}\"`).join(', ')}]\ncompletedDate: \"${projectData.completion_date}\"\nfeaturedImage: \"${projectData.featured_image || '/images/portfolio/default.jpg'}\"\nslug: \"${slug}\"\n---\n\n# ${projectData.project_name}\n\n## Overview\n\n${projectData.description || 'A custom web development project delivered by Hudson Digital Solutions.'}\n\n## Challenge\n\n${projectData.challenge || 'The client needed a modern, scalable solution to meet their business requirements.'}\n\n## Solution\n\nWe developed a comprehensive solution using cutting-edge technologies including ${technologiesString}.\n\n### Key Features\n\n${(projectData.key_features || []).map((feature, i) => `${i + 1}. ${feature}`).join('\\n')}\n\n## Technologies Used\n\n${technologies.map(tech => `- ${tech}`).join('\\n')}\n\n## Results\n\n${projectData.results_achieved || 'The project was delivered successfully and exceeded client expectations.'}\n\n### Metrics\n\n- **Duration**: ${projectData.duration_weeks} weeks\n- **Team Size**: ${projectData.team_size || 3} developers\n- **Budget Range**: ${projectData.budget_range || 'Custom'}\n\n## Client Testimonial\n\n> ${projectData.client_testimonial || 'Working with Hudson Digital Solutions was a great experience. They delivered exactly what we needed.'}\n>\n> — ${projectData.client_name || projectData.client_company}\n\n## Want Similar Results?\n\nIf you're looking for a development partner who can deliver results like this, [let's talk](https://hudsondigitalsolutions.com/contact).\n`;\n\n// Generate JSON-LD structured data\nconst structuredData = {\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"CreativeWork\",\n  \"name\": projectData.project_name,\n  \"description\": projectData.description,\n  \"creator\": {\n    \"@type\": \"Organization\",\n    \"name\": \"Hudson Digital Solutions\"\n  },\n  \"datePublished\": projectData.completion_date,\n  \"keywords\": technologies.join(', ')\n};\n\nreturn {\n  json: {\n    // Project data\n    project_id: projectData.id,\n    project_name: projectData.project_name,\n    slug: slug,\n    client_name: projectData.client_name || projectData.client_company,\n    client_email: projectData.client_email,\n    \n    // Case study content\n    case_study_markdown: caseStudyMarkdown,\n    structured_data: JSON.stringify(structuredData, null, 2),\n    \n    // Metadata\n    technologies: technologies,\n    industry: projectData.industry,\n    service_type: projectData.service_type,\n    completion_date: projectData.completion_date,\n    featured_image: projectData.featured_image,\n    \n    // File paths\n    markdown_file_path: `/content/portfolio/${slug}.md`,\n    portfolio_url: `https://hudsondigitalsolutions.com/portfolio/${slug}`\n  }\n};"
+      },
+      "id": "code-generate-case-study",
+      "name": "Code: Generate Case Study Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/hudsor01/hds-website/contents{{ $json.markdown_file_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"feat: add portfolio case study - {{ $json.project_name }}\",\n  \"content\": \"{{ Buffer.from($json.case_study_markdown).toString('base64') }}\",\n  \"branch\": \"main\"\n}",
+        "options": {}
+      },
+      "id": "github-create-file",
+      "name": "GitHub: Create Portfolio File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "8",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE completed_projects SET\n  case_study_url = '{{ $('Code: Generate Case Study Content').item.json.portfolio_url }}',\n  published_to_portfolio = true,\n  portfolio_published_at = NOW(),\n  updated_at = NOW()\nWHERE id = {{ $('Code: Generate Case Study Content').item.json.project_id }};",
+        "options": {}
+      },
+      "id": "postgres-update-project",
+      "name": "Postgres: Mark Portfolio Published",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1120, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.vercel.com/v1/integrations/deploy/{{ $env.VERCEL_DEPLOY_HOOK_ID }}/{{ $env.VERCEL_DEPLOY_HOOK_TOKEN }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"Portfolio Update Deploy\",\n  \"target\": \"production\"\n}",
+        "options": {}
+      },
+      "id": "vercel-trigger-deploy",
+      "name": "Vercel: Trigger Deployment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $('Code: Generate Case Study Content').item.json.client_email }}\"],\n  \"subject\": \"🎉 Your Project is Now Featured in Our Portfolio!\",\n  \"html\": \"<div style='font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;'><div style='background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%); padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0;'><h1 style='color: #000; margin: 0; font-size: 32px;'>🎉 Featured in Our Portfolio!</h1></div><div style='padding: 40px 30px; background: #fff;'><p style='font-size: 16px; color: #333; margin-bottom: 20px;'>Hi {{ $('Code: Generate Case Study Content').item.json.client_name }},</p><p style='font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px;'>We're excited to share that your project, <strong>{{ $('Code: Generate Case Study Content').item.json.project_name }}</strong>, is now featured as a case study in our portfolio!</p><p style='font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px;'>We're proud of what we built together and wanted to showcase the results we achieved.</p><div style='background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 30px 0; text-align: center;'><a href='{{ $('Code: Generate Case Study Content').item.json.portfolio_url }}' style='display: inline-block; background: #00D9FF; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;'>View Your Case Study</a></div><p style='font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px;'>The case study includes:</p><ul style='color: #333; line-height: 1.8; margin-bottom: 20px;'><li>Project overview and challenges</li><li>Our solution and technologies used</li><li>Results and metrics we achieved together</li><li>Your testimonial (thank you!)</li></ul><p style='font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px;'>Feel free to share this case study with your network. We'd love for others to see what we accomplished together!</p><div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5;'><p style='color: #6b7280; font-size: 14px; margin-bottom: 10px;'>If you'd like any changes to the case study or prefer not to be featured, just let us know and we'll update it immediately.</p></div><p style='font-size: 16px; color: #333; margin-top: 30px;'>Thank you again for being a great client!</p><p style='font-size: 16px; color: #333; margin-top: 10px;'>Best regards,<br>Richard Hudson<br>Hudson Digital Solutions</p></div><div style='background: #1a1a1a; padding: 30px; text-align: center; color: #9ca3af; font-size: 14px; border-radius: 0 0 8px 8px;'><p style='margin: 0;'>Hudson Digital Solutions</p><p style='margin: 5px 0 0 0;'>Professional Web Development & Automation Services</p></div></div>\"\n}",
+        "options": {}
+      },
+      "id": "resend-notify-client",
+      "name": "Resend: Notify Client",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"📁 **New Portfolio Case Study Published**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Code: Generate Case Study Content').item.json.project_name }}\",\n      \"url\": \"{{ $('Code: Generate Case Study Content').item.json.portfolio_url }}\",\n      \"description\": \"A new case study has been automatically added to the portfolio.\",\n      \"color\": 5763719,\n      \"thumbnail\": {\n        \"url\": \"{{ $('Code: Generate Case Study Content').item.json.featured_image }}\"\n      },\n      \"fields\": [\n        {\n          \"name\": \"Client\",\n          \"value\": \"{{ $('Code: Generate Case Study Content').item.json.client_name }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Service Type\",\n          \"value\": \"{{ $('Code: Generate Case Study Content').item.json.service_type }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Industry\",\n          \"value\": \"{{ $('Code: Generate Case Study Content').item.json.industry }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Technologies\",\n          \"value\": \"{{ $('Code: Generate Case Study Content').item.json.technologies.join(', ') }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Actions Completed\",\n          \"value\": \"✅ Case study generated\\n✅ Portfolio file created\\n✅ Vercel deployment triggered\\n✅ Client notified via email\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Portfolio URL\",\n          \"value\": \"[View Case Study]({{ $('Code: Generate Case Study Content').item.json.portfolio_url }})\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify-team",
+      "name": "Discord: Notify Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.google.com/ping?sitemap=https://hudsondigitalsolutions.com/sitemap.xml",
+        "options": {}
+      },
+      "id": "google-ping-sitemap",
+      "name": "Google: Ping Sitemap",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"project_name\": \"{{ $('Code: Generate Case Study Content').item.json.project_name }}\",\n  \"portfolio_url\": \"{{ $('Code: Generate Case Study Content').item.json.portfolio_url }}\",\n  \"slug\": \"{{ $('Code: Generate Case Study Content').item.json.slug }}\",\n  \"deployment_triggered\": true,\n  \"client_notified\": true\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2000, 400]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Portfolio Update Trigger": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Get Completed Project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Get Completed Project": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate Case Study Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Case Study Content": {
+      "main": [
+        [
+          {
+            "node": "GitHub: Create Portfolio File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub: Create Portfolio File": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Mark Portfolio Published",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Mark Portfolio Published": {
+      "main": [
+        [
+          {
+            "node": "Vercel: Trigger Deployment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vercel: Trigger Deployment": {
+      "main": [
+        [
+          {
+            "node": "Resend: Email Client",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord: Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Notify Client": {
+      "main": [
+        [
+          {
+            "node": "Google: Ping Sitemap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Team": {
+      "main": [
+        [
+          {
+            "node": "Google: Ping Sitemap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google: Ping Sitemap": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-portfolio-updater"
+  },
+  "id": "12",
+  "tags": []
+}

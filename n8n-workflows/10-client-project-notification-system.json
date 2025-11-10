@@ -1,0 +1,289 @@
+{
+  "name": "10 - Client Project Notification System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "project-milestone",
+        "options": {}
+      },
+      "id": "webhook-milestone",
+      "name": "Webhook: Project Milestone Reached",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 400],
+      "webhookId": "hds-project-milestone"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT \n  p.id,\n  p.project_name,\n  p.client_name,\n  p.client_email,\n  p.status,\n  p.progress_percentage,\n  p.start_date,\n  p.target_completion_date,\n  l.email as lead_email,\n  l.first_name,\n  l.last_name,\n  l.company\nFROM projects p\nLEFT JOIN leads l ON p.lead_id = l.id\nWHERE p.id = {{ $json.project_id }};",
+        "options": {}
+      },
+      "id": "postgres-get-project",
+      "name": "Postgres: Get Project Details",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [460, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse milestone data and generate notification content\nconst webhookData = $('Webhook: Project Milestone Reached').item.json;\nconst projectData = $input.item.json;\n\n// Milestone information\nconst milestoneType = webhookData.milestone_type; // 'kickoff', 'design_approved', 'development_complete', 'testing', 'launch', 'custom'\nconst milestoneTitle = webhookData.milestone_title || '';\nconst milestoneDescription = webhookData.milestone_description || '';\nconst nextSteps = webhookData.next_steps || '';\nconst attachmentUrls = webhookData.attachments || [];\n\n// Generate milestone-specific content\nfunction getMilestoneContent(type) {\n  const contents = {\n    'kickoff': {\n      emoji: '🚀',\n      subject: 'Project Kickoff - Let\\'s Get Started!',\n      title: 'Project Kickoff Complete',\n      message: `We're excited to officially kick off your project! Our team has reviewed all requirements and we're ready to begin.`,\n      color: 3447003 // Blue\n    },\n    'design_approved': {\n      emoji: '🎨',\n      subject: 'Design Approved - Moving to Development',\n      title: 'Design Phase Complete',\n      message: `Great news! Your design has been approved and we're moving forward with development.`,\n      color: 10181046 // Purple\n    },\n    'development_complete': {\n      emoji: '💻',\n      subject: 'Development Complete - Ready for Review',\n      title: 'Development Phase Complete',\n      message: `Development is complete! Your project is ready for testing and review.`,\n      color: 3066993 // Green\n    },\n    'testing': {\n      emoji: '🧪',\n      subject: 'Testing Phase - Quality Assurance',\n      title: 'Testing in Progress',\n      message: `We're thoroughly testing your project to ensure everything works perfectly.`,\n      color: 15844367 // Yellow\n    },\n    'launch': {\n      emoji: '🎉',\n      subject: 'Launch Day - Your Project is Live!',\n      title: 'Project Successfully Launched',\n      message: `Congratulations! Your project is now live and ready for the world to see.`,\n      color: 15158332 // Red/Orange\n    },\n    'custom': {\n      emoji: '📢',\n      subject: milestoneTitle || 'Project Update',\n      title: milestoneTitle || 'Project Milestone',\n      message: milestoneDescription || 'We have an update on your project.',\n      color: 9807270 // Gray\n    }\n  };\n  \n  return contents[type] || contents['custom'];\n}\n\nconst content = getMilestoneContent(milestoneType);\n\n// Calculate project progress\nconst progressPercentage = projectData.progress_percentage || 0;\nconst progressBar = '█'.repeat(Math.floor(progressPercentage / 10)) + '░'.repeat(10 - Math.floor(progressPercentage / 10));\n\n// Format dates\nconst startDate = new Date(projectData.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });\nconst targetDate = new Date(projectData.target_completion_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });\n\nreturn {\n  json: {\n    // Project data\n    project_id: projectData.id,\n    project_name: projectData.project_name,\n    client_name: projectData.client_name || `${projectData.first_name} ${projectData.last_name}`,\n    client_email: projectData.client_email || projectData.lead_email,\n    company: projectData.company || '',\n    \n    // Milestone data\n    milestone_type: milestoneType,\n    milestone_title: content.title,\n    milestone_emoji: content.emoji,\n    milestone_message: content.message,\n    milestone_description: milestoneDescription,\n    next_steps: nextSteps,\n    attachments: attachmentUrls,\n    \n    // Email content\n    email_subject: `${content.emoji} ${content.subject}`,\n    \n    // Progress data\n    progress_percentage: progressPercentage,\n    progress_bar: progressBar,\n    project_status: projectData.status,\n    start_date: startDate,\n    target_date: targetDate,\n    \n    // Discord embed color\n    discord_color: content.color\n  }\n};"
+      },
+      "id": "code-generate-notification",
+      "name": "Code: Generate Notification Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Hudson Digital Solutions <hello@hudsondigitalsolutions.com>\",\n  \"to\": [\"{{ $json.client_email }}\"],\n  \"subject\": \"{{ $json.email_subject }}\",\n  \"html\": \"<div style='font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto;'><div style='background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%); padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0;'><h1 style='color: #000; margin: 0; font-size: 32px;'>{{ $json.milestone_emoji }} {{ $json.milestone_title }}</h1></div><div style='padding: 40px 30px; background: #fff;'><p style='font-size: 16px; color: #333; margin-bottom: 20px;'>Hi {{ $json.client_name }},</p><p style='font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px;'>{{ $json.milestone_message }}</p>{{ $json.milestone_description ? '<div style=\\\"background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;\\\"><p style=\\\"margin: 0; color: #333;\\\"><strong>Details:</strong><br>{{ $json.milestone_description }}</p></div>' : '' }}<div style='background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0;'><h3 style='margin: 0 0 15px 0; color: #00D9FF; font-size: 18px;'>Project Progress</h3><div style='margin-bottom: 10px;'><div style='background: #e5e5e5; height: 30px; border-radius: 15px; overflow: hidden;'><div style='background: linear-gradient(90deg, #00D9FF 0%, #0099CC 100%); height: 100%; width: {{ $json.progress_percentage }}%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 14px;'>{{ $json.progress_percentage }}%</div></div></div><div style='display: flex; justify-content: space-between; margin-top: 15px; font-size: 14px; color: #6b7280;'><div><strong>Started:</strong> {{ $json.start_date }}</div><div><strong>Target:</strong> {{ $json.target_date }}</div></div></div>{{ $json.next_steps ? '<div style=\\\"margin-top: 30px;\\\"><h3 style=\\\"color: #00D9FF; font-size: 18px; margin-bottom: 15px;\\\">Next Steps</h3><p style=\\\"color: #333; line-height: 1.6;\\\">{{ $json.next_steps }}</p></div>' : '' }}<div style='margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e5e5;'><p style='color: #6b7280; font-size: 14px; margin-bottom: 10px;'>Have questions or feedback? We'd love to hear from you!</p><a href='mailto:hello@hudsondigitalsolutions.com' style='display: inline-block; background: #00D9FF; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px;'>Contact Us</a></div></div><div style='background: #1a1a1a; padding: 30px; text-align: center; color: #9ca3af; font-size: 14px; border-radius: 0 0 8px 8px;'><p style='margin: 0;'>Hudson Digital Solutions</p><p style='margin: 5px 0 0 0;'>Professional Web Development & Automation Services</p></div></div>\"\n}",
+        "options": {}
+      },
+      "id": "resend-notify-client",
+      "name": "Resend: Email Client Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Resend API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"{{ $('Code: Generate Notification Content').item.json.milestone_emoji }} **Project Milestone Reached**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Code: Generate Notification Content').item.json.project_name }}\",\n      \"description\": \"{{ $('Code: Generate Notification Content').item.json.milestone_title }}\",\n      \"color\": {{ $('Code: Generate Notification Content').item.json.discord_color }},\n      \"fields\": [\n        {\n          \"name\": \"Client\",\n          \"value\": \"{{ $('Code: Generate Notification Content').item.json.client_name }}{{ $('Code: Generate Notification Content').item.json.company ? ' - ' + $('Code: Generate Notification Content').item.json.company : '' }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Milestone\",\n          \"value\": \"{{ $('Code: Generate Notification Content').item.json.milestone_type }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Progress\",\n          \"value\": \"{{ $('Code: Generate Notification Content').item.json.progress_percentage }}%\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Status\",\n          \"value\": \"{{ $('Code: Generate Notification Content').item.json.project_status }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Progress Bar\",\n          \"value\": \"{{ $('Code: Generate Notification Content').item.json.progress_bar }}\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify-team",
+      "name": "Discord: Notify Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO project_milestones (\n  project_id,\n  milestone_type,\n  milestone_title,\n  milestone_description,\n  reached_at,\n  created_at\n) VALUES (\n  {{ $('Code: Generate Notification Content').item.json.project_id }},\n  '{{ $('Code: Generate Notification Content').item.json.milestone_type }}',\n  '{{ $('Code: Generate Notification Content').item.json.milestone_title }}',\n  '{{ $('Code: Generate Notification Content').item.json.milestone_description }}',\n  NOW(),\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "postgres-log-milestone",
+      "name": "Postgres: Log Milestone",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1120, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Code: Generate Notification Content').item.json.milestone_type }}",
+              "operation": "equals",
+              "value2": "launch"
+            }
+          ]
+        }
+      },
+      "id": "if-launch-milestone",
+      "name": "IF: Is Launch Milestone",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=UPDATE projects SET\n  status = 'completed',\n  progress_percentage = 100,\n  completion_date = NOW(),\n  updated_at = NOW()\nWHERE id = {{ $('Code: Generate Notification Content').item.json.project_id }};",
+        "options": {}
+      },
+      "id": "postgres-mark-complete",
+      "name": "Postgres: Mark Project Complete",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1560, 300],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://n8n-service.automation:5678/webhook/portfolio-update",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"project_id\": {{ $('Code: Generate Notification Content').item.json.project_id }}\n}",
+        "options": {}
+      },
+      "id": "trigger-portfolio-update",
+      "name": "HTTP: Trigger Portfolio Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"project_id\": {{ $('Code: Generate Notification Content').item.json.project_id }},\n  \"milestone\": \"{{ $('Code: Generate Notification Content').item.json.milestone_type }}\",\n  \"client_notified\": true,\n  \"team_notified\": true\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1560, 500]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Project Milestone Reached": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Get Project Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Get Project Details": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate Notification Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Notification Content": {
+      "main": [
+        [
+          {
+            "node": "Resend: Email Client Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord: Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resend: Email Client Notification": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Milestone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Team": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Milestone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Log Milestone": {
+      "main": [
+        [
+          {
+            "node": "IF: Is Launch Milestone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Is Launch Milestone": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Mark Project Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Mark Project Complete": {
+      "main": [
+        [
+          {
+            "node": "HTTP: Trigger Portfolio Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP: Trigger Portfolio Update": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-project-notifications"
+  },
+  "id": "10",
+  "tags": []
+}

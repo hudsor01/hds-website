@@ -1,0 +1,295 @@
+{
+  "name": "11 - Advanced Form Spam Protection",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "validate-form-submission",
+        "options": {}
+      },
+      "id": "webhook-form-submission",
+      "name": "Webhook: Form Submission",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 400],
+      "webhookId": "hds-form-validate"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Advanced spam detection algorithm\nconst formData = $input.item.json;\nlet spamScore = 0;\nconst spamReasons = [];\n\n// Check 1: Honeypot field (should be empty)\nif (formData.honeypot_field && formData.honeypot_field.length > 0) {\n  spamScore += 100;\n  spamReasons.push('Honeypot field filled');\n}\n\n// Check 2: Submission time (too fast = bot)\nconst submissionTime = formData.form_interaction_time || 0; // milliseconds\nif (submissionTime < 3000) { // Less than 3 seconds\n  spamScore += 50;\n  spamReasons.push(`Submitted too quickly (${submissionTime}ms)`);\n} else if (submissionTime < 5000) {\n  spamScore += 25;\n  spamReasons.push(`Fast submission (${submissionTime}ms)`);\n}\n\n// Check 3: Email domain validation\nconst email = formData.email || '';\nconst disposableEmailDomains = [\n  'tempmail.com', 'guerrillamail.com', '10minutemail.com', 'mailinator.com',\n  'throwaway.email', 'trashmail.com', 'yopmail.com', 'maildrop.cc'\n];\n\nconst emailDomain = email.split('@')[1]?.toLowerCase();\nif (disposableEmailDomains.includes(emailDomain)) {\n  spamScore += 40;\n  spamReasons.push(`Disposable email domain: ${emailDomain}`);\n}\n\n// Check 4: Email format validation\nconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nif (!emailRegex.test(email)) {\n  spamScore += 30;\n  spamReasons.push('Invalid email format');\n}\n\n// Check 5: Message quality analysis\nconst message = formData.message || '';\n\n// Too short\nif (message.length < 10) {\n  spamScore += 30;\n  spamReasons.push(`Message too short (${message.length} chars)`);\n}\n\n// Excessive links\nconst linkCount = (message.match(/http(s)?:\\/\\//g) || []).length;\nif (linkCount > 3) {\n  spamScore += 40;\n  spamReasons.push(`Too many links (${linkCount})`);\n} else if (linkCount > 1) {\n  spamScore += 20;\n  spamReasons.push(`Multiple links (${linkCount})`);\n}\n\n// Suspicious keywords\nconst spamKeywords = [\n  'viagra', 'cialis', 'lottery', 'winner', 'prince', 'inheritance',\n  'casino', 'bitcoin', 'crypto', 'investment opportunity', 'click here',\n  'buy now', 'limited time', 'act now', 'congratulations', 'you have won'\n];\n\nconst lowercaseMessage = message.toLowerCase();\nconst foundKeywords = spamKeywords.filter(keyword => lowercaseMessage.includes(keyword));\nif (foundKeywords.length > 0) {\n  spamScore += foundKeywords.length * 20;\n  spamReasons.push(`Spam keywords: ${foundKeywords.join(', ')}`);\n}\n\n// Check 6: Excessive capitalization\nconst capsRatio = (message.match(/[A-Z]/g) || []).length / message.length;\nif (capsRatio > 0.5 && message.length > 20) {\n  spamScore += 25;\n  spamReasons.push(`Excessive capitals (${Math.round(capsRatio * 100)}%)`);\n}\n\n// Check 7: Repeated characters (e.g., \"hellooooo\")\nif (/(.)\\1{4,}/.test(message)) {\n  spamScore += 15;\n  spamReasons.push('Excessive repeated characters');\n}\n\n// Check 8: Phone number validation (if provided)\nconst phone = formData.phone || '';\nif (phone && !/^[\\d\\s\\-\\+\\(\\)]+$/.test(phone)) {\n  spamScore += 20;\n  spamReasons.push('Invalid phone number format');\n}\n\n// Check 9: Name validation\nconst firstName = formData.firstName || formData.first_name || '';\nconst lastName = formData.lastName || formData.last_name || '';\n\nif (firstName.length < 2 || lastName.length < 2) {\n  spamScore += 15;\n  spamReasons.push('Suspiciously short name');\n}\n\n// Check for keyboard mashing (e.g., \"asdfghjkl\")\nconst keyboardPatterns = ['qwerty', 'asdfgh', 'zxcvbn', '123456', 'abcdef'];\nconst fullName = `${firstName} ${lastName}`.toLowerCase();\nif (keyboardPatterns.some(pattern => fullName.includes(pattern))) {\n  spamScore += 30;\n  spamReasons.push('Keyboard pattern in name');\n}\n\n// Check 10: User agent validation\nconst userAgent = formData.user_agent || '';\nif (!userAgent || userAgent.length < 20) {\n  spamScore += 25;\n  spamReasons.push('Missing or suspicious user agent');\n}\n\n// Check 11: Same field repetition\nif (firstName === lastName || email.includes(firstName.toLowerCase())) {\n  spamScore += 15;\n  spamReasons.push('Repetitive field values');\n}\n\n// Determine spam classification\nlet classification = 'legitimate';\nlet action = 'accept';\n\nif (spamScore >= 100) {\n  classification = 'definite_spam';\n  action = 'reject';\n} else if (spamScore >= 60) {\n  classification = 'likely_spam';\n  action = 'quarantine';\n} else if (spamScore >= 30) {\n  classification = 'suspicious';\n  action = 'review';\n}\n\nreturn {\n  json: {\n    // Original form data\n    email: email,\n    first_name: firstName,\n    last_name: lastName,\n    phone: phone,\n    company: formData.company || '',\n    message: message,\n    \n    // Spam analysis\n    spam_score: spamScore,\n    classification: classification,\n    action: action,\n    spam_reasons: spamReasons,\n    checks_performed: 11,\n    \n    // Metadata\n    submission_time: submissionTime,\n    email_domain: emailDomain,\n    link_count: linkCount,\n    user_agent: userAgent,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "code-spam-detection",
+      "name": "Code: Spam Detection Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "key": "=spam:check:{{ $('Webhook: Form Submission').item.json.email }}",
+        "operation": "get",
+        "options": {}
+      },
+      "id": "redis-check-submissions",
+      "name": "Redis: Check Recent Submissions",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "credentials": {
+        "redis": {
+          "id": "7",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check rate limiting from Redis\nconst spamData = $('Code: Spam Detection Analysis').item.json;\nconst redisData = $input.item.json;\n\nlet submissionCount = 0;\nlet isRateLimited = false;\n\nif (redisData && redisData.value) {\n  try {\n    const data = JSON.parse(redisData.value);\n    submissionCount = data.count || 0;\n    \n    // Rate limit: max 3 submissions per email per hour\n    if (submissionCount >= 3) {\n      isRateLimited = true;\n    }\n  } catch (e) {\n    // Redis data not parseable, assume first submission\n  }\n}\n\n// Increment count\nsubmissionCount++;\n\n// Update spam score if rate limited\nlet finalSpamScore = spamData.spam_score;\nlet finalClassification = spamData.classification;\nlet finalAction = spamData.action;\nconst spamReasons = [...spamData.spam_reasons];\n\nif (isRateLimited) {\n  finalSpamScore += 50;\n  spamReasons.push(`Rate limit exceeded (${submissionCount} submissions)`);\n  \n  if (finalSpamScore >= 100) {\n    finalClassification = 'definite_spam';\n    finalAction = 'reject';\n  } else if (finalSpamScore >= 60) {\n    finalClassification = 'likely_spam';\n    finalAction = 'quarantine';\n  }\n}\n\nreturn {\n  json: {\n    ...spamData,\n    spam_score: finalSpamScore,\n    classification: finalClassification,\n    action: finalAction,\n    spam_reasons: spamReasons,\n    submission_count: submissionCount,\n    is_rate_limited: isRateLimited\n  }\n};"
+      },
+      "id": "code-rate-limit-check",
+      "name": "Code: Rate Limit Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "key": "=spam:check:{{ $('Code: Spam Detection Analysis').item.json.email }}",
+        "value": "={{ JSON.stringify({ count: $json.submission_count, last_submission: $json.timestamp }) }}",
+        "ttl": 3600,
+        "options": {}
+      },
+      "id": "redis-update-count",
+      "name": "Redis: Update Submission Count",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1120, 400],
+      "credentials": {
+        "redis": {
+          "id": "7",
+          "name": "Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO spam_submissions (\n  email,\n  first_name,\n  last_name,\n  phone,\n  company,\n  message,\n  spam_score,\n  classification,\n  action_taken,\n  spam_reasons,\n  submission_count,\n  user_agent,\n  created_at\n) VALUES (\n  '{{ $json.email }}',\n  '{{ $json.first_name }}',\n  '{{ $json.last_name }}',\n  '{{ $json.phone }}',\n  '{{ $json.company }}',\n  '{{ $json.message }}',\n  {{ $json.spam_score }},\n  '{{ $json.classification }}',\n  '{{ $json.action }}',\n  '{{ JSON.stringify($json.spam_reasons) }}',\n  {{ $json.submission_count }},\n  '{{ $json.user_agent }}',\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "postgres-log-submission",
+      "name": "Postgres: Log Spam Analysis",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1340, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Code: Rate Limit Check').item.json.action }}",
+              "operation": "equals",
+              "value2": "reject"
+            }
+          ]
+        }
+      },
+      "id": "if-reject",
+      "name": "IF: Should Reject",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"Submission blocked\",\n  \"message\": \"Your submission has been flagged as spam. If you believe this is an error, please contact us directly.\"\n}",
+        "responseCode": 400,
+        "options": {}
+      },
+      "id": "respond-reject",
+      "name": "Respond: Reject Submission",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Code: Rate Limit Check').item.json.action }}",
+              "operation": "equals",
+              "value2": "quarantine"
+            }
+          ]
+        }
+      },
+      "id": "if-quarantine",
+      "name": "IF: Should Quarantine",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1780, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"⚠️ **Suspicious Form Submission - Review Required**\",\n  \"embeds\": [\n    {\n      \"title\": \"Potential Spam Detected\",\n      \"description\": \"A form submission has been quarantined for manual review.\",\n      \"color\": 15844367,\n      \"fields\": [\n        {\n          \"name\": \"Email\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.email }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Spam Score\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.spam_score }}/100\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Classification\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.classification }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Name\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.first_name }} {{ $('Code: Rate Limit Check').item.json.last_name }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Company\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.company || 'N/A' }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Submissions\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.submission_count }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Spam Reasons\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.spam_reasons.join('\\\\n• ') }}\",\n          \"inline\": false\n        },\n        {\n          \"name\": \"Message Preview\",\n          \"value\": \"{{ $('Code: Rate Limit Check').item.json.message.substring(0, 200) }}{{ $('Code: Rate Limit Check').item.json.message.length > 200 ? '...' : '' }}\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-quarantine-alert",
+      "name": "Discord: Quarantine Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"action\": \"{{ $('Code: Rate Limit Check').item.json.action }}\",\n  \"spam_score\": {{ $('Code: Rate Limit Check').item.json.spam_score }},\n  \"classification\": \"{{ $('Code: Rate Limit Check').item.json.classification }}\",\n  \"message\": \"Form submission validated successfully\"\n}",
+        "options": {}
+      },
+      "id": "respond-accept",
+      "name": "Respond: Accept/Review Submission",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2000, 600]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Form Submission": {
+      "main": [
+        [
+          {
+            "node": "Code: Spam Detection Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Spam Detection Analysis": {
+      "main": [
+        [
+          {
+            "node": "Redis: Check Recent Submissions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis: Check Recent Submissions": {
+      "main": [
+        [
+          {
+            "node": "Code: Rate Limit Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Rate Limit Check": {
+      "main": [
+        [
+          {
+            "node": "Redis: Update Submission Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis: Update Submission Count": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Spam Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Log Spam Analysis": {
+      "main": [
+        [
+          {
+            "node": "IF: Should Reject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Should Reject": {
+      "main": [
+        [
+          {
+            "node": "Respond: Reject Submission",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF: Should Quarantine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Should Quarantine": {
+      "main": [
+        [
+          {
+            "node": "Discord: Quarantine Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond: Accept/Review Submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Quarantine Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond: Accept/Review Submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-spam-protection"
+  },
+  "id": "11",
+  "tags": []
+}

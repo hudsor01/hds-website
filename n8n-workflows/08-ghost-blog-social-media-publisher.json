@@ -1,0 +1,309 @@
+{
+  "name": "08 - Ghost Blog Social Media Publisher",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ghost-social-publish",
+        "options": {}
+      },
+      "id": "webhook-ghost-publish",
+      "name": "Webhook: Ghost Post Published",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 400],
+      "webhookId": "hds-ghost-social"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "post_id",
+              "name": "post_id",
+              "value": "={{ $json.post.current.id }}",
+              "type": "string"
+            },
+            {
+              "id": "post_title",
+              "name": "post_title",
+              "value": "={{ $json.post.current.title }}",
+              "type": "string"
+            },
+            {
+              "id": "post_url",
+              "name": "post_url",
+              "value": "={{ $json.post.current.url }}",
+              "type": "string"
+            },
+            {
+              "id": "post_excerpt",
+              "name": "post_excerpt",
+              "value": "={{ $json.post.current.excerpt || $json.post.current.custom_excerpt || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "post_slug",
+              "name": "post_slug",
+              "value": "={{ $json.post.current.slug }}",
+              "type": "string"
+            },
+            {
+              "id": "featured_image",
+              "name": "featured_image",
+              "value": "={{ $json.post.current.feature_image || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "tags",
+              "name": "tags",
+              "value": "={{ ($json.post.current.tags || []).map(t => t.name).join(', ') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-post-data",
+      "name": "Set: Extract Post Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate social media posts from blog content\nconst postData = $input.item.json;\nconst maxTweetLength = 280;\nconst maxLinkedInLength = 3000;\n\n// Truncate excerpt for Twitter\nfunction truncateForTwitter(text, url) {\n  const urlLength = 23; // Twitter's t.co URL length\n  const hashtagLength = 15; // Space for hashtag\n  const availableLength = maxTweetLength - urlLength - hashtagLength - 5; // 5 for spaces and ellipsis\n  \n  if (text.length <= availableLength) {\n    return text;\n  }\n  \n  return text.substring(0, availableLength - 3) + '...';\n}\n\n// Extract hashtags from tags\nconst hashtags = postData.tags\n  .split(', ')\n  .filter(tag => tag.length > 0)\n  .map(tag => '#' + tag.replace(/\\s+/g, ''))\n  .slice(0, 3) // Max 3 hashtags\n  .join(' ');\n\n// Twitter post (280 characters)\nconst twitterExcerpt = truncateForTwitter(postData.post_excerpt, postData.post_url);\nconst twitterPost = `${twitterExcerpt}\\n\\n${postData.post_url}\\n\\n${hashtags}`;\n\n// LinkedIn post (more detailed)\nconst linkedInPost = `${postData.post_title}\\n\\n${postData.post_excerpt}\\n\\nRead the full article: ${postData.post_url}\\n\\n${hashtags} #WebDevelopment #TechBlog`;\n\n// Facebook post\nconst facebookPost = `${postData.post_title}\\n\\n${postData.post_excerpt}\\n\\nRead more: ${postData.post_url}`;\n\nreturn {\n  json: {\n    post_id: postData.post_id,\n    post_title: postData.post_title,\n    post_url: postData.post_url,\n    post_slug: postData.post_slug,\n    featured_image: postData.featured_image,\n    twitter_post: twitterPost,\n    linkedin_post: linkedInPost,\n    facebook_post: facebookPost,\n    hashtags: hashtags\n  }\n};"
+      },
+      "id": "code-generate-social-posts",
+      "name": "Code: Generate Social Media Posts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twitter.com/2/tweets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"{{ $json.twitter_post }}\"\n}",
+        "options": {}
+      },
+      "id": "twitter-post",
+      "name": "Twitter: Post Tweet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 200],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "4",
+          "name": "Twitter OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"author\": \"urn:li:person:YOUR_PERSON_URN\",\n  \"lifecycleState\": \"PUBLISHED\",\n  \"specificContent\": {\n    \"com.linkedin.ugc.ShareContent\": {\n      \"shareCommentary\": {\n        \"text\": \"{{ $('Code: Generate Social Media Posts').item.json.linkedin_post }}\"\n      },\n      \"shareMediaCategory\": \"ARTICLE\",\n      \"media\": [\n        {\n          \"status\": \"READY\",\n          \"originalUrl\": \"{{ $('Code: Generate Social Media Posts').item.json.post_url }}\"\n        }\n      ]\n    }\n  },\n  \"visibility\": {\n    \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n  }\n}",
+        "options": {}
+      },
+      "id": "linkedin-post",
+      "name": "LinkedIn: Create Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "5",
+          "name": "LinkedIn OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v18.0/YOUR_PAGE_ID/feed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $('Code: Generate Social Media Posts').item.json.facebook_post }}\",\n  \"link\": \"{{ $('Code: Generate Social Media Posts').item.json.post_url }}\"\n}",
+        "options": {}
+      },
+      "id": "facebook-post",
+      "name": "Facebook: Create Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 600],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "6",
+          "name": "Facebook OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO social_media_posts (\n  post_id,\n  post_slug,\n  post_title,\n  post_url,\n  twitter_posted,\n  linkedin_posted,\n  facebook_posted,\n  posted_at,\n  created_at\n) VALUES (\n  '{{ $('Set: Extract Post Data').item.json.post_id }}',\n  '{{ $('Set: Extract Post Data').item.json.post_slug }}',\n  '{{ $('Set: Extract Post Data').item.json.post_title }}',\n  '{{ $('Set: Extract Post Data').item.json.post_url }}',\n  true,\n  true,\n  true,\n  NOW(),\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "postgres-log-social-posts",
+      "name": "Postgres: Log Social Media Posts",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1120, 400],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": \"📢 **New Blog Post Published to Social Media**\",\n  \"embeds\": [\n    {\n      \"title\": \"{{ $('Set: Extract Post Data').item.json.post_title }}\",\n      \"url\": \"{{ $('Set: Extract Post Data').item.json.post_url }}\",\n      \"description\": \"Blog post has been automatically published to all social media channels.\",\n      \"color\": 1942002,\n      \"thumbnail\": {\n        \"url\": \"{{ $('Set: Extract Post Data').item.json.featured_image }}\"\n      },\n      \"fields\": [\n        {\n          \"name\": \"Platforms\",\n          \"value\": \"✅ Twitter\\n✅ LinkedIn\\n✅ Facebook\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Hashtags\",\n          \"value\": \"{{ $('Code: Generate Social Media Posts').item.json.hashtags || 'None' }}\",\n          \"inline\": true\n        },\n        {\n          \"name\": \"Blog URL\",\n          \"value\": \"[View Post]({{ $('Set: Extract Post Data').item.json.post_url }})\",\n          \"inline\": false\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "discord-notify",
+      "name": "Discord: Notify Social Posts Published",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"post_title\": \"{{ $('Set: Extract Post Data').item.json.post_title }}\",\n  \"platforms_published\": [\"twitter\", \"linkedin\", \"facebook\"],\n  \"post_url\": \"{{ $('Set: Extract Post Data').item.json.post_url }}\"\n}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1560, 400]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook: Ghost Post Published": {
+      "main": [
+        [
+          {
+            "node": "Set: Extract Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set: Extract Post Data": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate Social Media Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate Social Media Posts": {
+      "main": [
+        [
+          {
+            "node": "Twitter: Post Tweet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn: Create Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Facebook: Create Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twitter: Post Tweet": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Social Media Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn: Create Post": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Social Media Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook: Create Post": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Log Social Media Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Log Social Media Posts": {
+      "main": [
+        [
+          {
+            "node": "Discord: Notify Social Posts Published",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord: Notify Social Posts Published": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "instanceId": "hds-ghost-social"
+  },
+  "id": "8",
+  "tags": []
+}
