@@ -12,7 +12,7 @@ if (!process.env.GHOST_API_URL || !process.env.GHOST_CONTENT_API_KEY) {
 export const ghostClient = new GhostContentAPI({
   url: process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com',
   key: process.env.GHOST_CONTENT_API_KEY || '',
-  version: 'v5.0'
+  version: 'v5'
 });
 
 interface GetPostsOptions {
