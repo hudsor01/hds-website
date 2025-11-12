@@ -41,7 +41,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
             )}
             {author.twitter && (
               <a
-                href={`https://twitter.com/${author.twitter.replace('@', '')}`}
+                href={author.twitter.startsWith('http') ? author.twitter : `https://twitter.com/${author.twitter.replace('@', '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan-400 hover:text-cyan-300 transition-colors"
@@ -51,7 +51,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
             )}
             {author.facebook && (
               <a
-                href={`https://facebook.com/${author.facebook}`}
+                href={author.facebook.startsWith('http') ? author.facebook : `https://facebook.com/${author.facebook}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-cyan-400 hover:text-cyan-300 transition-colors"
