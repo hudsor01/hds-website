@@ -226,11 +226,4 @@ export async function searchPosts(query: string, options?: GetPostsOptions): Pro
   }
 }
 
-export function calculateReadingTime(html: string): number {
-  const wordsPerMinute = 200;
-  const text = html.replace(/<[^>]*>/g, '');
-  const wordCount = text.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
-}
-
 export type { Post, Tag, Author, Settings };
