@@ -214,7 +214,8 @@ export async function searchPosts(query: string, options?: GetPostsOptions): Pro
   try {
     logger.debug('Searching posts in Ghost', { query, options });
 
-    const filter = `title:~'${query}'+excerpt:~'${query}'`;
+    const escapedQuery = query.replace(/(['\\])/g, '\\$1');
+    const filter = `title:~'${escapedQuery}'+excerpt:~'${escapedQuery}'`;
     return getPosts({
       ...options,
       filter: options?.filter ? `${options.filter}+(${filter})` : filter,
