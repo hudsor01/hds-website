@@ -145,7 +145,7 @@ export interface BrowseOptions {
 }
 
 export interface BrowseResponse<T> {
-  data?: T[];
+  data: T[];
   meta: {
     pagination: {
       page: number;
