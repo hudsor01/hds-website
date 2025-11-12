@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: post.meta_title || `${post.title} - Hudson Digital Solutions`,
     description: post.meta_description || post.excerpt || post.custom_excerpt,
-    keywords: post.tags?.map((tag) => tag.name).join(", "),
+    keywords: post.tags?.map((tag) => tag.name)?.join(", "),
     openGraph: {
       title: post.og_title || post.title,
       description: post.og_description || post.excerpt || post.custom_excerpt,
