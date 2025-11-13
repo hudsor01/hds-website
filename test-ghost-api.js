@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable no-console */
+
 /**
  * Test script to verify Ghost CMS API connectivity
  * Run with: node test-ghost-api.js

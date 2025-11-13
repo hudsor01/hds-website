@@ -2,18 +2,31 @@ import GhostContentAPI from '@tryghost/content-api';
 import type { Post, Tag, Author, Settings, BrowseOptions } from '@/types/ghost-types';
 import { logger } from './logger';
 
-if (!process.env.GHOST_API_URL || !process.env.GHOST_CONTENT_API_KEY) {
-  logger.error('Ghost API credentials are not configured', {
+// Validate environment variables
+const GHOST_API_URL = process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
+const GHOST_CONTENT_API_KEY = process.env.GHOST_CONTENT_API_KEY || '';
+
+if (!GHOST_CONTENT_API_KEY) {
+  logger.error('Ghost Content API Key is not configured. Blog features will not work.', {
     hasUrl: !!process.env.GHOST_API_URL,
-    hasKey: !!process.env.GHOST_CONTENT_API_KEY,
+    hasKey: false,
   });
 }
 
 export const ghostClient = new GhostContentAPI({
-  url: process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com',
-  key: process.env.GHOST_CONTENT_API_KEY || '',
-  version: 'v5'
+  url: GHOST_API_URL,
+  key: GHOST_CONTENT_API_KEY,
+  version: 'v5.0'
 });
+
+/**
+ * Sanitize user input for Ghost API queries
+ * Removes special characters that could cause issues in filter queries
+ */
+function sanitizeInput(input: string): string {
+  // Remove quotes and special characters that could break Ghost filters
+  return input.replace(/['"\\]/g, '').trim();
+}
 
 interface GetPostsOptions {
   limit?: number;
@@ -66,11 +79,18 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  // Validate input
+  if (!slug || typeof slug !== 'string' || slug.trim() === '') {
+    logger.error('Invalid slug provided to getPostBySlug', { slug });
+    return null;
+  }
+
   try {
-    logger.debug('Fetching post by slug from Ghost', { slug });
+    const sanitizedSlug = sanitizeInput(slug);
+    logger.debug('Fetching post by slug from Ghost', { slug: sanitizedSlug });
 
     const post = await ghostClient.posts.read(
-      { slug },
+      { slug: sanitizedSlug },
       { include: ['tags', 'authors'] }
     );
 
@@ -98,10 +118,17 @@ export async function getPostById(id: string): Promise<Post | null> {
 }
 
 export async function getPostsByTag(tagSlug: string, options?: GetPostsOptions): Promise<GetPostsResult> {
-  try {
-    logger.debug('Fetching posts by tag from Ghost', { tagSlug, options });
+  // Validate input
+  if (!tagSlug || typeof tagSlug !== 'string' || tagSlug.trim() === '') {
+    logger.error('Invalid tag slug provided to getPostsByTag', { tagSlug });
+    return { posts: [] };
+  }
 
-    const filter = `tag:${tagSlug}`;
+  try {
+    const sanitizedTagSlug = sanitizeInput(tagSlug);
+    logger.debug('Fetching posts by tag from Ghost', { tagSlug: sanitizedTagSlug, options });
+
+    const filter = `tag:${sanitizedTagSlug}`;
     return getPosts({
       ...options,
       filter: options?.filter ? `${options.filter}+${filter}` : filter,
@@ -113,10 +140,17 @@ export async function getPostsByTag(tagSlug: string, options?: GetPostsOptions):
 }
 
 export async function getPostsByAuthor(authorSlug: string, options?: GetPostsOptions): Promise<GetPostsResult> {
-  try {
-    logger.debug('Fetching posts by author from Ghost', { authorSlug, options });
+  // Validate input
+  if (!authorSlug || typeof authorSlug !== 'string' || authorSlug.trim() === '') {
+    logger.error('Invalid author slug provided to getPostsByAuthor', { authorSlug });
+    return { posts: [] };
+  }
 
-    const filter = `author:${authorSlug}`;
+  try {
+    const sanitizedAuthorSlug = sanitizeInput(authorSlug);
+    logger.debug('Fetching posts by author from Ghost', { authorSlug: sanitizedAuthorSlug, options });
+
+    const filter = `author:${sanitizedAuthorSlug}`;
     return getPosts({
       ...options,
       filter: options?.filter ? `${options.filter}+${filter}` : filter,
@@ -160,10 +194,17 @@ export async function getTags(): Promise<Tag[]> {
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag | null> {
-  try {
-    logger.debug('Fetching tag by slug from Ghost', { slug });
+  // Validate input
+  if (!slug || typeof slug !== 'string' || slug.trim() === '') {
+    logger.error('Invalid slug provided to getTagBySlug', { slug });
+    return null;
+  }
 
-    const tag = await ghostClient.tags.read({ slug });
+  try {
+    const sanitizedSlug = sanitizeInput(slug);
+    logger.debug('Fetching tag by slug from Ghost', { slug: sanitizedSlug });
+
+    const tag = await ghostClient.tags.read({ slug: sanitizedSlug });
     return tag;
   } catch (error) {
     logger.error('Failed to fetch tag by slug from Ghost', { slug, error: error as Error });
@@ -187,10 +228,17 @@ export async function getAuthors(): Promise<Author[]> {
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
-  try {
-    logger.debug('Fetching author by slug from Ghost', { slug });
+  // Validate input
+  if (!slug || typeof slug !== 'string' || slug.trim() === '') {
+    logger.error('Invalid slug provided to getAuthorBySlug', { slug });
+    return null;
+  }
 
-    const author = await ghostClient.authors.read({ slug });
+  try {
+    const sanitizedSlug = sanitizeInput(slug);
+    logger.debug('Fetching author by slug from Ghost', { slug: sanitizedSlug });
+
+    const author = await ghostClient.authors.read({ slug: sanitizedSlug });
     return author;
   } catch (error) {
     logger.error('Failed to fetch author by slug from Ghost', { slug, error: error as Error });
@@ -211,11 +259,19 @@ export async function getSettings(): Promise<Settings | null> {
 }
 
 export async function searchPosts(query: string, options?: GetPostsOptions): Promise<GetPostsResult> {
-  try {
-    logger.debug('Searching posts in Ghost', { query, options });
+  // Validate and sanitize input to prevent injection
+  if (!query || typeof query !== 'string' || query.trim() === '') {
+    logger.error('Invalid query provided to searchPosts', { query });
+    return { posts: [] };
+  }
 
-    const escapedQuery = query.replace(/(['\\])/g, '\\$1');
-    const filter = `title:~'${escapedQuery}'+excerpt:~'${escapedQuery}'`;
+  try {
+    // Sanitize the query to prevent filter injection
+    const sanitizedQuery = sanitizeInput(query);
+    logger.debug('Searching posts in Ghost', { query: sanitizedQuery, options });
+
+    // Use sanitized query in filter
+    const filter = `title:~'${sanitizedQuery}'+excerpt:~'${sanitizedQuery}'`;
     return getPosts({
       ...options,
       filter: options?.filter ? `${options.filter}+(${filter})` : filter,
@@ -224,6 +280,23 @@ export async function searchPosts(query: string, options?: GetPostsOptions): Pro
     logger.error('Failed to search posts in Ghost', { query, error: error as Error });
     return { posts: [] };
   }
+}
+
+/**
+ * Calculate reading time from HTML content
+ * Note: Ghost API already provides reading_time field, so this is rarely needed
+ * @param html - HTML content to calculate reading time for
+ * @returns Reading time in minutes
+ */
+export function calculateReadingTime(html: string): number {
+  if (!html || typeof html !== 'string') {
+    return 0;
+  }
+
+  const wordsPerMinute = 200;
+  const text = html.replace(/<[^>]*>/g, '');
+  const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
+  return Math.ceil(wordCount / wordsPerMinute) || 1;
 }
 
 export type { Post, Tag, Author, Settings };
