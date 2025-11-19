@@ -6,17 +6,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
-// Fallback system fonts for test environments without network access
-const _geistSans = {
-  variable: "--font-geist-sans",
-  className: ""
-};
-
-const _geistMono = {
-  variable: "--font-geist-mono",
-  className: ""
-};
-
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
