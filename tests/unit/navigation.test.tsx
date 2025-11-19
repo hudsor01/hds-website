@@ -98,9 +98,9 @@ describe('Footer Component', () => {
     const { default: Footer } = await import('@/components/layout/Footer')
     render(<Footer />)
 
-    // Should have company name or copyright
-    const companyInfo = screen.queryByText(/hudson|©|copyright/i)
-    expect(companyInfo).toBeTruthy()
+    // Should have company name or copyright (may be multiple instances)
+    const companyInfo = screen.queryAllByText(/hudson|©|copyright/i)
+    expect(companyInfo.length).toBeGreaterThan(0)
   })
 
   it('should render footer navigation links', async () => {
