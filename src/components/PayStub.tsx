@@ -1,6 +1,7 @@
 import React from 'react'
 import { FileText } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import type { PayPeriod, PaystubData } from '@/types/paystub'
 
 interface PayStubProps {
@@ -21,256 +22,159 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
   }
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       {/* Save as PDF Button */}
-      <div className="no-print" style={{
-        position: 'absolute',
-        top: '-60px',
-        right: '0',
-        zIndex: 1000
-      }}>
+      <div className="no-print absolute -top-[60px] right-0 z-[1000]">
         <button
           onClick={handleSaveAsPDF}
-          style={{
-            backgroundColor: '#059669',
-            color: 'white',
-            border: 'none',
-            padding: '12px 24px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            transition: 'background-color 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#047857'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+          className={cn(
+            "flex items-center gap-2 px-6 py-3 rounded-md text-sm font-semibold transition-smooth",
+            "bg-accent text-white border-0 shadow-sm cursor-pointer",
+            "hover:bg-accent/90 focus-ring"
+          )}
         >
-          <FileText className="inline-block w-4 h-4 mr-2" />
+          <FileText className="w-4 h-4" />
           Save as PDF
         </button>
       </div>
 
-      <div style={{
-        maxWidth: '8.5in',
-        minHeight: '11in',
-        margin: '0 auto',
-        backgroundColor: 'white',
-        padding: '1in',
-        fontFamily: 'Arial, sans-serif',
-        fontSize: '12px',
-        color: '#000',
-        border: '1px solid #ccc'
-      }}>
-      {/* Header */}
-      <div style={{
-        borderBottom: '2px solid #000',
-        paddingBottom: '20px',
-        marginBottom: '20px'
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start'
-        }}>
-          <div>
-            <h2 style={{
-              fontSize: '18px',
-              fontWeight: 'bold',
-              margin: '0 0 10px 0'
-            }}>EARNINGS STATEMENT</h2>
+      <div className={cn(
+        "max-w-[8.5in] min-h-[11in] mx-auto bg-white p-[1in]",
+        "font-sans text-[12px] text-black border border-gray-300"
+      )}>
+        {/* Header */}
+        <div className="border-b-2 border-black pb-5 mb-5">
+          <div className="flex-between items-start">
             <div>
-              <strong>{employeeData.employerName || '[EMPLOYER NAME]'}</strong><br/>
-              <span style={{ fontSize: '10px', color: '#666' }}>
-                Pay Period: {formatDate(payPeriod.payDate)} - {formatDate(payPeriod.payDate)}<br/>
-                Pay Date: {formatDate(payPeriod.payDate)}
-              </span>
+              <h2 className="text-lg font-bold m-0 mb-2.5">EARNINGS STATEMENT</h2>
+              <div>
+                <strong>{employeeData.employerName || '[EMPLOYER NAME]'}</strong><br/>
+                <span className="text-[10px] text-gray-600">
+                  Pay Period: {formatDate(payPeriod.payDate)} - {formatDate(payPeriod.payDate)}<br/>
+                  Pay Date: {formatDate(payPeriod.payDate)}
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="border border-black p-2.5 bg-gray-50">
+                <strong>CHECK #{payPeriod.period.toString().padStart(4, '0')}</strong><br/>
+                <span className="text-base font-bold">
+                  {formatCurrency(payPeriod.netPay)}
+                </span>
+              </div>
             </div>
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{
-              border: '1px solid #000',
-              padding: '10px',
-              backgroundColor: '#f9f9f9'
-            }}>
-              <strong>CHECK #{payPeriod.period.toString().padStart(4, '0')}</strong><br/>
-              <span style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                {formatCurrency(payPeriod.netPay)}
-              </span>
+        </div>
+
+        {/* Employee Information */}
+        <div className="flex-between mb-5">
+          <div>
+            <h4 className="m-0 mb-2.5 text-sm">EMPLOYEE</h4>
+            <div>
+              <strong>{employeeData.employeeName}</strong><br/>
+              {employeeData.employeeId && <span>ID: {employeeData.employeeId}<br/></span>}
+            </div>
+          </div>
+          <div className="text-right">
+            <h4 className="m-0 mb-2.5 text-sm">PAY PERIOD</h4>
+            <div>
+              Period {payPeriod.period} of 26<br/>
+              Tax Year: {employeeData.taxYear}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Employee Information */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '20px'
-      }}>
-        <div>
-          <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>EMPLOYEE</h4>
-          <div>
-            <strong>{employeeData.employeeName}</strong><br/>
-            {employeeData.employeeId && <span>ID: {employeeData.employeeId}<br/></span>}
-          </div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>PAY PERIOD</h4>
-          <div>
-            Period {payPeriod.period} of 26<br/>
-            Tax Year: {employeeData.taxYear}
-          </div>
-        </div>
-      </div>
+        {/* Earnings Section */}
+        <div className="mb-5">
+          <h4 className="m-0 mb-2.5 text-sm border-b border-black pb-1.5">EARNINGS</h4>
+          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2.5 items-center">
+            <div><strong>Description</strong></div>
+            <div className="text-right"><strong>Rate</strong></div>
+            <div className="text-right"><strong>Hours</strong></div>
+            <div className="text-right"><strong>Current</strong></div>
 
-      {/* Earnings Section */}
-      <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ 
-          margin: '0 0 10px 0', 
-          fontSize: '14px',
-          borderBottom: '1px solid #000',
-          paddingBottom: '5px'
-        }}>EARNINGS</h4>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto auto auto',
-          gap: '10px',
-          alignItems: 'center'
-        }}>
-          <div><strong>Description</strong></div>
-          <div style={{ textAlign: 'right' }}><strong>Rate</strong></div>
-          <div style={{ textAlign: 'right' }}><strong>Hours</strong></div>
-          <div style={{ textAlign: 'right' }}><strong>Current</strong></div>
-          
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px' }}>Regular</div>
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px', textAlign: 'right' }}>
-            {formatCurrency(employeeData.hourlyRate)}
+            <div className="border-t border-gray-300 pt-1.5">Regular</div>
+            <div className="border-t border-gray-300 pt-1.5 text-right">
+              {formatCurrency(employeeData.hourlyRate)}
+            </div>
+            <div className="border-t border-gray-300 pt-1.5 text-right">
+              {payPeriod.hours}
+            </div>
+            <div className="border-t border-gray-300 pt-1.5 text-right">
+              {formatCurrency(payPeriod.grossPay)}
+            </div>
           </div>
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px', textAlign: 'right' }}>
-            {payPeriod.hours}
-          </div>
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px', textAlign: 'right' }}>
-            {formatCurrency(payPeriod.grossPay)}
+          <div className="border-t-2 border-black mt-2.5 pt-1.5 flex-between font-bold">
+            <span>TOTAL CURRENT EARNINGS:</span>
+            <span>{formatCurrency(payPeriod.grossPay)}</span>
           </div>
         </div>
-        <div style={{
-          borderTop: '2px solid #000',
-          marginTop: '10px',
-          paddingTop: '5px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontWeight: 'bold'
-        }}>
-          <span>TOTAL CURRENT EARNINGS:</span>
-          <span>{formatCurrency(payPeriod.grossPay)}</span>
-        </div>
-      </div>
 
-      {/* Deductions Section */}
-      <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ 
-          margin: '0 0 10px 0', 
-          fontSize: '14px',
-          borderBottom: '1px solid #000',
-          paddingBottom: '5px'
-        }}>DEDUCTIONS</h4>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto auto',
-          gap: '10px',
-          alignItems: 'center'
-        }}>
-          <div><strong>Description</strong></div>
-          <div style={{ textAlign: 'right' }}><strong>Current</strong></div>
-          <div style={{ textAlign: 'right' }}><strong>YTD</strong></div>
-          
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px' }}>Federal Income Tax</div>
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px', textAlign: 'right' }}>
-            {formatCurrency(payPeriod.federalTax)}
-          </div>
-          <div style={{ borderTop: '1px solid #ddd', paddingTop: '5px', textAlign: 'right' }}>
-            {formatCurrency(ytdTotals.federalTax)}
-          </div>
-          
-          <div>Social Security Tax</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(payPeriod.socialSecurity)}</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.socialSecurity)}</div>
-          
-          <div>Medicare Tax</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(payPeriod.medicare)}</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.medicare)}</div>
-        </div>
-        <div style={{
-          borderTop: '2px solid #000',
-          marginTop: '10px',
-          paddingTop: '5px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontWeight: 'bold'
-        }}>
-          <span>TOTAL CURRENT DEDUCTIONS:</span>
-          <span>{formatCurrency(payPeriod.federalTax + payPeriod.socialSecurity + payPeriod.medicare)}</span>
-        </div>
-      </div>
+        {/* Deductions Section */}
+        <div className="mb-5">
+          <h4 className="m-0 mb-2.5 text-sm border-b border-black pb-1.5">DEDUCTIONS</h4>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-2.5 items-center">
+            <div><strong>Description</strong></div>
+            <div className="text-right"><strong>Current</strong></div>
+            <div className="text-right"><strong>YTD</strong></div>
 
-      {/* Net Pay Summary */}
-      <div style={{
-        border: '2px solid #000',
-        padding: '15px',
-        backgroundColor: '#f0f0f0',
-        marginBottom: '20px'
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontSize: '16px',
-          fontWeight: 'bold'
-        }}>
-          <span>NET PAY:</span>
-          <span>{formatCurrency(payPeriod.netPay)}</span>
-        </div>
-      </div>
+            <div className="border-t border-gray-300 pt-1.5">Federal Income Tax</div>
+            <div className="border-t border-gray-300 pt-1.5 text-right">
+              {formatCurrency(payPeriod.federalTax)}
+            </div>
+            <div className="border-t border-gray-300 pt-1.5 text-right">
+              {formatCurrency(ytdTotals.federalTax)}
+            </div>
 
-      {/* Year-to-Date Summary */}
-      <div style={{ borderTop: '1px solid #000', paddingTop: '15px' }}>
-        <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>YEAR-TO-DATE TOTALS</h4>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto',
-          gap: '10px',
-          fontSize: '11px'
-        }}>
-          <div>Gross Earnings:</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.grossPay)}</div>
-          <div>Federal Income Tax:</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.federalTax)}</div>
-          <div>Social Security Tax:</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.socialSecurity)}</div>
-          <div>Medicare Tax:</div>
-          <div style={{ textAlign: 'right' }}>{formatCurrency(ytdTotals.medicare)}</div>
-          <div style={{ borderTop: '1px solid #000', paddingTop: '5px', fontWeight: 'bold' }}>Net Pay:</div>
-          <div style={{ borderTop: '1px solid #000', paddingTop: '5px', textAlign: 'right', fontWeight: 'bold' }}>
-            {formatCurrency(ytdTotals.netPay)}
+            <div>Social Security Tax</div>
+            <div className="text-right">{formatCurrency(payPeriod.socialSecurity)}</div>
+            <div className="text-right">{formatCurrency(ytdTotals.socialSecurity)}</div>
+
+            <div>Medicare Tax</div>
+            <div className="text-right">{formatCurrency(payPeriod.medicare)}</div>
+            <div className="text-right">{formatCurrency(ytdTotals.medicare)}</div>
+          </div>
+          <div className="border-t-2 border-black mt-2.5 pt-1.5 flex-between font-bold">
+            <span>TOTAL CURRENT DEDUCTIONS:</span>
+            <span>{formatCurrency(payPeriod.federalTax + payPeriod.socialSecurity + payPeriod.medicare)}</span>
           </div>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div style={{
-        marginTop: '30px',
-        fontSize: '10px',
-        color: '#666',
-        borderTop: '1px solid #ddd',
-        paddingTop: '10px'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          This statement is for informational purposes only and does not constitute an official document.
-          <br/>
-          Please retain this statement for your records.
+        {/* Net Pay Summary */}
+        <div className="border-2 border-black p-4 bg-gray-100 mb-5">
+          <div className="flex-between items-center text-base font-bold">
+            <span>NET PAY:</span>
+            <span>{formatCurrency(payPeriod.netPay)}</span>
+          </div>
         </div>
-      </div>
+
+        {/* Year-to-Date Summary */}
+        <div className="border-t border-black pt-4">
+          <h4 className="m-0 mb-2.5 text-sm">YEAR-TO-DATE TOTALS</h4>
+          <div className="grid grid-cols-[1fr_auto] gap-2.5 text-[11px]">
+            <div>Gross Earnings:</div>
+            <div className="text-right">{formatCurrency(ytdTotals.grossPay)}</div>
+            <div>Federal Income Tax:</div>
+            <div className="text-right">{formatCurrency(ytdTotals.federalTax)}</div>
+            <div>Social Security Tax:</div>
+            <div className="text-right">{formatCurrency(ytdTotals.socialSecurity)}</div>
+            <div>Medicare Tax:</div>
+            <div className="text-right">{formatCurrency(ytdTotals.medicare)}</div>
+            <div className="border-t border-black pt-1.5 font-bold">Net Pay:</div>
+            <div className="border-t border-black pt-1.5 text-right font-bold">
+              {formatCurrency(ytdTotals.netPay)}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-[10px] text-gray-600 border-t border-gray-300 pt-2.5">
+          <div className="text-center">
+            This statement is for informational purposes only and does not constitute an official document.
+            <br/>
+            Please retain this statement for your records.
+          </div>
+        </div>
       </div>
     </div>
   )

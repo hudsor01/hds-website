@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { cn } from '@/lib/utils'
 
 export default function FloatingInput({
   type = 'text',
@@ -33,15 +34,8 @@ export default function FloatingInput({
   const hasValue = value.length > 0
   const shouldFloat = isFocused || hasValue
 
-  // Simplify nested ternary for label color
-  const getLabelColor = () => {
-    if (isFocused && shouldFloat) {return 'text-cyan-400'}
-    if (shouldFloat) {return 'text-gray-300'}
-    return ''
-  }
-
   return (
-    <div className={`relative ${className}`}>
+    <div className={cn("relative", className)}>
       <input
         ref={inputRef}
         type={type}
@@ -57,47 +51,37 @@ export default function FloatingInput({
         required={required}
         disabled={disabled}
         autoComplete={autoComplete}
-        className={`
-          peer w-full px-4 pt-6 pb-2
-          bg-gray-800/50 border rounded-lg
-          text-white placeholder-transparent
-          transition-all duration-200 ease-in-out
-          ${disabled
-            ? 'border-gray-700 cursor-not-allowed opacity-50'
-            : isFocused
-              ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
-              : 'border-gray-600 hover:border-gray-500'
-          }
-          focus-ring
-        `}
+        className={cn(
+          "peer w-full px-4 pt-6 pb-2 border rounded-lg text-foreground placeholder-transparent transition-smooth focus-ring",
+          "bg-muted-dark/50 dark:bg-muted-dark/50",
+          disabled && "border-border-dark cursor-not-allowed opacity-50",
+          !disabled && isFocused && "border-secondary ring-2 ring-secondary/20 hover-glow",
+          !disabled && !isFocused && "border-border-dark hover:border-muted-foreground-dark"
+        )}
         placeholder={placeholder}
       />
-      
+
       <label
         htmlFor={id}
-        className={`
-          absolute left-4 transition-all duration-200 ease-in-out pointer-events-none
-          ${shouldFloat 
-            ? 'top-2 text-xs text-cyan-400' 
-            : 'top-1/2 -translate-y-1/2 text-base text-gray-400'
-          }
-          ${getLabelColor()}
-        `}
+        className={cn(
+          "absolute left-4 pointer-events-none transition-smooth",
+          shouldFloat && "top-2 text-xs",
+          !shouldFloat && "top-1/2 -translate-y-1/2 text-base",
+          isFocused && shouldFloat && "text-secondary",
+          !isFocused && shouldFloat && "text-muted-foreground",
+          !shouldFloat && "text-muted-foreground-dark"
+        )}
       >
         {placeholder}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-destructive ml-1">*</span>}
       </label>
 
       {/* Focus ring animation */}
       <div
-        className={`
-          absolute inset-0 rounded-lg pointer-events-none
-          transition-all duration-200 ease-in-out
-          ${isFocused 
-            ? 'ring-1 ring-cyan-400/30 ring-offset-1 ring-offset-transparent' 
-            : ''
-          }
-        `}
+        className={cn(
+          "absolute inset-0 rounded-lg pointer-events-none transition-smooth",
+          isFocused && "ring-1 ring-secondary/30 ring-offset-1 ring-offset-transparent"
+        )}
       />
     </div>
   )
