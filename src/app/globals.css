@@ -572,6 +572,31 @@
     animation: gradient-shift 3s ease infinite;
   }
 
+  /* Blob Animation for Floating Orbs */
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
   /* Subgrid Support */
   .subgrid {
     display: grid;
@@ -761,6 +786,17 @@
 
   .will-change-opacity {
     will-change: opacity;
+  }
+
+  /* GPU Acceleration for Smooth Animations */
+  .transform-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .will-change-auto {
+    will-change: auto;
   }
 
   /* Modern Scroll Behavior */
@@ -1171,6 +1207,24 @@
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
+  }
+
+  /* Gradient Text Effect - Used across portfolio, 404, and hero sections */
+  .gradient-text {
+    background: linear-gradient(90deg, var(--color-cyan-400), var(--color-blue-500), var(--color-purple-500));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+  }
+
+  .gradient-text-animated {
+    background: linear-gradient(90deg, var(--color-cyan-400), var(--color-blue-500), var(--color-purple-500));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: gradient-shift 3s linear infinite;
   }
 }
 
