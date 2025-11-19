@@ -9,7 +9,6 @@ import type {
   UserProperties,
   PostHogLike,
 } from "@/types/analytics";
-import { logger } from './logger';
 
 class AnalyticsManager {
   private posthog: PostHogLike | null = null;
@@ -50,7 +49,7 @@ class AnalyticsManager {
         );
       }
     } catch (error) {
-      logger.error("Failed to initialize analytics", {
+      console.error("Failed to initialize analytics", {
         error,
         posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ? 'present' : 'missing',
         host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'default',
@@ -90,13 +89,15 @@ class AnalyticsManager {
       }
 
       // Structured logging for development and production
-      logger.info('Analytics Event Tracked', {
-        eventName,
-        properties,
-        analyticsProvider: 'PostHog',
-        initialized: this.initialized,
-        queueLength: this.queue.length
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Analytics Event Tracked', {
+          eventName,
+          properties,
+          analyticsProvider: 'PostHog',
+          initialized: this.initialized,
+          queueLength: this.queue.length
+        });
+      }
     });
   }
 
@@ -240,7 +241,7 @@ class AnalyticsManager {
         }),
       });
     } catch (error) {
-      logger.error("Failed to send analytics to backend", {
+      console.error("Failed to send analytics to backend", {
         error,
         eventName,
         properties,

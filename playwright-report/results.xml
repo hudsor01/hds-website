@@ -1,2 +1,1582 @@
-<testsuites id="" name="" tests="0" failures="0" skipped="0" errors="0" time="0.38331999999999994">
+<testsuites id="" name="" tests="273" failures="5" skipped="265" errors="0" time="206.287875">
+<testsuite name="api/contact-form-submission.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="21" failures="5" skipped="13" time="174.045" errors="0">
+<testcase name="Contact Form Submission - UI Integration › should submit contact form successfully" classname="api/contact-form-submission.spec.ts" time="45.064">
+<failure message="contact-form-submission.spec.ts:18:7 should submit contact form successfully" type="FAILURE">
+<![CDATA[  [chromium] › api/contact-form-submission.spec.ts:18:7 › Contact Form Submission - UI Integration › should submit contact form successfully 
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      27 |
+      28 |     // Select options
+    > 29 |     await page.selectOption('select[name="service"]', 'custom-web-app')
+         |                ^
+      30 |     await page.selectOption('select[name="budget"]', '15k-50k')
+      31 |     await page.selectOption('select[name="timeline"]', '1-month')
+      32 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      27 |
+      28 |     // Select options
+    > 29 |     await page.selectOption('select[name="service"]', 'custom-web-app')
+         |                ^
+      30 |     await page.selectOption('select[name="budget"]', '15k-50k')
+      31 |     await page.selectOption('select[name="timeline"]', '1-month')
+      32 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-3d5b1-t-contact-form-successfully-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form Submission - UI Integration › should show validation errors for empty required fields" classname="api/contact-form-submission.spec.ts" time="2.582">
+</testcase>
+<testcase name="Contact Form Submission - UI Integration › should validate email format" classname="api/contact-form-submission.spec.ts" time="4.356">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-119f8-hould-validate-email-format-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form Submission - UI Integration › should show loading state during submission" classname="api/contact-form-submission.spec.ts" time="3.207">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-bf977-ing-state-during-submission-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form Submission - UI Integration › should reset form after successful submission" classname="api/contact-form-submission.spec.ts" time="13.212">
+<failure message="contact-form-submission.spec.ts:98:7 should reset form after successful submission" type="FAILURE">
+<![CDATA[  [chromium] › api/contact-form-submission.spec.ts:98:7 › Contact Form Submission - UI Integration › should reset form after successful submission 
+
+    Error: browserContext.newPage: Target page, context or browser has been closed
+    Browser logs:
+
+    <launching> /root/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --enable-web-bluetooth --disable-web-security --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding --disable-dev-shm-usage --no-sandbox --disable-setuid-sandbox --disable-gpu --disable-software-rasterizer --single-process --user-data-dir=/tmp/playwright_chromiumdev_profile-zWEFVT --remote-debugging-pipe --no-startup-window
+    <launched> pid=17626
+    [pid=17626][err] [1119/182812.886374:ERROR:base/files/file_path_watcher_inotify.cc:923] Failed to read /proc/sys/fs/inotify/max_user_watches
+    [pid=17626][err] [1119/182812.886685:ERROR:base/files/file_path_watcher_inotify.cc:923] Failed to read /proc/sys/fs/inotify/max_user_watches
+    [pid=17626][err] [1119/182812.894064:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=17626][err] [1119/182812.900902:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=17626][err] [1119/182812.901303:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=17626][err] [1119/182812.901843:ERROR:net/base/address_tracker_linux.cc:242] Could not bind NETLINK socket: Permission denied (13)
+    [pid=17626][err] [1119/182812.902338:ERROR:base/files/file_path_watcher_inotify.cc:923] Failed to read /proc/sys/fs/inotify/max_user_watches
+    [pid=17626][err] [1119/182812.907735:WARNING:media/audio/linux/audio_manager_linux.cc:54] Falling back to ALSA for audio output. PulseAudio is not available or could not be initialized.
+    [pid=17626][err] [1119/182812.961744:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182812.961850:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182812.967562:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182812.967962:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182812.971426:WARNING:device/bluetooth/dbus/bluez_dbus_manager.cc:209] Floss manager service not available, cannot set Floss enable/disable.
+    [pid=17626][err] [1119/182812.994032:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182812.994224:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182813.235135:INFO:CONSOLE:0] "Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.", source:  (0)
+    [pid=17626][err] [1119/182813.395930:INFO:CONSOLE:1] "Refused to frame 'https://www.google.com/' because it violates the following Content Security Policy directive: "child-src 'none'". Note that 'frame-src' was not explicitly set, so 'child-src' is used as a fallback.
+    [pid=17626][err] ", source: http://localhost:3000/contact (1)
+    [pid=17626][err] [1119/182814.011413:INFO:CONSOLE:25631] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)
+    [pid=17626][err] [1119/182814.131417:INFO:CONSOLE:33] "Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY", source: webpack-internal:///(app-pages-browser)/./src/lib/supabase.ts (33)
+    [pid=17626][err] [1119/182814.135243:INFO:CONSOLE:124] "GoTrueClient@sb-bshjmbshupiibfiewpxb-auth-token:1 (2.83.0) 2025-11-19T18:28:14.133Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.", source: webpack-internal:///(app-pages-browser)/./node_modules/@supabase/auth-js/dist/module/GoTrueClient.js (124)
+    [pid=17626][err] [1119/182814.611051:INFO:CONSOLE:121] "[Vercel Web Analytics] Failed to load script from https://va.vercel-scripts.com/v1/script.debug.js. Please check if any ad blockers are enabled and try again.", source: webpack-internal:///(app-pages-browser)/./node_modules/@vercel/analytics/dist/react/index.mjs (121)
+    [pid=17626][err] [1119/182815.121757:INFO:CONSOLE:59] "[2025-11-19T18:28:15.121Z] [INFO] Contact form state updated [object Object]", source: webpack-internal:///(app-pages-browser)/./src/lib/logger.ts (59)
+    [pid=17626][err] [1119/182815.123680:INFO:CONSOLE:59] "[2025-11-19T18:28:15.123Z] [INFO] Contact form state updated [object Object]", source: webpack-internal:///(app-pages-browser)/./src/lib/logger.ts (59)
+    [pid=17626][err] [1119/182816.191150:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+    [pid=17626][err] [1119/182816.191212:WARNING:net/proxy_resolution/proxy_config_service_linux.cc:100] Proxy authentication parameters ignored, see bug 16709
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('text=Message Sent Successfully')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator('text=Message Sent Successfully')
+
+
+      108 |
+      109 |     // Wait for success
+    > 110 |     await expect(page.locator('text=Message Sent Successfully')).toBeVisible({ timeout: 10000 })
+          |                                                                  ^
+      111 |
+      112 |     // Click "Send Another Message" button
+      113 |     await page.click('button:has-text("Send Another Message")')
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:110:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-4a3ab-after-successful-submission-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form - Lead Scoring Logic › should create high-value lead (score &gt;= 70) with large budget and urgent timeline" classname="api/contact-form-submission.spec.ts" time="35.212">
+<failure message="contact-form-submission.spec.ts:125:7 should create high-value lead (score &gt;= 70) with large budget and urgent timeline" type="FAILURE">
+<![CDATA[  [chromium] › api/contact-form-submission.spec.ts:125:7 › Contact Form - Lead Scoring Logic › should create high-value lead (score >= 70) with large budget and urgent timeline 
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      133 |
+      134 |     // High scoring options
+    > 135 |     await page.selectOption('select[name="service"]', 'custom-web-app')  // 2 points
+          |                ^
+      136 |     await page.selectOption('select[name="budget"]', '50k-plus')         // 3 points
+      137 |     await page.selectOption('select[name="timeline"]', 'asap')           // 2 points
+      138 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:135:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      133 |
+      134 |     // High scoring options
+    > 135 |     await page.selectOption('select[name="service"]', 'custom-web-app')  // 2 points
+          |                ^
+      136 |     await page.selectOption('select[name="budget"]', '50k-plus')         // 3 points
+      137 |     await page.selectOption('select[name="timeline"]', 'asap')           // 2 points
+      138 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:135:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-5bb99--budget-and-urgent-timeline-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form - Lead Scoring Logic › should create qualified lead (score 40-69) with medium budget" classname="api/contact-form-submission.spec.ts" time="35.165">
+<failure message="contact-form-submission.spec.ts:147:7 should create qualified lead (score 40-69) with medium budget" type="FAILURE">
+<![CDATA[  [chromium] › api/contact-form-submission.spec.ts:147:7 › Contact Form - Lead Scoring Logic › should create qualified lead (score 40-69) with medium budget 
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      153 |
+      154 |     // Medium scoring options
+    > 155 |     await page.selectOption('select[name="service"]', 'website-redesign')  // 1 point
+          |                ^
+      156 |     await page.selectOption('select[name="budget"]', '15k-50k')            // 2 points
+      157 |     await page.selectOption('select[name="timeline"]', '3-months')         // 1 point
+      158 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:155:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      153 |
+      154 |     // Medium scoring options
+    > 155 |     await page.selectOption('select[name="service"]', 'website-redesign')  // 1 point
+          |                ^
+      156 |     await page.selectOption('select[name="budget"]', '15k-50k')            // 2 points
+      157 |     await page.selectOption('select[name="timeline"]', '3-months')         // 1 point
+      158 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:155:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-db41f-re-40-69-with-medium-budget-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form - Lead Scoring Logic › should create nurture lead (score &lt; 40) with small budget and flexible timeline" classname="api/contact-form-submission.spec.ts" time="35.247">
+<failure message="contact-form-submission.spec.ts:166:7 should create nurture lead (score &lt; 40) with small budget and flexible timeline" type="FAILURE">
+<![CDATA[  [chromium] › api/contact-form-submission.spec.ts:166:7 › Contact Form - Lead Scoring Logic › should create nurture lead (score < 40) with small budget and flexible timeline 
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      172 |
+      173 |     // Low scoring options
+    > 174 |     await page.selectOption('select[name="service"]', 'consultation')    // 0 points
+          |                ^
+      175 |     await page.selectOption('select[name="budget"]', 'under-5k')         // 0 points
+      176 |     await page.selectOption('select[name="timeline"]', 'flexible')       // 0 points
+      177 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:174:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    TimeoutError: page.selectOption: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for locator('select[name="service"]')
+        - locator resolved to <select id="service" name="service" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500">…</select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        30 × waiting for element to be visible and enabled
+           - did not find some options
+         - retrying select option action
+           - waiting 500ms
+
+
+      172 |
+      173 |     // Low scoring options
+    > 174 |     await page.selectOption('select[name="service"]', 'consultation')    // 0 points
+          |                ^
+      175 |     await page.selectOption('select[name="budget"]', 'under-5k')         // 0 points
+      176 |     await page.selectOption('select[name="timeline"]', 'flexible')       // 0 points
+      177 |
+        at /home/user/hds-website/e2e/api/contact-form-submission.spec.ts:174:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/test-failed-1.png]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/error-context.md]]
+
+[[ATTACHMENT|../test-results/api-contact-form-submissio-90607-udget-and-flexible-timeline-chromium-retry1/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Form - Rate Limiting › should allow up to 3 submissions within 15 minutes" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Rate Limiting › should block 4th submission within 15 minutes" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Security › should sanitize potential XSS in firstName" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Security › should handle SQL injection attempts in message" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Security › should validate phone number format if provided" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Field Interactions › should preserve form data on validation error" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Field Interactions › should handle very long messages" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Field Interactions › should handle special characters in company name" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Field Interactions › should handle international characters" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Analytics Tracking › should track form interaction events" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Accessibility › should have proper form labels" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Accessibility › should be keyboard navigable" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form - Accessibility › should announce errors to screen readers" classname="api/contact-form-submission.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api/email-queue-processing.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="25" failures="0" skipped="25" time="0" errors="0">
+<testcase name="Email Queue Processing - Authentication › should reject request without authorization header" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Authentication › should reject request with invalid Bearer token" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Authentication › should reject request with malformed authorization header" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Authentication › should accept request with valid Bearer token" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Authentication › should return 500 if CRON_SECRET environment variable not set" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Response Format › should return processing stats on success" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Response Format › should include processed and error counts in message" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Response Format › should return ISO timestamp" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - GET Endpoint (Stats) › should get queue stats without authorization" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - GET Endpoint (Stats) › should get queue stats with valid authorization" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - GET Endpoint (Stats) › should return current timestamp in stats" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Security Headers › should apply security headers to response" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Security Headers › should return JSON content type" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Error Handling › should handle processing errors gracefully" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Error Handling › should return error details on failure" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Performance › should process queue within reasonable time" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Performance › should handle empty queue efficiently" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Idempotency › should be safe to call multiple times" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Integration › should process emails scheduled by contact form" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Integration › should process emails scheduled by lead magnet" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Monitoring › should provide queue statistics" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Monitoring › should track successful vs failed emails" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Edge Cases › should handle OPTIONS preflight request" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Edge Cases › should reject unsupported HTTP methods" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Queue Processing - Edge Cases › should handle concurrent processing requests" classname="api/email-queue-processing.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api/health-check.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="26" failures="0" skipped="26" time="0" errors="0">
+<testcase name="Health Check - Basic Functionality › should respond to GET requests" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Basic Functionality › should respond to HEAD requests for uptime monitoring" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Basic Functionality › should respond quickly for fast health checks" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Response Format › should return JSON response" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Response Format › should include status in response" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Response Format › should include timestamp in response" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Response Format › should include uptime information" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Environment Validation › should validate critical environment variables" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Environment Validation › should indicate if required services are configured" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - System Metrics › should include memory usage if available" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - System Metrics › should include process information" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Service Availability › should check database connectivity if applicable" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Service Availability › should check email service status" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Service Availability › should check analytics service status" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Error Scenarios › should return 503 when unhealthy" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Error Scenarios › should include error details when unhealthy" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Security › should not expose sensitive information" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Security › should include security headers" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Security › should allow CORS for monitoring tools" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Performance › should handle concurrent health check requests" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Performance › should not impact application performance" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Monitoring Integration › should be usable by UptimeRobot" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Monitoring Integration › should be usable by Pingdom" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Monitoring Integration › should include custom monitoring headers" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Versioning › should include API version if available" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Health Check - Versioning › should include build information" classname="api/health-check.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api/lead-magnet-api.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testcase name="Lead Magnet API - Validation › should accept valid lead magnet request" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with missing email" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with invalid email format" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with missing firstName" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with empty firstName" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with invalid resource" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Validation › should reject request with invalid JSON" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Security › should sanitize email to lowercase and trim" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Security › should trim firstName whitespace" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Security › should detect potential injection attempts" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Security › should apply security headers" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Resources › should accept valid resource: website-performance-checklist" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Resources › should accept valid resource: roi-calculator" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Resources › should accept valid resource: conversion-optimization-guide" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Resources › should return correct download URLs for each resource" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Response Format › should return success response with correct structure" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Response Format › should return error response with correct structure" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Email Delivery › should still succeed even if email service fails" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Email Delivery › should include appropriate success message when configured" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Edge Cases › should handle very long first names" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Edge Cases › should handle international characters in firstName" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Edge Cases › should handle emoji in firstName" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Edge Cases › should handle plus-addressing in email" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Edge Cases › should handle subdomain emails" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Performance › should respond within acceptable time" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Performance › should handle concurrent requests" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Error Handling › should handle missing Content-Type header" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Error Handling › should handle empty request body" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Lead Magnet API - Error Handling › should handle null values" classname="api/lead-magnet-api.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="api/rate-limiting-security.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="23" failures="0" skipped="23" time="0" errors="0">
+<testcase name="Rate Limiting - Contact Form › should enforce rate limit on contact form submissions" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Rate Limiting - Contact Form › should show appropriate error message when rate limited" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Rate Limiting - Lead Magnet API › should accept multiple lead magnet requests from different emails" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSRF Protection › should generate CSRF token" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSRF Protection › should validate CSRF token on protected endpoints" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Security Headers - Contact Form › should include security headers on contact page" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Security Headers - Contact Form › should have CSP headers" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Security Headers - Contact Form › should set HSTS header" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Security Headers - API Endpoints › should include security headers on lead magnet API" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Security Headers - API Endpoints › should include security headers on email queue API" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Input Sanitization › should sanitize HTML in contact form inputs" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Input Sanitization › should sanitize SQL injection attempts" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Input Sanitization › should sanitize JavaScript in lead magnet form" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Input Sanitization › should handle LDAP injection attempts" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Header Injection Prevention › should prevent email header injection in contact form" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Email Header Injection Prevention › should prevent header injection in lead magnet" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="DOS Protection › should handle rapid repeated requests gracefully" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="DOS Protection › should not crash on very large payloads" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication &amp; Authorization › should protect email queue endpoint from unauthorized access" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication &amp; Authorization › should protect email queue stats from unauthorized access" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Authentication &amp; Authorization › should validate Bearer token format" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CORS Protection › should handle CORS preflight requests" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CORS Protection › should include CORS headers in API responses" classname="api/rate-limiting-security.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="component-classes-verification.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Component Classes Visual Verification › should verify globals.css component classes are working" classname="component-classes-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Component Classes Visual Verification › should verify contact form component classes" classname="component-classes-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Component Classes Visual Verification › should verify services page component classes" classname="component-classes-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="contact-form.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="Contact Form › should display contact form with all fields" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form › should show validation errors for empty required fields" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form › should successfully submit form with valid data" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form › should show pending state while submitting" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form › should handle rate limiting gracefully" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Form › should preserve form data on validation error" classname="contact-form.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="css-rendering-validation.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="24" failures="0" skipped="24" time="0" errors="0">
+<testcase name="CSS Rendering Validation › Semantic Tokens &amp; Theme Colors › should correctly apply semantic color tokens from globals.css" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Semantic Tokens &amp; Theme Colors › should apply OKLCH colors correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Semantic Tokens &amp; Theme Colors › should correctly render dark mode colors" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Utility Classes from globals.css › should apply flex-center utility correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Utility Classes from globals.css › should apply flex-between utility correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Utility Classes from globals.css › should apply transition-smooth utility correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Utility Classes from globals.css › should apply focus-ring utility correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Utility Classes from globals.css › should apply hover effects correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Component Classes from globals.css › should render glass-card component correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Component Classes from globals.css › should render CTA buttons correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Component Classes from globals.css › should render gradient backgrounds correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Component Classes from globals.css › should render grid patterns correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › shadcn/ui Component Styling › should render Button component with correct variants" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › shadcn/ui Component Styling › should use CSS variables for theming" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Responsive &amp; Accessibility Features › should apply responsive text utilities correctly" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Responsive &amp; Accessibility Features › should respect reduced motion preferences" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Responsive &amp; Accessibility Features › should apply correct focus styles for accessibility" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Responsive &amp; Accessibility Features › should have proper contrast ratios" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Visual Consistency Across Pages › should apply consistent styling on /" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Visual Consistency Across Pages › should apply consistent styling on /services" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Visual Consistency Across Pages › should apply consistent styling on /about" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Visual Consistency Across Pages › should apply consistent styling on /contact" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Visual Consistency Across Pages › should apply consistent styling on /portfolio" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="CSS Rendering Validation › Print Styles for PDF Components › should apply print-specific styles to PayStub component" classname="css-rendering-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="dark-theme-verification.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Homepage Dark Theme Verification › should display dark hero background instead of bright blue/cyan gradient" classname="dark-theme-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage Dark Theme Verification › should maintain terminal/code aesthetic with dark colors" classname="dark-theme-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage Dark Theme Verification › should capture and analyze color scheme of key elements" classname="dark-theme-verification.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="gradient-components-validation.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="Gradient Components Validation › Gradient Background Classes › should render base gradient classes correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Gradient Background Classes › should render gradient variants with opacity correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Gradient Background Classes › should render decorative gradients correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Gradient Background Classes › should apply blur effects to gradient orbs" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Glass Morphism Components › should render glass-card with backdrop blur" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Glass Morphism Components › should render glass-card-light variant" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Glass Morphism Components › should render glass-section variant" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Grid Pattern Overlays › should render grid-pattern overlay" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Grid Pattern Overlays › should render grid pattern variants" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Component Hover States › should apply card hover effects correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Component Hover States › should apply card glow variants correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Component Hover States › should apply button hover glow correctly" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › CTA Button Components › should render cta-primary with gradient background" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › CTA Button Components › should render cta-secondary with hover effects" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Responsive Text Components › should apply responsive text sizing" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Responsive Text Components › should apply text clamp utilities" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Background Pattern Component › should render background pattern with gradient orbs" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Gradient Components Validation › Background Pattern Component › should render grid overlay pattern" classname="gradient-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="hero-text-visibility.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Hero Text Visibility › should display all hero text elements correctly" classname="hero-text-visibility.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Hero Text Visibility › should have proper gradient classes applied" classname="hero-text-visibility.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Hero Text Visibility › should not have any invisible text due to CSS issues" classname="hero-text-visibility.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="integrations/posthog-analytics.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="18" failures="0" skipped="18" time="0" errors="0">
+<testcase name="PostHog - Initialization › should load PostHog script" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Initialization › should initialize with correct API key" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Initialization › should set correct PostHog host" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Page View Tracking › should track page view on initial load" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Page View Tracking › should track navigation between pages" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Event Tracking › should track form submission events" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Event Tracking › should track CTA button clicks" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Event Tracking › should track link clicks" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - User Identification › should identify users after form submission" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Conversion Tracking › should track lead magnet downloads as conversions" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Conversion Tracking › should track contact form submissions as conversions" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Session Recording › should enable session recording" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Session Recording › should capture console logs if enabled" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Error Tracking › should track JavaScript errors" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Performance Monitoring › should track page load performance" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Custom Properties › should capture custom event properties" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Privacy Compliance › should respect Do Not Track" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PostHog - Privacy Compliance › should allow opt-out" classname="integrations/posthog-analytics.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="refactored-components-validation.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="20" failures="0" skipped="20" time="0" errors="0">
+<testcase name="Refactored Components Validation › FloatingInput Component › should render FloatingInput with semantic tokens" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › FloatingInput Component › should apply focus state correctly on FloatingInput" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › FloatingInput Component › should float label on focus and value" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › FloatingTextarea Component › should render FloatingTextarea with semantic tokens" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › FloatingTextarea Component › should show character count when typing" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Button Component › should render Button with proper flex layout" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Button Component › should apply transition-smooth utility" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Button Component › should apply focus-ring on focus" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Tabs Component › should render TabsList with flex layout" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Tabs Component › should apply active state styling to selected tab" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › PayStub Component (Print Layout) › should render PayStub with print-specific dimensions" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › PayStub Component (Print Layout) › should render PayStub button with semantic accent color" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › PayStub Component (Print Layout) › should use flex-between utility for layout" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Footer Component › should render Footer with semantic nav-dark background" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › GoogleMap Component › should render iframe with border-0 class" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Paystub Generator Form › should render form buttons with Tailwind classes" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Paystub Generator Form › should apply hover states to buttons" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Paystub Generator Form › should render form with gradient background" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Visual Regression - No Inline Styles › should not have inline style attributes on main components" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Refactored Components Validation › Visual Regression - No Inline Styles › should use semantic tokens instead of hardcoded colors" classname="refactored-components-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="tailwind-enhancements.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="23" failures="0" skipped="23" time="0" errors="0">
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should have text-balance on headings" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should have text-pretty on descriptions" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Text Balancing › should apply text-balance across all major pages" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Will-Change Optimizations › should have will-change-transform on hover elements" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Will-Change Optimizations › should optimize performance for animated elements" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should have scroll snap on mobile testimonials" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should have horizontal scroll on mobile portfolio" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Scroll Snap Implementation › should hide scrollbar on mobile" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › should have scroll-smooth on html element" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › should show scroll-to-top button when scrolled" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Smooth Scrolling › scroll-to-top button should have proper styling" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent-cyan-500 on form inputs" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent color on textarea" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Form Accessibility &amp; Accent Colors › should have accent color on select elements" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should respect prefers-reduced-motion" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should disable hover scales with reduced motion" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Motion Preferences › should disable will-change with reduced motion" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Responsive Behavior › scroll snap should only apply on mobile" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Responsive Behavior › text sizes should be responsive" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Performance Optimizations › should have optimized animations" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Performance Optimizations › should use will-change sparingly" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Accessibility Compliance › scroll-to-top button should be accessible" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Tailwind CSS Enhancements › Accessibility Compliance › form elements should have proper focus states" classname="tailwind-enhancements.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="test-pages.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="homepage loads" classname="test-pages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="about page loads" classname="test-pages.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="user-flows-validation.spec.ts" timestamp="2025-11-19T18:27:09.396Z" hostname="chromium" tests="29" failures="0" skipped="29" time="0" errors="0">
+<testcase name="User Flow Validation › Lead Generation Flow › should complete full lead generation journey from homepage to contact" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Lead Generation Flow › should track user journey from services to contact" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Lead Generation Flow › should navigate from portfolio to contact" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Service Discovery Flow › should browse all service offerings" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Service Discovery Flow › should navigate between home and services seamlessly" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Pricing Evaluation Flow › should view pricing information and navigate to contact" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Pricing Evaluation Flow › should compare pricing options" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Portfolio Browsing Flow › should browse portfolio projects" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Portfolio Browsing Flow › should view live project sites from portfolio" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Portfolio Browsing Flow › should navigate from portfolio stats to CTA" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Paystub Generator Flow › should complete paystub generation flow" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Paystub Generator Flow › should save form data in localStorage" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Paystub Generator Flow › should generate and preview PDF" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Mobile Navigation Flow › should navigate using mobile menu" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Mobile Navigation Flow › should scroll smoothly on mobile" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Mobile Navigation Flow › should interact with touch elements on mobile" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Error Handling Flow › should display 404 page for invalid routes" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Error Handling Flow › should handle form validation errors gracefully" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Error Handling Flow › should recover from network errors" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Blog and Content Flow › should browse blog listing" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Blog and Content Flow › should navigate from blog to individual post" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › About Page Flow › should view company information" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › About Page Flow › should navigate from about to contact" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Cross-Page Navigation Flow › should complete full site navigation loop" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Cross-Page Navigation Flow › should maintain state across navigation" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Performance and Loading Flow › should load pages within acceptable time" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Performance and Loading Flow › should show loading states during navigation" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Accessibility Navigation Flow › should navigate using keyboard only" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="User Flow Validation › Accessibility Navigation Flow › should announce page changes to screen readers" classname="user-flows-validation.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
 </testsuites>

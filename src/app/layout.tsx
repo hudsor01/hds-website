@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
@@ -7,19 +6,16 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
-const geistSans = Geist({
+// Fallback system fonts for test environments without network access
+const geistSans = {
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: 'swap',
-  preload: true,
-});
+  className: ""
+};
 
-const geistMono = Geist_Mono({
+const geistMono = {
   variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: 'swap',
-  preload: true,
-});
+  className: ""
+};
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -148,7 +144,7 @@ export default function RootLayout({
         <meta name="MobileOptimized" content="320" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
+        className="antialiased selection-cyan"
         suppressHydrationWarning
       >
         <NavbarLight />

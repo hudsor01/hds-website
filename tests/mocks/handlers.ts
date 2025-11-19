@@ -10,17 +10,17 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 export const handlers = [
   // Lead Magnet API - Success
   http.post(`${BASE_URL}/api/lead-magnet`, async ({ request }) => {
-    const body = await request.json()
+    const body = await request.json() as Record<string, unknown> | null
 
     // Validate required fields
-    if (!body.firstName || !body.email || !body.resource) {
+    if (!body || !body.firstName || !body.email || !body.resource) {
       return HttpResponse.json(
         {
           error: 'Validation failed',
           errors: {
-            firstName: !body.firstName ? 'First name is required' : undefined,
-            email: !body.email ? 'Email is required' : undefined,
-            resource: !body.resource ? 'Resource is required' : undefined
+            firstName: !body?.firstName ? 'First name is required' : undefined,
+            email: !body?.email ? 'Email is required' : undefined,
+            resource: !body?.resource ? 'Resource is required' : undefined
           }
         },
         { status: 400 }
@@ -205,12 +205,12 @@ export const handlers = [
       )
     }
 
-    const body = await request.json()
+    const body = await request.json() as Record<string, unknown> | null
 
     return HttpResponse.json({
       success: true,
       processed: true,
-      webhook_type: body.type || 'unknown'
+      webhook_type: body?.type || 'unknown'
     })
   })
 ]

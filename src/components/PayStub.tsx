@@ -1,7 +1,6 @@
 import React from 'react'
 import { FileText } from 'lucide-react'
-import { formatCurrency, formatDate } from '@/lib/utils'
-import { cn } from '@/lib/utils'
+import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { PayPeriod, PaystubData } from '@/types/paystub'
 
 interface PayStubProps {
