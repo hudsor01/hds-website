@@ -1,6 +1,12 @@
 // Test setup file for Vitest
-import { beforeAll, afterAll } from 'vitest'
+import { beforeAll, afterAll, afterEach } from 'vitest'
 import '@testing-library/jest-dom'
+import { server } from './mocks/server'
+
+// Setup MSW server for API mocking
+beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
 
 // Global test setup
 beforeAll(async () => {
