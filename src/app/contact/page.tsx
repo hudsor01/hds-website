@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { Mail, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { useFeatureFlag } from '@/lib/feature-flags';
 import { FEATURE_FLAGS } from '@/types/utils';
 // import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
