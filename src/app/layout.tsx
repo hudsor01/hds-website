@@ -7,12 +7,12 @@ import { Analytics } from "@/components/Analytics";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 
 // Fallback system fonts for test environments without network access
-const geistSans = {
+const _geistSans = {
   variable: "--font-geist-sans",
   className: ""
 };
 
-const geistMono = {
+const _geistMono = {
   variable: "--font-geist-mono",
   className: ""
 };
