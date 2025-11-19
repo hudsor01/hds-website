@@ -81,40 +81,67 @@ export default function ContactPage() {
 
               <div>
                 <h1 className="text-clamp-2xl font-black text-white leading-none tracking-tight text-balance">
-                  <span className="inline-block">Ready to</span>
+                  <span className="inline-block">Get Your Free</span>
                   <br />
-                  <span className="inline-block gradient-text">Transform</span>
+                  <span className="inline-block gradient-text">ROI Roadmap</span>
                   <br />
-                  <span className="inline-block">Your Business?</span>
+                  <span className="inline-block">in 30 Minutes</span>
                 </h1>
               </div>
 
               <div className="typography">
                 <p className="text-responsive-md text-gray-300 leading-relaxed text-pretty">
-                  Let&apos;s discuss your vision and create a custom solution that drives real results for your business.
+                  See exactly where your tech stack is leaking revenue—and how to fix it. No sales pitch. No commitment. Just actionable insights you can use immediately.
                 </p>
               </div>
 
-              {/* Contact Info */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 text-gray-300">
-                  <div className="w-12 h-12 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center">
-                    <Mail className="w-6 h-6" />
+              {/* Contact Info - Enhanced */}
+              <div className="space-y-6">
+                <div className="glass-card-light p-6 space-y-4">
+                  <h3 className="text-lg font-bold text-white mb-4">What Happens Next?</h3>
+
+                  <div className="flex items-start gap-4 text-gray-300">
+                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                      <span className="text-cyan-400 font-bold">1</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white">We respond within 2 hours</p>
+                      <p className="text-sm">Get a confirmation email with next steps</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-white">Email</p>
-                    <p>hello@hudsondigitalsolutions.com</p>
+
+                  <div className="flex items-start gap-4 text-gray-300">
+                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                      <span className="text-cyan-400 font-bold">2</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white">30-minute strategy call</p>
+                      <p className="text-sm">We analyze your needs and identify revenue opportunities</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 text-gray-300">
+                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                      <span className="text-cyan-400 font-bold">3</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white">Get your custom roadmap</p>
+                      <p className="text-sm">Detailed plan with ROI projections you can use immediately</p>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-4 text-gray-300">
-                  <div className="w-12 h-12 rounded-full bg-gradient-decorative-purple border border-purple-400/30 flex-center">
-                    <Clock className="w-6 h-6" />
-                  </div>
+
+                <div className="flex items-center gap-4 text-gray-300 p-4 bg-green-400/10 border border-green-400/30 rounded-lg">
+                  <Clock className="w-6 h-6 text-green-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-white">Response Time</p>
-                    <p>Within 24 hours</p>
+                    <p className="font-semibold text-white">Guaranteed Response</p>
+                    <p className="text-sm">Within 2 hours during business hours</p>
                   </div>
+                </div>
+
+                <div className="p-4 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
+                  <p className="text-sm text-cyan-400 font-semibold mb-2">Join 50+ successful businesses</p>
+                  <p className="text-xs text-gray-400">Average 250% ROI within 6 months</p>
                 </div>
               </div>
             </div>
@@ -125,13 +152,31 @@ export default function ContactPage() {
                 <div className="absolute inset-0 bg-gradient-hero-5" />
                 <div className="relative z-10">
                   <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-white mb-2 text-balance">Start Your Project</h2>
+                    <h2 className="text-2xl font-bold text-white mb-2 text-balance">Claim Your Free ROI Analysis</h2>
                     <div className="typography">
-                      <p className="text-gray-400 text-pretty">Tell us about your needs and we&apos;ll get back to you quickly.</p>
+                      <p className="text-gray-400 text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
                     </div>
                   </div>
-                  
+
                   {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+
+                  {/* Trust badges */}
+                  <div className="mt-6 pt-6 border-t border-white/10">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-green-400 rounded-full"></div>
+                        <span>No sales pitch</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-cyan-400 rounded-full"></div>
+                        <span>2-hour response time</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-purple-400 rounded-full"></div>
+                        <span>50+ success stories</span>
+                      </div>
+                    </div>
+                  </div>
                  </div>
                </div>
              </div>

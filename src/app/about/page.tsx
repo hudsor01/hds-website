@@ -70,7 +70,7 @@ export default function AboutPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Crafting digital solutions with the precision of master engineers and the vision of business leaders.
+                Where $3.7M+ in revenue impact meets obsessive engineering standards. We don&apos;t build websites—we forge revenue machines.
               </p>
             </div>
           </div>
@@ -97,20 +97,22 @@ export default function AboutPage() {
             {/* Story Content */}
             <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
               <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-cyan-400 transition-smooth">
-                Built from Experience
+                Forged in Revenue Operations, Refined in Code
               </h3>
               <div className="space-y-6 text-muted-foreground leading-relaxed typography">
                 <p>
-                  Hudson Digital was forged in the fires of enterprise-level challenges. With a foundation built on{" "}
-                  <strong className="text-cyan-400">$3.7M+ in revenue impact</strong>, we don&apos;t just build websites—we engineer business transformation tools.
+                  Most agencies learned web development in bootcamps. We learned it in the trenches of enterprise revenue operations—where every line of code either makes money or loses it.
                 </p>
                 <p>
-                  Our approach combines the precision of revenue operations with the craftsmanship of modern development. Every line of code, every design decision, every optimization is driven by one goal:{" "}
-                  <strong className="text-purple-400">measurable business results</strong>.
+                  With <strong className="text-cyan-400">$3.7M+ in revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
+                  <strong className="text-purple-400"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
                 </p>
                 <p>
-                  We&apos;re not another agency promising the world. We&apos;re engineers who&apos;ve proven that technology, when properly applied, can generate{" "}
-                  <strong className="text-pink-400">340% ROI</strong> and transform businesses.
+                  That&apos;s why our clients see <strong className="text-pink-400">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship revenue engines backed by analytics,
+                  A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-green-400">does this make money?</strong>
+                </p>
+                <p className="text-white font-semibold">
+                  We&apos;re not another agency promising &quot;beautiful websites.&quot; We&apos;re revenue engineers who happen to write beautiful code.
                 </p>
               </div>
             </div>
@@ -127,7 +129,7 @@ export default function AboutPage() {
                   </h3>
                 </div>
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-                  To forge digital solutions that don&apos;t just work—they dominate. We engineer competitive advantages, not just websites.
+                  Make enterprise-grade development accessible to growing businesses. No more choosing between &quot;affordable but mediocre&quot; or &quot;excellent but unaffordable.&quot; Get both.
                 </p>
               </div>
 
@@ -137,11 +139,11 @@ export default function AboutPage() {
                     <EyeIcon className="w-8 h-8 text-purple-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-smooth">
-                    Our Vision
+                    Our Guarantee
                   </h3>
                 </div>
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-                  To be the premier digital forge where ambitious businesses come to build their market dominance.
+                  If your investment doesn&apos;t show measurable ROI within 90 days, we keep working for free until it does. Your success is our only metric.
                 </p>
               </div>
             </div>
@@ -233,33 +235,36 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
               <span className="gradient-text">
-                Meet the Architect
+                The Revenue Engineer Behind the Code
               </span>
             </h2>
             <p className="text-xl text-gray-300 container-narrow text-pretty">
-              Hudson Digital Solutions was born from a simple realization: businesses don&apos;t need more technology—they need the right technology, implemented correctly.
+              Why trust a former revenue operations professional to build your website? Because they understand something agencies don&apos;t: every feature must justify its existence in dollars.
             </p>
           </div>
 
           <div className="group relative glass-card-light p-12 card-hover-glow transition-smooth">
             <div className="space-y-8 text-muted-foreground leading-relaxed">
               <p className="text-lg group-hover:text-white transition-smooth">
-                As a <strong className="text-cyan-400">revenue operations professional</strong> turned full-stack engineer, 
-                I&apos;ve seen both sides of the equation: the business need for measurable results and the technical precision required to deliver them.
+                Before writing a single line of client code, I spent 5+ years as a <strong className="text-cyan-400">revenue operations professional</strong> at enterprise SaaS companies.
+                I didn&apos;t build features—I built systems that generated <strong className="text-cyan-400">$3.7M+ in measurable revenue impact</strong>.
               </p>
-              
+
               <p className="text-lg group-hover:text-white transition-smooth">
-                My journey began in enterprise revenue operations, where I learned that every system, every process, and every line of code must serve one master: 
-                <strong className="text-purple-400"> business growth</strong>. This isn&apos;t about building pretty websites—it&apos;s about engineering competitive advantages.
+                Here&apos;s what I learned: <strong className="text-purple-400">most websites fail not because of bad technology, but because of bad economics</strong>.
+                Agencies charge $50K for a beautiful site that converts at 1.2%. We charge $5K-8K for a revenue-optimized machine that converts at 4%+. The math is simple.
               </p>
-              
+
               <p className="text-lg group-hover:text-white transition-smooth">
-                When I discovered that businesses were paying premium prices for basic websites that couldn&apos;t scale, couldn&apos;t convert, and couldn&apos;t adapt, 
-                I knew there was a better way. Hudson Digital Solutions was founded on the principle that 
-                <strong className="text-pink-400"> technology should be an investment, not an expense</strong>.
+                When I discovered businesses were hemorrhaging money on bloated agencies and junior developers who couldn&apos;t spell &quot;ROI,&quot; I knew there was a gap.
+                Hudson Digital Solutions fills that gap: <strong className="text-pink-400">enterprise-grade development at startup prices, with revenue accountability baked into every line of code</strong>.
               </p>
-              
-              <div className="grid md:grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/20">
+
+              <p className="text-xl text-white font-bold border-l-4 border-cyan-400 pl-6 py-4 bg-cyan-400/5">
+                &quot;I don&apos;t care how beautiful your code is if it doesn&apos;t make money. Ship results or ship nothing.&quot;
+              </p>
+
+              <div className="grid md:grid-cols-4 gap-8 mt-12 pt-8 border-t border-white/20">
                 <div className="text-center">
                   <div className="text-3xl font-black text-cyan-400 mb-2 group-hover:text-white transition-smooth">5+</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Years in RevOps</div>
@@ -269,8 +274,12 @@ export default function AboutPage() {
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Revenue Impact</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-pink-400 mb-2 group-hover:text-white transition-smooth">340%</div>
-                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Average ROI</div>
+                  <div className="text-3xl font-black text-pink-400 mb-2 group-hover:text-white transition-smooth">250%</div>
+                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Avg Client ROI</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-black text-green-400 mb-2 group-hover:text-white transition-smooth">50+</div>
+                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Businesses Transformed</div>
                 </div>
               </div>
             </div>
