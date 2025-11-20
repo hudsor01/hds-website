@@ -3,18 +3,11 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { Mail, Clock } from 'lucide-react';
-import { useFeatureFlag } from '@/lib/feature-flags';
-import { FEATURE_FLAGS } from '@/types/utils';
-// import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
 // Load the contact form - Server Actions need SSR
 const ContactForm = dynamic(() => import('@/components/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
-
-// For now, use the same component for both variants
-const ContactFormLight = ContactForm;
-const ContactFormV2 = ContactForm;
 
 const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
   loading: () => <MapSkeleton />
@@ -53,11 +46,6 @@ function ContactFormSkeleton() {
 // Client Component - metadata handled by layout
 
 export default function ContactPage() {
-  const contactFormV2Enabled = useFeatureFlag(FEATURE_FLAGS.CONTACT_FORM_V2);
-  // Track page view and business events
-  // usePageTracking();
-  // const { trackServiceInterest } = useBusinessTracking();
-
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
@@ -130,8 +118,8 @@ export default function ContactPage() {
                       <p className="text-gray-400 text-pretty">Tell us about your needs and we&apos;ll get back to you quickly.</p>
                     </div>
                   </div>
-                  
-                  {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+
+                  <ContactForm />
                  </div>
                </div>
              </div>

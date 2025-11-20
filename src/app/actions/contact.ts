@@ -200,6 +200,10 @@ export async function submitContactForm(
         // Send Discord notification if configured
         if (process.env.DISCORD_WEBHOOK_URL) {
           try {
+            // Add timeout protection for Discord webhook
+            const controller = new AbortController()
+            const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
             await fetch(process.env.DISCORD_WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -236,22 +240,39 @@ export async function submitContactForm(
                   footer: { text: "Hudson Digital Solutions Contact Form" },
                 }],
               }),
+              signal: controller.signal,
             })
+
+            clearTimeout(timeoutId)
           } catch (discordError) {
-            logger.error("Failed to send Discord notification", castError(discordError))
+            const error = castError(discordError)
+            if (error.name === 'AbortError') {
+              logger.warn("Discord notification timed out", { timeout: '5s' })
+            } else {
+              logger.error("Failed to send Discord notification", error)
+            }
           }
         }
 
         // Record successful submission
         recordContactFormSubmission(true)
 
-        // Schedule follow-up emails
-        scheduleEmailSequence(
-          data.email,
-          `${data.firstName} ${data.lastName}`,
-          sequenceId,
-          emailVariables
-        )
+        // Schedule follow-up emails with error handling
+        try {
+          await scheduleEmailSequence(
+            data.email,
+            `${data.firstName} ${data.lastName}`,
+            sequenceId,
+            emailVariables
+          )
+        } catch (scheduleError) {
+          // Log but don't fail the submission if email scheduling fails
+          logger.error("Failed to schedule email sequence", {
+            error: castError(scheduleError),
+            email: data.email,
+            sequenceId
+          })
+        }
 
         logger.info('Contact form submission successful', {
           email: data.email,
@@ -273,12 +294,20 @@ export async function submitContactForm(
       }
     } else {
       // Schedule emails even without email service
-      scheduleEmailSequence(
-        data.email,
-        `${data.firstName} ${data.lastName}`,
-        sequenceId,
-        emailVariables
-      )
+      try {
+        await scheduleEmailSequence(
+          data.email,
+          `${data.firstName} ${data.lastName}`,
+          sequenceId,
+          emailVariables
+        )
+      } catch (scheduleError) {
+        logger.error("Failed to schedule email sequence in test mode", {
+          error: castError(scheduleError),
+          email: data.email,
+          sequenceId
+        })
+      }
 
       // In test environment, still consider it successful if validation passed
       recordContactFormSubmission(true)

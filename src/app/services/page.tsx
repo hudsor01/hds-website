@@ -6,7 +6,16 @@ import Link from "next/link";
 import { CTAButton } from '@/components/cta-button';
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 
-const services = [
+interface Service {
+  title: string;
+  description: string;
+  features: string[];
+  pricing: string;
+  icon: React.ComponentType<{ className?: string }>;
+  gradient: string;
+}
+
+const services: Service[] = [
   {
     title: "Web Applications",
     description: "Custom web applications built with modern frameworks and scalable architecture.",
@@ -51,14 +60,26 @@ const services = [
   },
 ];
 
-const stats = [
+interface Stat {
+  value: string;
+  label: string;
+}
+
+const stats: Stat[] = [
   { value: "50+", label: "Projects Delivered" },
   { value: "98%", label: "Client Satisfaction" },
   { value: "250%", label: "Average ROI Increase" },
   { value: "24/7", label: "Support Available" },
 ];
 
-const process = [
+interface ProcessStep {
+  step: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const process: ProcessStep[] = [
   {
     step: "01",
     title: "Discovery",
@@ -122,8 +143,8 @@ export default function ServicesPage() {
                   Start Your Project
                 </CTAButton>
 
-                <CTAButton href="/portfolio" variant="secondary" size="lg">
-                  View Our Work
+                <CTAButton href="#process" variant="secondary" size="lg">
+                  See Our Process
                 </CTAButton>
               </div>
             </div>
@@ -131,7 +152,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="relative py-20 px-4">
+      <section id="services-list" className="relative py-20 px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
@@ -230,7 +251,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Process Section */}
-      <section className="relative py-20 px-4">
+      <section id="process" className="relative py-20 px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
@@ -297,12 +318,12 @@ export default function ServicesPage() {
                 <span className="relative z-10">Start Your Project</span>
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              
+
               <Link
-                href="/portfolio"
+                href="#services-list"
                 className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
-                View Our Work
+                Explore Services
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
