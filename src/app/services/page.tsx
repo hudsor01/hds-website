@@ -21,7 +21,6 @@ const services = [
     pricing: "Starting at $5,000",
     icon: CodeBracketIcon,
     gradient: "bg-gradient-secondary",
-    testimonial: "Our conversion rate jumped from 2.3% to 3.8% in the first month. The site paid for itself in 60 days.",
     roi: "250% average ROI in 6 months"
   },
   {
@@ -38,7 +37,6 @@ const services = [
     pricing: "Starting at $8,000",
     icon: CogIcon,
     gradient: "bg-gradient-decorative-purple",
-    testimonial: "Automated our entire lead nurturing process. Now we handle 5x the volume with the same team size.",
     roi: "340% average ROI in first year"
   },
   {
@@ -55,7 +53,6 @@ const services = [
     pricing: "Starting at $2,000",
     icon: ChartBarIcon,
     gradient: "bg-gradient-secondary",
-    testimonial: "They found $180K in lost revenue from our slow checkout process. Best $2K we ever spent.",
     roi: "Clients find 5-10x value in first 30 days"
   },
 ];
@@ -102,7 +99,7 @@ export default function ServicesPage() {
         {/* Background Elements */}
         <BackgroundPattern variant="default" />
 
-        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 container-wide text-center">
           <div className="space-y-8">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
@@ -139,7 +136,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
@@ -154,13 +151,13 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid-3 mb-16">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
                 <div
                   key={index}
-                  className="group relative glass-card-light p-8 card-hover-glow transition-all duration-300"
+                  className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
                 >
                   <div className="flex-center mb-6">
                     <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
@@ -198,16 +195,6 @@ export default function ServicesPage() {
                     ))}
                   </div>
 
-                  {/* Testimonial */}
-                  {service.testimonial && (
-                    <div className="mb-6 pt-6 border-t border-white/10">
-                      <p className="text-sm italic text-cyan-400/90 leading-relaxed mb-2">
-                        &quot;{service.testimonial}&quot;
-                      </p>
-                      <p className="text-xs text-muted-foreground">— HDS Client</p>
-                    </div>
-                  )}
-
                   {/* ROI Badge */}
                   {service.roi && (
                     <div className="mb-6">
@@ -233,7 +220,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Stats Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
@@ -248,11 +235,11 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="grid-4 mb-16">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="relative glass-card-light p-8 card-hover-glow transition-all duration-300 text-center"
+                className="relative glass-card-light card-padding card-hover-glow transition-smooth text-center"
               >
                 <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
@@ -262,7 +249,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Process Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
@@ -277,11 +264,11 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid-4 mb-16">
             {process.map((step, index) => (
               <div
                 key={index}
-                className="group relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
+                className="group relative glass-card card-padding card-hover-glow transition-smooth text-center"
               >
                 <div className="mb-4 flex justify-center">
                   <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
@@ -304,9 +291,9 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section p-12 md:p-16">
+          <div className="relative z-10 text-center glass-section card-padding">
             <h2 className="text-responsive-md font-black text-white mb-6">
               Ready for Development That
               <span className="gradient-text">

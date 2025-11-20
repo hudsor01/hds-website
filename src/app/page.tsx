@@ -14,22 +14,19 @@ export default function HomePage() {
       icon: CodeBracketIcon,
       title: "Ship Features 3x Faster",
       description: "Launch revenue-driving features in days, not months. Our clients ship new products 70% faster than with in-house teams—without the overhead.",
-      features: ["React/Next.js Development", "API & Database Architecture", "99.9% Uptime Guaranteed"],
-      testimonial: "We shipped our MVP in 3 weeks instead of 3 months. The speed advantage alone paid for itself."
+      features: ["React/Next.js Development", "API & Database Architecture", "99.9% Uptime Guaranteed"]
     },
     {
       icon: CogIcon,
       title: "Plug Revenue Leaks Instantly",
       description: "The average business loses $50K annually to broken automation. We identify and fix these revenue leaks in your first month—guaranteed.",
-      features: ["CRM Integration", "Lead Scoring Automation", "Real-time Analytics"],
-      testimonial: "They found $120K in lost revenue from our broken email sequences. ROI was immediate."
+      features: ["CRM Integration", "Lead Scoring Automation", "Real-time Analytics"]
     },
     {
       icon: ChartBarIcon,
       title: "Scale to 7-Figures Without Rebuilding",
       description: "Built for tomorrow's growth, not just today. Our architecture handles 10x traffic spikes while reducing your hosting costs by up to 40%.",
-      features: ["Performance Audits", "Infrastructure Planning", "Cost Optimization"],
-      testimonial: "Handled Black Friday traffic that was 15x normal. Zero downtime, zero stress."
+      features: ["Performance Audits", "Infrastructure Planning", "Cost Optimization"]
     }
   ];
 
@@ -43,8 +40,8 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-20 lg:py-32">
-        <div className="container-wide sm:px-6 lg:px-8 w-full">
+      <section className="relative section-spacing">
+        <div className="container-wide">
           <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
 
             {/* Left Side - Content */}
@@ -141,7 +138,7 @@ export default function HomePage() {
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16 typography">
             <h2 className="text-responsive-md font-black text-white mb-4">
@@ -154,11 +151,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid-3">
             {solutions.map((solution, index) => (
               <div
                 key={index}
-                className="group relative glass-card-light p-8 card-hover-glow transition-smooth"
+                className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
               >
                 <div className="space-y-6">
                   <div className="flex-center space-x-4">
@@ -184,15 +181,6 @@ export default function HomePage() {
                       </div>
                     ))}
                   </div>
-
-                  {solution.testimonial && (
-                    <div className="pt-4 mt-4 border-t border-white/10">
-                      <p className="text-sm italic text-cyan-400/90 leading-relaxed">
-                        &quot;{solution.testimonial}&quot;
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2">— HDS Client</p>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
@@ -201,7 +189,7 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - Enhanced */}
-      <section className="relative py-20 px-4 bg-gradient-secondary overflow-hidden">
+      <section className="relative section-spacing page-padding-x bg-gradient-secondary overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-600/5" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
@@ -223,7 +211,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid-4">
             {results.map((result, index) => (
               <div
                 key={index}
@@ -231,7 +219,7 @@ export default function HomePage() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Card with enhanced styling */}
-                <div className="relative glass-card-light p-8 lg:p-10 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
+                <div className="relative glass-card-light card-padding card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-smooth group-hover:transform group-hover:scale-105">
                   {/* Top accent line */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
 
@@ -277,9 +265,9 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <div className="glass-section p-12 md:p-16">
+          <div className="glass-section card-padding">
             <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
 
             <h2 className="text-responsive-md font-black text-white mb-6">

@@ -35,8 +35,7 @@ const pricingTiers = [
     popular: false,
     cta: 'Find Your Revenue Leaks',
     href: '/contact',
-    roi: '5-10x value typically found',
-    testimonial: 'Found $180K in lost revenue from our checkout process. Best $2K investment ever.'
+    roi: '5-10x value typically found'
   },
   {
     name: 'Revenue-Optimized Web App',
@@ -60,8 +59,7 @@ const pricingTiers = [
     popular: true,
     cta: 'Build My Revenue Machine',
     href: '/contact',
-    roi: '250% average ROI in 6 months',
-    testimonial: 'Conversion rate jumped from 2.3% to 3.8% in first month. Paid for itself in 60 days.'
+    roi: '250% average ROI in 6 months'
   },
   {
     name: 'Business Automation Suite',
@@ -82,8 +80,7 @@ const pricingTiers = [
     popular: false,
     cta: 'Automate My Business',
     href: '/contact',
-    roi: '340% average ROI in first year',
-    testimonial: 'Handles 5x the lead volume with same team size. Saved us from hiring 3 people.'
+    roi: '340% average ROI in first year'
   }
 ];
 
@@ -114,8 +111,8 @@ export default function PricingPage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32">
-        <div className="container-wide sm:px-6 lg:px-8 w-full">
+      <section className="relative section-spacing">
+        <div className="container-wide">
           <div className="text-center">
 
             {/* Professional Badge */}
@@ -147,13 +144,13 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid-3">
             {pricingTiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`group relative glass-card-light p-8 card-hover-glow transition-all duration-500 ${
+                className={`group relative glass-card-light card-padding card-hover-glow transition-smooth ${
                   tier.popular ? 'border-cyan-400/50 shadow-xl shadow-cyan-500/10' : ''
                 }`}
               >
@@ -212,16 +209,6 @@ export default function PricingPage() {
                   )}
                 </div>
 
-                {/* Testimonial */}
-                {tier.testimonial && (
-                  <div className="mb-6 pt-6 border-t border-white/10">
-                    <p className="text-sm italic text-cyan-400/90 leading-relaxed mb-2">
-                      &quot;{tier.testimonial}&quot;
-                    </p>
-                    <p className="text-xs text-muted-foreground">— HDS Client</p>
-                  </div>
-                )}
-
                 <Link
                   href={tier.href}
                   className={`button-base group w-full px-8 py-4 font-bold text-base rounded-lg overflow-hidden ${
@@ -239,7 +226,7 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16 typography">
             <h2 className="text-responsive-lg font-black text-white mb-4">
@@ -254,7 +241,7 @@ export default function PricingPage() {
 
           <div className="space-y-6">
             {faqs.map((faq, index) => (
-              <div key={index} className="glass-card-light p-8 hover:border-cyan-400/50 transition-all duration-300">
+              <div key={index} className="glass-card-light card-padding hover:border-cyan-400/50 transition-smooth">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-gray-400 leading-relaxed text-pretty">{faq.answer}</p>
@@ -266,9 +253,9 @@ export default function PricingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <div className="glass-section p-12 md:p-16">
+          <div className="glass-section card-padding">
             <h2 className="text-responsive-lg font-black text-white mb-6">
               Ready for Development That Actually Makes Money?
             </h2>
