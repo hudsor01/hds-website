@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { Clock } from 'lucide-react';
 import { useFeatureFlag } from '@/lib/feature-flags';
 import { FEATURE_FLAGS } from '@/types/utils';
+import { ComponentErrorBoundary } from '@/components/ErrorBoundary';
 // import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
 // Load the contact form - Server Actions need SSR
@@ -158,7 +159,9 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+                  <ComponentErrorBoundary name="Contact Form">
+                    {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
+                  </ComponentErrorBoundary>
 
                   {/* Trust badges */}
                   <div className="mt-card-content pt-card-content border-t border-white/10">
