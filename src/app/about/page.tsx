@@ -108,11 +108,13 @@ export default function AboutPage() {
                   <strong className="text-purple-400"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
                 </p>
                 <p>
-                  That&apos;s why our clients see <strong className="text-pink-400">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship revenue engines backed by analytics,
+                  That&apos;s why our clients see <strong className="text-pink-400">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship{' '}
+                  <Link href="/services" className="link-primary font-semibold">revenue engines</Link> backed by analytics,
                   A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-green-400">does this make money?</strong>
                 </p>
                 <p className="text-white font-semibold">
-                  We&apos;re not another agency promising &quot;beautiful websites.&quot; We&apos;re revenue engineers who happen to write beautiful code.
+                  We&apos;re not another agency promising &quot;beautiful websites.&quot; We&apos;re revenue engineers who happen to write beautiful code.{' '}
+                  <Link href="/contact" className="link-primary">Let&apos;s talk about your project</Link>.
                 </p>
               </div>
             </div>
@@ -143,7 +145,8 @@ export default function AboutPage() {
                   </h3>
                 </div>
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-                  If your investment doesn&apos;t show measurable ROI within 90 days, we keep working for free until it does. Your success is our only metric.
+                  If your investment doesn&apos;t show measurable ROI within 90 days, we keep working for free until it does. Your success is our only metric.{' '}
+                  <Link href="/pricing" className="link-primary font-semibold">View our pricing</Link>.
                 </p>
               </div>
             </div>
