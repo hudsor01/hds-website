@@ -7,11 +7,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-	--font-sans:
-		var(--font-spline), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-	--font-display: var(--font-spline);
-	--font-mono: var(--font-mono), ui-monospace, monospace;
-	--font-family: var(--font-sans);
+  --font-sans:
+    var(--font-spline), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-spline);
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-family: var(--font-sans);
 	--font-large-title: 26px;
 	--font-title-1: 22px;
 	--font-title-2: 17px;
