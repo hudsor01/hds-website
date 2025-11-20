@@ -6,18 +6,21 @@ import { logger } from './logger';
 const GHOST_API_URL = process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
 const GHOST_CONTENT_API_KEY = process.env.GHOST_CONTENT_API_KEY || '';
 
-if (!GHOST_CONTENT_API_KEY) {
-  logger.error('Ghost Content API Key is not configured. Blog features will not work.', {
+const isGhostConfigured = !!GHOST_CONTENT_API_KEY;
+
+if (!isGhostConfigured) {
+  logger.warn('Ghost Content API Key is not configured. Blog features will use fallback empty data.', {
     hasUrl: !!process.env.GHOST_API_URL,
     hasKey: false,
   });
 }
 
-export const ghostClient = new GhostContentAPI({
+// Only initialize Ghost client if properly configured
+export const ghostClient = isGhostConfigured ? new GhostContentAPI({
   url: GHOST_API_URL,
   key: GHOST_CONTENT_API_KEY,
   version: 'v5.0'
-});
+}) : null;
 
 /**
  * Sanitize user input for Ghost API queries
@@ -51,6 +54,11 @@ interface GetPostsResult {
 }
 
 export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResult> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty posts');
+    return { posts: [] };
+  }
+
   try {
     const browseOptions: BrowseOptions = {
       limit: options?.limit || 15,
@@ -79,6 +87,11 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getPostBySlug', { slug });
@@ -102,6 +115,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 export async function getPostById(id: string): Promise<Post | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   try {
     logger.debug('Fetching post by ID from Ghost', { id });
 
@@ -178,6 +196,11 @@ export async function getFeaturedPosts(limit: number = 3): Promise<Post[]> {
 }
 
 export async function getTags(): Promise<Tag[]> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty tags');
+    return [];
+  }
+
   try {
     logger.debug('Fetching tags from Ghost');
 
@@ -194,6 +217,11 @@ export async function getTags(): Promise<Tag[]> {
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getTagBySlug', { slug });
@@ -213,6 +241,11 @@ export async function getTagBySlug(slug: string): Promise<Tag | null> {
 }
 
 export async function getAuthors(): Promise<Author[]> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty authors');
+    return [];
+  }
+
   try {
     logger.debug('Fetching authors from Ghost');
 
@@ -228,6 +261,11 @@ export async function getAuthors(): Promise<Author[]> {
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getAuthorBySlug', { slug });
@@ -247,6 +285,11 @@ export async function getAuthorBySlug(slug: string): Promise<Author | null> {
 }
 
 export async function getSettings(): Promise<Settings | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   try {
     logger.debug('Fetching settings from Ghost');
 
@@ -259,6 +302,11 @@ export async function getSettings(): Promise<Settings | null> {
 }
 
 export async function searchPosts(query: string, options?: GetPostsOptions): Promise<GetPostsResult> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty posts');
+    return { posts: [] };
+  }
+
   // Validate and sanitize input to prevent injection
   if (!query || typeof query !== 'string' || query.trim() === '') {
     logger.error('Invalid query provided to searchPosts', { query });
