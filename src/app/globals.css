@@ -227,7 +227,7 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
- h4:not(.not-typography h4) {
+  h4:not(.not-typography h4) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-xl);
     line-height: var(--text-xl--line-height);
