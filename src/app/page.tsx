@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   CodeBracketIcon,
   CogIcon,
@@ -7,6 +8,10 @@ import {
   ClockIcon
 } from '@heroicons/react/24/outline';
 import { CTAButton } from '@/components/cta-button';
+
+export const metadata: Metadata = {
+  description: "Turn your website into a revenue machine. Custom web development that delivers 250% average ROI within 6 months. No templates, no compromises.",
+};
 
 export default function HomePage() {
   const solutions = [

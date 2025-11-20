@@ -5,8 +5,8 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 export const metadata: Metadata = {
   title: 'Client Testimonials | Hudson Digital Solutions',
-  description: 'Read what our clients say about working with Hudson Digital Solutions. Real success stories from real businesses.',
-  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies'
+  description: 'Real client results: 340% ROI, 100% satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from 50+ companies.',
+  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies, ROI results, business transformation'
 }
 
 const testimonials = [

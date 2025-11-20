@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   title: "How to Increase Website Conversion Rates: 2025 Complete Guide | Hudson Digital",
@@ -127,6 +128,7 @@ const breadcrumbSchema = {
 export default function ConversionGuidePost() {
   return (
     <>
+      <ScrollProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

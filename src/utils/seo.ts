@@ -68,12 +68,12 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   about: {
     title: 'Revenue Engineers Who Happen to Write Code | $3.7M+ Impact | Hudson Digital Solutions',
     description:
-      'Former revenue operations professionals turned full-stack engineers. Unlike agencies that learned in bootcamps, we learned in enterprise trenches where every line of code either makes money or loses it. $3.7M+ in revenue impact, 250% average client ROI, 50+ businesses transformed. Enterprise-grade development at startup prices with revenue accountability baked into every line of code.',
+      'Revenue engineers with $3.7M+ impact. We forge websites that dominate, not just work. Enterprise-grade development for ambitious businesses.',
     keywords:
       'revenue operations engineering, RevOps development, enterprise web development, startup development services, ROI-focused development, conversion rate optimization experts, business automation specialists, technical revenue optimization, SaaS development experts, growth engineering team',
     ogTitle: 'Revenue Engineers Behind the Code - $3.7M+ in Proven Impact | Hudson Digital',
     ogDescription:
-      'Former RevOps professionals turned engineers. $3.7M+ in revenue impact, 250% average ROI. We understand revenue, not just code. Enterprise-grade development at startup prices.',
+      'Former RevOps professionals turned engineers. $3.7M+ in revenue impact, 250% average ROI. We understand revenue, not just code.',
     canonical: 'https://hudsondigitalsolutions.com/about',
     structuredData: {
       '@context': 'https://schema.org',
