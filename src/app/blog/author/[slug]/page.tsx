@@ -105,7 +105,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={author.profile_image}
-                alt={`${author.name}'s profile picture`}
+                alt={author.name}
                 className="w-32 h-32 rounded-full border-4 border-cyan-400"
               />
             </div>
