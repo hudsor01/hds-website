@@ -152,7 +152,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={primaryAuthor.profile_image}
-                      alt={`${primaryAuthor.name}'s profile picture`}
+                      alt={primaryAuthor.name}
                       className="w-6 h-6 rounded-full"
                     />
                   )}
