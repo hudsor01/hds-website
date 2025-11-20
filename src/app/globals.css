@@ -1,15 +1,46 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
-@import "tw-animate-css";
+@source "../app/**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
 
-/* Explicit source detection for better performance */
-@source "../components/**/*.{js,ts,jsx,tsx}";
-@source "../app/**/*.{js,ts,jsx,tsx}";
-@source "../lib/**/*.{js,ts,jsx,tsx}";
+@custom-variant dark (&:where(.dark, .dark *));
 
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
+@theme {
+	--font-sans:
+		var(--font-spline), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+	--font-display: var(--font-spline);
+	--font-mono: var(--font-mono), ui-monospace, monospace;
+	--font-family: var(--font-sans);
+	--font-large-title: 26px;
+	--font-title-1: 22px;
+	--font-title-2: 17px;
+	--font-title-3: 15px;
+	--font-headline: 13px;
+	--font-body: 13px;
+	--font-callout: 12px;
+	--font-subheadline: 11px;
+	--font-footnote: 10px;
+	--font-caption-1: 10px;
+	--font-caption-2: 9px;
+	--line-height-large-title: 1.231;
+	--line-height-title-1: 1.182;
+	--line-height-title-2: 1.294;
+	--line-height-title-3: 1.333;
+	--line-height-headline: 1.231;
+	--line-height-body: 1.231;
+	--line-height-callout: 1.25;
+	--line-height-subheadline: 1.273;
+	--line-height-footnote: 1.3;
+	--line-height-caption: 1.3;
+	--tracking-large-title: 0px;
+	--tracking-title: 0px;
+	--tracking-headline: 0px;
+	--tracking-body: 0px;
+	--tracking-subheadline: 0px;
+	--tracking-footnote: 0px;
+	--tracking-caption: 0px;
   /* Core color palette using OKLCH for better color consistency */
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.129 0.042 264.695);
@@ -56,10 +87,6 @@
   --color-border-dark: oklch(0.279 0.041 260.031);
   --color-nav-dark: oklch(0.097 0.019 265.755);
 
-  /* Font families */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-
   /* Text sizes with line heights for Tailwind v4 */
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;
@@ -100,57 +127,89 @@
   --blur-xl: 24px;
   --blur-2xl: 40px;
   --blur-3xl: 64px;
-}
+  --color-scheme: light dark;
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);  }
+
 
 @layer base {
-  :root {
-    --color-scheme: light dark;
-    --radius: 0.625rem;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.129 0.042 264.695);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.129 0.042 264.695);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.129 0.042 264.695);
-    --primary: oklch(0.208 0.042 265.755);
-    --primary-foreground: oklch(0.984 0.003 247.858);
-    --secondary: oklch(0.968 0.007 247.896);
-    --secondary-foreground: oklch(0.208 0.042 265.755);
-    --muted: oklch(0.968 0.007 247.896);
-    --muted-foreground: oklch(0.554 0.046 257.417);
-    --accent: oklch(0.968 0.007 247.896);
-    --accent-foreground: oklch(0.208 0.042 265.755);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.929 0.013 255.508);
-    --input: oklch(0.929 0.013 255.508);
-    --ring: oklch(0.704 0.04 256.788);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.984 0.003 247.858);
-    --sidebar-foreground: oklch(0.129 0.042 264.695);
-    --sidebar-primary: oklch(0.208 0.042 265.755);
-    --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-    --sidebar-accent: oklch(0.968 0.007 247.896);
-    --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-    --sidebar-border: oklch(0.929 0.013 255.508);
-    --sidebar-ring: oklch(0.704 0.04 256.788);
-  }
+  *,
+  *::before,
+  *::after {
+		box-sizing: border-box;
+		border-width: 0;
+		border-style: solid;
+		border-color: var(--border);
+	}
 
-  .typography {
-    max-width: 65ch;
-    color: var(--color-foreground);
-  }
-  .typography h1:not(.not-typography h1) {
+	html,
+  body {
+		tab-size: 4;
+		font-feature-settings: normal;
+		font-variation-settings: normal;
+		-webkit-tap-highlight-color: transparent;
+		scroll-behavior: smooth;
+	}
+
+  body {
+		color: var(--foreground);
+		background-color: var(--background);
+		font-feature-settings:
+			'rlig' 1,
+			'calt' 1;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-weight: var(--font-weight-semibold);
+		line-height: var(--line-height-tight);
+		letter-spacing: -0.025em;
+		color: var(--foreground);
+	}
+
+  h1:not(.not-typography h1) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-4xl);
     line-height: var(--text-4xl--line-height);
     font-weight: 800;
     letter-spacing: var(--tracking-tight);
   }
-  .typography h2:not(.not-typography h2) {
+  
+  h2:not(.not-typography h2) {
     scroll-margin: calc(var(--spacing) * 20);
     border-bottom: 1px solid var(--color-border);
     padding-bottom: calc(var(--spacing) * 2);
@@ -160,10 +219,7 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
-  .typography h2:not(.not-typography h2):first-child {
-    margin-top: 0;
-  }
-  .typography h3:not(.not-typography h3) {
+  h3:not(.not-typography h3) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-2xl);
     line-height: var(--text-2xl--line-height);
@@ -171,10 +227,7 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
-  .typography h3:not(.not-typography h3):first-child {
-    margin-top: 0;
-  }
-  .typography h4:not(.not-typography h4) {
+ h4:not(.not-typography h4) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-xl);
     line-height: var(--text-xl--line-height);
@@ -182,10 +235,8 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
-  .typography h4:not(.not-typography h4):first-child {
-    margin-top: 0;
-  }
-  .typography h5:not(.not-typography h5) {
+
+  h5:not(.not-typography h5) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-lg);
     line-height: var(--text-lg--line-height);
@@ -193,10 +244,8 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
-  .typography h5:not(.not-typography h5):first-child {
-    margin-top: 0;
-  }
-  .typography h6:not(.not-typography h6) {
+
+  h6:not(.not-typography h6) {
     scroll-margin: calc(var(--spacing) * 20);
     font-size: var(--text-base);
     line-height: var(--text-base--line-height);
@@ -204,9 +253,7 @@
     letter-spacing: var(--tracking-tight);
     margin-top: calc(var(--spacing) * 12);
   }
-  .typography h6:not(.not-typography h6):first-child {
-    margin-top: 0;
-  }
+
   .typography h1:not(.not-typography h1) + p, .typography h2:not(.not-typography h2) + p, .typography h3:not(.not-typography h3) + p, .typography h4:not(.not-typography h4) + p, .typography h5:not(.not-typography h5) + p, .typography h6:not(.not-typography h6) + p {
     margin-top: 0;
   }
@@ -251,10 +298,10 @@
     text-align: left;
     font-weight: 700;
   }
-  .typography table:not(.not-typography table) th[align="center"] {
+  .typography table:not(.not-typography table) th[align='center'] {
     text-align: center;
   }
-  .typography table:not(.not-typography table) th[align="right"] {
+  .typography table:not(.not-typography table) th[align='right'] {
     text-align: right;
   }
   .typography table:not(.not-typography table) tbody tr {
@@ -270,10 +317,10 @@
     padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
     text-align: left;
   }
-  .typography table:not(.not-typography table) td[align="center"] {
+  .typography table:not(.not-typography table) td[align='center'] {
     text-align: center;
   }
-  .typography table:not(.not-typography table) td[align="right"] {
+  .typography table:not(.not-typography table) td[align='right'] {
     text-align: right;
   }
   .typography ul:not(.not-typography ul) {
@@ -631,20 +678,20 @@ body {
   }
 
   /* Data attribute styling */
-  [data-state="active"] {
+  [data-state='active'] {
     @apply bg-cyan-500/10 border-cyan-500 text-cyan-600 dark:text-cyan-400;
   }
 
-  [data-state="inactive"] {
+  [data-state='inactive'] {
     @apply opacity-50 pointer-events-none;
   }
 
   /* Aria attribute styling for accessibility */
-  [aria-selected="true"] {
+  [aria-selected='true'] {
     @apply bg-cyan-50 dark:bg-cyan-950 border-cyan-500;
   }
 
-  [aria-disabled="true"] {
+  [aria-disabled='true'] {
     @apply opacity-50 cursor-not-allowed;
   }
 
@@ -1167,7 +1214,7 @@ body {
 
   /* Disable hover transforms when reduced motion is preferred */
   .hover-lift:hover,
-  [class*="hover:scale"]:hover,
+  [class*='hover:scale']:hover,
   .button-base:hover,
   button:hover {
     transform: none !important;
@@ -1184,8 +1231,8 @@ body {
   .button-base:hover,
   .card-hover-glow:hover,
   .group:hover,
-  [class*="hover:scale"]:hover,
-  [class*="hover:translate"]:hover {
+  [class*='hover:scale']:hover,
+  [class*='hover:translate']:hover {
     will-change: auto !important;
   }
 }
