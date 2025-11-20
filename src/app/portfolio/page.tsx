@@ -136,9 +136,9 @@ export default function PortfolioPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <div className="grid-4 mb-content-block">
               {[
                 { value: "10+", label: "Projects Delivered" },
                 { value: "100%", label: "Client Satisfaction" },
@@ -147,9 +147,9 @@ export default function PortfolioPage() {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
+                  className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
                 >
-                  <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+                  <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
                   <div className="text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
@@ -158,44 +158,44 @@ export default function PortfolioPage() {
         </section>
 
         {/* Portfolio Projects */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="text-center mb-16">
-              <h2 className="text-clamp-xl font-black text-white mb-6">
+            <div className="text-center mb-content-block">
+              <h2 className="text-clamp-xl font-black text-white mb-heading">
                 <span className="gradient-text">
                   Featured Projects
                 </span>
               </h2>
               <div className="typography">
-                <p className="text-xl text-muted-foreground container-narrow">
+                <p className="text-subheading text-muted-foreground container-narrow">
                   Real projects delivering measurable results for clients across industries.
                 </p>
               </div>
             </div>
 
             {/* Desktop Grid / Mobile Horizontal Scroll */}
-            <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
+            <div className="md:grid md:grid-cols-2 md:gap-comfortable mb-content-block flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 gap-content md:gap-0">
               {projects.map((project) => (
                 <div
                   key={project.id}
                   className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
                 >
-                  <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
+                  <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-smooth">
                     {/* Project Header */}
                     <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient} relative overflow-hidden`}>
                       <div className="absolute inset-0 bg-black/20" />
-                      
+
                       {/* Grid pattern overlay */}
                       <div className="absolute inset-0 grid-pattern-light" />
-                      
-                      <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
-                        <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
+
+                      <div className="relative z-10 card-padding h-full flex flex-col justify-center text-center text-white">
+                        <div className="inline-flex flex-center gap-tight p-badge rounded-full glass-card-light text-caption mb-subheading mx-auto">
                           <CodeBracketIcon className="w-4 h-4" />
                           {project.category}
                         </div>
-                        <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
+                        <h3 className="text-responsive-lg font-black mb-card-title">{project.title}</h3>
                         {project.featured && (
-                          <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
+                          <span className="inline-flex flex-center gap-tight p-badge rounded-full bg-yellow-400/20 text-yellow-300 text-caption font-medium mx-auto">
                             <SparklesIcon className="w-4 h-4" />
                             Featured Project
                           </span>
@@ -216,29 +216,29 @@ export default function PortfolioPage() {
                     </div>
 
                     {/* Project Details */}
-                    <div className="p-8">
-                      <div className="typography mb-8">
-                        <p className="text-gray-300 leading-relaxed text-lg">
+                    <div className="card-padding">
+                      <div className="typography mb-comfortable">
+                        <p className="text-gray-300 leading-relaxed text-body-lg">
                           {project.description}
                         </p>
                       </div>
 
                       {/* Stats Grid */}
-                      <div className="grid grid-cols-3 gap-6 mb-8">
+                      <div className="grid grid-cols-3 gap-content mb-comfortable">
                         {Object.entries(project.stats).map(([key, value]) => (
                           <div key={key} className="text-center">
-                            <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                            <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                            <div className="text-card-title font-bold text-white mb-subheading">{value}</div>
+                            <div className="text-caption text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
                           </div>
                         ))}
                       </div>
 
                       {/* Tech Stack */}
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-tight">
                         {project.tech.map((tech) => (
-                          <span 
+                          <span
                             key={tech}
-                            className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                            className="p-badge glass-card-light rounded-full text-caption text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
                           >
                             {tech}
                           </span>
@@ -253,35 +253,35 @@ export default function PortfolioPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="relative z-10 text-center glass-section p-12 md:p-16">
-              <h2 className="text-clamp-xl font-black text-white mb-6">
+            <div className="relative z-10 text-center glass-section card-padding">
+              <h2 className="text-clamp-xl font-black text-white mb-heading">
                 Ready to create your
                 <span className="gradient-text">
                   {" "}success story?
                 </span>
               </h2>
-              
+
               <div className="typography">
-                <p className="text-xl text-gray-300 container-narrow mb-10">
+                <p className="text-subheading text-gray-300 container-narrow mb-content-block">
                   Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
                 </p>
               </div>
-              
-              <div className="flex flex-col sm:flex-row flex-center gap-4">
+
+              <div className="flex flex-col sm:flex-row flex-center gap-content">
                 <Link
                   href="/contact"
-                  className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
+                  className="button-base group cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
                 >
                   <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
                   <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                
+
                 <Link
                   href="/services"
-                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl"
+                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl"
                 >
                   View Services
                   <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

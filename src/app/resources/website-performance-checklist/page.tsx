@@ -117,56 +117,56 @@ export default function WebsiteChecklistPage() {
   return (
     <main className="min-h-screen bg-gradient-primary">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
         </div>
-        
-        <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
+
+        <div className="relative max-w-4xl mx-auto text-center page-padding-x">
+          <div className="inline-flex flex-center gap-tight p-badge mb-comfortable rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-body-lg">
             <DocumentTextIcon className="w-5 h-5" />
             Free Resource
           </div>
-          
-          <h1 className="text-clamp-xl font-black text-white mb-6">
+
+          <h1 className="text-clamp-xl font-black text-white mb-heading">
             Website Performance <span className="gradient-text">Checklist</span>
           </h1>
-          
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+
+          <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
             47 actionable checkpoints to boost conversion rates by 300%+, improve SEO rankings, and increase revenue. Based on $10M+ in client results.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-content justify-center mb-content-block">
             <Link
               href="#download"
-              className="inline-flex flex-center gap-2 bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-lg"
+              className="inline-flex flex-center gap-tight bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-body-lg"
             >
               <ArrowDownTrayIcon className="w-5 h-5" />
               Download Free Checklist
             </Link>
             <Link
               href="/contact"
-              className="inline-flex flex-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
+              className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
             >
               Get Professional Audit
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="grid-4 gap-comfortable text-center">
             <div>
-              <div className="text-3xl font-bold text-cyan-400">47</div>
+              <div className="text-section-title font-bold text-cyan-400">47</div>
               <div className="text-gray-400">Checkpoints</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-400">300%+</div>
+              <div className="text-section-title font-bold text-green-400">300%+</div>
               <div className="text-gray-400">Avg ROI Boost</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-400">6</div>
+              <div className="text-section-title font-bold text-purple-400">6</div>
               <div className="text-gray-400">Key Categories</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400">FREE</div>
+              <div className="text-section-title font-bold text-yellow-400">FREE</div>
               <div className="text-gray-400">No Cost</div>
             </div>
           </div>
@@ -174,33 +174,33 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Checklist Preview */}
-      <section className="py-16 bg-gradient-primary">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black text-white mb-4">Checklist Preview</h2>
+      <section className="section-spacing bg-gradient-primary">
+        <div className="max-w-7xl mx-auto page-padding-x">
+          <div className="text-center mb-content-block">
+            <h2 className="text-section-title font-black text-white mb-subheading">Checklist Preview</h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
               Get a glimpse of what&apos;s inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
             {checklistItems.map((section, index) => (
-              <div key={section.category} className="glass-card rounded-xl p-6 hover:border-cyan-300/50 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-4 flex flex-center gap-2">
-                  <span className="w-8 h-8 bg-cyan-400 text-black rounded-full flex-center text-sm font-bold">
+              <div key={section.category} className="glass-card rounded-xl card-padding-sm hover:border-cyan-300/50 transition-smooth">
+                <h3 className="text-subheading font-bold text-white mb-subheading flex flex-center gap-tight">
+                  <span className="w-8 h-8 bg-cyan-400 text-black rounded-full flex-center text-caption font-bold">
                     {index + 1}
                   </span>
                   {section.category}
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-tight">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start gap-2 text-gray-300 text-sm">
+                    <li key={itemIndex} className="flex items-start gap-tight text-gray-300 text-caption">
                       <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                       {item}
                     </li>
                   ))}
                   {section.items.length > 4 && (
-                    <li className="text-cyan-400 text-sm font-medium">
+                    <li className="text-cyan-400 text-caption font-medium">
                       +{section.items.length - 4} more items in full checklist
                     </li>
                   )}
@@ -212,50 +212,50 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 bg-gradient-primary">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black text-white mb-4">Why This Checklist Works</h2>
+      <section className="section-spacing bg-gradient-primary">
+        <div className="max-w-4xl mx-auto page-padding-x">
+          <div className="text-center mb-content-block">
+            <h2 className="text-section-title font-black text-white mb-subheading">Why This Checklist Works</h2>
             <p className="text-gray-300">Based on real results from 150+ client projects</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
+          <div className="grid md:grid-cols-2 gap-comfortable">
+            <div className="space-y-comfortable">
+              <div className="flex items-start gap-content">
                 <div className="w-12 h-12 bg-green-400/20 rounded-lg flex-center shrink-0">
                   <BarChart3 className="w-6 h-6 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Data-Driven Results</h3>
+                  <h3 className="text-subheading font-bold text-white mb-subheading">Data-Driven Results</h3>
                   <p className="text-gray-300">Every checkpoint is based on analysis of high-performing websites and conversion optimization best practices.</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-content">
                 <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex-center shrink-0">
                   <Zap className="w-6 h-6 text-cyan-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">Quick Implementation</h3>
+                  <h3 className="text-subheading font-bold text-white mb-subheading">Quick Implementation</h3>
                   <p className="text-gray-300">Each item includes clear action steps that can be implemented immediately, no technical expertise required.</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-content">
                 <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex-center shrink-0">
                   <Target className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">ROI-Focused</h3>
+                  <h3 className="text-subheading font-bold text-white mb-subheading">ROI-Focused</h3>
                   <p className="text-gray-300">Prioritized by impact - tackle the highest-return optimizations first to maximize your results.</p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <div className="bg-gradient-secondary-20 border border-green-400/30 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-white mb-3">Real Client Results</h3>
-                <div className="space-y-3">
+            <div className="space-y-comfortable">
+              <div className="bg-gradient-secondary-20 border border-green-400/30 rounded-lg card-padding-sm">
+                <h3 className="text-subheading font-bold text-white mb-subheading">Real Client Results</h3>
+                <div className="space-y-tight">
                   <div className="flex justify-between">
                     <span className="text-gray-300">Conversion Rate Increase:</span>
                     <span className="text-green-400 font-bold">340% avg</span>
@@ -275,8 +275,8 @@ export default function WebsiteChecklistPage() {
                 </div>
               </div>
 
-              <div className="glass-card-light rounded-lg p-6">
-                <blockquote className="text-gray-300 italic mb-3">
+              <div className="glass-card-light rounded-lg card-padding-sm">
+                <blockquote className="text-gray-300 italic mb-subheading">
                   &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
                 <div className="text-cyan-400 font-semibold">— Sarah M., E-commerce Director</div>
@@ -287,66 +287,66 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Download Section */}
-      <section id="download" className="py-16 bg-gradient-primary">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
-            <DocumentTextIcon className="w-16 h-16 text-green-400 mx-auto mb-6" />
-            
-            <h2 className="text-3xl font-black text-white mb-4">
+      <section id="download" className="section-spacing bg-gradient-primary">
+        <div className="max-w-4xl mx-auto page-padding-x">
+          <div className="glass-card rounded-2xl card-padding text-center">
+            <DocumentTextIcon className="w-16 h-16 text-green-400 mx-auto mb-comfortable" />
+
+            <h2 className="text-section-title font-black text-white mb-subheading">
               Download Your Free Checklist
             </h2>
-            
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+
+            <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
               Get instant access to our 47-point website performance checklist. No spam, just actionable insights that drive results.
             </p>
 
             {/* Download Form */}
             <div className="max-w-md mx-auto">
-              <form className="space-y-4" action="/api/lead-magnet" method="POST">
+              <form className="space-y-content" action="/api/lead-magnet" method="POST">
                 <input type="hidden" name="resource" value="website-performance-checklist" />
-                
+
                 <div>
                   <input
                     type="email"
                     name="email"
                     placeholder="Enter your business email"
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
                   />
                 </div>
-                
+
                 <div>
                   <input
                     type="text"
                     name="firstName"
                     placeholder="First name"
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-2"
+                  className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-tight"
                 >
                   <ArrowDownTrayIcon className="w-5 h-5" />
                   Get My Free Checklist
                 </button>
               </form>
 
-              <p className="text-xs text-gray-500 mt-4">
+              <p className="text-caption text-gray-500 mt-4">
                 No spam, ever. We respect your privacy and will only send valuable insights.
               </p>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-gray-700">
-              <h3 className="text-lg font-bold text-white mb-4">Need Professional Implementation?</h3>
-              <p className="text-gray-300 mb-4">
+            <div className="mt-comfortable pt-8 border-t border-gray-700">
+              <h3 className="text-body-lg font-bold text-white mb-subheading">Need Professional Implementation?</h3>
+              <p className="text-gray-300 mb-subheading">
                 Want us to handle the optimization for you? Our team has implemented these strategies for 150+ businesses with an average 340% ROI.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex flex-center gap-2 border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
+                className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
               >
                 Get Professional Help
               </Link>

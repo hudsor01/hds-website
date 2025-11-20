@@ -71,21 +71,21 @@ export default function BlogPage() {
   return (
     <main className="min-h-screen bg-gradient-primary">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero py-24 overflow-hidden">
+      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
         </div>
 
         <div className="relative container-wide text-center">
-          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
+          <div className="inline-flex flex-center gap-tight p-badge mb-comfortable rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-body-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-clamp-xl font-black text-white mb-6 text-balance">
+          <h1 className="text-clamp-xl font-black text-white mb-heading text-balance">
             Business <span className="gradient-text">Strategy</span> Blog
           </h1>
-          <p className="text-xl text-gray-300 container-narrow text-pretty">
+          <p className="text-subheading text-gray-300 container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -93,44 +93,44 @@ export default function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="py-16 bg-gradient-primary">
+        <section className="section-spacing bg-gradient-primary">
           <div className="container-wide">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Article</h2>
+            <div className="text-center mb-content-block">
+              <h2 className="text-section-title font-black text-white mb-subheading text-balance">Featured Article</h2>
               <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
-            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible md:mx-0 md:px-0">
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-comfortable md:overflow-visible md:mx-0 md:px-0">
               {featuredPosts.map((post) => (
                 <article key={post.id} className="group relative lg:col-span-2 snap-center flex-shrink-0 w-80 md:w-auto">
-                  <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
+                  <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-smooth hover:scale-105 will-change-transform transform-gpu">
 
-                    <div className="p-8">
-                      <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
-                        <span className="flex flex-center gap-1">
+                    <div className="card-padding">
+                      <div className="flex flex-center gap-content text-caption text-gray-400 mb-subheading">
+                        <span className="flex flex-center gap-tight">
                           <CalendarDaysIcon className="w-4 h-4" />
                           {formatDateLong(post.publishedAt)}
                         </span>
-                        <span className="flex flex-center gap-1">
+                        <span className="flex flex-center gap-tight">
                           <ClockIcon className="w-4 h-4" />
                           {post.readingTime} min read
                         </span>
-                        <span className="px-3 py-1 bg-cyan-400 text-black text-xs font-bold rounded-full">
+                        <span className="p-badge bg-cyan-400 text-black text-caption font-bold rounded-full">
                           FEATURED
                         </span>
                       </div>
 
-                      <h3 className="text-responsive-md font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors text-balance">
+                      <h3 className="text-responsive-md font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors text-balance">
                         {post.title}
                       </h3>
 
-                      <p className="text-gray-300 mb-6 text-lg leading-relaxed text-pretty">
+                      <p className="text-gray-300 mb-card-content text-body-lg leading-relaxed text-pretty">
                         {post.excerpt}
                       </p>
 
-                      <div className="flex flex-wrap gap-2 mb-6">
+                      <div className="flex flex-wrap gap-tight mb-card-content">
                         {post.tags.map((tag) => (
-                          <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full">
+                          <span key={tag} className="flex flex-center gap-tight text-caption text-cyan-400 bg-cyan-400/10 p-badge rounded-full">
                             <TagIcon className="w-3 h-3" />
                             {tag}
                           </span>
@@ -139,7 +139,7 @@ export default function BlogPage() {
 
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
+                        className="inline-flex flex-center gap-tight link-primary font-semibold text-body-lg"
                       >
                         Read Full Article
                         <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -154,46 +154,46 @@ export default function BlogPage() {
       )}
 
       {/* All Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="section-spacing bg-gradient-primary">
         <div className="container-wide">
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-comfortable">
             {/* Main Content */}
             <div className="flex-1">
-              <div className="text-center lg:text-left mb-12">
-                <h2 className="text-3xl font-black text-white mb-4 text-balance">All Articles</h2>
+              <div className="text-center lg:text-left mb-content-block">
+                <h2 className="text-section-title font-black text-white mb-subheading text-balance">All Articles</h2>
                 <p className="text-gray-300 text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-comfortable">
                 {allPosts.map((post) => (
                   <article key={post.id} className="group">
-                    <div className="glass-card rounded-xl p-6 hover:border-cyan-300 transition-all duration-300">
+                    <div className="glass-card rounded-xl card-padding-sm hover:border-cyan-300 transition-smooth">
                       <div className="flex flex-col">
-                        <div className="flex flex-center gap-4 text-sm text-gray-400 mb-3">
-                          <span className="flex flex-center gap-1">
+                        <div className="flex flex-center gap-content text-caption text-gray-400 mb-subheading">
+                          <span className="flex flex-center gap-tight">
                             <CalendarDaysIcon className="w-4 h-4" />
                             {formatDateLong(post.publishedAt)}
                           </span>
-                          <span className="flex flex-center gap-1">
+                          <span className="flex flex-center gap-tight">
                             <ClockIcon className="w-4 h-4" />
                             {post.readingTime} min read
                           </span>
                           <span className="text-gray-500">By {post.author}</span>
                         </div>
 
-                        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors text-balance">
+                        <h3 className="text-card-title font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors text-balance">
                           <Link href={`/blog/${post.slug}`}>
                             {post.title}
                           </Link>
                         </h3>
 
-                        <p className="text-gray-300 mb-4 line-clamp-3 leading-relaxed text-pretty">
+                        <p className="text-gray-300 mb-subheading line-clamp-3 leading-relaxed text-pretty">
                           {post.excerpt}
                         </p>
 
-                        <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="flex flex-wrap gap-tight mb-subheading">
                           {post.tags.map((tag) => (
-                            <span key={tag} className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
+                            <span key={tag} className="flex flex-center gap-tight text-caption text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
                               <TagIcon className="w-3 h-3" />
                               {tag}
                             </span>
@@ -202,7 +202,7 @@ export default function BlogPage() {
 
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="inline-flex flex-center gap-2 link-primary font-semibold"
+                          className="inline-flex flex-center gap-tight link-primary font-semibold"
                         >
                           Read Full Article
                           <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -215,32 +215,32 @@ export default function BlogPage() {
             </div>
 
             {/* Sidebar */}
-            <aside className="w-full lg:w-80 space-y-8">
+            <aside className="w-full lg:w-80 space-y-comfortable">
               {/* Newsletter Signup */}
-              <div className="glass-card rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
-                <p className="text-gray-300 mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
-                <div className="space-y-3">
+              <div className="glass-card rounded-xl card-padding-sm">
+                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Stay Updated</h3>
+                <p className="text-gray-300 mb-subheading text-pretty">Get strategic insights delivered to your inbox.</p>
+                <div className="space-y-tight">
                   <input
                     type="email"
                     placeholder="Your email address"
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring"
+                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring"
                   />
                   <button className="w-full cta-primary">
                     Subscribe
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Strategic insights, no spam.</p>
+                <p className="text-caption text-gray-500 mt-2">Strategic insights, no spam.</p>
               </div>
 
               {/* Topics */}
-              <div className="glass-card rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Topics</h3>
-                <div className="flex flex-wrap gap-2">
+              <div className="glass-card rounded-xl card-padding-sm">
+                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Topics</h3>
+                <div className="flex flex-wrap gap-tight">
                   {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
                     <span
                       key={topic}
-                      className="text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors cursor-pointer"
+                      className="text-caption text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 p-badge rounded-full transition-colors cursor-pointer"
                     >
                       {topic}
                     </span>
@@ -249,12 +249,12 @@ export default function BlogPage() {
               </div>
 
               {/* CTA */}
-              <div className="glass-card rounded-xl p-6 text-center">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Ready to Dominate Your Market?</h3>
-                <p className="text-gray-300 mb-4 text-pretty">Let&apos;s engineer your competitive advantage.</p>
+              <div className="glass-card rounded-xl card-padding-sm text-center">
+                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Ready to Dominate Your Market?</h3>
+                <p className="text-gray-300 mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
-                  className="inline-block bg-green-400 text-black font-semibold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors"
+                  className="inline-block bg-green-400 text-black font-semibold p-button rounded-lg hover:bg-green-500 transition-colors"
                 >
                   Get Started
                 </Link>
