@@ -98,61 +98,61 @@ export default function ContactPage() {
               {/* Contact Info - Enhanced */}
               <div className="space-y-content">
                 <div className="glass-card-light card-padding-sm space-y-tight">
-                  <h3 className="text-lg font-bold text-white mb-4">What Happens Next?</h3>
+                  <h3 className="text-body-lg font-bold text-white mb-subheading">What Happens Next?</h3>
 
-                  <div className="flex items-start gap-4 text-gray-300">
+                  <div className="flex items-start gap-content text-gray-300">
                     <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">1</span>
                     </div>
                     <div>
                       <p className="font-semibold text-white">We respond within 2 hours</p>
-                      <p className="text-sm">Get a confirmation email with next steps</p>
+                      <p className="text-caption">Get a confirmation email with next steps</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4 text-gray-300">
+                  <div className="flex items-start gap-content text-gray-300">
                     <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">2</span>
                     </div>
                     <div>
                       <p className="font-semibold text-white">30-minute strategy call</p>
-                      <p className="text-sm">We analyze your needs and identify revenue opportunities</p>
+                      <p className="text-caption">We analyze your needs and identify revenue opportunities</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4 text-gray-300">
+                  <div className="flex items-start gap-content text-gray-300">
                     <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">3</span>
                     </div>
                     <div>
                       <p className="font-semibold text-white">Get your custom roadmap</p>
-                      <p className="text-sm">Detailed plan with ROI projections you can use immediately</p>
+                      <p className="text-caption">Detailed plan with ROI projections you can use immediately</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-gray-300 p-4 bg-green-400/10 border border-green-400/30 rounded-lg">
+                <div className="flex items-center gap-content text-gray-300 p-badge bg-green-400/10 border border-green-400/30 rounded-lg">
                   <Clock className="w-6 h-6 text-green-400 shrink-0" />
                   <div>
                     <p className="font-semibold text-white">Guaranteed Response</p>
-                    <p className="text-sm">Within 2 hours during business hours</p>
+                    <p className="text-caption">Within 2 hours during business hours</p>
                   </div>
                 </div>
 
-                <div className="p-4 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
-                  <p className="text-sm text-cyan-400 font-semibold mb-2">Join 50+ successful businesses</p>
-                  <p className="text-xs text-gray-400">Average 250% ROI within 6 months</p>
+                <div className="p-badge bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
+                  <p className="text-caption text-cyan-400 font-semibold mb-subheading">Join 50+ successful businesses</p>
+                  <p className="text-caption text-gray-400">Average 250% ROI within 6 months</p>
                 </div>
               </div>
             </div>
 
             {/* Right Column - Contact Form */}
             <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden glass-card p-8 shadow-2xl">
+              <div className="relative rounded-2xl overflow-hidden glass-card card-padding shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-hero-5" />
                 <div className="relative z-10">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-white mb-2 text-balance">Claim Your Free ROI Analysis</h2>
+                  <div className="text-center mb-comfortable">
+                    <h2 className="text-card-title font-bold text-white mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
                     <div className="typography">
                       <p className="text-gray-400 text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
                     </div>
@@ -161,8 +161,8 @@ export default function ContactPage() {
                   {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
 
                   {/* Trust badges */}
-                  <div className="mt-6 pt-6 border-t border-white/10">
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs text-muted-foreground">
+                  <div className="mt-card-content pt-card-content border-t border-white/10">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-content text-caption text-muted-foreground">
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-green-400 rounded-full"></div>
                         <span>No sales pitch</span>
@@ -185,16 +185,16 @@ export default function ContactPage() {
        </section>
 
       {/* Map Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
+          <div className="text-center mb-content-block">
+            <h2 className="text-clamp-xl font-black text-white mb-heading text-balance">
               <span className="gradient-text">
                 Visit Our Office
               </span>
             </h2>
             <div className="typography">
-              <p className="text-xl text-gray-300 container-narrow text-pretty">
+              <p className="text-subheading text-gray-300 container-narrow text-pretty">
                 Located in the heart of Florida&apos;s tech corridor, ready to serve clients worldwide.
               </p>
             </div>

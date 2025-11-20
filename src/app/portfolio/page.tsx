@@ -91,10 +91,10 @@ export default function PortfolioPage() {
             <div className="absolute inset-0 grid-pattern" />
           </div>
 
-          <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
-            <div className="space-y-8">
+          <div className="relative z-10 container-wide text-center">
+            <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
+                <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
                   <SparklesIcon className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
@@ -114,7 +114,7 @@ export default function PortfolioPage() {
               </div>
 
               <div>
-                <div className="flex flex-col sm:flex-row flex-center gap-4 mt-12">
+                <div className="flex flex-col sm:flex-row flex-center gap-content mt-content-block">
                   <Link href="/contact">
                     <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
                       <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
