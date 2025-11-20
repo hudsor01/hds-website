@@ -100,9 +100,9 @@ export default function ServicesPage() {
         <BackgroundPattern variant="default" />
 
         <div className="relative z-10 container-wide text-center">
-          <div className="space-y-8">
+          <div className="space-y-comfortable">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
@@ -122,7 +122,7 @@ export default function ServicesPage() {
             </div>
 
             <div>
-              <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
+              <div className="flex-center flex-col sm:flex-row gap-content mt-content-block">
                 <CTAButton href="/contact" variant="primary" size="lg">
                   Get Your Free ROI Analysis
                 </CTAButton>
@@ -138,8 +138,8 @@ export default function ServicesPage() {
       {/* Services Section */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
+          <div className="text-center mb-content-block">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               <span className="gradient-text">
                 Our Services
               </span>
@@ -151,7 +151,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-3 mb-16">
+          <div className="grid-3 mb-content-block">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
@@ -159,17 +159,17 @@ export default function ServicesPage() {
                   key={index}
                   className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
                 >
-                  <div className="flex-center mb-6">
-                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
+                  <div className="flex-center mb-card-content">
+                    <div className={`p-badge rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
                       <Icon className="h-8 w-8 text-cyan-400" />
                     </div>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                  <h3 className="text-card-title font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors">
                     {service.title}
                   </h3>
 
-                  <div className="typography mb-6">
+                  <div className="typography mb-card-content">
                     <p className="muted leading-relaxed">
                       {service.description}
                     </p>
@@ -177,12 +177,12 @@ export default function ServicesPage() {
 
                   {/* Results Badge */}
                   {service.results && (
-                    <div className="mb-6 px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
-                      <p className="text-sm font-semibold text-cyan-400 text-center">{service.results}</p>
+                    <div className="mb-card-content p-badge bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
+                      <p className="text-caption font-semibold text-cyan-400 text-center">{service.results}</p>
                     </div>
                   )}
 
-                  <div className="space-y-3 mb-8">
+                  <div className="space-y-tight mb-comfortable">
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
@@ -197,18 +197,18 @@ export default function ServicesPage() {
 
                   {/* ROI Badge */}
                   {service.roi && (
-                    <div className="mb-6">
-                      <p className="text-sm font-bold text-green-400">{service.roi}</p>
+                    <div className="mb-card-content">
+                      <p className="text-caption font-bold text-green-400">{service.roi}</p>
                     </div>
                   )}
 
-                  <div className="mb-6">
-                    <p className="text-2xl font-bold text-white">{service.pricing}</p>
+                  <div className="mb-card-content">
+                    <p className="text-card-title font-bold text-white">{service.pricing}</p>
                   </div>
 
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300 w-full justify-center"
+                    className="group/btn inline-flex items-center gap-content p-button bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300 w-full justify-center"
                   >
                     Get Your Free Consultation
                     <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -222,8 +222,8 @@ export default function ServicesPage() {
       {/* Stats Section */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
+          <div className="text-center mb-content-block">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               <span className="gradient-text">
                 Proven Results
               </span>
@@ -235,13 +235,13 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-4 mb-16">
+          <div className="grid-4 mb-content-block">
             {stats.map((stat, index) => (
               <div
                 key={index}
                 className="relative glass-card-light card-padding card-hover-glow transition-smooth text-center"
               >
-                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
               </div>
             ))}
@@ -251,8 +251,8 @@ export default function ServicesPage() {
       {/* Process Section */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
+          <div className="text-center mb-content-block">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               <span className="gradient-text">
                 Our Process
               </span>
@@ -264,19 +264,19 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-4 mb-16">
+          <div className="grid-4 mb-content-block">
             {process.map((step, index) => (
               <div
                 key={index}
                 className="group relative glass-card card-padding card-hover-glow transition-smooth text-center"
               >
-                <div className="mb-4 flex justify-center">
+                <div className="mb-subheading flex justify-center">
                   <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
                     <step.icon className="w-8 h-8 text-cyan-400" />
                   </div>
                 </div>
-                <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                <div className="text-cyan-400 font-bold text-body-lg mb-subheading">{step.step}</div>
+                <h3 className="text-subheading font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -294,7 +294,7 @@ export default function ServicesPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="relative z-10 text-center glass-section card-padding">
-            <h2 className="text-responsive-md font-black text-white mb-6">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               Ready for Development That
               <span className="gradient-text">
                 {" "}Actually Drives Revenue?
@@ -302,18 +302,18 @@ export default function ServicesPage() {
             </h2>
 
             <div className="typography">
-              <p className="large muted container-narrow mb-6">
+              <p className="large muted container-narrow mb-heading">
                 Stop wasting money on features nobody uses. Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to fix it.
               </p>
-              <p className="text-cyan-400 font-semibold mb-10">
+              <p className="text-cyan-400 font-semibold mb-content-block">
                 No sales pitch. No commitment. Just actionable insights you can implement immediately.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row flex-center gap-4">
+            <div className="flex flex-col sm:flex-row flex-center gap-content">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
+                className="group relative inline-flex items-center gap-content cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Claim Your Free ROI Analysis</span>
@@ -322,7 +322,7 @@ export default function ServicesPage() {
 
               <Link
                 href="/portfolio"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                className="group inline-flex items-center gap-content px-10 py-5 border-2 border-gray-600 text-white font-semibold text-body-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
                 See $3.7M+ in Proven Results
                 <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -330,8 +330,8 @@ export default function ServicesPage() {
             </div>
 
             {/* Trust signals */}
-            <div className="mt-12 pt-8 border-t border-white/10">
-              <div className="flex flex-col md:flex-row justify-center items-center gap-8 text-sm text-muted-foreground">
+            <div className="mt-content-block pt-8 border-t border-white/10">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
                 <div>50+ successful projects delivered</div>
                 <div>250% average ROI within 6 months</div>
                 <div>Response within 2 hours</div>
