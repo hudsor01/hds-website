@@ -42,13 +42,13 @@ export default function HomePage() {
       {/* Hero Section - Seamless Layout */}
       <section className="relative section-spacing">
         <div className="container-wide">
-          <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
+          <div className="lg:grid lg:grid-cols-5 lg:gap-sections items-center">
 
             {/* Left Side - Content */}
             <div className="lg:col-span-3 lg:pr-8">
-              <div className="space-y-8">
+              <div className="space-y-comfortable">
                 <div>
-                  <h1 className="text-responsive-lg font-black text-white leading-[1.1] mb-6 text-balance">
+                  <h1 className="text-responsive-lg font-black text-white leading-[1.1] mb-section-title text-balance">
                     <span className="block">Turn Your Website Into a</span>
                     <span className="block gradient-text bg-clip-text text-transparent">
                       Revenue Machine
@@ -66,7 +66,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-content">
                   <CTAButton href="/contact" variant="primary" size="lg">
                     Get Your Free ROI Roadmap
                   </CTAButton>
@@ -76,12 +76,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Trust Indicators */}
-                <div className="flex-center gap-6 pt-8 border-t border-border">
-                  <div className="flex-center gap-2 text-muted-foreground">
+                <div className="flex-center gap-comfortable pt-8 border-t border-border">
+                  <div className="flex-center gap-tight text-muted-foreground">
                     <ClockIcon className="w-5 h-5 text-green-400" />
                     <span className="small">250% Average ROI in 6 months</span>
                   </div>
-                  <div className="flex-center gap-2 text-muted-foreground">
+                  <div className="flex-center gap-tight text-muted-foreground">
                     <UserGroupIcon className="w-5 h-5 text-blue-400" />
                     <span className="small">98% Client Satisfaction</span>
                   </div>
@@ -90,7 +90,7 @@ export default function HomePage() {
             </div>
 
             {/* Right Side - Terminal Display */}
-            <div className="lg:col-span-2 mt-16 lg:mt-0">
+            <div className="lg:col-span-2 mt-content-block lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 bg-gradient-hero-20 rounded-3xl blur-3xl" />
@@ -99,8 +99,8 @@ export default function HomePage() {
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
                   {/* Terminal Header */}
-                  <div className="bg-card/80 border-b border-border px-4 py-3 flex-between">
-                    <div className="flex-center gap-2">
+                  <div className="bg-card/80 border-b border-border p-badge flex-between">
+                    <div className="flex-center gap-tight">
                       <div className="w-3 h-3 rounded-full bg-red-500" />
                       <div className="w-3 h-3 rounded-full bg-yellow-500" />
                       <div className="w-3 h-3 rounded-full bg-green-500" />
@@ -110,7 +110,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Terminal Content */}
-                  <div className="p-6 font-mono text-sm space-y-2" role="log">
+                  <div className="p-card-sm font-mono text-caption space-y-tight" role="log">
                     <div className="text-cyan-400">$ npm run deploy --production</div>
                     <div className="text-muted-foreground">[OK] Build completed in 1.8s</div>
                     <div className="text-muted-foreground">[OK] Tests passed (147/147)</div>
@@ -119,13 +119,13 @@ export default function HomePage() {
                     <div className="text-green-400">[OK] Deployment successful</div>
                     <div className="text-yellow-400">[LIVE] at https://client-app.com</div>
 
-                    <div className="pt-2 space-y-1">
+                    <div className="pt-2 space-y-tight">
                       <div className="text-cyan-300">Performance: 100/100</div>
                       <div className="text-cyan-300">Accessibility: 100/100</div>
                       <div className="text-cyan-300">SEO: 98/100</div>
                     </div>
 
-                    <div className="text-cyan-400 mt-4">
+                    <div className="text-cyan-400 mt-card-content">
                       <span className="inline-block">$</span>
                       <span className="inline-block w-2 h-4 bg-cyan-400 ml-1" />
                     </div>
@@ -140,8 +140,8 @@ export default function HomePage() {
       {/* Solutions Grid */}
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16 typography">
-            <h2 className="text-responsive-md font-black text-white mb-4">
+          <div className="text-center mb-content-block typography">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               How We Turn Tech Challenges Into Revenue Growth
             </h2>
             <div className="typography">
@@ -157,12 +157,12 @@ export default function HomePage() {
                 key={index}
                 className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
               >
-                <div className="space-y-6">
-                  <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-cyan-500/30 hover-lift will-change-transform transition-smooth">
+                <div className="space-y-content">
+                  <div className="flex-center gap-content">
+                    <div className="p-badge rounded-xl bg-gradient-hero-20 border border-cyan-500/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">
+                    <h3 className="text-subheading font-bold text-white group-hover:text-cyan-400 transition-smooth">
                       {solution.title}
                     </h3>
                   </div>
@@ -173,9 +173,9 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-tight">
                     {solution.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex-center space-x-3">
+                      <div key={featureIndex} className="flex-center gap-content">
                         <div className="w-2 h-2 rounded-full bg-gradient-secondary" />
                         <span className="text-responsive-sm text-muted-foreground">{feature}</span>
                       </div>
@@ -196,8 +196,8 @@ export default function HomePage() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
 
         <div className="container-wide relative">
-          <div className="text-center mb-20 typography">
-            <h2 className="text-responsive-md font-black text-white mb-6">
+          <div className="text-center mb-content-block typography">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               <span className="gradient-text relative">
                 Proven Impact
                 <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
@@ -205,7 +205,7 @@ export default function HomePage() {
             </h2>
 
             <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-gray-300 leading-relaxed">
+              <p className="text-subheading text-gray-300 leading-relaxed">
                 Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
               </p>
             </div>
@@ -224,20 +224,20 @@ export default function HomePage() {
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
 
                   {/* Metric with enhanced styling */}
-                  <div className="relative mb-4">
-                    <div className="text-4xl lg:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-all duration-300 font-mono">
+                  <div className="relative mb-subheading">
+                    <div className="text-page-title font-black text-white mb-subheading group-hover:text-cyan-400 transition-all duration-300 font-mono">
                       {result.metric}
                     </div>
                     <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-gray-200 mb-3 group-hover:text-white transition-colors duration-300">
+                  <div className="text-body-lg font-bold text-gray-200 mb-card-title group-hover:text-white transition-colors duration-300">
                     {result.label}
                   </div>
 
                   {/* Period with accent styling */}
-                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
+                  <div className="text-caption text-muted-foreground font-medium p-badge bg-gray-800/50 rounded-full border border-gray-700/50">
                     {result.period}
                   </div>
 
@@ -256,8 +256,8 @@ export default function HomePage() {
           </div>
 
           {/* Bottom accent section */}
-          <div className="text-center mt-16 pt-8 border-t border-gray-700/30">
-            <p className="text-gray-400 text-sm font-medium">
+          <div className="text-center mt-content-block pt-8 border-t border-gray-700/30">
+            <p className="text-gray-400 text-caption font-medium">
               Join <span className="text-cyan-400 font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
             </p>
           </div>
@@ -268,25 +268,25 @@ export default function HomePage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
           <div className="glass-section card-padding">
-            <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+            <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-comfortable" />
 
-            <h2 className="text-responsive-md font-black text-white mb-6">
+            <h2 className="text-responsive-md font-black text-white mb-heading">
               Still Losing Deals to Slow Development?
-              <span className="block gradient-text mt-2">
+              <span className="block gradient-text mt-subheading">
                 Let&apos;s Fix That in 30 Days
               </span>
             </h2>
 
             <div className="typography">
-              <p className="large text-muted-foreground mb-6 container-narrow">
+              <p className="large text-muted-foreground mb-heading container-narrow">
                 Every week you delay costs you $10K+ in lost revenue. Get a custom roadmap showing exactly how to 3x your development speed—without hiring a single developer.
               </p>
-              <p className="text-cyan-400 font-semibold mb-10">
+              <p className="text-cyan-400 font-semibold mb-content-block">
                 Free 30-minute strategy session. No sales pitch. Just a detailed action plan you can use immediately.
               </p>
             </div>
 
-            <div className="flex-center flex-col sm:flex-row gap-4">
+            <div className="flex-center flex-col sm:flex-row gap-content">
               <CTAButton href="/contact" variant="primary" size="lg">
                 Claim Your Free Strategy Session
               </CTAButton>

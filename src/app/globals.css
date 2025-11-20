@@ -952,6 +952,175 @@
   /* ===================
    * SCROLLBAR UTILITIES
    * =================== */
+
+  /* SEMANTIC MARGIN UTILITIES - Use these instead of arbitrary mb-/mt- values */
+  .mb-section-title {
+    margin-bottom: 1.5rem; /* 24px - for spacing after section titles */
+  }
+
+  .mb-section-subtitle {
+    margin-bottom: 1rem; /* 16px - for spacing after section subtitles */
+  }
+
+  .mb-heading {
+    margin-bottom: 1.5rem; /* 24px - for spacing after h2/h3 headings */
+  }
+
+  .mb-subheading {
+    margin-bottom: 1rem; /* 16px - for spacing after h4/h5 headings */
+  }
+
+  .mb-card-title {
+    margin-bottom: 1rem; /* 16px - for spacing after card titles */
+  }
+
+  .mb-card-content {
+    margin-bottom: 1.5rem; /* 24px - for spacing between card content sections */
+  }
+
+  .mb-content-block {
+    margin-bottom: 4rem; /* 64px - for spacing between major content blocks */
+  }
+
+  .mb-prose {
+    margin-bottom: 1.5rem; /* 24px - for spacing in prose/article content */
+  }
+
+  .mb-comfortable {
+    margin-bottom: 2rem; /* 32px - comfortable spacing after elements */
+  }
+
+  /* Top Margins */
+  .mt-subheading {
+    margin-top: 1rem; /* 16px */
+  }
+  .mt-section-title {
+    margin-top: 1.5rem; /* 24px */
+  }
+
+  .mt-heading {
+    margin-top: 1.5rem; /* 24px */
+  }
+
+  .mt-card-content {
+    margin-top: 1.5rem; /* 24px */
+  }
+
+  .mt-content-block {
+    margin-top: 4rem; /* 64px */
+  }
+
+  /* SEMANTIC GAP UTILITIES - Use these for consistent spacing in flex/grid */
+  .gap-content {
+    gap: 1rem; /* 16px - standard content gap */
+  }
+
+  .gap-cards {
+    gap: 2rem; /* 32px - standard card gap */
+  }
+
+  .gap-sections {
+    gap: 3rem; /* 48px - gap between major sections */
+  }
+
+  .gap-tight {
+    gap: 0.5rem; /* 8px - tight spacing */
+  }
+
+  .gap-comfortable {
+    gap: 1.5rem; /* 24px - comfortable spacing */
+  }
+
+  /* SEMANTIC SPACE UTILITIES - Use these for vertical spacing in stacks */
+  .space-y-content > * + * {
+    margin-top: 1.5rem; /* 24px - standard content vertical spacing */
+  }
+
+  .space-y-tight > * + * {
+    margin-top: 0.75rem; /* 12px - tight vertical spacing */
+  }
+
+  .space-y-comfortable > * + * {
+    margin-top: 2rem; /* 32px - comfortable vertical spacing */
+  }
+
+  .space-y-sections > * + * {
+    margin-top: 3rem; /* 48px - section-level vertical spacing */
+  }
+
+  /* SEMANTIC TEXT SIZE UTILITIES - Use these instead of arbitrary text-* values */
+  .text-hero-title {
+    font-size: var(--text-6xl);
+    line-height: var(--text-6xl--line-height);
+  }
+
+  .text-page-title {
+    font-size: var(--text-4xl);
+    line-height: var(--text-4xl--line-height);
+  }
+
+  .text-section-title {
+    font-size: var(--text-3xl);
+    line-height: var(--text-3xl--line-height);
+  }
+
+  .text-card-title {
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+  }
+
+  .text-subheading {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+  }
+
+  .text-body-lg {
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+  }
+
+  .text-body {
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+  }
+
+  .text-caption {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  /* SEMANTIC PADDING UTILITIES - Use these instead of arbitrary p-* values */
+  .p-hero {
+    padding: 5rem 1rem; /* Hero section padding */
+  }
+
+  .p-section {
+    padding: 3rem 1rem; /* Standard section padding */
+  }
+
+  .p-card {
+    padding: var(--card-padding);
+  }
+
+  .p-card-sm {
+    padding: var(--spacing-card-sm);
+  }
+
+  .p-button {
+    padding: var(--button-padding-y) var(--button-padding-x);
+  }
+
+  .p-badge {
+    padding: 0.5rem 1rem; /* Badge/pill padding */
+  }
+
+  .p-input {
+    padding: var(--input-padding-y) var(--input-padding-x);
+  }
+
+  /* ===================
+   * SCROLLBAR UTILITIES
+   * =================== */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
