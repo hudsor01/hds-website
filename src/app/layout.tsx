@@ -136,6 +136,13 @@ export default function RootLayout({
         className="antialiased selection-cyan"
         suppressHydrationWarning
       >
+        {/* Skip to main content for accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-tooltip focus:px-6 focus:py-3 focus:bg-cyan-500 focus:text-white focus:font-bold focus:rounded-lg focus:shadow-xl focus-ring"
+        >
+          Skip to main content
+        </a>
         <NavbarLight />
         <div id="main-content" className="min-h-screen pt-16">
           {children}

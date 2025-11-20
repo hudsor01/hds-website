@@ -28,9 +28,9 @@ function MapSkeleton() {
 
 function ContactFormSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="space-y-content animate-pulse">
       {/* Name fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-content">
         <div className="h-12 bg-input rounded-lg"></div>
         <div className="h-12 bg-input rounded-lg"></div>
       </div>
@@ -70,11 +70,11 @@ export default function ContactPage() {
         </div>
 
         <div className="relative z-10 container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-sections items-center">
             {/* Left Column - Hero Content */}
-            <div className="space-y-8">
+            <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
+                <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
                   Let&apos;s Connect
                 </span>
               </div>
@@ -96,8 +96,8 @@ export default function ContactPage() {
               </div>
 
               {/* Contact Info - Enhanced */}
-              <div className="space-y-6">
-                <div className="glass-card-light p-6 space-y-4">
+              <div className="space-y-content">
+                <div className="glass-card-light card-padding-sm space-y-tight">
                   <h3 className="text-lg font-bold text-white mb-4">What Happens Next?</h3>
 
                   <div className="flex items-start gap-4 text-gray-300">

@@ -11,6 +11,19 @@ export const metadata: Metadata = {
     description: 'Transparent pricing for custom web development and digital solutions',
     url: 'https://hudsondigitalsolutions.com/pricing',
   },
+  other: {
+    "ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Why do prices start at these amounts?", "acceptedAnswer": {"@type": "Answer", "text": "Our starting prices reflect the quality and expertise we bring to every project. We focus on delivering business value through custom solutions, not template-based work."}},
+        {"@type": "Question", "name": "What factors affect the final project cost?", "acceptedAnswer": {"@type": "Answer", "text": "Project complexity, timeline requirements, third-party integrations, custom features, and ongoing maintenance needs all influence the final investment."}},
+        {"@type": "Question", "name": "Do you offer payment plans?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we typically structure payments in milestones: 50% to start, 30% at midpoint, and 20% upon completion. Custom arrangements available for larger projects."}},
+        {"@type": "Question", "name": "What's included in the free consultation?", "acceptedAnswer": {"@type": "Answer", "text": "A 60-minute strategy session where we analyze your requirements, discuss technical options, and provide a detailed project estimate with timeline."}},
+        {"@type": "Question", "name": "Do you provide ongoing support?", "acceptedAnswer": {"@type": "Answer", "text": "We offer various maintenance packages including bug fixes, security updates, feature enhancements, and technical support tailored to your needs."}}
+      ]
+    })
+  }
 };
 
 const pricingTiers = [
