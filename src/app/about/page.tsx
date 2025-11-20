@@ -53,7 +53,7 @@ export default function AboutPage() {
       <section className="relative min-h-screen flex-center overflow-hidden">
         <BackgroundPattern variant="hero" />
         
-        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 container-wide text-center">
           <div className="space-y-8">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
@@ -78,7 +78,7 @@ export default function AboutPage() {
       </section>
 
       {/* Story Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-lg font-black text-white mb-6 text-balance">
@@ -95,7 +95,7 @@ export default function AboutPage() {
 
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
             {/* Story Content */}
-            <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-cyan-400 transition-smooth">
                 Forged in Revenue Operations, Refined in Code
               </h3>
@@ -119,7 +119,7 @@ export default function AboutPage() {
 
             {/* Mission & Vision Cards */}
             <div className="space-y-8">
-              <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+              <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                     <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
@@ -133,7 +133,7 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="group relative glass-card-light p-8 card-hover-glow-purple transition-smooth">
+              <div className="group relative glass-card-light card-padding card-hover-glow-purple transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
                     <EyeIcon className="w-8 h-8 text-purple-400" />
@@ -152,7 +152,7 @@ export default function AboutPage() {
       </section>
 
       {/* Expertise Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
@@ -165,8 +165,8 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group relative glass-card-light p-6 card-hover-glow transition-smooth">
+          <div className="grid-4">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                   <CodeBracketIcon className="w-6 h-6 text-cyan-400" />
@@ -181,7 +181,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-emerald transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-emerald transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-emerald-500/30">
                   <ChartBarIcon className="w-6 h-6 text-emerald-400" />
@@ -196,7 +196,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-orange transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-orange transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-orange border border-orange-500/30">
                   <BoltIcon className="w-6 h-6 text-orange-400" />
@@ -211,7 +211,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-purple transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-purple transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
                   <ShieldCheckIcon className="w-6 h-6 text-purple-400" />
@@ -230,7 +230,7 @@ export default function AboutPage() {
       </section>
 
       {/* The Founder Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
@@ -243,7 +243,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="group relative glass-card-light p-12 card-hover-glow transition-smooth">
+          <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
             <div className="space-y-8 text-muted-foreground leading-relaxed">
               <p className="text-lg group-hover:text-white transition-smooth">
                 Before writing a single line of client code, I spent 5+ years as a <strong className="text-cyan-400">revenue operations professional</strong> at enterprise SaaS companies.
@@ -288,7 +288,7 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
@@ -301,8 +301,8 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+          <div className="grid-3">
+            <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                   <LightBulbIcon className="w-8 h-8 text-cyan-400" />
@@ -314,7 +314,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="group relative glass-card-light p-8 card-hover-glow-emerald transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow-emerald transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-emerald-500/30">
                   <ChartBarIcon className="w-8 h-8 text-emerald-400" />
@@ -326,7 +326,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="group relative glass-card-light p-8 card-hover-glow-orange transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow-orange transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-decorative-orange border border-orange-500/30">
                   <CogIcon className="w-8 h-8 text-orange-400" />
@@ -342,9 +342,9 @@ export default function AboutPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section p-12 md:p-16">
+          <div className="relative z-10 text-center glass-section card-padding">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
               Ready to engineer
               <span className="gradient-text">
