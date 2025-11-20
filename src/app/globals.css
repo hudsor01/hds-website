@@ -194,11 +194,11 @@
 	h4,
 	h5,
 	h6 {
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--line-height-tight);
-		letter-spacing: -0.025em;
-		color: var(--foreground);
-	}
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.025em;
+    color: var(--foreground);
+  }
 
   h1:not(.not-typography h1) {
     scroll-margin: calc(var(--spacing) * 20);
