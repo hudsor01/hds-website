@@ -183,11 +183,17 @@ export class FeatureFlags {
 // Hook for React components to use feature flags
 
 export function useFeatureFlag(flagKey: FeatureFlagKey): boolean {
-  const [isEnabled, setIsEnabled] = useState(() => 
+  const [isEnabled, setIsEnabled] = useState(() =>
     FeatureFlags.isEnabled(flagKey)
   );
 
   useEffect(() => {
+    // Only set up polling if PostHog is actually configured
+    if (typeof window === 'undefined' || !analytics) {
+      // Use default value if PostHog not available
+      return;
+    }
+
     // Update flag state when PostHog loads or updates
     const checkFlag = () => {
       const enabled = FeatureFlags.isEnabled(flagKey);
