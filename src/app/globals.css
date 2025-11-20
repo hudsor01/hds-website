@@ -173,12 +173,12 @@
 
 	html,
   body {
-		tab-size: 4;
-		font-feature-settings: normal;
-		font-variation-settings: normal;
-		-webkit-tap-highlight-color: transparent;
-		scroll-behavior: smooth;
-	}
+    tab-size: 4;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
 
   body {
 		color: var(--foreground);
