@@ -77,13 +77,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  other: {
-    "ld+json": JSON.stringify([
-      generateWebsiteSchema(),
-      generateOrganizationSchema(),
-      generateLocalBusinessSchema()
-    ].filter(Boolean))
-  }
 };
 
 export default function RootLayout({
@@ -137,6 +130,18 @@ export default function RootLayout({
         className="antialiased selection-cyan"
         suppressHydrationWarning
       >
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              generateWebsiteSchema(),
+              generateOrganizationSchema(),
+              generateLocalBusinessSchema()
+            ].filter(Boolean))
+          }}
+        />
+
         <ToastProvider>
           {/* Skip to main content for accessibility */}
           <a
@@ -146,9 +151,9 @@ export default function RootLayout({
             Skip to main content
           </a>
           <NavbarLight />
-          <div id="main-content" className="min-h-screen pt-16">
+          <main id="main-content" className="min-h-screen pt-16">
             {children}
-          </div>
+          </main>
           <Footer />
           <ScrollToTop />
           <Analytics />
