@@ -1110,10 +1110,6 @@
     padding: var(--button-padding-y) var(--button-padding-x);
   }
 
-  .p-badge {
-    padding: 0.5rem 1rem; /* Badge/pill padding */
-  }
-
   .p-input {
     padding: var(--input-padding-y) var(--input-padding-x);
   }

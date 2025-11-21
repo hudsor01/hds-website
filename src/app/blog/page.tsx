@@ -78,7 +78,7 @@ export default function BlogPage() {
         </div>
 
         <div className="relative container-wide text-center">
-          <div className="inline-flex flex-center gap-tight p-badge mb-comfortable rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-body-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-body-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
@@ -115,7 +115,7 @@ export default function BlogPage() {
                           <ClockIcon className="w-4 h-4" />
                           {post.readingTime} min read
                         </span>
-                        <span className="p-badge bg-cyan-400 text-black text-caption font-bold rounded-full">
+                        <span className="px-4 py-2 bg-cyan-400 text-black text-caption font-bold rounded-full">
                           FEATURED
                         </span>
                       </div>
@@ -130,7 +130,7 @@ export default function BlogPage() {
 
                       <div className="flex flex-wrap gap-tight mb-card-content">
                         {post.tags.map((tag) => (
-                          <span key={tag} className="flex flex-center gap-tight text-caption text-cyan-400 bg-cyan-400/10 p-badge rounded-full">
+                          <span key={tag} className="flex flex-center gap-tight text-caption text-cyan-400 bg-cyan-400/10 px-4 py-2 rounded-full">
                             <TagIcon className="w-3 h-3" />
                             {tag}
                           </span>
@@ -240,7 +240,7 @@ export default function BlogPage() {
                   {["Business Strategy", "Web Development", "Digital Marketing", "Conversion Optimization", "Small Business", "ROI", "UX Design", "Competitive Advantage"].map((topic) => (
                     <span
                       key={topic}
-                      className="text-caption text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 p-badge rounded-full transition-colors cursor-pointer"
+                      className="text-caption text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-4 py-2 rounded-full transition-colors cursor-pointer"
                     >
                       {topic}
                     </span>

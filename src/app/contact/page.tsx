@@ -75,7 +75,7 @@ export default function ContactPage() {
             {/* Left Column - Hero Content */}
             <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
+                <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
                   Let&apos;s Connect
                 </span>
               </div>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-content text-gray-300 p-badge bg-green-400/10 border border-green-400/30 rounded-lg">
+                <div className="flex items-center gap-content text-gray-300 px-4 py-2 bg-green-400/10 border border-green-400/30 rounded-lg">
                   <Clock className="w-6 h-6 text-green-400 shrink-0" />
                   <div>
                     <p className="font-semibold text-white">Guaranteed Response</p>
@@ -140,7 +140,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="p-badge bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
+                <div className="px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
                   <p className="text-caption text-cyan-400 font-semibold mb-subheading">Join 50+ successful businesses</p>
                   <p className="text-caption text-gray-400">Average 250% ROI within 6 months</p>
                 </div>

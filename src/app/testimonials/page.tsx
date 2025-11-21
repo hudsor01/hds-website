@@ -98,7 +98,7 @@ export default function TestimonialsPage() {
         <div className="relative z-10 container-wide">
           <div className="text-center space-y-comfortable">
             <div>
-              <span className="p-badge rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium inline-block">
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium inline-block">
                 Client Success Stories
               </span>
             </div>
@@ -169,9 +169,9 @@ export default function TestimonialsPage() {
                   <StarRating rating={testimonial.rating} />
                 </div>
 
-                {/* Highlight Badge */}
+                {/* Highlight Label */}
                 <div className="mb-card-content">
-                  <span className="p-badge rounded-full bg-cyan-400/10 text-cyan-400 text-caption font-semibold">
+                  <span className="px-4 py-2 rounded-full bg-cyan-400/10 text-cyan-400 text-caption font-semibold">
                     {testimonial.highlight}
                   </span>
                 </div>

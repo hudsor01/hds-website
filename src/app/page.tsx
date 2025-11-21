@@ -104,7 +104,7 @@ export default function HomePage() {
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
                   {/* Terminal Header */}
-                  <div className="bg-card/80 border-b border-border p-badge flex-between">
+                  <div className="bg-card/80 border-b border-border px-4 py-2 flex-between">
                     <div className="flex-center gap-tight">
                       <div className="w-3 h-3 rounded-full bg-red-500" />
                       <div className="w-3 h-3 rounded-full bg-yellow-500" />
@@ -164,7 +164,7 @@ export default function HomePage() {
               >
                 <div className="space-y-content">
                   <div className="flex-center gap-content">
-                    <div className="p-badge rounded-xl bg-gradient-hero-20 border border-cyan-500/30 hover-lift will-change-transform transition-smooth">
+                    <div className="px-4 py-2 rounded-xl bg-gradient-hero-20 border border-cyan-500/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
                     <h3 className="text-subheading font-bold text-white group-hover:text-cyan-400 transition-smooth">
@@ -242,7 +242,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Period with accent styling */}
-                  <div className="text-caption text-muted-foreground font-medium p-badge bg-gray-800/50 rounded-full border border-gray-700/50">
+                  <div className="text-caption text-muted-foreground font-medium px-4 py-2 bg-gray-800/50 rounded-full border border-gray-700/50">
                     {result.period}
                   </div>
 

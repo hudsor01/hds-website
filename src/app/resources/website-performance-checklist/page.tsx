@@ -123,7 +123,7 @@ export default function WebsiteChecklistPage() {
         </div>
 
         <div className="relative max-w-4xl mx-auto text-center page-padding-x">
-          <div className="inline-flex flex-center gap-tight p-badge mb-comfortable rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-body-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-body-lg">
             <DocumentTextIcon className="w-5 h-5" />
             Free Resource
           </div>

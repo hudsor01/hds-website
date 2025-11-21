@@ -128,9 +128,9 @@ export default function PricingPage() {
         <div className="container-wide">
           <div className="text-center">
 
-            {/* Professional Badge */}
+            {/* Section Label */}
             <div className="inline-block mb-comfortable">
-              <span className="p-badge rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium">
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium">
                 Transparent Pricing
               </span>
             </div>
@@ -169,7 +169,7 @@ export default function PricingPage() {
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-primary text-white p-badge rounded-full text-caption font-bold">
+                    <span className="bg-gradient-primary text-white px-4 py-2 rounded-full text-caption font-bold">
                       MOST POPULAR
                     </span>
                   </div>

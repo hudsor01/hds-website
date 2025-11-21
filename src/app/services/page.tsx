@@ -102,7 +102,7 @@ export default function ServicesPage() {
         <div className="relative z-10 container-wide text-center">
           <div className="space-y-comfortable">
             <div>
-              <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
@@ -160,7 +160,7 @@ export default function ServicesPage() {
                   className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
                 >
                   <div className="flex-center mb-card-content">
-                    <div className={`p-badge rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
+                    <div className={`px-4 py-2 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
                       <Icon className="h-8 w-8 text-cyan-400" />
                     </div>
                   </div>
@@ -177,7 +177,7 @@ export default function ServicesPage() {
 
                   {/* Results Badge */}
                   {service.results && (
-                    <div className="mb-card-content p-badge bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
+                    <div className="mb-card-content px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
                       <p className="text-caption font-semibold text-cyan-400 text-center">{service.results}</p>
                     </div>
                   )}

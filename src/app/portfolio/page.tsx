@@ -94,7 +94,7 @@ export default function PortfolioPage() {
           <div className="relative z-10 container-wide text-center">
             <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-tight p-badge rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
+                <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-caption blur-backdrop">
                   <SparklesIcon className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
@@ -189,13 +189,13 @@ export default function PortfolioPage() {
                       <div className="absolute inset-0 grid-pattern-light" />
 
                       <div className="relative z-10 card-padding h-full flex flex-col justify-center text-center text-white">
-                        <div className="inline-flex flex-center gap-tight p-badge rounded-full glass-card-light text-caption mb-subheading mx-auto">
+                        <div className="inline-flex flex-center gap-tight px-4 py-2 rounded-full glass-card-light text-caption mb-subheading mx-auto">
                           <CodeBracketIcon className="w-4 h-4" />
                           {project.category}
                         </div>
                         <h3 className="text-responsive-lg font-black mb-card-title">{project.title}</h3>
                         {project.featured && (
-                          <span className="inline-flex flex-center gap-tight p-badge rounded-full bg-yellow-400/20 text-yellow-300 text-caption font-medium mx-auto">
+                          <span className="inline-flex flex-center gap-tight px-4 py-2 rounded-full bg-yellow-400/20 text-yellow-300 text-caption font-medium mx-auto">
                             <SparklesIcon className="w-4 h-4" />
                             Featured Project
                           </span>
@@ -238,7 +238,7 @@ export default function PortfolioPage() {
                         {project.tech.map((tech) => (
                           <span
                             key={tech}
-                            className="p-badge glass-card-light rounded-full text-caption text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                            className="px-4 py-2 glass-card-light rounded-full text-caption text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
                           >
                             {tech}
                           </span>
