@@ -1,16 +1,27 @@
 import GhostContentAPI from '@tryghost/content-api';
 import type { Post, Tag, Author, Settings, BrowseOptions } from '@/types/ghost-types';
 import { logger } from './logger';
+import { env, isServiceConfigured } from './env';
+import {
+  parseGhostPosts,
+  parseGhostTags,
+  parseGhostAuthors,
+  parseGhostResponse,
+  ghostPostSchema,
+  ghostTagSchema,
+  ghostAuthorSchema,
+  ghostSettingsSchema,
+} from './schemas/ghost';
 
-// Validate environment variables
-const GHOST_API_URL = process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
-const GHOST_CONTENT_API_KEY = process.env.GHOST_CONTENT_API_KEY || '';
+// Use validated environment variables
+const GHOST_API_URL = env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
+const GHOST_CONTENT_API_KEY = env.GHOST_CONTENT_API_KEY || '';
 
-const isGhostConfigured = !!GHOST_CONTENT_API_KEY;
+const isGhostConfigured = isServiceConfigured.ghost();
 
 if (!isGhostConfigured) {
   logger.warn('Ghost Content API Key is not configured. Blog features will use fallback empty data.', {
-    hasUrl: !!process.env.GHOST_API_URL,
+    hasUrl: !!env.GHOST_API_URL,
     hasKey: false,
   });
 }
@@ -73,11 +84,13 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
     const result = await ghostClient.posts.browse(browseOptions);
 
     if (Array.isArray(result)) {
-      return { posts: result };
+      const validatedPosts = parseGhostPosts(result);
+      return { posts: validatedPosts as Post[] };
     }
 
+    const validatedPosts = parseGhostPosts(result.data || []);
     return {
-      posts: result.data || [],
+      posts: validatedPosts as Post[],
       meta: result.meta,
     };
   } catch (error) {
@@ -107,7 +120,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       { include: ['tags', 'authors'] }
     );
 
-    return post;
+    const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostBySlug(${slug})`);
+    return validatedPost as Post | null;
   } catch (error) {
     logger.error('Failed to fetch post by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -128,7 +142,8 @@ export async function getPostById(id: string): Promise<Post | null> {
       { include: ['tags', 'authors'] }
     );
 
-    return post;
+    const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostById(${id})`);
+    return validatedPost as Post | null;
   } catch (error) {
     logger.error('Failed to fetch post by ID from Ghost', { id, error: error as Error });
     return null;
@@ -209,7 +224,9 @@ export async function getTags(): Promise<Tag[]> {
       filter: 'visibility:public',
     });
 
-    return Array.isArray(tags) ? tags : [];
+    const tagsArray = Array.isArray(tags) ? tags : [];
+    const validatedTags = parseGhostTags(tagsArray);
+    return validatedTags as Tag[];
   } catch (error) {
     logger.error('Failed to fetch tags from Ghost', error as Error);
     return [];
@@ -233,7 +250,8 @@ export async function getTagBySlug(slug: string): Promise<Tag | null> {
     logger.debug('Fetching tag by slug from Ghost', { slug: sanitizedSlug });
 
     const tag = await ghostClient.tags.read({ slug: sanitizedSlug });
-    return tag;
+    const validatedTag = parseGhostResponse(ghostTagSchema, tag, `getTagBySlug(${slug})`);
+    return validatedTag as Tag | null;
   } catch (error) {
     logger.error('Failed to fetch tag by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -253,7 +271,9 @@ export async function getAuthors(): Promise<Author[]> {
       limit: 'all',
     });
 
-    return Array.isArray(authors) ? authors : [];
+    const authorsArray = Array.isArray(authors) ? authors : [];
+    const validatedAuthors = parseGhostAuthors(authorsArray);
+    return validatedAuthors as Author[];
   } catch (error) {
     logger.error('Failed to fetch authors from Ghost', error as Error);
     return [];
@@ -277,7 +297,8 @@ export async function getAuthorBySlug(slug: string): Promise<Author | null> {
     logger.debug('Fetching author by slug from Ghost', { slug: sanitizedSlug });
 
     const author = await ghostClient.authors.read({ slug: sanitizedSlug });
-    return author;
+    const validatedAuthor = parseGhostResponse(ghostAuthorSchema, author, `getAuthorBySlug(${slug})`);
+    return validatedAuthor as Author | null;
   } catch (error) {
     logger.error('Failed to fetch author by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -294,7 +315,8 @@ export async function getSettings(): Promise<Settings | null> {
     logger.debug('Fetching settings from Ghost');
 
     const settings = await ghostClient.settings.browse();
-    return settings;
+    const validatedSettings = parseGhostResponse(ghostSettingsSchema, settings, 'getSettings');
+    return validatedSettings as Settings | null;
   } catch (error) {
     logger.error('Failed to fetch settings from Ghost', error as Error);
     return null;
