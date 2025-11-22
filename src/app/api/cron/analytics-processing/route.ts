@@ -6,6 +6,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
 import { supabaseAdmin, logCronExecution, enqueueLogProcessing } from '@/lib/supabase'
+import { cronAuthHeaderSchema } from '@/lib/schemas'
 
 const logger = createServerLogger('analytics-cron')
 
@@ -18,6 +19,17 @@ export async function POST(request: NextRequest) {
 
     // Verify this is a legitimate cron request
     const authHeader = request.headers.get('authorization')
+
+    // Validate cron auth header format
+    const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
+    if (!authValidation.success) {
+      logger.error('Invalid cron auth header format', {
+        errors: authValidation.error.issues,
+        providedAuth: authHeader ? 'Bearer ***' : 'none',
+      });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       logger.warn('Unauthorized cron request')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
