@@ -1,522 +1,403 @@
 # CLAUDE.md
 
-Guidance for Claude Code when working with this Next.js 15 production application.
+Guidance for Claude Code working with this Next.js 15 production application.
 
 ## MANDATORY RULES
 
-### NO EMOJIS
-- Never use emojis unless user explicitly requests them
-- Use Heroicons/Lucide React for UI icons instead
+**NO EMOJIS** - Never use emojis unless explicitly requested. Use Heroicons/Lucide React for UI icons.
 
-### CORE PRINCIPLES
+**NO CODE EXAMPLES NEEDED** - This project uses standard patterns. Search the codebase for existing examples.
+
+## CORE PRINCIPLES
+
 - **SIMPLICITY**: Use native features first. No unnecessary abstractions.
 - **TYPE SAFETY**: TypeScript strict mode. NO `any` types. Use Zod for runtime validation.
 - **SERVER-FIRST**: Default to Server Components. Client components ONLY for hooks/events/browser APIs.
-- **PERFORMANCE**: Images as WebP, monitor bundle size, lazy load heavy components.
+- **PERFORMANCE**: WebP images, monitor bundle size, lazy load heavy components.
+
+## PROJECT STRUCTURE
+
+**File Organization:**
+- `src/app/` - Next.js 15 App Router pages, layouts, and API routes
+- `src/app/(tools)/` - Route groups (URL: /paystub not /tools/paystub)
+- `src/app/actions/` - Server Actions for form submissions
+- `src/app/api/` - API route handlers
+- `src/components/layout/` - NavbarLight, Footer
+- `src/components/forms/` - Form-specific components
+- `src/components/ui/` - Base reusable components
+- `src/lib/` - Core utilities (logger, analytics, seo-utils)
+- `src/lib/schemas/` - Zod validation schemas
+- `src/types/` - TypeScript type definitions
+- `src/hooks/` - Custom React hooks
+- `tests/` - Vitest unit tests
+- `e2e/` - Playwright end-to-end tests
 
 ## NEXT.JS 15 PATTERNS
 
-### File Structure
-```
-app/
-├── layout.tsx              # Root layout (server component)
-├── page.tsx                # Routes (server by default)
-├── (tools)/                # Route groups (URL: /paystub not /tools/paystub)
-├── actions/contact.ts      # Server Actions
-└── api/contact/route.ts    # API routes
-```
+**Server Components (Default):**
+- No 'use client' directive needed
+- Can use async/await for data fetching
+- Direct database queries, API calls
+- Better performance, smaller bundle
 
-### Server Components (Default)
-```typescript
-// NO 'use client' needed - async/await supported
-export default async function Page() {
-  const data = await fetchData()  // Direct server-side data fetch
-  return <div>{data}</div>
-}
-```
+**Client Components (Explicit):**
+- Add 'use client' ONLY when needed for:
+  - useState, useEffect, other React hooks
+  - Event handlers (onClick, onChange, onSubmit)
+  - Browser APIs (window, localStorage, document)
+  - Context consumers with hooks
 
-### Client Components (Explicit)
-```typescript
-// ONLY add 'use client' for: hooks, event handlers, browser APIs
-'use client'
-import { useState } from 'react'
+**Server Actions:**
+- File location: `app/actions/[name].ts`
+- Must start with 'use server' directive
+- Accept FormData or serializable data
+- Return serializable state objects
+- Use with useActionState in client components
+- Always validate with Zod before processing
 
-export default function Counter() {
-  const [count, setCount] = useState(0)
-  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
-}
-```
-
-### Server Actions
-```typescript
-// app/actions/contact.ts
-'use server'
-
-export async function submitForm(
-  _prevState: State | null,
-  formData: FormData
-): Promise<State> {
-  const result = schema.safeParse(Object.fromEntries(formData))
-  if (!result.success) return { error: result.error.message }
-
-  await sendEmail(result.data)
-  return { success: true }
-}
-
-// Use with useActionState in client component
-'use client'
-const [state, formAction] = useActionState(submitForm, null)
-<form action={formAction}>...</form>
-```
-
-### Metadata (Required for all pages)
-```typescript
-export const metadata: Metadata = {
-  title: "Page Title",
-  description: "120-160 character SEO description",
-  openGraph: { title, description, url, images },
-  twitter: { card: "summary_large_image" }
-}
-
-// Structured data in <script> tag, NOT metadata.other
-<script type="application/ld+json"
-  dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-/>
-```
+**Metadata:**
+- Export metadata object from all page components
+- Title, description (120-160 chars for SEO)
+- OpenGraph and Twitter card data
+- Structured data goes in script tags in body, NOT metadata.other
+- Use generateWebsiteSchema, generateOrganizationSchema from lib/seo-utils
 
 ## REACT PATTERNS
 
-### Hooks Usage
-```typescript
-// Local state
-const [isOpen, setIsOpen] = useState(false)
+**Hooks:**
+- useState for local UI state only
+- useActionState for forms (replaces useFormState)
+- useFormStatus for submit button pending states
+- useRef for non-reactive values (timers, RAF IDs)
+- useCallback for stable function references
+- useEffect MUST have cleanup functions (return statement)
 
-// Forms with Server Actions
-const [state, formAction] = useActionState(submitForm, null)
+**Context:**
+- Create context with undefined default
+- Provider wraps children with state
+- Custom hook checks context exists
+- Throw error if used outside provider
+- Example: ToastProvider, useToast pattern
 
-// Submit button pending state
-const { pending } = useFormStatus()
-
-// Refs for non-reactive values
-const rafId = useRef<number | null>(null)
-
-// Stable callbacks
-const handleClick = useCallback(() => {}, [deps])
-
-// Effects ALWAYS cleanup
-useEffect(() => {
-  const timer = setTimeout(fn, delay)
-  return () => clearTimeout(timer)  // Required
-}, [deps])
-```
-
-### Context Pattern
-```typescript
-const Context = createContext<API | undefined>(undefined)
-
-export function Provider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState(initial)
-  return <Context.Provider value={{ state }}>{children}</Context.Provider>
-}
-
-export function useContext() {
-  const context = useContext(Context)
-  if (!context) throw new Error('Must be used within Provider')
-  return context
-}
-```
+**State Management:**
+- NO external state libraries (Redux, Zustand, etc.)
+- Use React hooks for local state
+- Use Server Actions for mutations
+- Use URL state (usePathname, useSearchParams)
+- Use localStorage for persistence only
 
 ## TYPESCRIPT STANDARDS
 
-### Configuration (DO NOT CHANGE)
-```json
-{
-  "strict": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "noUncheckedIndexedAccess": true
-}
-```
+**Configuration (DO NOT CHANGE):**
+- strict: true
+- noUnusedLocals: true
+- noUnusedParameters: true
+- noUncheckedIndexedAccess: true
 
-### Type vs Interface
-```typescript
-// INTERFACE for component props and objects
-interface ButtonProps {
-  children: React.ReactNode
-  onClick?: () => void
-  variant?: 'primary' | 'secondary'
-}
+**Type vs Interface:**
+- Use INTERFACE for component props and object shapes
+- Use TYPE for unions, Zod inference, primitives
+- Never use `any` - use `unknown` and type guards
+- Infer types from Zod schemas with z.infer
 
-// TYPE for unions, Zod inference
-type Status = 'idle' | 'loading' | 'success' | 'error'
-type FormData = z.infer<typeof formSchema>
-```
+**Error Handling:**
+- Use castError helper from utils/errors.ts
+- Always wrap operations in try/catch
+- Log errors with logger.error, never console
+- Return typed error states from Server Actions
 
-### Zod Validation
-```typescript
-// lib/schemas/contact.ts
-import { z } from 'zod'
+## STYLING SYSTEM
 
-export const contactSchema = z.object({
-  firstName: z.string().min(1).max(50),
-  email: z.string().email(),
-  message: z.string().min(10)
-})
+**Tailwind-First Approach:**
+- Use Tailwind utilities directly on elements
+- Create semantic CSS classes for repeated patterns in globals.css
+- Use @apply sparingly, only for truly reusable patterns
+- Custom utilities for spacing consistency (.mb-heading, .gap-content)
 
-export type ContactData = z.infer<typeof contactSchema>
+**Design Tokens:**
+- Defined in globals.css @theme inline block
+- DO NOT modify without team discussion
+- --color-brand-cyan, --spacing-section, --text-hero, --radius
+- Use CSS custom properties, not hard-coded values
 
-// Use in Server Actions
-const result = contactSchema.safeParse(data)
-if (!result.success) return { error: result.error.issues[0].message }
-```
-
-### Error Handling
-```typescript
-// utils/errors.ts - use this helper
-export function castError(error: unknown): Error {
-  if (error instanceof Error) return error
-  return new Error(String(error))
-}
-
-// Usage
-try {
-  await operation()
-} catch (error) {
-  logger.error('Failed', castError(error))
-  return { error: 'Operation failed' }
-}
-```
-
-## STYLING GUIDELINES
-
-### Tailwind-First
-```typescript
-// Direct utilities
-<div className="flex items-center gap-4 px-6 py-4 rounded-lg bg-cyan-400/10">
-
-// Semantic CSS for repeated patterns
-// globals.css
-.glass-card {
-  @apply bg-black/40 backdrop-blur-sm border border-white/10 rounded-xl;
-}
-
-// Custom spacing utilities
-.mb-heading { margin-bottom: 1.5rem; }
-.section-spacing { padding-block: 5rem; }
-```
-
-### Design Tokens (DO NOT modify)
-```css
-@theme inline {
-  --color-brand-cyan: oklch(0.773 0.171 187.163);
-  --spacing-section: 5rem;
-  --text-hero: var(--text-6xl);
-}
-```
+**Component Styling:**
+- Utility-first with Tailwind classes
+- Glass morphism pattern: .glass-card, .glass-card-light
+- Gradient text: .gradient-text
+- Semantic utilities: .section-spacing, .card-padding
+- Hover states: .hover-lift, .button-hover-glow
+- Transitions: .transition-smooth
 
 ## COMPONENT PATTERNS
 
-### Organization
-```
-components/
-├── layout/          # NavbarLight, Footer
-├── forms/           # FormField, FormHeader
-├── ui/              # Button, Input (base)
-├── [feature]/       # Feature-specific
-└── Toast.tsx        # Shared components
-```
+**Organization:**
+- Layout components in components/layout/
+- Form components in components/forms/
+- Base UI in components/ui/
+- Feature-specific in components/[feature]/
+- Shared components at components/ root
 
-### Structure
-```typescript
-// 1. Imports
-import type { Metadata } from 'next'
-import { useState } from 'react'
+**Structure:**
+- Imports first (grouped: types, React, third-party, local)
+- Types/Interfaces second
+- Constants third (UPPER_SNAKE_CASE)
+- Component function fourth
+- Sub-components last (if small and only used here)
 
-// 2. Types
-interface Props {
-  title: string
-}
-
-// 3. Constants
-const MAX_ITEMS = 10
-
-// 4. Component
-export default function Component({ title }: Props) {
-  return <div>{title}</div>
-}
-```
-
-### Naming
-```typescript
-// Components: PascalCase
-ContactForm.tsx
-
-// Utils: kebab-case
-seo-utils.ts
-
-// Constants: UPPER_SNAKE_CASE
-const TOAST_DURATION_DEFAULT = 5000
-
-// Functions: camelCase
-function calculateTotal() {}
-```
+**Naming:**
+- Components: PascalCase (ContactForm.tsx)
+- Utils: kebab-case (seo-utils.ts)
+- Constants: UPPER_SNAKE_CASE (TOAST_DURATION_DEFAULT)
+- Functions: camelCase (calculateTotal)
 
 ## VALIDATION & FORMS
 
-### Schemas Location
-```
-lib/schemas/
-├── common.ts       # Reusable (email, phone)
-├── contact.ts      # Form schemas
-```
+**Zod Schemas:**
+- Location: lib/schemas/
+- common.ts for reusable validators (email, phone, name)
+- Feature-specific files for form schemas
+- Export schema and inferred type
+- Always use safeParse, never parse
 
-### Form Pattern
-```typescript
-// Server Action
-'use server'
-export async function submit(
-  _: State | null,
-  formData: FormData
-): Promise<State> {
-  const result = schema.safeParse(Object.fromEntries(formData))
-  if (!result.success) return { error: result.error.issues[0].message }
-
-  await processData(result.data)
-  return { success: true }
-}
-
-// Client Component
-'use client'
-export default function Form() {
-  const [state, formAction] = useActionState(submit, null)
-
-  return (
-    <form action={formAction}>
-      <input type="text" name="field" required />
-      {state?.error && <p className="text-red-400">{state.error}</p>}
-      <SubmitButton />
-    </form>
-  )
-}
-```
+**Form Pattern:**
+- Server Action validates with Zod
+- Returns state object with success/error
+- Client component uses useActionState
+- SubmitButton uses useFormStatus for pending state
+- Progressive enhancement - forms work without JS
 
 ## TESTING
 
-### Unit Tests (Vitest)
-```typescript
-// tests/unit/validation.test.ts
-import { describe, it, expect } from 'vitest'
-import { schema } from '@/lib/schemas/contact'
+**Unit Tests (Vitest):**
+- Location: tests/unit/
+- Test utilities, validation, pure functions
+- Mock external dependencies
+- Run: npm run test:unit
 
-describe('Validation', () => {
-  it('validates data', () => {
-    const result = schema.safeParse({ email: 'test@example.com' })
-    expect(result.success).toBe(true)
-  })
-})
-```
+**E2E Tests (Playwright):**
+- Location: e2e/
+- Test user flows, form submissions, navigation
+- Multiple browsers: chromium, firefox, webkit
+- Run: npm run test:e2e (all) or npm run test:e2e:fast (chromium only)
 
-### E2E Tests (Playwright)
-```typescript
-// e2e/contact.spec.ts
-import { test, expect } from '@playwright/test'
-
-test('submits form', async ({ page }) => {
-  await page.goto('/contact')
-  await page.fill('[name="email"]', 'test@example.com')
-  await page.click('[type="submit"]')
-  await expect(page.locator('text=Success')).toBeVisible()
-})
-```
-
-### Commands
-```bash
-npm run test:unit           # Unit tests
-npm run test:e2e:fast       # E2E (chromium only)
-npm run test:all            # All checks
-```
+**Test Coverage:**
+- Validation schemas must have tests
+- Critical user flows must have E2E tests
+- Server Actions should have unit tests
 
 ## PERFORMANCE
 
-### Images
-```typescript
-// ALWAYS use Next.js Image
-import Image from 'next/image'
+**Images:**
+- ALWAYS use Next.js Image component
+- Format: WebP for all images
+- Specify width and height explicitly
+- Use priority prop for above-fold images
+- Lazy load by default for below-fold
 
-<Image
-  src="/logo.webp"
-  alt="Description"
-  width={200}
-  height={50}
-  priority  // Above-fold images
-/>
-```
+**Code Splitting:**
+- Dynamic imports for heavy components
+- next/dynamic with loading fallback
+- ssr: false for client-only components
+- Modular imports enabled for Heroicons
 
-### Code Splitting
-```typescript
-// Heavy components
-import dynamic from 'next/dynamic'
-
-const Chart = dynamic(() => import('@/components/Chart'), {
-  loading: () => <p>Loading...</p>,
-  ssr: false  // Client-only if needed
-})
-```
-
-### Bundle Analysis
-```bash
-ANALYZE=true npm run build  # Check before large changes
-# Keep first load JS under 180kB per page
-```
+**Bundle Analysis:**
+- Run ANALYZE=true npm run build before adding dependencies
+- Keep first load JS under 180kB per page
+- Monitor bundle size in build output
 
 ## LOGGING & ANALYTICS
 
-### Logger (NOT console.log)
-```typescript
-// ALWAYS use logger
-import { logger } from '@/lib/logger'
+**Logger (NOT console.log):**
+- ALWAYS use logger from lib/logger
+- logger.info for events, user actions
+- logger.error for errors, failures
+- logger.debug for development only
+- NEVER use console.log/warn/error directly
 
-logger.info('Event', { userId, action })
-logger.error('Failed', error)
-logger.debug('Debug')  // Dev only
-
-// NEVER use console.log/warn/error
-```
+**Analytics:**
+- PostHog for event tracking
+- Vercel Analytics for performance
+- CTA clicks auto-tracked via CTAButton component
+- Form submissions auto-tracked via Server Actions
+- Custom events: logger.info with metadata
 
 ## ACCESSIBILITY
 
-### Semantic HTML
-```typescript
-<main id="main-content">
-  <nav aria-label="Main navigation">
-  <section aria-labelledby="heading">
-    <h2 id="heading">Title</h2>
-```
+**Semantic HTML:**
+- Use proper landmarks (main, nav, section, article)
+- main#main-content for skip link target
+- Headings in order (h1, h2, h3 - no skipping)
+- Lists for navigation and grouped content
 
-### ARIA
-```typescript
-// Labels for interactive elements
-<button aria-label="Close">
-  <XIcon aria-hidden="true" />
-</button>
+**ARIA:**
+- aria-label for interactive elements without text
+- aria-hidden="true" for decorative icons
+- aria-live for dynamic content (assertive for errors, polite for info)
+- role="alert" for error messages
+- role="progressbar" with aria-valuenow for progress indicators
 
-// Live regions
-<div role="alert" aria-live="assertive">
-  Error message
-</div>
-```
-
-## PRE-COMMIT CHECKLIST
-
-- [ ] Pattern already exists? (Search first)
-- [ ] Simplest solution?
-- [ ] Native platform feature available?
-- [ ] TypeScript strict passes?
-- [ ] No console.log?
-- [ ] Error handling with try/catch?
-- [ ] useEffect cleanup?
-- [ ] ARIA labels?
-- [ ] Next.js Image for images?
-- [ ] Meta description 120-160 chars?
-
-## CRITICAL RULES
-
-### NEVER
-- ❌ Use `any` type
-- ❌ Use console.log (use logger)
-- ❌ Skip TypeScript types
-- ❌ Inline styles (use Tailwind)
-- ❌ Add 'use client' without reason
-- ❌ Forget useEffect cleanup
-- ❌ Skip error handling
-- ❌ Use `<div>` for buttons
-- ❌ Forget alt text
-- ❌ Hard-code values
-
-### ALWAYS
-- ✅ Search first for existing patterns
-- ✅ Validate at boundaries with Zod
-- ✅ Type everything
-- ✅ Semantic HTML + ARIA
-- ✅ Clean up timers/listeners
-- ✅ Handle errors gracefully
-- ✅ Test keyboard navigation
-- ✅ Check bundle size
-- ✅ Use logger not console
-- ✅ Constants for magic numbers
+**Keyboard Navigation:**
+- All interactive elements keyboard accessible
+- Use button element, not div with onClick
+- Focus states visible (.focus-ring utility)
+- Tab order logical and complete
 
 ## INTEGRATIONS
 
-### Email (Resend)
-```typescript
-import { Resend } from 'resend'
-const resend = new Resend(process.env.RESEND_API_KEY)
+**Resend (Email):**
+- API key from env: RESEND_API_KEY
+- Send from: hello@hudsondigitalsolutions.com
+- HTML emails with proper headers
+- Error handling with logger.error
 
-await resend.emails.send({
-  from: 'hello@hudsondigitalsolutions.com',
-  to: [email],
-  subject: subject,
-  html: html
-})
-```
+**Supabase (Database):**
+- Client from lib/supabase
+- Environment vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+- Always check for errors in response
+- Log database errors, return user-friendly messages
 
-### Database (Supabase)
-```typescript
-import { supabase } from '@/lib/supabase'
+**PostHog (Analytics):**
+- Initialized in lib/analytics
+- Dynamic import for client-side only
+- Track events through logger, not directly
+- Environment var: NEXT_PUBLIC_POSTHOG_KEY
 
-const { data, error } = await supabase
-  .from('table')
-  .insert(record)
+## PRE-COMMIT CHECKLIST
 
-if (error) {
-  logger.error('DB error', error)
-  return { error: 'Failed' }
-}
-```
+Before committing any code, verify:
+- [ ] Pattern already exists? (Search first with grep/glob)
+- [ ] Simplest solution? (No over-engineering)
+- [ ] Native platform feature available? (No custom wrappers)
+- [ ] TypeScript strict passes? (No any types)
+- [ ] No console.log statements? (Use logger)
+- [ ] Error handling with try/catch? (All async operations)
+- [ ] useEffect cleanup? (All timers, listeners, subscriptions)
+- [ ] ARIA labels? (All interactive elements)
+- [ ] Next.js Image for images? (No img tags)
+- [ ] Meta description 120-160 chars? (SEO requirement)
+- [ ] Build succeeds? (npm run build)
+- [ ] Tests pass? (npm run test:all)
 
-## FILE LOCATIONS
+## CRITICAL RULES - NEVER/ALWAYS
 
-```
-src/
-├── app/              # Pages & API routes
-├── components/       # React components
-├── lib/              # Core utilities
-│   ├── schemas/      # Zod schemas
-│   ├── analytics.ts
-│   ├── logger.ts
-│   └── seo-utils.ts
-├── types/            # TypeScript defs
-├── hooks/            # Custom hooks
-└── utils/            # Helpers
+**NEVER:**
+- Use `any` type (use `unknown` and type guards)
+- Use console.log/warn/error (use logger)
+- Skip TypeScript types (type everything)
+- Use inline styles (use Tailwind classes)
+- Add 'use client' without reason (default is server)
+- Forget useEffect cleanup (memory leaks)
+- Skip error handling (user experience)
+- Use div for buttons (accessibility)
+- Forget alt text on images (accessibility)
+- Hard-code values (use constants)
 
-tests/                # Unit tests
-e2e/                  # E2E tests
-public/               # Static assets
-```
+**ALWAYS:**
+- Search codebase for existing patterns first
+- Validate at boundaries with Zod (forms, APIs)
+- Type everything explicitly (no implicit any)
+- Use semantic HTML and ARIA (accessibility)
+- Clean up timers, listeners, subscriptions (useEffect)
+- Handle errors gracefully (try/catch, user feedback)
+- Test keyboard navigation (accessibility)
+- Check bundle size (performance)
+- Use logger not console (unified logging)
+- Use constants for magic numbers (maintainability)
 
-## DEVELOPMENT
+## DEVELOPMENT COMMANDS
 
-### Commands
-```bash
-npm run dev              # Dev server
-npm run build           # Production build
-npm run lint            # ESLint
-npm run typecheck       # TypeScript
-npm run test:all        # All checks
-```
+**Development:**
+- npm run dev - Start development server
+- npm run build - Production build
+- npm run start - Start production server
+- npm run lint - Run ESLint
+- npm run typecheck - TypeScript type checking
+- npm run test:unit - Run unit tests
+- npm run test:e2e - Run E2E tests (all browsers)
+- npm run test:e2e:fast - Run E2E tests (chromium only)
+- npm run test:all - Run all checks (lint, typecheck, tests)
 
-### Git Commits
-```bash
-# Before commit
-npm run lint && npm run typecheck
+**Analysis:**
+- ANALYZE=true npm run build - Bundle size analysis
+- npm run test:unit:coverage - Test coverage report
 
-# Message format
-git commit -m "feat: Add feature
+## GIT WORKFLOW
 
-- Detailed change 1
-- Detailed change 2"
-```
+**Before Commit:**
+- Run: npm run lint && npm run typecheck
+- Fix all errors and warnings
+- Verify build succeeds
+
+**Commit Message Format:**
+- First line: type: description (feat:, fix:, refactor:, docs:)
+- Blank line
+- Detailed changes as bullet points
+- Keep first line under 50 characters
+- Explain WHY, not WHAT (code shows what)
+
+## ENVIRONMENT VARIABLES
+
+**Required:**
+- RESEND_API_KEY - Email sending
+- NEXT_PUBLIC_POSTHOG_KEY - Analytics
+- NEXT_PUBLIC_POSTHOG_HOST - Analytics host
+- NEXT_PUBLIC_SUPABASE_URL - Database
+- NEXT_PUBLIC_SUPABASE_ANON_KEY - Database
+- CSRF_SECRET - Security
+
+**Optional:**
+- GOOGLE_SITE_VERIFICATION - Search Console
+- DISCORD_WEBHOOK_URL - Notifications
+
+## COMMON PATTERNS
+
+**Server Action Pattern:**
+- File in app/actions/ with 'use server'
+- Accept _prevState and FormData
+- Validate with Zod safeParse
+- Return typed state object
+- Used with useActionState in client component
+
+**Form Pattern:**
+- Client component with 'use client'
+- useActionState for form state
+- Server Action for submission
+- SubmitButton with useFormStatus
+- Error display from state.error
+- Success message from state.success
+
+**Toast Pattern:**
+- Wrap app with ToastProvider in layout
+- Use useToast hook in components
+- Call showToast with type, title, message
+- Auto-dismisses after duration
+- Manual dismiss with close button
+
+**Icon Pattern:**
+- Import from @heroicons/react/24/outline or /24/solid
+- Use Icon wrapper from components/icon.tsx
+- IconButton for clickable icons
+- Always aria-label for buttons
+- aria-hidden="true" for decorative icons
+
+**Error Handling Pattern:**
+- try/catch around all async operations
+- Use castError helper for unknown errors
+- Log with logger.error, include context
+- Return user-friendly error messages
+- Never expose internal error details
+
+## WHEN IN DOUBT
+
+- Choose simplicity over cleverness
+- Use native platform features over custom solutions
+- Delete code instead of adding when possible
+- Search codebase before implementing
+- Ask user if requirements unclear
+- Follow existing patterns in codebase
+- Prioritize type safety and accessibility
+- Remember: this is production code, not a demo
 
 ---
 
-**Core Values**: Simplicity, type safety, performance. When in doubt, choose the simplest solution. Delete code instead of adding when possible.
+**Core Values**: Simplicity, type safety, performance, accessibility. When in doubt, choose the simplest solution that works.
