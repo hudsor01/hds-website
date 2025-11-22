@@ -110,6 +110,13 @@ export default defineConfig({
             "--disable-background-timer-throttling",
             "--disable-backgrounding-occluded-windows",
             "--disable-renderer-backgrounding",
+            // Container-safe flags
+            "--disable-dev-shm-usage",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-gpu",
+            "--disable-software-rasterizer",
+            "--single-process",
           ],
         },
       },

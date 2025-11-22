@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon, CheckIcon } from "@heroicons/react/24/outline";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -133,6 +134,7 @@ const breadcrumbSchema = {
 export default function BlogPost() {
   return (
     <>
+      <ScrollProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
