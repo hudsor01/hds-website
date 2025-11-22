@@ -134,6 +134,7 @@ interface BatchItem {
 const batchQueue: BatchItem[] = [];
 const BATCH_SIZE = 50;
 const BATCH_INTERVAL = 2000; // 2 seconds
+let isProcessing = false; // Mutex flag to prevent race conditions
 
 // Valid table names for batching
 type BatchTable =
@@ -144,31 +145,39 @@ type BatchTable =
   | 'ab_test_results'
   | 'page_analytics';
 
-// Process batch queue
+// Process batch queue (with mutex to prevent race conditions)
 async function processBatchQueue() {
-  if (batchQueue.length === 0) {
+  // Prevent concurrent processing
+  if (isProcessing || batchQueue.length === 0) {
     return;
   }
 
-  const items = batchQueue.splice(0, BATCH_SIZE);
-  const grouped = items.reduce((acc, item) => {
-    const table = item.table as BatchTable;
-    if (!acc[table]) {
-      acc[table] = [];
-    }
-    const tableData = acc[table];
-    if (tableData) {
-      tableData.push(item.data);
-    }
-    return acc;
-  }, {} as Record<BatchTable, unknown[]>);
+  isProcessing = true;
 
-  for (const [table, data] of Object.entries(grouped) as [BatchTable, unknown[]][]) {
-    try {
-      await supabase.from(table).insert(data as never);
-    } catch (error) {
-      console.error(`Batch insert failed for ${table}:`, error);
+  try {
+    const items = batchQueue.splice(0, BATCH_SIZE);
+    const grouped = items.reduce((acc, item) => {
+      const table = item.table as BatchTable;
+      if (!acc[table]) {
+        acc[table] = [];
+      }
+      const tableData = acc[table];
+      if (tableData) {
+        tableData.push(item.data);
+      }
+      return acc;
+    }, {} as Record<BatchTable, unknown[]>);
+
+    for (const [table, data] of Object.entries(grouped) as [BatchTable, unknown[]][]) {
+      try {
+        await supabase.from(table).insert(data as never);
+      } catch (error) {
+        console.error(`Batch insert failed for ${table}:`, error);
+      }
     }
+  } finally {
+    // Release mutex
+    isProcessing = false;
   }
 }
 
@@ -260,12 +269,13 @@ export async function logCustomEvent(
     });
 
     if (!validation.success) {
-      logger.warn('Invalid custom event data', {
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid custom event data:', {
         eventName,
-        properties,
-        sessionId,
-        userId,
-        errors: validation.error.issues,
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
     }
 
@@ -309,13 +319,13 @@ export async function logWebVitals(
     });
 
     if (!validation.success) {
-      logger.warn('Invalid web vitals data', {
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid web vitals data:', {
         metric,
-        value,
-        rating,
-        sessionId,
-        path,
-        errors: validation.error.issues,
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
     }
 
@@ -375,10 +385,12 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
     });
 
     if (!validation.success) {
-      logger.warn('Invalid analytics query', {
-        query,
-        variables,
-        errors: validation.error.issues,
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid analytics query:', {
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
       return null;
     }
@@ -407,10 +419,13 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
     });
 
     if (!validation.success) {
-      logger.warn('Invalid webhook payload', {
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid webhook payload:', {
         eventType,
-        payload,
-        errors: validation.error.issues,
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
       return;
     }
@@ -434,10 +449,13 @@ export async function updateLeadScore(leadId: string, score: number) {
     });
 
     if (!validation.success) {
-      logger.warn('Invalid lead score update', {
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid lead score update:', {
         leadId,
-        score,
-        errors: validation.error.issues,
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
       return;
     }
