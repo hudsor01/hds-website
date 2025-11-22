@@ -8,6 +8,7 @@ import { escapeHtml, detectInjectionAttempt } from "@/lib/security-utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
+import { resendEmailResponseSchema, discordWebhookRequestSchema } from "@/lib/schemas"
 import { createServerLogger, castError } from "@/lib/logger"
 
 // Initialize rate limiter
@@ -172,19 +173,28 @@ export async function submitContactForm(
     if (resend) {
       try {
         // Send admin notification
-        await resend.emails.send({
+        const adminEmailResponse = await resend.emails.send({
           from: "Hudson Digital <noreply@hudsondigitalsolutions.com>",
           to: ["hello@hudsondigitalsolutions.com"],
           subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
           html: generateAdminNotificationHTML(data, leadScore, sequenceId),
         })
 
+        // Validate Resend admin email response
+        const adminEmailValidation = resendEmailResponseSchema.safeParse(adminEmailResponse.data)
+        if (!adminEmailValidation.success) {
+          logger.warn('Resend admin email response validation failed', {
+            errors: adminEmailValidation.error.issues,
+            response: adminEmailResponse.data,
+          })
+        }
+
         // Send immediate welcome email to prospect
         if (sequence) {
           const processedContent = processEmailTemplate(sequence.content, emailVariables)
           const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
 
-          await resend.emails.send({
+          const welcomeEmailResponse = await resend.emails.send({
             from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
             to: [data.email],
             subject: processedSubject,
@@ -195,55 +205,83 @@ export async function submitContactForm(
                 .join("")}
             </div>`,
           })
+
+          // Validate Resend welcome email response
+          const welcomeEmailValidation = resendEmailResponseSchema.safeParse(welcomeEmailResponse.data)
+          if (!welcomeEmailValidation.success) {
+            logger.warn('Resend welcome email response validation failed', {
+              errors: welcomeEmailValidation.error.issues,
+              response: welcomeEmailResponse.data,
+            })
+          }
         }
 
         // Send Discord notification if configured
         if (process.env.DISCORD_WEBHOOK_URL) {
           try {
-            // Add timeout protection for Discord webhook
-            const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+            // Build Discord webhook payload
+            const discordPayload = {
+              embeds: [{
+                title: "New Project Inquiry",
+                color: 0x0891b2,
+                fields: [
+                  {
+                    name: "Contact",
+                    value: `**${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}**\n${escapeHtml(data.email)}${
+                      data.phone ? `\n${escapeHtml(data.phone)}` : ""
+                    }`,
+                    inline: true,
+                  },
+                  {
+                    name: "Details & Score",
+                    value: `**Lead Score:** ${leadScore}/100\n**Service:** ${escapeHtml(
+                      data.service || "Not specified"
+                    )}\n**Company:** ${escapeHtml(data.company || "Not specified")}\n**Sequence:** ${sequenceId}`,
+                    inline: true,
+                  },
+                  {
+                    name: "Message",
+                    value: escapeHtml(
+                      data.message.length > 1000
+                        ? data.message.substring(0, 1000) + "..."
+                        : data.message
+                    ),
+                    inline: false,
+                  },
+                ],
+                timestamp: new Date().toISOString(),
+                footer: { text: "Hudson Digital Solutions Contact Form" },
+              }],
+            }
 
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                embeds: [{
-                  title: "New Project Inquiry",
-                  color: 0x0891b2,
-                  fields: [
-                    {
-                      name: "Contact",
-                      value: `**${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}**\n${escapeHtml(data.email)}${
-                        data.phone ? `\n${escapeHtml(data.phone)}` : ""
-                      }`,
-                      inline: true,
-                    },
-                    {
-                      name: "Details & Score",
-                      value: `**Lead Score:** ${leadScore}/100\n**Service:** ${escapeHtml(
-                        data.service || "Not specified"
-                      )}\n**Company:** ${escapeHtml(data.company || "Not specified")}\n**Sequence:** ${sequenceId}`,
-                      inline: true,
-                    },
-                    {
-                      name: "Message",
-                      value: escapeHtml(
-                        data.message.length > 1000
-                          ? data.message.substring(0, 1000) + "..."
-                          : data.message
-                      ),
-                      inline: false,
-                    },
-                  ],
-                  timestamp: new Date().toISOString(),
-                  footer: { text: "Hudson Digital Solutions Contact Form" },
-                }],
-              }),
-              signal: controller.signal,
-            })
+            // Validate Discord payload before sending
+            const discordValidation = discordWebhookRequestSchema.safeParse(discordPayload)
+            if (!discordValidation.success) {
+              logger.error('Discord webhook payload validation failed', {
+                errors: discordValidation.error.issues,
+                payload: discordPayload,
+              })
+            } else {
+              // Add timeout protection for Discord webhook
+              const controller = new AbortController()
+              const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
 
-            clearTimeout(timeoutId)
+              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(discordValidation.data),
+                signal: controller.signal,
+              })
+
+              clearTimeout(timeoutId)
+
+              if (!discordResponse.ok) {
+                logger.error('Discord webhook request failed', {
+                  status: discordResponse.status,
+                  statusText: discordResponse.statusText,
+                })
+              }
+            }
           } catch (discordError) {
             const error = castError(discordError)
             if (error.name === 'AbortError') {
