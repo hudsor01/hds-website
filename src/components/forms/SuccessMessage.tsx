@@ -1,6 +1,6 @@
 'use client'
 
-import { CheckIcon } from '@heroicons/react/24/outline'
+import { Check } from 'lucide-react'
 
 interface SuccessMessageProps {
   onReset: () => void
@@ -12,7 +12,7 @@ export function SuccessMessage({ onReset, className = '' }: SuccessMessageProps)
     <div className={`glass-card shadow-2xl p-8 ${className}`}>
       <div className="text-center">
         <div className="inline-flex flex-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
-          <CheckIcon className="w-8 h-8 text-green-400" />
+          <Check className="w-8 h-8 text-green-400" />
         </div>
         <h3 className="text-2xl font-bold text-white mb-3">
           Message Sent Successfully!

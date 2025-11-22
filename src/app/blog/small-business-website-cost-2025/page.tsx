@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, TagIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Small Business Website Cost 2025: Complete Pricing Guide | Hudson Digital",
@@ -105,17 +105,17 @@ export default function WebsiteCostGuidePost() {
               href="/blog"
               className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors"
             >
-              <ArrowLeftIcon className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4" />
               Back to Blog
             </Link>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
               <span className="flex items-center gap-1">
-                <CalendarDaysIcon className="w-4 h-4" />
+                <Calendar className="w-4 h-4" />
                 March 1, 2024
               </span>
               <span className="flex items-center gap-1">
-                <ClockIcon className="w-4 h-4" />
+                <Clock className="w-4 h-4" />
                 14 min read
               </span>
               <span>By Hudson Digital Solutions</span>
@@ -135,7 +135,7 @@ export default function WebsiteCostGuidePost() {
                   key={tag}
                   className="flex items-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
                 >
-                  <TagIcon className="w-3 h-3" />
+                  <Tag className="w-3 h-3" />
                   {tag}
                 </span>
               ))}
@@ -411,7 +411,7 @@ export default function WebsiteCostGuidePost() {
                     className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
                   >
                     Get Your Custom Quote
-                    <ArrowLeftIcon className="w-5 h-5 rotate-180" />
+                    <ArrowLeft className="w-5 h-5 rotate-180" />
                   </Link>
                 </div>
 

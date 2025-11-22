@@ -1,7 +1,6 @@
 'use client';
 
-import { ArrowRightIcon, CheckIcon, CogIcon, CodeBracketIcon, ChartBarIcon } from "@heroicons/react/24/outline";
-import { Search, ClipboardList, Zap, Rocket } from 'lucide-react';
+import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
 import Link from "next/link";
 import { CTAButton } from '@/components/cta-button';
 import { BackgroundPattern } from "@/components/BackgroundPattern";
@@ -27,7 +26,7 @@ const services: Service[] = [
       "Cloud Deployment",
     ],
     pricing: "Starting at $5,000",
-    icon: CodeBracketIcon,
+    icon: Code2,
     gradient: "bg-gradient-secondary",
   },
   {
@@ -41,7 +40,7 @@ const services: Service[] = [
       "Legacy System Modernization",
     ],
     pricing: "Starting at $8,000",
-    icon: CogIcon,
+    icon: Settings,
     gradient: "bg-gradient-decorative-purple",
   },
   {
@@ -55,7 +54,7 @@ const services: Service[] = [
       "ROI Optimization",
     ],
     pricing: "Starting at $2,000",
-    icon: ChartBarIcon,
+    icon: BarChart3,
     gradient: "bg-gradient-secondary",
   },
 ];
@@ -196,7 +195,7 @@ export default function ServicesPage() {
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
                           <div className="w-5 h-5 rounded-full bg-gradient-secondary flex-center">
-                            <CheckIcon className="h-3 w-3 text-black" />
+                            <Check className="h-3 w-3 text-black" />
                           </div>
                         </div>
                         <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">{feature}</p>
@@ -213,7 +212,7 @@ export default function ServicesPage() {
                     className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300"
                   >
                     Get Started
-                    <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               );
@@ -316,7 +315,7 @@ export default function ServicesPage() {
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
@@ -324,7 +323,7 @@ export default function ServicesPage() {
                 className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
                 Explore Services
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

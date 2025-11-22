@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeftIcon, UserIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
+import { ArrowLeft, User, Globe } from "lucide-react";
 import { getPostsByAuthor, getAuthorBySlug, getAuthors } from "@/lib/ghost";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 
@@ -72,7 +72,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           href="/blog"
           className="inline-flex flex-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           Back to Blog
         </Link>
       </div>
@@ -96,7 +96,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
         <div className="relative container-wide text-center">
           <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
-            <UserIcon className="w-5 h-5" />
+            <User className="w-5 h-5" />
             Author
           </div>
 
@@ -129,7 +129,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                 rel="noopener noreferrer"
                 className="inline-flex flex-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
               >
-                <GlobeAltIcon className="w-5 h-5" />
+                <Globe className="w-5 h-5" />
                 Website
               </a>
             )}

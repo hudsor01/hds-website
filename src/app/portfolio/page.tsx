@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+import { ExternalLink, Sparkles, Code2, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 // Removed motion animations for simplified build
 
@@ -95,7 +95,7 @@ export default function PortfolioPage() {
             <div className="space-y-8">
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
-                  <SparklesIcon className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
               </div>
@@ -119,14 +119,14 @@ export default function PortfolioPage() {
                     <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
                       <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                       <span className="relative z-10">Start Your Project</span>
-                      <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
 
                   <Link href="/services">
                     <button className="button-base group cta-secondary button-hover-glow px-8 py-4 text-lg font-semibold focus-ring">
                       View Services
-                      <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
                 </div>
@@ -190,13 +190,13 @@ export default function PortfolioPage() {
                       
                       <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
                         <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
-                          <CodeBracketIcon className="w-4 h-4" />
+                          <Code2 className="w-4 h-4" />
                           {project.category}
                         </div>
                         <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
                         {project.featured && (
                           <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
-                            <SparklesIcon className="w-4 h-4" />
+                            <Sparkles className="w-4 h-4" />
                             Featured Project
                           </span>
                         )}
@@ -210,7 +210,7 @@ export default function PortfolioPage() {
                           className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu"
                         >
                           View Live Site
-                          <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                          <ExternalLink className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                         </Link>
                       </div>
                     </div>
@@ -276,7 +276,7 @@ export default function PortfolioPage() {
                 >
                   <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
-                  <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 
                 <Link
@@ -284,7 +284,7 @@ export default function PortfolioPage() {
                   className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl"
                 >
                   View Services
-                  <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>

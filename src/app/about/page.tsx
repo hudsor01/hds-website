@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  RocketLaunchIcon,
-  EyeIcon,
-  CodeBracketIcon,
-  ChartBarIcon,
-  LightBulbIcon,
-  CogIcon,
-  ShieldCheckIcon,
-  BoltIcon,
-  ArrowRightIcon
-} from "@heroicons/react/24/outline";
+  Rocket,
+  Eye,
+  Code2,
+  BarChart3,
+  Lightbulb,
+  Settings,
+  ShieldCheck,
+  Zap,
+  ArrowRight
+} from "lucide-react";
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 import { SEO_CONFIG } from "@/utils/seo";
 
@@ -120,7 +120,7 @@ export default function AboutPage() {
               <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
-                    <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
+                    <Rocket className="w-8 h-8 text-cyan-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">
                     Our Mission
@@ -134,7 +134,7 @@ export default function AboutPage() {
               <div className="group relative glass-card-light p-8 card-hover-glow-purple transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
-                    <EyeIcon className="w-8 h-8 text-purple-400" />
+                    <Eye className="w-8 h-8 text-purple-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-smooth">
                     Our Vision
@@ -167,7 +167,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-6 card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
-                  <CodeBracketIcon className="w-6 h-6 text-cyan-400" />
+                  <Code2 className="w-6 h-6 text-cyan-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-smooth">Development</h3>
               </div>
@@ -182,7 +182,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-6 card-hover-glow-emerald transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-emerald-500/30">
-                  <ChartBarIcon className="w-6 h-6 text-emerald-400" />
+                  <BarChart3 className="w-6 h-6 text-emerald-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-smooth">Analytics</h3>
               </div>
@@ -197,7 +197,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-6 card-hover-glow-orange transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-orange border border-orange-500/30">
-                  <BoltIcon className="w-6 h-6 text-orange-400" />
+                  <Zap className="w-6 h-6 text-orange-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-smooth">Operations</h3>
               </div>
@@ -212,7 +212,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-6 card-hover-glow-purple transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
-                  <ShieldCheckIcon className="w-6 h-6 text-purple-400" />
+                  <ShieldCheck className="w-6 h-6 text-purple-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-smooth">Security</h3>
               </div>
@@ -296,7 +296,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-cyan-500/30">
-                  <LightBulbIcon className="w-8 h-8 text-cyan-400" />
+                  <Lightbulb className="w-8 h-8 text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">Performance First</h3>
               </div>
@@ -308,7 +308,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-8 card-hover-glow-emerald transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-emerald-500/30">
-                  <ChartBarIcon className="w-8 h-8 text-emerald-400" />
+                  <BarChart3 className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-smooth">Data Driven</h3>
               </div>
@@ -320,7 +320,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-8 card-hover-glow-orange transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-decorative-orange border border-orange-500/30">
-                  <CogIcon className="w-8 h-8 text-orange-400" />
+                  <Settings className="w-8 h-8 text-orange-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-smooth">Scalable Architecture</h3>
               </div>
@@ -354,7 +354,7 @@ export default function AboutPage() {
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               
               <Link
@@ -362,7 +362,7 @@ export default function AboutPage() {
                 className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-smooth"
               >
                 Explore Services
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
