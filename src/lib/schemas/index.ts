@@ -170,6 +170,32 @@ export {
   type EventData,
 } from './supabase';
 
+// Email scheduling schemas
+export {
+  emailSequenceIdSchema,
+  emailTemplateVariablesSchema,
+  scheduleEmailParamsSchema,
+  emailStatusSchema,
+  scheduledEmailSchema,
+  emailQueueStatsSchema,
+  emailProcessResultSchema,
+  cancelEmailSequenceParamsSchema,
+  emailTemplateSchema,
+  processedEmailSchema,
+  validateScheduleEmailParams,
+  validateScheduledEmail,
+  validateCancelEmailParams,
+  validateEmailQueueStats,
+  type EmailSequenceId,
+  type ScheduleEmailParams,
+  type ScheduledEmail,
+  type EmailQueueStats,
+  type EmailProcessResult,
+  type CancelEmailSequenceParams,
+  type EmailTemplate,
+  type ProcessedEmail,
+} from './email';
+
 // Paystub generator schemas
 export {
   paystubFormSchema,

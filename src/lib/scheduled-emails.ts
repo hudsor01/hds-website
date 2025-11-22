@@ -10,6 +10,11 @@ import type {
   EmailProcessResult,
 } from "@/types/utils";
 import { createServerLogger } from "@/lib/logger";
+import {
+  scheduleEmailParamsSchema,
+  cancelEmailSequenceParamsSchema,
+  resendEmailResponseSchema,
+} from '@/lib/schemas';
 import { getEmailSequences, processEmailTemplate } from "./email-utils";
 import { escapeHtml, sanitizeEmailHeader } from "./security-utils";
 
@@ -37,6 +42,24 @@ export function scheduleEmailSequence(
   sequenceId: string,
   variables: Record<string, string>
 ): void {
+  // Validate input parameters
+  const validation = scheduleEmailParamsSchema.safeParse({
+    recipientEmail,
+    recipientName,
+    sequenceId,
+    variables,
+  });
+
+  if (!validation.success) {
+    emailLogger.error('Invalid email scheduling parameters', {
+      recipientEmail,
+      recipientName,
+      sequenceId,
+      errors: validation.error.issues,
+    });
+    return;
+  }
+
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
   const sequence = sequences[sequenceId];
   if (!sequence) {
@@ -223,12 +246,23 @@ async function sendScheduledEmail(
       </div>
     `;
 
-    await resend.emails.send({
+    const emailResponse = await resend.emails.send({
       from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
       to: [scheduledEmail.recipientEmail],
       subject: sanitizeEmailHeader(processedSubject),
       html: htmlContent,
     });
+
+    // Validate Resend response
+    const responseValidation = resendEmailResponseSchema.safeParse(emailResponse.data);
+    if (!responseValidation.success) {
+      emailLogger.warn('Resend email response validation failed', {
+        emailId: scheduledEmail.id,
+        recipientEmail: scheduledEmail.recipientEmail,
+        response: emailResponse.data,
+        errors: responseValidation.error.issues,
+      });
+    }
 
     scheduledEmail.status = "sent";
     scheduledEmail.sentAt = new Date();
@@ -282,6 +316,21 @@ export function cancelEmailSequence(
   recipientEmail: string,
   sequenceId?: string
 ): void {
+  // Validate cancellation parameters
+  const validation = cancelEmailSequenceParamsSchema.safeParse({
+    recipientEmail,
+    sequenceId,
+  });
+
+  if (!validation.success) {
+    emailLogger.error('Invalid email cancellation parameters', {
+      recipientEmail,
+      sequenceId,
+      errors: validation.error.issues,
+    });
+    return;
+  }
+
   scheduledEmailsQueue = scheduledEmailsQueue.filter(
     (email) =>
       !(

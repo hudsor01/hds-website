@@ -5,6 +5,7 @@ import {
 } from "@/lib/scheduled-emails";
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { createServerLogger, castError } from "@/lib/logger";
+import { cronAuthHeaderSchema } from '@/lib/schemas';
 
 // This endpoint would typically be called by a cron job or scheduled task
 // In production, you'd want to secure this endpoint with authentication
@@ -14,13 +15,23 @@ export async function POST(request: NextRequest) {
 
   try {
     logger.info('Processing emails cron job started');
-    // In production, add authentication here
+    // Validate authentication header
     const authHeader = request.headers.get("authorization");
     const expectedToken = process.env.CRON_SECRET;
 
     if (!expectedToken) {
       logger.error("CRON_SECRET environment variable is not set");
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    // Validate cron auth header format
+    const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
+    if (!authValidation.success) {
+      logger.error('Invalid cron auth header format', {
+        errors: authValidation.error.issues,
+        providedAuth: authHeader ? 'Bearer ***' : 'none',
+      });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     if (authHeader !== `Bearer ${expectedToken}`) {
@@ -60,13 +71,23 @@ export async function GET(request: NextRequest) {
 
   try {
     logger.info('Email stats requested');
-    // Simple endpoint to check email queue status
+    // Validate authentication header
     const authHeader = request.headers.get("authorization");
     const expectedToken = process.env.CRON_SECRET;
 
     if (!expectedToken) {
       logger.error("CRON_SECRET environment variable is not set");
       return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    // Validate cron auth header format
+    const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
+    if (!authValidation.success) {
+      logger.error('Invalid cron auth header format', {
+        errors: authValidation.error.issues,
+        providedAuth: authHeader ? 'Bearer ***' : 'none',
+      });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     if (authHeader !== `Bearer ${expectedToken}`) {
