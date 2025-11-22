@@ -2,7 +2,7 @@
 
 import { useState, type ComponentType, type ReactNode, type ErrorInfo as ReactErrorInfo } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { ExclamationTriangleIcon, ArrowPathIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
 import { logger, castError } from '@/lib/logger';
 // Error handling is now managed by React Query for API calls
@@ -41,7 +41,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
     <div className="min-h-screen bg-gradient-hero flex-center p-6">
       <div className="max-w-md w-full text-center">
         <div className="glass-card p-8 border border-red-500/20">
-          <ExclamationTriangleIcon className="w-16 h-16 text-red-400 mx-auto mb-6" />
+          <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-6" />
           
           <h2 className="text-2xl font-bold text-white mb-4">
             Oops! Something went wrong
@@ -61,9 +61,9 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                   title="Copy error details"
                 >
                   {copied ? (
-                    <CheckIcon className="w-4 h-4 text-green-400" />
+                    <Check className="w-4 h-4 text-green-400" />
                   ) : (
-                    <ClipboardDocumentIcon className="w-4 h-4 text-gray-400" />
+                    <Clipboard className="w-4 h-4 text-gray-400" />
                   )}
                 </button>
               </summary>
@@ -80,12 +80,12 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                   >
                     {copied ? (
                       <>
-                        <CheckIcon className="w-3 h-3" />
+                        <Check className="w-3 h-3" />
                         Copied!
                       </>
                     ) : (
                       <>
-                        <ClipboardDocumentIcon className="w-3 h-3" />
+                        <Clipboard className="w-3 h-3" />
                         Copy Error Details
                       </>
                     )}
@@ -100,7 +100,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
               onClick={resetErrorBoundary}
               className="cta-primary flex items-center gap-2"
             >
-              <ArrowPathIcon className="w-5 h-5" />
+              <RotateCw className="w-5 h-5" />
               Try Again
             </button>
           </div>

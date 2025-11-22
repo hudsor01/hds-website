@@ -461,6 +461,54 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_emails: {
+        Row: {
+          id: string
+          recipient_email: string
+          recipient_name: string
+          sequence_id: string
+          step_id: string
+          scheduled_for: string
+          variables: Json
+          status: string
+          created_at: string
+          sent_at: string | null
+          error: string | null
+          retry_count: number
+          max_retries: number
+        }
+        Insert: {
+          id?: string
+          recipient_email: string
+          recipient_name: string
+          sequence_id: string
+          step_id: string
+          scheduled_for: string
+          variables?: Json
+          status?: string
+          created_at?: string
+          sent_at?: string | null
+          error?: string | null
+          retry_count?: number
+          max_retries?: number
+        }
+        Update: {
+          id?: string
+          recipient_email?: string
+          recipient_name?: string
+          sequence_id?: string
+          step_id?: string
+          scheduled_for?: string
+          variables?: Json
+          status?: string
+          created_at?: string
+          sent_at?: string | null
+          error?: string | null
+          retry_count?: number
+          max_retries?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
