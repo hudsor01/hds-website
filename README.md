@@ -17,25 +17,35 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
 ## Setup
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/hudsor01/hds-website.git
+   cd hds-website
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. Create a `.env.local` file with the following variables:
-   ```
-   RESEND_API_KEY=your_resend_api_key
-   GHOST_URL=https://your-ghost-site.com
-   GHOST_CONTENT_API_KEY=your_content_api_key
-   NEXT_PUBLIC_GA_MEASUREMENT_ID=your_ga_id
-   GOOGLE_SITE_VERIFICATION=your_verification_code
+3. **Setup environment variables**
+   ```bash
+   cp .env.example .env.local
    ```
 
-4. Run the development server:
+   Then edit `.env.local` with your actual values. At minimum, you need:
+   - `RESEND_API_KEY` - for contact form emails
+   - `GHOST_API_URL` and `GHOST_CONTENT_API_KEY` - for blog (optional)
+   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` - for analytics (optional)
+
+   See `.env.example` for all available options.
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
+
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Testing the Contact Form
 
@@ -150,23 +160,21 @@ The website includes automated email sequences:
 
 ## Environment Variables
 
-```bash
-# Email
-RESEND_API_KEY=             # Resend API key for email sending
+See `.env.example` for a complete list with detailed instructions.
 
-# Ghost CMS
-GHOST_URL=                  # Your Ghost instance URL
-GHOST_CONTENT_API_KEY=      # Ghost Content API key
+**Required:**
+- `RESEND_API_KEY` - Email service for contact form
 
-# Analytics & Monitoring
-NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4 ID
-GA4_API_SECRET=             # GA4 Measurement Protocol API secret
-NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
-NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host (default: https://app.posthog.com)
+**Optional:**
+- `GHOST_API_URL` - Your Ghost CMS instance URL
+- `GHOST_CONTENT_API_KEY` - Ghost Content API key
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID` - Google Analytics 4
+- `NEXT_PUBLIC_POSTHOG_KEY` - PostHog analytics
+- `GOOGLE_SITE_VERIFICATION` - Google Search Console
+- `CSRF_SECRET` - CSRF protection
+- `CRON_SECRET` - Scheduled task authentication
 
-# SEO
-GOOGLE_SITE_VERIFICATION=   # Google Search Console verification
-```
+Run `cp .env.example .env.local` to get started.
 
 ## Analytics & Monitoring
 

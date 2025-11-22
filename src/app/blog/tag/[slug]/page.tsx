@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeftIcon, TagIcon } from "@heroicons/react/24/outline";
+import { ArrowLeft, Tag } from "lucide-react";
 import { getPostsByTag, getTagBySlug, getTags } from "@/lib/ghost";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 
@@ -72,7 +72,7 @@ export default async function TagPage({ params }: TagPageProps) {
           href="/blog"
           className="inline-flex flex-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           Back to Blog
         </Link>
       </div>
@@ -86,7 +86,7 @@ export default async function TagPage({ params }: TagPageProps) {
 
         <div className="relative container-wide text-center">
           <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
-            <TagIcon className="w-5 h-5" />
+            <Tag className="w-5 h-5" />
             Tag
           </div>
           <h1 className="text-clamp-xl font-black text-white mb-6 text-balance">

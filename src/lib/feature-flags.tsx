@@ -1,5 +1,5 @@
-// Feature flags management for PostHog
-import React, { useEffect, useState } from 'react';
+// Feature flags management with static configuration
+import React, { useState } from 'react';
 // import { getFeatureFlag, isFeatureEnabled } from './unified-analytics';
 import { FEATURE_FLAGS, type FeatureFlagKey, type FeatureFlagConfig } from '@/types/utils';
 import { logger } from './logger';
@@ -183,26 +183,14 @@ export class FeatureFlags {
 // Hook for React components to use feature flags
 
 export function useFeatureFlag(flagKey: FeatureFlagKey): boolean {
-  const [isEnabled, setIsEnabled] = useState(() => 
+  // Since we're using static configuration, we can just return the enabled state directly
+  // No need for polling or dynamic updates
+  const [isEnabled] = useState(() =>
     FeatureFlags.isEnabled(flagKey)
   );
 
-  useEffect(() => {
-    // Update flag state when PostHog loads or updates
-    const checkFlag = () => {
-      const enabled = FeatureFlags.isEnabled(flagKey);
-      setIsEnabled(enabled);
-    };
-
-    // Check immediately
-    checkFlag();
-
-    // Set up a small interval to check for flag updates
-    // PostHog typically updates flags every 30 seconds
-    const interval = setInterval(checkFlag, 30000);
-
-    return () => clearInterval(interval);
-  }, [flagKey]);
+  // No useEffect needed - flags are static and don't change at runtime
+  // This eliminates the memory leak from the 30-second polling interval
 
   return isEnabled;
 }

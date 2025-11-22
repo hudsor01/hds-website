@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarDaysIcon, ClockIcon, ArrowLeftIcon, TagIcon } from "@heroicons/react/24/outline";
+import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import { getPostBySlug, getPosts, getPostsByTag } from "@/lib/ghost";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { AuthorCard } from "@/components/blog/AuthorCard";
@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           href="/blog"
           className="inline-flex flex-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           Back to Blog
         </Link>
       </div>
@@ -115,7 +115,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     href={`/blog/tag/${tag.slug}`}
                     className="flex flex-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
                   >
-                    <TagIcon className="w-4 h-4" />
+                    <Tag className="w-4 h-4" />
                     {tag.name}
                   </Link>
                 ))}
@@ -137,13 +137,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Meta */}
             <div className="flex flex-wrap gap-6 text-gray-400">
               <div className="flex flex-center gap-2">
-                <CalendarDaysIcon className="w-5 h-5" />
+                <Calendar className="w-5 h-5" />
                 <time dateTime={post.published_at}>
                   {formatDateLong(post.published_at)}
                 </time>
               </div>
               <div className="flex flex-center gap-2">
-                <ClockIcon className="w-5 h-5" />
+                <Clock className="w-5 h-5" />
                 <span>{post.reading_time} min read</span>
               </div>
               {primaryAuthor && (

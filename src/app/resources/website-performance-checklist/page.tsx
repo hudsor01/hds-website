@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowDownTrayIcon, CheckCircleIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-import { BarChart3, Zap, Target } from 'lucide-react';
+import { Download, CheckCircle, FileText, BarChart3, Zap, Target } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Free Website Performance Checklist 2025 - Download PDF | Hudson Digital",
@@ -124,7 +123,7 @@ export default function WebsiteChecklistPage() {
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
           <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
-            <DocumentTextIcon className="w-5 h-5" />
+            <FileText className="w-5 h-5" />
             Free Resource
           </div>
           
@@ -141,7 +140,7 @@ export default function WebsiteChecklistPage() {
               href="#download"
               className="inline-flex flex-center gap-2 bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-lg"
             >
-              <ArrowDownTrayIcon className="w-5 h-5" />
+              <Download className="w-5 h-5" />
               Download Free Checklist
             </Link>
             <Link
@@ -195,7 +194,7 @@ export default function WebsiteChecklistPage() {
                 <ul className="space-y-2">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                      <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -290,7 +289,7 @@ export default function WebsiteChecklistPage() {
       <section id="download" className="py-16 bg-gradient-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
-            <DocumentTextIcon className="w-16 h-16 text-green-400 mx-auto mb-6" />
+            <FileText className="w-16 h-16 text-green-400 mx-auto mb-6" />
             
             <h2 className="text-3xl font-black text-white mb-4">
               Download Your Free Checklist
@@ -329,7 +328,7 @@ export default function WebsiteChecklistPage() {
                   type="submit"
                   className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-2"
                 >
-                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  <Download className="w-5 h-5" />
                   Get My Free Checklist
                 </button>
               </form>

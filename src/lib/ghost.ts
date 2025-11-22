@@ -1,23 +1,37 @@
 import GhostContentAPI from '@tryghost/content-api';
 import type { Post, Tag, Author, Settings, BrowseOptions } from '@/types/ghost-types';
 import { logger } from './logger';
+import { env, isServiceConfigured } from './env';
+import {
+  parseGhostPosts,
+  parseGhostTags,
+  parseGhostAuthors,
+  parseGhostResponse,
+  ghostPostSchema,
+  ghostTagSchema,
+  ghostAuthorSchema,
+  ghostSettingsSchema,
+} from './schemas/ghost';
 
-// Validate environment variables
-const GHOST_API_URL = process.env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
-const GHOST_CONTENT_API_KEY = process.env.GHOST_CONTENT_API_KEY || '';
+// Use validated environment variables
+const GHOST_API_URL = env.GHOST_API_URL || 'https://blog.thehudsonfam.com';
+const GHOST_CONTENT_API_KEY = env.GHOST_CONTENT_API_KEY || '';
 
-if (!GHOST_CONTENT_API_KEY) {
-  logger.error('Ghost Content API Key is not configured. Blog features will not work.', {
-    hasUrl: !!process.env.GHOST_API_URL,
+const isGhostConfigured = isServiceConfigured.ghost();
+
+if (!isGhostConfigured) {
+  logger.warn('Ghost Content API Key is not configured. Blog features will use fallback empty data.', {
+    hasUrl: !!env.GHOST_API_URL,
     hasKey: false,
   });
 }
 
-export const ghostClient = new GhostContentAPI({
+// Only initialize Ghost client if properly configured
+export const ghostClient = isGhostConfigured ? new GhostContentAPI({
   url: GHOST_API_URL,
   key: GHOST_CONTENT_API_KEY,
   version: 'v5.0'
-});
+}) : null;
 
 /**
  * Sanitize user input for Ghost API queries
@@ -51,6 +65,11 @@ interface GetPostsResult {
 }
 
 export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResult> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty posts');
+    return { posts: [] };
+  }
+
   try {
     const browseOptions: BrowseOptions = {
       limit: options?.limit || 15,
@@ -65,11 +84,13 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
     const result = await ghostClient.posts.browse(browseOptions);
 
     if (Array.isArray(result)) {
-      return { posts: result };
+      const validatedPosts = parseGhostPosts(result);
+      return { posts: validatedPosts as Post[] };
     }
 
+    const validatedPosts = parseGhostPosts(result.data || []);
     return {
-      posts: result.data || [],
+      posts: validatedPosts as Post[],
       meta: result.meta,
     };
   } catch (error) {
@@ -79,6 +100,11 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getPostBySlug', { slug });
@@ -94,7 +120,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       { include: ['tags', 'authors'] }
     );
 
-    return post;
+    const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostBySlug(${slug})`);
+    return validatedPost as Post | null;
   } catch (error) {
     logger.error('Failed to fetch post by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -102,6 +129,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 }
 
 export async function getPostById(id: string): Promise<Post | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   try {
     logger.debug('Fetching post by ID from Ghost', { id });
 
@@ -110,7 +142,8 @@ export async function getPostById(id: string): Promise<Post | null> {
       { include: ['tags', 'authors'] }
     );
 
-    return post;
+    const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostById(${id})`);
+    return validatedPost as Post | null;
   } catch (error) {
     logger.error('Failed to fetch post by ID from Ghost', { id, error: error as Error });
     return null;
@@ -178,6 +211,11 @@ export async function getFeaturedPosts(limit: number = 3): Promise<Post[]> {
 }
 
 export async function getTags(): Promise<Tag[]> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty tags');
+    return [];
+  }
+
   try {
     logger.debug('Fetching tags from Ghost');
 
@@ -186,7 +224,9 @@ export async function getTags(): Promise<Tag[]> {
       filter: 'visibility:public',
     });
 
-    return Array.isArray(tags) ? tags : [];
+    const tagsArray = Array.isArray(tags) ? tags : [];
+    const validatedTags = parseGhostTags(tagsArray);
+    return validatedTags as Tag[];
   } catch (error) {
     logger.error('Failed to fetch tags from Ghost', error as Error);
     return [];
@@ -194,6 +234,11 @@ export async function getTags(): Promise<Tag[]> {
 }
 
 export async function getTagBySlug(slug: string): Promise<Tag | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getTagBySlug', { slug });
@@ -205,7 +250,8 @@ export async function getTagBySlug(slug: string): Promise<Tag | null> {
     logger.debug('Fetching tag by slug from Ghost', { slug: sanitizedSlug });
 
     const tag = await ghostClient.tags.read({ slug: sanitizedSlug });
-    return tag;
+    const validatedTag = parseGhostResponse(ghostTagSchema, tag, `getTagBySlug(${slug})`);
+    return validatedTag as Tag | null;
   } catch (error) {
     logger.error('Failed to fetch tag by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -213,6 +259,11 @@ export async function getTagBySlug(slug: string): Promise<Tag | null> {
 }
 
 export async function getAuthors(): Promise<Author[]> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty authors');
+    return [];
+  }
+
   try {
     logger.debug('Fetching authors from Ghost');
 
@@ -220,7 +271,9 @@ export async function getAuthors(): Promise<Author[]> {
       limit: 'all',
     });
 
-    return Array.isArray(authors) ? authors : [];
+    const authorsArray = Array.isArray(authors) ? authors : [];
+    const validatedAuthors = parseGhostAuthors(authorsArray);
+    return validatedAuthors as Author[];
   } catch (error) {
     logger.error('Failed to fetch authors from Ghost', error as Error);
     return [];
@@ -228,6 +281,11 @@ export async function getAuthors(): Promise<Author[]> {
 }
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   // Validate input
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     logger.error('Invalid slug provided to getAuthorBySlug', { slug });
@@ -239,7 +297,8 @@ export async function getAuthorBySlug(slug: string): Promise<Author | null> {
     logger.debug('Fetching author by slug from Ghost', { slug: sanitizedSlug });
 
     const author = await ghostClient.authors.read({ slug: sanitizedSlug });
-    return author;
+    const validatedAuthor = parseGhostResponse(ghostAuthorSchema, author, `getAuthorBySlug(${slug})`);
+    return validatedAuthor as Author | null;
   } catch (error) {
     logger.error('Failed to fetch author by slug from Ghost', { slug, error: error as Error });
     return null;
@@ -247,11 +306,17 @@ export async function getAuthorBySlug(slug: string): Promise<Author | null> {
 }
 
 export async function getSettings(): Promise<Settings | null> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning null');
+    return null;
+  }
+
   try {
     logger.debug('Fetching settings from Ghost');
 
     const settings = await ghostClient.settings.browse();
-    return settings;
+    const validatedSettings = parseGhostResponse(ghostSettingsSchema, settings, 'getSettings');
+    return validatedSettings as Settings | null;
   } catch (error) {
     logger.error('Failed to fetch settings from Ghost', error as Error);
     return null;
@@ -259,6 +324,11 @@ export async function getSettings(): Promise<Settings | null> {
 }
 
 export async function searchPosts(query: string, options?: GetPostsOptions): Promise<GetPostsResult> {
+  if (!ghostClient) {
+    logger.debug('Ghost client not configured, returning empty posts');
+    return { posts: [] };
+  }
+
   // Validate and sanitize input to prevent injection
   if (!query || typeof query !== 'string' || query.trim() === '') {
     logger.error('Invalid query provided to searchPosts', { query });

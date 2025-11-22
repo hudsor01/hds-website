@@ -461,6 +461,135 @@ export type Database = {
         }
         Relationships: []
       }
+      scheduled_emails: {
+        Row: {
+          id: string
+          recipient_email: string
+          recipient_name: string
+          sequence_id: string
+          step_id: string
+          scheduled_for: string
+          variables: Json
+          status: string
+          created_at: string
+          sent_at: string | null
+          error: string | null
+          retry_count: number
+          max_retries: number
+        }
+        Insert: {
+          id?: string
+          recipient_email: string
+          recipient_name: string
+          sequence_id: string
+          step_id: string
+          scheduled_for: string
+          variables?: Json
+          status?: string
+          created_at?: string
+          sent_at?: string | null
+          error?: string | null
+          retry_count?: number
+          max_retries?: number
+        }
+        Update: {
+          id?: string
+          recipient_email?: string
+          recipient_name?: string
+          sequence_id?: string
+          step_id?: string
+          scheduled_for?: string
+          variables?: Json
+          status?: string
+          created_at?: string
+          sent_at?: string | null
+          error?: string | null
+          retry_count?: number
+          max_retries?: number
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          id: string
+          slug: string
+          title: string
+          category: string
+          description: string
+          long_description: string | null
+          image_url: string
+          gallery_images: string[] | null
+          gradient_class: string
+          stats: Json
+          tech_stack: string[]
+          external_link: string | null
+          github_link: string | null
+          case_study_url: string | null
+          featured: boolean
+          published: boolean
+          display_order: number
+          meta_title: string | null
+          meta_description: string | null
+          og_image_url: string | null
+          created_at: string
+          updated_at: string
+          published_at: string | null
+          view_count: number
+        }
+        Insert: {
+          id?: string
+          slug: string
+          title: string
+          category: string
+          description: string
+          long_description?: string | null
+          image_url: string
+          gallery_images?: string[] | null
+          gradient_class?: string
+          stats?: Json
+          tech_stack?: string[]
+          external_link?: string | null
+          github_link?: string | null
+          case_study_url?: string | null
+          featured?: boolean
+          published?: boolean
+          display_order?: number
+          meta_title?: string | null
+          meta_description?: string | null
+          og_image_url?: string | null
+          created_at?: string
+          updated_at?: string
+          published_at?: string | null
+          view_count?: number
+        }
+        Update: {
+          id?: string
+          slug?: string
+          title?: string
+          category?: string
+          description?: string
+          long_description?: string | null
+          image_url?: string
+          gallery_images?: string[] | null
+          gradient_class?: string
+          stats?: Json
+          tech_stack?: string[]
+          external_link?: string | null
+          github_link?: string | null
+          case_study_url?: string | null
+          featured?: boolean
+          published?: boolean
+          display_order?: number
+          meta_title?: string | null
+          meta_description?: string | null
+          og_image_url?: string | null
+          created_at?: string
+          updated_at?: string
+          published_at?: string | null
+          view_count?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

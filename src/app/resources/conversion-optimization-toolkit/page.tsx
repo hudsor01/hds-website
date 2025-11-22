@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowDownTrayIcon, CheckCircleIcon, ChartBarIcon, CogIcon } from "@heroicons/react/24/outline";
-import { TrendingUp, DollarSign, Clock } from 'lucide-react';
+import { Download, CheckCircle, BarChart3, Settings, TrendingUp, DollarSign, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Free Conversion Optimization Toolkit 2025 - Templates & Guides | Hudson Digital",
@@ -28,25 +27,25 @@ export const metadata: Metadata = {
 
 const toolkitItems = [
   {
-    icon: ChartBarIcon,
+    icon: BarChart3,
     title: "A/B Testing Templates",
     description: "Ready-to-use templates for testing headlines, CTAs, and page layouts",
     items: ["Headline testing framework", "CTA button variations", "Landing page layouts", "Email subject lines"]
   },
   {
-    icon: CogIcon,
+    icon: Settings,
     title: "CRO Audit Checklist",
     description: "Comprehensive checklist to identify conversion bottlenecks",
     items: ["Page-by-page audit guide", "Conversion funnel analysis", "User experience evaluation", "Technical optimization checks"]
   },
   {
-    icon: CheckCircleIcon,
+    icon: CheckCircle,
     title: "Psychology Triggers Guide",
     description: "Proven psychological principles that drive conversions",
     items: ["Urgency and scarcity tactics", "Social proof strategies", "Trust building elements", "Decision-making shortcuts"]
   },
   {
-    icon: ChartBarIcon,
+    icon: BarChart3,
     title: "ROI Calculator",
     description: "Calculate the potential return on your optimization investments",
     items: ["Conversion impact calculator", "Revenue projection tool", "Cost-benefit analysis", "Timeline estimator"]
@@ -64,7 +63,7 @@ export default function ConversionToolkitPage() {
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
           <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
-            <CogIcon className="w-5 h-5" />
+            <Settings className="w-5 h-5" />
             Complete Toolkit
           </div>
           
@@ -81,7 +80,7 @@ export default function ConversionToolkitPage() {
               href="#download"
               className="inline-flex flex-center gap-2 bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-lg"
             >
-              <ArrowDownTrayIcon className="w-5 h-5" />
+              <Download className="w-5 h-5" />
               Download Complete Toolkit
             </Link>
             <Link
@@ -136,7 +135,7 @@ export default function ConversionToolkitPage() {
                     <ul className="space-y-2">
                       {item.items.map((subItem, subIndex) => (
                         <li key={subIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                          <CheckCircleIcon className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                           {subItem}
                         </li>
                       ))}
@@ -221,7 +220,7 @@ export default function ConversionToolkitPage() {
       <section id="download" className="py-16 bg-gradient-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
-            <CogIcon className="w-16 h-16 text-green-400 mx-auto mb-6" />
+            <Settings className="w-16 h-16 text-green-400 mx-auto mb-6" />
             
             <h2 className="text-3xl font-black text-white mb-4">
               Download Your Complete Toolkit
@@ -269,7 +268,7 @@ export default function ConversionToolkitPage() {
                   type="submit"
                   className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-2"
                 >
-                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  <Download className="w-5 h-5" />
                   Get My Complete Toolkit
                 </button>
               </form>

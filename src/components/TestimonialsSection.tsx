@@ -1,6 +1,6 @@
 "use client";
 
-import { StarIcon, UserIcon } from "@heroicons/react/24/solid";
+import { Star, User } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
 import type { Testimonial } from "@/types/components";
 import { cn } from "@/lib/utils";
@@ -85,7 +85,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                   "col-span-1",
                   testimonial.featured && "md:col-span-2"
                 )}
-                Icon={UserIcon}
+                Icon={User}
                 description={`${testimonial.role} at ${testimonial.company}`}
                 href="#"
                 cta="View Case Study"
@@ -95,11 +95,11 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <StarIcon
+                          <Star
                             key={i}
                             className={cn(
                               "w-4 h-4",
-                              i < (testimonial.rating || 0) ? "text-yellow-400" : "text-gray-600"
+                              i < (testimonial.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-gray-600"
                             )}
                           />
                         ))}

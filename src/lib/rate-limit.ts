@@ -37,20 +37,40 @@ export const rateLimiters = {
 // IP-based rate limiting tracker
 const ipTrackers = new Map<string, Map<string, number>>();
 
-// Clean up old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, endpoints] of ipTrackers.entries()) {
-    for (const [endpoint, timestamp] of endpoints.entries()) {
-      if (now - timestamp > 60 * 60 * 1000) { // Remove entries older than 1 hour
-        endpoints.delete(endpoint);
+// Store cleanup interval reference for proper cleanup
+let cleanupInterval: NodeJS.Timeout | null = null;
+
+// Initialize cleanup interval (only in server environment)
+if (typeof window === 'undefined') {
+  // Clean up old entries every 5 minutes
+  cleanupInterval = setInterval(() => {
+    const now = Date.now();
+    for (const [ip, endpoints] of ipTrackers.entries()) {
+      for (const [endpoint, timestamp] of endpoints.entries()) {
+        if (now - timestamp > 60 * 60 * 1000) { // Remove entries older than 1 hour
+          endpoints.delete(endpoint);
+        }
+      }
+      if (endpoints.size === 0) {
+        ipTrackers.delete(ip);
       }
     }
-    if (endpoints.size === 0) {
-      ipTrackers.delete(ip);
-    }
+  }, 5 * 60 * 1000);
+
+  // Allow interval to be unreferenced in Node.js to avoid keeping process alive
+  if (cleanupInterval.unref) {
+    cleanupInterval.unref();
   }
-}, 5 * 60 * 1000);
+}
+
+// Export cleanup function for graceful shutdown
+export function cleanupRateLimiters() {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+    cleanupInterval = null;
+  }
+  ipTrackers.clear();
+}
 
 export function trackIpRequest(ip: string, endpoint: string): boolean {
   const now = Date.now();
