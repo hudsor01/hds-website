@@ -9,6 +9,12 @@ import type {
   UserProperties,
   PostHogLike,
 } from "@/types/analytics";
+import {
+  postHogEventSchema,
+  conversionDataSchema,
+  pageViewPropertiesSchema,
+  userPropertiesSchema,
+} from '@/lib/schemas';
 import { logger } from './logger';
 
 class AnalyticsManager {
@@ -78,6 +84,21 @@ class AnalyticsManager {
    * Track custom events
    */
   trackEvent(eventName: string, properties?: EventProperties) {
+    // Validate event data
+    const validation = postHogEventSchema.safeParse({
+      event: eventName,
+      properties,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid analytics event data', {
+        eventName,
+        properties,
+        errors: validation.error.issues,
+      });
+      // Continue with original data for backwards compatibility
+    }
+
     this.executeOrQueue(() => {
       // PostHog tracking
       if (this.posthog) {
@@ -104,6 +125,17 @@ class AnalyticsManager {
    * Track page views
    */
   trackPageView(properties?: PageViewProperties) {
+    // Validate page view properties
+    if (properties) {
+      const validation = pageViewPropertiesSchema.safeParse(properties);
+      if (!validation.success) {
+        logger.warn('Invalid page view properties', {
+          properties,
+          errors: validation.error.issues,
+        });
+      }
+    }
+
     this.executeOrQueue(() => {
       const pageData = {
         url: window.location.href,
@@ -123,6 +155,18 @@ class AnalyticsManager {
    * Identify user
    */
   identify(userId: string, properties?: UserProperties) {
+    // Validate user properties
+    if (properties) {
+      const validation = userPropertiesSchema.safeParse(properties);
+      if (!validation.success) {
+        logger.warn('Invalid user properties', {
+          userId,
+          properties,
+          errors: validation.error.issues,
+        });
+      }
+    }
+
     this.executeOrQueue(() => {
       if (this.posthog) {
         this.posthog.identify(userId, properties);
@@ -138,6 +182,21 @@ class AnalyticsManager {
     value?: number,
     properties?: EventProperties
   ) {
+    // Validate conversion data
+    const validation = conversionDataSchema.safeParse({
+      event: conversionType,
+      value,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid conversion event data', {
+        conversionType,
+        value,
+        properties,
+        errors: validation.error.issues,
+      });
+    }
+
     const conversionData = {
       conversion_type: conversionType,
       conversion_value: value,
@@ -156,6 +215,16 @@ class AnalyticsManager {
     time: number,
     label?: string
   ) {
+    // Basic validation for timing parameters
+    if (!category || !variable || time < 0) {
+      logger.warn('Invalid timing event parameters', {
+        category,
+        variable,
+        time,
+        label,
+      });
+    }
+
     this.trackEvent("timing_complete", {
       timing_category: category,
       timing_variable: variable,
@@ -205,6 +274,11 @@ class AnalyticsManager {
    * Track scroll depth
    */
   trackScrollDepth(percentage: number) {
+    // Basic validation
+    if (percentage < 0 || percentage > 100) {
+      logger.warn('Invalid scroll depth percentage', { percentage });
+    }
+
     this.trackEvent("scroll_depth", {
       depth_percentage: percentage,
       page_height:
@@ -216,6 +290,11 @@ class AnalyticsManager {
    * Track time on page
    */
   trackTimeOnPage(seconds: number) {
+    // Basic validation
+    if (seconds < 0) {
+      logger.warn('Invalid time on page', { seconds });
+    }
+
     this.trackEvent("time_on_page", {
       time_seconds: seconds,
       page_url:
@@ -228,16 +307,29 @@ class AnalyticsManager {
    */
   private async sendToBackend(eventName: string, properties?: EventProperties) {
     try {
+      const payload = {
+        event: eventName,
+        properties,
+        timestamp: new Date().toISOString(),
+      };
+
+      // Validate backend analytics payload
+      const validation = postHogEventSchema.safeParse(payload);
+
+      if (!validation.success) {
+        logger.warn('Invalid backend analytics payload', {
+          payload,
+          errors: validation.error.issues,
+        });
+        return; // Don't send invalid data to backend
+      }
+
       await fetch("/api/analytics", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          event: eventName,
-          properties,
-          timestamp: new Date().toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
     } catch (error) {
       logger.error("Failed to send analytics to backend", {

@@ -5,6 +5,18 @@
 
 import { createClient } from '@supabase/supabase-js'
 import type { Database, Json } from '@/types/database'
+import {
+  logEntrySchema,
+  customEventSchema,
+  webVitalsEntrySchema,
+  webhookPayloadSchema,
+  leadUpdateSchema,
+  funnelTrackingSchema,
+  testResultSchema,
+  pageViewSchema,
+  analyticsQuerySchema,
+} from '@/lib/schemas'
+import { logger } from './logger'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -54,6 +66,22 @@ export async function logToDatabase(
   context: Record<string, unknown> = {}
 ) {
   try {
+    // Validate log entry
+    const validation = logEntrySchema.safeParse({
+      level,
+      message,
+      context,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid log entry data', {
+        level,
+        message,
+        context,
+        errors: validation.error.issues,
+      });
+    }
+
     const logData = {
       endpoint: (context.endpoint as string) || 'unknown',
       method: (context.method as string) || 'INTERNAL',
@@ -81,6 +109,24 @@ export async function logCustomEvent(
   userId?: string
 ) {
   try {
+    // Validate custom event data
+    const validation = customEventSchema.safeParse({
+      event_name: eventName,
+      properties,
+      session_id: sessionId,
+      user_id: userId,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid custom event data', {
+        eventName,
+        properties,
+        sessionId,
+        userId,
+        errors: validation.error.issues,
+      });
+    }
+
     const eventData = {
       session_id: sessionId || null,
       user_id: userId || null,
@@ -108,9 +154,31 @@ export async function logWebVitals(
   pagePath?: string
 ) {
   try {
+    const path = pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/');
+
+    // Validate web vitals data
+    const validation = webVitalsEntrySchema.safeParse({
+      metric_type: metric,
+      value,
+      rating,
+      session_id: sessionId,
+      path,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid web vitals data', {
+        metric,
+        value,
+        rating,
+        sessionId,
+        path,
+        errors: validation.error.issues,
+      });
+    }
+
     const vitalsData = {
       session_id: sessionId || null,
-      page_path: pagePath || (typeof window !== 'undefined' ? window.location.pathname : '/'),
+      page_path: path,
       metric_type: metric,
       value: value,
       rating: rating,
@@ -156,6 +224,21 @@ export async function enqueueLogProcessing(logData: Record<string, unknown>) {
 // GraphQL query for analytics
 export async function queryAnalytics(query: string, variables?: Record<string, unknown>) {
   try {
+    // Validate analytics query
+    const validation = analyticsQuerySchema.safeParse({
+      query,
+      variables,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid analytics query', {
+        query,
+        variables,
+        errors: validation.error.issues,
+      });
+      return null;
+    }
+
     const { data, error } = await supabaseAdmin.rpc('graphql', {
       query,
       variables: variables || {}
@@ -172,6 +255,22 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
 // Webhook helpers for external integrations
 export async function triggerWebhook(eventType: string, payload: Record<string, unknown>) {
   try {
+    // Validate webhook payload
+    const validation = webhookPayloadSchema.safeParse({
+      event_type: eventType,
+      data: payload,
+      timestamp: new Date().toISOString(),
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid webhook payload', {
+        eventType,
+        payload,
+        errors: validation.error.issues,
+      });
+      return;
+    }
+
     await supabaseAdmin.rpc('trigger_webhook', {
       event_type: eventType,
       payload: payload
@@ -184,6 +283,21 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
 // Lead scoring and analytics
 export async function updateLeadScore(leadId: string, score: number) {
   try {
+    // Validate lead score update
+    const validation = leadUpdateSchema.safeParse({
+      lead_id: leadId,
+      score,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid lead score update', {
+        leadId,
+        score,
+        errors: validation.error.issues,
+      });
+      return;
+    }
+
     await supabase
       .from('leads')
       .update({ lead_score: score, updated_at: new Date().toISOString() })
@@ -203,6 +317,28 @@ export async function trackFunnelStep(
   properties?: Record<string, unknown>
 ) {
   try {
+    // Validate funnel tracking data
+    const validation = funnelTrackingSchema.safeParse({
+      funnel_name: funnelName,
+      step_name: stepName,
+      step_number: stepOrder,
+      status: completed ? 'completed' : 'entered',
+      session_id: sessionId,
+      metadata: properties,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid funnel tracking data', {
+        sessionId,
+        funnelName,
+        stepName,
+        stepOrder,
+        completed,
+        properties,
+        errors: validation.error.issues,
+      });
+    }
+
     const funnelData = {
       session_id: sessionId,
       funnel_name: funnelName,
@@ -232,6 +368,30 @@ export async function recordTestResult(
   userId?: string
 ) {
   try {
+    // Validate test result data
+    const validation = testResultSchema.safeParse({
+      test_id: testName,
+      test_name: testName,
+      variant: variantName,
+      outcome: converted ? 'conversion' : 'other',
+      value: conversionValue,
+      session_id: sessionId,
+      user_id: userId,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid A/B test result data', {
+        testName,
+        variantName,
+        converted,
+        conversionEvent,
+        conversionValue,
+        sessionId,
+        userId,
+        errors: validation.error.issues,
+      });
+    }
+
     const testData = {
       test_name: testName,
       variant_name: variantName,
@@ -259,13 +419,34 @@ export async function trackPageView(
   userId?: string
 ) {
   try {
+    // Validate page view data
+    const validation = pageViewSchema.safeParse({
+      path,
+      title: title || (typeof document !== 'undefined' ? document.title : undefined),
+      referrer: referrer || (typeof document !== 'undefined' ? document.referrer : undefined),
+      user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      session_id: sessionId,
+      user_id: userId,
+    });
+
+    if (!validation.success) {
+      logger.warn('Invalid page view data', {
+        path,
+        title,
+        referrer,
+        sessionId,
+        userId,
+        errors: validation.error.issues,
+      });
+    }
+
     const pageData = {
       session_id: sessionId || null,
       user_id: userId || null,
       path,
-      title: title || document.title,
-      referrer: referrer || document.referrer,
-      user_agent: navigator.userAgent,
+      title: title || (typeof document !== 'undefined' ? document.title : 'Unknown'),
+      referrer: referrer || (typeof document !== 'undefined' ? document.referrer : ''),
+      user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       ip_address: null, // Will be populated by server
       bounce: false, // Will be updated by duration tracking
       timestamp: new Date().toISOString(),
