@@ -1,379 +1,522 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working with this Next.js 15 production application.
 
-## MANDATORY RULES - NO EXCEPTIONS
+## MANDATORY RULES
 
-### NO EMOJIS RULE
-- Never use emojis in communication unless user explicitly requests them
-- Never use emojis in code, comments, or file content
-- Use Lucide Icons or Heroicons instead for visual elements in UI components
-- Keep all responses professional and emoji-free
-- Focus on clear, direct technical communication
+### NO EMOJIS
+- Never use emojis unless user explicitly requests them
+- Use Heroicons/Lucide React for UI icons instead
 
 ### CORE PRINCIPLES
-- **DRY**: Search before writing (`rg "functionName"`). Consolidate code reused ≥2 places
-- **KISS**: Choose simplest solution. Delete code instead of adding when possible
-- **SOLID**: Single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion
-- **NO ABSTRACTIONS**: Use native platform features directly. No wrappers, factories, or custom layers
-- **PRODUCTION MINDSET**: Security first, platform-native, performance-conscious, reliability-focused
+- **SIMPLICITY**: Use native features first. No unnecessary abstractions.
+- **TYPE SAFETY**: TypeScript strict mode. NO `any` types. Use Zod for runtime validation.
+- **SERVER-FIRST**: Default to Server Components. Client components ONLY for hooks/events/browser APIs.
+- **PERFORMANCE**: Images as WebP, monitor bundle size, lazy load heavy components.
 
-### NATIVE PLATFORM REPLACEMENTS
-- **Auth**: Next.js Auth or simple session management
-- **Storage**: Vercel Blob or native file handling
-- **Email**: Resend API
-- **Validation**: Zod schemas or native JavaScript validation
-- **Data**: Native fetch API
-- **Forms**: Native form handling or React Hook Form
-- **State**: React useState/useReducer (avoid complex state management)
-- **Styles**: Tailwind classes
-- **Components**: Radix/ShadCN base components
-- **Dates**: date-fns
-- **HTTP**: Native fetch
-- **Logging**: Unified logger with PostHog + Vercel integration (`@/lib/logger`)
+## NEXT.JS 15 PATTERNS
 
-### UI COMPONENT PATTERNS
-- **Buttons**: Native button + Tailwind or Radix Button
-- **Forms**: Native form elements + validation
-- **Modals**: Radix Dialog when needed
-- **Dropdowns**: Radix Select
-- **Loading**: Simple CSS animations
-- **Layouts**: CSS Grid + Flexbox + Tailwind
-- **Animations**: Tailwind transitions (avoid complex animation libraries)
-- **Themes**: CSS custom properties
-- **Responsive**: Tailwind responsive prefixes
-
-### BEFORE EVERY CHANGE
-1. Does this exist? (Search first!)
-2. Can I use native platform feature?
-3. Can I delete code instead?
-4. Is this the simplest solution?
-5. Will another developer understand immediately?
-6. Does this follow accessibility standards?
-7. Is this predictable and consistent?
-
-### LOGGING STANDARDS
-- **NEVER use console.log/info/debug** - Use `logger` from `@/lib/logger`
-- **Use structured logging**: Include context, user IDs, request IDs
-- **PostHog Integration**: All logs become trackable analytics events
-- **Vercel Integration**: Structured JSON logs in production dashboard
-- **Error Tracking**: Rich error context with stack traces and user sessions
-
-```typescript
-import { logger } from '@/lib/logger';
-
-// Replace console.log with:
-logger.info('User action', { userId: 123, action: 'click' });
-logger.error('API failed', error);
-logger.debug('Debug info'); // Only in development
-
-// Performance tracking:
-logger.time('api-call');
-// ... API call
-logger.timeEnd('api-call'); // Tracked in PostHog
-
-// Context for user sessions:
-logger.setContext({ userId: 'user-123', plan: 'premium' });
+### File Structure
+```
+app/
+├── layout.tsx              # Root layout (server component)
+├── page.tsx                # Routes (server by default)
+├── (tools)/                # Route groups (URL: /paystub not /tools/paystub)
+├── actions/contact.ts      # Server Actions
+└── api/contact/route.ts    # API routes
 ```
 
-## Development Commands
+### Server Components (Default)
+```typescript
+// NO 'use client' needed - async/await supported
+export default async function Page() {
+  const data = await fetchData()  // Direct server-side data fetch
+  return <div>{data}</div>
+}
+```
 
-### Core Commands
-- `npm run dev` - Start development server with .env.local (localhost:3000)
-- `npm run build` - Build production application with .env.production
-- `npm run build:local` - Build with .env.local for local testing
-- `npm run build:analyze` - Build with bundle analyzer for performance optimization
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint for code quality checks
-- `npm run typecheck` - Run TypeScript type checking
+### Client Components (Explicit)
+```typescript
+// ONLY add 'use client' for: hooks, event handlers, browser APIs
+'use client'
+import { useState } from 'react'
 
-### Testing Commands
-- `npm run test:unit` - Run Jest unit tests
-- `npm run test:unit:watch` - Run Jest unit tests in watch mode
-- `npm run test:unit:coverage` - Run Jest unit tests with coverage report
-- `npm run test:e2e` - Run all Playwright e2e tests
-- `npm run test:e2e:ui` - Run Playwright tests with UI mode
-- `npm run test:e2e:fast` - Run fast e2e tests (chromium only)
-- `npm run test:e2e:a11y` - Run accessibility-specific e2e tests
-- `npm run test:e2e:report` - Show Playwright test report
-- `npm run test:all` - Run lint, typecheck, unit tests, and fast e2e tests
-- `npm run test:ci` - Full test suite for CI (includes all e2e tests)
+export default function Counter() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
+}
+```
 
-### Development Workflow
-- Use `npm run dev` for local development with hot reload
-- Always run `npm run lint` and `npm run typecheck` before commits to ensure code quality
-- Use `npm run test:all` to run all checks before pushing
-- Use `npm run build:local` to verify production build works with your local environment
+### Server Actions
+```typescript
+// app/actions/contact.ts
+'use server'
 
-## Project Architecture
+export async function submitForm(
+  _prevState: State | null,
+  formData: FormData
+): Promise<State> {
+  const result = schema.safeParse(Object.fromEntries(formData))
+  if (!result.success) return { error: result.error.message }
 
-### Technology Stack
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4.x
-- **UI Components**: Custom components with Heroicons
-- **Email Service**: Resend for transactional emails
-- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
-- **CMS**: Ghost CMS for blog content
-- **Calendar**: Cal.com integration
-- **Performance**: Web Vitals tracking, Core Web Vitals optimization
+  await sendEmail(result.data)
+  return { success: true }
+}
 
-### Directory Structure
+// Use with useActionState in client component
+'use client'
+const [state, formAction] = useActionState(submitForm, null)
+<form action={formAction}>...</form>
+```
+
+### Metadata (Required for all pages)
+```typescript
+export const metadata: Metadata = {
+  title: "Page Title",
+  description: "120-160 character SEO description",
+  openGraph: { title, description, url, images },
+  twitter: { card: "summary_large_image" }
+}
+
+// Structured data in <script> tag, NOT metadata.other
+<script type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+/>
+```
+
+## REACT PATTERNS
+
+### Hooks Usage
+```typescript
+// Local state
+const [isOpen, setIsOpen] = useState(false)
+
+// Forms with Server Actions
+const [state, formAction] = useActionState(submitForm, null)
+
+// Submit button pending state
+const { pending } = useFormStatus()
+
+// Refs for non-reactive values
+const rafId = useRef<number | null>(null)
+
+// Stable callbacks
+const handleClick = useCallback(() => {}, [deps])
+
+// Effects ALWAYS cleanup
+useEffect(() => {
+  const timer = setTimeout(fn, delay)
+  return () => clearTimeout(timer)  // Required
+}, [deps])
+```
+
+### Context Pattern
+```typescript
+const Context = createContext<API | undefined>(undefined)
+
+export function Provider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState(initial)
+  return <Context.Provider value={{ state }}>{children}</Context.Provider>
+}
+
+export function useContext() {
+  const context = useContext(Context)
+  if (!context) throw new Error('Must be used within Provider')
+  return context
+}
+```
+
+## TYPESCRIPT STANDARDS
+
+### Configuration (DO NOT CHANGE)
+```json
+{
+  "strict": true,
+  "noUnusedLocals": true,
+  "noUnusedParameters": true,
+  "noUncheckedIndexedAccess": true
+}
+```
+
+### Type vs Interface
+```typescript
+// INTERFACE for component props and objects
+interface ButtonProps {
+  children: React.ReactNode
+  onClick?: () => void
+  variant?: 'primary' | 'secondary'
+}
+
+// TYPE for unions, Zod inference
+type Status = 'idle' | 'loading' | 'success' | 'error'
+type FormData = z.infer<typeof formSchema>
+```
+
+### Zod Validation
+```typescript
+// lib/schemas/contact.ts
+import { z } from 'zod'
+
+export const contactSchema = z.object({
+  firstName: z.string().min(1).max(50),
+  email: z.string().email(),
+  message: z.string().min(10)
+})
+
+export type ContactData = z.infer<typeof contactSchema>
+
+// Use in Server Actions
+const result = contactSchema.safeParse(data)
+if (!result.success) return { error: result.error.issues[0].message }
+```
+
+### Error Handling
+```typescript
+// utils/errors.ts - use this helper
+export function castError(error: unknown): Error {
+  if (error instanceof Error) return error
+  return new Error(String(error))
+}
+
+// Usage
+try {
+  await operation()
+} catch (error) {
+  logger.error('Failed', castError(error))
+  return { error: 'Operation failed' }
+}
+```
+
+## STYLING GUIDELINES
+
+### Tailwind-First
+```typescript
+// Direct utilities
+<div className="flex items-center gap-4 px-6 py-4 rounded-lg bg-cyan-400/10">
+
+// Semantic CSS for repeated patterns
+// globals.css
+.glass-card {
+  @apply bg-black/40 backdrop-blur-sm border border-white/10 rounded-xl;
+}
+
+// Custom spacing utilities
+.mb-heading { margin-bottom: 1.5rem; }
+.section-spacing { padding-block: 5rem; }
+```
+
+### Design Tokens (DO NOT modify)
+```css
+@theme inline {
+  --color-brand-cyan: oklch(0.773 0.171 187.163);
+  --spacing-section: 5rem;
+  --text-hero: var(--text-6xl);
+}
+```
+
+## COMPONENT PATTERNS
+
+### Organization
+```
+components/
+├── layout/          # NavbarLight, Footer
+├── forms/           # FormField, FormHeader
+├── ui/              # Button, Input (base)
+├── [feature]/       # Feature-specific
+└── Toast.tsx        # Shared components
+```
+
+### Structure
+```typescript
+// 1. Imports
+import type { Metadata } from 'next'
+import { useState } from 'react'
+
+// 2. Types
+interface Props {
+  title: string
+}
+
+// 3. Constants
+const MAX_ITEMS = 10
+
+// 4. Component
+export default function Component({ title }: Props) {
+  return <div>{title}</div>
+}
+```
+
+### Naming
+```typescript
+// Components: PascalCase
+ContactForm.tsx
+
+// Utils: kebab-case
+seo-utils.ts
+
+// Constants: UPPER_SNAKE_CASE
+const TOAST_DURATION_DEFAULT = 5000
+
+// Functions: camelCase
+function calculateTotal() {}
+```
+
+## VALIDATION & FORMS
+
+### Schemas Location
+```
+lib/schemas/
+├── common.ts       # Reusable (email, phone)
+├── contact.ts      # Form schemas
+```
+
+### Form Pattern
+```typescript
+// Server Action
+'use server'
+export async function submit(
+  _: State | null,
+  formData: FormData
+): Promise<State> {
+  const result = schema.safeParse(Object.fromEntries(formData))
+  if (!result.success) return { error: result.error.issues[0].message }
+
+  await processData(result.data)
+  return { success: true }
+}
+
+// Client Component
+'use client'
+export default function Form() {
+  const [state, formAction] = useActionState(submit, null)
+
+  return (
+    <form action={formAction}>
+      <input type="text" name="field" required />
+      {state?.error && <p className="text-red-400">{state.error}</p>}
+      <SubmitButton />
+    </form>
+  )
+}
+```
+
+## TESTING
+
+### Unit Tests (Vitest)
+```typescript
+// tests/unit/validation.test.ts
+import { describe, it, expect } from 'vitest'
+import { schema } from '@/lib/schemas/contact'
+
+describe('Validation', () => {
+  it('validates data', () => {
+    const result = schema.safeParse({ email: 'test@example.com' })
+    expect(result.success).toBe(true)
+  })
+})
+```
+
+### E2E Tests (Playwright)
+```typescript
+// e2e/contact.spec.ts
+import { test, expect } from '@playwright/test'
+
+test('submits form', async ({ page }) => {
+  await page.goto('/contact')
+  await page.fill('[name="email"]', 'test@example.com')
+  await page.click('[type="submit"]')
+  await expect(page.locator('text=Success')).toBeVisible()
+})
+```
+
+### Commands
+```bash
+npm run test:unit           # Unit tests
+npm run test:e2e:fast       # E2E (chromium only)
+npm run test:all            # All checks
+```
+
+## PERFORMANCE
+
+### Images
+```typescript
+// ALWAYS use Next.js Image
+import Image from 'next/image'
+
+<Image
+  src="/logo.webp"
+  alt="Description"
+  width={200}
+  height={50}
+  priority  // Above-fold images
+/>
+```
+
+### Code Splitting
+```typescript
+// Heavy components
+import dynamic from 'next/dynamic'
+
+const Chart = dynamic(() => import('@/components/Chart'), {
+  loading: () => <p>Loading...</p>,
+  ssr: false  // Client-only if needed
+})
+```
+
+### Bundle Analysis
+```bash
+ANALYZE=true npm run build  # Check before large changes
+# Keep first load JS under 180kB per page
+```
+
+## LOGGING & ANALYTICS
+
+### Logger (NOT console.log)
+```typescript
+// ALWAYS use logger
+import { logger } from '@/lib/logger'
+
+logger.info('Event', { userId, action })
+logger.error('Failed', error)
+logger.debug('Debug')  // Dev only
+
+// NEVER use console.log/warn/error
+```
+
+## ACCESSIBILITY
+
+### Semantic HTML
+```typescript
+<main id="main-content">
+  <nav aria-label="Main navigation">
+  <section aria-labelledby="heading">
+    <h2 id="heading">Title</h2>
+```
+
+### ARIA
+```typescript
+// Labels for interactive elements
+<button aria-label="Close">
+  <XIcon aria-hidden="true" />
+</button>
+
+// Live regions
+<div role="alert" aria-live="assertive">
+  Error message
+</div>
+```
+
+## PRE-COMMIT CHECKLIST
+
+- [ ] Pattern already exists? (Search first)
+- [ ] Simplest solution?
+- [ ] Native platform feature available?
+- [ ] TypeScript strict passes?
+- [ ] No console.log?
+- [ ] Error handling with try/catch?
+- [ ] useEffect cleanup?
+- [ ] ARIA labels?
+- [ ] Next.js Image for images?
+- [ ] Meta description 120-160 chars?
+
+## CRITICAL RULES
+
+### NEVER
+- ❌ Use `any` type
+- ❌ Use console.log (use logger)
+- ❌ Skip TypeScript types
+- ❌ Inline styles (use Tailwind)
+- ❌ Add 'use client' without reason
+- ❌ Forget useEffect cleanup
+- ❌ Skip error handling
+- ❌ Use `<div>` for buttons
+- ❌ Forget alt text
+- ❌ Hard-code values
+
+### ALWAYS
+- ✅ Search first for existing patterns
+- ✅ Validate at boundaries with Zod
+- ✅ Type everything
+- ✅ Semantic HTML + ARIA
+- ✅ Clean up timers/listeners
+- ✅ Handle errors gracefully
+- ✅ Test keyboard navigation
+- ✅ Check bundle size
+- ✅ Use logger not console
+- ✅ Constants for magic numbers
+
+## INTEGRATIONS
+
+### Email (Resend)
+```typescript
+import { Resend } from 'resend'
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+await resend.emails.send({
+  from: 'hello@hudsondigitalsolutions.com',
+  to: [email],
+  subject: subject,
+  html: html
+})
+```
+
+### Database (Supabase)
+```typescript
+import { supabase } from '@/lib/supabase'
+
+const { data, error } = await supabase
+  .from('table')
+  .insert(record)
+
+if (error) {
+  logger.error('DB error', error)
+  return { error: 'Failed' }
+}
+```
+
+## FILE LOCATIONS
+
 ```
 src/
-├── app/                    # Next.js App Router pages and API routes
-│   ├── (tools)/           # Route group for internal tools
-│   │   └── paystub-generator/ # Paystub generator tool
-│   ├── layout.tsx         # Root layout with fonts and metadata
-│   ├── page.tsx           # Home page
-│   ├── about/page.tsx     # About page
-│   ├── contact/page.tsx   # Contact page
-│   ├── services/page.tsx  # Services page
-│   ├── portfolio/page.tsx # Portfolio showcase page
-│   ├── pricing/page.tsx   # Pricing information page
-│   ├── privacy/page.tsx   # Privacy policy page
-│   ├── testimonials/page.tsx # Customer testimonials page
-│   ├── resources/         # Lead magnets and resources
-│   ├── blog/              # Blog pages with static content
-│   │   ├── page.tsx       # Blog listing
-│   │   └── [slug]/page.tsx # Individual blog posts
-│   ├── robots.ts          # Dynamic robots.txt generation
-│   ├── sitemap.ts         # Dynamic sitemap generation
-│   └── api/               # API routes
-│       ├── contact/route.ts # Contact form handler
-│       ├── lead-magnet/route.ts # Lead magnet downloads
-│       ├── process-emails/route.ts # Email processing
-│       ├── csrf/route.ts  # CSRF token endpoint
-│       └── rss/feed/route.ts # RSS feed generation
-├── components/            # Reusable UI components
-│   ├── layout/
-│   │   ├── Navbar.tsx     # Main navigation (client component)
-│   │   └── Footer.tsx     # Site footer
-│   ├── ContactForm.tsx    # Contact form with validation and analytics
-│   ├── CalendarWidget.tsx # Cal.com integration widget
-│   ├── ThemeToggle.tsx    # Dark/light mode toggle
-│   ├── Analytics.tsx      # Analytics tracking components
-│   ├── AccessibilityProvider.tsx # Accessibility features provider
-│   ├── CookieConsent.tsx  # GDPR cookie consent management
-│   ├── ErrorBoundary.tsx  # React error boundary component
-│   ├── LoadingStates.tsx  # Loading indicators and states
-│   ├── ServiceWorkerRegistration.tsx # PWA service worker
-│   └── WebVitalsReporting.tsx # Core Web Vitals monitoring
-├── contexts/              # React contexts
-│   └── ThemeContext.tsx   # Theme management
-├── hooks/                 # Custom React hooks
-│   └── useTouchInteractions.ts # Touch interaction handling
-├── lib/                   # Core utilities and integrations
-│   ├── analytics.ts       # Multi-platform analytics tracking
-│   ├── seo.ts            # SEO configuration with schema markup
-│   ├── email-sequences.ts # Automated email nurturing sequences
-│   ├── ghost.ts          # Ghost CMS API integration
-│   ├── posthog.ts        # PostHog analytics configuration
-│   ├── image-loader.ts   # Next.js image optimization
-│   └── analytics.ts.bak  # Backup of analytics configuration
-├── types/                 # TypeScript type definitions
-│   ├── seo.ts            # SEO metadata types and interfaces
-│   ├── accessibility.ts  # Accessibility compliance types
-│   ├── performance.ts    # Performance monitoring types
-│   ├── components.ts     # Component prop and state types
-│   └── ghost.d.ts        # Ghost CMS API response types
-└── utils/                 # Utility functions
-    ├── seo.ts            # SEO optimization utilities
-    ├── accessibility.ts  # Accessibility helper functions
-    ├── performance.ts    # Performance measurement utilities
-    └── crawling.ts       # Web crawling and indexing utilities
-tests/                     # Test files
-├── unit/                  # Jest unit tests
-│   ├── validation.test.ts # Form validation tests
-│   ├── states.test.ts     # State management tests
-│   └── storage.test.ts    # Storage utility tests
-└── e2e/                   # Playwright end-to-end tests
-    ├── form-functionality.spec.ts # Contact form tests
-    ├── pdf-generation.spec.ts     # PDF generation tests
-    └── localStorage-persistence.spec.ts # Storage persistence tests
+├── app/              # Pages & API routes
+├── components/       # React components
+├── lib/              # Core utilities
+│   ├── schemas/      # Zod schemas
+│   ├── analytics.ts
+│   ├── logger.ts
+│   └── seo-utils.ts
+├── types/            # TypeScript defs
+├── hooks/            # Custom hooks
+└── utils/            # Helpers
+
+tests/                # Unit tests
+e2e/                  # E2E tests
+public/               # Static assets
 ```
 
-### Key Architectural Patterns
+## DEVELOPMENT
 
-#### Multi-Platform Analytics Integration
-- **Google Analytics 4**: Page views, conversions, custom events
-- **PostHog**: Product analytics, feature flags, session recordings
-- **Vercel Analytics**: Core Web Vitals, speed insights
-- Unified tracking through `src/lib/analytics.ts`
-- Comprehensive event tracking: form submissions, scroll depth, time on page
-- Web Vitals monitoring (LCP, FID, CLS) with automatic reporting
-
-#### SEO and Performance Optimization
-- Centralized SEO config in `src/lib/seo.ts`
-- Rich schema markup (Organization, Service, LocalBusiness, Person)
-- Dynamic keyword generation and meta descriptions
-- OpenGraph and Twitter Card optimization
-- Performance-first approach with Next.js Image optimization
-- Core Web Vitals tracking and optimization
-
-#### Email Marketing and Lead Nurturing
-- Automated email sequences in `src/lib/email-sequences.ts`
-- Multiple nurturing flows: welcome series, consultation follow-up, long-term nurturing
-- Resend integration for transactional emails
-- Lead scoring and high-intent detection
-- Conversion tracking across all touchpoints
-
-#### Content Management and Blog
-- Static blog content (not Ghost CMS)
-- Individual blog posts as static pages
-- RSS feed generation via API route
-- Static generation for optimal performance
-- Lead magnet integration for downloads
-
-#### Component Architecture
-- **Layout Components**: Navbar, Footer in `src/components/layout/`
-- **Form Components**: ContactForm with validation and analytics
-- **Integration Components**: CalendarWidget, ThemeToggle
-- **Client Components**: Use `"use client"` directive for interactive components
-- **Server Components**: Default for static content and SEO
-
-#### TypeScript Configuration
-- Path aliases configured: `@/*` maps to `src/*`
-- Strict TypeScript settings enabled
-- Component-specific path aliases for better imports
-- Comprehensive type definitions for all integrations
-
-#### Styling and Theme System
-- Tailwind CSS 4.x with custom theme configuration
-- Dark/light mode support with system preference detection
-- CSS custom properties for theming
-- Responsive design patterns with mobile-first approach
-- Custom gradient and glow effects for brand identity
-
-#### Progressive Web App (PWA) Features
-- Service worker registration for offline functionality
-- Manifest.json configuration for app-like experience
-- Caching strategies for improved performance
-- Offline page fallback for network failures
-- App icon and splash screen configurations
-
-#### Cron Jobs and Background Processing
-- Email queue processing via `/api/cron/process-email-queue`
-- Automated sitemap updates via `/api/cron/update-sitemap`
-- RSS feed generation at `/api/rss/feed`
-- Background analytics data processing
-- Scheduled maintenance tasks
-
-### Business Context and Features
-- **Company**: Hudson Digital Solutions
-- **Brand Colors**: Cyan-based palette with gradients
-- **Design Language**: Modern, tech-focused with terminal/coding aesthetics
-- **Target Audience**: Businesses needing web development and digital solutions
-- **Contact Form**: Sends to hello@hudsondigitalsolutions.com with automated nurturing
-- **Calendar Integration**: Cal.com widget for consultation bookings
-- **Lead Nurturing**: Automated email sequences for different user intents
-
-### Development Guidelines
-- Use Next.js App Router patterns (not Pages Router)
-- Implement proper TypeScript types for all components
-- Follow accessibility best practices with ARIA labels
-- Optimize for SEO with structured data and metadata
-- Use server components by default, client components only when needed
-- Maintain responsive design across all screen sizes
-- Follow the existing brand aesthetic and color scheme
-- Always test contact form functionality before deployment
-- Monitor Core Web Vitals and optimize for performance
-- Use analytics tracking for all user interactions
-
-### Environment Variables Required
+### Commands
 ```bash
-# Email
-RESEND_API_KEY=             # Resend API key for email sending
-
-# Analytics & Monitoring
-NEXT_PUBLIC_GA_MEASUREMENT_ID=  # Google Analytics 4 ID
-GA4_API_SECRET=             # GA4 Measurement Protocol API secret
-NEXT_PUBLIC_POSTHOG_KEY=    # PostHog project API key
-NEXT_PUBLIC_POSTHOG_HOST=   # PostHog host (default: https://app.posthog.com)
-
-# SEO
-GOOGLE_SITE_VERIFICATION=   # Google Search Console verification
-
-# Security
-CSRF_SECRET=                # CSRF token secret for form security
+npm run dev              # Dev server
+npm run build           # Production build
+npm run lint            # ESLint
+npm run typecheck       # TypeScript
+npm run test:all        # All checks
 ```
 
-### Configuration Files
-- `next.config.ts` - Next.js configuration with image optimization and security headers
-- `tsconfig.json` - TypeScript configuration with path aliases
-- `eslint.config.mjs` - ESLint configuration using Next.js presets
-- `postcss.config.mjs` - PostCSS configuration for Tailwind
-- `tailwind.config.js` - Tailwind CSS configuration
-- `vercel.json` - Vercel deployment configuration with performance optimizations
+### Git Commits
+```bash
+# Before commit
+npm run lint && npm run typecheck
 
-### Testing Strategy
+# Message format
+git commit -m "feat: Add feature
 
-#### Unit Testing
-- Jest configured for unit tests in `tests/unit/`
-- Tests for validation, state management, and utility functions
-- Coverage reporting available with `npm run test:unit:coverage`
-- Watch mode for development: `npm run test:unit:watch`
+- Detailed change 1
+- Detailed change 2"
+```
 
-#### E2E Testing Setup
-- Playwright configured for comprehensive end-to-end testing
-- Tests in `tests/e2e/` directory
-- Multi-browser testing (Chrome, Firefox, Safari)
-- Mobile device testing (iPhone, Pixel)
-- Accessibility testing with axe-core
-- Performance and animation-specific test suites
-- Visual regression testing capabilities
+---
 
-#### Performance Testing
-- Core Web Vitals monitoring with automated reports
-- Bundle analysis available with `ANALYZE=true npm run build`
-- Performance regression testing included in CI/CD
-- Real User Monitoring (RUM) data collection
-
-### Performance and Monitoring
-- Real User Monitoring (RUM) with Web Vitals tracking
-- Performance budgets and optimization
-- Error tracking and debugging
-- Lead attribution and marketing campaign tracking
-- Comprehensive analytics dashboard integration
-
-### Key Development Patterns
-
-#### File-based Routing Architecture
-- Uses Next.js 15 App Router (not Pages Router)
-- Route handlers in `app/api/` for server-side logic
-- Dynamic routes: `[slug]` for blog posts, `[tag]` for blog tags
-- Special files: `layout.tsx`, `page.tsx`, `robots.ts`, `sitemap.ts`
-- Client components marked with `"use client"` directive
-
-#### Data Flow and State Management
-- Server components for static content and SEO optimization
-- Client components for interactive features (forms, navigation)
-- React Context for theme management (`ThemeContext.tsx`)
-- Custom hooks for reusable stateful logic (`useTouchInteractions.ts`)
-- Type-safe APIs with comprehensive TypeScript definitions
-
-#### Integration Architecture
-- Multi-platform analytics unified through `src/lib/analytics.ts`
-- Email automation orchestrated via `src/lib/email-sequences.ts`
-- Ghost CMS headless integration for blog content
-- PostHog for advanced product analytics and feature flags
-- Resend for transactional email delivery
-
-#### Performance-First Design
-- Static generation for blog posts and marketing pages
-- Image optimization with Next.js Image component
-- Bundle splitting and lazy loading strategies
-- Edge caching and CDN optimization
-- Core Web Vitals monitoring and optimization
-
-## Memories and Development Notes
-
-### Integration Strategies
-- Route all memories to use mcp server supermemory
-
-### Important Development Considerations
-- Always test contact form functionality before deployment
-- Monitor bundle size with analyzer (`ANALYZE=true npm run build`)
-- Verify email sequences are working in production
-- Check Core Web Vitals after significant changes
-- Ensure accessibility compliance with screen readers
+**Core Values**: Simplicity, type safety, performance. When in doubt, choose the simplest solution. Delete code instead of adding when possible.
