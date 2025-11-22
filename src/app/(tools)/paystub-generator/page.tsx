@@ -9,10 +9,10 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { PayStub } from '@/components/PayStub'
 import { AnnualWageSummary } from '@/components/AnnualWageSummary'
 import { saveFormData, loadFormData, clearFormData } from '@/lib/storage'
-import { validateForm } from '@/lib/validation'
 import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/states-utils'
 import type { FormErrors } from '@/types/common'
 import { logger } from '@/lib/logger'
+import { paystubFormSchema } from '@/lib/schemas'
 
 export default function Home() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -132,20 +132,36 @@ export default function Home() {
       businessValue: 'medium'
     })
 
-    // Validate form
-    const validation = validateForm({
+    // Validate form with Zod
+    const validation = paystubFormSchema.safeParse({
       employeeName: paystubData.employeeName,
       hourlyRate: paystubData.hourlyRate,
       hoursPerPeriod: paystubData.hoursPerPeriod
     })
 
-    setFormErrors(validation.errors)
+    // Convert Zod errors to FormErrors format
+    const errors: FormErrors = {}
+    if (!validation.success) {
+      for (const issue of validation.error.issues) {
+        const path = issue.path[0]
+        if (path === 'employeeName') {
+          errors.employeeName = issue.message
+        } else if (path === 'hourlyRate') {
+          errors.hourlyRate = issue.message
+        } else if (path === 'hoursPerPeriod') {
+          errors.hoursPerPeriod = issue.message
+        }
+      }
+    }
 
-    if (!validation.isValid) {
+    setFormErrors(errors)
+
+    if (!validation.success) {
       logger.warn('Form validation failed in page component', {
         component: 'PaystubGeneratorPage',
         userFlow: 'paystub_tool_usage',
-        validationErrors: validation.errors,
+        validationErrors: errors,
+        zodIssues: validation.error.issues,
         action: 'validation_failed'
       })
       toast.error('Please fix the form errors before generating payroll records')
