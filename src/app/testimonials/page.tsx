@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { StarIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/solid'
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { Star, MessageCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Client Testimonials | Hudson Digital Solutions',
@@ -76,9 +75,9 @@ const StarRating = ({ rating }: { rating: number }) => {
   return (
     <div className="flex gap-1">
       {[...Array(5)].map((_, i) => (
-        <StarIcon
+        <Star
           key={i}
-          className={`w-5 h-5 ${i < rating ? 'text-cyan-400' : 'text-muted-foreground'}`}
+          className={`w-5 h-5 ${i < rating ? 'text-cyan-400 fill-cyan-400' : 'text-muted-foreground'}`}
         />
       ))}
     </div>
@@ -178,7 +177,7 @@ export default function TestimonialsPage() {
 
                 {/* Quote */}
                 <div className="mb-6">
-                  <ChatBubbleLeftEllipsisIcon className="w-8 h-8 text-cyan-400/30 mb-3" />
+                  <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
                     "{testimonial.content}"
                   </p>
@@ -225,7 +224,7 @@ export default function TestimonialsPage() {
                 className="group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg"
               >
                 Start Your Transformation
-                <ArrowRightIcon className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link

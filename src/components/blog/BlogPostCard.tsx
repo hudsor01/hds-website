@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CalendarDaysIcon, ClockIcon, TagIcon } from "@heroicons/react/24/outline";
+import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
 import Link from "next/link";
 import type { Post } from "@/types/ghost-types";
 import { formatDateLong } from "@/lib/utils";
@@ -29,11 +29,11 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         <div className="p-8">
           <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
             <span className="flex flex-center gap-1">
-              <CalendarDaysIcon className="w-4 h-4" />
+              <Calendar className="w-4 h-4" />
               {formatDateLong(post.published_at)}
             </span>
             <span className="flex flex-center gap-1">
-              <ClockIcon className="w-4 h-4" />
+              <Clock className="w-4 h-4" />
               {post.reading_time} min read
             </span>
             {post.featured && (
@@ -61,7 +61,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
                   href={`/blog/tag/${tag.slug}`}
                   className="flex flex-center gap-1 text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1 rounded-full hover:bg-cyan-400/20 transition-colors"
                 >
-                  <TagIcon className="w-3 h-3" />
+                  <Tag className="w-3 h-3" />
                   {tag.name}
                 </Link>
               ))}
@@ -87,7 +87,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
             className="inline-flex flex-center gap-2 link-primary font-semibold text-lg"
           >
             Read Full Article
-            <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

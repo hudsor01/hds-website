@@ -1,4 +1,4 @@
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
+import { Globe } from "lucide-react";
 import Link from "next/link";
 import type { Author } from "@/types/ghost-types";
 
@@ -35,7 +35,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
                 rel="noopener noreferrer"
                 className="flex flex-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors"
               >
-                <GlobeAltIcon className="w-4 h-4" />
+                <Globe className="w-4 h-4" />
                 Website
               </a>
             )}

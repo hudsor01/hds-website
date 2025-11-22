@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
 import type { Post } from "@/types/ghost-types";
 import { formatDateLong } from "@/lib/utils";
@@ -35,7 +35,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
                   <div className="flex flex-center gap-3 text-sm text-gray-400 mb-3">
                     <span>{formatDateLong(post.published_at)}</span>
                     <span className="flex flex-center gap-1">
-                      <ClockIcon className="w-4 h-4" />
+                      <Clock className="w-4 h-4" />
                       {post.reading_time} min
                     </span>
                   </div>
@@ -52,7 +52,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
                     className="inline-flex flex-center gap-2 link-primary font-semibold"
                   >
                     Read More
-                    <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>

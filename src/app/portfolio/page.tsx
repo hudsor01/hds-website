@@ -1,76 +1,25 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowTopRightOnSquareIcon, SparklesIcon, CodeBracketIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+import { ExternalLink, Sparkles, Code2, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
-// Removed motion animations for simplified build
+import { getProjects, parseProjectStats } from '@/lib/projects';
 
-const projects = [
-  {
-    id: 1,
-    title: "TenantFlow.app",
-    category: "SaaS Platform",
-    description: "Modern property management platform helping landlords streamline operations, tenant communications, and financial tracking with automated workflows.",
-    image: "/portfolio/tenantflow.jpg",
-    gradient: "bg-gradient-primary",
-    stats: {
-      properties: "1K+",
-      efficiency: "+300%",
-      uptime: "99.9%"
-    },
-    tech: ["Next.js 14", "TypeScript", "Prisma", "PostgreSQL", "Stripe"],
-    link: "https://tenantflow.app",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "Ink37 Tattoos",
-    category: "Business Website",
-    description: "Premium tattoo studio website featuring artist portfolios, online booking system, and customer gallery with modern design aesthetics.",
-    image: "/portfolio/ink37.jpg",
-    gradient: "bg-gradient-decorative-purple",
-    stats: {
-      bookings: "+180%",
-      engagement: "4.8/5",
-      conversion: "+120%"
-    },
-    tech: ["React", "Next.js", "Tailwind CSS", "Vercel", "CMS"],
-    link: "https://ink37tattoos.com"
-  },
-  {
-    id: 3,
-    title: "Richard W Hudson Jr",
-    category: "Personal Portfolio",
-    description: "Professional portfolio showcasing leadership experience, technical expertise, and project management capabilities with clean, modern design.",
-    image: "/portfolio/richard-portfolio.jpg",
-    gradient: "bg-gradient-secondary",
-    stats: {
-      projects: "50+",
-      experience: "10+ years",
-      satisfaction: "98%"
-    },
-    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel Analytics"],
-    link: "https://richardwhudsonjr.com"
-  },
-  {
-    id: 4,
-    title: "Hudson Digital Solutions",
-    category: "Business Website",
-    description: "Company website showcasing full-stack development, revenue operations, and partnership management services with conversion-optimized design.",
-    image: "/portfolio/hudson-digital.jpg",
-    gradient: "bg-gradient-primary",
-    stats: {
-      leads: "+250%",
-      performance: "98/100",
-      conversion: "+180%"
-    },
-    tech: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "PostHog"],
-    link: "https://hudsondigitalsolutions.com",
-    featured: true
-  }
-];
+// Enable ISR with 1-hour revalidation
+export const revalidate = 3600;
 
-export default function PortfolioPage() {
+export const metadata: Metadata = {
+  title: 'Portfolio - Our Work | Hudson Digital Solutions',
+  description: 'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+  openGraph: {
+    title: 'Portfolio - Our Work | Hudson Digital Solutions',
+    description: 'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+    type: 'website',
+  },
+};
+
+export default async function PortfolioPage() {
+  // Fetch projects from Supabase (with caching)
+  const projects = await getProjects();
 
   return (
     <>
@@ -95,7 +44,7 @@ export default function PortfolioPage() {
             <div className="space-y-8">
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
-                  <SparklesIcon className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
               </div>
@@ -119,14 +68,14 @@ export default function PortfolioPage() {
                     <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
                       <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                       <span className="relative z-10">Start Your Project</span>
-                      <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
 
                   <Link href="/services">
                     <button className="button-base group cta-secondary button-hover-glow px-8 py-4 text-lg font-semibold focus-ring">
                       View Services
-                      <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
                 </div>
@@ -140,7 +89,7 @@ export default function PortfolioPage() {
           <div className="container-wide">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
               {[
-                { value: "10+", label: "Projects Delivered" },
+                { value: `${projects.length}+`, label: "Projects Delivered" },
                 { value: "100%", label: "Client Satisfaction" },
                 { value: "250%", label: "Average ROI" },
                 { value: "24/7", label: "Support Available" },
@@ -175,79 +124,83 @@ export default function PortfolioPage() {
 
             {/* Desktop Grid / Mobile Horizontal Scroll */}
             <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
-                >
-                  <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
-                    {/* Project Header */}
-                    <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient} relative overflow-hidden`}>
-                      <div className="absolute inset-0 bg-black/20" />
-                      
-                      {/* Grid pattern overlay */}
-                      <div className="absolute inset-0 grid-pattern-light" />
-                      
-                      <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
-                        <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
-                          <CodeBracketIcon className="w-4 h-4" />
-                          {project.category}
-                        </div>
-                        <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
-                        {project.featured && (
-                          <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
-                            <SparklesIcon className="w-4 h-4" />
-                            Featured Project
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
-                        <Link 
-                          href={project.link}
-                          target="_blank"
-                          className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu"
-                        >
-                          View Live Site
-                          <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                      </div>
-                    </div>
+              {projects.map((project) => {
+                const stats = parseProjectStats(project.stats);
 
-                    {/* Project Details */}
-                    <div className="p-8">
-                      <div className="typography mb-8">
-                        <p className="text-gray-300 leading-relaxed text-lg">
-                          {project.description}
-                        </p>
-                      </div>
+                return (
+                  <div
+                    key={project.id}
+                    className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
+                  >
+                    <Link href={`/portfolio/${project.slug}`}>
+                      <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
+                        {/* Project Header */}
+                        <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient_class} relative overflow-hidden`}>
+                          <div className="absolute inset-0 bg-black/20" />
 
-                      {/* Stats Grid */}
-                      <div className="grid grid-cols-3 gap-6 mb-8">
-                        {Object.entries(project.stats).map(([key, value]) => (
-                          <div key={key} className="text-center">
-                            <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                            <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                          {/* Grid pattern overlay */}
+                          <div className="absolute inset-0 grid-pattern-light" />
+
+                          <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
+                            <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
+                              <Code2 className="w-4 h-4" />
+                              {project.category}
+                            </div>
+                            <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
+                            {project.featured && (
+                              <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
+                                <Sparkles className="w-4 h-4" />
+                                Featured Project
+                              </span>
+                            )}
                           </div>
-                        ))}
-                      </div>
 
-                      {/* Tech Stack */}
-                      <div className="flex flex-wrap gap-2">
-                        {project.tech.map((tech) => (
-                          <span 
-                            key={tech}
-                            className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                          {/* Hover Overlay */}
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
+                            <div className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu">
+                              View Project
+                              <ExternalLink className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Project Details */}
+                        <div className="p-8">
+                          <div className="typography mb-8">
+                            <p className="text-gray-300 leading-relaxed text-lg">
+                              {project.description}
+                            </p>
+                          </div>
+
+                          {/* Stats Grid */}
+                          {Object.keys(stats).length > 0 && (
+                            <div className="grid grid-cols-3 gap-6 mb-8">
+                              {Object.entries(stats).map(([key, value]) => (
+                                <div key={key} className="text-center">
+                                  <div className="text-2xl font-bold text-white mb-1">{value}</div>
+                                  <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Tech Stack */}
+                          <div className="flex flex-wrap gap-2">
+                            {project.tech_stack.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -262,13 +215,13 @@ export default function PortfolioPage() {
                   {" "}success story?
                 </span>
               </h2>
-              
+
               <div className="typography">
                 <p className="text-xl text-gray-300 container-narrow mb-10">
                   Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row flex-center gap-4">
                 <Link
                   href="/contact"
@@ -276,44 +229,21 @@ export default function PortfolioPage() {
                 >
                   <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
-                  <RocketLaunchIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                
+
                 <Link
                   href="/services"
                   className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl"
                 >
                   View Services
-                  <ArrowTopRightOnSquareIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
           </div>
         </section>
       </main>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-      `}</style>
     </>
   );
 }

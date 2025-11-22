@@ -30,6 +30,15 @@ function SubmitButton() {
 
 // Success Message Component
 function SuccessMessage({ onReset, className = '' }: { onReset: () => void; className?: string }) {
+  const handleReset = () => {
+    // SSR-safe window reload
+    if (typeof window !== 'undefined') {
+      window.location.reload()
+    } else {
+      onReset()
+    }
+  }
+
   return (
     <div className={`glass-card border-green-700/50 text-center ${className}`}>
       <div className="mb-6">
@@ -42,7 +51,7 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
         Thank you for contacting us. We'll get back to you within 24 hours.
       </p>
       <button
-        onClick={onReset}
+        onClick={handleReset}
         className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-smooth button-hover-glow"
       >
         Send Another Message
@@ -94,7 +103,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
 
     return (
       <SuccessMessage
-        onReset={() => window.location.reload()}
+        onReset={() => {/* Handled in SuccessMessage component */}}
         className={className}
       />
     )
@@ -233,7 +242,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
         />
 
         {/* Error Display */}
-        {state?.error && (
+        {state && state.error && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4" data-testid="error-message">
             <p className="text-red-400 text-sm">
               Error: {state.error}
@@ -243,7 +252,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
         )}
 
         {/* Success message for non-success state but with message */}
-        {state?.message && !state?.error && (
+        {state && state.message && !state.error && (
           <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4" data-testid="success-message">
             <p className="text-green-400 text-sm">
               {state.message}
