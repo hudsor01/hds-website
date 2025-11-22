@@ -207,11 +207,14 @@ export async function logToDatabase(
     });
 
     if (!validation.success) {
-      logger.warn('Invalid log entry data', {
+      // Use console.warn to avoid infinite recursion
+      console.warn('Invalid log entry data:', {
         level,
         message,
-        context,
-        errors: validation.error.issues,
+        errors: validation.error.issues.map(issue => ({
+          path: issue.path.join('.'),
+          message: issue.message
+        })),
       });
     }
 
