@@ -1,47 +1,20 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { ExternalLink, Sparkles, Code, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
-import { fetchJSON } from '@/lib/fetch-utils';
 import { StatsBar } from '@/components/ui/StatsBar';
 import { CTASection } from '@/components/ui/CTASection';
 import './portfolio.css';
-
-// Define the project type to match the API response
-interface PortfolioProject {
-  id: number;
-  title: string;
-  category: string;
-  description: string;
-  image: string;
-  gradient: string;
-  stats: {
-    [key: string]: string;
-  };
-  tech: string[];
-  link: string;
-  featured?: boolean;
-}
-
-// API service function to fetch portfolio projects with timeout
-// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-async function fetchPortfolioProjects(): Promise<PortfolioProject[]> {
-  return fetchJSON<PortfolioProject[]>('/api/portfolio/projects', {}, 10000);
-}
+import { usePortfolioProjects } from '@/hooks/api';
 
 export default function PortfolioPage() {
   const { 
     data: projects = [], 
     isLoading, 
-    error 
-  } = useQuery<PortfolioProject[]>({
-    queryKey: ['portfolio-projects'],
-    queryFn: fetchPortfolioProjects,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000,  // 10 minutes
-  });
+    error,
+    refetch
+  } = usePortfolioProjects();
 
   if (isLoading) {
     return (
@@ -61,7 +34,7 @@ export default function PortfolioPage() {
           <h2 className="text-2xl font-bold mb-4">Error Loading Projects</h2>
           <p className="text-gray-300 mb-4">{(error as Error).message}</p>
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => refetch()}
             className="px-6 py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors"
           >
             Retry
@@ -175,7 +148,7 @@ export default function PortfolioPage() {
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   {Object.entries(project.stats).map(([key, value]) => (
                     <div key={key} className="text-center">
-                      <div className="text-lg font-bold text-white">{value}</div>
+                      <div className="text-lg font-bold text-white">{String(value)}</div>
                       <div className="text-xs text-gray-400 capitalize">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
@@ -185,8 +158,8 @@ export default function PortfolioPage() {
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech) => (
-                    <span 
+                  {project.tech.map((tech: string) => (
+                    <span
                       key={tech}
                       className="px-3 py-1 glass-card-extra-small rounded-full text-xs text-gray-300"
                     >

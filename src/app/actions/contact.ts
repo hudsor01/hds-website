@@ -55,7 +55,7 @@ export async function submitContactForm(
       }
     }
 
-    // Step 2: Parse and validate form data
+    // Step 2: Parse and validate form data using shared schema
     const rawData = Object.fromEntries(formData.entries())
     const validation = contactFormSchema.safeParse(rawData)
 

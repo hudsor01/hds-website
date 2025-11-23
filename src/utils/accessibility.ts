@@ -222,7 +222,7 @@ export function validateColorContrast() {
       timestamp: Date.now()
     });
 
-    // Send accessibility event to PostHog
+    // Send accessibility event to analytics
     if (typeof window !== 'undefined' && analytics) {
       analytics.trackEvent('accessibility_contrast_check', {
         foreground_color: color1,

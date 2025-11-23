@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 
+// Pre-compute modification time at module load time
+const modifiedTime = new Date().toISOString();
+
 export const metadata: Metadata = {
   title: "Small Business Website Cost 2025: Complete Pricing Guide | Hudson Digital",
   description: "Discover the true cost of professional website development for small businesses in 2025. Compare DIY vs professional options, ROI analysis, and hidden costs.",
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
     url: "https://hudsondigitalsolutions.com/blog/small-business-website-cost-2025",
     type: "article",
     publishedTime: "2024-03-01T12:00:00.000Z",
-    modifiedTime: new Date().toISOString(),
+    modifiedTime: modifiedTime,
     authors: ["Hudson Digital Solutions"],
     tags: ["Small Business", "Web Development", "Pricing", "ROI", "Business Strategy"],
     images: [

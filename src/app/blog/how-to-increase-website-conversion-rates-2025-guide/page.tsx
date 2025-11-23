@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 
+// Pre-compute modification time at module load time
+const modifiedTime = new Date().toISOString();
+
 export const metadata: Metadata = {
   title: "How to Increase Website Conversion Rates: 2025 Complete Guide | Hudson Digital",
   description: "Discover 15 proven strategies to boost your website conversion rates by 300%+ in 2025. From UX optimization to psychology-based design, learn what converts.",
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
     url: "https://hudsondigitalsolutions.com/blog/how-to-increase-website-conversion-rates-2025-guide",
     type: "article",
     publishedTime: "2024-02-15T12:00:00.000Z",
-    modifiedTime: new Date().toISOString(),
+    modifiedTime: modifiedTime,
     authors: ["Hudson Digital Solutions"],
     tags: ["Conversion Rate Optimization", "Web Development", "Digital Marketing", "UX Design", "Performance"],
     images: [

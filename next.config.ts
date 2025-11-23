@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     return null;
   },
 
+  // Enable Next.js 16 features
+  reactCompiler: true,
+  cacheComponents: true,
+
   typescript: {
     ignoreBuildErrors: false,
  },
@@ -19,6 +23,10 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+    // Next.js 16 image optimization features
+    dangerouslyAllowLocalIP: false,
+    maximumRedirects: 3,
+    minimumCacheTTL: 14400, // 4 hours default
   },
 
   experimental: {

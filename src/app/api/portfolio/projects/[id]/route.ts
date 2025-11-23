@@ -77,7 +77,7 @@ const portfolioProjects: PortfolioProject[] = [
       performance: "98/100",
       conversion: "+180%"
     },
-    tech: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "PostHog"],
+    tech: ["Next.js 15", "React 19", "TypeScript", "Tailwind CSS", "Analytics"],
     link: "https://hudsondigitalsolutions.com",
     featured: true
   }
