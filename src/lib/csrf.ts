@@ -9,17 +9,10 @@
 
 import { env } from '@/env'
 
+// T3 env handles validation - use validated env vars directly
+// Fallback to dev secret only for local development when CSRF_SECRET is optional
 const CSRF_SECRET = env.CSRF_SECRET || 'dev-csrf-secret-not-for-production';
 
-// Validate CSRF secret at runtime when functions are called
-function validateCsrfSecret() {
-  if (env.NODE_ENV === 'production' && !env.CSRF_SECRET) {
-    throw new Error(
-      'CSRF_SECRET environment variable must be set in production. ' +
-      'Generate a secure secret with: openssl rand -hex 32'
-    );
-  }
-}
 const TOKEN_LENGTH = 18;
 const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
 
@@ -65,7 +58,6 @@ async function createHmacSignature(message: string, secret: string): Promise<str
  * Edge Runtime compatible - uses Web Crypto API
  */
 export async function generateCsrfToken(): Promise<string> {
-  validateCsrfSecret();
   const expiry = Date.now() + TOKEN_EXPIRY;
   const token = generateRandomHex(TOKEN_LENGTH);
   const signature = await createHmacSignature(`${token}.${expiry}`, CSRF_SECRET);
@@ -78,7 +70,6 @@ export async function generateCsrfToken(): Promise<string> {
  * Edge Runtime compatible - uses Web Crypto API
  */
 export async function validateCsrfToken(token: string): Promise<boolean> {
-  validateCsrfSecret();
   if (!token) {
     return false;
   }

@@ -87,7 +87,7 @@ const checklistItems = [
   {
     category: "Analytics & Tracking",
     items: [
-      "PostHog analytics configured",
+      "Analytics configured",
       "Goal tracking setup",
       "Conversion events defined",
       "Heat mapping active",

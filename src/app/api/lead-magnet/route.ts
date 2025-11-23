@@ -10,6 +10,8 @@ import { createServerLogger, castError } from '@/lib/logger';
 import { fetchWithTimeout } from '@/lib/fetch-utils';
 import { generateLeadMagnetNotification, generateLeadMagnetWelcomeEmail } from '@/lib/email-templates';
 import { env } from '@/env';
+import { newsletterSchema } from '@/lib/schemas/contact';
+import { z } from 'zod';
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
@@ -36,36 +38,38 @@ const LEAD_MAGNETS = {
 };
 
 function validateLeadMagnetForm(body: Record<string, unknown>) {
-  const errors: Record<string, string> = {};
+  // Extended schema to include resource field
+  const leadMagnetSchema = newsletterSchema.extend({
+    resource: z.string().refine(
+      (val) => val in LEAD_MAGNETS,
+      { message: 'Invalid resource requested' }
+    ),
+  });
 
-  // Validate email
-  if (!body.email || typeof body.email !== 'string') {
-    errors.email = 'Email is required';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
-    errors.email = 'Please enter a valid email address';
-  }
-
-  // Validate first name
-  if (!body.firstName || typeof body.firstName !== 'string' || body.firstName.trim().length < 1) {
-    errors.firstName = 'First name is required';
-  }
-
-  // Validate resource
-  if (!body.resource || !LEAD_MAGNETS[body.resource as keyof typeof LEAD_MAGNETS]) {
-    errors.resource = 'Invalid resource requested';
-  }
-
-  const isValid = Object.keys(errors).length === 0;
+  const result = leadMagnetSchema.safeParse(body);
   
-  return {
-    isValid,
-    errors,
-    data: isValid ? {
-      email: (body.email as string).toLowerCase().trim(),
-      firstName: (body.firstName as string).trim(),
-      resource: body.resource as string
-    } : null
-  };
+  if (result.success) {
+    return {
+      isValid: true,
+      errors: {},
+      data: {
+        email: result.data.email.toLowerCase().trim(),
+        firstName: result.data.firstName?.trim(),
+        resource: result.data.resource
+      }
+    };
+  } else {
+    const errors: Record<string, string> = {};
+    result.error.issues.forEach(issue => {
+      errors[issue.path[0] as string] = issue.message;
+    });
+    
+    return {
+      isValid: false,
+      errors,
+      data: null
+    };
+  }
 }
 
 // Removed duplicate email template functions - now using shared templates from @/lib/email-templates
@@ -109,7 +113,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Check for suspicious activity
-    const fieldsToCheck = [data.firstName, data.email];
+    const fieldsToCheck = [data.firstName, data.email].filter((field): field is string => field !== undefined);
     const suspiciousActivity = fieldsToCheck.some(field => detectInjectionAttempt(field));
     
     if (suspiciousActivity) {
@@ -130,7 +134,7 @@ export async function POST(request: NextRequest) {
           to: [data.email],
           subject: sanitizeEmailHeader(`Your ${resource.title} is Ready for Download`),
           html: generateLeadMagnetWelcomeEmail({
-            firstName: data.firstName,
+            firstName: data.firstName || 'there',
             resourceTitle: resource.title,
             downloadUrl: `https://hudsondigitalsolutions.com${resource.downloadUrl}`
           })
@@ -142,7 +146,7 @@ export async function POST(request: NextRequest) {
           to: ['hello@hudsondigitalsolutions.com'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),
           html: generateLeadMagnetNotification({
-            firstName: data.firstName,
+            firstName: data.firstName || 'Anonymous',
             email: data.email,
             resourceTitle: resource.title
           })
@@ -164,7 +168,7 @@ export async function POST(request: NextRequest) {
                   fields: [
                     {
                       name: 'Contact',
-                      value: `**${escapeHtml(data.firstName)}**\n${escapeHtml(data.email)}`,
+                      value: `**${escapeHtml(data.firstName || 'Anonymous')}**\n${escapeHtml(data.email)}`,
                       inline: true
                     },
                     {

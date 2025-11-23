@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from '@tanstack/react-form'
+import { useMutation } from '@tanstack/react-query'
 import { CheckCircle2, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -52,6 +53,45 @@ function FormHeader() {
 export default function ContactFormTanStack({ className = '' }: { className?: string }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // React Query mutation for form submission
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      logger.info('Contact form submission started', {
+        component: 'ContactFormTanStack',
+        userFlow: 'lead_generation',
+      });
+
+      const result = await submitContactForm(null, formData);
+
+      if (!result.success) {
+        throw new Error(result.error || result.message || 'Submission failed');
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      setIsSubmitted(true);
+      toast.success('Message sent successfully!', {
+        description: "We'll respond within 24 hours",
+      });
+
+      logger.info('Contact form submission successful', {
+        component: 'ContactFormTanStack',
+        conversionEvent: 'contact_form_completed',
+        businessValue: 'high',
+      });
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to send message', {
+        description: error.message || 'Please try again',
+      });
+
+      logger.error('Contact form submission failed', {
+        error: error.message,
+      });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       firstName: '',
@@ -66,49 +106,14 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
       message: '',
     },
     onSubmit: async ({ value }) => {
-      logger.info('Contact form submission started', {
-        component: 'ContactFormTanStack',
-        userFlow: 'lead_generation',
+      // Create FormData from values (to match Server Action signature)
+      const formData = new FormData();
+      Object.entries(value).forEach(([key, val]) => {
+        formData.append(key, val as string);
       });
 
-      try {
-        // Create FormData from values (to match Server Action signature)
-        const formData = new FormData();
-        Object.entries(value).forEach(([key, val]) => {
-          formData.append(key, val as string);
-        });
-
-        // Call server action
-        const result = await submitContactForm(null, formData);
-
-        if (result.success) {
-          setIsSubmitted(true);
-          toast.success('Message sent successfully!', {
-            description: "We'll respond within 24 hours",
-          });
-
-          logger.info('Contact form submission successful', {
-            component: 'ContactFormTanStack',
-            conversionEvent: 'contact_form_completed',
-            businessValue: 'high',
-          });
-        } else {
-          toast.error('Failed to send message', {
-            description: result.error || result.message || 'Please try again',
-          });
-
-          logger.error('Contact form submission failed', {
-            error: result.error,
-            message: result.message,
-          });
-        }
-      } catch (error) {
-        toast.error('An error occurred', {
-          description: 'Please try again later',
-        });
-
-        logger.error('Contact form submission error', error as Error);
-      }
+      // Use React Query mutation
+      mutation.mutate(formData);
     },
   });
 
@@ -382,22 +387,25 @@ export default function ContactFormTanStack({ className = '' }: { className?: st
 
         {/* Submit Button */}
         <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
-          {([canSubmit, isSubmitting]) => (
-            <button
-              type="submit"
-              disabled={!canSubmit || isSubmitting}
-              className="cta-primary px-12 py-4 text-responsive-sm hover-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none will-change-transform transition-smooth"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center">
-                  <Loader2 className="animate-spin h-5 w-5 mr-3" />
-                  Sending...
-                </span>
-              ) : (
-                'Send Message'
-              )}
-            </button>
-          )}
+          {([canSubmit, isSubmitting]) => {
+            const isLoading = isSubmitting || mutation.isPending;
+            return (
+              <button
+                type="submit"
+                disabled={!canSubmit || isLoading}
+                className="cta-primary px-12 py-4 text-responsive-sm hover-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none will-change-transform transition-smooth"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="animate-spin h-5 w-5 mr-3" />
+                    Sending...
+                  </span>
+                ) : (
+                  'Send Message'
+                )}
+              </button>
+            );
+          }}
         </form.Subscribe>
       </form>
     </div>

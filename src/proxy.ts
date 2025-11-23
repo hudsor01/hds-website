@@ -3,11 +3,11 @@
  * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
  * Official docs: https://nextjs.org/docs/messages/middleware-to-proxy
  */
-import { NextResponse, type NextRequest } from 'next/server';
-import { applySecurityHeaders } from '@/lib/security-headers';
-import { getClientIp, unifiedRateLimiter, type RateLimitType, RATE_LIMIT_CONFIGS } from '@/lib/rate-limiter';
-import { validateCsrfForMutation } from '@/lib/csrf';
-import { env } from '@/env';
+import { env } from '@/env'
+import { validateCsrfForMutation } from '@/lib/csrf'
+import { getClientIp, RATE_LIMIT_CONFIGS, unifiedRateLimiter, type RateLimitType } from '@/lib/rate-limiter'
+import { applySecurityHeaders } from '@/lib/security-headers'
+import { NextResponse, type NextRequest } from 'next/server'
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -53,7 +53,7 @@ export async function proxy(request: NextRequest) {
   const userAgent = request.headers.get('user-agent') || '';
   const suspiciousPatterns = [
     /sqlmap/i,
-    /nikto/i, 
+    /nikto/i,
     /nessus/i,
     /masscan/i,
     /zmap/i,

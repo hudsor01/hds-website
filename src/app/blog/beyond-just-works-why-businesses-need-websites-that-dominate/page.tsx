@@ -3,6 +3,9 @@ import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
 
+// Pre-compute modification time at module load time
+const modifiedTime = new Date().toISOString();
+
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
   description: "Discover why 'good enough' websites fail. Learn how to engineer 340% ROI through Hudson Digital's BUILD. DEPLOY. DOMINATE. philosophy for ambitious businesses.",
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
     url: "https://hudsondigitalsolutions.com/blog/beyond-just-works-why-businesses-need-websites-that-dominate",
     type: "article",
     publishedTime: "2024-01-31T12:00:00.000Z",
-    modifiedTime: new Date().toISOString(),
+    modifiedTime: modifiedTime,
     authors: ["Hudson Digital Solutions"],
     tags: ["Business Strategy", "Web Development", "Digital Marketing", "ROI", "Competitive Advantage"],
     images: [

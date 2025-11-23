@@ -1,28 +1,9 @@
-import { env } from '@/env'
 import { logger } from '@/lib/logger'
+import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase'
 import { detectInjectionAttempt } from '@/lib/utils'
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
-
-// Validate environment variables
-const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing required Supabase environment variables');
-}
-
-// Initialize Supabase client
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey, // Using service role key for admin privileges
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
+import { newsletterSchema } from '@/lib/schemas/contact'
+import { env } from '@/env'
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -66,22 +47,32 @@ export async function POST(request: NextRequest) {
     // Parse request body
     const body = await request.json();
 
-    // Validate input
-    if (!body.email || typeof body.email !== 'string') {
+    // Validate input using shared schema
+    const parsedBody = {
+      email: body.email,
+      firstName: body.firstName,
+      source: body.source || 'newsletter-form'
+    };
+    
+    const validation = newsletterSchema.safeParse(parsedBody);
+    
+    if (!validation.success) {
+      const errors: Record<string, string[]> = {};
+      validation.error.issues.forEach(issue => {
+        const key = String(issue.path[0]);
+        if (!errors[key]) {
+          errors[key] = [];
+        }
+        errors[key].push(issue.message);
+      });
+      
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: 'Validation failed', errors },
         { status: 400 }
       );
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(body.email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    
+    const validatedData = validation.data;
 
     // Check for injection attempts
     if (detectInjectionAttempt(body.email, 'header') || (body.firstName && detectInjectionAttempt(body.firstName as string, 'header'))) {
@@ -95,19 +86,28 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Prepare subscription data
+    // Prepare subscription data using validated data
     const subscriptionData: NewsletterSubscription = {
-      email: body.email.toLowerCase().trim(),
-      first_name: body.firstName ? body.firstName.trim() : undefined,
-      source: body.source || 'newsletter-form',
+      email: validatedData.email.toLowerCase().trim(),
+      first_name: validatedData.firstName ? validatedData.firstName.trim() : undefined,
+      source: validatedData.source || 'newsletter-form',
       consent_marketing: body.consentMarketing ?? false,
       consent_analytics: body.consentAnalytics ?? true,
       ip_address: clientIP,
       user_agent: userAgent || undefined,
     };
 
+    // Check if Supabase admin is configured
+    if (!isSupabaseAdminConfigured() || !supabaseAdmin) {
+      logger.warn('Supabase admin not configured, skipping newsletter subscription save');
+      return NextResponse.json({
+        message: 'Thank you for subscribing to our newsletter! (development mode)',
+        success: true
+      });
+    }
+
     // Save to leads table with newsletter source
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('leads')
       .insert([{
         email: subscriptionData.email,
@@ -181,11 +181,18 @@ export async function POST(request: NextRequest) {
 // GET endpoint for retrieving subscribers (admin only)
 export async function GET(request: NextRequest) {
   try {
-    // In a real implementation, you would check for admin authentication:
-    // const session = await getServerSession(authOptions);
-    // if (!session?.user?.isAdmin) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    // Verify this is an admin request
+    const authHeader = request.headers.get('authorization');
+    
+    // Check for admin token (should match the one configured in env)
+    if (!env.ADMIN_API_TOKEN) {
+      logger.error('ADMIN_API_TOKEN not configured');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+    
+    if (authHeader !== `Bearer ${env.ADMIN_API_TOKEN}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     logger.info('Newsletter subscribers list accessed', {
       url: request.url,
@@ -194,13 +201,28 @@ export async function GET(request: NextRequest) {
       userFlow: 'newsletter_admin'
     });
 
+    // Check if Supabase admin is configured
+    if (!isSupabaseAdminConfigured() || !supabaseAdmin) {
+      logger.warn('Supabase admin not configured, returning empty subscribers list');
+      return NextResponse.json({
+        subscribers: [],
+        count: 0
+      });
+    }
+
+    // Get pagination parameters
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '100'), 1000); // Max 1000 per request
+    const offset = (page - 1) * limit;
+
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const { data, error } = await supabase
+    const { data, error, count } = await supabaseAdmin
       .from('leads')
-      .select('email, name, source, created_at')
+      .select('email, name, source, created_at', { count: 'exact' })
       .eq('source', 'newsletter-form') // Filter for newsletter signups only
       .order('created_at', { ascending: false })
-      .limit(100); // Limit for performance
+      .range(offset, offset + limit - 1);
 
     if (error) {
       logger.error('Failed to retrieve newsletter subscribers', {
@@ -224,7 +246,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       subscribers: data,
-      count: data?.length || 0
+      count: count || 0,
+      pagination: {
+        page,
+        limit,
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit)
+      }
     });
   } catch (error) {
     logger.error('Error retrieving newsletter subscribers', {

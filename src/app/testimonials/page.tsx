@@ -1,43 +1,19 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { MessageCircle } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
-import { fetchJSON } from '@/lib/fetch-utils';
 import { StarRating } from '@/components/ui/StarRating';
 import { StatsBar } from '@/components/ui/StatsBar';
 import { CTASection } from '@/components/ui/CTASection';
-
-
-// Define the testimonial type to match the API response
-interface Testimonial {
-  id: number;
-  name: string;
-  company: string;
-  role: string;
-  content: string;
-  rating: number;
-  service: string;
-  highlight: string;
-}
-
-// API service function to fetch testimonials with timeout
-// Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-async function fetchTestimonials(): Promise<Testimonial[]> {
-  return fetchJSON<Testimonial[]>('/api/testimonials', {}, 10000);
-}
+import { useTestimonials } from '@/hooks/api';
 
 export default function TestimonialsPage() {
   const {
     data: testimonials = [],
     isLoading,
-    error
-  } = useQuery<Testimonial[]>({
-    queryKey: ['testimonials'],
-    queryFn: fetchTestimonials,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000,  // 10 minutes
-  });
+    error,
+    refetch
+  } = useTestimonials();
 
   if (isLoading) {
     return (
@@ -57,7 +33,7 @@ export default function TestimonialsPage() {
           <h2 className="text-2xl font-bold mb-4">Error Loading Testimonials</h2>
           <p className="text-gray-300 mb-4">{(error as Error).message}</p>
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => refetch()}
             className="px-6 py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors"
           >
             Retry

@@ -38,6 +38,15 @@ export const env = createEnv({
     // SEO
     GOOGLE_SITE_VERIFICATION: z.string().optional(),
 
+    // Base URL
+    BASE_URL: z.string().url().optional().default("http://localhost:3000"),
+
+    // Admin API token
+    ADMIN_API_TOKEN: z.string().min(16).optional(),
+
+    // JWT Secret for authentication
+    JWT_SECRET: z.string().min(16).optional(),
+
     // Node environment
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 
@@ -56,6 +65,9 @@ export const env = createEnv({
 
     // Analytics
     NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
+    
+    // Base URL
+    NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000"),
   },
 
   /**
@@ -74,6 +86,9 @@ export const env = createEnv({
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GA4_API_SECRET: process.env.GA4_API_SECRET,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
+    BASE_URL: process.env.BASE_URL,
+    ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,
+    JWT_SECRET: process.env.JWT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
     npm_package_version: process.env.npm_package_version,
 
@@ -81,6 +96,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
 
   /**

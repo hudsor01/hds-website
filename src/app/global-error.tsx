@@ -37,21 +37,23 @@ export default function GlobalError({
       } : null
     });
 
-    // Try to send to PostHog if available (may fail in critical state)
+    // Try to send to our analytics system without third-party dependencies
     try {
-      if (typeof window !== 'undefined' && 'posthog' in window && window.posthog) {
-        const posthog = window.posthog as {
-          capture: (event: string, properties: Record<string, unknown>) => void;
+      if (typeof window !== 'undefined' && window && 'analytics' in window && window.analytics) {
+        const analytics = window.analytics as {
+          track: (event: string, properties: Record<string, unknown>) => void;
         };
-        posthog.capture('global_error', {
+        analytics.track('global_error', {
           error_name: error.name,
           error_message: error.message,
           error_digest: error.digest,
-          critical: true
+          critical: true,
+          url: window.location.href,
+          userAgent: navigator.userAgent,
         });
       }
     } catch (trackingError) {
-      logger.warn('Failed to track global error in PostHog', {
+      logger.warn('Failed to track global error in analytics', {
         error: trackingError instanceof Error ? trackingError.message : String(trackingError)
       });
     }

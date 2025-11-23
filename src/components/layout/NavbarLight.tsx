@@ -39,7 +39,7 @@ const NavbarLight = memo(function NavbarLight() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 bg-background/80 dark:bg-nav-dark/95 backdrop-blur-xl border-b border-border/50 dark:border-border-dark/30"
       role="navigation"
       aria-label="Main navigation"
     >
