@@ -132,3 +132,107 @@ export interface MetricsResponse {
     active_connections: number;
   };
 }
+
+// User Types
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  role?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+// Newsletter Types
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  firstName?: string;
+  source?: string;
+  subscribedAt: string;
+  status: 'active' | 'unsubscribed';
+}
+
+export interface NewsletterSubscribersResponse {
+  subscribers: NewsletterSubscriber[];
+  count: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+// Testimonial Types
+export interface Testimonial {
+  id: string;
+  name: string;
+  company?: string;
+  role?: string;
+  content: string;
+  rating?: number;
+  image?: string;
+  highlight?: boolean;
+  service?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface CreateTestimonialInput {
+  name: string;
+  company?: string;
+  role?: string;
+  content: string;
+  rating?: number;
+  image?: string;
+  highlight?: boolean;
+  service?: string;
+}
+
+// Portfolio Project Types
+export interface PortfolioProject {
+  id: string;
+  title: string;
+  description: string;
+  image?: string;
+  tags?: string[];
+  tech?: string[];
+  url?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  gradient?: string;
+  category?: string;
+  stats?: Record<string, string | number>;
+  link?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface CreatePortfolioProjectInput {
+  title: string;
+  description: string;
+  image?: string;
+  tags?: string[];
+  tech?: string[];
+  url?: string;
+  githubUrl?: string;
+  featured?: boolean;
+  gradient?: string;
+  category?: string;
+  stats?: Record<string, string | number>;
+  link?: string;
+}
+
+// Analytics Event Types
+export type AnalyticsEventProperties = Record<string, string | number | boolean | null | undefined>;
+
+export interface TrackEventInput {
+  eventName: string;
+  properties?: AnalyticsEventProperties;
+}

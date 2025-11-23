@@ -112,7 +112,7 @@ export default function TestimonialsPage() {
               >
                 {/* Rating */}
                 <div className="mb-4">
-                  <StarRating rating={testimonial.rating} />
+                  <StarRating rating={testimonial.rating || 5} />
                 </div>
 
                 {/* Highlight Badge */}

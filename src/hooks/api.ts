@@ -1,5 +1,14 @@
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api-client';
+import type {
+  User,
+  Testimonial,
+  CreateTestimonialInput,
+  PortfolioProject,
+  CreatePortfolioProjectInput,
+  NewsletterSubscribersResponse,
+  TrackEventInput,
+} from '@/types/api';
 
 // Query keys
 export const QUERY_KEYS = {
@@ -11,7 +20,7 @@ export const QUERY_KEYS = {
 } as const;
 
 // Testimonials hooks
-export function useTestimonials(options?: UseQueryOptions<any[], Error>) {
+export function useTestimonials(options?: UseQueryOptions<Testimonial[], Error>) {
   return useQuery({
     queryKey: QUERY_KEYS.testimonials,
     queryFn: async () => {
@@ -25,9 +34,9 @@ export function useTestimonials(options?: UseQueryOptions<any[], Error>) {
 
 export function useCreateTestimonial() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: CreateTestimonialInput) => {
       return await apiClient.createTestimonial(data);
     },
     onSuccess: () => {
@@ -37,7 +46,7 @@ export function useCreateTestimonial() {
 }
 
 // Portfolio projects hooks
-export function usePortfolioProjects(options?: UseQueryOptions<any[], Error>) {
+export function usePortfolioProjects(options?: UseQueryOptions<PortfolioProject[], Error>) {
   return useQuery({
     queryKey: QUERY_KEYS.portfolioProjects,
     queryFn: async () => {
@@ -62,9 +71,9 @@ export function usePortfolioProject(id: string) {
 
 export function useCreatePortfolioProject() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: CreatePortfolioProjectInput) => {
       return await apiClient.createPortfolioProject(data);
     },
     onSuccess: () => {
@@ -74,7 +83,7 @@ export function useCreatePortfolioProject() {
 }
 
 // Newsletter hooks
-export function useNewsletterSubscribers(options?: UseQueryOptions<any, Error>) {
+export function useNewsletterSubscribers(options?: UseQueryOptions<NewsletterSubscribersResponse | undefined, Error>) {
   return useQuery({
     queryKey: QUERY_KEYS.newsletterSubscribers,
     queryFn: async () => {
@@ -104,7 +113,7 @@ export function useSubmitContactForm() {
 }
 
 // User related hooks
-export function useUser(options?: UseQueryOptions<any, Error>) {
+export function useUser(options?: UseQueryOptions<User | undefined, Error>) {
   return useQuery({
     queryKey: QUERY_KEYS.user,
     queryFn: async () => {
@@ -119,7 +128,7 @@ export function useUser(options?: UseQueryOptions<any, Error>) {
 // Analytics hook
 export function useTrackEvent() {
   return useMutation({
-    mutationFn: async (eventData: { eventName: string; properties?: Record<string, any> }) => {
+    mutationFn: async (eventData: TrackEventInput) => {
       return await apiClient.trackEvent(eventData);
     },
   });

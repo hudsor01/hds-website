@@ -146,7 +146,7 @@ export default function PortfolioPage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  {Object.entries(project.stats).map(([key, value]) => (
+                  {Object.entries(project.stats || {}).map(([key, value]) => (
                     <div key={key} className="text-center">
                       <div className="text-lg font-bold text-white">{String(value)}</div>
                       <div className="text-xs text-gray-400 capitalize">
@@ -158,7 +158,7 @@ export default function PortfolioPage() {
 
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech: string) => (
+                  {project.tech?.map((tech: string) => (
                     <span
                       key={tech}
                       className="px-3 py-1 glass-card-extra-small rounded-full text-xs text-gray-300"
@@ -171,7 +171,7 @@ export default function PortfolioPage() {
                 {/* CTA */}
                 <div className="flex justify-between items-center">
                   <Link
-                    href={project.link}
+                    href={project.link || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group inline-flex-center gap-2 text-cyan-400 hover:text-cyan-300 font-semibold"

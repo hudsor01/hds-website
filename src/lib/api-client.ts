@@ -1,12 +1,15 @@
 import { env } from '@/env';
-
-// API Response interfaces
-export interface ApiResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
+import type {
+  ApiResponse,
+  User,
+  AuthResponse,
+  NewsletterSubscribersResponse,
+  Testimonial,
+  CreateTestimonialInput,
+  PortfolioProject,
+  CreatePortfolioProjectInput,
+  TrackEventInput,
+} from '@/types/api';
 
 // API Client class to manage all API calls
 class ApiClient {
@@ -63,7 +66,7 @@ class ApiClient {
 
   // Auth endpoints
   async login(credentials: { email: string; password: string }) {
-    return this.fetcher<ApiResponse<{ token: string; user: any }>>('/api/auth/login', {
+    return this.fetcher<ApiResponse<AuthResponse>>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
@@ -80,7 +83,7 @@ class ApiClient {
   }
 
   async getMe() {
-    return this.fetcher<ApiResponse<{ user: any }>>('/api/auth/me', {
+    return this.fetcher<ApiResponse<{ user: User }>>('/api/auth/me', {
       method: 'GET',
     });
   }
@@ -108,28 +111,19 @@ class ApiClient {
   }
 
   async getNewsletterSubscribers(page: number = 1, limit: number = 100) {
-    return this.fetcher<ApiResponse<{ 
-      subscribers: any[]; 
-      count: number; 
-      pagination: { 
-        page: number; 
-        limit: number; 
-        total: number; 
-        totalPages: number 
-      } 
-    }>>(`/api/newsletter?page=${page}&limit=${limit}`, {
+    return this.fetcher<ApiResponse<NewsletterSubscribersResponse>>(`/api/newsletter?page=${page}&limit=${limit}`, {
       method: 'GET',
     });
   }
 
   // Testimonials endpoints
   async getTestimonials() {
-    return this.fetcher<ApiResponse<{ testimonials: any[] }>>('/api/testimonials', {
+    return this.fetcher<ApiResponse<{ testimonials: Testimonial[] }>>('/api/testimonials', {
       method: 'GET',
     });
   }
 
-  async createTestimonial(data: any) {
+  async createTestimonial(data: CreateTestimonialInput) {
     return this.fetcher<ApiResponse>('/api/testimonials', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -138,18 +132,18 @@ class ApiClient {
 
   // Portfolio projects endpoints
   async getPortfolioProjects() {
-    return this.fetcher<ApiResponse<{ projects: any[] }>>('/api/portfolio/projects', {
+    return this.fetcher<ApiResponse<{ projects: PortfolioProject[] }>>('/api/portfolio/projects', {
       method: 'GET',
     });
   }
 
   async getPortfolioProject(id: string) {
-    return this.fetcher<ApiResponse<{ project: any }>>(`/api/portfolio/projects/${id}`, {
+    return this.fetcher<ApiResponse<{ project: PortfolioProject }>>(`/api/portfolio/projects/${id}`, {
       method: 'GET',
     });
   }
 
-  async createPortfolioProject(data: any) {
+  async createPortfolioProject(data: CreatePortfolioProjectInput) {
     return this.fetcher<ApiResponse>('/api/portfolio/projects', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -157,7 +151,7 @@ class ApiClient {
   }
 
   // Analytics endpoints
-  async trackEvent(eventData: { eventName: string; properties?: Record<string, any> }) {
+  async trackEvent(eventData: TrackEventInput) {
     return this.fetcher<ApiResponse>('/api/analytics', {
       method: 'POST',
       body: JSON.stringify(eventData),
