@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 // import { brand } from "@/lib/brand";
-import { Mail, Rocket, Clock, CheckCircle2 } from "lucide-react";
+import {
+  Mail,
+  Rocket,
+  Clock,
+  CheckCircle
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const footerLinks = {
@@ -52,10 +57,8 @@ const socialLinks = [
 
 // Removed unused animation variants
 
-// Pre-compute year at module load time (safe for RSC)
-const currentYear = new Date().getFullYear();
-
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">
@@ -88,11 +91,11 @@ export default function Footer() {
               {/* Quick Stats */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-300">
-                  <CheckCircle2 className="h-4 w-4 text-cyan-400" />
+                  <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">50+ Projects Delivered</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-300">
-                  <CheckCircle2 className="h-4 w-4 text-cyan-400" />
+                  <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">250% Average ROI</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-300">
@@ -172,7 +175,7 @@ export default function Footer() {
           <div className="border-t border-white/10 pt-8">
             <div className="flex flex-col md:flex-between gap-4">
               {/* Copyright */}
-              <div className="small muted" suppressHydrationWarning>
+              <div className="small muted">
                 © {currentYear} Hudson Digital Solutions. All rights reserved.
               </div>
 

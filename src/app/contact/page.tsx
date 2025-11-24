@@ -3,9 +3,8 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { Mail, Clock } from 'lucide-react';
-// import { usePageTracking, useBusinessTracking } from '@/components/AnalyticsProvider';
 
-// Load the TanStack contact form
+// Load the contact form - Server Actions need SSR
 const ContactForm = dynamic(() => import('@/components/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
@@ -47,10 +46,6 @@ function ContactFormSkeleton() {
 // Client Component - metadata handled by layout
 
 export default function ContactPage() {
-  // Track page view and business events
-  // usePageTracking();
-  // const { trackServiceInterest } = useBusinessTracking();
-
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
@@ -117,6 +112,13 @@ export default function ContactPage() {
               <div className="relative rounded-2xl overflow-hidden glass-card p-8 shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-hero-5" />
                 <div className="relative z-10">
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-white mb-2 text-balance">Start Your Project</h2>
+                    <div className="typography">
+                      <p className="text-gray-400 text-pretty">Tell us about your needs and we&apos;ll get back to you quickly.</p>
+                    </div>
+                  </div>
+
                   <ContactForm />
                  </div>
                </div>

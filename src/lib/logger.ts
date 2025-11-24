@@ -1,11 +1,11 @@
 /**
- * Unified Logger with Vercel and Supabase integration
- * Replaces console.log with structured logging that works in all environments
+ * Unified Logger using Supabase (non-blocking)
+ * Lightweight, non-blocking logging with sampling
+ * NO PostHog - optimized for performance
  */
 
 import analytics from './analytics';
 import { logToDatabase, logCustomEvent as _logCustomEvent } from './supabase';
-import { env } from '@/env';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -19,11 +19,12 @@ interface LogContext {
 class Logger {
   private static instance: Logger;
   private context: LogContext = {};
+  private samplingRate = 0.1; // 10% sampling for non-critical logs
 
   private constructor() {
-    // Initialize with session data if available
+    // Initialize with random session ID if client-side
     if (typeof window !== 'undefined') {
-      this.context.sessionId = this.getSessionId();
+      this.context.sessionId = this.generateSessionId();
     }
   }
 
@@ -34,24 +35,26 @@ class Logger {
     return Logger.instance;
   }
 
-  private getSessionId(): string {
-    // Generate or retrieve session ID from sessionStorage
-    if (typeof window !== 'undefined') {
-      let sessionId = sessionStorage.getItem('app_session_id');
-      if (!sessionId) {
-        sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        sessionStorage.setItem('app_session_id', sessionId);
-      }
-      return sessionId;
+  private generateSessionId(): string {
+    // Generate simple session ID (no external dependencies)
+    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private shouldSample(level: LogLevel): boolean {
+    // Always log errors and warnings
+    if (level === 'error' || level === 'warn') {
+      return true;
     }
-    return 'no-session';
+
+    // Sample info and debug logs at 10% rate
+    return Math.random() < this.samplingRate;
   }
 
   private formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
     const timestamp = new Date().toISOString();
-    const currentEnv = env.NODE_ENV;
+    const env = process.env.NODE_ENV;
 
-    if (currentEnv === 'production') {
+    if (env === 'production') {
       // Structured JSON for Vercel logs
       return JSON.stringify({
         timestamp,
@@ -66,13 +69,18 @@ class Logger {
     return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
   }
 
-  private async log(level: LogLevel, message: string, data?: Record<string, unknown>) {
+  private log(level: LogLevel, message: string, data?: Record<string, unknown>) {
+    // Sample logs to reduce overhead
+    if (!this.shouldSample(level)) {
+      return;
+    }
+
     const formattedMessage = this.formatMessage(level, message, data);
 
     // Console output based on level
     switch (level) {
       case 'debug':
-        if (env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
           console.warn(formattedMessage, data || '');
         }
         break;
@@ -87,7 +95,7 @@ class Logger {
         break;
     }
 
-    // Send to analytics for tracking
+    // Non-blocking analytics tracking (fire-and-forget)
     if (typeof window !== 'undefined' && analytics) {
       const analyticsData: Record<string, string | number | boolean | null | undefined> = {
         message,
@@ -106,38 +114,34 @@ class Logger {
           )
         ))
       };
+
+      // Fire-and-forget (non-blocking)
       analytics.trackEvent(`log_${level}`, analyticsData);
     }
 
-    // In production, Vercel automatically captures console output
-    // These logs are available in Vercel Dashboard > Functions > Logs
-
-    // Send to Supabase database for persistent logging
-    try {
-      await logToDatabase(level, message, {
-        ...this.context,
-        ...data,
-        timestamp: new Date().toISOString(),
-        url: typeof window !== 'undefined' ? window.location.href : undefined,
-        userAgent: typeof window !== 'undefined' ? navigator.userAgent : undefined
-      });
-    } catch (dbError) {
-      // Fallback to console if database logging fails
-      console.error('Database logging failed:', dbError);
-    }
+    // Non-blocking Supabase logging (fire-and-forget)
+    logToDatabase(level, message, {
+      ...this.context,
+      ...data,
+      timestamp: new Date().toISOString(),
+      url: typeof window !== 'undefined' ? window.location.href : undefined,
+      userAgent: typeof window !== 'undefined' ? navigator.userAgent : undefined
+    }).catch(() => {
+      // Silent fail - don't block execution
+    });
   }
 
   // Public methods matching console API
   debug(message: string, data?: Record<string, unknown>) {
-    void this.log('debug', message, data);
+    this.log('debug', message, data);
   }
 
   info(message: string, data?: Record<string, unknown>) {
-    void this.log('info', message, data);
+    this.log('info', message, data);
   }
 
   warn(message: string, data?: Record<string, unknown>) {
-    void this.log('warn', message, data);
+    this.log('warn', message, data);
   }
 
   error(message: string, error?: Error | Record<string, unknown>) {
@@ -147,140 +151,91 @@ class Logger {
       stack: error.stack
     } : error as Record<string, unknown>;
 
-    void this.log('error', message, errorData);
+    this.log('error', message, errorData);
 
-    // For errors, also track as a separate error event
+    // For errors, also track as a separate error event (fire-and-forget)
     if (typeof window !== 'undefined' && analytics) {
-      const errorAnalyticsData: Record<string, string | number | boolean | null | undefined> = {
-        message,
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-        errorType: typeof errorData === 'object' && errorData && 'name' in errorData ? String(errorData.name) : 'unknown',
-        ...Object.fromEntries(
-          Object.entries(this.context).filter(([, value]) =>
-            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
-          )
-        )
-      };
-      analytics.trackEvent('error_occurred', errorAnalyticsData);
+      // Fire-and-forget (non-blocking)
+      analytics.trackError(message, false);
     }
   }
 
-  // Set context for all future logs
-  setContext(context: LogContext) {
-    this.context = { ...this.context, ...context };
-  }
-
-  // Clear context
-  clearContext() {
-    this.context = {};
-  }
-
-  // Performance logging
+  // Timing methods (non-blocking)
   time(label: string) {
-    if (typeof window !== 'undefined') {
+    if (typeof performance !== 'undefined') {
       performance.mark(`${label}-start`);
     }
   }
 
   timeEnd(label: string) {
-    if (typeof window !== 'undefined') {
+    if (typeof performance !== 'undefined') {
       performance.mark(`${label}-end`);
-      performance.measure(label, `${label}-start`, `${label}-end`);
 
-      const measure = performance.getEntriesByName(label)[0];
-      if (measure) {
-        this.info(`Performance: ${label}`, { duration: measure.duration });
+      try {
+        performance.measure(label, `${label}-start`, `${label}-end`);
+        const measure = performance.getEntriesByName(label)[0];
 
-        // Send to analytics
-        analytics.trackEvent('performance_measure', {
-          label,
-          duration: measure.duration,
-          timestamp: new Date().toISOString()
-        });
+        if (measure && analytics) {
+          // Fire-and-forget (non-blocking)
+          analytics.trackTiming('performance', label, measure.duration);
+        }
+
+        // Cleanup
+        performance.clearMarks(`${label}-start`);
+        performance.clearMarks(`${label}-end`);
+        performance.clearMeasures(label);
+      } catch {
+        // Silent fail
       }
     }
   }
 
-  // Group related logs
-  group(label: string) {
-    console.warn(`[GROUP START] ${label}`);
+  // Context management
+  setContext(context: LogContext) {
+    this.context = { ...this.context, ...context };
   }
 
-  groupEnd() {
-    console.warn('[GROUP END]');
+  getContext(): LogContext {
+    return { ...this.context };
   }
 
-  // Table logging for development
-  table(data: Record<string, unknown>) {
-    if (env.NODE_ENV === 'development') {
-      console.warn('[TABLE DATA]', JSON.stringify(data, null, 2));
-    }
-  }
-
-  // Database logging method
-  async logToDatabase(level: LogLevel, message: string, context: Record<string, unknown> = {}) {
-    try {
-      await logToDatabase(level, message, {
-        ...this.context,
-        ...context,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Failed to log to database:', error);
+  clearContext() {
+    this.context = {};
+    if (typeof window !== 'undefined') {
+      this.context.sessionId = this.generateSessionId();
     }
   }
 }
 
 // Export singleton instance
-export const logger = Logger.getInstance();
+const logger = Logger.getInstance();
 
-// Helper function to safely cast errors for logging
-export function castError(error: unknown): Error | Record<string, unknown> {
-  if (error instanceof Error) {
-    return error;
-  }
-  if (typeof error === 'object' && error !== null) {
-    return error as Record<string, unknown>;
-  }
-  return { message: String(error) };
-}
-
-// Export for server-side usage
-export function createServerLogger(requestId?: string) {
+// Server-side logger factory
+export function createServerLogger(component?: string): Logger {
   const serverLogger = Logger.getInstance();
-  serverLogger.setContext({
-    requestId,
-    environment: env.NODE_ENV,
-    isServer: true
-  });
+
+  if (component) {
+    serverLogger.setContext({ component });
+  }
+
   return serverLogger;
 }
 
-// Helper for API routes
-export function withLogger<T extends unknown[]>(
-  handler: (req: Request, ...args: T) => Promise<Response>
-) {
-  return async (req: Request, ...args: T) => {
-    const requestId = req.headers.get('x-request-id') ||
-                     req.headers.get('x-vercel-id') ||
-                     crypto.randomUUID();
+// Helper to cast Error objects for logging
+export function castError(error: unknown): Error {
+  if (error instanceof Error) {
+    return error;
+  }
 
-    const logger = createServerLogger(requestId);
+  if (typeof error === 'string') {
+    return new Error(error);
+  }
 
-    logger.info('API Request', {
-      method: req.method,
-      url: req.url,
-      headers: Object.fromEntries(req.headers.entries())
-    });
-
-    try {
-      const result = await handler(req, ...args);
-      logger.info('API Response Success', { requestId });
-      return result;
-    } catch (error) {
-      logger.error('API Response Error', error instanceof Error ? error : { error });
-      throw error;
-    }
-  };
+  const err = new Error('Unknown error');
+  // Attach the original error as a property for debugging
+  (err as Error & { originalError?: unknown }).originalError = error;
+  return err;
 }
+
+export { logger };
+export default logger;

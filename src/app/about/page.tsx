@@ -3,7 +3,7 @@ import Link from "next/link";
 import {
   Rocket,
   Eye,
-  Code,
+  Code2,
   BarChart3,
   Lightbulb,
   Settings,
@@ -167,7 +167,7 @@ export default function AboutPage() {
             <div className="group relative glass-card-light p-6 card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
-                  <Code className="w-6 h-6 text-cyan-400" />
+                  <Code2 className="w-6 h-6 text-cyan-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-smooth">Development</h3>
               </div>
@@ -356,7 +356,7 @@ export default function AboutPage() {
                 <span className="relative z-10">Start Your Project</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-
+              
               <Link
                 href="/services"
                 className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-smooth"

@@ -2,9 +2,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, memo, useCallback, useEffect } from "react";
-import { Menu, X, Rocket, ArrowRight } from "lucide-react";
+import {
+  Menu,
+  X,
+  Rocket,
+  ArrowRight
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import type { NavigationItem } from "@/types/components";
 // import { brand } from "@/lib/brand";
 
@@ -26,20 +30,13 @@ const NavbarLight = memo(function NavbarLight() {
   }, []);
 
   // Close mobile menu on route change
-  // Bug fix: Properly synchronize with Next.js router (external state)
-  // https://react.dev/learn/synchronizing-with-effects
-  // https://react.dev/reference/react/useEffect
-  // Pathname from Next.js router is external state - this is the correct pattern
   useEffect(() => {
-    // Close menu when navigating - React batches and skips if already false
-    // Disable set-state-in-effect as this IS synchronizing with external system
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileMenuOpen(false);
   }, [pathname]);
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 dark:bg-nav-dark/95 backdrop-blur-xl border-b border-border/50 dark:border-border-dark/30"
+      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -90,11 +87,8 @@ const NavbarLight = memo(function NavbarLight() {
           </div>
 
 
-          {/* Right side - Theme Toggle + Dual CTAs */}
+          {/* Right side - Dual CTAs */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* Secondary CTA - Talk to Sales */}
             <Link
               href="/contact"
@@ -168,9 +162,6 @@ const NavbarLight = memo(function NavbarLight() {
             ))}
             
             <div className="pt-4 space-y-2">
-              <div className="flex justify-center pb-2">
-                <ThemeToggle />
-              </div>
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}

@@ -99,7 +99,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                             key={i}
                             className={cn(
                               "w-4 h-4",
-                              i < (testimonial.rating || 0) ? "text-yellow-400" : "text-gray-600"
+                              i < (testimonial.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-gray-600"
                             )}
                             fill={i < (testimonial.rating || 0) ? "currentColor" : "none"}
                           />
