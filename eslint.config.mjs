@@ -82,6 +82,7 @@ const eslintConfig = [
       'no-unreachable': 'error',
       'no-constant-condition': 'error',
       'no-empty': ['error', { allowEmptyCatch: true }],
+      'react/no-unescaped-entities': 'off',
     },
   },
 ];

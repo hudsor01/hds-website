@@ -15,6 +15,7 @@ import {
   scheduleEmailParamsSchema,
   cancelEmailSequenceParamsSchema,
   resendEmailResponseSchema,
+  type ScheduleEmailParams,
 } from '@/lib/schemas';
 import { getEmailSequences, processEmailTemplate } from "./email-utils";
 import { escapeHtml, sanitizeEmailHeader } from "./utils";
@@ -30,6 +31,74 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
+export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> {
+  const {
+    recipientEmail,
+    recipientName,
+    sequenceId,
+    stepId,
+    scheduledFor,
+    variables,
+  } = params;
+
+  // Validate input parameters
+  const validation = scheduleEmailParamsSchema.safeParse(params);
+
+  if (!validation.success) {
+    emailLogger.error('Invalid email scheduling parameters', {
+      recipientEmail,
+      recipientName,
+      sequenceId,
+      stepId,
+      errors: validation.error.issues,
+    });
+    return;
+  }
+
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('scheduled_emails')
+      .insert({
+        recipient_email: recipientEmail,
+        recipient_name: recipientName,
+        sequence_id: sequenceId,
+        step_id: stepId,
+        scheduled_for: scheduledFor.toISOString(),
+        variables,
+        status: 'pending',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      emailLogger.error('Failed to schedule email in Supabase', {
+        error: error.message,
+        recipientEmail,
+        sequenceId,
+        stepId,
+      });
+      return;
+    }
+
+    // Log email scheduling with metrics
+    emailLogger.info('Email scheduled for delivery', {
+      emailId: data?.id,
+      recipientEmail,
+      recipientName,
+      sequenceId,
+      stepId,
+      scheduledFor: scheduledFor.toISOString(),
+    });
+  } catch (error) {
+    emailLogger.error('Exception scheduling email', {
+      error: error instanceof Error ? error.message : String(error),
+      recipientEmail,
+      sequenceId,
+      stepId,
+    });
+  }
+}
+
 /**
  * Schedule email sequence for a new lead
  * Stores in Supabase for persistence
@@ -40,24 +109,6 @@ export async function scheduleEmailSequence(
   sequenceId: string,
   variables: Record<string, string>
 ): Promise<void> {
-  // Validate input parameters
-  const validation = scheduleEmailParamsSchema.safeParse({
-    recipientEmail,
-    recipientName,
-    sequenceId,
-    variables,
-  });
-
-  if (!validation.success) {
-    emailLogger.error('Invalid email scheduling parameters', {
-      recipientEmail,
-      recipientName,
-      sequenceId,
-      errors: validation.error.issues,
-    });
-    return;
-  }
-
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
   const sequence = sequences[sequenceId];
   if (!sequence) {
@@ -74,47 +125,14 @@ export async function scheduleEmailSequence(
     const scheduledFor = new Date();
     scheduledFor.setDate(scheduledFor.getDate() + 3); // 3 days follow-up
 
-    try {
-      const { data, error } = await supabaseAdmin
-        .from('scheduled_emails')
-        .insert({
-          recipient_email: recipientEmail,
-          recipient_name: recipientName,
-          sequence_id: sequenceId,
-          step_id: 'followup',
-          scheduled_for: scheduledFor.toISOString(),
-          variables,
-          status: 'pending',
-        })
-        .select()
-        .single();
-
-      if (error) {
-        emailLogger.error('Failed to schedule email in Supabase', {
-          error: error.message,
-          recipientEmail,
-          sequenceId,
-        });
-        return;
-      }
-
-      // Log email scheduling with metrics
-      emailLogger.info('Email scheduled for delivery', {
-        emailId: data?.id,
-        recipientEmail,
-        recipientName,
-        sequenceId,
-        subject: sequence.subject,
-        scheduledFor: scheduledFor.toISOString(),
-        daysFromNow: 3,
-      });
-    } catch (error) {
-      emailLogger.error('Exception scheduling email', {
-        error: error instanceof Error ? error.message : String(error),
-        recipientEmail,
-        sequenceId,
-      });
-    }
+    await scheduleEmail({
+      recipientEmail,
+      recipientName,
+      sequenceId: sequenceId as any,
+      stepId: 'followup',
+      scheduledFor,
+      variables,
+    });
   }
 }
 

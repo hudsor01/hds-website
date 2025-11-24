@@ -379,7 +379,7 @@ export function subscribeToEvents(callback: (payload: Record<string, unknown>) =
 // Queue system for background processing
 export async function enqueueLogProcessing(logData: Record<string, unknown>) {
   try {
-    await supabaseAdmin.rpc('enqueue_log_processing', { log_data: logData })
+    await (supabaseAdmin.rpc as any)('enqueue_log_processing', { log_data: logData })
   } catch (error) {
     console.error('Queue enqueue failed:', error)
   }
@@ -405,7 +405,7 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
       return null;
     }
 
-    const { data, error } = await supabaseAdmin.rpc('graphql', {
+    const { data, error } = await (supabaseAdmin.rpc as any)('graphql', {
       query,
       variables: variables || {}
     })
@@ -440,7 +440,7 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
       return;
     }
 
-    await supabaseAdmin.rpc('trigger_webhook', {
+    await (supabaseAdmin.rpc as any)('trigger_webhook', {
       event_type: eventType,
       payload: payload
     })
