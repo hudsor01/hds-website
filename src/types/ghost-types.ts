@@ -139,7 +139,7 @@ export interface BrowseOptions {
   page?: number;
   fields?: string;
   filter?: string;
-  include?: string | string[];
+  include?: string;
   order?: string;
   formats?: string;
 }

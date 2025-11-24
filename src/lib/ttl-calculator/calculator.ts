@@ -36,16 +36,16 @@ const INSPECTION_FEE = 7.50; // Updated inspection fee
 const NEW_VEHICLE_INSPECTION_FEE = 16.75; // 2-year registration - updated
 const EV_FEE_ANNUAL = 200; // Electric vehicle fee - updated for 2024
 
-// Calculate registration based on default vehicle weight (average car ~4000 lbs)
-function calculateRegistrationFee(isNewVehicle: boolean): number {
-  const weight = 4000; // Default to average car weight (under 6000 lbs)
+// Calculate registration based on vehicle weight
+function calculateRegistrationFee(isNewVehicle: boolean, vehicleWeight: number): number {
+  const weight = vehicleWeight || 4000; // Default to average car weight if not provided
   let baseFee = BASE_REGISTRATION_FEE;
 
-  if (weight > 6000) {
-    baseFee = 54.00; // 6,001-10,000 lbs
-  }
+  // Use mutually exclusive conditions for weight tiers
   if (weight > 10000) {
     baseFee = 60.00; // Over 10,000 lbs
+  } else if (weight > 6000) {
+    baseFee = 54.00; // 6,001-10,000 lbs
   }
 
   const inspectionFee = isNewVehicle ? NEW_VEHICLE_INSPECTION_FEE : INSPECTION_FEE;
@@ -70,7 +70,7 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
   const titleFee = countyData.titleFee + countyData.localFees;
 
   // Registration fees
-  const registrationFees = calculateRegistrationFee(input.isNewVehicle);
+  const registrationFees = calculateRegistrationFee(input.isNewVehicle, input.vehicleWeight);
 
   // Processing fees (already included in registration calculation)
   const processingFees = 0;

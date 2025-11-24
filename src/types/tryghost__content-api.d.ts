@@ -63,6 +63,40 @@ declare module '@tryghost/content-api' {
     url: string;
   }
 
+  interface GhostSettings {
+    title?: string;
+    description?: string;
+    logo?: string;
+    icon?: string;
+    cover_image?: string;
+    facebook?: string;
+    twitter?: string;
+    lang?: string;
+    timezone?: string;
+    codeinjection_head?: string;
+    codeinjection_foot?: string;
+    navigation?: Array<{
+      label: string;
+      url: string;
+    }>;
+  }
+
+  interface Pagination {
+    page: number;
+    limit: number;
+    pages: number;
+    total: number;
+    next?: number;
+    prev?: number;
+  }
+
+  interface BrowseResponse<T> {
+    data?: T[];
+    meta?: {
+      pagination: Pagination;
+    };
+  }
+
   interface BrowseOptions {
     limit?: number | 'all';
     page?: number;
@@ -76,6 +110,9 @@ declare module '@tryghost/content-api' {
   interface ReadOptions {
     id?: string;
     slug?: string;
+  }
+
+  interface ReadOptionsWithInclude extends ReadOptions {
     include?: string;
     fields?: string;
     formats?: string;
@@ -85,13 +122,13 @@ declare module '@tryghost/content-api' {
     constructor(options: GhostContentAPIOptions);
 
     posts: {
-      browse(options?: BrowseOptions): Promise<GhostPost[]>;
-      read(options: ReadOptions): Promise<GhostPost>;
+      browse(options?: BrowseOptions): Promise<GhostPost[] | BrowseResponse<GhostPost>>;
+      read(options: ReadOptions, readOptions?: ReadOptionsWithInclude): Promise<GhostPost>;
     };
 
     pages: {
-      browse(options?: BrowseOptions): Promise<GhostPage[]>;
-      read(options: ReadOptions): Promise<GhostPage>;
+      browse(options?: BrowseOptions): Promise<GhostPage[] | BrowseResponse<GhostPage>>;
+      read(options: ReadOptions, readOptions?: ReadOptionsWithInclude): Promise<GhostPage>;
     };
 
     authors: {
@@ -102,6 +139,10 @@ declare module '@tryghost/content-api' {
     tags: {
       browse(options?: BrowseOptions): Promise<GhostTag[]>;
       read(options: ReadOptions): Promise<GhostTag>;
+    };
+
+    settings: {
+      browse(): Promise<GhostSettings>;
     };
   }
 
