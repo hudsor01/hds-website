@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TrendingUp, DollarSign, Clock, Download, CheckCircle2, BarChart3, Settings } from 'lucide-react';
+import { Download, CheckCircle, BarChart3, Settings, TrendingUp, DollarSign, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Free Conversion Optimization Toolkit 2025 - Templates & Guides | Hudson Digital",
@@ -39,7 +39,7 @@ const toolkitItems = [
     items: ["Page-by-page audit guide", "Conversion funnel analysis", "User experience evaluation", "Technical optimization checks"]
   },
   {
-    icon: CheckCircle2,
+    icon: CheckCircle,
     title: "Psychology Triggers Guide",
     description: "Proven psychological principles that drive conversions",
     items: ["Urgency and scarcity tactics", "Social proof strategies", "Trust building elements", "Decision-making shortcuts"]
@@ -135,7 +135,7 @@ export default function ConversionToolkitPage() {
                     <ul className="space-y-2">
                       {item.items.map((subItem, subIndex) => (
                         <li key={subIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                           {subItem}
                         </li>
                       ))}

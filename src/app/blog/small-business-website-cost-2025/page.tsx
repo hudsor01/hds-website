@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
-import { JsonLd } from "@/components/JsonLd";
-
-// Pre-compute modification time at module load time
-const modifiedTime = new Date().toISOString();
 
 export const metadata: Metadata = {
   title: "Small Business Website Cost 2025: Complete Pricing Guide | Hudson Digital",
@@ -16,7 +12,7 @@ export const metadata: Metadata = {
     url: "https://hudsondigitalsolutions.com/blog/small-business-website-cost-2025",
     type: "article",
     publishedTime: "2024-03-01T12:00:00.000Z",
-    modifiedTime: modifiedTime,
+    modifiedTime: new Date().toISOString(),
     authors: ["Hudson Digital Solutions"],
     tags: ["Small Business", "Web Development", "Pricing", "ROI", "Business Strategy"],
     images: [
@@ -93,7 +89,10 @@ const structuredData = {
 export default function WebsiteCostGuidePost() {
   return (
     <>
-      <JsonLd data={structuredData} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <main className="min-h-screen bg-gradient-primary">
         {/* Hero Section */}
         <section className="relative bg-gradient-hero py-16 overflow-hidden">
@@ -102,7 +101,7 @@ export default function WebsiteCostGuidePost() {
           </div>
           
           <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-            <Link
+            <Link 
               href="/blog"
               className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors"
             >

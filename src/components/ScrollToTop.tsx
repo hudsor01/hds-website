@@ -1,54 +1,45 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 
-/**
- * ScrollToTop component with throttled scroll listener
- *
- * Performance optimized per MDN best practices:
- * https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
- *
- * "scroll events can fire at a high rate" - throttling prevents
- * performance degradation ("jank") during fast scrolling
- */
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
-  const tickingRef = useRef(false);
-  const lastScrollPositionRef = useRef(0);
 
   useEffect(() => {
-    const toggleVisibility = (scrollPos: number) => {
-      // Lower threshold for easier testing and better UX
-      if (scrollPos > 200) {
+    let ticking = false;
+
+    const toggleVisibility = () => {
+      const scrollY = window.scrollY;
+
+      // Only update state if visibility actually changes
+      if (scrollY > 200 && !isVisible) {
         setIsVisible(true);
-      } else {
+      } else if (scrollY <= 200 && isVisible) {
         setIsVisible(false);
       }
+
+      ticking = false;
     };
 
-    // Throttled scroll handler per MDN recommendation
-    // Uses setTimeout instead of requestAnimationFrame
     const handleScroll = () => {
-      lastScrollPositionRef.current = window.scrollY;
-
-      if (!tickingRef.current) {
-        setTimeout(() => {
-          toggleVisibility(lastScrollPositionRef.current);
-          tickingRef.current = false;
-        }, 100); // Throttle to ~100ms (10fps) - good balance for scroll button
-        tickingRef.current = true;
+      // Throttle using requestAnimationFrame
+      if (!ticking) {
+        window.requestAnimationFrame(toggleVisibility);
+        ticking = true;
       }
     };
 
     // Check initial scroll position
-    toggleVisibility(window.scrollY);
+    toggleVisibility();
 
-    // Add scroll listener with passive option for better performance
+    // Use passive listener for better scroll performance
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isVisible]); // Add isVisible to dependencies
 
   const scrollToTop = () => {
     window.scrollTo({

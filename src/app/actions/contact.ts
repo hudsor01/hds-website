@@ -1,18 +1,91 @@
 'use server'
 
 import { headers } from "next/headers"
+import { Resend } from "resend"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
+import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
-import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
+import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
+import { resendEmailResponseSchema, discordWebhookRequestSchema } from "@/lib/schemas"
 import { createServerLogger, castError } from "@/lib/logger"
-import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
-import { supabase, isSupabaseConfigured } from "@/lib/supabase"
-import { getResendClient, isResendConfigured } from "@/lib/resend-client"
-import { fetchWithTimeout } from "@/lib/fetch-utils"
-import { generateContactFormNotification } from "@/lib/email-templates"
-import { env } from "@/env"
+
+// Initialize Resend
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
+
+// Get client IP from headers
+async function getClientIP(): Promise<string> {
+  const headersList = await headers()
+  const forwardedFor = headersList.get("x-forwarded-for")
+  if (forwardedFor) {
+    const first = forwardedFor.split(",")[0]?.trim()
+    if (first) {
+      return first
+    }
+  }
+
+  const realIp = headersList.get("x-real-ip")
+  if (realIp?.trim()) {
+    return realIp.trim()
+  }
+
+  return "unknown"
+}
+
+// Generate admin notification email
+function generateAdminNotificationHTML(
+  data: ContactFormData,
+  leadScore?: number,
+  sequenceId?: string
+): string {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h1 style="color: #0891b2;">New Contact Form Submission</h1>
+
+      <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
+        <h2>Contact Information</h2>
+        <p><strong>Name:</strong> ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}</p>
+        <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
+        ${data.phone ? `<p><strong>Phone:</strong> <a href="tel:${escapeHtml(data.phone)}">${escapeHtml(data.phone)}</a></p>` : ""}
+        ${data.company ? `<p><strong>Company:</strong> ${escapeHtml(data.company)}</p>` : ""}
+        ${data.service ? `<p><strong>Service Interest:</strong> ${escapeHtml(data.service)}</p>` : ""}
+        ${data.budget ? `<p><strong>Budget:</strong> ${escapeHtml(data.budget)}</p>` : ""}
+        ${data.timeline ? `<p><strong>Timeline:</strong> ${escapeHtml(data.timeline)}</p>` : ""}
+      </div>
+
+      ${leadScore ? `
+      <div style="background: ${leadScore >= 70 ? "#dcfce7" : leadScore >= 40 ? "#fef3c7" : "#fef2f2"}; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h2 style="color: ${leadScore >= 70 ? "#15803d" : leadScore >= 40 ? "#d97706" : "#dc2626"};">Lead Intelligence</h2>
+        <p><strong>Lead Score:</strong> ${leadScore}/100 ${
+          leadScore >= 70 ? "(HIGH PRIORITY)" : leadScore >= 40 ? "(QUALIFIED)" : "(NURTURE)"
+        }</p>
+        <p><strong>Email Sequence:</strong> ${sequenceId || "standard-welcome"}</p>
+        <p><strong>Recommended Action:</strong> ${
+          leadScore >= 70
+            ? "Schedule call within 24 hours"
+            : leadScore >= 40
+            ? "Follow up within 2-3 days"
+            : "Add to nurture sequence"
+        }</p>
+      </div>
+      ` : ""}
+
+      <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
+        <h2>Message</h2>
+        <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>
+      </div>
+
+      <p style="margin-top: 30px; color: #64748b; font-size: 12px;">
+        Submitted: ${new Date().toLocaleString()}<br>
+        Source: Hudson Digital Solutions Contact Form<br>
+        ${leadScore ? `Lead Score: ${leadScore}/100 | Sequence: ${sequenceId}` : ""}
+      </p>
+    </div>
+  `
+}
 
 export type ContactFormState = {
   success?: boolean
@@ -29,33 +102,17 @@ export async function submitContactForm(
   try {
     logger.info('Contact form submission started');
     // Step 1: Rate limiting
-    const headersList = await headers();
-    const forwardedFor = headersList.get('x-forwarded-for');
-    let clientIP = '127.0.0.1';
-    
-    if (forwardedFor) {
-      const first = forwardedFor.split(',')[0]?.trim();
-      if (first) {
-        clientIP = first;
-      }
-    }
+    const clientIP = await getClientIP()
+    const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
 
-    const realIp = headersList.get('x-real-ip');
-    if (realIp?.trim()) {
-      clientIP = realIp.trim();
-    }
-    
-    const identifier = `contact-form:${clientIP}`;
-    const isLimited = await unifiedRateLimiter.checkLimit(identifier, 'contactForm');
-
-    if (isLimited) {
+    if (!isAllowed) {
       return {
         success: false,
         error: "Too many requests. Please try again in 15 minutes."
       }
     }
 
-    // Step 2: Parse and validate form data using shared schema
+    // Step 2: Parse and validate form data
     const rawData = Object.fromEntries(formData.entries())
     const validation = contactFormSchema.safeParse(rawData)
 
@@ -102,36 +159,31 @@ export async function submitContactForm(
     }
 
     // Step 5: Send emails
-    if (isResendConfigured()) {
+    if (resend) {
       try {
-        const resend = getResendClient();
-
         // Send admin notification
-        await resend.emails.send({
+        const adminEmailResponse = await resend.emails.send({
           from: "Hudson Digital <noreply@hudsondigitalsolutions.com>",
           to: ["hello@hudsondigitalsolutions.com"],
           subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
-          html: generateContactFormNotification({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone,
-            company: data.company,
-            service: data.service,
-            budget: data.budget,
-            timeline: data.timeline,
-            message: data.message,
-            leadScore,
-            sequenceId,
-          }),
+          html: generateAdminNotificationHTML(data, leadScore, sequenceId),
         })
+
+        // Validate Resend admin email response
+        const adminEmailValidation = resendEmailResponseSchema.safeParse(adminEmailResponse.data)
+        if (!adminEmailValidation.success) {
+          logger.warn('Resend admin email response validation failed', {
+            errors: adminEmailValidation.error.issues,
+            response: adminEmailResponse.data,
+          })
+        }
 
         // Send immediate welcome email to prospect
         if (sequence) {
           const processedContent = processEmailTemplate(sequence.content, emailVariables)
           const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
 
-          await resend.emails.send({
+          const welcomeEmailResponse = await resend.emails.send({
             from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
             to: [data.email],
             subject: processedSubject,
@@ -142,112 +194,112 @@ export async function submitContactForm(
                 .join("")}
             </div>`,
           })
+
+          // Validate Resend welcome email response
+          const welcomeEmailValidation = resendEmailResponseSchema.safeParse(welcomeEmailResponse.data)
+          if (!welcomeEmailValidation.success) {
+            logger.warn('Resend welcome email response validation failed', {
+              errors: welcomeEmailValidation.error.issues,
+              response: welcomeEmailResponse.data,
+            })
+          }
         }
 
-        // Send Discord notification if configured with timeout
-        // Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-        if (env.DISCORD_WEBHOOK_URL) {
+        // Send Discord notification if configured
+        if (process.env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetchWithTimeout(env.DISCORD_WEBHOOK_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                embeds: [{
-                  title: "New Project Inquiry",
-                  color: 0x0891b2,
-                  fields: [
-                    {
-                      name: "Contact",
-                      value: `**${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}**\n${escapeHtml(data.email)}${
-                        data.phone ? `\n${escapeHtml(data.phone)}` : ""
-                      }`,
-                      inline: true,
-                    },
-                    {
-                      name: "Details & Score",
-                      value: `**Lead Score:** ${leadScore}/100\n**Service:** ${escapeHtml(
-                        data.service || "Not specified"
-                      )}\n**Company:** ${escapeHtml(data.company || "Not specified")}\n**Sequence:** ${sequenceId}`,
-                      inline: true,
-                    },
-                    {
-                      name: "Message",
-                      value: escapeHtml(
-                        data.message.length > 1000
-                          ? data.message.substring(0, 1000) + "..."
-                          : data.message
-                      ),
-                      inline: false,
-                    },
-                  ],
-                  timestamp: new Date().toISOString(),
-                  footer: { text: "Hudson Digital Solutions Contact Form" },
-                }],
-              }),
-            }, 5000); // 5s timeout for Discord webhook
+            // Build Discord webhook payload
+            const discordPayload = {
+              embeds: [{
+                title: "New Project Inquiry",
+                color: 0x0891b2,
+                fields: [
+                  {
+                    name: "Contact",
+                    value: `**${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}**\n${escapeHtml(data.email)}${
+                      data.phone ? `\n${escapeHtml(data.phone)}` : ""
+                    }`,
+                    inline: true,
+                  },
+                  {
+                    name: "Details & Score",
+                    value: `**Lead Score:** ${leadScore}/100\n**Service:** ${escapeHtml(
+                      data.service || "Not specified"
+                    )}\n**Company:** ${escapeHtml(data.company || "Not specified")}\n**Sequence:** ${sequenceId}`,
+                    inline: true,
+                  },
+                  {
+                    name: "Message",
+                    value: escapeHtml(
+                      data.message.length > 1000
+                        ? data.message.substring(0, 1000) + "..."
+                        : data.message
+                    ),
+                    inline: false,
+                  },
+                ],
+                timestamp: new Date().toISOString(),
+                footer: { text: "Hudson Digital Solutions Contact Form" },
+              }],
+            }
+
+            // Validate Discord payload before sending
+            const discordValidation = discordWebhookRequestSchema.safeParse(discordPayload)
+            if (!discordValidation.success) {
+              logger.error('Discord webhook payload validation failed', {
+                errors: discordValidation.error.issues,
+                payload: discordPayload,
+              })
+            } else {
+              // Add timeout protection for Discord webhook
+              const controller = new AbortController()
+              const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
+              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(discordValidation.data),
+                signal: controller.signal,
+              })
+
+              clearTimeout(timeoutId)
+
+              if (!discordResponse.ok) {
+                logger.error('Discord webhook request failed', {
+                  status: discordResponse.status,
+                  statusText: discordResponse.statusText,
+                })
+              }
+            }
           } catch (discordError) {
-            logger.error("Failed to send Discord notification", castError(discordError))
+            const error = castError(discordError)
+            if (error.name === 'AbortError') {
+              logger.warn("Discord notification timed out", { timeout: '5s' })
+            } else {
+              logger.error("Failed to send Discord notification", error)
+            }
           }
         }
 
         // Record successful submission
         recordContactFormSubmission(true)
 
-        // Save lead to database asynchronously (non-blocking)
-        void (async () => {
-          // Only save to database if Supabase is configured
-          if (!isSupabaseConfigured() || !supabase) {
-            logger.info('Skipping database save - Supabase not configured', {
-              email: data.email
-            });
-            return;
-          }
-
-          try {
-            const { error } = await supabase
-              .from('leads')
-              .insert([{
-                name: `${data.firstName} ${data.lastName}`,
-                email: data.email,
-                phone: data.phone || null,
-                company: data.company || null,
-                message: data.message,
-                source: 'contact_form',
-                status: 'new',
-                lead_score: leadScore,
-                consent_marketing: false, // Default value since not in form
-                consent_analytics: true,  // Default value since not in form
-                ip_address: clientIP,
-                user_agent: headersList.get('user-agent') || null,
-                referrer_url: headersList.get('referer') || null,
-                created_at: new Date().toISOString()
-              }]);
-
-            if (error) {
-              logger.error('Failed to save lead to database', {
-                error: error.message,
-                email: data.email
-              });
-            } else {
-              logger.info('Lead saved to database successfully', {
-                email: data.email
-              });
-            }
-          } catch (dbError) {
-            logger.error('Database error when saving lead', {
-              error: dbError instanceof Error ? dbError.message : String(dbError),
-              email: data.email
-            });
-          }
-        })();
-
-        // Schedule follow-up emails
-        scheduleEmailSequence(
-          data.email,
-          `${data.firstName} ${data.lastName}`,
-          sequenceId,
-          emailVariables
-        )
+        // Schedule follow-up emails with error handling
+        try {
+          await scheduleEmailSequence(
+            data.email,
+            `${data.firstName} ${data.lastName}`,
+            sequenceId,
+            emailVariables
+          )
+        } catch (scheduleError) {
+          // Log but don't fail the submission if email scheduling fails
+          logger.error("Failed to schedule email sequence", {
+            error: castError(scheduleError),
+            email: data.email,
+            sequenceId
+          })
+        }
 
         logger.info('Contact form submission successful', {
           email: data.email,
@@ -269,12 +321,20 @@ export async function submitContactForm(
       }
     } else {
       // Schedule emails even without email service
-      scheduleEmailSequence(
-        data.email,
-        `${data.firstName} ${data.lastName}`,
-        sequenceId,
-        emailVariables
-      )
+      try {
+        await scheduleEmailSequence(
+          data.email,
+          `${data.firstName} ${data.lastName}`,
+          sequenceId,
+          emailVariables
+        )
+      } catch (scheduleError) {
+        logger.error("Failed to schedule email sequence in test mode", {
+          error: castError(scheduleError),
+          email: data.email,
+          sequenceId
+        })
+      }
 
       // In test environment, still consider it successful if validation passed
       recordContactFormSubmission(true)

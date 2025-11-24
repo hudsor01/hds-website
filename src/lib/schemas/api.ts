@@ -1,0 +1,150 @@
+/**
+ * API Route Validation Schemas
+ *
+ * Zod schemas for validating API route inputs and outputs
+ */
+
+import { z } from 'zod';
+import { emailSchema, nameSchema } from './common';
+
+// ============================================================================
+// Lead Magnet API Schemas
+// ============================================================================
+
+export const leadMagnetResourceSchema = z.enum([
+  'website-performance-checklist',
+  'roi-calculator',
+  'conversion-optimization-guide',
+]);
+
+export const leadMagnetRequestSchema = z.object({
+  email: emailSchema,
+  firstName: nameSchema,
+  resource: leadMagnetResourceSchema,
+});
+
+export const leadMagnetResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  downloadUrl: z.string().url().optional(),
+  error: z.string().optional(),
+});
+
+export type LeadMagnetRequest = z.infer<typeof leadMagnetRequestSchema>;
+export type LeadMagnetResource = z.infer<typeof leadMagnetResourceSchema>;
+export type LeadMagnetResponse = z.infer<typeof leadMagnetResponseSchema>;
+
+// ============================================================================
+// GraphQL Analytics API Schemas
+// ============================================================================
+
+export const timeRangeSchema = z.enum(['24h', '7d', '30d', '90d']);
+
+export const analyticsVariablesSchema = z.object({
+  timeRange: timeRangeSchema.optional(),
+  limit: z.number().int().positive().max(1000).optional(),
+  metric: z.string().optional(),
+  category: z.string().optional(),
+  funnelName: z.string().optional(),
+});
+
+export const graphqlRequestSchema = z.object({
+  query: z.string().min(1, 'GraphQL query cannot be empty'),
+  variables: analyticsVariablesSchema.optional(),
+});
+
+export const graphqlResponseSchema = z.object({
+  data: z.unknown().optional(),
+  errors: z.array(z.object({
+    message: z.string(),
+    locations: z.array(z.object({
+      line: z.number(),
+      column: z.number(),
+    })).optional(),
+    path: z.array(z.union([z.string(), z.number()])).optional(),
+  })).optional(),
+});
+
+export type TimeRange = z.infer<typeof timeRangeSchema>;
+export type AnalyticsVariables = z.infer<typeof analyticsVariablesSchema>;
+export type GraphQLRequest = z.infer<typeof graphqlRequestSchema>;
+export type GraphQLResponse = z.infer<typeof graphqlResponseSchema>;
+
+// ============================================================================
+// Cron Job API Schemas
+// ============================================================================
+
+export const cronAuthHeaderSchema = z.object({
+  authorization: z.string().regex(/^Bearer .+$/, 'Authorization must be Bearer token'),
+});
+
+export const cronResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  processed: z.number().optional(),
+  errors: z.array(z.string()).optional(),
+});
+
+export type CronAuthHeader = z.infer<typeof cronAuthHeaderSchema>;
+export type CronResponse = z.infer<typeof cronResponseSchema>;
+
+// ============================================================================
+// Webhook Validation Schemas
+// ============================================================================
+
+export const webhookSignatureSchema = z.object({
+  'x-webhook-signature': z.string().min(1),
+  'x-webhook-timestamp': z.string().min(1),
+});
+
+// Supabase webhook payload types
+export const databaseChangePayloadSchema = z.object({
+  type: z.enum(['INSERT', 'UPDATE', 'DELETE']),
+  table: z.string(),
+  schema: z.string(),
+  record: z.record(z.string(), z.unknown()).nullable(),
+  old_record: z.record(z.string(), z.unknown()).nullable().optional(),
+});
+
+export const authChangePayloadSchema = z.object({
+  type: z.enum(['SIGNED_IN', 'SIGNED_OUT', 'USER_UPDATED', 'USER_DELETED']),
+  user: z.object({
+    id: z.string().uuid(),
+    email: z.string().email().optional(),
+    role: z.string().optional(),
+    created_at: z.string().datetime(),
+  }).nullable(),
+});
+
+export const storageChangePayloadSchema = z.object({
+  type: z.enum(['OBJECT_CREATED', 'OBJECT_UPDATED', 'OBJECT_REMOVED']),
+  bucket: z.string(),
+  object: z.string(),
+  owner: z.string().uuid().optional(),
+});
+
+export const supabaseWebhookSchema = z.object({
+  type: z.enum(['db_change', 'auth_change', 'storage_change']),
+  payload: z.union([
+    databaseChangePayloadSchema,
+    authChangePayloadSchema,
+    storageChangePayloadSchema,
+  ]),
+});
+
+export type WebhookSignature = z.infer<typeof webhookSignatureSchema>;
+export type DatabaseChangePayload = z.infer<typeof databaseChangePayloadSchema>;
+export type AuthChangePayload = z.infer<typeof authChangePayloadSchema>;
+export type StorageChangePayload = z.infer<typeof storageChangePayloadSchema>;
+export type SupabaseWebhook = z.infer<typeof supabaseWebhookSchema>;
+
+// ============================================================================
+// CSRF Token Schemas
+// ============================================================================
+
+export const csrfTokenResponseSchema = z.object({
+  token: z.string().min(32),
+  expiresAt: z.number().positive(),
+});
+
+export type CsrfTokenResponse = z.infer<typeof csrfTokenResponseSchema>;

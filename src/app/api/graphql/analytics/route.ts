@@ -5,27 +5,73 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { getSupabaseAdmin, queryAnalytics } from '@/lib/supabase'
+import { supabaseAdmin, queryAnalytics } from '@/lib/supabase'
+import {
+  graphqlRequestSchema,
+  analyticsVariablesSchema,
+  timeRangeSchema,
+  type TimeRange,
+} from '@/lib/schemas'
 
 const logger = createServerLogger('graphql-analytics')
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, variables } = await request.json()
-
-    logger.info('GraphQL analytics query received', {
-      queryLength: query?.length,
-      hasVariables: !!variables,
-    })
-
     // Basic authentication check
     const authHeader = request.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const rawData = await request.json()
+
+    // Validate request data
+    const validation = graphqlRequestSchema.safeParse(rawData)
+    if (!validation.success) {
+      logger.error('Invalid GraphQL request', {
+        errors: validation.error.issues,
+        rawData,
+      })
+      return NextResponse.json(
+        {
+          errors: [{
+            message: 'Invalid GraphQL request',
+            details: validation.error.issues,
+          }],
+        },
+        { status: 400 }
+      )
+    }
+
+    const { query, variables } = validation.data
+
+    logger.info('GraphQL analytics query received', {
+      queryLength: query.length,
+      hasVariables: !!variables,
+    })
+
+    // Validate variables if present
+    if (variables) {
+      const variablesValidation = analyticsVariablesSchema.safeParse(variables)
+      if (!variablesValidation.success) {
+        logger.error('Invalid query variables', {
+          errors: variablesValidation.error.issues,
+          variables,
+        })
+        return NextResponse.json(
+          {
+            errors: [{
+              message: 'Invalid query variables',
+              details: variablesValidation.error.issues,
+            }],
+          },
+          { status: 400 }
+        )
+      }
+    }
+
     // Execute GraphQL query
-    const result = await executeAnalyticsQuery(query, variables)
+    const result = await executeAnalyticsQuery(query, variables || {})
 
     logger.info('GraphQL query executed successfully')
     return NextResponse.json(result)
@@ -33,7 +79,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     logger.error('GraphQL query failed', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json(
-      { error: 'Query execution failed' },
+      {
+        errors: [{
+          message: 'Query execution failed',
+          details: error instanceof Error ? error.message : String(error),
+        }],
+      },
       { status: 500 }
     )
   }
@@ -59,17 +110,25 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
 }
 
 async function getPageViews(variables: Record<string, unknown>) {
-  const supabaseAdmin = getSupabaseAdmin();
-  const { timeRange = '24h', limit = 100 } = variables
-  const limitNum = typeof limit === 'number' ? limit : 100
+  const timeRangeValidation = timeRangeSchema.safeParse(variables.timeRange || '24h')
+  const timeRange = timeRangeValidation.success ? timeRangeValidation.data : '24h' as TimeRange
+
+  const limitNum = typeof variables.limit === 'number' ? Math.min(variables.limit, 1000) : 100
 
   const startTime = new Date()
-  if (timeRange === '24h') {
-    startTime.setHours(startTime.getHours() - 24)
-  } else if (timeRange === '7d') {
-    startTime.setDate(startTime.getDate() - 7)
-  } else if (timeRange === '30d') {
-    startTime.setDate(startTime.getDate() - 30)
+  switch (timeRange) {
+    case '24h':
+      startTime.setHours(startTime.getHours() - 24)
+      break
+    case '7d':
+      startTime.setDate(startTime.getDate() - 7)
+      break
+    case '30d':
+      startTime.setDate(startTime.getDate() - 30)
+      break
+    case '90d':
+      startTime.setDate(startTime.getDate() - 90)
+      break
   }
 
   const { data: pageViews, error } = await supabaseAdmin
@@ -130,7 +189,6 @@ async function getPageViews(variables: Record<string, unknown>) {
 }
 
 async function getWebVitals(variables: Record<string, unknown>) {
-  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '24h', metric = null } = variables
   const metricStr = typeof metric === 'string' ? metric : null
 
@@ -197,7 +255,6 @@ async function getWebVitals(variables: Record<string, unknown>) {
 }
 
 async function getLeadStats(variables: Record<string, unknown>) {
-  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '30d' } = variables
 
   const startTime = new Date()
@@ -260,7 +317,6 @@ async function getLeadStats(variables: Record<string, unknown>) {
 }
 
 async function getEventStats(variables: Record<string, unknown>) {
-  const supabaseAdmin = getSupabaseAdmin();
   const { timeRange = '24h', category = null } = variables
   const categoryStr = typeof category === 'string' ? category : null
 
@@ -322,7 +378,6 @@ async function getEventStats(variables: Record<string, unknown>) {
 }
 
 async function getFunnelAnalytics(variables: Record<string, unknown>) {
-  const supabaseAdmin = getSupabaseAdmin();
   const { funnelName, timeRange = '7d' } = variables
   const funnelNameStr = typeof funnelName === 'string' ? funnelName : null
 

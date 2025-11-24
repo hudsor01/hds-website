@@ -1,6 +1,7 @@
 /**
  * Unified Analytics Module
- * Simple analytics tracking with backend integration for critical events
+ * Lightweight analytics tracking using Supabase only
+ * No external dependencies - optimized for performance
  */
 
 import type {
@@ -8,108 +9,151 @@ import type {
   PageViewProperties,
   UserProperties,
 } from "@/types/analytics";
-import { logger } from './logger';
-import { env } from '@/env';
+import {
+  postHogEventSchema,
+  conversionDataSchema,
+  pageViewPropertiesSchema,
+  userPropertiesSchema,
+} from '@/lib/schemas';
 
+/**
+ * Analytics Manager - Lightweight, non-blocking analytics
+ * Only tracks critical events to Supabase
+ * Sampling strategy: 10% of non-critical events
+ */
 class AnalyticsManager {
   private initialized = false;
-  private queue: Array<() => void> = [];
+  private samplingRate = 0.1; // 10% sampling for non-critical events
 
   constructor() {
     if (typeof window !== "undefined") {
-      this.initialize();
-    }
-  }
-
-  private initialize() {
-    try {
-      // Mark as initialized immediately for simple tracking
       this.initialized = true;
-      this.processQueue();
-
-      logger.info('Analytics initialized', {
-        environment: env.NODE_ENV
-      });
-    } catch (error) {
-      logger.error("Failed to initialize analytics", {
-        error,
-        environment: env.NODE_ENV
-      });
-    }
-  }
-
-  private processQueue() {
-    while (this.queue.length > 0) {
-      const action = this.queue.shift();
-      if (action) {action();}
-    }
-  }
-
-  private executeOrQueue(action: () => void) {
-    if (this.initialized) {
-      action();
-    } else {
-      this.queue.push(action);
     }
   }
 
   /**
-   * Track custom events
+   * Determine if event should be sampled
+   */
+  private shouldSample(eventName: string): boolean {
+    // Always track critical events
+    const criticalEvents = [
+      'form_submission',
+      'lead_captured',
+      'conversion',
+      'error',
+      'purchase',
+      'sign_up'
+    ];
+
+    if (criticalEvents.includes(eventName)) {
+      return true;
+    }
+
+    // Sample non-critical events at 10% rate
+    return Math.random() < this.samplingRate;
+  }
+
+  /**
+   * Track custom events (non-blocking)
    */
   trackEvent(eventName: string, properties?: EventProperties) {
-    this.executeOrQueue(() => {
-      // Custom tracking for critical events
-      if (eventName === "form_submission" || eventName === "lead_captured") {
-        this.sendToBackend(eventName, properties);
-      }
+    // Skip if not initialized or shouldn't sample
+    if (!this.initialized || !this.shouldSample(eventName)) {
+      return;
+    }
 
-      // Structured logging for development and production
-      logger.info('Analytics Event Tracked', {
-        eventName,
-        properties,
-        initialized: this.initialized,
-        queueLength: this.queue.length
-      });
+    // Validate event data
+    const validation = postHogEventSchema.safeParse({
+      event: eventName,
+      properties,
     });
+
+    if (!validation.success) {
+      // Silent fail for invalid events (don't spam logs)
+      return;
+    }
+
+    // Fire-and-forget to backend (non-blocking)
+    if (eventName === "form_submission" || eventName === "lead_captured" || eventName === "conversion") {
+      this.sendToBackend(eventName, properties).catch(() => {
+        // Silent fail - don't block user experience
+      });
+    }
   }
 
   /**
-   * Track page views
+   * Track page views (non-blocking, sampled)
    */
   trackPageView(properties?: PageViewProperties) {
-    this.executeOrQueue(() => {
-      const pageData = {
-        url: window.location.href,
-        path: window.location.pathname,
-        referrer: document.referrer,
-        title: document.title,
-        ...properties,
-      };
+    if (!this.initialized || !this.shouldSample('pageview')) {
+      return;
+    }
 
-      logger.info('Page view tracked', pageData);
-    });
+    // Validate page view properties
+    if (properties) {
+      const validation = pageViewPropertiesSchema.safeParse(properties);
+      if (!validation.success) {
+        return; // Silent fail
+      }
+    }
+
+    // Fire-and-forget (non-blocking)
+    const pageData = {
+      url: window.location.href,
+      path: window.location.pathname,
+      referrer: document.referrer,
+      title: document.title,
+      ...properties,
+    };
+
+    this.sendToBackend('pageview', pageData).catch(() => {});
   }
 
   /**
-   * Identify user
+   * Identify user (always tracked, non-blocking)
    */
   identify(userId: string, properties?: UserProperties) {
-    this.executeOrQueue(() => {
-      logger.info('User identified', {
-        userId,
-        properties
-      });
-    });
+    if (!this.initialized) {
+      return;
+    }
+
+    // Validate user properties
+    if (properties) {
+      const validation = userPropertiesSchema.safeParse(properties);
+      if (!validation.success) {
+        return; // Silent fail
+      }
+    }
+
+    // Fire-and-forget (non-blocking)
+    this.sendToBackend('user_identified', {
+      user_id: userId,
+      ...properties,
+    }).catch(() => {});
   }
 
   /**
-   * Track conversion events
+   * Track conversion events (always tracked, non-blocking)
    */
   trackConversion(
     conversionType: string,
     value?: number,
     properties?: EventProperties
   ) {
+    if (!this.initialized) {
+      return;
+    }
+
+    // Validate conversion data
+    const validation = conversionDataSchema.safeParse({
+      event: conversionType,
+      value,
+    });
+
+    if (!validation.success) {
+      return; // Silent fail
+    }
+
     const conversionData = {
       conversion_type: conversionType,
       conversion_value: value,
@@ -120,7 +164,7 @@ class AnalyticsManager {
   }
 
   /**
-   * Track timing events (performance)
+   * Track timing events (sampled)
    */
   trackTiming(
     category: string,
@@ -128,6 +172,11 @@ class AnalyticsManager {
     time: number,
     label?: string
   ) {
+    // Basic validation
+    if (!category || !variable || time < 0) {
+      return;
+    }
+
     this.trackEvent("timing_complete", {
       timing_category: category,
       timing_variable: variable,
@@ -137,22 +186,26 @@ class AnalyticsManager {
   }
 
   /**
-   * Track errors
+   * Track errors (always tracked, non-blocking)
    */
   trackError(error: Error | string, fatal = false) {
+    if (!this.initialized) {
+      return;
+    }
+
     const errorData = {
       error_message: typeof error === "string" ? error : error.message,
       error_stack: typeof error === "object" ? error.stack : undefined,
       error_fatal: fatal,
-      page_url:
-        typeof window !== "undefined" ? window.location.href : undefined,
+      page_url: typeof window !== "undefined" ? window.location.href : undefined,
     };
 
-    this.trackEvent("error", errorData);
+    // Fire-and-forget (non-blocking)
+    this.sendToBackend("error", errorData).catch(() => {});
   }
 
   /**
-   * Track form interactions
+   * Track form interactions (sampled)
    */
   trackFormInteraction(formName: string, action: string, fieldName?: string) {
     this.trackEvent("form_interaction", {
@@ -163,7 +216,7 @@ class AnalyticsManager {
   }
 
   /**
-   * Track CTA clicks
+   * Track CTA clicks (sampled)
    */
   trackCTAClick(ctaName: string, location: string, destination?: string) {
     this.trackEvent("cta_click", {
@@ -174,58 +227,71 @@ class AnalyticsManager {
   }
 
   /**
-   * Track scroll depth
+   * Track scroll depth (sampled)
    */
   trackScrollDepth(percentage: number) {
+    // Basic validation
+    if (percentage < 0 || percentage > 100) {
+      return;
+    }
+
     this.trackEvent("scroll_depth", {
       depth_percentage: percentage,
-      page_height:
-        typeof document !== "undefined" ? document.body.scrollHeight : 0,
+      page_height: typeof document !== "undefined" ? document.body.scrollHeight : 0,
     });
   }
 
   /**
-   * Track time on page
+   * Track time on page (sampled)
    */
   trackTimeOnPage(seconds: number) {
+    // Basic validation
+    if (seconds < 0) {
+      return;
+    }
+
     this.trackEvent("time_on_page", {
       time_seconds: seconds,
-      page_url:
-        typeof window !== "undefined" ? window.location.href : undefined,
+      page_url: typeof window !== "undefined" ? window.location.href : undefined,
     });
   }
 
   /**
-   * Send critical events to backend
+   * Send critical events to backend (non-blocking, fire-and-forget)
    */
-  private async sendToBackend(eventName: string, properties?: EventProperties) {
-    try {
-      await fetch("/api/analytics", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          event: eventName,
-          properties,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      logger.error("Failed to send analytics to backend", {
-        error,
-        eventName,
-        properties,
-        endpoint: '/api/analytics'
-      });
+  private async sendToBackend(eventName: string, properties?: EventProperties): Promise<void> {
+    const payload = {
+      event: eventName,
+      properties,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Validate backend analytics payload
+    const validation = postHogEventSchema.safeParse(payload);
+
+    if (!validation.success) {
+      return; // Silent fail
     }
+
+    // Fire-and-forget fetch (no await in caller)
+    fetch("/api/analytics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      // Use keepalive to ensure request completes even if page unloads
+      keepalive: true,
+    }).catch(() => {
+      // Silent fail - don't throw errors or log
+    });
   }
 
   /**
-   * Reset user (logout)
+   * Reset user (no-op since we removed PostHog)
    */
   reset() {
-    logger.info('Analytics reset');
+    // No-op: Kept for backwards compatibility
   }
 }
 

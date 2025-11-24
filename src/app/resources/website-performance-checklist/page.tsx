@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BarChart3, Zap, Target, Download, CheckCircle2, FileText } from 'lucide-react';
+import { Download, CheckCircle, FileText, BarChart3, Zap, Target } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Free Website Performance Checklist 2025 - Download PDF | Hudson Digital",
@@ -87,7 +87,7 @@ const checklistItems = [
   {
     category: "Analytics & Tracking",
     items: [
-      "Analytics configured",
+      "PostHog analytics configured",
       "Goal tracking setup",
       "Conversion events defined",
       "Heat mapping active",
@@ -194,7 +194,7 @@ export default function WebsiteChecklistPage() {
                 <ul className="space-y-2">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-2 text-gray-300 text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                       {item}
                     </li>
                   ))}

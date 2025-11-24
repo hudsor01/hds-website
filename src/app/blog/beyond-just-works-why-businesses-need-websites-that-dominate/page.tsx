@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
-import { JsonLd } from "@/components/JsonLd";
-
-// Pre-compute modification time at module load time
-const modifiedTime = new Date().toISOString();
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -16,7 +12,7 @@ export const metadata: Metadata = {
     url: "https://hudsondigitalsolutions.com/blog/beyond-just-works-why-businesses-need-websites-that-dominate",
     type: "article",
     publishedTime: "2024-01-31T12:00:00.000Z",
-    modifiedTime: modifiedTime,
+    modifiedTime: new Date().toISOString(),
     authors: ["Hudson Digital Solutions"],
     tags: ["Business Strategy", "Web Development", "Digital Marketing", "ROI", "Competitive Advantage"],
     images: [
@@ -137,8 +133,14 @@ const breadcrumbSchema = {
 export default function BlogPost() {
   return (
     <>
-      <JsonLd data={structuredData} />
-      <JsonLd data={breadcrumbSchema} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <main className="min-h-screen bg-gradient-primary">
       {/* Hero Section */}
       <section className="relative bg-gradient-hero py-16 overflow-hidden">
@@ -148,7 +150,7 @@ export default function BlogPost() {
         
         <div className="relative max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           {/* Back Link */}
-          <Link
+          <Link 
             href="/blog"
             className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors"
           >
