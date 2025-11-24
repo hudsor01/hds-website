@@ -1,4 +1,3 @@
-import { randomBytes } from 'crypto'
 import { FileText } from 'lucide-react'
 import React from 'react'
 import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
@@ -19,7 +18,13 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
   const socialSecurityWages = Math.min(employeeData.totals.grossPay, ssWageBase)
 
   const generateReferenceId = () => {
-    return randomBytes(6).toString('hex').substring(0, 9).toUpperCase();
+    // Use Web Crypto API instead of Node.js crypto for browser compatibility
+    const array = new Uint8Array(6);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0'))
+      .join('')
+      .substring(0, 9)
+      .toUpperCase();
   };
 
   return (
