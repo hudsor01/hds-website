@@ -1,0 +1,34 @@
+{
+  "general": {
+    "preferredEditor": "vscode",
+    "vimMode": false
+  },
+  "output": {
+    "format": "text"
+  },
+  "ui": {
+    "hideTips": true,
+    "hideBanner": true,
+    "footer": {
+      "hideSandboxStatus": true
+    },
+    "hideFooter": true,
+    "showMemoryUsage": true,
+    "showCitations": true,
+    "enableWelcomeBack": false
+  },
+  "model": {
+    "skipLoopDetection": true
+  },
+  "context": {
+    "discoveryMaxDirs": 500,
+    "loadMemoryFromIncludeDirectories": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    },
+    "approvalMode": "yolo"
+  },
+  "$version": 2
+}

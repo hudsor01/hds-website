@@ -1,12 +1,17 @@
-import {
-  Code2,
-  Settings,
-  BarChart3,
-  Rocket,
-  Users,
-  Clock
-} from 'lucide-react';
 import { CTAButton } from '@/components/cta-button';
+import {
+    BarChart3,
+    Calculator,
+    Clock,
+    Code2,
+    Rocket,
+    Settings,
+    TrendingUp,
+    Users,
+    Zap
+} from 'lucide-react';
+import Link from 'next/link';
+import { NewsletterSignup } from '@/components/NewsletterSignup';
 
 export default function HomePage() {
   const solutions = [
@@ -153,7 +158,7 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             {solutions.map((solution, index) => (
-              <div 
+              <div
                 key={index}
                 className="group relative glass-card-light p-8 card-hover-glow transition-smooth"
               >
@@ -166,13 +171,13 @@ export default function HomePage() {
                       {solution.title}
                     </h3>
                   </div>
-                  
+
                   <div className="typography">
                     <p className="muted leading-relaxed">
                       {solution.description}
                     </p>
                   </div>
-                  
+
                   <div className="space-y-3">
                     {solution.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex-center space-x-3">
@@ -264,25 +269,196 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Free Tools Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div className="container-wide">
+          <div className="text-center mb-16">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              <span className="gradient-text relative">
+                Free Business Tools
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
+              </span>
+            </h2>
+
+            <div className="typography max-w-2xl mx-auto">
+              <p className="text-xl text-gray-300 leading-relaxed">
+                Calculate your potential in 60 seconds. No signup required.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* ROI Calculator */}
+            <Link
+              href="/roi-calculator"
+              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+            >
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+
+              <div className="mb-6">
+                <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
+                  <TrendingUp className="w-8 h-8 text-cyan-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  ROI Calculator
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  See how much revenue you&apos;re leaving on the table with poor conversion rates
+                </p>
+              </div>
+
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Calculate potential revenue increase
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Understand conversion impact
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Make data-driven decisions
+                </li>
+              </ul>
+
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+                <span>Try Calculator</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+
+            {/* Cost Estimator */}
+            <Link
+              href="/cost-estimator"
+              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+            >
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+
+              <div className="mb-6">
+                <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
+                  <Calculator className="w-8 h-8 text-cyan-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  Cost Estimator
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Get instant pricing for your website project based on features and complexity
+                </p>
+              </div>
+
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Transparent pricing breakdown
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Timeline estimates included
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Feature-based pricing
+                </li>
+              </ul>
+
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+                <span>Get Estimate</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+
+            {/* Performance Calculator */}
+            <Link
+              href="/performance-calculator"
+              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+            >
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+
+              <div className="mb-6">
+                <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
+                  <Zap className="w-8 h-8 text-cyan-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  Performance Analyzer
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Discover how much revenue slow performance is costing you every month
+                </p>
+              </div>
+
+              <ul className="space-y-2 mb-6">
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Real PageSpeed analysis
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Revenue impact calculation
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                  Core Web Vitals insights
+                </li>
+              </ul>
+
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+                <span>Analyze Site</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/tools"
+              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
+            >
+              View All Tools
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-16 px-4">
+        <div className="container-wide max-w-4xl mx-auto">
+          <NewsletterSignup
+            variant="inline"
+            title="Join 500+ Tech Leaders"
+            description="Get weekly insights on scaling engineering teams, technical leadership, and development efficiency. No spam, unsubscribe anytime."
+          />
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12 md:p-16">
             <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
-            
+
             <h2 className="text-responsive-md font-black text-white mb-6">
               Your competitors ship faster.
               <span className="block gradient-text mt-2">
                 Why don&apos;t you?
               </span>
             </h2>
-            
+
             <div className="typography">
               <p className="large text-muted-foreground mb-10 container-narrow">
                 Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
               </p>
             </div>
-            
+
             <div className="flex-center flex-col sm:flex-row gap-4">
               <CTAButton href="/contact" variant="primary" size="lg">
                 Get Your Free Roadmap

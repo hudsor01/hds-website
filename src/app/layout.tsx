@@ -8,6 +8,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
 import ClientProviders from "@/components/ClientProviders";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebVitalsReporting } from "@/components/WebVitalsReporting";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
 import { env } from "@/env";
 
@@ -168,6 +170,8 @@ export default function RootLayout({
             <Footer />
             <ScrollToTop />
             <Analytics />
+            <SpeedInsights />
+            <WebVitalsReporting />
           </ErrorBoundary>
           <Toaster position="top-right" richColors theme="dark" />
         </ClientProviders>
