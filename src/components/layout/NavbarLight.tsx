@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, memo, useCallback, useEffect } from "react";
-import { 
-  Bars3Icon, 
-  XMarkIcon,
-  RocketLaunchIcon,
-  ArrowRightIcon
-} from "@heroicons/react/24/outline";
+import {
+  Menu,
+  X,
+  Rocket,
+  ArrowRight
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/types/components";
 // import { brand } from "@/lib/brand";
@@ -51,7 +51,7 @@ const NavbarLight = memo(function NavbarLight() {
               aria-label="Hudson Digital Solutions - Home"
             >
               <div className="relative">
-                <RocketLaunchIcon className="w-8 h-8 text-cyan-400" />
+                <Rocket className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1">
@@ -95,7 +95,7 @@ const NavbarLight = memo(function NavbarLight() {
               className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
             >
               Talk to Sales
-              <ArrowRightIcon className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
 
             {/* Primary CTA - Get Free Roadmap */}
@@ -107,7 +107,7 @@ const NavbarLight = memo(function NavbarLight() {
                 aria-label="Get your free roadmap"
               >
                 <span className="relative">Start Shipping Faster</span>
-                <ArrowRightIcon className="relative w-4 h-4" />
+                <ArrowRight className="relative w-4 h-4" />
               </Link>
             </div>
 
@@ -124,9 +124,9 @@ const NavbarLight = memo(function NavbarLight() {
                 {mobileMenuOpen ? "Close" : "Open"} main menu
               </span>
               {mobileMenuOpen ? (
-                <XMarkIcon className="block h-6 w-6" />
+                <X className="block h-6 w-6" />
               ) : (
-                <Bars3Icon className="block h-6 w-6" />
+                <Menu className="block h-6 w-6" />
               )}
             </button>
           </div>

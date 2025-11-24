@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, CheckIcon } from '@heroicons/react/24/outline'
+import { ChevronDown, Check } from 'lucide-react'
 
 interface Option {
   value: string
@@ -143,7 +143,7 @@ export default function CustomSelect({
         </span>
         
         <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <ChevronDownIcon
+          <ChevronDown
             className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
               isOpen ? 'rotate-180' : ''
             }`}
@@ -183,7 +183,7 @@ export default function CustomSelect({
                 
                 {option.value === value && (
                   <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                    <CheckIcon className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-cyan-400" aria-hidden="true" />
                   </span>
                 )}
               </button>

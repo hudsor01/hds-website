@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Resend } from 'resend';
+import { type ZodError } from 'zod';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import {
   escapeHtml,
@@ -7,6 +8,12 @@ import {
   detectInjectionAttempt
 } from '@/lib/security-utils';
 import { createServerLogger, castError } from '@/lib/logger';
+import {
+  leadMagnetRequestSchema,
+  resendEmailResponseSchema,
+  discordWebhookRequestSchema,
+  type LeadMagnetRequest,
+} from '@/lib/schemas';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -32,37 +39,14 @@ const LEAD_MAGNETS = {
   }
 };
 
-function validateLeadMagnetForm(body: Record<string, unknown>) {
-  const errors: Record<string, string> = {};
-
-  // Validate email
-  if (!body.email || typeof body.email !== 'string') {
-    errors.email = 'Email is required';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
-    errors.email = 'Please enter a valid email address';
+// Helper function to convert Zod errors to user-friendly format
+function formatZodErrors(error: ZodError): Record<string, string> {
+  const formatted: Record<string, string> = {};
+  for (const issue of error.issues) {
+    const path = issue.path.join('.');
+    formatted[path] = issue.message;
   }
-
-  // Validate first name
-  if (!body.firstName || typeof body.firstName !== 'string' || body.firstName.trim().length < 1) {
-    errors.firstName = 'First name is required';
-  }
-
-  // Validate resource
-  if (!body.resource || !LEAD_MAGNETS[body.resource as keyof typeof LEAD_MAGNETS]) {
-    errors.resource = 'Invalid resource requested';
-  }
-
-  const isValid = Object.keys(errors).length === 0;
-  
-  return {
-    isValid,
-    errors,
-    data: isValid ? {
-      email: (body.email as string).toLowerCase().trim(),
-      firstName: (body.firstName as string).trim(),
-      resource: body.resource as string
-    } : null
-  };
+  return formatted;
 }
 
 // Generate welcome email with download link
@@ -168,35 +152,38 @@ export async function POST(request: NextRequest) {
       method: request.method,
       url: request.url
     });
+
     // Parse request body
-    let body;
+    let rawBody;
     try {
-      body = await request.json();
+      rawBody = await request.json();
     } catch {
       return NextResponse.json(
-        { error: 'Invalid request format' },
-        { status: 400 }
-      );
-    }
-    
-    // Validate form data
-    const validation = validateLeadMagnetForm(body);
-
-    if (!validation.isValid) {
-      return NextResponse.json(
-        { error: 'Validation failed', errors: validation.errors },
+        { error: 'Invalid request format', success: false },
         { status: 400 }
       );
     }
 
-    // TypeScript: validation.data is guaranteed to be non-null when isValid is true
-    const data = validation.data;
-    if (!data) {
+    // Validate form data with Zod
+    const validation = leadMagnetRequestSchema.safeParse(rawBody);
+
+    if (!validation.success) {
+      logger.error('Lead magnet validation failed', {
+        errors: validation.error.issues,
+        body: rawBody,
+      });
+
       return NextResponse.json(
-        { error: 'Invalid validation state' },
-        { status: 500 }
+        {
+          error: 'Validation failed',
+          errors: formatZodErrors(validation.error),
+          success: false,
+        },
+        { status: 400 }
       );
     }
+
+    const data: LeadMagnetRequest = validation.data;
     
     // Check for suspicious activity
     const fieldsToCheck = [data.firstName, data.email];
@@ -213,54 +200,92 @@ export async function POST(request: NextRequest) {
     if (resend) {
       try {
         const resource = LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS];
-        
+
         // Send download email to user
-        await resend.emails.send({
+        const userEmailResponse = await resend.emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: [data.email],
           subject: sanitizeEmailHeader(`Your ${resource.title} is Ready for Download`),
           html: generateLeadMagnetEmail(data)
         });
-        
+
+        // Validate Resend response
+        const userEmailValidation = resendEmailResponseSchema.safeParse(userEmailResponse.data);
+        if (!userEmailValidation.success) {
+          logger.warn('Resend user email response validation failed', {
+            errors: userEmailValidation.error.issues,
+            response: userEmailResponse.data,
+          });
+        }
+
         // Send notification to admin
-        await resend.emails.send({
+        const adminEmailResponse = await resend.emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: ['hello@hudsondigitalsolutions.com'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),
           html: generateAdminNotificationEmail(data)
         });
+
+        // Validate admin email response
+        const adminEmailValidation = resendEmailResponseSchema.safeParse(adminEmailResponse.data);
+        if (!adminEmailValidation.success) {
+          logger.warn('Resend admin email response validation failed', {
+            errors: adminEmailValidation.error.issues,
+            response: adminEmailResponse.data,
+          });
+        }
         
         // Send Discord notification if configured
         if (process.env.DISCORD_WEBHOOK_URL) {
           try {
-            await fetch(process.env.DISCORD_WEBHOOK_URL, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                embeds: [{
-                  title: 'New Lead Magnet Download',
-                  color: 0x22c55e, // Green color
-                  fields: [
-                    {
-                      name: 'Contact',
-                      value: `**${escapeHtml(data.firstName)}**\n${escapeHtml(data.email)}`,
-                      inline: true
-                    },
-                    {
-                      name: 'Resource',
-                      value: `**${resource.title}**\n${resource.description}`,
-                      inline: true
-                    }
-                  ],
-                  timestamp: new Date().toISOString(),
-                  footer: {
-                    text: 'Hudson Digital Solutions Lead Magnet'
+            // Build Discord webhook payload
+            const discordPayload = {
+              embeds: [{
+                title: 'New Lead Magnet Download',
+                color: 0x22c55e, // Green color
+                fields: [
+                  {
+                    name: 'Contact',
+                    value: `**${escapeHtml(data.firstName)}**\n${escapeHtml(data.email)}`,
+                    inline: true
+                  },
+                  {
+                    name: 'Resource',
+                    value: `**${resource.title}**\n${resource.description}`,
+                    inline: true
                   }
-                }]
-              })
-            });
+                ],
+                timestamp: new Date().toISOString(),
+                footer: {
+                  text: 'Hudson Digital Solutions Lead Magnet'
+                }
+              }]
+            };
+
+            // Validate Discord payload before sending
+            const discordValidation = discordWebhookRequestSchema.safeParse(discordPayload);
+            if (!discordValidation.success) {
+              logger.error('Discord webhook payload validation failed', {
+                errors: discordValidation.error.issues,
+                payload: discordPayload,
+              });
+            } else {
+              // Send validated payload
+              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(discordValidation.data),
+              });
+
+              if (!discordResponse.ok) {
+                logger.error('Discord webhook request failed', {
+                  status: discordResponse.status,
+                  statusText: discordResponse.statusText,
+                });
+              }
+            }
           } catch (discordError) {
             logger.error('Failed to send Discord notification', castError(discordError));
           }

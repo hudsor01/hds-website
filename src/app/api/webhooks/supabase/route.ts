@@ -7,6 +7,16 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { createServerLogger } from '@/lib/logger'
 import { triggerWebhook } from '@/lib/supabase'
+import {
+  databaseChangePayloadSchema,
+  authChangePayloadSchema,
+  storageChangePayloadSchema,
+  leadDataSchema,
+  eventDataSchema,
+  type DatabaseChangePayload,
+  type AuthChangePayload,
+  type StorageChangePayload,
+} from '@/lib/schemas'
 
 const logger = createServerLogger('supabase-webhook')
 
@@ -28,35 +38,73 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
     }
 
-    const payload = await request.json()
+    // Validate event type
+    const validEventTypes = ['db_change', 'auth_change', 'storage_change']
+    if (!eventType || !validEventTypes.includes(eventType)) {
+      logger.warn('Invalid or missing event type', { eventType })
+      return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
+    }
 
-    logger.info('Processing webhook payload', {
-      eventType,
-      recordId: payload.record?.id,
-      table: payload.table,
-      type: payload.type,
-    })
+    const rawPayload = await request.json()
 
-    // Handle different event types
+    // Validate payload based on event type
+    let validatedPayload
     switch (eventType) {
       case 'db_change':
-        await handleDatabaseChange(payload)
+        validatedPayload = databaseChangePayloadSchema.safeParse(rawPayload)
+        if (!validatedPayload.success) {
+          logger.error('Invalid database change payload', {
+            errors: validatedPayload.error.issues,
+            payload: rawPayload,
+          })
+          return NextResponse.json(
+            { error: 'Invalid payload', details: validatedPayload.error.issues },
+            { status: 400 }
+          )
+        }
+        await handleDatabaseChange(validatedPayload.data)
         break
 
       case 'auth_change':
-        await handleAuthChange(payload)
+        validatedPayload = authChangePayloadSchema.safeParse(rawPayload)
+        if (!validatedPayload.success) {
+          logger.error('Invalid auth change payload', {
+            errors: validatedPayload.error.issues,
+            payload: rawPayload,
+          })
+          return NextResponse.json(
+            { error: 'Invalid payload', details: validatedPayload.error.issues },
+            { status: 400 }
+          )
+        }
+        await handleAuthChange(validatedPayload.data)
         break
 
       case 'storage_change':
-        await handleStorageChange(payload)
+        validatedPayload = storageChangePayloadSchema.safeParse(rawPayload)
+        if (!validatedPayload.success) {
+          logger.error('Invalid storage change payload', {
+            errors: validatedPayload.error.issues,
+            payload: rawPayload,
+          })
+          return NextResponse.json(
+            { error: 'Invalid payload', details: validatedPayload.error.issues },
+            { status: 400 }
+          )
+        }
+        await handleStorageChange(validatedPayload.data)
         break
-
-      default:
-        logger.warn('Unknown webhook event type', { eventType })
     }
 
+    logger.info('Processing webhook payload', {
+      eventType,
+      recordId: rawPayload.record?.id,
+      table: rawPayload.table,
+      type: rawPayload.type,
+    })
+
     // Trigger any downstream webhooks
-    await triggerWebhook(eventType || 'unknown', payload)
+    await triggerWebhook(eventType, rawPayload)
 
     logger.info('Webhook processed successfully', { eventType })
     return NextResponse.json({ success: true })
@@ -70,94 +118,142 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleDatabaseChange(payload: Record<string, unknown>) {
+async function handleDatabaseChange(payload: DatabaseChangePayload) {
   const { table, type, record, old_record } = payload
 
-  // Type assertions for payload properties
-  const tableStr = table as string
-  const typeStr = type as string
-  const recordObj = record as Record<string, unknown>
-  const oldRecordObj = old_record as Record<string, unknown>
-
   logger.info('Database change detected', {
-    table: tableStr,
-    type: typeStr,
-    recordId: recordObj?.id,
+    table,
+    type,
+    recordId: record?.id,
   })
 
+  // Validate record data if present
+  if (!record) {
+    logger.warn('Database change payload missing record data', { table, type })
+    return
+  }
+
   // Handle specific table changes
-  switch (tableStr) {
+  switch (table) {
     case 'leads':
-      if (typeStr === 'INSERT') {
-        await handleNewLead(recordObj)
-      } else if (typeStr === 'UPDATE') {
-        await handleLeadUpdate(recordObj, oldRecordObj)
+      if (type === 'INSERT') {
+        const leadValidation = leadDataSchema.safeParse(record)
+        if (leadValidation.success) {
+          await handleNewLead(leadValidation.data)
+        } else {
+          logger.error('Invalid lead data', {
+            errors: leadValidation.error.issues,
+            record,
+          })
+        }
+      } else if (type === 'UPDATE' && old_record) {
+        const leadValidation = leadDataSchema.safeParse(record)
+        if (leadValidation.success) {
+          await handleLeadUpdate(leadValidation.data, old_record)
+        }
       }
       break
 
     case 'custom_events':
-      if (typeStr === 'INSERT') {
-        await handleNewEvent(recordObj)
+      if (type === 'INSERT') {
+        const eventValidation = eventDataSchema.safeParse(record)
+        if (eventValidation.success) {
+          await handleNewEvent(eventValidation.data)
+        } else {
+          logger.error('Invalid event data', {
+            errors: eventValidation.error.issues,
+            record,
+          })
+        }
       }
       break
 
     case 'api_logs':
-      if (typeStr === 'INSERT' && recordObj.error_message) {
-        await handleErrorLog(recordObj)
+      if (type === 'INSERT' && record.error_message) {
+        await handleErrorLog(record)
       }
       break
   }
 }
 
-async function handleAuthChange(payload: Record<string, unknown>) {
-  const user = payload.user as Record<string, unknown> | undefined
+async function handleAuthChange(payload: AuthChangePayload) {
+  const { user, type } = payload
+
   logger.info('Auth change detected', {
     userId: user?.id,
-    eventType: payload.event,
+    eventType: type,
   })
 
-  // Handle user authentication events
-  // Could trigger welcome emails, analytics, etc.
+  // Handle user authentication events based on type
+  switch (type) {
+    case 'SIGNED_IN':
+      // Could trigger analytics, session logging
+      break
+    case 'SIGNED_OUT':
+      // Could trigger session cleanup
+      break
+    case 'USER_UPDATED':
+      // Could trigger profile update notifications
+      break
+    case 'USER_DELETED':
+      // Could trigger cleanup, export data
+      break
+  }
 }
 
-async function handleStorageChange(payload: Record<string, unknown>) {
+async function handleStorageChange(payload: StorageChangePayload) {
+  const { bucket, object, type } = payload
+
   logger.info('Storage change detected', {
-    bucket: payload.bucket,
-    object: payload.object,
-    eventType: payload.event,
+    bucket,
+    object,
+    eventType: type,
   })
 
-  // Handle file uploads, processing, etc.
+  // Handle file uploads, processing based on type
+  switch (type) {
+    case 'OBJECT_CREATED':
+      // Could trigger file processing, thumbnail generation
+      break
+    case 'OBJECT_UPDATED':
+      // Could trigger reprocessing
+      break
+    case 'OBJECT_REMOVED':
+      // Could trigger cleanup
+      break
+  }
 }
 
-async function handleNewLead(lead: Record<string, unknown>) {
+async function handleNewLead(lead: { email: string; first_name: string; source?: string | undefined; company?: string | undefined }) {
   logger.info('New lead created', {
-    leadId: lead.id,
     email: lead.email,
+    name: lead.first_name,
     source: lead.source,
   })
 
   // Could trigger email sequences, notifications, etc.
+  // Example: scheduleEmailSequence(lead.email, lead.first_name, 'welcome', {})
 }
 
-async function handleLeadUpdate(lead: Record<string, unknown>, oldLead: Record<string, unknown>) {
+async function handleLeadUpdate(lead: { email: string; first_name: string; score?: number | undefined }, oldLead: Record<string, unknown>) {
   logger.info('Lead updated', {
-    leadId: lead.id,
-    statusChanged: lead.status !== oldLead.status,
-    scoreChanged: lead.lead_score !== oldLead.lead_score,
+    email: lead.email,
+    scoreChanged: lead.score !== oldLead.score,
   })
 
   // Handle lead status changes, score updates, etc.
+  // Example: If score increased significantly, trigger high-intent notification
 }
 
-async function handleNewEvent(event: Record<string, unknown>) {
+async function handleNewEvent(event: { name: string; category?: string | undefined; session_id?: string | undefined }) {
   logger.info('New custom event logged', {
-    eventName: event.event_name,
-    category: event.event_category,
+    eventName: event.name,
+    category: event.category,
     sessionId: event.session_id,
   })
 
   // Could trigger real-time analytics updates
+  // Example: Update real-time dashboards, trigger automations
 }
 
 async function handleErrorLog(log: Record<string, unknown>) {
@@ -169,4 +265,5 @@ async function handleErrorLog(log: Record<string, unknown>) {
   })
 
   // Could trigger alerts, notifications, etc.
+  // Example: Send to error tracking service, create incident if critical
 }

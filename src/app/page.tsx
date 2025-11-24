@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import {
-  CodeBracketIcon,
-  CogIcon,
-  ChartBarIcon,
-  RocketLaunchIcon,
-  UserGroupIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+  Code2,
+  Settings,
+  BarChart3,
+  Rocket,
+  Users,
+  Clock
+} from 'lucide-react';
 import { CTAButton } from '@/components/cta-button';
 
 export const metadata: Metadata = {
@@ -16,21 +16,21 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const solutions = [
     {
-      icon: CodeBracketIcon,
-      title: "Ship Features 3x Faster",
-      description: "Launch revenue-driving features in days, not months. Our clients ship new products 70% faster than with in-house teams—without the overhead.",
+      icon: Code2,
+      title: "Ship Features Faster",
+      description: "Launch new features in days, not months. We handle the entire technical stack.",
       features: ["React/Next.js Development", "API & Database Architecture", "99.9% Uptime Guaranteed"]
     },
     {
-      icon: CogIcon,
-      title: "Plug Revenue Leaks Instantly",
-      description: "The average business loses $50K annually to broken automation. We identify and fix these revenue leaks in your first month—guaranteed.",
+      icon: Settings,
+      title: "Fix Revenue Leaks",
+      description: "Stop losing 30% of leads to broken processes. Automate everything that slows you down.",
       features: ["CRM Integration", "Lead Scoring Automation", "Real-time Analytics"]
     },
     {
-      icon: ChartBarIcon,
-      title: "Scale to 7-Figures Without Rebuilding",
-      description: "Built for tomorrow's growth, not just today. Our architecture handles 10x traffic spikes while reducing your hosting costs by up to 40%.",
+      icon: BarChart3,
+      title: "Scale Without Breaking",
+      description: "Handle 10x growth without rebuilding. We future-proof your tech from day one.",
       features: ["Performance Audits", "Infrastructure Planning", "Cost Optimization"]
     }
   ];
@@ -81,14 +81,14 @@ export default function HomePage() {
                 </div>
 
                 {/* Trust Indicators */}
-                <div className="flex-center gap-comfortable pt-8 border-t border-border">
-                  <div className="flex-center gap-tight text-muted-foreground">
-                    <ClockIcon className="w-5 h-5 text-green-400" />
-                    <span className="small">250% Average ROI in 6 months</span>
+                <div className="flex-center gap-6 pt-8 border-t border-border">
+                  <div className="flex-center gap-2 text-muted-foreground">
+                    <Clock className="w-5 h-5 text-green-400" />
+                    <span className="small">Average 250% ROI</span>
                   </div>
-                  <div className="flex-center gap-tight text-muted-foreground">
-                    <UserGroupIcon className="w-5 h-5 text-blue-400" />
-                    <span className="small">98% Client Satisfaction</span>
+                  <div className="flex-center gap-2 text-muted-foreground">
+                    <Users className="w-5 h-5 text-blue-400" />
+                    <span className="small">Zero onboarding time</span>
                   </div>
                 </div>
               </div>
@@ -272,13 +272,13 @@ export default function HomePage() {
       {/* Final CTA */}
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <div className="glass-section card-padding">
-            <RocketLaunchIcon className="w-16 h-16 text-cyan-400 mx-auto mb-comfortable" />
-
-            <h2 className="text-responsive-md font-black text-white mb-heading">
-              Still Losing Deals to Slow Development?
-              <span className="block gradient-text mt-subheading">
-                Let&apos;s Fix That in 30 Days
+          <div className="glass-section p-12 md:p-16">
+            <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+            
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              Your competitors ship faster.
+              <span className="block gradient-text mt-2">
+                Why don&apos;t you?
               </span>
             </h2>
 

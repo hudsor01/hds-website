@@ -1,12 +1,20 @@
 'use client';
 
-import { ArrowRightIcon, CheckIcon, CogIcon, CodeBracketIcon, ChartBarIcon } from "@heroicons/react/24/outline";
-import { Search, ClipboardList, Zap, Rocket } from 'lucide-react';
+import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
 import Link from "next/link";
 import { CTAButton } from '@/components/cta-button';
 import { BackgroundPattern } from "@/components/BackgroundPattern";
 
-const services = [
+interface Service {
+  title: string;
+  description: string;
+  features: string[];
+  pricing: string;
+  icon: React.ComponentType<{ className?: string }>;
+  gradient: string;
+}
+
+const services: Service[] = [
   {
     title: "Web Applications That Convert",
     description: "Custom web applications that don't just look good—they generate revenue. Average 40% increase in conversion rates within 90 days.",
@@ -19,7 +27,7 @@ const services = [
     ],
     results: "Average 40% conversion increase",
     pricing: "Starting at $5,000",
-    icon: CodeBracketIcon,
+    icon: Code2,
     gradient: "bg-gradient-secondary",
     roi: "250% average ROI in 6 months"
   },
@@ -35,7 +43,7 @@ const services = [
     ],
     results: "Save 20+ hours/week on average",
     pricing: "Starting at $8,000",
-    icon: CogIcon,
+    icon: Settings,
     gradient: "bg-gradient-decorative-purple",
     roi: "340% average ROI in first year"
   },
@@ -51,20 +59,32 @@ const services = [
     ],
     results: "Average 3 revenue leaks found per audit",
     pricing: "Starting at $2,000",
-    icon: ChartBarIcon,
+    icon: BarChart3,
     gradient: "bg-gradient-secondary",
     roi: "Clients find 5-10x value in first 30 days"
   },
 ];
 
-const stats = [
+interface Stat {
+  value: string;
+  label: string;
+}
+
+const stats: Stat[] = [
   { value: "50+", label: "Projects Delivered" },
   { value: "98%", label: "Client Satisfaction" },
   { value: "250%", label: "Average ROI Increase" },
   { value: "24/7", label: "Support Available" },
 ];
 
-const process = [
+interface ProcessStep {
+  step: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const process: ProcessStep[] = [
   {
     step: "01",
     title: "Discovery",
@@ -127,8 +147,8 @@ export default function ServicesPage() {
                   Get Your Free ROI Analysis
                 </CTAButton>
 
-                <CTAButton href="/portfolio" variant="secondary" size="lg">
-                  See $3.7M+ in Results
+                <CTAButton href="#process" variant="secondary" size="lg">
+                  See Our Process
                 </CTAButton>
               </div>
             </div>
@@ -136,7 +156,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Services Section */}
-      <section className="relative section-spacing page-padding-x">
+      <section id="services-list" className="relative py-20 px-4">
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-responsive-md font-black text-white mb-heading">
@@ -187,7 +207,7 @@ export default function ServicesPage() {
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
                           <div className="w-5 h-5 rounded-full bg-gradient-secondary flex-center">
-                            <CheckIcon className="h-3 w-3 text-black" />
+                            <Check className="h-3 w-3 text-black" />
                           </div>
                         </div>
                         <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">{feature}</p>
@@ -210,8 +230,8 @@ export default function ServicesPage() {
                     href="/contact"
                     className="group/btn inline-flex items-center gap-content p-button bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300 w-full justify-center"
                   >
-                    Get Your Free Consultation
-                    <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    Get Started
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               );
@@ -249,7 +269,7 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Process Section */}
-      <section className="relative section-spacing page-padding-x">
+      <section id="process" className="relative py-20 px-4">
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-responsive-md font-black text-white mb-heading">
@@ -316,16 +336,16 @@ export default function ServicesPage() {
                 className="group relative inline-flex items-center gap-content cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative z-10">Claim Your Free ROI Analysis</span>
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10">Start Your Project</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
-                href="/portfolio"
-                className="group inline-flex items-center gap-content px-10 py-5 border-2 border-gray-600 text-white font-semibold text-body-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                href="#services-list"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
-                See $3.7M+ in Proven Results
-                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Explore Services
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 

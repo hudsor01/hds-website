@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { ArrowRightIcon } from "@heroicons/react/24/outline"
+import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
 
@@ -106,7 +106,7 @@ export function CTAButton({
     <LinkComponent {...linkProps}>
       <span className="relative">{children}</span>
       {showArrow && (
-        <ArrowRightIcon className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+        <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
       )}
     </LinkComponent>
   )

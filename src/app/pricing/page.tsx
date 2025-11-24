@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { X } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Pricing | Hudson Digital Solutions',
@@ -212,9 +212,9 @@ export default function PricingPage() {
                       </h4>
                       <ul className="space-y-tight">
                         {tier.notIncluded.map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-content">
-                            <XMarkIcon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                            <span className="text-caption text-muted-foreground">{item}</span>
+                          <li key={idx} className="flex items-start space-x-3">
+                            <X className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                            <span className="text-sm text-muted-foreground">{item}</span>
                           </li>
                         ))}
                       </ul>

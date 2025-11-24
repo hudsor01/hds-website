@@ -3,11 +3,11 @@
 import Link from "next/link";
 // import { brand } from "@/lib/brand";
 import {
-  EnvelopeIcon,
-  RocketLaunchIcon,
-  ClockIcon,
-  CheckCircleIcon
-} from "@heroicons/react/24/outline";
+  Mail,
+  Rocket,
+  Clock,
+  CheckCircle
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const footerLinks = {
@@ -75,7 +75,7 @@ export default function Footer() {
             <div className="md:col-span-1">
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <RocketLaunchIcon className="w-7 h-7 text-cyan-400" />
+                  <Rocket className="w-7 h-7 text-cyan-400" />
                   <h3 className="text-xl font-bold text-white">
                     HDS
                   </h3>
@@ -91,15 +91,15 @@ export default function Footer() {
               {/* Quick Stats */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-300">
-                  <CheckCircleIcon className="h-4 w-4 text-cyan-400" />
+                  <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">50+ Projects Delivered</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-300">
-                  <CheckCircleIcon className="h-4 w-4 text-cyan-400" />
+                  <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">250% Average ROI</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-300">
-                  <ClockIcon className="h-4 w-4 text-cyan-400" />
+                  <Clock className="h-4 w-4 text-cyan-400" />
                   <span className="small">Response within 2 hours</span>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function Footer() {
                   href="mailto:hello@hudsondigitalsolutions.com"
                   className="flex-center gap-2 w-full px-4 py-3 rounded-lg border border-gray-600 text-gray-300 hover:text-white hover:border-cyan-400 hover:bg-cyan-400/5 transition-smooth focus-ring"
                 >
-                  <EnvelopeIcon className="h-4 w-4" />
+                  <Mail className="h-4 w-4" />
                   <span className="small">hello@hudsondigitalsolutions.com</span>
                 </a>
               </div>
