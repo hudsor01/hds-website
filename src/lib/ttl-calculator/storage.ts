@@ -42,7 +42,7 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
     const tcoResults = calculateTCO(input);
     const leaseComparisonResults = calculateLeaseComparison(input);
 
-    const id = `calc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `calc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     const calculation: SavedCalculation = {
       id,
       name: name || `Vehicle - ${new Date().toLocaleDateString()}`,

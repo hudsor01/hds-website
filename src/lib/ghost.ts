@@ -75,7 +75,7 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
       limit: options?.limit || 15,
       page: options?.page || 1,
       filter: options?.filter,
-      include: options?.include || ['tags', 'authors'],
+      include: options?.include ? options.include.join(',') : 'tags,authors',
       order: options?.order || 'published_at DESC',
     };
 
@@ -88,10 +88,12 @@ export async function getPosts(options?: GetPostsOptions): Promise<GetPostsResul
       return { posts: validatedPosts as Post[] };
     }
 
-    const validatedPosts = parseGhostPosts(result.data || []);
+    // Handle paginated response
+    const paginatedResult = result as { data?: unknown[]; meta?: unknown };
+    const validatedPosts = parseGhostPosts(paginatedResult.data || []);
     return {
       posts: validatedPosts as Post[],
-      meta: result.meta,
+      meta: paginatedResult.meta as GetPostsResult['meta'],
     };
   } catch (error) {
     logger.error('Failed to fetch posts from Ghost', error as Error);
@@ -117,7 +119,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
     const post = await ghostClient.posts.read(
       { slug: sanitizedSlug },
-      { include: ['tags', 'authors'] }
+      { include: 'tags,authors' }
     );
 
     const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostBySlug(${slug})`);
@@ -139,7 +141,7 @@ export async function getPostById(id: string): Promise<Post | null> {
 
     const post = await ghostClient.posts.read(
       { id },
-      { include: ['tags', 'authors'] }
+      { include: 'tags,authors' }
     );
 
     const validatedPost = parseGhostResponse(ghostPostSchema, post, `getPostById(${id})`);

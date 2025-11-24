@@ -81,6 +81,14 @@ export class UnifiedRateLimiter {
   }
 
   /**
+   * Build a namespaced key for rate limiting
+   * This ensures different limit types don't share counters
+   */
+  private buildKey(identifier: string, limitType: RateLimitType): string {
+    return `${limitType}:${identifier}`;
+  }
+
+  /**
    * Check rate limit for a specific identifier and configuration
    */
   async checkLimit(
@@ -88,12 +96,13 @@ export class UnifiedRateLimiter {
     limitType: RateLimitType = 'default'
   ): Promise<boolean> {
     const config = RATE_LIMIT_CONFIGS[limitType];
+    const key = this.buildKey(identifier, limitType);
 
     if (this.useKV && this.kv) {
-      return this.checkLimitKV(identifier, config.maxRequests, config.windowMs);
+      return this.checkLimitKV(key, config.maxRequests, config.windowMs);
     }
 
-    return this._checkLimit(identifier, config.maxRequests, config.windowMs);
+    return this._checkLimit(key, config.maxRequests, config.windowMs);
   }
 
   /**
@@ -187,12 +196,13 @@ export class UnifiedRateLimiter {
   }> {
     const config = RATE_LIMIT_CONFIGS[limitType];
     const now = Date.now();
+    const key = this.buildKey(identifier, limitType);
 
     if (this.useKV && this.kv) {
-      return this.getLimitInfoKV(identifier, config.maxRequests, config.windowMs);
+      return this.getLimitInfoKV(key, config.maxRequests, config.windowMs);
     }
 
-    const entry = this.store.get(identifier);
+    const entry = this.store.get(key);
 
     if (!entry || now > entry.resetTime) {
       return {

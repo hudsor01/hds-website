@@ -273,7 +273,9 @@ Monthly Payment:
 
     printWindow.onload = function() {
       setTimeout(() => {
-        {return;}      }, 500);
+        printWindow.focus();
+        printWindow.print();
+      }, 500);
     };
   };
 
