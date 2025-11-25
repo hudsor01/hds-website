@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: false,
-    contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+    contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';", // Removed 'unsafe-eval' and 'unsafe-inline' from script-src for better security
   },
 
   experimental: {
@@ -88,7 +88,41 @@ const nextConfig: NextConfig = {
             key: "X-XSS-Protection",
             value: "1; mode=block",
           },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
         ],
+      },
+      // Content Security Policy header for enhanced security
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com", // Added vercel analytics
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: https:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "connect-src 'self' https://api.vercel.com https://*.supabase.co https://*.resend.dev",
+              "frame-ancestors 'none'",
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join('; '),
+          },
+        ],
+        // Only apply to HTML documents to avoid conflicts with API routes
+        has: [{ type: "header", key: "content-type", value: "text/html" }],
       },
     ];
   },
@@ -145,25 +179,40 @@ const nextConfig: NextConfig = {
         },
       };
 
-      // Warn if bundle exceeds performance budget
+      // Enhanced performance monitoring and optimization
       config.plugins.push({
         apply: (compiler: any) => {
           compiler.hooks.afterEmit.tap('PerformanceBudgetPlugin', (compilation: any) => {
             const stats = compilation.getStats().toJson({
               assets: true,
-              chunks: false,
-              modules: false,
+              chunks: true, // Include chunk information
+              modules: true, // Include module information
             });
 
             let totalJSSize = 0;
             let totalCSSSize = 0;
+            let totalImageSize = 0;
+            const chunkSizes: Record<string, number> = {};
+            const assetsByType: Record<string, number> = {};
 
             stats.assets?.forEach((asset: any) => {
+              const size = asset.size;
               if (asset.name.endsWith('.js')) {
-                totalJSSize += asset.size;
+                totalJSSize += size;
+                // Track individual chunk sizes
+                const match = asset.name.match(/([a-zA-Z0-9_-]+)(\.[a-f0-9]+)?\.js/);
+                if (match) {
+                  chunkSizes[match[1]] = (chunkSizes[match[1]] || 0) + size;
+                }
               } else if (asset.name.endsWith('.css')) {
-                totalCSSSize += asset.size;
+                totalCSSSize += size;
+              } else if (asset.name.match(/\.(png|jpe?g|gif|svg|webp)$/)) {
+                totalImageSize += size;
               }
+
+              // Track all asset types
+              const ext = asset.name.split('.').pop()?.toLowerCase() || 'unknown';
+              assetsByType[ext] = (assetsByType[ext] || 0) + size;
             });
 
             // Check against budgets
@@ -178,6 +227,25 @@ const nextConfig: NextConfig = {
                 `⚠️  CSS bundle size (${(totalCSSSize / 1024).toFixed(2)}KB) exceeds budget (${(PERFORMANCE_BUDGETS.maxCSSSize / 1024).toFixed(2)}KB)`
               );
             }
+
+            // Log performance metrics
+            console.log('\n📊 Performance Metrics:');
+            console.log(`   JavaScript Bundle: ${(totalJSSize / 1024).toFixed(2)}KB`);
+            console.log(`   CSS Bundle: ${(totalCSSSize / 1024).toFixed(2)}KB`);
+            console.log(`   Images: ${(totalImageSize / 1024).toFixed(2)}KB`);
+
+            // Log chunk sizes that are larger than 50KB
+            Object.entries(chunkSizes).forEach(([chunkName, size]) => {
+              if (size > 50 * 1024) { // 50KB
+                console.warn(`⚠️  Large chunk: ${chunkName} (${(size / 1024).toFixed(2)}KB)`);
+              }
+            });
+
+            // Log assets by type
+            console.log('   Assets by type:');
+            Object.entries(assetsByType).forEach(([ext, size]) => {
+              console.log(`     ${ext}: ${(size / 1024).toFixed(2)}KB`);
+            });
           });
         },
       });
