@@ -3,14 +3,11 @@
  * Fetches performance metrics for a given URL
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 
 const logger = createServerLogger('pagespeed-api');
 const PAGESPEED_API_URL = 'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed';
-
-// Force dynamic rendering for API route
-export const dynamic = 'force-dynamic';
 
 interface PageSpeedResponse {
   lighthouseResult: {
@@ -30,6 +27,8 @@ interface PageSpeedResponse {
 }
 
 export async function GET(request: NextRequest) {
+  await connection(); // Force dynamic rendering
+
   try {
     const { searchParams } = new URL(request.url);
     const url = searchParams.get('url');

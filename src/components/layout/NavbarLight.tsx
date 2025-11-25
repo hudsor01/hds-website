@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState, memo, useCallback, useEffect } from "react";
 import {
   Menu,
@@ -23,8 +22,13 @@ const navigation: NavigationItem[] = [
 ];
 
 const NavbarLight = memo(function NavbarLight() {
-  const pathname = usePathname();
+  const [pathname, setPathname] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Initialize pathname on client side only (Next.js 16 cacheComponents compatibility)
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
 
   const handleNavClick = useCallback(() => {
     setMobileMenuOpen(false);
