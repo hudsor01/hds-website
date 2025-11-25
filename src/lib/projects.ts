@@ -41,7 +41,10 @@ export async function getProjects(): Promise<Project[]> {
       .order('created_at', { ascending: false });
 
     if (error) {
-      logger.error('Failed to fetch projects', { error: error.message });
+      // Only log errors in development or runtime (not during build)
+      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+        logger.error('Failed to fetch projects', { error: error.message });
+      }
       return [];
     }
 
@@ -53,9 +56,12 @@ export async function getProjects(): Promise<Project[]> {
     logger.info('Projects fetched from database', { count: projects.length });
     return projects;
   } catch (error) {
-    logger.error('Exception fetching projects', {
-      error: error instanceof Error ? error.message : String(error),
-    });
+    // Only log errors in development or runtime (not during build)
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      logger.error('Exception fetching projects', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return [];
   }
 }
@@ -81,7 +87,10 @@ export async function getFeaturedProjects(): Promise<Project[]> {
       .order('created_at', { ascending: false });
 
     if (error) {
-      logger.error('Failed to fetch featured projects', { error: error.message });
+      // Only log errors in development or runtime (not during build)
+      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+        logger.error('Failed to fetch featured projects', { error: error.message });
+      }
       return [];
     }
 
@@ -90,9 +99,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 
     return projects;
   } catch (error) {
-    logger.error('Exception fetching featured projects', {
-      error: error instanceof Error ? error.message : String(error),
-    });
+    // Only log errors in development or runtime (not during build)
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      logger.error('Exception fetching featured projects', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return [];
   }
 }
@@ -119,12 +131,10 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        // Not found
-        logger.info('Project not found', { slug });
-        return null;
+      // Don't log "not found" errors or build-time errors
+      if (error.code !== 'PGRST116' && (process.env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
+        logger.error('Failed to fetch project', { slug, error: error.message });
       }
-      logger.error('Failed to fetch project', { slug, error: error.message });
       return null;
     }
 
@@ -138,10 +148,13 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 
     return data;
   } catch (error) {
-    logger.error('Exception fetching project', {
-      slug,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    // Only log errors in development or runtime (not during build)
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      logger.error('Exception fetching project', {
+        slug,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return null;
   }
 }
@@ -166,10 +179,13 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
       .order('created_at', { ascending: false});
 
     if (error) {
-      logger.error('Failed to fetch projects by category', {
-        category,
-        error: error.message,
-      });
+      // Only log errors in development or runtime (not during build)
+      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+        logger.error('Failed to fetch projects by category', {
+          category,
+          error: error.message,
+        });
+      }
       return [];
     }
 
@@ -178,10 +194,13 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
 
     return projects;
   } catch (error) {
-    logger.error('Exception fetching projects by category', {
-      category,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    // Only log errors in development or runtime (not during build)
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      logger.error('Exception fetching projects by category', {
+        category,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return [];
   }
 }
@@ -198,15 +217,21 @@ export async function getAllProjectSlugs(): Promise<string[]> {
       .eq('published', true);
 
     if (error) {
-      logger.error('Failed to fetch project slugs', { error: error.message });
+      // Only log errors in development or runtime (not during build)
+      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+        logger.error('Failed to fetch project slugs', { error: error.message });
+      }
       return [];
     }
 
     return (data || []).map((p) => p.slug);
   } catch (error) {
-    logger.error('Exception fetching project slugs', {
-      error: error instanceof Error ? error.message : String(error),
-    });
+    // Only log errors in development or runtime (not during build)
+    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      logger.error('Exception fetching project slugs', {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return [];
   }
 }
