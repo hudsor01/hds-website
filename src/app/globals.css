@@ -1232,6 +1232,96 @@ body {
   cursor: pointer;
 }
 
+/* CTA Button variants - Critical utility classes */
+.cta-primary {
+  background: linear-gradient(90deg, var(--color-gradient-primary-start), var(--color-gradient-primary-end));
+  color: var(--color-text-inverted);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 6);
+  transition: all var(--duration-300);
+  box-shadow: 0 0 0 0 oklch(from var(--color-cyan-600) l c h / 0);
+  will-change: transform, box-shadow;
+}
+
+.cta-primary:hover {
+  box-shadow: 0 10px 15px -3px oklch(from var(--color-cyan-600) l c h / 0.25);
+  transform: translateY(-1px);
+}
+
+.cta-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 10px -3px oklch(from var(--color-cyan-600) l c h / 0.25);
+}
+
+.cta-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 6);
+  border: 2px solid var(--color-border-primary);
+  transition: all var(--duration-300);
+  will-change: transform, border-color, background-color;
+}
+
+.cta-secondary:hover {
+  border-color: var(--color-cyan-400);
+  background: oklch(from var(--color-cyan-400) l c h / 0.05);
+  color: var(--color-cyan-400);
+}
+
+.cta-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Hover effect utilities */
+.button-hover-glow {
+  position: relative;
+  transition: all var(--duration-300);
+  will-change: box-shadow;
+}
+
+.button-hover-glow:hover {
+  box-shadow: 0 10px 15px -3px oklch(from var(--color-cyan-600) l c h / 0.25),
+              0 4px 6px -2px oklch(from var(--color-cyan-600) l c h / 0.05);
+}
+
+.card-hover-glow {
+  transition: all var(--duration-500);
+  will-change: transform, box-shadow;
+}
+
+.card-hover-glow:hover {
+  box-shadow: 0 20px 25px -5px oklch(from var(--color-cyan-600) l c h / 0.1),
+              0 10px 10px -5px oklch(from var(--color-cyan-600) l c h / 0.04);
+  transform: translateY(-2px);
+}
+
+.hover-lift {
+  transition: transform var(--duration-300);
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hover-lift:active {
+  transform: translateY(0);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(90deg, var(--color-gradient-primary-start), var(--color-gradient-primary-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 .text-responsive-xs {
   font-size: var(--text-sm);
 }

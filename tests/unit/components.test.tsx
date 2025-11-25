@@ -216,11 +216,11 @@ describe('Button Component', () => {
     expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center')
   })
 
-  it('should apply transition-smooth class', () => {
+  it('should apply transition-all class', () => {
     render(<Button>Click Me</Button>)
 
     const button = screen.getByRole('button', { name: 'Click Me' })
-    expect(button).toHaveClass('transition-smooth')
+    expect(button).toHaveClass('transition-all')
   })
 
   it('should render different variants', () => {

@@ -97,8 +97,8 @@ export default function FloatingTextarea({
         className={`
           absolute inset-0 rounded-lg pointer-events-none
           transition-all duration-200 ease-in-out
-          ${isFocused 
-            ? 'ring-1 ring-cyan-400/30 ring-offset-1 ring-offset-transparent' 
+          ${isFocused
+            ? 'ring-1 ring-cyan-400/30'
             : ''
           }
         `}
