@@ -138,13 +138,13 @@ class PerformanceMonitor {
 export const performanceMonitor = new PerformanceMonitor();
 
 // Utility function to measure component rendering performance
-export const measureComponentRender = (componentName: string, renderFn: () => any) => {
+export const measureComponentRender = (componentName: string, renderFn: () => unknown) => {
   const start = performance.now();
   const result = renderFn();
   const end = performance.now();
-  
+
   performanceMonitor.addCustomMetric(`render_${componentName}`, end - start);
-  
+
   return result;
 };
 
