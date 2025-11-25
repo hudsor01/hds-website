@@ -11,21 +11,34 @@ export const metadata: Metadata = {
     description: 'Transparent pricing for custom web development and digital solutions',
     url: 'https://hudsondigitalsolutions.com/pricing',
   },
+  other: {
+    "ld+json": JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Why do prices start at these amounts?", "acceptedAnswer": {"@type": "Answer", "text": "Our starting prices reflect the quality and expertise we bring to every project. We focus on delivering business value through custom solutions, not template-based work."}},
+        {"@type": "Question", "name": "What factors affect the final project cost?", "acceptedAnswer": {"@type": "Answer", "text": "Project complexity, timeline requirements, third-party integrations, custom features, and ongoing maintenance needs all influence the final investment."}},
+        {"@type": "Question", "name": "Do you offer payment plans?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we typically structure payments in milestones: 50% to start, 30% at midpoint, and 20% upon completion. Custom arrangements available for larger projects."}},
+        {"@type": "Question", "name": "What's included in the free consultation?", "acceptedAnswer": {"@type": "Answer", "text": "A 60-minute strategy session where we analyze your requirements, discuss technical options, and provide a detailed project estimate with timeline."}},
+        {"@type": "Question", "name": "Do you provide ongoing support?", "acceptedAnswer": {"@type": "Answer", "text": "We offer various maintenance packages including bug fixes, security updates, feature enhancements, and technical support tailored to your needs."}}
+      ]
+    })
+  }
 };
 
 const pricingTiers = [
   {
-    name: 'Strategy & Consultation',
+    name: 'Revenue Leak Audit',
     price: 'Starting at $2,000',
-    description: 'Perfect for businesses needing technical guidance and planning',
+    description: 'Find $50K-$180K in hidden revenue leaks within 30 days. Average client finds 5-10x value in first month.',
     features: [
       'Technical audit & assessment',
-      'Growth strategy planning',
-      'Technology recommendations',
-      'Architecture planning',
-      'Performance optimization plan',
-      'Security assessment',
-      'Detailed project roadmap',
+      'Revenue leak identification',
+      'Conversion optimization roadmap',
+      'Performance bottleneck analysis',
+      'Security vulnerability assessment',
+      'Competitive analysis',
+      'Detailed action plan with ROI projections',
       '2-4 week delivery'
     ],
     notIncluded: [
@@ -33,22 +46,23 @@ const pricingTiers = [
       'Ongoing maintenance'
     ],
     popular: false,
-    cta: 'Start Planning',
-    href: '/contact'
+    cta: 'Find Your Revenue Leaks',
+    href: '/contact',
+    roi: '5-10x value typically found'
   },
   {
-    name: 'Web Applications',
+    name: 'Revenue-Optimized Web App',
     price: 'Starting at $5,000',
-    description: 'Custom web applications built with modern technologies',
+    description: 'Websites that pay for themselves. Average 40% conversion increase within 90 days or we keep working for free.',
     features: [
       'Custom React/Next.js development',
-      'Responsive design',
+      'Conversion-focused design',
       'Database integration',
       'User authentication',
       'API development',
-      'Testing & quality assurance',
-      'Deployment & hosting setup',
-      'Basic SEO optimization',
+      'A/B testing infrastructure',
+      'Analytics & tracking setup',
+      'SEO optimization',
       '4-8 week delivery'
     ],
     notIncluded: [
@@ -56,28 +70,30 @@ const pricingTiers = [
       'E-commerce functionality'
     ],
     popular: true,
-    cta: 'Get Started',
-    href: '/contact'
+    cta: 'Build My Revenue Machine',
+    href: '/contact',
+    roi: '250% average ROI in 6 months'
   },
   {
-    name: 'Custom Solutions',
+    name: 'Business Automation Suite',
     price: 'Starting at $8,000',
-    description: 'Full-scale business automation and enterprise solutions',
+    description: 'Save 20+ hours/week and eliminate $50K+ in annual process costs. Automation that scales with your growth.',
     features: [
-      'Business process automation',
-      'Third-party integrations',
-      'Custom CRM/ERP systems',
-      'Advanced analytics',
-      'Scalable architecture',
-      'Security compliance',
+      'End-to-end process automation',
+      'CRM/Email/Analytics integrations',
+      'Custom workflow engines',
+      'Advanced analytics dashboards',
+      'Scalable cloud architecture',
+      'Security & compliance',
       'Performance monitoring',
       'Training & documentation',
       '6-12 week delivery'
     ],
     notIncluded: [],
     popular: false,
-    cta: 'Discuss Project',
-    href: '/contact'
+    cta: 'Automate My Business',
+    href: '/contact',
+    roi: '340% average ROI in first year'
   }
 ];
 
@@ -108,31 +124,32 @@ export default function PricingPage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32">
-        <div className="container-wide sm:px-6 lg:px-8 w-full">
+      <section className="relative section-spacing">
+        <div className="container-wide">
           <div className="text-center">
 
-            {/* Professional Badge */}
-            <div className="inline-block mb-8">
-              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-sm font-medium">
+            {/* Section Label */}
+            <div className="inline-block mb-comfortable">
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium">
                 Transparent Pricing
               </span>
             </div>
 
             {/* Hero Heading */}
-            <h1 className="text-clamp-2xl font-black text-white leading-[1.1] mb-6 text-balance">
-              <span className="block">Quality</span>
+            <h1 className="text-clamp-2xl font-black text-white leading-[1.1] mb-heading text-balance">
+              <span className="block">Development That</span>
               <span className="block gradient-text">
-                Investment
+                Pays for Itself
               </span>
-              <span className="block text-responsive-lg font-bold text-muted-foreground mt-2">
-                Transparent Pricing
+              <span className="block text-responsive-lg font-bold text-muted-foreground mt-subheading">
+                ROI-Guaranteed Pricing
               </span>
             </h1>
 
             <div className="typography">
-              <p className="text-xl text-muted-foreground leading-relaxed container-narrow text-pretty">
-                Quality development that drives real business results. No hidden fees, no surprises - just transparent pricing for exceptional work.
+              <p className="text-subheading text-muted-foreground leading-relaxed container-narrow text-pretty">
+                Stop paying for websites that sit on a shelf. Our pricing is designed around ROI—if you don&apos;t see measurable results within 90 days, we keep working for free.
+                No hidden fees. No surprises. Just revenue-driven results.
               </p>
             </div>
           </div>
@@ -140,42 +157,49 @@ export default function PricingPage() {
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid-3">
             {pricingTiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`group relative glass-card-light p-8 card-hover-glow transition-all duration-500 ${
+                className={`group relative glass-card-light card-padding card-hover-glow transition-smooth ${
                   tier.popular ? 'border-cyan-400/50 shadow-xl shadow-cyan-500/10' : ''
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-primary text-white px-4 py-2 rounded-full text-sm font-bold">
+                    <span className="bg-gradient-primary text-white px-4 py-2 rounded-full text-caption font-bold">
                       MOST POPULAR
                     </span>
                   </div>
                 )}
 
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-2 text-balance group-hover:text-cyan-400 transition-colors">{tier.name}</h3>
-                  <div className="text-3xl font-black gradient-text mb-4">{tier.price}</div>
+                <div className="text-center mb-comfortable">
+                  <h3 className="text-card-title font-bold text-white mb-subheading text-balance group-hover:text-cyan-400 transition-colors">{tier.name}</h3>
+                  <div className="text-section-title font-black gradient-text mb-subheading">{tier.price}</div>
                   <div className="typography">
                     <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
                   </div>
                 </div>
 
-                <div className="space-y-6 mb-8">
+                {/* ROI Badge */}
+                {tier.roi && (
+                  <div className="mb-card-content p-button bg-green-400/10 border border-green-400/30 rounded-lg">
+                    <p className="text-caption font-bold text-green-400 text-center">{tier.roi}</p>
+                  </div>
+                )}
+
+                <div className="space-y-content mb-comfortable">
                   <div>
-                    <h4 className="text-sm uppercase tracking-wide text-muted-foreground font-bold mb-4">
+                    <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
                       What&apos;s Included
                     </h4>
-                    <ul className="space-y-3">
+                    <ul className="space-y-tight">
                       {tier.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start space-x-3">
+                        <li key={idx} className="flex items-start gap-content">
                           <div className="w-2 h-2 rounded-full bg-gradient-secondary mt-2" />
-                          <span className="text-sm text-muted-foreground">{feature}</span>
+                          <span className="text-caption text-muted-foreground">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -183,10 +207,10 @@ export default function PricingPage() {
 
                   {tier.notIncluded.length > 0 && (
                     <div>
-                      <h4 className="text-sm uppercase tracking-wide text-muted-foreground font-bold mb-4 mt-6">
+                      <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
                         Not Included
                       </h4>
-                      <ul className="space-y-3">
+                      <ul className="space-y-tight">
                         {tier.notIncluded.map((item, idx) => (
                           <li key={idx} className="flex items-start space-x-3">
                             <X className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
@@ -200,7 +224,7 @@ export default function PricingPage() {
 
                 <Link
                   href={tier.href}
-                  className={`button-base group w-full px-8 py-4 font-bold text-base rounded-lg overflow-hidden ${
+                  className={`button-base group w-full px-8 py-4 font-bold text-body rounded-lg overflow-hidden ${
                     tier.popular
                       ? 'cta-primary hover:shadow-xl hover:shadow-cyan-500/30'
                       : 'cta-secondary button-hover-glow'
@@ -215,23 +239,23 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16 typography">
-            <h2 className="text-responsive-lg font-black text-white mb-4">
+          <div className="text-center mb-content-block typography">
+            <h2 className="text-responsive-lg font-black text-white mb-heading">
               Frequently Asked <span className="gradient-text">Questions</span>
             </h2>
             <div className="typography">
-              <p className="text-xl text-gray-400">
+              <p className="text-subheading text-gray-400">
                 Everything you need to know about our pricing and process
               </p>
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-content">
             {faqs.map((faq, index) => (
-              <div key={index} className="glass-card-light p-8 hover:border-cyan-400/50 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">{faq.question}</h3>
+              <div key={index} className="glass-card-light card-padding hover:border-cyan-400/50 transition-smooth">
+                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-gray-400 leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
@@ -242,31 +266,43 @@ export default function PricingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <div className="glass-section p-12 md:p-16">
-            <h2 className="text-responsive-lg font-black text-white mb-6">
-              Ready to Start Your Project?
+          <div className="glass-section card-padding">
+            <h2 className="text-responsive-lg font-black text-white mb-heading">
+              Ready for Development That Actually Makes Money?
             </h2>
 
             <div className="typography">
-              <p className="text-xl text-gray-300 mb-10 container-narrow">
-                Get a free consultation and detailed project estimate. No commitments, just expert advice on bringing your vision to life.
+              <p className="text-subheading text-gray-300 mb-heading container-narrow">
+                Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to plug the leaks fast.
+              </p>
+              <p className="text-cyan-400 font-semibold mb-content-block">
+                No sales pitch. No commitment. Just a detailed roadmap you can use immediately (even if you never hire us).
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-content justify-center">
               <Link href="/contact">
-                <button className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden will-change-transform">
-                  <span className="relative">Get Free Consultation</span>
+                <button className="button-base group cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden will-change-transform">
+                  <span className="relative">Claim Your Free ROI Analysis</span>
                 </button>
               </Link>
 
               <Link href="/portfolio">
-                <button className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl will-change-transform">
-                  View Our Work
+                <button className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl will-change-transform">
+                  See $3.7M+ in Proven Results
                 </button>
               </Link>
+            </div>
+
+            {/* Trust signals */}
+            <div className="mt-content-block pt-8 border-t border-white/10">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
+                <div>90-day ROI guarantee</div>
+                <div>Response within 2 hours</div>
+                <div>50+ successful projects</div>
+              </div>
             </div>
           </div>
         </div>

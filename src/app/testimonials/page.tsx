@@ -4,8 +4,8 @@ import { Star, MessageCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Client Testimonials | Hudson Digital Solutions',
-  description: 'Read what our clients say about working with Hudson Digital Solutions. Real success stories from real businesses.',
-  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies'
+  description: 'Real client results: 340% ROI, 100% satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from 50+ companies.',
+  keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies, ROI results, business transformation'
 }
 
 const testimonials = [
@@ -73,7 +73,7 @@ const testimonials = [
 
 const StarRating = ({ rating }: { rating: number }) => {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-tight">
       {[...Array(5)].map((_, i) => (
         <Star
           key={i}
@@ -88,16 +88,16 @@ export default function TestimonialsPage() {
   return (
     <div className="min-h-screen bg-gradient-hero">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4">
+      <section className="relative pt-32 section-spacing page-padding-x">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full"></div>
           <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
         </div>
 
         <div className="relative z-10 container-wide">
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-comfortable">
             <div>
-              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-sm font-medium inline-block">
+              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium inline-block">
                 Client Success Stories
               </span>
             </div>
@@ -120,57 +120,57 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 px-4 border-y border-border">
+      <section className="py-12 page-padding-x border-y border-border">
         <div className="container-wide">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid-4 gap-comfortable">
             <div className="text-center">
               <div className="text-responsive-lg font-black text-cyan-400">100%</div>
-              <div className="text-sm text-muted-foreground mt-1">Client Satisfaction</div>
+              <div className="text-caption text-muted-foreground mt-1">Client Satisfaction</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-cyan-400">50+</div>
-              <div className="text-sm text-muted-foreground mt-1">Projects Delivered</div>
+              <div className="text-caption text-muted-foreground mt-1">Projects Delivered</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-cyan-400">3.5x</div>
-              <div className="text-sm text-muted-foreground mt-1">Average ROI</div>
+              <div className="text-caption text-muted-foreground mt-1">Average ROI</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-cyan-400">24hr</div>
-              <div className="text-sm text-muted-foreground mt-1">Response Time</div>
+              <div className="text-caption text-muted-foreground mt-1">Response Time</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Grid */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-clamp-xl font-black text-white mb-6">
+          <div className="text-center mb-content-block">
+            <h2 className="text-clamp-xl font-black text-white mb-heading">
               <span className="gradient-text">
                 What Our Clients Say
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground container-narrow">
+            <p className="text-subheading text-muted-foreground container-narrow">
               Every testimonial represents a business that chose excellence over mediocrity
             </p>
           </div>
 
-          <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-8 scrollbar-hide">
+          <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-comfortable scrollbar-hide">
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="glass-card-light p-8 card-hover-glow transition-all duration-300 snap-center flex-shrink-0 w-[90vw] md:w-auto"
+                className="glass-card-light card-padding card-hover-glow transition-smooth snap-center flex-shrink-0 w-[90vw] md:w-auto"
               >
                 {/* Rating */}
-                <div className="mb-4">
+                <div className="mb-subheading">
                   <StarRating rating={testimonial.rating} />
                 </div>
 
-                {/* Highlight Badge */}
-                <div className="mb-6">
-                  <span className="px-3 py-1 rounded-full bg-cyan-400/10 text-cyan-400 text-sm font-semibold">
+                {/* Highlight Label */}
+                <div className="mb-card-content">
+                  <span className="px-4 py-2 rounded-full bg-cyan-400/10 text-cyan-400 text-caption font-semibold">
                     {testimonial.highlight}
                   </span>
                 </div>
@@ -188,10 +188,10 @@ export default function TestimonialsPage() {
                   <div className="font-semibold text-white">
                     {testimonial.name}
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-caption text-gray-400">
                     {testimonial.role} at {testimonial.company}
                   </div>
-                  <div className="text-xs text-cyan-400 mt-2">
+                  <div className="text-caption text-cyan-400 mt-2">
                     {testimonial.service}
                   </div>
                 </div>
@@ -202,10 +202,10 @@ export default function TestimonialsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4">
+      <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="glass-section p-12 md:p-16 text-center">
-            <h2 className="text-clamp-xl font-black text-white mb-6">
+          <div className="glass-section card-padding text-center">
+            <h2 className="text-clamp-xl font-black text-white mb-heading">
               Ready to be our next
               <span className="block gradient-text mt-2">
                 success story?
@@ -213,15 +213,15 @@ export default function TestimonialsPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-xl text-gray-300 container-narrow mb-10">
+              <p className="text-subheading text-gray-300 container-narrow mb-content-block">
                 Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-content justify-center">
               <Link
                 href="/contact"
-                className="group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg"
+                className="group inline-flex-center px-8 py-4 text-body font-semibold text-black bg-gradient-secondary-hover rounded-lg"
               >
                 Start Your Transformation
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -229,7 +229,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200"
+                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-smooth"
               >
                 View Portfolio
               </Link>

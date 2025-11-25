@@ -41,21 +41,21 @@ export default async function BlogPage() {
   return (
     <main className="min-h-screen bg-gradient-primary">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero py-24 overflow-hidden">
+      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
         </div>
 
         <div className="relative container-wide text-center">
-          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-body-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-clamp-xl font-black text-white mb-6 text-balance">
+          <h1 className="text-clamp-xl font-black text-white mb-heading text-balance">
             Business <span className="gradient-text">Strategy</span> Blog
           </h1>
-          <p className="text-xl text-gray-300 container-narrow text-pretty">
+          <p className="text-subheading text-gray-300 container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -63,7 +63,7 @@ export default async function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="py-16 bg-gradient-primary">
+        <section className="section-spacing bg-gradient-primary">
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Articles</h2>
@@ -80,13 +80,13 @@ export default async function BlogPage() {
       )}
 
       {/* All Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="section-spacing bg-gradient-primary">
         <div className="container-wide">
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-comfortable">
             {/* Main Content */}
             <div className="flex-1">
-              <div className="text-center lg:text-left mb-12">
-                <h2 className="text-3xl font-black text-white mb-4 text-balance">All Articles</h2>
+              <div className="text-center lg:text-left mb-content-block">
+                <h2 className="text-section-title font-black text-white mb-subheading text-balance">All Articles</h2>
                 <p className="text-gray-300 text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
@@ -122,12 +122,12 @@ export default async function BlogPage() {
               {tags.length > 0 && <TagList tags={tags} />}
 
               {/* CTA */}
-              <div className="glass-card rounded-xl p-6 text-center">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Ready to Dominate Your Market?</h3>
-                <p className="text-gray-300 mb-4 text-pretty">Let&apos;s engineer your competitive advantage.</p>
+              <div className="glass-card rounded-xl card-padding-sm text-center">
+                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Ready to Dominate Your Market?</h3>
+                <p className="text-gray-300 mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
-                  className="inline-block bg-green-400 text-black font-semibold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors"
+                  className="inline-block bg-green-400 text-black font-semibold p-button rounded-lg hover:bg-green-500 transition-colors"
                 >
                   Get Started
                 </Link>

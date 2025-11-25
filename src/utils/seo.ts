@@ -8,11 +8,11 @@ import type { SEOMetaData } from '@/types/seo'
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
   home: {
     title:
-      'Hudson Digital Solutions - Professional Web Development & Business Growth Strategy 2025',
+      'Turn Your Website Into a Revenue Machine | 250% ROI Guaranteed | Hudson Digital Solutions',
     description:
-      'Transform your business with Hudson Digital Solutions. Expert web development, conversion optimization, and digital dominance strategies. 340% average ROI, $5K+ projects. Get your free consultation today.',
+      'Stop losing revenue to technical bottlenecks. Custom web development that pays for itself—average 250% ROI within 6 months or we keep working for free. Ship 3x faster, convert 2x better. $3.7M+ in proven revenue impact across 50+ businesses. Get your free ROI roadmap today.',
     keywords:
-      'web development 2025, business website development, conversion rate optimization, website ROI optimization, Next.js development, React development, TypeScript applications, digital marketing strategy, small business website, professional web design, business growth website',
+      'revenue-driven web development, high converting websites 2025, web development ROI, website revenue optimization, conversion rate optimization CRO, Next.js development services, React development agency, business automation software, SaaS development, technical debt solutions, web application development, startup web development',
     ogImage: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
     canonical: 'https://hudsondigitalsolutions.com/',
     structuredData: {
@@ -38,14 +38,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 
   services: {
     title:
-      'Professional Web Development Services 2025 - Custom Business Solutions | Hudson Digital',
+      'Development That Pays for Itself | 90-Day ROI Guarantee | Hudson Digital Solutions',
     description:
-      'Professional web development services: Next.js & React apps, conversion optimization, custom software, and performance optimization. Starting at $5K with 340% average ROI.',
+      'Stop paying for development that sits on a shelf. Revenue-optimized web apps (40% conversion increase), business automation (save 20+ hours/week), and revenue leak audits (find $50K-$180K in lost revenue). Services generate measurable ROI within 90 days—or we keep working for free. No agencies. No junior devs. Just senior engineers who understand revenue.',
     keywords:
-      'web development services 2025, professional website development, conversion rate optimization services, Next.js development, React development, small business web development, custom software development, website performance optimization, business growth website, digital marketing integration',
-    ogTitle: 'Professional Web Development Services 2025 | Hudson Digital',
+      'ROI-driven web development, conversion-optimized websites, business process automation, revenue operations automation, web application development, SaaS development services, technical consulting ROI, performance optimization services, revenue leak analysis, CRM integration services, marketing automation development',
+    ogTitle: 'Development That Pays for Itself - 90-Day ROI Guarantee | Hudson Digital',
     ogDescription:
-      'Expert web development: Next.js, React, conversion optimization, custom software solutions. 340% average ROI, proven results. Starting at $5K.',
+      'Revenue-optimized development services with 90-day ROI guarantee. Web apps with 40% conversion increases, automation saving 20+ hours/week. Find $50K-$180K in revenue leaks.',
     canonical: 'https://hudsondigitalsolutions.com/services',
     structuredData: {
       '@context': 'https://schema.org',
@@ -66,14 +66,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   },
 
   about: {
-    title: 'About Hudson Digital Solutions - Expert Web Development & Growth Strategy Team',
+    title: 'Revenue Engineers Who Happen to Write Code | $3.7M+ Impact | Hudson Digital Solutions',
     description:
-      'Meet the Hudson Digital team. Experienced web developers specializing in Next.js, React, conversion optimization, and business growth strategies. 150+ successful projects, 340% average ROI.',
+      'Revenue engineers with $3.7M+ impact. We forge websites that dominate, not just work. Enterprise-grade development for ambitious businesses.',
     keywords:
-      'about Hudson Digital, web development team, Next.js experts, React developers, conversion optimization specialists, business growth strategists, professional web development team',
-    ogTitle: 'About Hudson Digital Solutions - Expert Development & Growth Team',
+      'revenue operations engineering, RevOps development, enterprise web development, startup development services, ROI-focused development, conversion rate optimization experts, business automation specialists, technical revenue optimization, SaaS development experts, growth engineering team',
+    ogTitle: 'Revenue Engineers Behind the Code - $3.7M+ in Proven Impact | Hudson Digital',
     ogDescription:
-      'Experienced web development team specializing in Next.js, React, conversion optimization, and business growth strategies. 150+ projects, 340% average ROI.',
+      'Former RevOps professionals turned engineers. $3.7M+ in revenue impact, 250% average ROI. We understand revenue, not just code.',
     canonical: 'https://hudsondigitalsolutions.com/about',
     structuredData: {
       '@context': 'https://schema.org',
@@ -85,14 +85,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   },
 
   contact: {
-    title: 'Contact Hudson Digital Solutions - Get Your Free Strategy Consultation',
+    title: 'Get Your Free ROI Roadmap in 30 Minutes | No Sales Pitch | Hudson Digital Solutions',
     description:
-      'Ready to dominate your market? Contact Hudson Digital Solutions for a free strategy consultation. Response within 4 hours. Transform your business with proven results. Email: hello@hudsondigitalsolutions.com',
+      'See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join 50+ successful businesses with 250% average ROI. Email: hello@hudsondigitalsolutions.com',
     keywords:
-      'contact Hudson Digital, free consultation, web development quote, business strategy consultation, conversion optimization quote, professional web development consultation, project inquiry, business growth strategy',
-    ogTitle: 'Contact Hudson Digital - Free Strategy Consultation Available',
+      'free ROI analysis, revenue leak audit, technical consultation, web development consultation, conversion optimization audit, performance audit services, free strategy session, business technology assessment, revenue operations consulting, growth engineering consultation',
+    ogTitle: 'Free ROI Roadmap - Find Revenue Leaks in 30 Minutes | Hudson Digital',
     ogDescription:
-      'Get your free strategy consultation today. Response within 4 hours. Transform your business with expert web development and growth strategies.',
+      'Free 30-minute ROI analysis showing exactly where your tech leaks revenue. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
     canonical: 'https://hudsondigitalsolutions.com/contact',
     structuredData: {
       '@context': 'https://schema.org',

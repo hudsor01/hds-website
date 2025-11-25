@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   title: "Small Business Website Cost 2025: Complete Pricing Guide | Hudson Digital",
@@ -89,6 +90,7 @@ const structuredData = {
 export default function WebsiteCostGuidePost() {
   return (
     <>
+      <ScrollProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

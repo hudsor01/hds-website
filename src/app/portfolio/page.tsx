@@ -41,8 +41,8 @@ export default async function PortfolioPage() {
             <div className="absolute inset-0 grid-pattern" />
           </div>
 
-          <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
-            <div className="space-y-8">
+          <div className="relative z-10 container-wide text-center">
+            <div className="space-y-comfortable">
               <div>
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
                   <Sparkles className="w-4 h-4" />
@@ -64,7 +64,7 @@ export default async function PortfolioPage() {
               </div>
 
               <div>
-                <div className="flex flex-col sm:flex-row flex-center gap-4 mt-12">
+                <div className="flex flex-col sm:flex-row flex-center gap-content mt-content-block">
                   <Link href="/contact">
                     <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
                       <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -86,9 +86,9 @@ export default async function PortfolioPage() {
         </section>
 
         {/* Stats Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <div className="grid-4 mb-content-block">
               {[
                 { value: `${projects.length}+`, label: "Projects Delivered" },
                 { value: "100%", label: "Client Satisfaction" },
@@ -97,9 +97,9 @@ export default async function PortfolioPage() {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
+                  className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
                 >
-                  <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+                  <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
                   <div className="text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
@@ -108,16 +108,16 @@ export default async function PortfolioPage() {
         </section>
 
         {/* Portfolio Projects */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="text-center mb-16">
-              <h2 className="text-clamp-xl font-black text-white mb-6">
+            <div className="text-center mb-content-block">
+              <h2 className="text-clamp-xl font-black text-white mb-heading">
                 <span className="gradient-text">
                   Featured Projects
                 </span>
               </h2>
               <div className="typography">
-                <p className="text-xl text-muted-foreground container-narrow">
+                <p className="text-subheading text-muted-foreground container-narrow">
                   Real projects delivering measurable results for clients across industries.
                 </p>
               </div>
@@ -207,10 +207,10 @@ export default async function PortfolioPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="relative z-10 text-center glass-section p-12 md:p-16">
-              <h2 className="text-clamp-xl font-black text-white mb-6">
+            <div className="relative z-10 text-center glass-section card-padding">
+              <h2 className="text-clamp-xl font-black text-white mb-heading">
                 Ready to create your
                 <span className="gradient-text">
                   {" "}success story?
@@ -218,7 +218,7 @@ export default async function PortfolioPage() {
               </h2>
 
               <div className="typography">
-                <p className="text-xl text-gray-300 container-narrow mb-10">
+                <p className="text-subheading text-gray-300 container-narrow mb-content-block">
                   Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default async function PortfolioPage() {
               <div className="flex flex-col sm:flex-row flex-center gap-4">
                 <Link
                   href="/contact"
-                  className="button-base group cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
+                  className="button-base group cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
                 >
                   <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative z-10">Start Your Project</span>
@@ -235,7 +235,7 @@ export default async function PortfolioPage() {
 
                 <Link
                   href="/services"
-                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-lg font-semibold rounded-xl"
+                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl"
                 >
                   View Services
                   <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
