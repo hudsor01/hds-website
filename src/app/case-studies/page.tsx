@@ -6,51 +6,13 @@
 import type { Metadata } from 'next';
 import { CTAButton } from '@/components/cta-button';
 import { Clock, Users, ExternalLink } from 'lucide-react';
+import { getCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
   title: 'Case Studies | Real Results From Real Projects',
   description: 'See how we\'ve helped businesses scale, increase conversions, and solve complex technical challenges. Real metrics, real testimonials.',
   keywords: 'case studies, portfolio, client success stories, development projects',
 };
-
-interface CaseStudy {
-  id: string;
-  title: string;
-  slug: string;
-  client_name: string;
-  industry: string;
-  project_type: string;
-  description: string;
-  metrics: Array<{ label: string; value: string }>;
-  testimonial_text: string;
-  testimonial_author: string;
-  testimonial_role: string;
-  testimonial_video_url: string | null;
-  thumbnail_url: string;
-  project_duration: string;
-  team_size: number;
-  featured: boolean;
-}
-
-async function getCaseStudies(): Promise<CaseStudy[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/case-studies`, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch case studies');
-      return [];
-    }
-
-    const data = await response.json();
-    return data.caseStudies || [];
-  } catch (error) {
-    console.error('Error fetching case studies:', error);
-    return [];
-  }
-}
 
 export default async function CaseStudiesPage() {
   const caseStudies = await getCaseStudies();

@@ -3,11 +3,13 @@
  * Public endpoint for fetching published case studies
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse, connection } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { CaseStudy } from '@/types/supabase-helpers';
 
 export async function GET(request: NextRequest) {
+  await connection(); // Force dynamic rendering
+
   try {
     const { searchParams } = new URL(request.url);
     const industry = searchParams.get('industry');
