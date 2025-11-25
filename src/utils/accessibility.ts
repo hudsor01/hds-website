@@ -2,13 +2,20 @@
 import { logger } from '@/lib/logger';
 import analytics from '@/lib/analytics';
 
+/**
+ * Cleanup registry to track all event listeners and observers
+ * Per MDN: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_concerns
+ * "Event listeners can create memory leaks if not removed properly"
+ */
+const cleanupRegistry: Array<() => void> = [];
+
 // Skip to main content link
 export function addSkipToMainLink() {
   const skipLink = document.createElement("a");
   skipLink.href = "#main-content";
   skipLink.textContent = "Skip to main content";
   skipLink.className =
-    "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-secondary-600 focus:text-white focus:rounded-md focus:text-sm focus:font-medium";
+    "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-secondary-600 focus:text-white focus:rounded-md focus:text-sm font-medium";
   skipLink.style.cssText = `
     position: absolute;
     left: -10000px;
@@ -18,7 +25,7 @@ export function addSkipToMainLink() {
     overflow: hidden;
   `;
 
-  skipLink.addEventListener("focus", () => {
+  const handleFocus = () => {
     skipLink.style.cssText = `
       position: absolute;
       top: 1rem;
@@ -32,9 +39,9 @@ export function addSkipToMainLink() {
       font-weight: 500;
       text-decoration: none;
     `;
-  });
+  };
 
-  skipLink.addEventListener("blur", () => {
+  const handleBlur = () => {
     skipLink.style.cssText = `
       position: absolute;
       left: -10000px;
@@ -43,22 +50,34 @@ export function addSkipToMainLink() {
       height: 1px;
       overflow: hidden;
     `;
-  });
+  };
+
+  skipLink.addEventListener("focus", handleFocus);
+  skipLink.addEventListener("blur", handleBlur);
 
   document.body.insertBefore(skipLink, document.body.firstChild);
+
+  // Register cleanup
+  cleanupRegistry.push(() => {
+    skipLink.removeEventListener("focus", handleFocus);
+    skipLink.removeEventListener("blur", handleBlur);
+    skipLink.remove();
+  });
 }
 
 // Focus management for SPA navigation
 export function manageFocus() {
   // Store focus before navigation
-  window.addEventListener("beforeunload", () => {
+  const handleBeforeUnload = () => {
     // Store the last focused element for potential restoration
     const lastFocused = document.activeElement;
     if (lastFocused) {
       // Store reference for potential restoration
       // Focus element stored for restoration
     }
-  });
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
 
   // Restore or set appropriate focus after navigation
   const observer = new MutationObserver(() => {
@@ -77,18 +96,25 @@ export function manageFocus() {
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
+
+  // Register cleanup
+  cleanupRegistry.push(() => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+    observer.disconnect();
+  });
 }
 
 // Keyboard navigation enhancements
 export function enhanceKeyboardNavigation() {
   // Add visible focus indicators
   const focusStyle = document.createElement("style");
+  focusStyle.id = "accessibility-focus-styles";
   focusStyle.textContent = `
     .focus-visible:focus {
       outline: 2px solid #0891b2 !important;
       outline-offset: 2px !important;
     }
-    
+
     .focus-visible:focus:not(:focus-visible) {
       outline: none !important;
     }
@@ -96,7 +122,7 @@ export function enhanceKeyboardNavigation() {
   document.head.appendChild(focusStyle);
 
   // Escape key handling for modals/dropdowns
-  document.addEventListener("keydown", (e) => {
+  const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       const activeModal = document.querySelector(
         '[role="dialog"][aria-hidden="false"]'
@@ -124,6 +150,14 @@ export function enhanceKeyboardNavigation() {
         }
       }
     }
+  };
+
+  document.addEventListener("keydown", handleKeydown);
+
+  // Register cleanup
+  cleanupRegistry.push(() => {
+    document.removeEventListener("keydown", handleKeydown);
+    focusStyle.remove();
   });
 }
 
@@ -144,6 +178,12 @@ export function setupLiveRegions() {
   assertiveRegion.setAttribute("aria-atomic", "true");
   assertiveRegion.className = "sr-only";
   document.body.appendChild(assertiveRegion);
+
+  // Register cleanup
+  cleanupRegistry.push(() => {
+    politeRegion.remove();
+    assertiveRegion.remove();
+  });
 }
 
 // Announce messages to screen readers
@@ -182,7 +222,7 @@ export function validateColorContrast() {
       timestamp: Date.now()
     });
 
-    // Send accessibility event to PostHog
+    // Send accessibility event to analytics
     if (typeof window !== 'undefined' && analytics) {
       analytics.trackEvent('accessibility_contrast_check', {
         foreground_color: color1,
@@ -236,8 +276,15 @@ export function respectReducedMotion() {
     "(prefers-reduced-motion: reduce)"
   );
 
-  if (prefersReducedMotion.matches) {
+  const applyReducedMotion = () => {
+    // Remove existing styles to prevent duplicates
+    const existing = document.getElementById("reduced-motion-styles");
+    if (existing) {
+      existing.remove();
+    }
+
     const style = document.createElement("style");
+    style.id = "reduced-motion-styles";
     style.textContent = `
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -247,12 +294,32 @@ export function respectReducedMotion() {
       }
     `;
     document.head.appendChild(style);
+  };
+
+  if (prefersReducedMotion.matches) {
+    applyReducedMotion();
   }
 
   // Listen for changes in motion preference
-  prefersReducedMotion.addEventListener("change", (e) => {
+  const handleChange = (e: MediaQueryListEvent) => {
     if (e.matches) {
-      respectReducedMotion();
+      applyReducedMotion();
+    } else {
+      const style = document.getElementById("reduced-motion-styles");
+      if (style) {
+        style.remove();
+      }
+    }
+  };
+
+  prefersReducedMotion.addEventListener("change", handleChange);
+
+  // Register cleanup
+  cleanupRegistry.push(() => {
+    prefersReducedMotion.removeEventListener("change", handleChange);
+    const style = document.getElementById("reduced-motion-styles");
+    if (style) {
+      style.remove();
     }
   });
 }
@@ -301,4 +368,21 @@ export function initAccessibilityFeatures() {
       });
     }
   }
+}
+
+/**
+ * Cleanup all accessibility features
+ * Call this when unmounting or cleaning up the application
+ * Per MDN: Proper cleanup prevents memory leaks in SPAs
+ * Reference: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_concerns
+ */
+export function cleanupAccessibilityFeatures() {
+  cleanupRegistry.forEach(cleanup => {
+    try {
+      cleanup();
+    } catch (error) {
+      logger.error('Accessibility cleanup error', { error });
+    }
+  });
+  cleanupRegistry.length = 0;
 }

@@ -15,6 +15,7 @@ import {
   pageViewPropertiesSchema,
   userPropertiesSchema,
 } from '@/lib/schemas';
+import { getAttributionForSubmission } from '@/lib/attribution';
 
 /**
  * Analytics Manager - Lightweight, non-blocking analytics
@@ -134,6 +135,7 @@ class AnalyticsManager {
 
   /**
    * Track conversion events (always tracked, non-blocking)
+   * Automatically includes attribution data
    */
   trackConversion(
     conversionType: string,
@@ -154,9 +156,18 @@ class AnalyticsManager {
       return; // Silent fail
     }
 
+    // Include attribution data with conversion
+    const attribution = getAttributionForSubmission();
+
     const conversionData = {
       conversion_type: conversionType,
       conversion_value: value,
+      utm_source: attribution.utm_params?.utm_source,
+      utm_medium: attribution.utm_params?.utm_medium,
+      utm_campaign: attribution.utm_params?.utm_campaign,
+      source: attribution.source,
+      medium: attribution.medium,
+      device_type: attribution.device_type,
       ...properties,
     };
 
@@ -206,13 +217,26 @@ class AnalyticsManager {
 
   /**
    * Track form interactions (sampled)
+   * Includes attribution data for form submissions
    */
   trackFormInteraction(formName: string, action: string, fieldName?: string) {
-    this.trackEvent("form_interaction", {
+    const properties: EventProperties = {
       form_name: formName,
       form_action: action,
       field_name: fieldName,
-    });
+    };
+
+    // For form submissions, include attribution
+    if (action === 'submit' || action === 'submitted') {
+      const attribution = getAttributionForSubmission();
+      properties.utm_source = attribution.utm_params?.utm_source;
+      properties.utm_medium = attribution.utm_params?.utm_medium;
+      properties.utm_campaign = attribution.utm_params?.utm_campaign;
+      properties.source = attribution.source;
+      properties.medium = attribution.medium;
+    }
+
+    this.trackEvent("form_interaction", properties);
   }
 
   /**

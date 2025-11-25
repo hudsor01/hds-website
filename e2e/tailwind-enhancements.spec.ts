@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Browser } from '@playwright/test';
 
 test.describe('Tailwind CSS Enhancements', () => {
   test.describe('Text Balancing', () => {
@@ -163,7 +163,7 @@ test.describe('Tailwind CSS Enhancements', () => {
   });
 
   test.describe('Motion Preferences', () => {
-    test('should respect prefers-reduced-motion', async ({ browser }) => {
+    test('should respect prefers-reduced-motion', async ({ browser }: { browser: Browser }) => {
       // Create context with reduced motion preference
       const context = await browser.newContext({
         reducedMotion: 'reduce'
@@ -187,7 +187,7 @@ test.describe('Tailwind CSS Enhancements', () => {
       await context.close();
     });
 
-    test('should disable hover scales with reduced motion', async ({ browser }) => {
+    test('should disable hover scales with reduced motion', async ({ browser }: { browser: Browser }) => {
       const context = await browser.newContext({
         reducedMotion: 'reduce'
       });
@@ -213,7 +213,7 @@ test.describe('Tailwind CSS Enhancements', () => {
       await context.close();
     });
 
-    test('should disable will-change with reduced motion', async ({ browser }) => {
+    test('should disable will-change with reduced motion', async ({ browser }: { browser: Browser }) => {
       const context = await browser.newContext({
         reducedMotion: 'reduce'
       });

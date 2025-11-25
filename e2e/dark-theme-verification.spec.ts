@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type TestInfo } from '@playwright/test';
 import { createTestLogger } from './test-logger';
 
 test.describe('Homepage Dark Theme Verification', () => {
-  test('should display dark hero background instead of bright blue/cyan gradient', async ({ page }, testInfo) => {
+  test('should display dark hero background instead of bright blue/cyan gradient', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Navigate to the homepage
     logger.step('Navigating to homepage');
@@ -74,7 +74,7 @@ test.describe('Homepage Dark Theme Verification', () => {
     logger.step('Verified dark colors are present in background gradient');
   });
 
-  test('should maintain terminal/code aesthetic with dark colors', async ({ page }, testInfo) => {
+  test('should maintain terminal/code aesthetic with dark colors', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     logger.step('Navigating to homepage');
     await page.goto('/');
@@ -114,7 +114,7 @@ test.describe('Homepage Dark Theme Verification', () => {
     logger.complete('Terminal/code aesthetic verification completed');
   });
 
-  test('should capture and analyze color scheme of key elements', async ({ page }, testInfo) => {
+  test('should capture and analyze color scheme of key elements', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     logger.step('Navigating to homepage');
     await page.goto('/');

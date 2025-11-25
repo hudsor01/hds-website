@@ -112,7 +112,7 @@ export default function TestimonialsPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Don't just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
+                Don&apos;t just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function TestimonialsPage() {
                 <div className="mb-6">
                   <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
                 </div>
 

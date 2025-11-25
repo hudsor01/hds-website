@@ -1,17 +1,25 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
+import ClientProviders from "@/components/ClientProviders";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebVitalsReporting } from "@/components/WebVitalsReporting";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
+import { env } from "@/env";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: 'swap',
   preload: true,
+  fallback: ['system-ui', 'arial'], // Graceful degradation if font fetch fails
+  adjustFontFallback: true,
 });
 
 const geistMono = Geist_Mono({
@@ -19,6 +27,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: 'swap',
   preload: true,
+  fallback: ['ui-monospace', 'Courier New', 'monospace'], // Graceful degradation
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
@@ -72,7 +82,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
+    google: env.GOOGLE_SITE_VERIFICATION,
   },
   alternates: {
     canonical: 'https://hudsondigitalsolutions.com',
@@ -151,13 +161,20 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <NavbarLight />
-        <div id="main-content" className="min-h-screen pt-16">
-          {children}
-        </div>
-        <Footer />
-        <ScrollToTop />
-        <Analytics />
+        <ClientProviders>
+          <ErrorBoundary>
+            <NavbarLight />
+            <div id="main-content" className="min-h-screen pt-16">
+              {children}
+            </div>
+            <Footer />
+            <ScrollToTop />
+            <Analytics />
+            <SpeedInsights />
+            <WebVitalsReporting />
+          </ErrorBoundary>
+          <Toaster position="top-right" richColors theme="dark" />
+        </ClientProviders>
       </body>
     </html>
   );

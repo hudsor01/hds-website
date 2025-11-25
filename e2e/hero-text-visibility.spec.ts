@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type TestInfo } from '@playwright/test';
 import { createTestLogger } from './test-logger';
 
 test.describe('Hero Text Visibility', () => {
-  test('should display all hero text elements correctly', async ({ page }, testInfo) => {
+  test('should display all hero text elements correctly', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Navigate to homepage
     logger.step('Navigating to homepage');
@@ -73,7 +73,7 @@ test.describe('Hero Text Visibility', () => {
     logger.complete('Hero text elements verification completed');
   });
 
-  test('should have proper gradient classes applied', async ({ page }, testInfo) => {
+  test('should have proper gradient classes applied', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     logger.step('Navigating to homepage');
     await page.goto('/');
@@ -108,7 +108,7 @@ test.describe('Hero Text Visibility', () => {
     logger.complete('Gradient classes verification completed');
   });
 
-  test('should not have any invisible text due to CSS issues', async ({ page }, testInfo) => {
+  test('should not have any invisible text due to CSS issues', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     logger.step('Navigating to homepage');
     await page.goto('/');

@@ -46,7 +46,12 @@ class Logger {
       return true;
     }
 
-    // Sample info and debug logs at 10% rate
+    // Skip sampling during build/prerendering (Next.js 16 cacheComponents compatibility)
+    if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
+      return false; // Don't log debug/info during build
+    }
+
+    // Sample info and debug logs at 10% rate (only at runtime)
     return Math.random() < this.samplingRate;
   }
 
