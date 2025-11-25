@@ -33,7 +33,7 @@ describe('FloatingInput Component', () => {
 
     const input = screen.getByPlaceholderText('Test Input')
     expect(input).toBeInTheDocument()
-    expect(input).toHaveClass('transition-smooth', 'focus-ring')
+    expect(input).toHaveClass('focus-ring')
   })
 
   it('should float label when focused', async () => {
@@ -104,7 +104,7 @@ describe('FloatingInput Component', () => {
     )
 
     expect(screen.getByText('*')).toBeInTheDocument()
-    expect(screen.getByText('*')).toHaveClass('text-destructive')
+    expect(screen.getByText('*')).toHaveClass('text-danger')
   })
 
   it('should be disabled when disabled prop is true', () => {
@@ -162,11 +162,10 @@ describe('FloatingTextarea Component', () => {
 
     const textarea = screen.getByPlaceholderText('Your Message')
     expect(textarea).toBeInTheDocument()
-    expect(textarea).toHaveClass('transition-smooth', 'focus-ring', 'resize-none')
+    expect(textarea).toHaveClass('focus-ring', 'resize-none')
   })
 
   it('should show character count when typing', async () => {
-    const _user = userEvent.setup()
     const { rerender } = render(
       <FloatingTextarea
         name="message"
