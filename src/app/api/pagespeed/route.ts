@@ -9,6 +9,9 @@ import { createServerLogger } from '@/lib/logger';
 const logger = createServerLogger('pagespeed-api');
 const PAGESPEED_API_URL = 'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed';
 
+// Force dynamic rendering for API route
+export const dynamic = 'force-dynamic';
+
 interface PageSpeedResponse {
   lighthouseResult: {
     categories: {

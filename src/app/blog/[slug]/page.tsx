@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
-import { getPostBySlug, getPosts, getPostsByTag } from "@/lib/ghost";
+import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/ghost";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
@@ -12,7 +12,8 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 60;
+// Next.js 16: Using cacheLife instead
+// export const revalidate = 60;
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -59,12 +60,17 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export async function generateStaticParams() {
-  const result = await getPosts({ limit: 100 });
-  const posts = result.posts;
-
-  return posts.map((post) => ({
+  const { posts } = await getPosts();
+  const results = posts.map((post) => ({
     slug: post.slug,
   }));
+
+  // Next.js 16: cacheComponents requires at least one static param
+  if (results.length === 0) {
+    return [{ slug: '__placeholder__' }];
+  }
+
+  return results;
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

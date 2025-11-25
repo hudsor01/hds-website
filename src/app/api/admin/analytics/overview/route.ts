@@ -9,6 +9,9 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 const logger = createServerLogger('analytics-overview-api');
 
+// Force dynamic rendering for API route
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
