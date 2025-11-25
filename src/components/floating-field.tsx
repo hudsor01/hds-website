@@ -10,7 +10,7 @@ const useFloatingFieldStyles = (value: string, isFocused: boolean, disabled: boo
 
   const getLabelColor = () => {
     if (disabled) {return 'text-text-secondary'}
-    if (isActive) {return 'text-brand-secondary'}
+    if (isActive) {return 'text-cyan-400'}
     return 'text-text-muted'
   }
 
@@ -20,7 +20,7 @@ const useFloatingFieldStyles = (value: string, isFocused: boolean, disabled: boo
     disabled
       ? "border-border-primary-dark text-text-secondary cursor-not-allowed"
       : isActive
-        ? "border-brand-secondary text-text-inverted"
+        ? "border-cyan-400 text-text-inverted"
         : "border-border-primary-dark text-text-inverted hover:border-border-secondary-dark",
     className
   )

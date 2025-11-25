@@ -168,10 +168,10 @@ export default function CustomSelect({
                 className={`
                   relative w-full px-4 py-3 text-left transition-colors duration-150
                   ${index === focusedIndex 
-                    ? 'bg-brand-primary/20 text-brand-secondary/80'
+                    ? 'bg-cyan-600/20 text-cyan-400/80'
                     : 'text-text-inverted hover:bg-bg-tertiary-dark/50'
                   }
-                  ${option.value === value ? 'bg-brand-primary/10' : ''}
+                  ${option.value === value ? 'bg-cyan-600/10' : ''}
                 `}
                 role="option"
                 aria-selected={option.value === value}
@@ -183,7 +183,7 @@ export default function CustomSelect({
                 
                 {option.value === value && (
                   <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                    <Check className="w-4 h-4 text-brand-secondary" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-cyan-400" aria-hidden="true" />
                   </span>
                 )}
               </button>
