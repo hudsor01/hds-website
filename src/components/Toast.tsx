@@ -2,12 +2,12 @@
 
 import { createContext, useContext, useState, useCallback, useRef, useEffect, type ReactNode } from 'react'
 import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  InformationCircleIcon,
-  XCircleIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline'
+  CheckCircle,
+  AlertCircle,
+  Info,
+  XCircle,
+  X
+} from 'lucide-react'
 
 /**
  * Toast Notification System
@@ -94,29 +94,29 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }
   }, [dismissToast])
 
-  const toastStyles: Record<ToastType, { bg: string; border: string; icon: typeof CheckCircleIcon; iconColor: string }> = {
+  const toastStyles: Record<ToastType, { bg: string; border: string; icon: typeof CheckCircle; iconColor: string }> = {
     success: {
       bg: 'bg-green-500/10',
       border: 'border-green-500/30',
-      icon: CheckCircleIcon,
+      icon: CheckCircle,
       iconColor: 'text-green-400'
     },
     error: {
       bg: 'bg-red-500/10',
       border: 'border-red-500/30',
-      icon: XCircleIcon,
+      icon: XCircle,
       iconColor: 'text-red-400'
     },
     warning: {
       bg: 'bg-yellow-500/10',
       border: 'border-yellow-500/30',
-      icon: ExclamationCircleIcon,
+      icon: AlertCircle,
       iconColor: 'text-yellow-400'
     },
     info: {
       bg: 'bg-cyan-500/10',
       border: 'border-cyan-500/30',
-      icon: InformationCircleIcon,
+      icon: Info,
       iconColor: 'text-cyan-400'
     }
   }
@@ -167,7 +167,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
                   aria-label="Dismiss notification"
                 >
-                  <XMarkIcon className="w-5 h-5" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
