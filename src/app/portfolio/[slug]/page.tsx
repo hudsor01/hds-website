@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { ExternalLink, ArrowLeft, Code2, Calendar, Eye } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import {
@@ -71,8 +72,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+// Async component that fetches project data
+async function ProjectContent({ slug }: { slug: string }) {
   const project = await getProjectBySlug(slug);
 
   if (!project) {
@@ -108,25 +109,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <Analytics />
-
       {/* Schema Markup */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
       />
-
-      <main className="min-h-screen bg-gradient-hero text-white">
-        {/* Back Button */}
-        <div className="container-wide sm:px-6 lg:px-8 pt-24 pb-8">
-          <Link
-            href="/portfolio"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Portfolio
-          </Link>
-        </div>
 
         {/* Hero Section */}
         <section className="relative py-12">
@@ -315,7 +302,37 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
         </section>
-      </main>
     </>
+  );
+}
+
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+
+  return (
+    <main className="min-h-screen bg-gradient-hero text-white">
+      <Analytics />
+
+      {/* Back Button - Static, prerendered */}
+      <div className="container-wide sm:px-6 lg:px-8 pt-24 pb-8">
+        <Link
+          href="/portfolio"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Portfolio
+        </Link>
+      </div>
+
+      {/* Dynamic content with Suspense */}
+      <Suspense fallback={
+        <div className="container-wide sm:px-6 lg:px-8 py-20 text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+          <p className="text-gray-400 text-lg mt-4">Loading project...</p>
+        </div>
+      }>
+        <ProjectContent slug={slug} />
+      </Suspense>
+    </main>
   );
 }

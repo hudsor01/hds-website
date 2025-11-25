@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { ExternalLink, Sparkles, Code2, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
@@ -18,10 +19,137 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function PortfolioPage() {
-  // Fetch projects from Supabase (with caching)
+// Async component for dynamic project data
+async function PortfolioProjects() {
   const projects = await getProjects();
 
+  return (
+    <>
+      {/* Stats Section */}
+      <section className="relative section-spacing page-padding-x">
+        <div className="container-wide">
+          <div className="grid-4 mb-content-block">
+            {[
+              { value: `${projects.length}+`, label: "Projects Delivered" },
+              { value: "100%", label: "Client Satisfaction" },
+              { value: "250%", label: "Average ROI" },
+              { value: "24/7", label: "Support Available" },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
+              >
+                <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
+                <div className="text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Projects */}
+      <section className="relative section-spacing page-padding-x">
+        <div className="container-wide">
+          <div className="text-center mb-content-block">
+            <h2 className="text-clamp-xl font-black text-white mb-heading">
+              <span className="gradient-text">
+                Featured Projects
+              </span>
+            </h2>
+            <div className="typography">
+              <p className="text-subheading text-muted-foreground container-narrow">
+                Real projects delivering measurable results for clients across industries.
+              </p>
+            </div>
+          </div>
+
+          {/* Desktop Grid / Mobile Horizontal Scroll */}
+          <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
+            {projects.map((project) => {
+              const stats = parseProjectStats(project.stats);
+
+              return (
+                <div
+                  key={project.id}
+                  className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
+                >
+                  <Link href={`/portfolio/${project.slug}`}>
+                    <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
+                      {/* Project Header */}
+                      <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient_class} relative overflow-hidden`}>
+                        <div className="absolute inset-0 bg-black/20" />
+
+                        {/* Grid pattern overlay */}
+                        <div className="absolute inset-0 grid-pattern-light" />
+
+                        <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
+                          <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
+                            <Code2 className="w-4 h-4" />
+                            {project.category}
+                          </div>
+                          <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
+                          {project.featured && (
+                            <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
+                              <Sparkles className="w-4 h-4" />
+                              Featured Project
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
+                          <div className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu">
+                            View Project
+                            <ExternalLink className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Project Details */}
+                      <div className="p-8">
+                        <div className="typography mb-8">
+                          <p className="text-gray-300 leading-relaxed text-lg">
+                            {project.description}
+                          </p>
+                        </div>
+
+                        {/* Stats Grid */}
+                        {Object.keys(stats).length > 0 && (
+                          <div className="grid grid-cols-3 gap-6 mb-8">
+                            {Object.entries(stats).map(([key, value]) => (
+                              <div key={key} className="text-center">
+                                <div className="text-2xl font-bold text-white mb-1">{value}</div>
+                                <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Tech Stack */}
+                        <div className="flex flex-wrap gap-2">
+                          {project.tech_stack.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default function PortfolioPage() {
   return (
     <>
       <Analytics />
@@ -32,7 +160,7 @@ export default async function PortfolioPage() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         </div>
 
-        {/* Hero Section */}
+        {/* Hero Section - Static */}
         <section className="relative min-h-screen flex-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
@@ -85,126 +213,15 @@ export default async function PortfolioPage() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="relative section-spacing page-padding-x">
-          <div className="container-wide">
-            <div className="grid-4 mb-content-block">
-              {[
-                { value: `${projects.length}+`, label: "Projects Delivered" },
-                { value: "100%", label: "Client Satisfaction" },
-                { value: "250%", label: "Average ROI" },
-                { value: "24/7", label: "Support Available" },
-              ].map((stat, index) => (
-                <div
-                  key={index}
-                  className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
-                >
-                  <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
-            </div>
+        {/* Dynamic content with Suspense */}
+        <Suspense fallback={
+          <div className="container-wide py-20 text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+            <p className="text-gray-400 text-lg mt-4">Loading projects...</p>
           </div>
-        </section>
-
-        {/* Portfolio Projects */}
-        <section className="relative section-spacing page-padding-x">
-          <div className="container-wide">
-            <div className="text-center mb-content-block">
-              <h2 className="text-clamp-xl font-black text-white mb-heading">
-                <span className="gradient-text">
-                  Featured Projects
-                </span>
-              </h2>
-              <div className="typography">
-                <p className="text-subheading text-muted-foreground container-narrow">
-                  Real projects delivering measurable results for clients across industries.
-                </p>
-              </div>
-            </div>
-
-            {/* Desktop Grid / Mobile Horizontal Scroll */}
-            <div className="md:grid md:grid-cols-2 md:gap-8 mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
-              {projects.map((project) => {
-                const stats = parseProjectStats(project.stats);
-
-                return (
-                  <div
-                    key={project.id}
-                    className={`group relative snap-center flex-shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
-                  >
-                    <Link href={`/portfolio/${project.slug}`}>
-                      <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
-                        {/* Project Header */}
-                        <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient_class} relative overflow-hidden`}>
-                          <div className="absolute inset-0 bg-black/20" />
-
-                          {/* Grid pattern overlay */}
-                          <div className="absolute inset-0 grid-pattern-light" />
-
-                          <div className="relative z-10 p-8 h-full flex flex-col justify-center text-center text-white">
-                            <div className="inline-flex flex-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm mb-4 mx-auto">
-                              <Code2 className="w-4 h-4" />
-                              {project.category}
-                            </div>
-                            <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
-                            {project.featured && (
-                              <span className="inline-flex flex-center gap-2 px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-sm font-medium mx-auto">
-                                <Sparkles className="w-4 h-4" />
-                                Featured Project
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Hover Overlay */}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
-                            <div className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu">
-                              View Project
-                              <ExternalLink className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Project Details */}
-                        <div className="p-8">
-                          <div className="typography mb-8">
-                            <p className="text-gray-300 leading-relaxed text-lg">
-                              {project.description}
-                            </p>
-                          </div>
-
-                          {/* Stats Grid */}
-                          {Object.keys(stats).length > 0 && (
-                            <div className="grid grid-cols-3 gap-6 mb-8">
-                              {Object.entries(stats).map(([key, value]) => (
-                                <div key={key} className="text-center">
-                                  <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                                  <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Tech Stack */}
-                          <div className="flex flex-wrap gap-2">
-                            {project.tech_stack.map((tech) => (
-                              <span
-                                key={tech}
-                                className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        }>
+          <PortfolioProjects />
+        </Suspense>
 
         {/* CTA Section */}
         <section className="relative section-spacing page-padding-x">

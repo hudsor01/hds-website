@@ -23,7 +23,9 @@ function ensureVehicleInputsComplete(input: Partial<VehicleInputs>): VehicleInpu
     downPayment: input.downPayment ?? 5000,
     paymentFrequency: typeof input.paymentFrequency === 'string' ? input.paymentFrequency : 'monthly',
     zipCode: typeof input.zipCode === 'string' ? input.zipCode : '75201',
-    loanStartDate: typeof input.loanStartDate === 'string' ? input.loanStartDate : (new Date().toISOString().split('T')[0] as string),
+    // Use static default date to avoid SSR/Client hydration mismatch
+    // Will be updated on client after mount if needed
+    loanStartDate: typeof input.loanStartDate === 'string' ? input.loanStartDate : '2024-01-01',
     leaseMileage: input.leaseMileage ?? 12000,
     leaseBuyout: input.leaseBuyout ?? 0,
     residualValue: input.residualValue ?? 0,

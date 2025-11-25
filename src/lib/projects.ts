@@ -3,6 +3,7 @@
  * Handles all project-related data fetching with Supabase
  */
 
+import { cache } from 'react';
 import { supabase, supabaseAdmin, getCached, setCache } from '@/lib/supabase';
 import type { Database } from '@/types/database';
 import { logger } from './logger';
@@ -23,7 +24,7 @@ const CACHE_KEYS = {
  * Get all published projects (with caching)
  * Used for portfolio listing page
  */
-export async function getProjects(): Promise<Project[]> {
+export const getProjects = cache(async (): Promise<Project[]> => {
   try {
     // Check cache first
     const cached = getCached<Project[]>(CACHE_KEYS.PUBLISHED_PROJECTS);
@@ -64,13 +65,13 @@ export async function getProjects(): Promise<Project[]> {
     }
     return [];
   }
-}
+});
 
 /**
  * Get featured projects only
  * Used for homepage or featured section
  */
-export async function getFeaturedProjects(): Promise<Project[]> {
+export const getFeaturedProjects = cache(async (): Promise<Project[]> => {
   try {
     // Check cache first
     const cached = getCached<Project[]>(CACHE_KEYS.FEATURED_PROJECTS);
@@ -107,13 +108,13 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     }
     return [];
   }
-}
+});
 
 /**
  * Get a single project by slug (with caching)
  * Used for individual project pages
  */
-export async function getProjectBySlug(slug: string): Promise<Project | null> {
+export const getProjectBySlug = cache(async (slug: string): Promise<Project | null> => {
   try {
     // Check cache first
     const cacheKey = CACHE_KEYS.PROJECT_BY_SLUG(slug);
@@ -157,12 +158,12 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     }
     return null;
   }
-}
+});
 
 /**
  * Get projects by category
  */
-export async function getProjectsByCategory(category: string): Promise<Project[]> {
+export const getProjectsByCategory = cache(async (category: string): Promise<Project[]> => {
   try {
     const cacheKey = CACHE_KEYS.PROJECTS_BY_CATEGORY(category);
     const cached = getCached<Project[]>(cacheKey);
@@ -203,13 +204,13 @@ export async function getProjectsByCategory(category: string): Promise<Project[]
     }
     return [];
   }
-}
+});
 
 /**
  * Get all project slugs for static generation
  * Used by generateStaticParams
  */
-export async function getAllProjectSlugs(): Promise<string[]> {
+export const getAllProjectSlugs = cache(async (): Promise<string[]> => {
   try {
     const { data, error } = await supabase
       .from('projects')
@@ -234,12 +235,12 @@ export async function getAllProjectSlugs(): Promise<string[]> {
     }
     return [];
   }
-}
+});
 
 /**
  * Get unique categories for filtering
  */
-export async function getProjectCategories(): Promise<string[]> {
+export const getProjectCategories = cache(async (): Promise<string[]> => {
   try {
     const projects = await getProjects();
     const categories = [...new Set(projects.map((p) => p.category))];
@@ -250,7 +251,7 @@ export async function getProjectCategories(): Promise<string[]> {
     });
     return [];
   }
-}
+});
 
 /**
  * Increment project view count (non-blocking)
