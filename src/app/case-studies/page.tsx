@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { CTAButton } from '@/components/cta-button';
 import { Clock, Users, ExternalLink } from 'lucide-react';
 import { getCaseStudies } from '@/lib/case-studies';
@@ -14,34 +15,13 @@ export const metadata: Metadata = {
   keywords: 'case studies, portfolio, client success stories, development projects',
 };
 
-export default async function CaseStudiesPage() {
+// Separate component for async data fetching
+async function CaseStudiesContent() {
   const caseStudies = await getCaseStudies();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-      {/* Hero */}
-      <section className="py-20 px-4">
-        <div className="container-wide text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Real Results From <span className="gradient-text">Real Projects</span>
-          </h1>
-
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            See how we've helped businesses scale, increase conversions, and solve complex technical challenges.
-          </p>
-
-          <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Case Studies Grid */}
-      <section className="py-16 px-4">
-        <div className="container-wide">
-          {caseStudies.length === 0 ? (
+    <>
+      {caseStudies.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-400 text-lg">
                 Case studies coming soon. Contact us to discuss your project!
@@ -150,10 +130,47 @@ export default async function CaseStudiesPage() {
               ))}
             </div>
           )}
+    </>
+  );
+}
+
+export default function CaseStudiesPage() {
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      {/* Hero - Static, prerendered */}
+      <section className="py-20 px-4">
+        <div className="container-wide text-center">
+          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
+            Real Results From <span className="gradient-text">Real Projects</span>
+          </h1>
+
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            See how we've helped businesses scale, increase conversions, and solve complex technical challenges.
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <CTAButton href="/contact" variant="primary" size="lg">
+              Start Your Project
+            </CTAButton>
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Case Studies Grid - Dynamic with Suspense */}
+      <section className="py-16 px-4">
+        <div className="container-wide">
+          <Suspense fallback={
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+              <p className="text-gray-400 text-lg mt-4">Loading case studies...</p>
+            </div>
+          }>
+            <CaseStudiesContent />
+          </Suspense>
+        </div>
+      </section>
+
+      {/* CTA - Static, prerendered */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">

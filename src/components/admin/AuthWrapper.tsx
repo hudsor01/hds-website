@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Lock } from 'lucide-react';
 
 interface AuthWrapperProps {
@@ -16,27 +16,33 @@ const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 const SESSION_KEY = 'admin_session';
 
 export function AuthWrapper({ children }: AuthWrapperProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check for existing session during initialization
+    if (typeof window === 'undefined') {
+      return false;
+    }
 
-  useEffect(() => {
-    // Check for existing session
     const session = sessionStorage.getItem(SESSION_KEY);
     if (session) {
-      const sessionData = JSON.parse(session);
-      const now = Date.now();
+      try {
+        const sessionData = JSON.parse(session);
+        const now = Date.now();
 
-      // Session valid for 24 hours
-      if (sessionData.expires > now) {
-        setIsAuthenticated(true);
-      } else {
+        // Session valid for 24 hours
+        if (sessionData.expires > now) {
+          return true;
+        } else {
+          sessionStorage.removeItem(SESSION_KEY);
+        }
+      } catch {
         sessionStorage.removeItem(SESSION_KEY);
       }
     }
-    setIsLoading(false);
-  }, []);
+
+    return false;
+  });
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,14 +67,6 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     setIsAuthenticated(false);
     setPassword('');
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-600 border-t-transparent"></div>
-      </div>
-    );
-  }
 
   if (!isAuthenticated) {
     return (

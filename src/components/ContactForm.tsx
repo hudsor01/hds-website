@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { submitContactForm, type ContactFormState } from '@/app/actions/contact'
 import { getServiceOptions, getContactTimeOptions, getBudgetOptions, getTimelineOptions } from '@/lib/form-utils'
 import { logger } from '@/lib/logger'
-import { useToast } from '@/components/Toast'
+import { toast } from 'sonner'
 
 // Submit button with built-in pending state
 function SubmitButton() {
@@ -80,7 +80,6 @@ export default function ContactForm({ className = '' }: { className?: string }) 
     submitContactForm,
     null
   )
-  const { showToast } = useToast()
 
   // Show toast notifications when form state changes
   useEffect(() => {
@@ -89,21 +88,15 @@ export default function ContactForm({ className = '' }: { className?: string }) 
     }
 
     if (state.success) {
-      showToast({
-        type: 'success',
-        title: 'Message Sent!',
-        message: "Thank you for contacting us. We'll get back to you within 24 hours.",
+      toast.success("Thank you for contacting us. We'll get back to you within 24 hours.", {
         duration: 5000
       })
     } else if (state.error) {
-      showToast({
-        type: 'error',
-        title: 'Submission Failed',
-        message: state.error,
+      toast.error(state.error, {
         duration: 7000
       })
     }
-  }, [state, showToast])
+  }, [state])
 
   // Track form state changes for business intelligence
   if (typeof window !== 'undefined' && state) {

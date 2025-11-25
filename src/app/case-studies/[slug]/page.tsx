@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CTAButton } from '@/components/cta-button';
@@ -44,12 +45,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function CaseStudyPage({
-  params
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params;
+// Async component for case study content
+async function CaseStudyContent({ slug }: { slug: string }) {
   const caseStudy = await getCaseStudyBySlug(slug);
 
   if (!caseStudy) {
@@ -57,16 +54,7 @@ export default async function CaseStudyPage({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-      {/* Back Button */}
-      <section className="py-8 px-4">
-        <div className="container-wide">
-          <Link href="/case-studies" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Case Studies
-          </Link>
-        </div>
-      </section>
+    <>
 
       {/* Hero */}
       <section className="py-12 px-4">
@@ -241,6 +229,38 @@ export default async function CaseStudyPage({
           </div>
         </div>
       </section>
+    </>
+  );
+}
+
+export default async function CaseStudyPage({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params;
+
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      {/* Back Button - Static */}
+      <section className="py-8 px-4">
+        <div className="container-wide">
+          <Link href="/case-studies" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Case Studies
+          </Link>
+        </div>
+      </section>
+
+      {/* Dynamic content with Suspense */}
+      <Suspense fallback={
+        <div className="container-wide py-20 text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+          <p className="text-gray-400 text-lg mt-4">Loading case study...</p>
+        </div>
+      }>
+        <CaseStudyContent slug={slug} />
+      </Suspense>
     </main>
   );
 }
