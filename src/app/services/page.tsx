@@ -16,8 +16,8 @@ interface Service {
 
 const services: Service[] = [
   {
-    title: "Web Applications That Convert",
-    description: "Custom web applications that don't just look good—they generate revenue. Average 40% increase in conversion rates within 90 days.",
+    title: "Web Applications",
+    description: "Custom web applications built with modern frameworks and scalable architecture.",
     features: [
       "React & Next.js Development",
       "API Design & Integration",
@@ -25,15 +25,13 @@ const services: Service[] = [
       "Performance Optimization",
       "Cloud Deployment",
     ],
-    results: "Average 40% conversion increase",
     pricing: "Starting at $5,000",
     icon: Code2,
     gradient: "bg-gradient-secondary",
-    roi: "250% average ROI in 6 months"
   },
   {
-    title: "Business Automation That Scales",
-    description: "Stop losing $50K+ annually to manual processes. We automate your revenue operations so you can focus on growth, not busywork.",
+    title: "Custom Solutions",
+    description: "Tailored software solutions designed specifically for your business needs.",
     features: [
       "Business Process Automation",
       "System Integrations",
@@ -41,15 +39,13 @@ const services: Service[] = [
       "Revenue Operations",
       "Legacy System Modernization",
     ],
-    results: "Save 20+ hours/week on average",
     pricing: "Starting at $8,000",
     icon: Settings,
     gradient: "bg-gradient-decorative-purple",
-    roi: "340% average ROI in first year"
   },
   {
-    title: "Strategic Growth Consulting",
-    description: "Get the technical roadmap that turns your website into a growth engine. We identify revenue leaks and fix them fast.",
+    title: "Strategic Consulting",
+    description: "Technical strategy and planning to accelerate your business growth.",
     features: [
       "Technical Architecture Review",
       "Growth Strategy Planning",
@@ -57,11 +53,9 @@ const services: Service[] = [
       "Technology Roadmapping",
       "ROI Optimization",
     ],
-    results: "Average 3 revenue leaks found per audit",
     pricing: "Starting at $2,000",
     icon: BarChart3,
     gradient: "bg-gradient-secondary",
-    roi: "Clients find 5-10x value in first 30 days"
   },
 ];
 
@@ -119,32 +113,33 @@ export default function ServicesPage() {
         {/* Background Elements */}
         <BackgroundPattern variant="default" />
 
-        <div className="relative z-10 container-wide text-center">
-          <div className="space-y-comfortable">
+        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
+          <div className="space-y-8">
             <div>
-              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
 
             <div>
               <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
-                <span className="inline-block">Development That</span>
-                <span className="inline-block mx-4 gradient-text">Pays for Itself</span>
+                <span className="inline-block">Technical</span>
+                <span className="inline-block mx-4 gradient-text">Services</span>
+                <span className="inline-block">That</span>
+                <span className="inline-block ml-4 gradient-text">Scale</span>
               </h1>
             </div>
 
             <div className="typography">
               <p className="large text-muted-foreground container-wide leading-relaxed text-pretty">
-                Stop paying for development that sits on a shelf. Our services generate measurable ROI within 90 days—or we keep working until they do.
-                No agencies. No junior devs. Just senior engineers who understand revenue.
+                Expert technical solutions designed to accelerate your business growth without the overhead of full-time development teams.
               </p>
             </div>
 
             <div>
-              <div className="flex-center flex-col sm:flex-row gap-content mt-content-block">
+              <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
                 <CTAButton href="/contact" variant="primary" size="lg">
-                  Get Your Free ROI Analysis
+                  Start Your Project
                 </CTAButton>
 
                 <CTAButton href="#process" variant="secondary" size="lg">
@@ -158,8 +153,8 @@ export default function ServicesPage() {
       {/* Services Section */}
       <section id="services-list" className="relative py-20 px-4">
         <div className="container-wide">
-          <div className="text-center mb-content-block">
-            <h2 className="text-responsive-md font-black text-white mb-heading">
+          <div className="text-center mb-16">
+            <h2 className="text-responsive-md font-black text-white mb-6">
               <span className="gradient-text">
                 Our Services
               </span>
@@ -171,38 +166,31 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-3 mb-content-block">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
                 <div
                   key={index}
-                  className="group relative glass-card-light card-padding card-hover-glow transition-smooth"
+                  className="group relative glass-card-light p-8 card-hover-glow transition-all duration-300"
                 >
-                  <div className="flex-center mb-card-content">
-                    <div className={`px-4 py-2 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
+                  <div className="flex-center mb-6">
+                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
                       <Icon className="h-8 w-8 text-cyan-400" />
                     </div>
                   </div>
-
-                  <h3 className="text-card-title font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors">
+                  
+                  <h3 className="text-2xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
                     {service.title}
                   </h3>
-
-                  <div className="typography mb-card-content">
+                  
+                  <div className="typography mb-6">
                     <p className="muted leading-relaxed">
                       {service.description}
                     </p>
                   </div>
-
-                  {/* Results Badge */}
-                  {service.results && (
-                    <div className="mb-card-content px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
-                      <p className="text-caption font-semibold text-cyan-400 text-center">{service.results}</p>
-                    </div>
-                  )}
-
-                  <div className="space-y-tight mb-comfortable">
+                  
+                  <div className="space-y-3 mb-8">
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
@@ -214,21 +202,14 @@ export default function ServicesPage() {
                       </div>
                     ))}
                   </div>
-
-                  {/* ROI Badge */}
-                  {service.roi && (
-                    <div className="mb-card-content">
-                      <p className="text-caption font-bold text-green-400">{service.roi}</p>
-                    </div>
-                  )}
-
-                  <div className="mb-card-content">
-                    <p className="text-card-title font-bold text-white">{service.pricing}</p>
+                  
+                  <div className="mb-6">
+                    <p className="text-2xl font-bold text-white">{service.pricing}</p>
                   </div>
-
+                  
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-content p-button bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300 w-full justify-center"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300"
                   >
                     Get Started
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -240,10 +221,10 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Stats Section */}
-      <section className="relative section-spacing page-padding-x">
+      <section className="relative py-20 px-4">
         <div className="container-wide">
-          <div className="text-center mb-content-block">
-            <h2 className="text-responsive-md font-black text-white mb-heading">
+          <div className="text-center mb-16">
+            <h2 className="text-responsive-md font-black text-white mb-6">
               <span className="gradient-text">
                 Proven Results
               </span>
@@ -255,13 +236,13 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-4 mb-content-block">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="relative glass-card-light card-padding card-hover-glow transition-smooth text-center"
+                className="relative glass-card-light p-8 card-hover-glow transition-all duration-300 text-center"
               >
-                <div className="text-page-title font-bold text-white mb-subheading">{stat.value}</div>
+                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
               </div>
             ))}
@@ -271,8 +252,8 @@ export default function ServicesPage() {
       {/* Process Section */}
       <section id="process" className="relative py-20 px-4">
         <div className="container-wide">
-          <div className="text-center mb-content-block">
-            <h2 className="text-responsive-md font-black text-white mb-heading">
+          <div className="text-center mb-16">
+            <h2 className="text-responsive-md font-black text-white mb-6">
               <span className="gradient-text">
                 Our Process
               </span>
@@ -284,19 +265,19 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid-4 mb-content-block">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {process.map((step, index) => (
               <div
                 key={index}
-                className="group relative glass-card card-padding card-hover-glow transition-smooth text-center"
+                className="group relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
               >
-                <div className="mb-subheading flex justify-center">
+                <div className="mb-4 flex justify-center">
                   <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
                     <step.icon className="w-8 h-8 text-cyan-400" />
                   </div>
                 </div>
-                <div className="text-cyan-400 font-bold text-body-lg mb-subheading">{step.step}</div>
-                <h3 className="text-subheading font-bold text-white mb-subheading group-hover:text-cyan-400 transition-colors">
+                <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
+                <h3 className="text-xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -311,29 +292,26 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative section-spacing page-padding-x">
+      <section className="relative py-20 px-4">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section card-padding">
-            <h2 className="text-responsive-md font-black text-white mb-heading">
-              Ready for Development That
+          <div className="relative z-10 text-center glass-section p-12 md:p-16">
+            <h2 className="text-responsive-md font-black text-white mb-6">
+              Ready to accelerate 
               <span className="gradient-text">
-                {" "}Actually Drives Revenue?
+                {" "}your growth?
               </span>
             </h2>
-
+            
             <div className="typography">
-              <p className="large muted container-narrow mb-heading">
-                Stop wasting money on features nobody uses. Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to fix it.
-              </p>
-              <p className="text-cyan-400 font-semibold mb-content-block">
-                No sales pitch. No commitment. Just actionable insights you can implement immediately.
+              <p className="large muted container-narrow mb-10">
+                Let&apos;s discuss your specific technical needs and create a custom solution that drives real results for your business.
               </p>
             </div>
-
-            <div className="flex flex-col sm:flex-row flex-center gap-content">
+            
+            <div className="flex flex-col sm:flex-row flex-center gap-4">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-content cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
+                className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative z-10">Start Your Project</span>
@@ -342,20 +320,11 @@ export default function ServicesPage() {
 
               <Link
                 href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-            </div>
-
-            {/* Trust signals */}
-            <div className="mt-content-block pt-8 border-t border-white/10">
-              <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
-                <div>50+ successful projects delivered</div>
-                <div>250% average ROI within 6 months</div>
-                <div>Response within 2 hours</div>
-              </div>
             </div>
           </div>
         </div>

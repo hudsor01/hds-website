@@ -125,7 +125,7 @@ describe('Footer Component', () => {
     const { container } = render(<Footer />)
 
     // Check for social media icons or links
-    const socialLinks = container.querySelectorAll('a[href*="linkedin"], a[href*="twitter"], a[href*="github"]')
+    const _socialLinks = container.querySelectorAll('a[href*="linkedin"], a[href*="twitter"], a[href*="github"]')
 
     // Social links may or may not be present, just verify footer renders
     expect(container.querySelector('footer')).toBeInTheDocument()
@@ -136,7 +136,7 @@ describe('Footer Component', () => {
     render(<Footer />)
 
     // Look for privacy policy or terms links
-    const privacyLink = screen.queryByRole('link', { name: /privacy/i })
+    const _privacyLink = screen.queryByRole('link', { name: /privacy/i })
 
     // May or may not have privacy link, just verify footer is functional
     const footer = screen.getByRole('contentinfo')

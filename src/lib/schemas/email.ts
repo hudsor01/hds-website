@@ -16,6 +16,8 @@ export const emailSequenceIdSchema = z.enum([
   'standard-consultation-followup',
   'standard-long-term-nurture',
   'standard-high-intent',
+  'calculator-hot-lead',
+  'calculator-follow-up',
 ]);
 
 export type EmailSequenceId = z.infer<typeof emailSequenceIdSchema>;
@@ -26,6 +28,8 @@ export const scheduleEmailParamsSchema = z.object({
   recipientEmail: emailSchema,
   recipientName: nameSchema,
   sequenceId: emailSequenceIdSchema,
+  stepId: z.string(),
+  scheduledFor: z.date(),
   variables: emailTemplateVariablesSchema,
 });
 

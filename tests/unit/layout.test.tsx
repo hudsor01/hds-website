@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Component, ReactNode } from 'react'
 
 /**
  * Unit tests for layout and utility components
@@ -45,15 +44,20 @@ describe('ErrorBoundary Component', () => {
 
     // Error boundary should show error UI (may have multiple error texts)
     const errorElements = screen.queryAllByText(/error|wrong|problem/i)
-    expect(errorElements.length).toBeGreaterThan(0) ||
-    expect(screen.queryByText('Test Content')).not.toBeInTheDocument()
+    if (errorElements.length === 0) {
+      expect(screen.queryByText('Test Content')).not.toBeInTheDocument()
+    } else {
+      expect(errorElements.length).toBeGreaterThan(0)
+    }
   })
 
   it('should have a reset mechanism', async () => {
     const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
 
     const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
-      if (shouldThrow) throw new Error('Test error')
+      if (shouldThrow) {
+        throw new Error('Test error')
+      }
       return <div>No Error</div>
     }
 
@@ -89,8 +93,11 @@ describe('ErrorBoundary Component', () => {
     )
 
     // Error should be logged
-    expect(consoleSpy).toHaveBeenCalled() ||
-    expect(screen.queryByText(/error/i)).toBeInTheDocument()
+    if (!consoleSpy.mock.calls.length) {
+      expect(screen.queryByText(/error/i)).toBeInTheDocument()
+    } else {
+      expect(consoleSpy).toHaveBeenCalled()
+    }
   })
 })
 

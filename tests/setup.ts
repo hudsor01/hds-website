@@ -1,59 +1,14 @@
-// Test setup file for Vitest
-import { beforeAll, afterAll, afterEach } from 'vitest'
-import '@testing-library/jest-dom'
-import { server } from './mocks/server'
+// Vitest setup file
+import { beforeAll, afterEach, afterAll } from 'vitest';
 
-// Setup MSW server for API mocking
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => {
+  // Setup before all tests
+});
 
-// Global test setup
-beforeAll(async () => {
-  // Any global setup code can go here
-})
+afterEach(() => {
+  // Cleanup after each test
+});
 
-// Global test cleanup
-afterAll(async () => {
-  // Any global cleanup code can go here
-})
-
-// Mock Next.js router if needed
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => {},
-  }),
-})
-
-// Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
-
-// Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  root = null
-  rootMargin = ''
-  thresholds = []
-
-  constructor() {}
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-  takeRecords() {
-    return []
-  }
-} as unknown as {
-  new (callback: IntersectionObserverCallback, options?: IntersectionObserverInit): IntersectionObserver;
-  prototype: IntersectionObserver;
-}
+afterAll(() => {
+  // Cleanup after all tests
+});

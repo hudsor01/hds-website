@@ -166,7 +166,7 @@ describe('FloatingTextarea Component', () => {
   })
 
   it('should show character count when typing', async () => {
-    const user = userEvent.setup()
+    const _user = userEvent.setup()
     const { rerender } = render(
       <FloatingTextarea
         name="message"
@@ -358,9 +358,12 @@ describe('Semantic Token Usage', () => {
   it('should use theme variables for colors', () => {
     const { container } = render(<Button>Test</Button>)
     const button = container.querySelector('button')
+    expect(button).toBeInTheDocument()
 
     // Check computed styles use CSS variables
-    const styles = window.getComputedStyle(button!)
-    expect(styles).toBeDefined()
+    if (button) {
+      const styles = window.getComputedStyle(button)
+      expect(styles).toBeDefined()
+    }
   })
 })

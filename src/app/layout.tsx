@@ -1,11 +1,35 @@
 import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@/components/Analytics";
-import { ToastProvider } from "@/components/Toast";
+import ClientProviders from "@/components/ClientProviders";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebVitalsReporting } from "@/components/WebVitalsReporting";
 import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
+import { env } from "@/env";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'], // Graceful degradation if font fetch fails
+  adjustFontFallback: true,
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  fallback: ['ui-monospace', 'Courier New', 'monospace'], // Graceful degradation
+  adjustFontFallback: true,
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -58,7 +82,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION,
+    google: env.GOOGLE_SITE_VERIFICATION,
   },
   alternates: {
     canonical: 'https://hudsondigitalsolutions.com',
@@ -77,6 +101,13 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  other: {
+    "ld+json": JSON.stringify([
+      generateWebsiteSchema(),
+      generateOrganizationSchema(),
+      generateLocalBusinessSchema()
+    ].filter(Boolean))
+  }
 };
 
 export default function RootLayout({
@@ -127,37 +158,23 @@ export default function RootLayout({
         <meta name="MobileOptimized" content="320" />
       </head>
       <body
-        className="antialiased selection-cyan"
+        className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        {/* Structured Data for SEO */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              generateWebsiteSchema(),
-              generateOrganizationSchema(),
-              generateLocalBusinessSchema()
-            ].filter(Boolean))
-          }}
-        />
-
-        <ToastProvider>
-          {/* Skip to main content for accessibility */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-tooltip focus:px-6 focus:py-3 focus:bg-cyan-500 focus:text-white focus:font-bold focus:rounded-lg focus:shadow-xl focus-ring"
-          >
-            Skip to main content
-          </a>
-          <NavbarLight />
-          <main id="main-content" className="min-h-screen pt-16">
-            {children}
-          </main>
-          <Footer />
-          <ScrollToTop />
-          <Analytics />
-        </ToastProvider>
+        <ClientProviders>
+          <ErrorBoundary>
+            <NavbarLight />
+            <div id="main-content" className="min-h-screen pt-16">
+              {children}
+            </div>
+            <Footer />
+            <ScrollToTop />
+            <Analytics />
+            <SpeedInsights />
+            <WebVitalsReporting />
+          </ErrorBoundary>
+          <Toaster position="top-right" richColors theme="dark" />
+        </ClientProviders>
       </body>
     </html>
   );

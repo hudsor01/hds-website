@@ -9,7 +9,8 @@ interface TagPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 60;
+// Next.js 16: Using cacheLife instead
+// export const revalidate = 60;
 
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -45,10 +46,16 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 
 export async function generateStaticParams() {
   const tags = await getTags();
-
-  return tags.map((tag) => ({
+  const results = tags.map((tag) => ({
     slug: tag.slug,
   }));
+
+  // Next.js 16: cacheComponents requires at least one static param
+  if (results.length === 0) {
+    return [{ slug: '__placeholder__' }];
+  }
+
+  return results;
 }
 
 export default async function TagPage({ params }: TagPageProps) {

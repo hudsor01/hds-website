@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { Mail, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 // Load the contact form - Server Actions need SSR
 const ContactForm = dynamic(() => import('@/components/ContactForm'), {
@@ -146,9 +146,9 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <ComponentErrorBoundary name="Contact Form">
-                    {contactFormV2Enabled ? <ContactFormV2 /> : <ContactFormLight />}
-                  </ComponentErrorBoundary>
+                  <Suspense fallback={<ContactFormSkeleton />}>
+                    <ContactForm />
+                  </Suspense>
 
                   {/* Trust badges */}
                   <div className="mt-card-content pt-card-content border-t border-white/10">
