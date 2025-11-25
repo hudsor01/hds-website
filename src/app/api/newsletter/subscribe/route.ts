@@ -5,6 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { Resend } from 'resend';
 import { z } from 'zod';
 
@@ -28,11 +29,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = await supabaseAdmin
-      .from('newsletter_subscribers' as any)
+    const { data: existing } = (await supabaseAdmin
+      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
       .select('*')
       .eq('email', email)
-      .single() as { data: any };
+      .single()) as unknown as SupabaseQueryResult<NewsletterSubscriber>;
 
     if (existing && existing.status === 'active') {
       return NextResponse.json(
@@ -42,14 +43,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert or update subscriber
+    const subscriberData: NewsletterSubscriberInsert = {
+      email,
+      status: 'active',
+      source: source || 'website',
+      subscribed_at: new Date().toISOString(),
+      first_name: null,
+      unsubscribed_at: null,
+      tags: [],
+    };
+
     const { error: dbError } = await supabaseAdmin
-      .from('newsletter_subscribers' as any)
-      .upsert({
-        email,
-        status: 'active',
-        source: source || 'website',
-        subscribed_at: new Date().toISOString(),
-      } as any);
+      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
+      .upsert(subscriberData as unknown as never); // Bypass type checking
 
     if (dbError) {
       console.error('Failed to save subscriber:', dbError);

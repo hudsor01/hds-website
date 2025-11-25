@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import type { WebpackCompiler, WebpackCompilation } from '@/types/supabase-helpers';
 
 // Performance budgets for Core Web Vitals
 const PERFORMANCE_BUDGETS = {
@@ -181,8 +182,8 @@ const nextConfig: NextConfig = {
 
       // Enhanced performance monitoring and optimization
       config.plugins.push({
-        apply: (compiler: any) => {
-          compiler.hooks.afterEmit.tap('PerformanceBudgetPlugin', (compilation: any) => {
+        apply: (compiler: WebpackCompiler) => {
+          compiler.hooks.afterEmit.tap('PerformanceBudgetPlugin', (compilation: WebpackCompilation) => {
             const stats = compilation.getStats().toJson({
               assets: true,
               chunks: true, // Include chunk information
@@ -195,13 +196,13 @@ const nextConfig: NextConfig = {
             const chunkSizes: Record<string, number> = {};
             const assetsByType: Record<string, number> = {};
 
-            stats.assets?.forEach((asset: any) => {
+            stats.assets?.forEach((asset: { name: string; size: number }) => {
               const size = asset.size;
               if (asset.name.endsWith('.js')) {
                 totalJSSize += size;
                 // Track individual chunk sizes
                 const match = asset.name.match(/([a-zA-Z0-9_-]+)(\.[a-f0-9]+)?\.js/);
-                if (match) {
+                if (match && match[1]) {
                   chunkSizes[match[1]] = (chunkSizes[match[1]] || 0) + size;
                 }
               } else if (asset.name.endsWith('.css')) {
@@ -211,8 +212,10 @@ const nextConfig: NextConfig = {
               }
 
               // Track all asset types
-              const ext = asset.name.split('.').pop()?.toLowerCase() || 'unknown';
-              assetsByType[ext] = (assetsByType[ext] || 0) + size;
+              const ext = asset.name.split('.').pop();
+              if (ext) {
+                assetsByType[ext.toLowerCase()] = (assetsByType[ext.toLowerCase()] || 0) + size;
+              }
             });
 
             // Check against budgets

@@ -29,7 +29,7 @@ export default function NotFound() {
           <h2 className="text-responsive-lg font-black text-white mb-4">
             Page Not Found
           </h2>
-          <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+          <p className="text-xl text-text-secondary mb-8 leading-relaxed">
             The page you&apos;re looking for has vanished into the digital void.
             But don&apos;t worry—our navigation system is still operational.
           </p>
@@ -59,7 +59,7 @@ export default function NotFound() {
         </div>
         {/* Quick Links */}
         <div className="mt-16">
-          <h3 className="text-lg font-semibold text-gray-400 mb-6">Or explore these sections:</h3>
+          <h3 className="text-lg font-semibold text-text-muted mb-6">Or explore these sections:</h3>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/services" passHref>
               <button

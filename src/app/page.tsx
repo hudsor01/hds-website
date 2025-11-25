@@ -116,23 +116,23 @@ export default function HomePage() {
 
                   {/* Terminal Content */}
                   <div className="p-6 font-mono text-sm space-y-2" role="log">
-                    <div className="text-cyan-400">$ npm run deploy --production</div>
+                    <div className="text-brand-secondary">$ npm run deploy --production</div>
                     <div className="text-muted-foreground">[OK] Build completed in 1.8s</div>
                     <div className="text-muted-foreground">[OK] Tests passed (147/147)</div>
                     <div className="text-muted-foreground">[OK] Security scan clean</div>
-                    <div className="text-blue-400">&gt; Deploying to production...</div>
-                    <div className="text-green-400">[OK] Deployment successful</div>
-                    <div className="text-yellow-400">[LIVE] at https://client-app.com</div>
+                    <div className="text-brand-tertiary">&gt; Deploying to production...</div>
+                    <div className="text-success">[OK] Deployment successful</div>
+                    <div className="text-warning">[LIVE] at https://client-app.com</div>
 
                     <div className="pt-2 space-y-1">
-                      <div className="text-cyan-300">Performance: 100/100</div>
-                      <div className="text-cyan-300">Accessibility: 100/100</div>
-                      <div className="text-cyan-300">SEO: 98/100</div>
+                      <div className="text-brand-secondary/80">Performance: 100/100</div>
+                      <div className="text-brand-secondary/80">Accessibility: 100/100</div>
+                      <div className="text-brand-secondary/80">SEO: 98/100</div>
                     </div>
 
-                    <div className="text-cyan-400 mt-4">
+                    <div className="text-brand-secondary mt-4">
                       <span className="inline-block">$</span>
-                      <span className="inline-block w-2 h-4 bg-cyan-400 ml-1" />
+                      <span className="inline-block w-2 h-4 bg-brand-secondary ml-1" />
                     </div>
                   </div>
                 </div>
@@ -164,10 +164,10 @@ export default function HomePage() {
               >
                 <div className="space-y-6">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-cyan-500/30 hover-lift will-change-transform transition-smooth">
-                      <solution.icon className="h-6 w-6 text-cyan-400" />
+                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-brand-primary/30 hover-lift will-change-transform transition-smooth">
+                      <solution.icon className="h-6 w-6 text-brand-secondary" />
                     </div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">
+                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-brand-secondary transition-smooth">
                       {solution.title}
                     </h3>
                   </div>
@@ -210,8 +210,8 @@ export default function HomePage() {
             </h2>
 
             <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-gray-300 leading-relaxed">
-                Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
+              <p className="text-xl text-text-secondary leading-relaxed">
+                Numbers don&apos;t lie - our clients see <span className="text-brand-secondary font-semibold">measurable results</span> that transform their businesses
               </p>
             </div>
           </div>

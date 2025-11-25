@@ -5,6 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import type { CaseStudy } from '@/types/supabase-helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,12 +23,12 @@ export async function GET(request: NextRequest) {
 
     // If slug is provided, return single case study
     if (slug) {
-      const { data: caseStudy, error } = await supabaseAdmin
-        .from('case_studies' as any)
+      const { data: caseStudy, error } = (await supabaseAdmin
+        .from('case_studies' as 'lead_attribution') // Type assertion for custom table
         .select('*')
         .eq('slug', slug)
         .eq('published', true)
-        .single();
+        .single()) as unknown as { data: CaseStudy | null; error: unknown };
 
       if (error) {
         return NextResponse.json(
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     // Build query for list of case studies
     let query = supabaseAdmin
-      .from('case_studies' as any)
+      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .select('*')
       .eq('published', true)
       .order('created_at', { ascending: false });

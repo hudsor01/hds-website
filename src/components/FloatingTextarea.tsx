@@ -33,8 +33,8 @@ export default function FloatingTextarea({
 
   // Simplify nested ternary for label color
   const getLabelColor = () => {
-    if (isFocused && shouldFloat) {return 'text-cyan-400'}
-    if (shouldFloat) {return 'text-gray-300'}
+    if (isFocused && shouldFloat) {return 'text-brand-secondary'}
+    if (shouldFloat) {return 'text-text-secondary'}
     return ''
   }
 
@@ -75,19 +75,19 @@ export default function FloatingTextarea({
         className={`
           absolute left-4 transition-all duration-200 ease-in-out pointer-events-none
           ${shouldFloat 
-            ? 'top-2 text-xs text-cyan-400' 
-            : 'top-6 text-base text-gray-400'
+            ? 'top-2 text-xs text-brand-secondary'
+            : 'top-6 text-base text-text-muted'
           }
           ${getLabelColor()}
         `}
       >
         {placeholder}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-danger ml-1">*</span>}
       </label>
 
       {/* Character count indicator */}
       {value.length > 0 && (
-        <div className="absolute bottom-2 right-4 text-xs text-gray-400">
+        <div className="absolute bottom-2 right-4 text-xs text-text-muted">
           {value.length} characters
         </div>
       )}

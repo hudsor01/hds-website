@@ -128,7 +128,7 @@ export async function scheduleEmailSequence(
     await scheduleEmail({
       recipientEmail,
       recipientName,
-      sequenceId: sequenceId as any,
+      sequenceId: sequenceId as never,
       stepId: 'followup',
       scheduledFor,
       variables,

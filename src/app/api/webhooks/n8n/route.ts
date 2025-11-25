@@ -216,7 +216,7 @@ async function handleEmailSequence(body: unknown) {
     await scheduleEmail({
       recipientEmail: data.email,
       recipientName: data.name,
-      sequenceId: data.sequenceId as any,
+      sequenceId: data.sequenceId as never,
       stepId: 'n8n-triggered',
       scheduledFor,
       variables: {
