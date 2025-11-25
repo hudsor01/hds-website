@@ -5,8 +5,9 @@
 
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { CTAButton } from '@/components/cta-button';
-import { Clock, Users, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
+import { Clock, Users, ExternalLink, ArrowRight } from 'lucide-react';
 import { getCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
@@ -154,9 +155,12 @@ export default function CaseStudiesPage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+              <Link href="/contact">
+                Start Your Project
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
