@@ -30,10 +30,6 @@ const nextConfig: NextConfig = {
     return null;
   },
 
-  // Enable Next.js 16 features
-  reactCompiler: true,
-  cacheComponents: true,
-
   typescript: {
     ignoreBuildErrors: false,
   },
