@@ -48,7 +48,7 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
       </div>
       <h2 className="text-responsive-md font-bold text-green-100 mb-4">Message Sent Successfully!</h2>
       <p className="text-green-200 mb-6">
-        Thank you for contacting us. We'll get back to you within 24 hours.
+        Thank you for contacting us. We&apos;ll get back to you within 24 hours.
       </p>
       <button
         onClick={handleReset}
@@ -65,10 +65,10 @@ function FormHeader() {
   return (
     <div className="mb-8">
       <h2 className="text-responsive-md gradient-text mb-2">
-        Let's Build Something Amazing
+        Let&apos;s Build Something Amazing
       </h2>
       <p className="text-muted-foreground">
-        Tell us about your project and we'll get back to you within 24 hours.
+        Tell us about your project and we&apos;ll get back to you within 24 hours.
       </p>
     </div>
   )

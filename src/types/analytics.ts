@@ -79,20 +79,37 @@ export interface UserProperties {
   [key: string]: string | number | boolean | undefined;
 }
 
-export interface PostHogLike {
-  init: (key: string, config: Record<string, unknown>) => void;
-  capture: (event: string, properties?: Record<string, unknown>) => void;
-  identify: (userId: string, properties?: Record<string, unknown>) => void;
-  group: (groupType: string, groupKey: string, properties?: Record<string, unknown>) => void;
-  reset: () => void;
-  isFeatureEnabled: (flag: string) => boolean | undefined;
-}
-
 // Analytics event property types
 export type BasicAnalyticsPropertyValue = string | number | boolean | null | undefined;
 
 export interface AnalyticsProperties {
   [key: string]: BasicAnalyticsPropertyValue | BasicAnalyticsPropertyValue[] | AnalyticsProperties;
+}
+
+// Lead attribution types
+export interface UTMParameters {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+}
+
+export interface LeadAttributionData {
+  email?: string;
+  source?: string; // organic, paid, referral, direct, social, email
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+  utm_params?: UTMParameters;
+  referrer?: string;
+  landing_page?: string;
+  current_page?: string;
+  session_id?: string;
+  device_type?: string; // mobile, tablet, desktop
+  browser?: string;
+  os?: string;
 }
 
 // Analytics Web Vitals metric type

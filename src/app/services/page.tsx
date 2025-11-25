@@ -116,7 +116,7 @@ export default function ServicesPage() {
         <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
           <div className="space-y-8">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
@@ -180,7 +180,7 @@ export default function ServicesPage() {
                     </div>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                  <h3 className="text-2xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
                     {service.title}
                   </h3>
                   
@@ -277,7 +277,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
                 <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -320,7 +320,7 @@ export default function ServicesPage() {
 
               <Link
                 href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

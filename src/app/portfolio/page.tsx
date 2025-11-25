@@ -5,7 +5,8 @@ import { Analytics } from '@/components/Analytics';
 import { getProjects, parseProjectStats } from '@/lib/projects';
 
 // Enable ISR with 1-hour revalidation
-export const revalidate = 3600;
+// Next.js 16: Using cacheLife instead
+// export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Portfolio - Our Work | Hudson Digital Solutions',

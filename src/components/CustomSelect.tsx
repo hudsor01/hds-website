@@ -132,7 +132,7 @@ export default function CustomSelect({
               ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
               : 'border-gray-600 hover:border-gray-500 focus-ring'
           }
-          ${!selectedOption?.value ? 'text-gray-400' : 'text-white'}
+          ${!selectedOption?.value ? 'text-text-muted' : 'text-text-inverted'}
         `}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -144,7 +144,7 @@ export default function CustomSelect({
         
         <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <ChevronDown
-            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+            className={`w-5 h-5 text-text-muted transition-transform duration-200 ${
               isOpen ? 'rotate-180' : ''
             }`}
             aria-hidden="true"
@@ -168,8 +168,8 @@ export default function CustomSelect({
                 className={`
                   relative w-full px-4 py-3 text-left transition-colors duration-150
                   ${index === focusedIndex 
-                    ? 'bg-cyan-600/20 text-cyan-300' 
-                    : 'text-white hover:bg-gray-700/50'
+                    ? 'bg-cyan-600/20 text-cyan-400/80'
+                    : 'text-text-inverted hover:bg-bg-tertiary-dark/50'
                   }
                   ${option.value === value ? 'bg-cyan-600/10' : ''}
                 `}

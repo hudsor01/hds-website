@@ -6,7 +6,7 @@ import {
   escapeHtml,
   sanitizeEmailHeader,
   detectInjectionAttempt
-} from '@/lib/security-utils';
+} from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
 import {
   leadMagnetRequestSchema,

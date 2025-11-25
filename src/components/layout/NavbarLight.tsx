@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState, memo, useCallback, useEffect } from "react";
 import {
   Menu,
@@ -10,6 +9,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/types/components";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 // import { brand } from "@/lib/brand";
 
 
@@ -22,8 +22,13 @@ const navigation: NavigationItem[] = [
 ];
 
 const NavbarLight = memo(function NavbarLight() {
-  const pathname = usePathname();
+  const [pathname, setPathname] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Initialize pathname on client side only (Next.js 16 cacheComponents compatibility)
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
 
   const handleNavClick = useCallback(() => {
     setMobileMenuOpen(false);
@@ -89,6 +94,9 @@ const NavbarLight = memo(function NavbarLight() {
 
           {/* Right side - Dual CTAs */}
           <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Secondary CTA - Talk to Sales */}
             <Link
               href="/contact"

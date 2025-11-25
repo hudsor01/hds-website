@@ -12,8 +12,8 @@ const envSchema = z.object({
   // Node Environment
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
-  // Email Service (Required)
-  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required for email functionality'),
+  // Email Service (Optional - for production email sending)
+  RESEND_API_KEY: z.string().optional().or(z.literal('')),
 
   // Ghost CMS (Optional - for blog)
   GHOST_API_URL: z.string().url().optional().or(z.literal('')),

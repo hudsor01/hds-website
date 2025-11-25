@@ -1,4 +1,3 @@
-import './globals.css'
 import './print.css'
 import type { Metadata } from 'next'
 

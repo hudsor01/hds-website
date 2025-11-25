@@ -36,7 +36,7 @@ export default function FloatingInput({
   // Simplify nested ternary for label color
   const getLabelColor = () => {
     if (isFocused && shouldFloat) {return 'text-cyan-400'}
-    if (shouldFloat) {return 'text-gray-300'}
+    if (shouldFloat) {return 'text-text-secondary'}
     return ''
   }
 
@@ -78,14 +78,14 @@ export default function FloatingInput({
         className={`
           absolute left-4 transition-all duration-200 ease-in-out pointer-events-none
           ${shouldFloat 
-            ? 'top-2 text-xs text-cyan-400' 
-            : 'top-1/2 -translate-y-1/2 text-base text-gray-400'
+            ? 'top-2 text-xs text-cyan-400'
+            : 'top-1/2 -translate-y-1/2 text-base text-text-muted'
           }
           ${getLabelColor()}
         `}
       >
         {placeholder}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-danger ml-1">*</span>}
       </label>
 
       {/* Focus ring animation */}

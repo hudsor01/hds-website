@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 };
 
+// Pre-compute date at module load time (safe for RSC)
+const lastUpdated = new Date().toLocaleDateString();
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -19,7 +22,7 @@ export default function PrivacyPage() {
               Your privacy matters to us. Learn how we handle your data.
             </p>
             <p className="text-sm text-gray-400 mt-2">
-              Last updated: {new Date().toLocaleDateString()}
+              Last updated: {lastUpdated}
             </p>
           </div>
 
@@ -97,7 +100,7 @@ export default function PrivacyPage() {
               <div className="text-gray-300 space-y-4">
                 <p>Our website uses third-party services that may collect information:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>PostHog:</strong> Product analytics and user experience optimization</li>
+                  <li><strong>Analytics:</strong> Product analytics and user experience optimization</li>
                   <li><strong>Vercel Analytics:</strong> Performance monitoring</li>
                   <li><strong>Resend:</strong> Email communications</li>
                   <li><strong>Google Maps:</strong> Location services</li>

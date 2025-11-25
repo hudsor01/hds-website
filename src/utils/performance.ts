@@ -96,7 +96,7 @@ export function trackWebVitals() {
         timestamp: Date.now()
       });
 
-      // Send to PostHog for performance analytics
+      // Send to analytics for performance tracking
       if (typeof window !== 'undefined' && analytics) {
         analytics.trackEvent('web_vitals_cls', {
           cls_value: _clsValue,

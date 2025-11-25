@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type TestInfo, type Route } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
 test.describe('Contact Form', () => {
@@ -64,7 +64,7 @@ test.describe('Contact Form', () => {
     expect(successVisible || errorVisible).toBeTruthy()
   })
 
-  test('should show pending state while submitting', async ({ page }, testInfo) => {
+  test('should show pending state while submitting', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Fill in form
     await page.fill('input[name="firstName"]', 'Jane')
@@ -77,7 +77,7 @@ test.describe('Contact Form', () => {
 
     // For Server Actions, we can't intercept the request, but we can slow down the response
     // by intercepting the fetch that Server Actions use internally
-    await page.route('**/_next/**', async route => {
+    await page.route('**/_next/**', async (route: Route) => {
       if (route.request().method() === 'POST') {
         // Add a delay to simulate slower network request
         await new Promise(resolve => setTimeout(resolve, 1000))

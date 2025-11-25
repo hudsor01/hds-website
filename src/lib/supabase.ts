@@ -83,6 +83,16 @@ export const supabaseAdmin = createClient<Database>(
   }
 )
 
+// Helper function to check if admin client is properly configured
+export function isSupabaseAdminConfigured(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'placeholder'
+  );
+}
+
 // ========================================
 // PERFORMANCE OPTIMIZATIONS
 // ========================================
@@ -369,7 +379,8 @@ export function subscribeToEvents(callback: (payload: Record<string, unknown>) =
 // Queue system for background processing
 export async function enqueueLogProcessing(logData: Record<string, unknown>) {
   try {
-    await supabaseAdmin.rpc('enqueue_log_processing', { log_data: logData })
+    type SupabaseRPCFunction = (name: string, params: Record<string, unknown>) => Promise<unknown>;
+    await (supabaseAdmin.rpc as unknown as SupabaseRPCFunction)('enqueue_log_processing', { log_data: logData })
   } catch (error) {
     console.error('Queue enqueue failed:', error)
   }
@@ -395,7 +406,8 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
       return null;
     }
 
-    const { data, error } = await supabaseAdmin.rpc('graphql', {
+    type SupabaseGraphQLFunction = (name: string, params: { query: string; variables: Record<string, unknown> }) => Promise<{ data: unknown; error: unknown }>;
+    const { data, error } = await (supabaseAdmin.rpc as unknown as SupabaseGraphQLFunction)('graphql', {
       query,
       variables: variables || {}
     })
@@ -430,7 +442,8 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
       return;
     }
 
-    await supabaseAdmin.rpc('trigger_webhook', {
+    type SupabaseWebhookFunction = (name: string, params: { event_type: string; payload: Record<string, unknown> }) => Promise<unknown>;
+    await (supabaseAdmin.rpc as unknown as SupabaseWebhookFunction)('trigger_webhook', {
       event_type: eventType,
       payload: payload
     })

@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type TestInfo } from '@playwright/test';
 import { createTestLogger } from './test-logger';
 
 test.describe('Component Classes Visual Verification', () => {
-  test('should verify globals.css component classes are working', async ({ page }, testInfo) => {
+  test('should verify globals.css component classes are working', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Navigate to homepage using relative URL (uses baseURL from config)
     logger.step('Navigating to homepage');
@@ -66,7 +66,7 @@ test.describe('Component Classes Visual Verification', () => {
     logger.complete('Homepage component classes verification completed');
   });
 
-  test('should verify contact form component classes', async ({ page }, testInfo) => {
+  test('should verify contact form component classes', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Navigate to contact page using relative URL
     logger.step('Navigating to contact page');
@@ -96,7 +96,7 @@ test.describe('Component Classes Visual Verification', () => {
     logger.complete('Contact form component classes verification completed');
   });
 
-  test('should verify services page component classes', async ({ page }, testInfo) => {
+  test('should verify services page component classes', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title);
     // Navigate to services page using relative URL
     logger.step('Navigating to services page');
