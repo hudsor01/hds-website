@@ -3,9 +3,10 @@
  * Tailored for financial technology companies
  */
 
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, Lock, TrendingUp, CreditCard, AlertTriangle, Zap, DollarSign, Shield } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { Lock, TrendingUp, CreditCard, AlertTriangle, Zap, DollarSign, Shield } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -33,12 +34,18 @@ export default function FinTechPage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Security Audit
-            </CTAButton>
-            <CTAButton href="/portfolio" variant="secondary" size="lg">
-              See FinTech Projects
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Security Audit
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+            <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See FinTech Projects
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -156,9 +163,12 @@ export default function FinTechPage() {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Get a free security audit and compliance roadmap for your financial technology application.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Schedule Security Consultation
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Security Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

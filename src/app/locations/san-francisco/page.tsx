@@ -4,9 +4,10 @@
  */
 
 import type { Metadata } from 'next';
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, MapPin, Mail, Clock } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { MapPin, Mail, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Web Development Services in San Francisco & Bay Area | Hudson Digital',
@@ -91,12 +92,18 @@ export default function SanFranciscoPage() {
             </p>
 
             <div className="flex justify-center gap-4">
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Schedule Free Consultation
-              </CTAButton>
-              <CTAButton href="/case-studies" variant="secondary" size="lg">
-                View Bay Area Case Studies
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+              <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/case-studies">
+        View Bay Area Case Studies
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </section>
@@ -247,9 +254,12 @@ export default function SanFranciscoPage() {
               <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Let's discuss your project over coffee in San Francisco or a video call.
               </p>
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Schedule Free Consultation
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </section>

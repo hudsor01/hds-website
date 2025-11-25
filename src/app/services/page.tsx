@@ -1,9 +1,9 @@
 'use client';
 
 import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
-import Link from "next/link";
-import { CTAButton } from '@/components/cta-button';
-import { BackgroundPattern } from "@/components/BackgroundPattern";
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button'
+import { BackgroundPattern } from '@/components/BackgroundPattern';
 
 interface Service {
   title: string;
@@ -138,13 +138,19 @@ export default function ServicesPage() {
 
             <div>
               <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
-                <CTAButton href="/contact" variant="primary" size="lg">
-                  Start Your Project
-                </CTAButton>
+                <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
 
-                <CTAButton href="#process" variant="secondary" size="lg">
-                  See Our Process
-                </CTAButton>
+                <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="#process">
+        See Our Process
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
               </div>
             </div>
           </div>

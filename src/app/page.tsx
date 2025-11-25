@@ -1,5 +1,7 @@
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
 import {
+    ArrowRight,
     BarChart3,
     Calculator,
     Clock,
@@ -9,8 +11,7 @@ import {
     TrendingUp,
     Users,
     Zap
-} from 'lucide-react';
-import Link from 'next/link';
+} from 'lucide-react'
 import { NewsletterSignup } from '@/components/NewsletterSignup';
 
 export default function HomePage() {
@@ -70,12 +71,18 @@ export default function HomePage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-6">
-                  <CTAButton href="/contact" variant="primary" size="lg">
-                    See Your ROI in 30 Days
-                  </CTAButton>
-                  <CTAButton href="/portfolio" variant="secondary" size="lg">
-                    View Case Studies
-                  </CTAButton>
+                  <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        See Your ROI in 30 Days
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+                  <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        View Case Studies
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
                 </div>
 
                 {/* Trust Indicators */}
@@ -456,12 +463,18 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Get Your Free Roadmap
-              </CTAButton>
-              <CTAButton href="/portfolio" variant="secondary" size="lg">
-                See Proven Results First
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Your Free Roadmap
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+              <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See Proven Results First
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </div>

@@ -3,9 +3,10 @@
  * Tailored for real estate companies and property management
  */
 
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -33,12 +34,18 @@ export default function RealEstatePage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Free Platform Audit
-            </CTAButton>
-            <CTAButton href="/portfolio" variant="secondary" size="lg">
-              See Real Estate Projects
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Free Platform Audit
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+            <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See Real Estate Projects
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -156,9 +163,12 @@ export default function RealEstatePage() {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Get a free platform audit showing exactly how to increase lead conversions and close deals faster.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Schedule Free Consultation
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

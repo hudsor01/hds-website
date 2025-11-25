@@ -3,9 +3,10 @@
  * Tailored for online retail businesses
  */
 
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, ShoppingCart, TrendingUp, Smartphone, CreditCard, Zap, DollarSign } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { ShoppingCart, TrendingUp, Smartphone, CreditCard, Zap, DollarSign } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -33,12 +34,18 @@ export default function EcommercePage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Free Store Audit
-            </CTAButton>
-            <CTAButton href="/portfolio" variant="secondary" size="lg">
-              See E-commerce Projects
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Free Store Audit
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+            <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See E-commerce Projects
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -156,9 +163,12 @@ export default function EcommercePage() {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Get a free e-commerce audit showing exactly how to improve your conversion rate and revenue.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Free Store Audit
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Free Store Audit
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

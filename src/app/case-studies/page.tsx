@@ -5,8 +5,9 @@
 
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { CTAButton } from '@/components/cta-button';
-import { Clock, Users, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, Clock, Users, ExternalLink } from 'lucide-react';
 import { getCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
@@ -26,9 +27,12 @@ async function CaseStudiesContent() {
               <p className="text-gray-400 text-lg">
                 Case studies coming soon. Contact us to discuss your project!
               </p>
-              <CTAButton href="/contact" variant="primary" size="lg" className="mt-6">
-                Get Started
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true} className="mt-6">
+      <Link href="/contact">
+        Get Started
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           ) : (
             <div className="grid gap-8">
@@ -80,10 +84,12 @@ async function CaseStudiesContent() {
                         </div>
                       </div>
 
-                      <CTAButton href={`/case-studies/${study.slug}`} variant="secondary" size="md">
-                        Read Full Case Study
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </CTAButton>
+                      <Button asChild variant="outline" size="default" trackConversion={true}>
+                        <Link href={`/case-studies/${study.slug}`}>
+                          Read Full Case Study
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
                     </div>
 
                     {/* Right Column - Testimonial */}
@@ -149,9 +155,12 @@ export default function CaseStudiesPage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -180,9 +189,12 @@ export default function CaseStudiesPage() {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Let's discuss your project and create a custom solution that drives real business results.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project Today
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project Today
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

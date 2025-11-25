@@ -4,9 +4,10 @@
  */
 
 import type { Metadata } from 'next';
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, MapPin } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Web Development Services in New York City | Hudson Digital Solutions',
@@ -62,9 +63,12 @@ export default function NewYorkPage() {
             </p>
 
             <div className="flex justify-center gap-4">
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Schedule Free Consultation
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </section>
@@ -97,9 +101,12 @@ export default function NewYorkPage() {
               <h2 className="text-4xl font-black text-white mb-6">
                 Let's Build Something Great in NYC
               </h2>
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Get Started Today
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Started Today
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </section>

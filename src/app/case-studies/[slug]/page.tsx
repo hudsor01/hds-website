@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { CTAButton } from '@/components/cta-button';
-import { ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
+import { Button } from '@/components/ui/Button'
+import { ArrowRight, ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
 import { getCaseStudyBySlug, getAllCaseStudySlugs } from '@/lib/case-studies';
 
 // Generate static params for all case studies
@@ -223,9 +223,12 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Let's discuss how we can help you achieve similar results for your business.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

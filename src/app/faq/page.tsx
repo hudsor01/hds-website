@@ -6,8 +6,9 @@
 'use client';
 
 import { useState } from 'react';
-import { CTAButton } from '@/components/cta-button';
-import { ChevronDown, Search } from 'lucide-react';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, ChevronDown, Search } from 'lucide-react';
 
 const faqs = [
   {
@@ -237,9 +238,12 @@ export default function FAQPage() {
               <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                 Schedule a free consultation call and we&apos;ll answer all your questions about your project.
               </p>
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Schedule Free Consultation
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </section>
