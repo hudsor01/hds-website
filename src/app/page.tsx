@@ -45,61 +45,63 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-20 lg:py-32">
-        <div className="container-wide sm:px-6 lg:px-8 w-full">
-          <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
+      <section className="relative py-24 lg:py-40 px-4 sm:px-6">
+        <div className="container-wide">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
 
             {/* Left Side - Content */}
-            <div className="lg:col-span-3 lg:pr-8">
+            <div className="lg:pr-8">
               <div className="space-y-8">
                 <div>
-                  <h1 className="text-responsive-lg font-black text-text-inverted leading-[1.1] mb-6 text-balance">
-                    <span className="block">Stop Losing Revenue to</span>
-                    <span className="block gradient-text bg-clip-text text-transparent">
+                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-8">
+                    <span className="block mb-2">Stop Losing Revenue to</span>
+                    <span className="block gradient-text">
                       Technical Bottlenecks
                     </span>
-                    <span className="block text-responsive-md font-bold text-text-secondary mt-2">
-                      Ship 3x Faster, 60% Cheaper
-                    </span>
                   </h1>
-                </div>
-
-                <div className="typography">
-                  <p className="lead max-w-2xl text-pretty">
-                    We build and scale your technical operations in weeks, not months.
-                    No hiring delays. No training costs. Just proven senior talent ready to execute.
+                  <p className="text-responsive-xl font-bold text-cyan-400 mb-6">
+                    Ship 3x Faster, 60% Cheaper
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
+                  We build and scale your technical operations in weeks, not months.
+                  No hiring delays. No training costs. Just proven senior talent ready to execute.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-6">
                   <CTAButton href="/contact" variant="primary" size="lg">
                     See Your ROI in 30 Days
                   </CTAButton>
-                  <CTAButton href="/portfolio" variant="primary" size="lg">
+                  <CTAButton href="/portfolio" variant="secondary" size="lg">
                     View Case Studies
                   </CTAButton>
                 </div>
 
                 {/* Trust Indicators */}
-                <div className="flex-center gap-6 pt-8 border-t border-border-primary">
-                  <div className="flex-center gap-2 text-text-secondary">
-                    <Clock className="w-5 h-5 text-success" />
-                    <span className="small">Average 250% ROI</span>
+                <div className="flex flex-wrap gap-8 pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-green-400" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-300">Average 250% ROI</span>
                   </div>
-                  <div className="flex-center gap-2 text-text-secondary">
-                    <Users className="w-5 h-5 text-blue-500" />
-                    <span className="small">Zero onboarding time</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-300">Zero onboarding time</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Side - Terminal Display */}
-            <div className="lg:col-span-2 mt-16 lg:mt-0">
+            <div className="mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-gradient-hero-20 rounded-3xl blur-3xl" />
-                <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-primary-30 rounded-full blur-2xl" />
+                <div className="absolute inset-0 bg-cyan-500/20 rounded-3xl blur-3xl opacity-50" />
+                <div className="absolute top-4 right-4 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
@@ -143,17 +145,15 @@ export default function HomePage() {
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 sm:px-6">
         <div className="container-wide">
-          <div className="text-center mb-16 typography">
-            <h2 className="text-responsive-md font-black text-white mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-responsive-2xl font-black text-white mb-6">
               How We Solve Your Biggest Problems
             </h2>
-            <div className="typography">
-              <p className="large muted container-narrow">
-                Three ways we help SaaS companies go from struggling to scaling
-              </p>
-            </div>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Three ways we help SaaS companies go from struggling to scaling
+            </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -194,26 +194,24 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - Enhanced */}
-      <section className="relative py-20 px-4 bg-gradient-secondary overflow-hidden">
+      <section className="relative py-24 px-4 sm:px-6 bg-gradient-secondary overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-600/5" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
 
         <div className="container-wide relative">
-          <div className="text-center mb-20 typography">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="gradient-text relative">
+          <div className="text-center mb-24">
+            <h2 className="text-responsive-2xl font-black text-white mb-6">
+              <span className="gradient-text relative inline-block">
                 Proven Impact
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
               </span>
             </h2>
 
-            <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-text-secondary leading-relaxed">
-                Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
-              </p>
-            </div>
+            <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mt-8">
+              Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
+            </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
@@ -270,21 +268,19 @@ export default function HomePage() {
       </section>
 
       {/* Free Tools Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-bg-primary-dark to-bg-secondary-dark">
+      <section className="py-24 px-4 sm:px-6 bg-gradient-to-b from-bg-primary-dark to-bg-secondary-dark">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-text-inverted mb-6">
-              <span className="gradient-text relative">
+          <div className="text-center mb-20">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6">
+              <span className="gradient-text relative inline-block">
                 Free Business Tools
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
               </span>
             </h2>
 
-            <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-text-secondary leading-relaxed">
-                Calculate your potential in 60 seconds. No signup required.
-              </p>
-            </div>
+            <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mt-8">
+              Calculate your potential in 60 seconds. No signup required.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -441,25 +437,25 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 sm:px-6">
         <div className="container-wide text-center">
-          <div className="glass-section p-12 md:p-16">
-            <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+          <div className="glass-section p-12 md:p-20">
+            <div className="w-20 h-20 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-8">
+              <Rocket className="w-10 h-10 text-cyan-400" />
+            </div>
 
-            <h2 className="text-responsive-md font-black text-text-inverted mb-6">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6 max-w-4xl mx-auto">
               Your competitors ship faster.
-              <span className="block gradient-text mt-2">
+              <span className="block gradient-text mt-4">
                 Why don&apos;t you?
               </span>
             </h2>
 
-            <div className="typography">
-              <p className="large text-text-secondary mb-10 container-narrow">
-                Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
-              </p>
-            </div>
+            <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
+            </p>
 
-            <div className="flex-center flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <CTAButton href="/contact" variant="primary" size="lg">
                 Get Your Free Roadmap
               </CTAButton>
