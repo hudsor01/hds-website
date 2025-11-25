@@ -104,7 +104,7 @@ class PerformanceMonitor {
 
   public logPerformanceSummary() {
     const metrics = this.getMetrics();
-    logger.info('Performance Summary', metrics);
+    logger.info('Performance Summary', metrics as Record<string, unknown>);
     
     // Log any metrics that are above recommended thresholds
     if (metrics.fcp && metrics.fcp > 1800) { // 1.8s
