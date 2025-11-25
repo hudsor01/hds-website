@@ -7,6 +7,16 @@
 
 import { useReportWebVitals } from 'next/web-vitals';
 
+interface PostHogClient {
+  capture: (event: string, properties: Record<string, unknown>) => void;
+}
+
+declare global {
+  interface Window {
+    posthog?: PostHogClient;
+  }
+}
+
 export function WebVitalsReporting() {
   useReportWebVitals((metric) => {
     // Send to analytics
@@ -20,8 +30,8 @@ export function WebVitalsReporting() {
     }
 
     // Send to PostHog if available
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture('web_vitals', {
+    if (typeof window !== 'undefined' && window.posthog) {
+      window.posthog.capture('web_vitals', {
         metric_name: metric.name,
         value: metric.value,
         rating: metric.rating,
@@ -44,7 +54,16 @@ export function WebVitalsReporting() {
   return null;
 }
 
-async function storeWebVital(metric: any) {
+interface WebVitalMetric {
+  name: string;
+  value: number;
+  rating: string;
+  delta: number;
+  id: string;
+  navigationType?: string;
+}
+
+async function storeWebVital(metric: WebVitalMetric) {
   try {
     // Only store in production
     if (process.env.NODE_ENV !== 'production') {

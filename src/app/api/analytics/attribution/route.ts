@@ -6,6 +6,8 @@
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { LeadAttributionData } from '@/types/analytics';
+import type { Database } from '@/types/database';
+import type { LeadAttributionRow, LeadAttributionInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const logger = createServerLogger('attribution-api');
@@ -60,20 +62,20 @@ export async function POST(request: NextRequest) {
 
     // Check if attribution already exists for this email/session
     const { data: existing } = await supabaseAdmin
-      .from('lead_attribution' as any)
+      .from('lead_attribution')
       .select('id, email, first_visit_at, visit_count')
       .eq(email ? 'email' : 'session_id', (email || session_id) as string)
-      .single() as { data: any };
+      .single() as SupabaseQueryResult<Pick<LeadAttributionRow, 'id' | 'email' | 'first_visit_at' | 'visit_count'>>;
 
     if (existing) {
       // Update last visit time and visit count
       await supabaseAdmin
-        .from('lead_attribution' as any)
+        .from('lead_attribution')
         .update({
           last_visit_at: new Date().toISOString(),
           visit_count: (existing.visit_count || 0) + 1,
           current_page,
-        } as any)
+        })
         .eq('id', existing.id);
 
       logger.info('Updated existing attribution', { id: existing.id });
@@ -86,33 +88,42 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new attribution record
+    const insertData: LeadAttributionInsert = {
+      email: email || '',
+      source: source || 'direct',
+      medium: medium || 'none',
+      campaign: campaign || null,
+      term: term || null,
+      content: content || null,
+      utm_params: utm_params ? (utm_params as unknown as Database['public']['Tables']['lead_attribution']['Row']['utm_params']) : null,
+      referrer: referrer || null,
+      landing_page: landing_page || '',
+      current_page: current_page || null,
+      session_id: session_id || null,
+      device_type: device_type || null,
+      browser: browser || null,
+      os: os || null,
+      first_visit_at: new Date().toISOString(),
+      last_visit_at: new Date().toISOString(),
+    };
+
     const { data, error } = await supabaseAdmin
-      .from('lead_attribution' as any)
-      .insert({
-        email: email || null,
-        source: source || 'direct',
-        medium: medium || 'none',
-        campaign: campaign || null,
-        term: term || null,
-        content: content || null,
-        utm_params: utm_params || null,
-        referrer: referrer || null,
-        landing_page: landing_page || null,
-        current_page: current_page || null,
-        session_id: session_id || null,
-        device_type: device_type || null,
-        browser: browser || null,
-        os: os || null,
-        first_visit_at: new Date().toISOString(),
-        last_visit_at: new Date().toISOString(),
-      } as any)
+      .from('lead_attribution')
+      .insert(insertData)
       .select()
-      .single() as { data: any; error: any };
+      .single() as SupabaseQueryResult<LeadAttributionRow>;
 
     if (error) {
       logger.error('Failed to store attribution', error as Error);
       return NextResponse.json(
         { error: 'Failed to store attribution data' },
+        { status: 500 }
+      );
+    }
+
+    if (!data) {
+      return NextResponse.json(
+        { error: 'Failed to create attribution record' },
         { status: 500 }
       );
     }

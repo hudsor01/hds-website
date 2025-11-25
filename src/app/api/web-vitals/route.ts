@@ -5,6 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import type { WebVitalsInsert } from '@/types/supabase-helpers';
 import { z } from 'zod';
 
 const WebVitalSchema = z.object({
@@ -33,18 +34,20 @@ export async function POST(request: NextRequest) {
     const referer = request.headers.get('referer') || request.url;
 
     // Insert web vital
+    const webVitalData: WebVitalsInsert = {
+      metric_type: validatedData.name,
+      value: validatedData.value,
+      rating: validatedData.rating || null,
+      page_path: referer,
+      user_agent: userAgent || null,
+      device_type: null,
+      connection_type: null,
+      session_id: null,
+    };
+
     const { error } = await supabaseAdmin
-      .from('web_vitals' as any)
-      .insert({
-        metric_name: validatedData.name,
-        value: validatedData.value,
-        rating: validatedData.rating,
-        delta: validatedData.delta,
-        metric_id: validatedData.id,
-        navigation_type: validatedData.navigation_type,
-        user_agent: userAgent,
-        page_url: referer,
-      } as any);
+      .from('web_vitals')
+      .insert(webVitalData);
 
     if (error) {
       console.error('Failed to store web vital:', error);

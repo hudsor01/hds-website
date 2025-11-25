@@ -9,19 +9,19 @@ const useFloatingFieldStyles = (value: string, isFocused: boolean, disabled: boo
   const isActive = isFocused || hasValue
 
   const getLabelColor = () => {
-    if (disabled) {return 'text-gray-500'}
-    if (isActive) {return 'text-cyan-400'}
-    return 'text-gray-400'
+    if (disabled) {return 'text-text-secondary'}
+    if (isActive) {return 'text-brand-secondary'}
+    return 'text-text-muted'
   }
 
   const getFieldClasses = () => cn(
     "w-full px-4 py-3 bg-transparent border-2 rounded-lg transition-all duration-200 placeholder-transparent peer",
     "focus-ring",
     disabled
-      ? "border-gray-700 text-gray-500 cursor-not-allowed"
+      ? "border-border-primary-dark text-text-secondary cursor-not-allowed"
       : isActive
-        ? "border-cyan-400 text-white"
-        : "border-gray-600 text-white hover:border-gray-500",
+        ? "border-brand-secondary text-text-inverted"
+        : "border-border-primary-dark text-text-inverted hover:border-border-secondary-dark",
     className
   )
 
@@ -98,7 +98,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(({
         className={getLabelClasses()}
       >
         {placeholder}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-danger ml-1">*</span>}
       </label>
     </div>
   )
@@ -165,7 +165,7 @@ export const FloatingTextarea = forwardRef<HTMLTextAreaElement, FloatingTextarea
         className={getLabelClasses()}
       >
         {placeholder}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-danger ml-1">*</span>}
       </label>
     </div>
   )

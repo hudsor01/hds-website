@@ -116,7 +116,7 @@ export default function ServicesPage() {
         <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
           <div className="space-y-8">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-secondary/30 bg-brand-secondary/10 text-brand-secondary font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
@@ -176,11 +176,11 @@ export default function ServicesPage() {
                 >
                   <div className="flex-center mb-6">
                     <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
-                      <Icon className="h-8 w-8 text-cyan-400" />
+                      <Icon className="h-8 w-8 text-brand-secondary" />
                     </div>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                  <h3 className="text-2xl font-bold text-text-inverted mb-4 group-hover:text-brand-secondary transition-colors">
                     {service.title}
                   </h3>
                   
@@ -209,7 +209,7 @@ export default function ServicesPage() {
                   
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-brand-secondary/30 text-brand-secondary font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-brand-secondary transition-all duration-300"
                   >
                     Get Started
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -273,11 +273,11 @@ export default function ServicesPage() {
               >
                 <div className="mb-4 flex justify-center">
                   <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
-                    <step.icon className="w-8 h-8 text-cyan-400" />
+                    <step.icon className="w-8 h-8 text-brand-secondary" />
                   </div>
                 </div>
-                <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                <div className="text-brand-secondary font-bold text-lg mb-2">{step.step}</div>
+                <h3 className="text-xl font-bold text-text-inverted mb-4 group-hover:text-brand-secondary transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -320,7 +320,7 @@ export default function ServicesPage() {
 
               <Link
                 href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-brand-secondary hover:text-brand-secondary transition-all duration-300"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -38,7 +38,10 @@ class PerformanceMonitor {
             this.metrics.lcp = Math.round(lcpEntry.startTime);
             logger.info('Performance: LCP', { value: this.metrics.lcp, size: lcpEntry.size });
           } else if (entry.entryType === 'layout-shift') {
-            const layoutShiftEntry = entry as PerformanceEntry & { value?: number; hadRecentInput?: boolean };
+            const layoutShiftEntry = entry as PerformanceEntry & {
+              value?: number;
+              hadRecentInput?: boolean;
+            };
             if (!layoutShiftEntry.hadRecentInput) {
               this.metrics.cls = (this.metrics.cls || 0) + (layoutShiftEntry.value || 0);
               logger.info('Performance: Layout Shift', { 
