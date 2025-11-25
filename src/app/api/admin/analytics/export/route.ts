@@ -3,7 +3,7 @@
  * Exports lead data to CSV format
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 
@@ -36,6 +36,8 @@ interface LeadExportData {
 }
 
 export async function GET(request: NextRequest) {
+  await connection(); // Force dynamic rendering
+
   try {
     const { searchParams } = new URL(request.url);
     const quality = searchParams.get('quality'); // hot, warm, cold
