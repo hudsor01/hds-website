@@ -44,7 +44,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section - Seamless Layout */}
       <section className="relative py-24 lg:py-40 px-4 sm:px-6">
         <div className="container-wide">
@@ -56,7 +56,7 @@ export default function HomePage() {
                 <div>
                   <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-8">
                     <span className="block mb-2">Stop Losing Revenue to</span>
-                    <span className="block gradient-text">
+                    <span className="block text-cyan-400">
                       Technical Bottlenecks
                     </span>
                   </h1>
@@ -171,7 +171,7 @@ export default function HomePage() {
               >
                 <div className="space-y-6">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
+                    <div className="p-3 rounded-xl bg-background-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
                     <h3 className="text-xl font-bold text-text-inverted group-hover:text-cyan-400 transition-smooth">
@@ -188,7 +188,7 @@ export default function HomePage() {
                   <div className="space-y-3">
                     {solution.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex-center space-x-3">
-                        <div className="w-2 h-2 rounded-full bg-gradient-secondary" />
+                        <div className="w-2 h-2 rounded-full bg-muted" />
                         <span className="text-responsive-sm text-muted-foreground">{feature}</span>
                       </div>
                     ))}
@@ -201,18 +201,18 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - Enhanced */}
-      <section className="relative py-24 px-4 sm:px-6 bg-gradient-secondary overflow-hidden">
+      <section className="relative py-24 px-4 sm:px-6 bg-muted overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-600/5" />
+        <div className="absolute inset-0 bg-cyan-600/5" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
 
         <div className="container-wide relative">
           <div className="text-center mb-24">
             <h2 className="text-responsive-2xl font-black text-white mb-6">
-              <span className="gradient-text relative inline-block">
+              <span className="text-cyan-400 relative inline-block">
                 Proven Impact
-                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
               </span>
             </h2>
 
@@ -231,14 +231,14 @@ export default function HomePage() {
                 {/* Card with enhanced styling */}
                 <div className="relative glass-card-light p-8 lg:p-10 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
                   {/* Top accent line */}
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
                   {/* Metric with enhanced styling */}
                   <div className="relative mb-4">
                     <div className="text-4xl lg:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-all duration-300 font-mono">
                       {result.metric}
                     </div>
-                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <div className="absolute -inset-4 bg-cyan-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                   </div>
 
                   {/* Label with enhanced typography */}
@@ -252,13 +252,13 @@ export default function HomePage() {
                   </div>
 
                   {/* Subtle glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-400/5 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-cyan-400/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 </div>
 
                 {/* Connecting dots for visual flow */}
                 {index < results.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
-                    <div className="w-3 h-0.5 bg-gradient-to-r from-cyan-400/50 to-transparent"></div>
+                    <div className="w-3 h-0.5 bg-cyan-400/50"></div>
                   </div>
                 )}
               </div>
@@ -275,13 +275,13 @@ export default function HomePage() {
       </section>
 
       {/* Free Tools Section */}
-      <section className="py-24 px-4 sm:px-6 bg-gradient-to-b from-bg-primary-dark to-bg-secondary-dark">
+      <section className="py-24 px-4 sm:px-6 bg-background">
         <div className="container-wide">
           <div className="text-center mb-20">
             <h2 className="text-responsive-2xl font-black text-text-inverted mb-6">
-              <span className="gradient-text relative inline-block">
+              <span className="text-cyan-400 relative inline-block">
                 Free Business Tools
-                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
               </span>
             </h2>
 
@@ -296,7 +296,7 @@ export default function HomePage() {
               href="/roi-calculator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
@@ -338,7 +338,7 @@ export default function HomePage() {
               href="/cost-estimator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
@@ -380,7 +380,7 @@ export default function HomePage() {
               href="/performance-calculator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
@@ -453,7 +453,7 @@ export default function HomePage() {
 
             <h2 className="text-responsive-2xl font-black text-text-inverted mb-6 max-w-4xl mx-auto">
               Your competitors ship faster.
-              <span className="block gradient-text mt-4">
+              <span className="block text-cyan-400 mt-4">
                 Why don&apos;t you?
               </span>
             </h2>

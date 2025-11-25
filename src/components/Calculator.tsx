@@ -327,7 +327,7 @@ Monthly Payment:
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-cyan-600/10 py-8 px-4">
       <Head>
         <title>Texas TTL Calculator - Calculate Vehicle Tax, Title, and License Fees</title>
         <meta name="description" content="Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers." />

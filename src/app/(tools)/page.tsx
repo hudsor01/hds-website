@@ -68,7 +68,7 @@ const tools = [
 
 export default function ToolsPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <main className="min-h-screen bg-cyan-600/10 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
@@ -136,7 +136,7 @@ export default function ToolsPage() {
       {/* CTA Section */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 p-8 text-center shadow-xl sm:p-12">
+          <div className="rounded-2xl bg-cyan-600/10 p-8 text-center shadow-xl sm:p-12">
             <h2 className="mb-4 text-3xl font-bold text-white">
               Ready to Take Action?
             </h2>

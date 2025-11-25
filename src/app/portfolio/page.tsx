@@ -52,7 +52,7 @@ async function PortfolioProjects() {
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-clamp-xl font-black text-white mb-heading">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Featured Projects
               </span>
             </h2>
@@ -153,7 +153,7 @@ export default function PortfolioPage() {
   return (
     <>
       <Analytics />
-      <main className="min-h-screen bg-gradient-hero text-white">
+      <main className="min-h-screen bg-background text-white">
         {/* Animated background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -164,7 +164,7 @@ export default function PortfolioPage() {
         <section className="relative min-h-screen flex-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-primary-20 rounded-full blur-3xl" />
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-600-20 rounded-full blur-3xl" />
             <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-decorative-purple rounded-full blur-3xl" />
             <div className="absolute inset-0 grid-pattern" />
           </div>
@@ -181,7 +181,7 @@ export default function PortfolioPage() {
               <div>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
                   <span className="inline-block mr-4">Our</span>
-                  <span className="inline-block mr-4 gradient-text">Portfolio</span>
+                  <span className="inline-block mr-4 text-cyan-400">Portfolio</span>
                 </h1>
               </div>
 
@@ -229,7 +229,7 @@ export default function PortfolioPage() {
             <div className="relative z-10 text-center glass-section card-padding">
               <h2 className="text-clamp-xl font-black text-white mb-heading">
                 Ready to create your
-                <span className="gradient-text">
+                <span className="text-cyan-400">
                   {" "}success story?
                 </span>
               </h2>

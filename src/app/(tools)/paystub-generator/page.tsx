@@ -421,7 +421,7 @@ export default function Home() {
   }
 
   return (
-    <div className="m-0 p-5 box-border font-sans bg-gradient-to-br from-gray-50 to-blue-200 min-h-screen text-foreground">
+    <div className="m-0 p-5 box-border font-sans bg-cyan-600/10 min-h-screen text-foreground">
       <div className="max-w-[1000px] mx-auto bg-white rounded-[15px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Header */}
         <div className="bg-[#2c3e50] text-white text-center py-[25px] px-5 border-b-[3px] border-[#34495e]">
@@ -729,7 +729,7 @@ export default function Home() {
             </div>
 
             {/* W-2 Tax Document Information */}
-            <div className="my-[30px] mx-0 bg-gradient-to-br from-yellow-100 to-yellow-200 p-[25px] rounded-xl border-2 border-yellow-500">
+            <div className="my-[30px] mx-0 bg-cyan-600/10 p-[25px] rounded-xl border-2 border-yellow-500">
               <h3 className="text-[#2c3e50] text-center mb-5 text-[1.2rem] font-semibold tracking-[0.5px]">
                 W-2 TAX DOCUMENT INFORMATION
               </h3>
@@ -762,7 +762,7 @@ export default function Home() {
             </div>
 
             {/* Individual Paystub Generator */}
-            <div className="bg-gradient-to-br from-green-50 to-green-200 p-[25px] rounded-xl border-2 border-green-500">
+            <div className="bg-cyan-600/10 p-[25px] rounded-xl border-2 border-green-500">
               <h3 className="text-[#2c3e50] text-center mb-[15px] text-[1.2rem] font-semibold tracking-[0.5px]">
                 INDIVIDUAL PAYSTUB GENERATOR
               </h3>
@@ -789,13 +789,13 @@ export default function Home() {
               <div className="flex justify-center gap-2.5 mt-5">
                 <button
                   onClick={generateIndividualPaystub}
-                  className="bg-gradient-to-br from-green-500 to-green-700 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Individual Paystub
                 </button>
                 <button
                   onClick={generateAnnualSummary}
-                  className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Annual Summary
                 </button>

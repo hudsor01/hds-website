@@ -114,9 +114,9 @@ const checklistItems = [
 
 export default function WebsiteChecklistPage() {
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
+      <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
         </div>
@@ -128,7 +128,7 @@ export default function WebsiteChecklistPage() {
           </div>
 
           <h1 className="text-clamp-xl font-black text-white mb-heading">
-            Website Performance <span className="gradient-text">Checklist</span>
+            Website Performance <span className="text-cyan-400">Checklist</span>
           </h1>
 
           <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
@@ -173,7 +173,7 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Checklist Preview */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Checklist Preview</h2>
@@ -211,7 +211,7 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="max-w-4xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Why This Checklist Works</h2>
@@ -252,7 +252,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="space-y-comfortable">
-              <div className="bg-gradient-secondary-20 border border-green-400/30 rounded-lg card-padding-sm">
+              <div className="bg-muted-20 border border-green-400/30 rounded-lg card-padding-sm">
                 <h3 className="text-subheading font-bold text-white mb-subheading">Real Client Results</h3>
                 <div className="space-y-tight">
                   <div className="flex justify-between">
@@ -286,7 +286,7 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Download Section */}
-      <section id="download" className="py-16 bg-gradient-primary">
+      <section id="download" className="py-16 bg-cyan-600">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
             <FileText className="w-16 h-16 text-green-400 mx-auto mb-6" />

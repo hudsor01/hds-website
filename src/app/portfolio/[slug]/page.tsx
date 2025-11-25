@@ -287,7 +287,7 @@ async function ProjectContent({ slug }: { slug: string }) {
             <div className="glass-section p-12 md:p-16 text-center">
               <h2 className="text-4xl font-black text-white mb-6">
                 Ready to create your
-                <span className="gradient-text"> success story?</span>
+                <span className="text-cyan-400"> success story?</span>
               </h2>
               <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
                 Let&apos;s build something amazing together. Get in touch to discuss your project.
@@ -310,7 +310,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-hero text-white">
+    <main className="min-h-screen bg-background text-white">
       <Analytics />
 
       {/* Back Button - Static, prerendered */}

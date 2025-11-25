@@ -72,7 +72,7 @@ export default function SanFranciscoPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
 
-      <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      <main className="min-h-screen bg-cyan-600/10">
         {/* Hero */}
         <section className="py-20 px-4">
           <div className="container-wide text-center">
@@ -84,7 +84,7 @@ export default function SanFranciscoPage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-              Web Development & SaaS Consulting in <span className="gradient-text">San Francisco</span>
+              Web Development & SaaS Consulting in <span className="text-cyan-400">San Francisco</span>
             </h1>
 
             <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">

@@ -54,9 +54,9 @@ const toolkitItems = [
 
 export default function ConversionToolkitPage() {
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
+      <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
         </div>
@@ -68,7 +68,7 @@ export default function ConversionToolkitPage() {
           </div>
 
           <h1 className="text-clamp-xl font-black text-white mb-heading">
-            Conversion Optimization <span className="gradient-text">Toolkit</span>
+            Conversion Optimization <span className="text-cyan-400">Toolkit</span>
           </h1>
 
           <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
@@ -113,7 +113,7 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Toolkit Contents */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">What&apos;s Inside the Toolkit</h2>
@@ -126,7 +126,7 @@ export default function ConversionToolkitPage() {
             {toolkitItems.map((item, index) => (
               <div key={index} className="glass-card rounded-xl card-padding hover:border-cyan-300/50 transition-smooth">
                 <div className="flex items-start gap-content">
-                  <div className="w-12 h-12 bg-gradient-secondary-br-20 rounded-lg flex-center shrink-0">
+                  <div className="w-12 h-12 bg-muted-br-20 rounded-lg flex-center shrink-0">
                     <item.icon className="w-6 h-6 text-cyan-400" />
                   </div>
                   <div className="flex-1">
@@ -149,7 +149,7 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Results Section */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="max-w-6xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Proven Results</h2>
@@ -188,7 +188,7 @@ export default function ConversionToolkitPage() {
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-gradient-secondary rounded-full flex-center text-white font-bold">
+                <div className="w-10 h-10 bg-muted rounded-full flex-center text-white font-bold">
                   M
                 </div>
                 <div>
@@ -203,7 +203,7 @@ export default function ConversionToolkitPage() {
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex-center text-white font-bold">
+                <div className="w-10 h-10 bg-cyan-600/10 rounded-full flex-center text-white font-bold">
                   S
                 </div>
                 <div>
@@ -217,7 +217,7 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Download Section */}
-      <section id="download" className="py-16 bg-gradient-primary">
+      <section id="download" className="py-16 bg-cyan-600">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
             <Settings className="w-16 h-16 text-green-400 mx-auto mb-6" />

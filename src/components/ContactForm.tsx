@@ -65,7 +65,7 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
 function FormHeader() {
   return (
     <div className="mb-8">
-      <h2 className="text-responsive-md gradient-text mb-2">
+      <h2 className="text-responsive-md text-cyan-400 mb-2">
         Let&apos;s Build Something Amazing
       </h2>
       <p className="text-muted-foreground">

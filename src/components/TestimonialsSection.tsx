@@ -90,7 +90,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-gradient-hero-10 p-6">
+                  <div className="absolute inset-0 bg-background-10 p-6">
                     {/* Rating Stars */}
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-4">

@@ -150,12 +150,12 @@ export default function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      <main className="min-h-screen bg-cyan-600/10">
         {/* Hero */}
         <section className="py-20 px-4">
           <div className="container-wide text-center">
             <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-              Frequently Asked <span className="gradient-text">Questions</span>
+              Frequently Asked <span className="text-cyan-400">Questions</span>
             </h1>
 
             <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">

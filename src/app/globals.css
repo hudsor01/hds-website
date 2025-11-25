@@ -692,16 +692,7 @@ body {
     aspect-ratio: 32/9;
   }
 
-  /* Gradient animations */
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient-shift 3s ease infinite;
-  }
+  /* Professional animations - No gradients */
 
   /* Blob animations for floating effects */
   @keyframes blob {
@@ -1314,7 +1305,7 @@ body {
 }
 
 /* Gradient text utility */
-.gradient-text {
+.text-cyan-400 {
   background: linear-gradient(90deg, var(--color-gradient-primary-start), var(--color-gradient-primary-end));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1370,172 +1361,7 @@ body {
   .text-responsive-3xl { font-size: 4rem; }
 }
 
-/* Semantic gradient classes using theme colors */
-.bg-gradient-to-r {
-  background: linear-gradient(to right, var(--tw-gradient-stops));
-}
-
-.bg-gradient-hero {
-  background: linear-gradient(135deg,
-    var(--color-bg-primary-dark),
-    var(--color-bg-secondary-dark),
-    var(--color-bg-tertiary-dark)
-  );
-}
-
-.bg-gradient-primary {
-  background: linear-gradient(90deg,
-    var(--color-gradient-primary-start),
-    var(--color-gradient-primary-end)
-  );
-}
-
-.bg-gradient-secondary {
-  background: linear-gradient(90deg,
-    var(--color-gradient-secondary-start),
-    var(--color-gradient-secondary-end)
-  );
-}
-
-.bg-gradient-accent {
-  background: linear-gradient(90deg,
-    var(--color-gradient-accent-start),
-    var(--color-gradient-accent-end)
-  );
-}
-
-/* Gradient classes with opacity support using semantic tokens */
-.bg-gradient-hero-5 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.05),
-    oklch(from var(--color-blue-500) l c h / 0.05),
-    oklch(from var(--color-brand-purple) l c h / 0.05)
-  );
-}
-
-.bg-gradient-hero-10 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.1),
-    oklch(from var(--color-blue-500) l c h / 0.1),
-    oklch(from var(--color-brand-purple) l c h / 0.1)
-  );
-}
-
-.bg-gradient-hero-20 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.2),
-    oklch(from var(--color-blue-500) l c h / 0.2),
-    oklch(from var(--color-brand-purple) l c h / 0.2)
-  );
-}
-
-.bg-gradient-primary-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-primary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-primary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-primary-30 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-primary-start) l c h / 0.3),
-    oklch(from var(--color-gradient-primary-end) l c h / 0.3)
-  );
-}
-
-.bg-gradient-secondary-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-secondary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-secondary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-secondary-br-20 {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-gradient-secondary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-secondary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-secondary-hover {
-  background: linear-gradient(90deg,
-    var(--color-gradient-secondary-start),
-    var(--color-gradient-secondary-end)
-  );
-  transition: all var(--duration-150) var(--ease-out);
-}
-
-.bg-gradient-secondary-hover:hover {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-secondary-start) 0.85 c h),
-    oklch(from var(--color-gradient-secondary-end) 0.85 c h)
-  );
-}
-
-.bg-gradient-accent-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-accent-start) l c h / 0.2),
-    oklch(from var(--color-gradient-accent-end) l c h / 0.2)
-  );
-}
-
-/* Decorative semantic gradient classes */
-.bg-gradient-decorative-brand {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-brand-purple) l c h / 0.2),
-    oklch(from var(--color-brand-accent) l c h / 0.2)
-  );
-}
-
-.bg-gradient-decorative-brand-20 {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-brand-purple) l c h / 0.04),
-    oklch(from var(--color-brand-accent) l c h / 0.04)
-  );
-}
-
-.bg-gradient-decorative-warm {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-warning) l c h / 0.2),
-    oklch(from var(--color-danger) l c h / 0.2)
-  );
-}
-
-/* Shine Effect for Interactive Elements */
-.shine-effect {
-  background: linear-gradient(to right,
-    transparent,
-    oklch(0.984 0.003 247.858 / 0.2),
-    transparent
-  );
-}
-
-/* Semantic grid pattern overlays */
-.grid-pattern {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.1) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.1) 50%, transparent 51%);
-  background-size: var(--spacing-15);
-}
-
-.grid-pattern-light {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(0.984 0.003 247.858 / 0.05) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, oklch(0.984 0.003 247.858 / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-5);
-}
-
-.grid-pattern-subtle {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-20);
-}
-
-.grid-pattern-minimal {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-30);
-}
+/* Professional solid color utilities - No gradients */
 
 /* Semantic blur overlay effects */
 .bg-blur-overlay {
@@ -1543,35 +1369,11 @@ body {
   background-color: oklch(0 0 0 / 0.1);
 }
 
-/* Semantic gradient border effect */
-.gradient-border {
+/* Professional border effect */
+.accent-border {
   position: relative;
-  background: linear-gradient(var(--color-bg-primary), var(--color-bg-primary)) padding-box,
-              linear-gradient(90deg, var(--color-cyan-400), var(--color-blue-500)) border-box;
-  border: 2px solid transparent;
+  border: 2px solid var(--color-cyan-400);
   border-radius: var(--radius-lg);
-}
-
-/* Common semantic overlay gradients */
-.overlay-gradient-dark {
-  background: linear-gradient(to top, oklch(0 0 0 / 0.5) 0%, transparent 100%);
-}
-
-.overlay-gradient-light {
-  background: linear-gradient(to top, oklch(0 0 0 / 0.2) 0%, transparent 50%, transparent 100%);
-}
-
-/* Semantic small accent gradients */
-.accent-gradient-success {
-  background: linear-gradient(to bottom right, var(--color-success), oklch(from var(--color-success) 0.75 c h));
-}
-
-.accent-gradient-warning {
-  background: linear-gradient(to bottom right, var(--color-warning), oklch(from var(--color-warning) 0.75 c h));
-}
-
-.accent-gradient-danger {
-  background: linear-gradient(to bottom right, var(--color-danger), oklch(from var(--color-danger) 0.75 c h));
 }
 
 /* Semantic glass morphism effects */

@@ -92,7 +92,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
           <div className="grid md:grid-cols-4 gap-6">
             {caseStudy.metrics.map((metric, i) => (
               <div key={i} className="glass-card p-6 text-center">
-                <div className="text-5xl font-black gradient-text mb-2">
+                <div className="text-5xl font-black text-cyan-400 mb-2">
                   {metric.value}
                 </div>
                 <div className="text-muted">{metric.label}</div>
@@ -244,7 +244,7 @@ export default async function CaseStudyPage({
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-cyan-600/10">
       {/* Back Button - Static */}
       <section className="py-8 px-4">
         <div className="container-wide">

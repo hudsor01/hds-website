@@ -17,7 +17,7 @@ export function ServiceCard({
   description,
   features,
   icon,
-  gradient = "bg-gradient-secondary",
+  gradient = "bg-muted",
   pricing,
   className
 }: ServiceCardProps) {

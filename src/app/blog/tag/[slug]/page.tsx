@@ -72,7 +72,7 @@ export default async function TagPage({ params }: TagPageProps) {
   const posts = postsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
@@ -85,7 +85,7 @@ export default async function TagPage({ params }: TagPageProps) {
       </div>
 
       {/* Tag Header */}
-      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+      <section className="relative bg-background py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
@@ -111,7 +111,7 @@ export default async function TagPage({ params }: TagPageProps) {
       </section>
 
       {/* Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="py-16 bg-cyan-600">
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">

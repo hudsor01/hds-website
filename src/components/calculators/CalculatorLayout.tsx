@@ -24,7 +24,7 @@ export function CalculatorLayout({
   showBackLink = true,
 }: CalculatorLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cyan-600/10 dark:from-gray-900 dark:to-gray-800">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8 text-center">

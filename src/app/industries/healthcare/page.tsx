@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function HealthcarePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-cyan-600/10">
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
@@ -26,7 +26,7 @@ export default function HealthcarePage() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Secure Healthcare Software <span className="gradient-text">That Saves Lives</span>
+            Secure Healthcare Software <span className="text-cyan-400">That Saves Lives</span>
           </h1>
 
           <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
@@ -105,7 +105,7 @@ export default function HealthcarePage() {
             ].map((stat, i) => (
               <div key={i} className="text-center glass-card p-6">
                 <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
-                <div className="text-4xl font-black gradient-text mb-2">{stat.metric}</div>
+                <div className="text-4xl font-black text-cyan-400 mb-2">{stat.metric}</div>
                 <div className="text-muted">{stat.label}</div>
               </div>
             ))}

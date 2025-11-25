@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative min-h-screen flex-center overflow-hidden">
         <BackgroundPattern variant="hero" />
@@ -64,7 +64,7 @@ export default function AboutPage() {
             <div>
               <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
                 <span className="inline-block mr-4">Built for</span>
-                <span className="inline-block mr-4 gradient-text">Excellence</span>
+                <span className="inline-block mr-4 text-cyan-400">Excellence</span>
               </h1>
             </div>
 
@@ -82,7 +82,7 @@ export default function AboutPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-lg font-black text-white mb-6 text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Our Story
               </span>
             </h2>
@@ -123,7 +123,7 @@ export default function AboutPage() {
             <div className="space-y-8">
               <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
                 <div className="flex-center gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
+                  <div className="p-3 rounded-xl bg-muted-br-20 border border-cyan-500/30">
                     <Rocket className="w-8 h-8 text-cyan-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">
@@ -159,7 +159,7 @@ export default function AboutPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Technical Arsenal
               </span>
             </h2>
@@ -171,7 +171,7 @@ export default function AboutPage() {
           <div className="grid-4">
             <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
+                <div className="p-3 rounded-xl bg-muted-br-20 border border-cyan-500/30">
                   <Code2 className="w-6 h-6 text-cyan-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-smooth">Development</h3>
@@ -186,7 +186,7 @@ export default function AboutPage() {
 
             <div className="group relative glass-card-light card-padding-sm card-hover-glow-emerald transition-smooth">
               <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-emerald-500/30">
+                <div className="p-3 rounded-xl bg-muted-br-20 border border-emerald-500/30">
                   <BarChart3 className="w-6 h-6 text-emerald-400" />
                 </div>
                 <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-smooth">Analytics</h3>
@@ -237,7 +237,7 @@ export default function AboutPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 The Revenue Engineer Behind the Code
               </span>
             </h2>
@@ -295,7 +295,7 @@ export default function AboutPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Engineering Principles
               </span>
             </h2>
@@ -307,7 +307,7 @@ export default function AboutPage() {
           <div className="grid-3">
             <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-cyan-500/30">
+                <div className="p-4 rounded-2xl bg-muted-br-20 border border-cyan-500/30">
                   <Lightbulb className="w-8 h-8 text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">Performance First</h3>
@@ -319,7 +319,7 @@ export default function AboutPage() {
 
             <div className="group relative glass-card-light card-padding card-hover-glow-emerald transition-smooth">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-emerald-500/30">
+                <div className="p-4 rounded-2xl bg-muted-br-20 border border-emerald-500/30">
                   <BarChart3 className="w-8 h-8 text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-smooth">Data Driven</h3>
@@ -350,7 +350,7 @@ export default function AboutPage() {
           <div className="relative z-10 text-center glass-section card-padding">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
               Ready to engineer
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 {" "}your success?
               </span>
             </h2>

@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Article Header */}
       <article className="pb-16">
-        <header className="relative bg-gradient-hero py-16 overflow-hidden">
+        <header className="relative bg-background py-16 overflow-hidden">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           </div>
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 className="w-full h-full object-cover"
               />
               {post.feature_image_caption && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                <div className="absolute bottom-0 left-0 right-0 bg-cyan-600/10 p-4">
                   <p className="text-sm text-muted">{post.feature_image_caption}</p>
                 </div>
               )}
@@ -207,7 +207,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="py-16 bg-cyan-600">
         <div className="container-narrow">
           <div className="glass-card rounded-xl p-8 text-center">
             <h2 className="text-3xl font-black text-white mb-4 text-balance">

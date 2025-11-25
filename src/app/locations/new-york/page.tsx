@@ -44,7 +44,7 @@ export default function NewYorkPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
 
-      <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      <main className="min-h-screen bg-cyan-600/10">
         <section className="py-20 px-4">
           <div className="container-wide text-center">
             <div className="inline-block mb-4 px-4 py-2 bg-cyan-900/30 border border-cyan-500/30 rounded-full">
@@ -55,7 +55,7 @@ export default function NewYorkPage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-              Web Development & Digital Solutions in <span className="gradient-text">New York City</span>
+              Web Development & Digital Solutions in <span className="text-cyan-400">New York City</span>
             </h1>
 
             <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">

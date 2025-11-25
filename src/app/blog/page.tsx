@@ -39,9 +39,9 @@ export default async function BlogPage() {
   const allPosts = allPostsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
+      <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
@@ -53,7 +53,7 @@ export default async function BlogPage() {
             Strategic Insights
           </div>
           <h1 className="text-clamp-xl font-black text-white mb-heading text-balance">
-            Business <span className="gradient-text">Strategy</span> Blog
+            Business <span className="text-cyan-400">Strategy</span> Blog
           </h1>
           <p className="text-subheading text-muted container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
@@ -63,7 +63,7 @@ export default async function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="section-spacing bg-gradient-primary">
+        <section className="section-spacing bg-cyan-600">
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Articles</h2>
@@ -80,7 +80,7 @@ export default async function BlogPage() {
       )}
 
       {/* All Posts */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="container-wide">
           <div className="flex flex-col lg:flex-row gap-comfortable">
             {/* Main Content */}

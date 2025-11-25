@@ -67,7 +67,7 @@ export function NewsletterSignup({
 
   const variantStyles = {
     inline: 'rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted',
-    sidebar: 'rounded-lg bg-gradient-to-br from-cyan-50 to-blue-50 p-6 dark:from-gray-800 dark:to-gray-900',
+    sidebar: 'rounded-lg bg-cyan-600/10 p-6 dark:from-gray-800 dark:to-gray-900',
     modal: 'rounded-lg bg-white p-8 shadow-xl dark:bg-muted',
   };
 

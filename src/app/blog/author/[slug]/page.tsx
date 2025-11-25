@@ -72,7 +72,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
   const posts = postsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
@@ -85,7 +85,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       </div>
 
       {/* Author Header */}
-      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+      <section className="relative bg-background py-16 overflow-hidden">
         {author.cover_image && (
           <div className="absolute inset-0 opacity-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -169,7 +169,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       </section>
 
       {/* Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="py-16 bg-cyan-600">
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">

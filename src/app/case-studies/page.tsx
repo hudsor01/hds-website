@@ -64,7 +64,7 @@ async function CaseStudiesContent() {
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         {study.metrics.map((metric, i) => (
                           <div key={i} className="bg-muted/50 rounded-lg p-4">
-                            <div className="text-2xl font-black gradient-text mb-1">
+                            <div className="text-2xl font-black text-cyan-400 mb-1">
                               {metric.value}
                             </div>
                             <div className="text-sm text-muted-foreground">{metric.label}</div>
@@ -142,12 +142,12 @@ async function CaseStudiesContent() {
 
 export default function CaseStudiesPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-cyan-600/10">
       {/* Hero - Static, prerendered */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Real Results From <span className="gradient-text">Real Projects</span>
+            Real Results From <span className="text-cyan-400">Real Projects</span>
           </h1>
 
           <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">

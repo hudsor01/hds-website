@@ -11,11 +11,11 @@ const lastUpdated = new Date().toLocaleDateString();
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-20">
         <div className="container-wide">
           <div className="text-center mb-12">
-            <h1 className="text-responsive-lg gradient-text font-black mb-6">
+            <h1 className="text-responsive-lg text-cyan-400 font-black mb-6">
               Privacy Policy
             </h1>
             <p className="text-responsive-md text-muted">

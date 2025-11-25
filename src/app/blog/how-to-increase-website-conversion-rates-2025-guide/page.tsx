@@ -137,9 +137,9 @@ export default function ConversionGuidePost() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <main className="min-h-screen bg-gradient-primary">
+      <main className="min-h-screen bg-cyan-600">
         {/* Hero Section */}
-        <section className="relative bg-gradient-hero py-16 overflow-hidden">
+        <section className="relative bg-background py-16 overflow-hidden">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           </div>
@@ -439,7 +439,7 @@ export default function ConversionGuidePost() {
                   <li>Recovery optimization</li>
                 </ul>
 
-                <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
+                <div className="bg-cyan-600/10 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to 3x Your Conversion Rates?</h3>
                   <p className="text-muted mb-6">Our CRO specialists have helped 200+ businesses achieve these results. Let&apos;s optimize your site for maximum conversions.</p>
                   <Link

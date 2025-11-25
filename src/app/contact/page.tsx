@@ -47,12 +47,12 @@ function ContactFormSkeleton() {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative min-h-screen flex-center overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-primary-20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-600-20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-decorative-purple rounded-full blur-3xl" />
           <div className="absolute inset-0 grid-pattern" />
         </div>
@@ -71,7 +71,7 @@ export default function ContactPage() {
                 <h1 className="text-clamp-2xl font-black text-white leading-none tracking-tight text-balance">
                   <span className="inline-block">Get Your Free</span>
                   <br />
-                  <span className="inline-block gradient-text">ROI Roadmap</span>
+                  <span className="inline-block text-cyan-400">ROI Roadmap</span>
                   <br />
                   <span className="inline-block">in 30 Minutes</span>
                 </h1>
@@ -89,7 +89,7 @@ export default function ContactPage() {
                   <h3 className="text-body-lg font-bold text-white mb-subheading">What Happens Next?</h3>
 
                   <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">1</span>
                     </div>
                     <div>
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">2</span>
                     </div>
                     <div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">3</span>
                     </div>
                     <div>
@@ -137,7 +137,7 @@ export default function ContactPage() {
             {/* Right Column - Contact Form */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden glass-card card-padding shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-hero-5" />
+                <div className="absolute inset-0 bg-background-5" />
                 <div className="relative z-10">
                   <div className="text-center mb-comfortable">
                     <h2 className="text-card-title font-bold text-white mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
@@ -181,7 +181,7 @@ export default function ContactPage() {
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-clamp-xl font-black text-white mb-heading text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Visit Our Office
               </span>
             </h2>
