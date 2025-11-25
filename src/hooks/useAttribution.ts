@@ -3,7 +3,7 @@
  * Automatically captures and tracks lead attribution data
  */
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   captureAttribution,
   getStoredAttribution,
@@ -23,15 +23,7 @@ export interface UseAttributionReturn {
  * Captures UTM parameters, referrer, and device information
  */
 export function useAttribution(): UseAttributionReturn {
-  const [attribution, setAttribution] = useState<LeadAttributionData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Capture attribution on mount
-    const captured = captureAttribution();
-    setAttribution(captured);
-    setIsLoading(false);
-  }, []);
+  const [attribution] = useState<LeadAttributionData | null>(() => captureAttribution());
 
   /**
    * Send attribution data to backend
@@ -62,7 +54,7 @@ export function useAttribution(): UseAttributionReturn {
 
   return {
     attribution,
-    isLoading,
+    isLoading: false,
     utmParams: attribution?.utm_params || {},
     sendAttribution,
   };
@@ -72,12 +64,7 @@ export function useAttribution(): UseAttributionReturn {
  * Hook for getting stored attribution (first-touch)
  */
 export function useStoredAttribution(): LeadAttributionData | null {
-  const [attribution, setAttribution] = useState<LeadAttributionData | null>(null);
-
-  useEffect(() => {
-    const stored = getStoredAttribution();
-    setAttribution(stored);
-  }, []);
+  const [attribution] = useState<LeadAttributionData | null>(() => getStoredAttribution());
 
   return attribution;
 }

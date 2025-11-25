@@ -3,6 +3,7 @@
  * Handles all case study data fetching with Supabase
  */
 
+import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
 import { logger } from './logger';
 
@@ -36,7 +37,7 @@ export interface CaseStudy {
 /**
  * Get all published case studies
  */
-export async function getCaseStudies(): Promise<CaseStudy[]> {
+export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
   try {
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
@@ -62,12 +63,12 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
     }
     return [];
   }
-}
+});
 
 /**
  * Get a single case study by slug
  */
-export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy | null> => {
   try {
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
@@ -95,12 +96,12 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
     }
     return null;
   }
-}
+});
 
 /**
  * Get all case study slugs for static generation
  */
-export async function getAllCaseStudySlugs(): Promise<string[]> {
+export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
   try {
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution')
@@ -125,12 +126,12 @@ export async function getAllCaseStudySlugs(): Promise<string[]> {
     }
     return [];
   }
-}
+});
 
 /**
  * Get featured case studies
  */
-export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
+export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
   try {
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution')
@@ -157,4 +158,4 @@ export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
     }
     return [];
   }
-}
+});

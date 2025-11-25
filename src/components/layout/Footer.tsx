@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 // import { brand } from "@/lib/brand";
 import {
   Mail,
@@ -59,11 +59,12 @@ const socialLinks = [
 // Removed unused animation variants
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState<number>(2024);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  // Use useSyncExternalStore to handle SSR hydration correctly without setState in effect
+  const currentYear = useSyncExternalStore(
+    () => () => {}, // subscribe (no-op - year doesn't change during session)
+    () => new Date().getFullYear(), // getSnapshot (client)
+    () => 2024 // getServerSnapshot (SSR fallback)
+  );
 
   return (
     <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">

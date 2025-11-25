@@ -45,10 +45,17 @@ export class UnifiedRateLimiter {
 
   constructor() {
     // Initialize Vercel KV if available
-    if (env.KV_REST_API_URL && env.KV_REST_API_TOKEN) {
-      this.initializeKV();
-    } else {
-      logger.info('KV not configured, using in-memory rate limiter (local dev only)');
+    // Wrap in try-catch to handle test environments where server-only env vars aren't accessible
+    try {
+      if (typeof window === 'undefined' && env.KV_REST_API_URL && env.KV_REST_API_TOKEN) {
+        this.initializeKV();
+      } else {
+        logger.info('KV not configured, using in-memory rate limiter (local dev only)');
+        this.initializeInMemory();
+      }
+    } catch {
+      // In test/client environments, server env vars may not be accessible
+      logger.info('Using in-memory rate limiter (test/client environment)');
       this.initializeInMemory();
     }
   }
