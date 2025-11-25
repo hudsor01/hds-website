@@ -53,7 +53,7 @@ export default function AboutPage() {
       <section className="relative min-h-screen flex-center overflow-hidden">
         <BackgroundPattern variant="hero" />
         
-        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 container-wide text-center">
           <div className="space-y-8">
             <div>
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
@@ -70,7 +70,7 @@ export default function AboutPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Crafting digital solutions with the precision of master engineers and the vision of business leaders.
+                Where $3.7M+ in revenue impact meets obsessive engineering standards. We don&apos;t build websites—we forge revenue machines.
               </p>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function AboutPage() {
       </section>
 
       {/* Story Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-lg font-black text-white mb-6 text-balance">
@@ -95,29 +95,33 @@ export default function AboutPage() {
 
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
             {/* Story Content */}
-            <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-cyan-400 transition-smooth">
-                Built from Experience
+                Forged in Revenue Operations, Refined in Code
               </h3>
               <div className="space-y-6 text-muted-foreground leading-relaxed typography">
                 <p>
-                  Hudson Digital was forged in the fires of enterprise-level challenges. With a foundation built on{" "}
-                  <strong className="text-cyan-400">$3.7M+ in revenue impact</strong>, we don&apos;t just build websites—we engineer business transformation tools.
+                  Most agencies learned web development in bootcamps. We learned it in the trenches of enterprise revenue operations—where every line of code either makes money or loses it.
                 </p>
                 <p>
-                  Our approach combines the precision of revenue operations with the craftsmanship of modern development. Every line of code, every design decision, every optimization is driven by one goal:{" "}
-                  <strong className="text-purple-400">measurable business results</strong>.
+                  With <strong className="text-cyan-400">$3.7M+ in revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
+                  <strong className="text-purple-400"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
                 </p>
                 <p>
-                  We&apos;re not another agency promising the world. We&apos;re engineers who&apos;ve proven that technology, when properly applied, can generate{" "}
-                  <strong className="text-pink-400">340% ROI</strong> and transform businesses.
+                  That&apos;s why our clients see <strong className="text-pink-400">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship{' '}
+                  <Link href="/services" className="link-primary font-semibold">revenue engines</Link> backed by analytics,
+                  A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-green-400">does this make money?</strong>
+                </p>
+                <p className="text-white font-semibold">
+                  We&apos;re not another agency promising &quot;beautiful websites.&quot; We&apos;re revenue engineers who happen to write beautiful code.{' '}
+                  <Link href="/contact" className="link-primary">Let&apos;s talk about your project</Link>.
                 </p>
               </div>
             </div>
 
             {/* Mission & Vision Cards */}
             <div className="space-y-8">
-              <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+              <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                     <Rocket className="w-8 h-8 text-cyan-400" />
@@ -127,21 +131,22 @@ export default function AboutPage() {
                   </h3>
                 </div>
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-                  To forge digital solutions that don&apos;t just work—they dominate. We engineer competitive advantages, not just websites.
+                  Make enterprise-grade development accessible to growing businesses. No more choosing between &quot;affordable but mediocre&quot; or &quot;excellent but unaffordable.&quot; Get both.
                 </p>
               </div>
 
-              <div className="group relative glass-card-light p-8 card-hover-glow-purple transition-smooth">
+              <div className="group relative glass-card-light card-padding card-hover-glow-purple transition-smooth">
                 <div className="flex-center gap-4 mb-4">
                   <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
                     <Eye className="w-8 h-8 text-purple-400" />
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-smooth">
-                    Our Vision
+                    Our Guarantee
                   </h3>
                 </div>
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-                  To be the premier digital forge where ambitious businesses come to build their market dominance.
+                  If your investment doesn&apos;t show measurable ROI within 90 days, we keep working for free until it does. Your success is our only metric.{' '}
+                  <Link href="/pricing" className="link-primary font-semibold">View our pricing</Link>.
                 </p>
               </div>
             </div>
@@ -150,7 +155,7 @@ export default function AboutPage() {
       </section>
 
       {/* Expertise Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
@@ -163,8 +168,8 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group relative glass-card-light p-6 card-hover-glow transition-smooth">
+          <div className="grid-4">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                   <Code2 className="w-6 h-6 text-cyan-400" />
@@ -179,7 +184,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-emerald transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-emerald transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-secondary-br-20 border border-emerald-500/30">
                   <BarChart3 className="w-6 h-6 text-emerald-400" />
@@ -194,7 +199,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-orange transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-orange transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-orange border border-orange-500/30">
                   <Zap className="w-6 h-6 text-orange-400" />
@@ -209,7 +214,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light p-6 card-hover-glow-purple transition-smooth">
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow-purple transition-smooth">
               <div className="flex-center gap-3 mb-4">
                 <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
                   <ShieldCheck className="w-6 h-6 text-purple-400" />
@@ -228,38 +233,41 @@ export default function AboutPage() {
       </section>
 
       {/* The Founder Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
               <span className="gradient-text">
-                Meet the Architect
+                The Revenue Engineer Behind the Code
               </span>
             </h2>
             <p className="text-xl text-gray-300 container-narrow text-pretty">
-              Hudson Digital Solutions was born from a simple realization: businesses don&apos;t need more technology—they need the right technology, implemented correctly.
+              Why trust a former revenue operations professional to build your website? Because they understand something agencies don&apos;t: every feature must justify its existence in dollars.
             </p>
           </div>
 
-          <div className="group relative glass-card-light p-12 card-hover-glow transition-smooth">
+          <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
             <div className="space-y-8 text-muted-foreground leading-relaxed">
               <p className="text-lg group-hover:text-white transition-smooth">
-                As a <strong className="text-cyan-400">revenue operations professional</strong> turned full-stack engineer, 
-                I&apos;ve seen both sides of the equation: the business need for measurable results and the technical precision required to deliver them.
+                Before writing a single line of client code, I spent 5+ years as a <strong className="text-cyan-400">revenue operations professional</strong> at enterprise SaaS companies.
+                I didn&apos;t build features—I built systems that generated <strong className="text-cyan-400">$3.7M+ in measurable revenue impact</strong>.
               </p>
-              
+
               <p className="text-lg group-hover:text-white transition-smooth">
-                My journey began in enterprise revenue operations, where I learned that every system, every process, and every line of code must serve one master: 
-                <strong className="text-purple-400"> business growth</strong>. This isn&apos;t about building pretty websites—it&apos;s about engineering competitive advantages.
+                Here&apos;s what I learned: <strong className="text-purple-400">most websites fail not because of bad technology, but because of bad economics</strong>.
+                Agencies charge $50K for a beautiful site that converts at 1.2%. We charge $5K-8K for a revenue-optimized machine that converts at 4%+. The math is simple.
               </p>
-              
+
               <p className="text-lg group-hover:text-white transition-smooth">
-                When I discovered that businesses were paying premium prices for basic websites that couldn&apos;t scale, couldn&apos;t convert, and couldn&apos;t adapt, 
-                I knew there was a better way. Hudson Digital Solutions was founded on the principle that 
-                <strong className="text-pink-400"> technology should be an investment, not an expense</strong>.
+                When I discovered businesses were hemorrhaging money on bloated agencies and junior developers who couldn&apos;t spell &quot;ROI,&quot; I knew there was a gap.
+                Hudson Digital Solutions fills that gap: <strong className="text-pink-400">enterprise-grade development at startup prices, with revenue accountability baked into every line of code</strong>.
               </p>
-              
-              <div className="grid md:grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/20">
+
+              <p className="text-xl text-white font-bold border-l-4 border-cyan-400 pl-6 py-4 bg-cyan-400/5">
+                &quot;I don&apos;t care how beautiful your code is if it doesn&apos;t make money. Ship results or ship nothing.&quot;
+              </p>
+
+              <div className="grid md:grid-cols-4 gap-8 mt-12 pt-8 border-t border-white/20">
                 <div className="text-center">
                   <div className="text-3xl font-black text-cyan-400 mb-2 group-hover:text-white transition-smooth">5+</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Years in RevOps</div>
@@ -269,8 +277,12 @@ export default function AboutPage() {
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Revenue Impact</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-pink-400 mb-2 group-hover:text-white transition-smooth">340%</div>
-                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Average ROI</div>
+                  <div className="text-3xl font-black text-pink-400 mb-2 group-hover:text-white transition-smooth">250%</div>
+                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Avg Client ROI</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-black text-green-400 mb-2 group-hover:text-white transition-smooth">50+</div>
+                  <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Businesses Transformed</div>
                 </div>
               </div>
             </div>
@@ -279,7 +291,7 @@ export default function AboutPage() {
       </section>
 
       {/* Core Values */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
@@ -292,8 +304,8 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="group relative glass-card-light p-8 card-hover-glow transition-smooth">
+          <div className="grid-3">
+            <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-cyan-500/30">
                   <Lightbulb className="w-8 h-8 text-cyan-400" />
@@ -305,7 +317,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="group relative glass-card-light p-8 card-hover-glow-emerald transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow-emerald transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-secondary-br-20 border border-emerald-500/30">
                   <BarChart3 className="w-8 h-8 text-emerald-400" />
@@ -317,7 +329,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="group relative glass-card-light p-8 card-hover-glow-orange transition-smooth">
+            <div className="group relative glass-card-light card-padding card-hover-glow-orange transition-smooth">
               <div className="flex items-center gap-4 mb-6">
                 <div className="p-4 rounded-2xl bg-gradient-decorative-orange border border-orange-500/30">
                   <Settings className="w-8 h-8 text-orange-400" />
@@ -333,9 +345,9 @@ export default function AboutPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="relative py-20 px-4">
+      <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section p-12 md:p-16">
+          <div className="relative z-10 text-center glass-section card-padding">
             <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
               Ready to engineer
               <span className="gradient-text">

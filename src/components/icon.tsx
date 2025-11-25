@@ -1,6 +1,13 @@
 import type { ComponentType, SVGProps } from 'react'
 import { cn } from '@/lib/utils'
 
+/**
+ * Icon Component System
+ *
+ * Standardizes icon usage across the application with consistent sizing and styling.
+ * Works with any Heroicon or SVG component that accepts SVGProps.
+ */
+
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'ref'> {
   icon: ComponentType<SVGProps<SVGSVGElement>>
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
@@ -38,3 +45,66 @@ export const LargeIcon = ({ icon, ...props }: Omit<IconProps, 'size'>) =>
 
 export const HeroIcon = ({ icon, ...props }: Omit<IconProps, 'size'>) =>
   <Icon icon={icon} size="2xl" {...props} />
+
+/**
+ * Icon Button Component
+ *
+ * Renders a clickable icon button with consistent hover states and accessibility.
+ * Perfect for toolbar buttons, action buttons, and interactive icons.
+ */
+
+interface IconButtonProps {
+  icon: ComponentType<SVGProps<SVGSVGElement>>
+  onClick?: () => void
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'default' | 'ghost' | 'primary' | 'danger'
+  className?: string
+  ariaLabel: string
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+}
+
+const buttonVariants = {
+  default: 'text-gray-400 hover:text-white hover:bg-gray-800/50',
+  ghost: 'text-gray-400 hover:text-white hover:bg-transparent',
+  primary: 'text-cyan-400 hover:text-cyan-300 hover:bg-cyan-400/10',
+  danger: 'text-red-400 hover:text-red-300 hover:bg-red-400/10'
+}
+
+const buttonSizes = {
+  xs: 'p-1',
+  sm: 'p-1.5',
+  md: 'p-2',
+  lg: 'p-3',
+  xl: 'p-4'
+}
+
+export function IconButton({
+  icon: IconComponent,
+  onClick,
+  size = 'md',
+  variant = 'default',
+  className,
+  ariaLabel,
+  disabled = false,
+  type = 'button'
+}: IconButtonProps) {
+  const iconSize = size === 'xs' ? 'w-3 h-3' : size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-5 h-5' : size === 'lg' ? 'w-6 h-6' : 'w-8 h-8'
+
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      className={cn(
+        'rounded-lg transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed',
+        buttonSizes[size],
+        buttonVariants[variant],
+        className
+      )}
+    >
+      <IconComponent className={iconSize} aria-hidden="true" />
+    </button>
+  )
+}

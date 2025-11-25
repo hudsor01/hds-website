@@ -68,7 +68,7 @@ export default function Footer() {
   return (
     <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">
       {/* Dark background matching homepage */}
-      <div className="absolute inset-0" style={{ backgroundColor: 'var(--color-nav-dark)' }} />
+      <div className="absolute inset-0 bg-[var(--color-nav-dark)]" />
       
       {/* Top border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gray-800/50" />
