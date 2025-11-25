@@ -11,12 +11,20 @@ import {
 } from '@/lib/projects';
 
 // Enable ISR with 1-hour revalidation
-export const revalidate = 3600;
+// Next.js 16: Using cacheLife instead
+// export const revalidate = 3600;
 
 // Generate static params for all projects
 export async function generateStaticParams() {
   const slugs = await getAllProjectSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const results = slugs.map((slug) => ({ slug }));
+
+  // Next.js 16: cacheComponents requires at least one static param
+  if (results.length === 0) {
+    return [{ slug: '__placeholder__' }];
+  }
+
+  return results;
 }
 
 // Generate metadata for SEO

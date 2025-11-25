@@ -9,7 +9,8 @@ interface AuthorPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 60;
+// Next.js 16: Using cacheLife instead
+// export const revalidate = 60;
 
 export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -45,10 +46,16 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
 
 export async function generateStaticParams() {
   const authors = await getAuthors();
-
-  return authors.map((author) => ({
+  const results = authors.map((author) => ({
     slug: author.slug,
   }));
+
+  // Next.js 16: cacheComponents requires at least one static param
+  if (results.length === 0) {
+    return [{ slug: '__placeholder__' }];
+  }
+
+  return results;
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {

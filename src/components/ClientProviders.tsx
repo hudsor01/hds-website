@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, type ReactNode } from 'react';
+import { ThemeProvider } from 'next-themes';
 import { QueryProvider } from '@/components/QueryProvider';
 import { initAccessibilityFeatures, cleanupAccessibilityFeatures } from '@/utils/accessibility';
 
@@ -21,8 +22,10 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
   }, []);
 
   return (
-    <QueryProvider>
-      {children}
-    </QueryProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryProvider>
+        {children}
+      </QueryProvider>
+    </ThemeProvider>
   );
 }

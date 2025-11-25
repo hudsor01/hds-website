@@ -22,6 +22,13 @@ const PERFORMANCE_BUDGETS = {
 };
 
 const nextConfig: NextConfig = {
+  // Next.js 16 features - React Compiler for automatic optimization
+  reactCompiler: true,
+
+  // Cache Components disabled - incompatible with dynamic API routes that use request.url
+  // Once all API routes are refactored to use alternative patterns, can re-enable
+  // cacheComponents: true,
+
   compress: true,
   poweredByHeader: false,
   trailingSlash: false,
@@ -32,10 +39,6 @@ const nextConfig: NextConfig = {
 
   typescript: {
     ignoreBuildErrors: false,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   images: {
@@ -49,6 +52,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["@heroicons/react", "@vercel/analytics"],
   },
+
+  // Turbopack configuration (empty for now, can be populated if needed)
+  turbopack: {},
 
   productionBrowserSourceMaps: false,
 

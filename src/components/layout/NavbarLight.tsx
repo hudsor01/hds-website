@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { NavigationItem } from "@/types/components";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 // import { brand } from "@/lib/brand";
 
 
@@ -89,6 +90,9 @@ const NavbarLight = memo(function NavbarLight() {
 
           {/* Right side - Dual CTAs */}
           <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Secondary CTA - Talk to Sales */}
             <Link
               href="/contact"

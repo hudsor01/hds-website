@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 // import { brand } from "@/lib/brand";
 import {
@@ -58,7 +59,11 @@ const socialLinks = [
 // Removed unused animation variants
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number>(2024);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">
