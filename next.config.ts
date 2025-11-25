@@ -25,9 +25,27 @@ const nextConfig: NextConfig = {
   // Next.js 16 features - React Compiler for automatic optimization
   reactCompiler: true,
 
-  // Cache Components disabled - incompatible with dynamic API routes that use request.url
-  // Once all API routes are refactored to use alternative patterns, can re-enable
-  // cacheComponents: true,
+  // Cache Components for granular caching control
+  cacheComponents: true,
+
+  // Cache life profiles for different content types
+  cacheLife: {
+    default: {
+      stale: 3600,      // 1 hour - client cache before revalidation
+      revalidate: 900,  // 15 minutes - server refresh frequency
+      expire: 86400,    // 1 day - maximum staleness
+    },
+    blog: {
+      stale: 7200,      // 2 hours
+      revalidate: 1800, // 30 minutes
+      expire: 172800,   // 2 days
+    },
+    api: {
+      stale: 60,        // 1 minute
+      revalidate: 30,   // 30 seconds
+      expire: 3600,     // 1 hour
+    },
+  },
 
   compress: true,
   poweredByHeader: false,

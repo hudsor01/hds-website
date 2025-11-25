@@ -3,16 +3,15 @@
  * Returns high-level metrics and KPIs
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 
 const logger = createServerLogger('analytics-overview-api');
 
-// Force dynamic rendering for API route
-export const dynamic = 'force-dynamic';
-
 export async function GET(request: NextRequest) {
+  await connection(); // Force dynamic rendering
+
   try {
     const { searchParams } = new URL(request.url);
     const days = parseInt(searchParams.get('days') || '30');
