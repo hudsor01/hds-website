@@ -157,22 +157,22 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
         />
 
         {/* Modal */}
-        <div className="relative w-full max-w-4xl rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
+        <div className="relative w-full max-w-4xl rounded-lg border border-border bg-white shadow-xl dark:border-border dark:bg-muted">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 p-6 dark:border-gray-700">
+          <div className="flex items-center justify-between border-b border-border p-6 dark:border-border">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-foreground dark:text-white">
                 {lead.name || lead.email}
               </h2>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
                 Lead ID: {lead.id.slice(0, 8)}...
               </p>
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="rounded-lg p-2 hover:bg-muted dark:hover:bg-muted"
             >
-              <X className="h-6 w-6 text-gray-500" />
+              <X className="h-6 w-6 text-muted-foreground" />
             </button>
           </div>
 
@@ -200,7 +200,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
               )}
               <a
                 href={`mailto:${lead.email}`}
-                className="inline-flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted dark:border-gray-600 dark:text-muted dark:hover:bg-muted"
               >
                 <Mail className="h-4 w-4" />
                 Send Email
@@ -208,13 +208,13 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             </div>
 
             {/* Lead Score Badge */}
-            <div className="mb-6 rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+            <div className="mb-6 rounded-lg bg-muted p-4 dark:bg-background">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                     Lead Score
                   </p>
-                  <p className="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
+                  <p className="mt-1 text-3xl font-bold text-foreground dark:text-white">
                     {lead.lead_score}/100
                   </p>
                 </div>
@@ -223,7 +223,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                     ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                     : lead.lead_quality === 'warm'
                     ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                    : 'bg-muted text-foreground dark:bg-muted dark:text-muted'
                 }`}>
                   {lead.lead_quality.toUpperCase()} LEAD
                 </span>
@@ -233,18 +233,18 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Contact Information */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-foreground dark:text-white">
                   Contact Information
                 </h3>
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <Mail className="mt-0.5 h-5 w-5 text-gray-400" />
+                    <Mail className="mt-0.5 h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                         Email
                       </p>
-                      <p className="text-sm text-gray-900 dark:text-white">
+                      <p className="text-sm text-foreground dark:text-white">
                         {lead.email}
                       </p>
                     </div>
@@ -252,12 +252,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
                   {lead.phone && (
                     <div className="flex items-start gap-3">
-                      <Phone className="mt-0.5 h-5 w-5 text-gray-400" />
+                      <Phone className="mt-0.5 h-5 w-5 text-muted-foreground" />
                       <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                           Phone
                         </p>
-                        <p className="text-sm text-gray-900 dark:text-white">
+                        <p className="text-sm text-foreground dark:text-white">
                           {lead.phone}
                         </p>
                       </div>
@@ -266,12 +266,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
                   {lead.company && (
                     <div className="flex items-start gap-3">
-                      <Building2 className="mt-0.5 h-5 w-5 text-gray-400" />
+                      <Building2 className="mt-0.5 h-5 w-5 text-muted-foreground" />
                       <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                           Company
                         </p>
-                        <p className="text-sm text-gray-900 dark:text-white">
+                        <p className="text-sm text-foreground dark:text-white">
                           {lead.company}
                         </p>
                       </div>
@@ -279,12 +279,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                   )}
 
                   <div className="flex items-start gap-3">
-                    <Calendar className="mt-0.5 h-5 w-5 text-gray-400" />
+                    <Calendar className="mt-0.5 h-5 w-5 text-muted-foreground" />
                     <div>
-                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                         Submitted
                       </p>
-                      <p className="text-sm text-gray-900 dark:text-white">
+                      <p className="text-sm text-foreground dark:text-white">
                         {new Date(lead.created_at).toLocaleString()}
                       </p>
                     </div>
@@ -295,18 +295,18 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
               {/* Attribution */}
               {lead.attribution && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-semibold text-foreground dark:text-white">
                     Traffic Attribution
                   </h3>
 
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <TrendingUp className="mt-0.5 h-5 w-5 text-gray-400" />
+                      <TrendingUp className="mt-0.5 h-5 w-5 text-muted-foreground" />
                       <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                           Source / Medium
                         </p>
-                        <p className="text-sm text-gray-900 dark:text-white">
+                        <p className="text-sm text-foreground dark:text-white">
                           {lead.attribution.source} / {lead.attribution.medium}
                         </p>
                       </div>
@@ -314,12 +314,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
                     {lead.attribution.campaign && (
                       <div className="flex items-start gap-3">
-                        <Globe className="mt-0.5 h-5 w-5 text-gray-400" />
+                        <Globe className="mt-0.5 h-5 w-5 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                             Campaign
                           </p>
-                          <p className="text-sm text-gray-900 dark:text-white">
+                          <p className="text-sm text-foreground dark:text-white">
                             {lead.attribution.campaign}
                           </p>
                         </div>
@@ -328,12 +328,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
                     {lead.attribution.device_type && (
                       <div className="flex items-start gap-3">
-                        <Download className="mt-0.5 h-5 w-5 text-gray-400" />
+                        <Download className="mt-0.5 h-5 w-5 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                             Device / Browser
                           </p>
-                          <p className="text-sm text-gray-900 dark:text-white">
+                          <p className="text-sm text-foreground dark:text-white">
                             {lead.attribution.device_type} / {lead.attribution.browser}
                           </p>
                         </div>
@@ -342,12 +342,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
                     {lead.attribution.referrer && (
                       <div className="flex items-start gap-3">
-                        <Globe className="mt-0.5 h-5 w-5 text-gray-400" />
+                        <Globe className="mt-0.5 h-5 w-5 text-muted-foreground" />
                         <div>
-                          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
                             Referrer
                           </p>
-                          <p className="text-sm text-gray-900 dark:text-white break-all">
+                          <p className="text-sm text-foreground dark:text-white break-all">
                             {lead.attribution.referrer}
                           </p>
                         </div>
@@ -360,23 +360,23 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
             {/* Calculator Details */}
             <div className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-foreground dark:text-white">
                 {calculatorName} Details
               </h3>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Inputs */}
-                <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-                  <h4 className="mb-3 font-medium text-gray-900 dark:text-white">
+                <div className="rounded-lg border border-border p-4 dark:border-border">
+                  <h4 className="mb-3 font-medium text-foreground dark:text-white">
                     Calculator Inputs
                   </h4>
                   <dl className="space-y-2">
                     {Object.entries(lead.inputs).map(([key, value]) => (
                       <div key={key} className="flex justify-between text-sm">
-                        <dt className="text-gray-500 dark:text-gray-400">
+                        <dt className="text-muted-foreground dark:text-muted-foreground">
                           {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:
                         </dt>
-                        <dd className="font-medium text-gray-900 dark:text-white">
+                        <dd className="font-medium text-foreground dark:text-white">
                           {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                         </dd>
                       </div>
@@ -385,17 +385,17 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                 </div>
 
                 {/* Results */}
-                <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-                  <h4 className="mb-3 font-medium text-gray-900 dark:text-white">
+                <div className="rounded-lg border border-border p-4 dark:border-border">
+                  <h4 className="mb-3 font-medium text-foreground dark:text-white">
                     Calculator Results
                   </h4>
                   <dl className="space-y-2">
                     {Object.entries(lead.results).map(([key, value]) => (
                       <div key={key} className="flex justify-between text-sm">
-                        <dt className="text-gray-500 dark:text-gray-400">
+                        <dt className="text-muted-foreground dark:text-muted-foreground">
                           {key}:
                         </dt>
-                        <dd className="font-medium text-gray-900 dark:text-white">
+                        <dd className="font-medium text-foreground dark:text-white">
                           {String(value)}
                         </dd>
                       </div>
@@ -408,7 +408,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             {/* Status Timeline */}
             {(lead.contacted || lead.converted) && (
               <div className="mt-6 space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-foreground dark:text-white">
                   Status Timeline
                 </h3>
 
@@ -418,10 +418,10 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                       <div className="h-3 w-3 rounded-full bg-green-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-foreground dark:text-white">
                         Lead Created
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                         {new Date(lead.created_at).toLocaleString()}
                       </p>
                     </div>
@@ -433,10 +433,10 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                         <div className="h-3 w-3 rounded-full bg-blue-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground dark:text-white">
                           Contacted
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                           {new Date(lead.contacted_at).toLocaleString()}
                         </p>
                       </div>
@@ -449,11 +449,11 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                         <div className="h-3 w-3 rounded-full bg-green-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-foreground dark:text-white">
                           Converted
                           {lead.conversion_value && ` - $${lead.conversion_value.toLocaleString()}`}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                           {new Date(lead.converted_at).toLocaleString()}
                         </p>
                       </div>
@@ -466,19 +466,19 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             {/* Notes and Activity Timeline */}
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-foreground dark:text-white">
                   Notes & Activity Timeline
                 </h3>
               </div>
 
               {/* Add Note Form */}
-              <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
+              <div className="rounded-lg border border-border bg-muted p-4 dark:border-border dark:bg-background">
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <select
                       value={noteType}
                       onChange={(e) => setNoteType(e.target.value as typeof noteType)}
-                      className="rounded-md border-gray-300 text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      className="rounded-md border-border text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
                     >
                       <option value="note">Note</option>
                       <option value="call">Call</option>
@@ -492,7 +492,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Add a note about this lead..."
                     rows={3}
-                    className="w-full rounded-md border-gray-300 text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    className="w-full rounded-md border-border text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white dark:placeholder-muted-foreground"
                   />
 
                   <button
@@ -509,14 +509,14 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
               {/* Activity Timeline */}
               <div className="space-y-3">
                 {notes.length === 0 ? (
-                  <p className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                  <p className="py-4 text-center text-sm text-muted-foreground dark:text-muted-foreground">
                     No activity yet
                   </p>
                 ) : (
                   notes.map((note) => (
                     <div
                       key={note.id}
-                      className="flex gap-3 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+                      className="flex gap-3 rounded-lg border border-border bg-white p-4 dark:border-border dark:bg-muted"
                     >
                       <div className="flex-shrink-0">
                         <div className={`flex h-8 w-8 items-center justify-center rounded-full ${
@@ -528,7 +528,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                             ? 'bg-purple-100 dark:bg-purple-900'
                             : note.note_type === 'email_sent'
                             ? 'bg-yellow-100 dark:bg-yellow-900'
-                            : 'bg-gray-100 dark:bg-gray-700'
+                            : 'bg-muted dark:bg-muted'
                         }`}>
                           {note.note_type === 'status_change' && (
                             <TrendingUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -543,24 +543,24 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
                             <Mail className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                           )}
                           {note.note_type === 'note' && (
-                            <MessageSquare className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                            <MessageSquare className="h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
                           )}
                         </div>
                       </div>
 
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium capitalize text-gray-900 dark:text-white">
+                          <p className="text-sm font-medium capitalize text-foreground dark:text-white">
                             {note.note_type.replace('_', ' ')}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                             {new Date(note.created_at).toLocaleString()}
                           </p>
                         </div>
-                        <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                        <p className="mt-1 text-sm text-muted-foreground dark:text-muted">
                           {note.content}
                         </p>
-                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p className="mt-1 text-xs text-muted-foreground dark:text-muted-foreground">
                           by {note.created_by}
                         </p>
                       </div>

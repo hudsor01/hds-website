@@ -29,7 +29,7 @@ export default function EcommercePage() {
             Convert More Visitors Into <span className="gradient-text">Paying Customers</span>
           </h1>
 
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
             Your store is live but sales are stuck. Every slow page load costs you money. We build e-commerce experiences that convert.
           </p>
 
@@ -90,7 +90,7 @@ export default function EcommercePage() {
       </section>
 
       {/* E-commerce Metrics */}
-      <section className="py-16 px-4 bg-gray-800/50">
+      <section className="py-16 px-4 bg-muted/50">
         <div className="container-wide">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
             Results That Impact Your Bottom Line
@@ -106,7 +106,7 @@ export default function EcommercePage() {
               <div key={i} className="text-center glass-card p-6">
                 <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
                 <div className="text-4xl font-black gradient-text mb-2">{stat.metric}</div>
-                <div className="text-gray-300">{stat.label}</div>
+                <div className="text-muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -135,7 +135,7 @@ export default function EcommercePage() {
                 <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm">✓</span>
                 </div>
-                <span className="text-gray-300">{capability}</span>
+                <span className="text-muted">{capability}</span>
               </div>
             ))}
           </div>
@@ -160,7 +160,7 @@ export default function EcommercePage() {
             <h2 className="text-4xl font-black text-white mb-6">
               Ready to Increase Your Sales?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
               Get a free e-commerce audit showing exactly how to improve your conversion rate and revenue.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>

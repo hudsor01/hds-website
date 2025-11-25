@@ -246,7 +246,7 @@ export default function PricingPage() {
               Frequently Asked <span className="gradient-text">Questions</span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-gray-400">
+              <p className="text-subheading text-muted-foreground">
                 Everything you need to know about our pricing and process
               </p>
             </div>
@@ -257,7 +257,7 @@ export default function PricingPage() {
               <div key={index} className="glass-card-light card-padding hover:border-cyan-400/50 transition-smooth">
                 <h3 className="text-subheading font-bold text-white mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
-                  <p className="text-gray-400 leading-relaxed text-pretty">{faq.answer}</p>
+                  <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
               </div>
             ))}
@@ -274,7 +274,7 @@ export default function PricingPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-gray-300 mb-heading container-narrow">
+              <p className="text-subheading text-muted mb-heading container-narrow">
                 Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to plug the leaks fast.
               </p>
               <p className="text-cyan-400 font-semibold mb-content-block">

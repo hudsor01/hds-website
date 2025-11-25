@@ -86,7 +86,7 @@ export function CalculatorResults({
     <div className="space-y-6">
       {/* Results Display */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-xl font-semibold text-foreground dark:text-white">
           Your Results
         </h3>
 
@@ -99,12 +99,12 @@ export function CalculatorResults({
                 ${
                   result.highlight
                     ? 'border-cyan-200 bg-cyan-50 dark:border-cyan-800 dark:bg-cyan-900/20'
-                    : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+                    : 'border-border bg-muted dark:border-border dark:bg-muted'
                 }
               `}
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-medium text-muted-foreground dark:text-muted">
                   {result.label}
                 </span>
                 <span
@@ -113,7 +113,7 @@ export function CalculatorResults({
                     ${
                       result.highlight
                         ? 'text-cyan-600 dark:text-cyan-400'
-                        : 'text-gray-900 dark:text-white'
+                        : 'text-foreground dark:text-white'
                     }
                   `}
                 >
@@ -122,7 +122,7 @@ export function CalculatorResults({
               </div>
 
               {result.description && (
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                <p className="mt-2 text-sm text-muted-foreground dark:text-muted-foreground">
                   {result.description}
                 </p>
               )}
@@ -134,10 +134,10 @@ export function CalculatorResults({
       {/* Email Capture */}
       {showEmailCapture && !emailSubmitted && (
         <div className="rounded-lg border-2 border-dashed border-cyan-300 bg-cyan-50/50 p-6 dark:border-cyan-700 dark:bg-cyan-900/10">
-          <h4 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+          <h4 className="mb-2 text-lg font-semibold text-foreground dark:text-white">
             Get Your Detailed Report
           </h4>
-          <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mb-4 text-sm text-muted-foreground dark:text-muted-foreground">
             Enter your email to receive a detailed breakdown and personalized recommendations.
           </p>
 
@@ -149,7 +149,7 @@ export function CalculatorResults({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
               />
               {error && (
                 <p className="mt-1 text-xs text-red-600 dark:text-red-400">
@@ -166,7 +166,7 @@ export function CalculatorResults({
               {isSubmitting ? 'Sending...' : 'Get Detailed Report'}
             </button>
 
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               We&apos;ll never spam you. Unsubscribe anytime.
             </p>
           </form>
@@ -203,11 +203,11 @@ export function CalculatorResults({
       )}
 
       {/* CTA */}
-      <div className="rounded-lg bg-gray-100 p-6 text-center dark:bg-gray-800">
-        <h4 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="rounded-lg bg-muted p-6 text-center dark:bg-muted">
+        <h4 className="mb-2 text-lg font-semibold text-foreground dark:text-white">
           Want to improve these numbers?
         </h4>
-        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-4 text-sm text-muted-foreground dark:text-muted-foreground">
           Let&apos;s discuss how we can help you achieve better results.
         </p>
         <a

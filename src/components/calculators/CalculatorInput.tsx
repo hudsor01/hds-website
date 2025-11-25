@@ -30,7 +30,7 @@ export function CalculatorInput({
     <div className="space-y-2">
       <label
         htmlFor={id}
-        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        className="block text-sm font-medium text-muted-foreground dark:text-muted"
       >
         {label}
       </label>
@@ -38,7 +38,7 @@ export function CalculatorInput({
       <div className="relative">
         {prefix && (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <span className="text-gray-500 dark:text-gray-400 sm:text-sm">
+            <span className="text-muted-foreground dark:text-muted-foreground sm:text-sm">
               {prefix}
             </span>
           </div>
@@ -47,9 +47,9 @@ export function CalculatorInput({
         <input
           id={id}
           className={`
-            block w-full rounded-md border-gray-300 shadow-sm
+            block w-full rounded-md border-border shadow-sm
             focus:border-cyan-500 focus:ring-cyan-500
-            dark:border-gray-600 dark:bg-gray-700 dark:text-white
+            dark:border-gray-600 dark:bg-muted dark:text-white
             dark:focus:border-cyan-400 dark:focus:ring-cyan-400
             ${prefix ? 'pl-7' : ''}
             ${suffix ? 'pr-12' : ''}
@@ -61,7 +61,7 @@ export function CalculatorInput({
 
         {suffix && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <span className="text-gray-500 dark:text-gray-400 sm:text-sm">
+            <span className="text-muted-foreground dark:text-muted-foreground sm:text-sm">
               {suffix}
             </span>
           </div>
@@ -69,7 +69,7 @@ export function CalculatorInput({
       </div>
 
       {helpText && !error && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">{helpText}</p>
+        <p className="text-xs text-muted-foreground dark:text-muted-foreground">{helpText}</p>
       )}
 
       {error && (

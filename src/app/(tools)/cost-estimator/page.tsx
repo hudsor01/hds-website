@@ -177,14 +177,14 @@ export default function CostEstimatorPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Website Type */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-muted">
               Website Type *
             </label>
             <select
               value={inputs.websiteType}
               onChange={(e) => setInputs(prev => ({ ...prev, websiteType: e.target.value }))}
               required
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
             >
               <option value="">Select a type...</option>
               {websiteTypes.map(type => (
@@ -211,28 +211,28 @@ export default function CostEstimatorPage() {
 
           {/* Features */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-muted">
               Additional Features
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
               {availableFeatures.map(feature => (
                 <label
                   key={feature.value}
-                  className="relative flex cursor-pointer items-start rounded-lg border border-gray-300 p-4 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+                  className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted dark:border-gray-600 dark:hover:bg-muted"
                 >
                   <div className="flex h-5 items-center">
                     <input
                       type="checkbox"
                       checked={inputs.features.includes(feature.value)}
                       onChange={() => handleFeatureToggle(feature.value)}
-                      className="h-4 w-4 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                      className="h-4 w-4 rounded border-border text-cyan-600 focus:ring-cyan-500"
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <div className="font-medium text-gray-900 dark:text-white">
+                    <div className="font-medium text-foreground dark:text-white">
                       {feature.label}
                     </div>
-                    <div className="text-gray-500 dark:text-gray-400">
+                    <div className="text-muted-foreground dark:text-muted-foreground">
                       +${feature.price.toLocaleString()}
                     </div>
                   </div>
@@ -243,13 +243,13 @@ export default function CostEstimatorPage() {
 
           {/* Design Complexity */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-muted">
               Design Complexity
             </label>
             <select
               value={inputs.designComplexity}
               onChange={(e) => setInputs(prev => ({ ...prev, designComplexity: e.target.value }))}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
             >
               <option value="basic">Basic Template (-20%)</option>
               <option value="standard">Standard Custom Design</option>
@@ -260,13 +260,13 @@ export default function CostEstimatorPage() {
 
           {/* Timeline */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-muted">
               Project Timeline
             </label>
             <select
               value={inputs.timeline}
               onChange={(e) => setInputs(prev => ({ ...prev, timeline: e.target.value }))}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
             >
               <option value="flexible">Flexible (Best Price)</option>
               <option value="normal">Normal (4-12 weeks)</option>
@@ -282,14 +282,14 @@ export default function CostEstimatorPage() {
                 type="checkbox"
                 checked={inputs.maintenanceNeeded}
                 onChange={(e) => setInputs(prev => ({ ...prev, maintenanceNeeded: e.target.checked }))}
-                className="h-4 w-4 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                className="h-4 w-4 rounded border-border text-cyan-600 focus:ring-cyan-500"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="maintenance" className="font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="maintenance" className="font-medium text-muted-foreground dark:text-muted">
                 Include Maintenance Package
               </label>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-muted-foreground dark:text-muted-foreground">
                 Ongoing updates, security patches, and technical support
               </p>
             </div>
@@ -313,7 +313,7 @@ export default function CostEstimatorPage() {
 
           <button
             onClick={() => setShowResults(false)}
-            className="mt-6 w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:text-muted dark:hover:bg-gray-600"
           >
             ← Modify Estimate
           </button>

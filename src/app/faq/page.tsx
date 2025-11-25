@@ -158,20 +158,20 @@ export default function FAQPage() {
               Frequently Asked <span className="gradient-text">Questions</span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
               Everything you need to know about our web development services, process, and pricing.
             </p>
 
             {/* Search */}
             <div className="max-w-2xl mx-auto">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500"
+                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-lg text-white placeholder-muted-foreground focus:outline-none focus:border-cyan-500"
                 />
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function FAQPage() {
           <div className="container-wide max-w-4xl mx-auto">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-400 text-lg">No results found for "{searchQuery}"</p>
+                <p className="text-muted-foreground text-lg">No results found for "{searchQuery}"</p>
               </div>
             ) : (
               <div className="space-y-12">
@@ -200,7 +200,7 @@ export default function FAQPage() {
                           <div key={qIndex} className="glass-card overflow-hidden">
                             <button
                               onClick={() => toggleQuestion(questionId)}
-                              className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-800/50 transition-colors"
+                              className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/50 transition-colors"
                             >
                               <span className="text-lg font-semibold text-white pr-8">
                                 {faq.question}
@@ -214,7 +214,7 @@ export default function FAQPage() {
 
                             {isExpanded && (
                               <div className="px-6 pb-6">
-                                <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                                <p className="text-muted leading-relaxed">{faq.answer}</p>
                               </div>
                             )}
                           </div>
@@ -235,7 +235,7 @@ export default function FAQPage() {
               <h2 className="text-4xl font-black text-white mb-6">
                 Still Have Questions?
               </h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
                 Schedule a free consultation call and we&apos;ll answer all your questions about your project.
               </p>
               <Button asChild variant="default" size="lg" trackConversion={true}>

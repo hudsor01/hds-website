@@ -77,7 +77,7 @@ export default function ScrollProgress() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 h-1 bg-gray-800/50 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 h-1 bg-muted/50 backdrop-blur-sm"
       style={{ zIndex: PROGRESS_BAR_Z_INDEX }}
       role="progressbar"
       aria-label="Reading progress"

@@ -135,13 +135,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Excerpt */}
             {(post.custom_excerpt || post.excerpt) && (
-              <p className="text-xl text-gray-300 mb-8 text-pretty">
+              <p className="text-xl text-muted mb-8 text-pretty">
                 {post.custom_excerpt || post.excerpt}
               </p>
             )}
 
             {/* Meta */}
-            <div className="flex flex-wrap gap-6 text-gray-400">
+            <div className="flex flex-wrap gap-6 text-muted-foreground">
               <div className="flex flex-center gap-2">
                 <Calendar className="w-5 h-5" />
                 <time dateTime={post.published_at}>
@@ -181,7 +181,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               />
               {post.feature_image_caption && (
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                  <p className="text-sm text-gray-300">{post.feature_image_caption}</p>
+                  <p className="text-sm text-muted">{post.feature_image_caption}</p>
                 </div>
               )}
             </div>
@@ -213,7 +213,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h2 className="text-3xl font-black text-white mb-4 text-balance">
               Ready to Build Your Competitive Advantage?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 text-pretty">
+            <p className="text-xl text-muted mb-8 text-pretty">
               Let&apos;s engineer a digital solution that dominates your market.
             </p>
             <Link

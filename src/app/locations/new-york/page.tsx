@@ -58,7 +58,7 @@ export default function NewYorkPage() {
               Web Development & Digital Solutions in <span className="gradient-text">New York City</span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
               Trusted by 30+ NYC businesses. We build high-performing websites, e-commerce platforms, and custom software for businesses across all five boroughs.
             </p>
 
@@ -73,7 +73,7 @@ export default function NewYorkPage() {
           </div>
         </section>
 
-        <section className="py-16 px-4 bg-gray-800/30">
+        <section className="py-16 px-4 bg-muted/30">
           <div className="container-wide">
             <h2 className="text-3xl font-bold text-white text-center mb-12">
               Serving All of New York City

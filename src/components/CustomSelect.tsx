@@ -124,10 +124,10 @@ export default function CustomSelect({
         disabled={disabled}
         className={`
           relative w-full px-4 py-3 text-left
-          bg-gray-800/50 border rounded-lg
+          bg-muted/50 border rounded-lg
           transition-all duration-200 ease-in-out
           ${disabled 
-            ? 'border-gray-700 cursor-not-allowed opacity-50' 
+            ? 'border-border cursor-not-allowed opacity-50' 
             : isOpen
               ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
               : 'border-gray-600 hover:border-gray-500 focus-ring'

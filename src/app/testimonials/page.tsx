@@ -188,7 +188,7 @@ export default function TestimonialsPage() {
                   <div className="font-semibold text-white">
                     {testimonial.name}
                   </div>
-                  <div className="text-caption text-gray-400">
+                  <div className="text-caption text-muted-foreground">
                     {testimonial.role} at {testimonial.company}
                   </div>
                   <div className="text-caption text-cyan-400 mt-2">
@@ -213,7 +213,7 @@ export default function TestimonialsPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-gray-300 container-narrow mb-content-block">
+              <p className="text-subheading text-muted container-narrow mb-content-block">
                 Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
               </p>
             </div>
@@ -229,7 +229,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-smooth"
+                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-border rounded-lg hover:border-cyan-400/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio
               </Link>

@@ -87,7 +87,7 @@ export default function SanFranciscoPage() {
               Web Development & SaaS Consulting in <span className="gradient-text">San Francisco</span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
               Trusted by 50+ Bay Area businesses. We build scalable web applications, optimize SaaS products, and deliver measurable results for startups and enterprises.
             </p>
 
@@ -109,7 +109,7 @@ export default function SanFranciscoPage() {
         </section>
 
         {/* Service Areas */}
-        <section className="py-16 px-4 bg-gray-800/30">
+        <section className="py-16 px-4 bg-muted/30">
           <div className="container-wide">
             <h2 className="text-3xl font-bold text-white text-center mb-12">
               Proudly Serving the Bay Area
@@ -133,7 +133,7 @@ export default function SanFranciscoPage() {
               ))}
             </div>
 
-            <p className="text-center text-gray-400 mt-8">
+            <p className="text-center text-muted-foreground mt-8">
               Also serving Fremont, Hayward, San Mateo, Redwood City, and the entire Bay Area
             </p>
           </div>
@@ -166,10 +166,10 @@ export default function SanFranciscoPage() {
               ].map((service, i) => (
                 <div key={i} className="glass-card p-6">
                   <h3 className="text-2xl font-bold text-white mb-3">{service.title}</h3>
-                  <p className="text-gray-300 mb-4">{service.description}</p>
+                  <p className="text-muted mb-4">{service.description}</p>
                   <ul className="space-y-2">
                     {service.features.map((feature, j) => (
-                      <li key={j} className="flex items-center gap-2 text-gray-400">
+                      <li key={j} className="flex items-center gap-2 text-muted-foreground">
                         <span className="w-2 h-2 rounded-full bg-cyan-400" />
                         {feature}
                       </li>
@@ -182,10 +182,10 @@ export default function SanFranciscoPage() {
         </section>
 
         {/* Local Testimonial */}
-        <section className="py-16 px-4 bg-gray-800/30">
+        <section className="py-16 px-4 bg-muted/30">
           <div className="container-wide max-w-4xl mx-auto">
             <div className="glass-card p-8">
-              <blockquote className="text-2xl text-gray-300 italic mb-6">
+              <blockquote className="text-2xl text-muted italic mb-6">
                 "Hudson Digital Solutions helped us scale from 10K to 100K users without a single outage. Their expertise in Bay Area tech trends and startup needs is unmatched."
               </blockquote>
               <div className="flex items-center gap-4">
@@ -194,8 +194,8 @@ export default function SanFranciscoPage() {
                 </div>
                 <div>
                   <div className="font-bold text-white text-lg">Sarah Chen</div>
-                  <div className="text-gray-400">CTO, TechFlow Analytics</div>
-                  <div className="text-gray-500 text-sm">San Francisco, CA</div>
+                  <div className="text-muted-foreground">CTO, TechFlow Analytics</div>
+                  <div className="text-muted-foreground text-sm">San Francisco, CA</div>
                 </div>
               </div>
             </div>
@@ -221,13 +221,13 @@ export default function SanFranciscoPage() {
               <div className="glass-card p-6 text-center">
                 <Clock className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
                 <h3 className="font-semibold text-white mb-2">Hours</h3>
-                <p className="text-gray-400">Mon-Fri: 9am - 5pm PST</p>
+                <p className="text-muted-foreground">Mon-Fri: 9am - 5pm PST</p>
               </div>
 
               <div className="glass-card p-6 text-center">
                 <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
                 <h3 className="font-semibold text-white mb-2">Location</h3>
-                <p className="text-gray-400">Serving all of Bay Area</p>
+                <p className="text-muted-foreground">Serving all of Bay Area</p>
               </div>
             </div>
           </div>
@@ -251,7 +251,7 @@ export default function SanFranciscoPage() {
               <h2 className="text-4xl font-black text-white mb-6">
                 Ready to Build Something Amazing?
               </h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
                 Let's discuss your project over coffee in San Francisco or a video call.
               </p>
               <Button asChild variant="default" size="lg" trackConversion={true}>

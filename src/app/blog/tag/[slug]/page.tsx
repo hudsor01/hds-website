@@ -100,11 +100,11 @@ export default async function TagPage({ params }: TagPageProps) {
             {tag.name}
           </h1>
           {tag.description && (
-            <p className="text-xl text-gray-300 container-narrow text-pretty">
+            <p className="text-xl text-muted container-narrow text-pretty">
               {tag.description}
             </p>
           )}
-          <p className="text-gray-400 mt-4">
+          <p className="text-muted-foreground mt-4">
             {posts.length} {posts.length === 1 ? "article" : "articles"}
           </p>
         </div>
@@ -115,7 +115,7 @@ export default async function TagPage({ params }: TagPageProps) {
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">
-              <p className="text-gray-300 text-lg">No articles found for this tag.</p>
+              <p className="text-muted text-lg">No articles found for this tag.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

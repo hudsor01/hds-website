@@ -18,7 +18,7 @@ export function PaystubNavigation({
   onPrint
 }: PaystubNavigationProps) {
   return (
-    <div className="p-5 text-center bg-gray-50">
+    <div className="p-5 text-center bg-muted">
       <div className="mb-5">
         <button
           onClick={onBackToForm}
@@ -32,7 +32,7 @@ export function PaystubNavigation({
           className={`button-base px-5 py-2.5 rounded-md text-sm mr-2.5 transition-smooth ${
             documentType === 'paystub'
               ? 'cta-primary'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              : 'bg-gray-200 text-muted-foreground hover:bg-gray-300'
           }`}
         >
           Pay Stub
@@ -43,7 +43,7 @@ export function PaystubNavigation({
           className={`button-base px-5 py-2.5 rounded-md text-sm transition-smooth ${
             documentType === 'annual'
               ? 'cta-primary'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              : 'bg-gray-200 text-muted-foreground hover:bg-gray-300'
           }`}
         >
           W-2 Summary
@@ -56,7 +56,7 @@ export function PaystubNavigation({
           <select
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white"
+            className="px-3 py-2 border border-border rounded-md text-sm bg-white"
           >
             {Array.from({ length: 26 }, (_, i) => (
               <option key={i + 1} value={i + 1}>

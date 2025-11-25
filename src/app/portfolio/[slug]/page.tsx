@@ -130,11 +130,11 @@ async function ProjectContent({ slug }: { slug: string }) {
                   {project.title}
                 </h1>
 
-                <p className="text-xl text-gray-300 leading-relaxed">{project.description}</p>
+                <p className="text-xl text-muted leading-relaxed">{project.description}</p>
 
                 {project.long_description && (
                   <div className="typography">
-                    <p className="text-gray-400 leading-relaxed">{project.long_description}</p>
+                    <p className="text-muted-foreground leading-relaxed">{project.long_description}</p>
                   </div>
                 )}
 
@@ -212,7 +212,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                       <div className="text-3xl md:text-4xl font-bold text-white mb-2">
                         {value}
                       </div>
-                      <div className="text-sm text-gray-400 capitalize">
+                      <div className="text-sm text-muted-foreground capitalize">
                         {key.replace(/([A-Z])/g, ' $1').trim()}
                       </div>
                     </div>
@@ -232,7 +232,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                 {project.tech_stack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-4 py-2 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors"
+                    className="px-4 py-2 glass-card-light rounded-full text-sm text-muted hover:border-cyan-400/50 hover:text-cyan-400 transition-colors"
                   >
                     {tech}
                   </span>
@@ -270,7 +270,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
                         {relatedProject.title}
                       </h3>
-                      <p className="text-gray-400 text-sm line-clamp-2">
+                      <p className="text-muted-foreground text-sm line-clamp-2">
                         {relatedProject.description}
                       </p>
                     </div>
@@ -289,7 +289,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                 Ready to create your
                 <span className="gradient-text"> success story?</span>
               </h2>
-              <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+              <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
                 Let&apos;s build something amazing together. Get in touch to discuss your project.
               </p>
               <Link
@@ -327,8 +327,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       {/* Dynamic content with Suspense */}
       <Suspense fallback={
         <div className="container-wide sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
-          <p className="text-gray-400 text-lg mt-4">Loading project...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+          <p className="text-muted-foreground text-lg mt-4">Loading project...</p>
         </div>
       }>
         <ProjectContent slug={slug} />

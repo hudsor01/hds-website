@@ -156,7 +156,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                     {toast.title}
                   </p>
                   {toast.message && (
-                    <p className="text-sm text-gray-300 mt-1">
+                    <p className="text-sm text-muted mt-1">
                       {toast.message}
                     </p>
                   )}
@@ -164,7 +164,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
                 <button
                   onClick={() => dismissToast(toast.id)}
-                  className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
+                  className="text-muted-foreground hover:text-white transition-colors flex-shrink-0"
                   aria-label="Dismiss notification"
                 >
                   <X className="w-5 h-5" />

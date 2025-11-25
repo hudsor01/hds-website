@@ -65,8 +65,8 @@ interface IconButtonProps {
 }
 
 const buttonVariants = {
-  default: 'text-gray-400 hover:text-white hover:bg-gray-800/50',
-  ghost: 'text-gray-400 hover:text-white hover:bg-transparent',
+  default: 'text-muted-foreground hover:text-white hover:bg-muted/50',
+  ghost: 'text-muted-foreground hover:text-white hover:bg-transparent',
   primary: 'text-cyan-400 hover:text-cyan-300 hover:bg-cyan-400/10',
   danger: 'text-red-400 hover:text-red-300 hover:bg-red-400/10'
 }

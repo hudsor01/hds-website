@@ -221,7 +221,7 @@ export default function ROICalculatorPage() {
 
           <button
             onClick={() => setShowResults(false)}
-            className="mt-6 w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:text-muted dark:hover:bg-gray-600"
           >
             ← Recalculate
           </button>
@@ -229,44 +229,44 @@ export default function ROICalculatorPage() {
       )}
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-white">
           How We Help You Achieve These Results
         </h3>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-            <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
+          <div className="rounded-lg border border-border p-4 dark:border-border">
+            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
               Conversion Optimization
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               A/B testing, UX improvements, and optimized user flows that increase conversions.
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-            <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
+          <div className="rounded-lg border border-border p-4 dark:border-border">
+            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
               Performance Optimization
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Faster load times mean better user experience and higher conversion rates.
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-            <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
+          <div className="rounded-lg border border-border p-4 dark:border-border">
+            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
               Strategic Design
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Data-driven design decisions that guide visitors toward conversion.
             </p>
           </div>
 
-          <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-            <h4 className="mb-2 font-semibold text-gray-900 dark:text-white">
+          <div className="rounded-lg border border-border p-4 dark:border-border">
+            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
               Analytics & Testing
             </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Continuous monitoring and improvement based on real user data.
             </p>
           </div>

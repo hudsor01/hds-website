@@ -72,10 +72,10 @@ export default function ToolsPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-white sm:text-5xl">
             Free Business Tools
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
             Make data-driven decisions about your website with our free interactive calculators.
             No credit card required, no signup needed.
           </p>
@@ -89,7 +89,7 @@ export default function ToolsPage() {
             {tools.map((tool) => (
               <div
                 key={tool.href}
-                className="group relative flex flex-col rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                className="group relative flex flex-col rounded-lg border border-border bg-white p-6 shadow-sm transition-all hover:shadow-lg dark:border-border dark:bg-muted"
               >
                 {/* Icon */}
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-lg bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-400">
@@ -97,18 +97,18 @@ export default function ToolsPage() {
                 </div>
 
                 {/* Content */}
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   {tool.title}
                 </h3>
 
-                <p className="mb-4 flex-1 text-sm text-gray-600 dark:text-gray-400">
+                <p className="mb-4 flex-1 text-sm text-muted-foreground dark:text-muted-foreground">
                   {tool.description}
                 </p>
 
                 {/* Benefits */}
                 <ul className="mb-6 space-y-2">
                   {tool.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
                       <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
@@ -146,7 +146,7 @@ export default function ToolsPage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-base font-semibold text-cyan-600 shadow-sm hover:bg-gray-50"
+                className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-base font-semibold text-cyan-600 shadow-sm hover:bg-muted"
               >
                 Schedule Consultation
               </Link>
@@ -162,14 +162,14 @@ export default function ToolsPage() {
       </section>
 
       {/* Trust Signals */}
-      <section className="border-t border-gray-200 px-4 py-12 dark:border-gray-700">
+      <section className="border-t border-border px-4 py-12 dark:border-border">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 sm:grid-cols-3">
             <div className="text-center">
               <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
                 500+
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Calculations Performed
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function ToolsPage() {
               <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
                 98%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Accuracy Rate
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function ToolsPage() {
               <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
                 100%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Free Forever
               </div>
             </div>

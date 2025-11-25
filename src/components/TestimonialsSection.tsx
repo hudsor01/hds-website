@@ -68,7 +68,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
           <h2 className="text-responsive-lg font-bold text-white mb-4">
             What Our Clients Say
           </h2>
-          <p className="text-gray-400 text-lg container-narrow">
+          <p className="text-muted-foreground text-lg container-narrow">
             Don&apos;t just take our word for it. Here&apos;s what business owners and teams
             have to say about working with Hudson Digital Solutions.
           </p>
@@ -99,7 +99,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                             key={i}
                             className={cn(
                               "w-4 h-4",
-                              i < (testimonial.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-gray-600"
+                              i < (testimonial.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"
                             )}
                             fill={i < (testimonial.rating || 0) ? "currentColor" : "none"}
                           />
@@ -108,14 +108,14 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     )}
 
                     {/* Testimonial Content */}
-                    <blockquote className="text-gray-300 leading-relaxed mb-6 text-responsive-sm">
+                    <blockquote className="text-muted leading-relaxed mb-6 text-responsive-sm">
                       &quot;{testimonial.content}&quot;
                     </blockquote>
 
                     {/* Author Info */}
                     <div className="mt-auto">
                       <div className="font-semibold text-white text-sm">{testimonial.name}</div>
-                      <div className="text-gray-400 text-xs">
+                      <div className="text-muted-foreground text-xs">
                         {testimonial.role} at {testimonial.company}
                       </div>
                     </div>

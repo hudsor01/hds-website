@@ -123,7 +123,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           </h1>
 
           {author.bio && (
-            <p className="text-xl text-gray-300 container-narrow text-pretty mb-6">
+            <p className="text-xl text-muted container-narrow text-pretty mb-6">
               {author.bio}
             </p>
           )}
@@ -162,7 +162,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             )}
           </div>
 
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             {posts.length} {posts.length === 1 ? "article" : "articles"}
           </p>
         </div>
@@ -173,7 +173,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">
-              <p className="text-gray-300 text-lg">No articles found for this author.</p>
+              <p className="text-muted text-lg">No articles found for this author.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

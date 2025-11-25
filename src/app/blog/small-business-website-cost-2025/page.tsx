@@ -111,7 +111,7 @@ export default function WebsiteCostGuidePost() {
               Back to Blog
             </Link>
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 March 1, 2024
@@ -127,7 +127,7 @@ export default function WebsiteCostGuidePost() {
               Small Business Website Cost 2025: Complete Pricing Guide
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed italic">
+            <p className="text-xl text-muted mb-8 leading-relaxed italic">
               The complete breakdown of website costs for small businesses. ROI analysis, hidden costs, and how to choose the right investment level.
             </p>
 
@@ -149,7 +149,7 @@ export default function WebsiteCostGuidePost() {
         <section className="py-16">
           <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
             <article className="prose prose-lg prose-invert max-w-none">
-              <div className="blog-content text-gray-300 leading-relaxed space-y-6">
+              <div className="blog-content text-muted leading-relaxed space-y-6">
                 
                 <div className="bg-cyan-400/10 border border-cyan-400/20 rounded-lg p-6 mb-8">
                   <p><strong className="text-cyan-400">2025 Cost Overview:</strong></p>
@@ -302,7 +302,7 @@ export default function WebsiteCostGuidePost() {
                 <h2 className="text-3xl font-bold text-white mb-4 mt-12">ROI Analysis by Investment Level</h2>
                 
                 <div className="grid md:grid-cols-3 gap-6 my-8">
-                  <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
+                  <div className="bg-black/40 border border-border rounded-lg p-6">
                     <h4 className="text-lg font-bold text-yellow-400 mb-3">DIY Website</h4>
                     <p className="text-sm mb-2"><strong>Investment:</strong> $1,500-3,000/year</p>
                     <p className="text-sm mb-2"><strong>Typical ROI:</strong> 50-150%</p>
@@ -407,7 +407,7 @@ export default function WebsiteCostGuidePost() {
 
                 <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to Make the Right Investment?</h3>
-                  <p className="text-gray-300 mb-6">Get a custom website cost estimate based on your specific business needs and growth goals.</p>
+                  <p className="text-muted mb-6">Get a custom website cost estimate based on your specific business needs and growth goals.</p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
@@ -419,7 +419,7 @@ export default function WebsiteCostGuidePost() {
 
                 <hr className="border-gray-600 my-8" />
 
-                <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
+                <div className="bg-black/40 border border-border rounded-lg p-6">
                   <p><strong className="text-white">About Hudson Digital Solutions</strong></p>
                   <p className="mt-2">We help small businesses make smart website investments that drive real growth. Our strategic approach has helped 150+ companies achieve an average 340% ROI through professional web development that focuses on business outcomes, not just beautiful design.</p>
                   <p className="mt-4">
@@ -433,9 +433,9 @@ export default function WebsiteCostGuidePost() {
             </article>
 
             {/* Article Footer */}
-            <div className="mt-16 pt-8 border-t border-gray-700">
+            <div className="mt-16 pt-8 border-t border-border">
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-gray-400">Share this guide:</span>
+                <span className="text-muted-foreground">Share this guide:</span>
                 <a
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://hudsondigitalsolutions.com/blog/small-business-website-cost-2025')}&text=${encodeURIComponent('Small Business Website Cost 2025: Complete Pricing Guide')}`}
                   target="_blank"
@@ -458,7 +458,7 @@ export default function WebsiteCostGuidePost() {
                 <h3 className="text-2xl font-bold text-white mb-4">
                   Get a Custom Website Cost Analysis
                 </h3>
-                <p className="text-gray-300 mb-6">
+                <p className="text-muted mb-6">
                   Let us analyze your business needs and provide a detailed cost breakdown with ROI projections.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

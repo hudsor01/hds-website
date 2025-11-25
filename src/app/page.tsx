@@ -65,7 +65,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
+                <p className="text-xl text-muted leading-relaxed max-w-xl">
                   We build and scale your technical operations in weeks, not months.
                   No hiring delays. No training costs. Just proven senior talent ready to execute.
                 </p>
@@ -91,13 +91,13 @@ export default function HomePage() {
                     <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-green-400" />
                     </div>
-                    <span className="text-sm font-medium text-gray-300">Average 250% ROI</span>
+                    <span className="text-sm font-medium text-muted">Average 250% ROI</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
                       <Users className="w-5 h-5 text-blue-400" />
                     </div>
-                    <span className="text-sm font-medium text-gray-300">Zero onboarding time</span>
+                    <span className="text-sm font-medium text-muted">Zero onboarding time</span>
                   </div>
                 </div>
               </div>
@@ -158,7 +158,7 @@ export default function HomePage() {
             <h2 className="text-responsive-2xl font-black text-white mb-6">
               How We Solve Your Biggest Problems
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Three ways we help SaaS companies go from struggling to scaling
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function HomePage() {
               </span>
             </h2>
 
-            <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mt-8">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
               Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
             </p>
           </div>
@@ -242,12 +242,12 @@ export default function HomePage() {
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-gray-200 mb-3 group-hover:text-white transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-white transition-colors duration-300">
                     {result.label}
                   </div>
 
                   {/* Period with accent styling */}
-                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
+                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-muted/50 rounded-full border border-border/50">
                     {result.period}
                   </div>
 
@@ -285,7 +285,7 @@ export default function HomePage() {
               </span>
             </h2>
 
-            <p className="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mt-8">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
               Calculate your potential in 60 seconds. No signup required.
             </p>
           </div>
@@ -458,7 +458,7 @@ export default function HomePage() {
               </span>
             </h2>
 
-            <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
               Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
             </p>
 

@@ -26,18 +26,18 @@ export function PaystubForm({
 }: PaystubFormProps) {
   return (
     <div className="p-8 font-sans container-narrow">
-      <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">
+      <h1 className="text-3xl font-bold mb-8 text-center text-foreground">
         Professional Pay Stub Generator
       </h1>
 
       {/* Employee Information */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-        <h2 className="text-xl font-bold mb-5 text-gray-800">
+      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+        <h2 className="text-xl font-bold mb-5 text-foreground">
           Employee Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Employee Name *
             </label>
             <input
@@ -45,7 +45,7 @@ export function PaystubForm({
               value={paystubData.employeeName}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employeeName: e.target.value }))}
               className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.employeeName ? 'border-red-500 border-2' : 'border-gray-300'
+                formErrors.employeeName ? 'border-red-500 border-2' : 'border-border'
               }`}
               placeholder="John Doe"
             />
@@ -55,27 +55,27 @@ export function PaystubForm({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Employee ID
             </label>
             <input
               type="text"
               value={paystubData.employeeId}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employeeId: e.target.value }))}
-              className="w-full p-2.5 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2.5 border border-border rounded-md text-sm"
               placeholder="EMP001"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Employer Name
             </label>
             <input
               type="text"
               value={paystubData.employerName}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employerName: e.target.value }))}
-              className="w-full p-2.5 border border-gray-300 rounded-md text-sm"
+              className="w-full p-2.5 border border-border rounded-md text-sm"
               placeholder="ABC Company Inc."
             />
           </div>
@@ -83,13 +83,13 @@ export function PaystubForm({
       </div>
 
       {/* Pay Information */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-        <h2 className="text-xl font-bold mb-5 text-gray-800">
+      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+        <h2 className="text-xl font-bold mb-5 text-foreground">
           Pay Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Hourly Rate *
             </label>
             <input
@@ -98,7 +98,7 @@ export function PaystubForm({
               value={paystubData.hourlyRate || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hourlyRate: parseFloat(e.target.value) || 0 }))}
               className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.hourlyRate ? 'border-red-500 border-2' : 'border-gray-300'
+                formErrors.hourlyRate ? 'border-red-500 border-2' : 'border-border'
               }`}
               placeholder="25.00"
             />
@@ -108,7 +108,7 @@ export function PaystubForm({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Hours Per Period *
             </label>
             <input
@@ -117,7 +117,7 @@ export function PaystubForm({
               value={paystubData.hoursPerPeriod || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hoursPerPeriod: parseFloat(e.target.value) || 0 }))}
               className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.hoursPerPeriod ? 'border-red-500 border-2' : 'border-gray-300'
+                formErrors.hoursPerPeriod ? 'border-red-500 border-2' : 'border-border'
               }`}
               placeholder="80"
             />
@@ -129,19 +129,19 @@ export function PaystubForm({
       </div>
 
       {/* Tax Information */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-        <h2 className="text-xl font-bold mb-5 text-gray-800">
+      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+        <h2 className="text-xl font-bold mb-5 text-foreground">
           Tax Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Filing Status
             </label>
             <select
               value={paystubData.filingStatus}
               onChange={(e) => setPaystubData(prev => ({ ...prev, filingStatus: e.target.value as FilingStatus }))}
-              className="w-full p-2.5 border border-gray-300 rounded-md text-sm bg-white"
+              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
             >
               <option value="single">Single</option>
               <option value="married_jointly">Married Filing Jointly</option>
@@ -151,13 +151,13 @@ export function PaystubForm({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               Tax Year
             </label>
             <select
               value={paystubData.taxYear}
               onChange={(e) => setPaystubData(prev => ({ ...prev, taxYear: parseInt(e.target.value) }))}
-              className="w-full p-2.5 border border-gray-300 rounded-md text-sm bg-white"
+              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
             >
               <option value="2024">2024</option>
               <option value="2023">2023</option>
@@ -165,13 +165,13 @@ export function PaystubForm({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">
+            <label className="block mb-1 font-medium text-muted-foreground">
               State
             </label>
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full p-2.5 border border-gray-300 rounded-md text-sm bg-white"
+              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
             >
               <option value="">Select State</option>
               <optgroup label="No State Income Tax">

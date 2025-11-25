@@ -108,7 +108,7 @@ async function PortfolioProjects() {
                       {/* Project Details */}
                       <div className="p-8">
                         <div className="typography mb-8">
-                          <p className="text-gray-300 leading-relaxed text-lg">
+                          <p className="text-muted leading-relaxed text-lg">
                             {project.description}
                           </p>
                         </div>
@@ -119,7 +119,7 @@ async function PortfolioProjects() {
                             {Object.entries(stats).map(([key, value]) => (
                               <div key={key} className="text-center">
                                 <div className="text-2xl font-bold text-white mb-1">{value}</div>
-                                <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                                <div className="text-sm text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
                               </div>
                             ))}
                           </div>
@@ -130,7 +130,7 @@ async function PortfolioProjects() {
                           {project.tech_stack.map((tech) => (
                             <span
                               key={tech}
-                              className="px-3 py-1 glass-card-light rounded-full text-sm text-gray-300 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
+                              className="px-3 py-1 glass-card-light rounded-full text-sm text-muted hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-300"
                             >
                               {tech}
                             </span>
@@ -216,8 +216,8 @@ export default function PortfolioPage() {
         {/* Dynamic content with Suspense */}
         <Suspense fallback={
           <div className="container-wide py-20 text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
-            <p className="text-gray-400 text-lg mt-4">Loading projects...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+            <p className="text-muted-foreground text-lg mt-4">Loading projects...</p>
           </div>
         }>
           <PortfolioProjects />
@@ -235,7 +235,7 @@ export default function PortfolioPage() {
               </h2>
 
               <div className="typography">
-                <p className="text-subheading text-gray-300 container-narrow mb-content-block">
+                <p className="text-subheading text-muted container-narrow mb-content-block">
                   Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
                 </p>
               </div>

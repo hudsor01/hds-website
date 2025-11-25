@@ -17,7 +17,7 @@ export function SuccessMessage({ onReset, className = '' }: SuccessMessageProps)
         <h3 className="text-2xl font-bold text-white mb-3">
           Message Sent Successfully!
         </h3>
-        <p className="text-gray-300 mb-6 leading-relaxed">
+        <p className="text-muted mb-6 leading-relaxed">
           Thank you for reaching out. We&apos;ve received your message and will get back to you within 24 hours.
         </p>
         <button

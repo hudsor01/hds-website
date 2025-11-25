@@ -71,7 +71,7 @@ export default function ConversionToolkitPage() {
             Conversion Optimization <span className="gradient-text">Toolkit</span>
           </h1>
 
-          <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
+          <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
             Everything you need to boost conversion rates by 300%+. Templates, checklists, calculators, and proven strategies used by top-performing websites.
           </p>
 
@@ -94,19 +94,19 @@ export default function ConversionToolkitPage() {
           <div className="grid-4 gap-comfortable text-center">
             <div>
               <div className="text-section-title font-bold text-cyan-400">4</div>
-              <div className="text-gray-400">Tool Categories</div>
+              <div className="text-muted-foreground">Tool Categories</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-green-400">15+</div>
-              <div className="text-gray-400">Templates</div>
+              <div className="text-muted-foreground">Templates</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-purple-400">$0</div>
-              <div className="text-gray-400">Cost</div>
+              <div className="text-muted-foreground">Cost</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-yellow-400">300%+</div>
-              <div className="text-gray-400">Avg ROI Boost</div>
+              <div className="text-muted-foreground">Avg ROI Boost</div>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function ConversionToolkitPage() {
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">What&apos;s Inside the Toolkit</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
+            <p className="text-muted max-w-2xl mx-auto">
               Complete set of tools and templates to systematically improve your conversion rates
             </p>
           </div>
@@ -131,10 +131,10 @@ export default function ConversionToolkitPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-subheading font-bold text-white mb-subheading">{item.title}</h3>
-                    <p className="text-gray-300 mb-subheading">{item.description}</p>
+                    <p className="text-muted mb-subheading">{item.description}</p>
                     <ul className="space-y-tight">
                       {item.items.map((subItem, subIndex) => (
-                        <li key={subIndex} className="flex items-start gap-2 text-gray-300 text-sm">
+                        <li key={subIndex} className="flex items-start gap-2 text-muted text-sm">
                           <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                           {subItem}
                         </li>
@@ -153,7 +153,7 @@ export default function ConversionToolkitPage() {
         <div className="max-w-6xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Proven Results</h2>
-            <p className="text-gray-300">Real outcomes from businesses using these tools</p>
+            <p className="text-muted">Real outcomes from businesses using these tools</p>
           </div>
 
           <div className="grid-3 gap-comfortable">
@@ -162,7 +162,7 @@ export default function ConversionToolkitPage() {
                 <TrendingUp className="w-8 h-8 text-green-400" />
               </div>
               <div className="text-section-title font-bold text-green-400 mb-subheading">340%</div>
-              <div className="text-gray-300">Average conversion increase</div>
+              <div className="text-muted">Average conversion increase</div>
             </div>
 
             <div className="text-center">
@@ -170,7 +170,7 @@ export default function ConversionToolkitPage() {
                 <DollarSign className="w-8 h-8 text-cyan-400" />
               </div>
               <div className="text-section-title font-bold text-cyan-400 mb-subheading">$185K</div>
-              <div className="text-gray-300">Average revenue increase</div>
+              <div className="text-muted">Average revenue increase</div>
             </div>
 
             <div className="text-center">
@@ -178,13 +178,13 @@ export default function ConversionToolkitPage() {
                 <Clock className="w-8 h-8 text-purple-400" />
               </div>
               <div className="text-section-title font-bold text-purple-400 mb-subheading">8 weeks</div>
-              <div className="text-gray-300">Average time to results</div>
+              <div className="text-muted">Average time to results</div>
             </div>
           </div>
 
           <div className="mt-content-block grid md:grid-cols-2 gap-comfortable">
             <div className="glass-card-light rounded-lg card-padding-sm">
-              <blockquote className="text-gray-300 italic mb-subheading">
+              <blockquote className="text-muted italic mb-subheading">
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
@@ -193,13 +193,13 @@ export default function ConversionToolkitPage() {
                 </div>
                 <div>
                   <div className="text-cyan-400 font-semibold">Mike Chen</div>
-                  <div className="text-gray-500 text-caption">SaaS Founder</div>
+                  <div className="text-muted-foreground text-caption">SaaS Founder</div>
                 </div>
               </div>
             </div>
 
             <div className="glass-card-light rounded-lg card-padding-sm">
-              <blockquote className="text-gray-300 italic mb-subheading">
+              <blockquote className="text-muted italic mb-subheading">
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
@@ -208,7 +208,7 @@ export default function ConversionToolkitPage() {
                 </div>
                 <div>
                   <div className="text-green-400 font-semibold">Sarah Williams</div>
-                  <div className="text-gray-500 text-caption">E-commerce Director</div>
+                  <div className="text-muted-foreground text-caption">E-commerce Director</div>
                 </div>
               </div>
             </div>
@@ -226,7 +226,7 @@ export default function ConversionToolkitPage() {
               Download Your Complete Toolkit
             </h2>
 
-            <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
+            <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
               Get instant access to templates, checklists, and calculators that have helped 150+ businesses achieve 340% average ROI improvement.
             </p>
 
@@ -241,7 +241,7 @@ export default function ConversionToolkitPage() {
                     name="email"
                     placeholder="Enter your business email"
                     required
-                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
@@ -251,7 +251,7 @@ export default function ConversionToolkitPage() {
                     name="firstName"
                     placeholder="First name"
                     required
-                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
@@ -260,7 +260,7 @@ export default function ConversionToolkitPage() {
                     type="text"
                     name="company"
                     placeholder="Company name (optional)"
-                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
@@ -273,14 +273,14 @@ export default function ConversionToolkitPage() {
                 </button>
               </form>
 
-              <p className="text-caption text-gray-500 mt-4">
+              <p className="text-caption text-muted-foreground mt-4">
                 No spam. We&apos;ll only send you valuable conversion optimization insights.
               </p>
             </div>
 
-            <div className="mt-comfortable pt-8 border-t border-gray-700">
+            <div className="mt-comfortable pt-8 border-t border-border">
               <h3 className="text-body-lg font-bold text-white mb-subheading">Want Professional Implementation?</h3>
-              <p className="text-gray-300 mb-subheading">
+              <p className="text-muted mb-subheading">
                 Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped 150+ businesses achieve an average 340% ROI.
               </p>
               <Link

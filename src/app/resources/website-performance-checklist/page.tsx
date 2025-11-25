@@ -131,7 +131,7 @@ export default function WebsiteChecklistPage() {
             Website Performance <span className="gradient-text">Checklist</span>
           </h1>
 
-          <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
+          <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
             47 actionable checkpoints to boost conversion rates by 300%+, improve SEO rankings, and increase revenue. Based on $10M+ in client results.
           </p>
 
@@ -154,19 +154,19 @@ export default function WebsiteChecklistPage() {
           <div className="grid-4 gap-comfortable text-center">
             <div>
               <div className="text-section-title font-bold text-cyan-400">47</div>
-              <div className="text-gray-400">Checkpoints</div>
+              <div className="text-muted-foreground">Checkpoints</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-green-400">300%+</div>
-              <div className="text-gray-400">Avg ROI Boost</div>
+              <div className="text-muted-foreground">Avg ROI Boost</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-purple-400">6</div>
-              <div className="text-gray-400">Key Categories</div>
+              <div className="text-muted-foreground">Key Categories</div>
             </div>
             <div>
               <div className="text-section-title font-bold text-yellow-400">FREE</div>
-              <div className="text-gray-400">No Cost</div>
+              <div className="text-muted-foreground">No Cost</div>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function WebsiteChecklistPage() {
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Checklist Preview</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
+            <p className="text-muted max-w-2xl mx-auto">
               Get a glimpse of what&apos;s inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
             </p>
           </div>
@@ -193,7 +193,7 @@ export default function WebsiteChecklistPage() {
                 </h3>
                 <ul className="space-y-tight">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start gap-2 text-gray-300 text-sm">
+                    <li key={itemIndex} className="flex items-start gap-2 text-muted text-sm">
                       <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
                       {item}
                     </li>
@@ -215,7 +215,7 @@ export default function WebsiteChecklistPage() {
         <div className="max-w-4xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-white mb-subheading">Why This Checklist Works</h2>
-            <p className="text-gray-300">Based on real results from 150+ client projects</p>
+            <p className="text-muted">Based on real results from 150+ client projects</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-comfortable">
@@ -226,7 +226,7 @@ export default function WebsiteChecklistPage() {
                 </div>
                 <div>
                   <h3 className="text-subheading font-bold text-white mb-subheading">Data-Driven Results</h3>
-                  <p className="text-gray-300">Every checkpoint is based on analysis of high-performing websites and conversion optimization best practices.</p>
+                  <p className="text-muted">Every checkpoint is based on analysis of high-performing websites and conversion optimization best practices.</p>
                 </div>
               </div>
 
@@ -236,7 +236,7 @@ export default function WebsiteChecklistPage() {
                 </div>
                 <div>
                   <h3 className="text-subheading font-bold text-white mb-subheading">Quick Implementation</h3>
-                  <p className="text-gray-300">Each item includes clear action steps that can be implemented immediately, no technical expertise required.</p>
+                  <p className="text-muted">Each item includes clear action steps that can be implemented immediately, no technical expertise required.</p>
                 </div>
               </div>
 
@@ -246,7 +246,7 @@ export default function WebsiteChecklistPage() {
                 </div>
                 <div>
                   <h3 className="text-subheading font-bold text-white mb-subheading">ROI-Focused</h3>
-                  <p className="text-gray-300">Prioritized by impact - tackle the highest-return optimizations first to maximize your results.</p>
+                  <p className="text-muted">Prioritized by impact - tackle the highest-return optimizations first to maximize your results.</p>
                 </div>
               </div>
             </div>
@@ -256,26 +256,26 @@ export default function WebsiteChecklistPage() {
                 <h3 className="text-subheading font-bold text-white mb-subheading">Real Client Results</h3>
                 <div className="space-y-tight">
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Conversion Rate Increase:</span>
+                    <span className="text-muted">Conversion Rate Increase:</span>
                     <span className="text-green-400 font-bold">340% avg</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Page Speed Improvement:</span>
+                    <span className="text-muted">Page Speed Improvement:</span>
                     <span className="text-cyan-400 font-bold">65% faster</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">SEO Ranking Boost:</span>
+                    <span className="text-muted">SEO Ranking Boost:</span>
                     <span className="text-purple-400 font-bold">2.3x increase</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Revenue Impact:</span>
+                    <span className="text-muted">Revenue Impact:</span>
                     <span className="text-yellow-400 font-bold">$50K-500K+</span>
                   </div>
                 </div>
               </div>
 
               <div className="glass-card-light rounded-lg card-padding-sm">
-                <blockquote className="text-gray-300 italic mb-subheading">
+                <blockquote className="text-muted italic mb-subheading">
                   &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
                 <div className="text-cyan-400 font-semibold">— Sarah M., E-commerce Director</div>
@@ -295,7 +295,7 @@ export default function WebsiteChecklistPage() {
               Download Your Free Checklist
             </h2>
 
-            <p className="text-subheading text-gray-300 mb-comfortable max-w-2xl mx-auto">
+            <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
               Get instant access to our 47-point website performance checklist. No spam, just actionable insights that drive results.
             </p>
 
@@ -310,7 +310,7 @@ export default function WebsiteChecklistPage() {
                     name="email"
                     placeholder="Enter your business email"
                     required
-                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
@@ -320,7 +320,7 @@ export default function WebsiteChecklistPage() {
                     name="firstName"
                     placeholder="First name"
                     required
-                    className="w-full p-input bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus-ring transition-colors"
+                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
@@ -333,14 +333,14 @@ export default function WebsiteChecklistPage() {
                 </button>
               </form>
 
-              <p className="text-caption text-gray-500 mt-4">
+              <p className="text-caption text-muted-foreground mt-4">
                 No spam, ever. We respect your privacy and will only send valuable insights.
               </p>
             </div>
 
-            <div className="mt-comfortable pt-8 border-t border-gray-700">
+            <div className="mt-comfortable pt-8 border-t border-border">
               <h3 className="text-body-lg font-bold text-white mb-subheading">Need Professional Implementation?</h3>
-              <p className="text-gray-300 mb-subheading">
+              <p className="text-muted mb-subheading">
                 Want us to handle the optimization for you? Our team has implemented these strategies for 150+ businesses with an average 340% ROI.
               </p>
               <Link

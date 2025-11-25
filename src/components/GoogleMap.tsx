@@ -7,7 +7,7 @@ export default function GoogleMap() {
         <h2 className="text-3xl font-bold text-white mb-4">
           Dallas-Fort Worth Metroplex
         </h2>
-        <p className="text-gray-300 text-lg">
+        <p className="text-muted text-lg">
           Serving businesses across the DFW area with cutting-edge digital solutions
         </p>
       </div>
@@ -29,7 +29,7 @@ export default function GoogleMap() {
       </div>
       
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-muted-foreground">
           Ready to transform your business? We&apos;re here to help companies across the metroplex achieve digital excellence.
         </p>
       </div>

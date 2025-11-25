@@ -70,24 +70,24 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
         <div className="w-full max-w-md">
-          <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <div className="rounded-lg border border-border bg-white p-8 shadow-lg dark:border-border dark:bg-muted">
             <div className="mb-8 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900">
                 <Lock className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-foreground dark:text-white">
                 Admin Dashboard
               </h2>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-sm text-muted-foreground dark:text-muted-foreground">
                 Enter password to access analytics
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="password" className="block text-sm font-medium text-muted-foreground dark:text-muted">
                   Password
                 </label>
                 <input
@@ -95,7 +95,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  className="mt-1 block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
                   placeholder="Enter admin password"
                   autoFocus
                 />
@@ -115,7 +115,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                 Session valid for 24 hours
               </p>
             </div>
@@ -131,7 +131,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
       <div className="fixed right-4 top-4 z-50">
         <button
           onClick={handleLogout}
-          className="rounded-md bg-gray-800 px-4 py-2 text-sm text-white hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
+          className="rounded-md bg-muted px-4 py-2 text-sm text-white hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
         >
           Logout
         </button>

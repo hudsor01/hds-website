@@ -163,7 +163,7 @@ export default function AboutPage() {
                 Technical Arsenal
               </span>
             </h2>
-            <p className="text-xl text-gray-300 container-narrow text-pretty">
+            <p className="text-xl text-muted container-narrow text-pretty">
               Forged through enterprise-level battles, refined through startup agility, and sharpened by revenue-focused engineering.
             </p>
           </div>
@@ -241,7 +241,7 @@ export default function AboutPage() {
                 The Revenue Engineer Behind the Code
               </span>
             </h2>
-            <p className="text-xl text-gray-300 container-narrow text-pretty">
+            <p className="text-xl text-muted container-narrow text-pretty">
               Why trust a former revenue operations professional to build your website? Because they understand something agencies don&apos;t: every feature must justify its existence in dollars.
             </p>
           </div>
@@ -299,7 +299,7 @@ export default function AboutPage() {
                 Engineering Principles
               </span>
             </h2>
-            <p className="text-xl text-gray-300 container-narrow text-pretty">
+            <p className="text-xl text-muted container-narrow text-pretty">
               The core beliefs that drive every line of code, every design decision, and every strategic recommendation.
             </p>
           </div>
@@ -312,7 +312,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">Performance First</h3>
               </div>
-              <p className="text-gray-300 group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-white transition-smooth">
                 Every millisecond matters. We engineer for speed because fast sites convert better, rank higher, and deliver superior user experiences.
               </p>
             </div>
@@ -324,7 +324,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-smooth">Data Driven</h3>
               </div>
-              <p className="text-gray-300 group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-white transition-smooth">
                 Assumptions kill businesses. Every decision is backed by data, every feature is measured, and every optimization is validated.
               </p>
             </div>
@@ -336,7 +336,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-smooth">Scalable Architecture</h3>
               </div>
-              <p className="text-gray-300 group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-white transition-smooth">
                 We build for tomorrow&apos;s growth, not just today&apos;s needs. Every solution is architected to scale with your business ambitions.
               </p>
             </div>
@@ -355,7 +355,7 @@ export default function AboutPage() {
               </span>
             </h2>
             
-            <p className="text-xl text-gray-300 container-narrow mb-10 text-pretty">
+            <p className="text-xl text-muted container-narrow mb-10 text-pretty">
               Stop settling for ordinary. Let&apos;s build something that doesn&apos;t just work—it dominates.
             </p>
             

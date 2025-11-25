@@ -140,7 +140,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
         >
           {(field) => (
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="firstName" className="block text-sm font-medium text-muted-foreground mb-1">
                 First Name
               </label>
               <input
@@ -153,7 +153,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
                   'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
                   field.state.meta.errors.length > 0
                     ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300'
+                    : 'border-border'
                 )}
                 placeholder="Enter your first name"
               />
@@ -176,7 +176,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
         >
           {(field) => (
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-1">
                 Email
               </label>
               <input
@@ -190,7 +190,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
                   'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
                   field.state.meta.errors.length > 0
                     ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300'
+                    : 'border-border'
                 )}
                 placeholder="Enter your email"
               />

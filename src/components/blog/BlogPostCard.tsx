@@ -27,7 +27,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         )}
 
         <div className="p-8">
-          <div className="flex flex-center gap-4 text-sm text-gray-400 mb-4">
+          <div className="flex flex-center gap-4 text-sm text-muted-foreground mb-4">
             <span className="flex flex-center gap-1">
               <Calendar className="w-4 h-4" />
               {formatDateLong(post.published_at)}
@@ -49,7 +49,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
             </Link>
           </h3>
 
-          <p className="text-gray-300 mb-6 text-lg leading-relaxed text-pretty line-clamp-3">
+          <p className="text-muted mb-6 text-lg leading-relaxed text-pretty line-clamp-3">
             {post.excerpt || post.custom_excerpt}
           </p>
 
@@ -69,7 +69,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
           )}
 
           {author && (
-            <div className="flex flex-center gap-2 text-sm text-gray-500 mb-4">
+            <div className="flex flex-center gap-2 text-sm text-muted-foreground mb-4">
               {author.profile_image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

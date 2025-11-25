@@ -155,7 +155,7 @@ export default function ConversionGuidePost() {
             </Link>
 
             {/* Post Meta */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 February 15, 2024
@@ -173,7 +173,7 @@ export default function ConversionGuidePost() {
             </h1>
 
             {/* Excerpt */}
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed italic">
+            <p className="text-xl text-muted mb-8 leading-relaxed italic">
               15 proven strategies to boost your website conversion rates by 300%+. Real case studies and actionable tactics that drive results.
             </p>
 
@@ -196,7 +196,7 @@ export default function ConversionGuidePost() {
         <section className="py-16">
           <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
             <article className="prose prose-lg prose-invert max-w-none">
-              <div className="blog-content text-gray-300 leading-relaxed space-y-6">
+              <div className="blog-content text-muted leading-relaxed space-y-6">
                 
                 <div className="bg-cyan-400/10 border border-cyan-400/20 rounded-lg p-6 mb-8">
                   <p><strong className="text-cyan-400">Quick Stats:</strong></p>
@@ -441,7 +441,7 @@ export default function ConversionGuidePost() {
 
                 <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to 3x Your Conversion Rates?</h3>
-                  <p className="text-gray-300 mb-6">Our CRO specialists have helped 200+ businesses achieve these results. Let&apos;s optimize your site for maximum conversions.</p>
+                  <p className="text-muted mb-6">Our CRO specialists have helped 200+ businesses achieve these results. Let&apos;s optimize your site for maximum conversions.</p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
@@ -453,7 +453,7 @@ export default function ConversionGuidePost() {
 
                 <hr className="border-gray-600 my-8" />
 
-                <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
+                <div className="bg-black/40 border border-border rounded-lg p-6">
                   <p><strong className="text-white">About the Author</strong></p>
                   <p className="mt-2">Hudson Digital Solutions specializes in conversion rate optimization for ambitious businesses. Our clients achieve an average 340% ROI through strategic CRO implementation and data-driven optimization.</p>
                   <p className="mt-4">
@@ -467,10 +467,10 @@ export default function ConversionGuidePost() {
             </article>
 
             {/* Article Footer */}
-            <div className="mt-16 pt-8 border-t border-gray-700">
+            <div className="mt-16 pt-8 border-t border-border">
               {/* Share Buttons */}
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-gray-400">Share this guide:</span>
+                <span className="text-muted-foreground">Share this guide:</span>
                 <a
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://hudsondigitalsolutions.com/blog/how-to-increase-website-conversion-rates-2025-guide')}&text=${encodeURIComponent('How to Increase Website Conversion Rates: 2025 Complete Guide')}`}
                   target="_blank"
@@ -494,7 +494,7 @@ export default function ConversionGuidePost() {
                 <h3 className="text-2xl font-bold text-white mb-4">
                   Want Professional CRO Implementation?
                 </h3>
-                <p className="text-gray-300 mb-6">
+                <p className="text-muted mb-6">
                   Let our experts handle the optimization while you focus on growing your business.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

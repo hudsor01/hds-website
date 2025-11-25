@@ -161,7 +161,7 @@ export default function BlogPost() {
           </Link>
 
           {/* Post Meta */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-6">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
             <span className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
               January 31, 2024
@@ -179,7 +179,7 @@ export default function BlogPost() {
           </h1>
 
           {/* Excerpt */}
-          <p className="text-xl text-gray-300 mb-8 leading-relaxed italic">
+          <p className="text-xl text-muted mb-8 leading-relaxed italic">
             The brutal truth about why most business websites fail to deliver results—and what ambitious companies do differently.
           </p>
 
@@ -202,7 +202,7 @@ export default function BlogPost() {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <article className="prose prose-lg prose-invert max-w-none">
-            <div className="blog-content text-gray-300 leading-relaxed space-y-6">
+            <div className="blog-content text-muted leading-relaxed space-y-6">
               
               <hr className="border-gray-600 my-8" />
               
@@ -353,7 +353,7 @@ export default function BlogPost() {
               
               <div className="bg-gradient-to-r from-cyan-400/20 to-green-400/20 border border-cyan-400/30 rounded-lg p-8 my-12 text-center">
                 <h3 className="text-2xl font-bold text-white mb-4">Ready to Dominate Your Market?</h3>
-                <p className="text-gray-300 mb-6">Let&apos;s discuss how to engineer your digital dominance.</p>
+                <p className="text-muted mb-6">Let&apos;s discuss how to engineer your digital dominance.</p>
                 <Link
                   href="/contact"
                   className="inline-flex items-center gap-2 bg-cyan-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-cyan-300 transition-colors text-lg"
@@ -365,11 +365,11 @@ export default function BlogPost() {
               
               <hr className="border-gray-600 my-8" />
               
-              <p className="italic text-gray-400">P.S. - Still not convinced? Consider this: Your biggest competitor is probably reading articles just like this one right now. The question is: Will you be the one who acts on it first?</p>
+              <p className="italic text-muted-foreground">P.S. - Still not convinced? Consider this: Your biggest competitor is probably reading articles just like this one right now. The question is: Will you be the one who acts on it first?</p>
               
               <hr className="border-gray-600 my-8" />
               
-              <div className="bg-black/40 border border-gray-700 rounded-lg p-6">
+              <div className="bg-black/40 border border-border rounded-lg p-6">
                 <p><strong className="text-white">About Hudson Digital Solutions</strong></p>
                 <p className="mt-2">We don&apos;t build websites that &quot;just work&quot;—we engineer digital competitive advantages for ambitious businesses. With an average ROI of 340% and a 98% client success rate, we&apos;ve helped over 150 companies transform their digital presence from a business expense into their most powerful growth engine.</p>
                 <p className="mt-4">
@@ -383,10 +383,10 @@ export default function BlogPost() {
           </article>
 
           {/* Article Footer */}
-          <div className="mt-16 pt-8 border-t border-gray-700">
+          <div className="mt-16 pt-8 border-t border-border">
             {/* Share Buttons */}
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-gray-400">Share this article:</span>
+              <span className="text-muted-foreground">Share this article:</span>
               <a
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://hudsondigitalsolutions.com/blog/beyond-just-works-why-businesses-need-websites-that-dominate')}&text=${encodeURIComponent('Beyond Just Works: Why Businesses Need Websites That Dominate')}`}
                 target="_blank"
@@ -410,7 +410,7 @@ export default function BlogPost() {
               <h3 className="text-2xl font-bold text-white mb-4">
                 Ready to Build Something That Dominates?
               </h3>
-              <p className="text-gray-300 mb-6">
+              <p className="text-muted mb-6">
                 Let&apos;s discuss how we can engineer your competitive advantage.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
