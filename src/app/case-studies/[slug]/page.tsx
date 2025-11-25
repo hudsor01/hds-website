@@ -8,51 +8,28 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CTAButton } from '@/components/cta-button';
 import { ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
+import { getCaseStudyBySlug, getAllCaseStudySlugs } from '@/lib/case-studies';
 
-interface CaseStudy {
-  id: string;
-  title: string;
-  slug: string;
-  client_name: string;
-  industry: string;
-  project_type: string;
-  description: string;
-  challenge: string;
-  solution: string;
-  results: string;
-  technologies: string[];
-  metrics: Array<{ label: string; value: string }>;
-  testimonial_text: string;
-  testimonial_author: string;
-  testimonial_role: string;
-  testimonial_video_url: string | null;
-  featured_image_url: string;
-  project_url: string | null;
-  project_duration: string;
-  team_size: number;
-}
+// Generate static params for all case studies
+export async function generateStaticParams() {
+  const slugs = await getAllCaseStudySlugs();
+  const results = slugs.map((slug) => ({ slug }));
 
-async function getCaseStudy(slug: string): Promise<CaseStudy | null> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/case-studies?slug=${slug}`, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-    return data.caseStudy || null;
-  } catch (error) {
-    console.error('Error fetching case study:', error);
-    return null;
+  // Next.js 16: cacheComponents requires at least one static param
+  if (results.length === 0) {
+    return [{ slug: '__placeholder__' }];
   }
+
+  return results;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const caseStudy = await getCaseStudy(params.slug);
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const caseStudy = await getCaseStudyBySlug(slug);
 
   if (!caseStudy) {
     return {
@@ -63,12 +40,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${caseStudy.title} | Case Study`,
     description: caseStudy.description,
-    keywords: `case study, ${caseStudy.industry}, ${caseStudy.project_type}, ${caseStudy.technologies.join(', ')}`,
+    keywords: `case study, ${caseStudy.industry}, ${caseStudy.project_type}, ${caseStudy.technologies?.join(', ') || ''}`,
   };
 }
 
-export default async function CaseStudyPage({ params }: { params: { slug: string } }) {
-  const caseStudy = await getCaseStudy(params.slug);
+export default async function CaseStudyPage({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params;
+  const caseStudy = await getCaseStudyBySlug(slug);
 
   if (!caseStudy) {
     notFound();
@@ -155,19 +137,21 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
                 </p>
 
                 {/* Technologies Used */}
-                <div className="mt-6">
-                  <h3 className="text-xl font-semibold text-white mb-4">Technologies Used</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {caseStudy.technologies.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 bg-gray-700/50 border border-gray-600 rounded-full text-gray-300 text-sm"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                {caseStudy.technologies && caseStudy.technologies.length > 0 && (
+                  <div className="mt-6">
+                    <h3 className="text-xl font-semibold text-white mb-4">Technologies Used</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {caseStudy.technologies.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 bg-gray-700/50 border border-gray-600 rounded-full text-gray-300 text-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
