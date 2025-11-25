@@ -229,9 +229,13 @@ const nextConfig: NextConfig = {
             }
 
             // Log performance metrics
+            // eslint-disable-next-line no-console
             console.log('\n📊 Performance Metrics:');
+            // eslint-disable-next-line no-console
             console.log(`   JavaScript Bundle: ${(totalJSSize / 1024).toFixed(2)}KB`);
+            // eslint-disable-next-line no-console
             console.log(`   CSS Bundle: ${(totalCSSSize / 1024).toFixed(2)}KB`);
+            // eslint-disable-next-line no-console
             console.log(`   Images: ${(totalImageSize / 1024).toFixed(2)}KB`);
 
             // Log chunk sizes that are larger than 50KB
@@ -242,8 +246,10 @@ const nextConfig: NextConfig = {
             });
 
             // Log assets by type
+            // eslint-disable-next-line no-console
             console.log('   Assets by type:');
             Object.entries(assetsByType).forEach(([ext, size]) => {
+              // eslint-disable-next-line no-console
               console.log(`     ${ext}: ${(size / 1024).toFixed(2)}KB`);
             });
           });

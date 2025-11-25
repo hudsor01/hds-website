@@ -184,7 +184,7 @@ export function ErrorBoundary({
         name: error.name,
         message: error.message,
         stack: error.stack,
-        cause: error.cause
+        cause: (error as Error & { cause?: unknown }).cause
       },
       componentStack: errorInfo.componentStack,
       errorBoundary: 'React Error Boundary',
