@@ -310,7 +310,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-background text-white">
+    <main className="min-h-screen bg-gradient-hero text-white">
       <Analytics />
 
       {/* Back Button - Static, prerendered */}
@@ -327,8 +327,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       {/* Dynamic content with Suspense */}
       <Suspense fallback={
         <div className="container-wide sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
-          <p className="text-muted-foreground text-lg mt-4">Loading project...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+          <p className="text-gray-400 text-lg mt-4">Loading project...</p>
         </div>
       }>
         <ProjectContent slug={slug} />

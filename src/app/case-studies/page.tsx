@@ -5,9 +5,8 @@
 
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Clock, Users, ExternalLink } from 'lucide-react';
+import { CTAButton } from '@/components/cta-button';
+import { Clock, Users, ExternalLink } from 'lucide-react';
 import { getCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
@@ -142,25 +141,22 @@ async function CaseStudiesContent() {
 
 export default function CaseStudiesPage() {
   return (
-    <main className="min-h-screen bg-cyan-600/10">
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       {/* Hero - Static, prerendered */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Real Results From <span className="text-cyan-400">Real Projects</span>
+            Real Results From <span className="gradient-text">Real Projects</span>
           </h1>
 
-          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             See how we've helped businesses scale, increase conversions, and solve complex technical challenges.
           </p>
 
           <div className="flex justify-center gap-4">
-            <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href="/contact">
-        Start Your Project
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
+            <CTAButton href="/contact" variant="primary" size="lg">
+              Start Your Project
+            </CTAButton>
           </div>
         </div>
       </section>
@@ -170,8 +166,8 @@ export default function CaseStudiesPage() {
         <div className="container-wide">
           <Suspense fallback={
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
-              <p className="text-muted-foreground text-lg mt-4">Loading case studies...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+              <p className="text-gray-400 text-lg mt-4">Loading case studies...</p>
             </div>
           }>
             <CaseStudiesContent />

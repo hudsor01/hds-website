@@ -244,7 +244,7 @@ export default async function CaseStudyPage({
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-cyan-600/10">
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
       {/* Back Button - Static */}
       <section className="py-8 px-4">
         <div className="container-wide">
@@ -258,8 +258,8 @@ export default async function CaseStudyPage({
       {/* Dynamic content with Suspense */}
       <Suspense fallback={
         <div className="container-wide py-20 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
-          <p className="text-muted-foreground text-lg mt-4">Loading case study...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
+          <p className="text-gray-400 text-lg mt-4">Loading case study...</p>
         </div>
       }>
         <CaseStudyContent slug={slug} />
