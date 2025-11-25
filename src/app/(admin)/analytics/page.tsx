@@ -251,7 +251,7 @@ export default function AnalyticsDashboard() {
                 <select
                   value={timeRange}
                   onChange={(e) => setTimeRange(e.target.value)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-brand-primary focus:ring-brand-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
                 >
                   <option value="7">Last 7 days</option>
                   <option value="30">Last 30 days</option>
@@ -284,7 +284,7 @@ export default function AnalyticsDashboard() {
                 placeholder="Search by email, name, or company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-brand-primary focus:ring-brand-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted dark:placeholder-text-muted"
+                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted dark:placeholder-text-muted"
               />
               {searchQuery && (
                 <button
@@ -433,7 +433,7 @@ export default function AnalyticsDashboard() {
                 <select
                   value={qualityFilter}
                   onChange={(e) => setQualityFilter(e.target.value)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-brand-primary focus:ring-brand-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
                 >
                   <option value="all">All Leads</option>
                   <option value="hot">Hot Leads Only</option>
@@ -526,7 +526,7 @@ export default function AnalyticsDashboard() {
                           </span>
                         )}
                         {lead.contacted && !lead.converted && (
-                          <span className="inline-flex rounded-full bg-brand-tertiary/10 px-2 py-1 text-xs font-semibold text-brand-tertiary dark:bg-brand-tertiary/90 dark:text-brand-tertiary">
+                          <span className="inline-flex rounded-full bg-blue-500/10 px-2 py-1 text-xs font-semibold text-blue-500 dark:bg-blue-500/90 dark:text-blue-500">
                             Contacted
                           </span>
                         )}

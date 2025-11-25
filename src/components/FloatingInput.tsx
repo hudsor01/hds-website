@@ -35,7 +35,7 @@ export default function FloatingInput({
 
   // Simplify nested ternary for label color
   const getLabelColor = () => {
-    if (isFocused && shouldFloat) {return 'text-brand-secondary'}
+    if (isFocused && shouldFloat) {return 'text-cyan-400'}
     if (shouldFloat) {return 'text-text-secondary'}
     return ''
   }
@@ -78,7 +78,7 @@ export default function FloatingInput({
         className={`
           absolute left-4 transition-all duration-200 ease-in-out pointer-events-none
           ${shouldFloat 
-            ? 'top-2 text-xs text-brand-secondary'
+            ? 'top-2 text-xs text-cyan-400'
             : 'top-1/2 -translate-y-1/2 text-base text-text-muted'
           }
           ${getLabelColor()}

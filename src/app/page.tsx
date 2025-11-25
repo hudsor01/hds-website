@@ -87,7 +87,7 @@ export default function HomePage() {
                     <span className="small">Average 250% ROI</span>
                   </div>
                   <div className="flex-center gap-2 text-text-secondary">
-                    <Users className="w-5 h-5 text-brand-tertiary" />
+                    <Users className="w-5 h-5 text-blue-500" />
                     <span className="small">Zero onboarding time</span>
                   </div>
                 </div>
@@ -116,23 +116,23 @@ export default function HomePage() {
 
                   {/* Terminal Content */}
                   <div className="p-6 font-mono text-sm space-y-2" role="log">
-                    <div className="text-brand-secondary">$ npm run deploy --production</div>
+                    <div className="text-cyan-400">$ npm run deploy --production</div>
                     <div className="text-muted-foreground">[OK] Build completed in 1.8s</div>
                     <div className="text-muted-foreground">[OK] Tests passed (147/147)</div>
                     <div className="text-muted-foreground">[OK] Security scan clean</div>
-                    <div className="text-brand-tertiary">&gt; Deploying to production...</div>
+                    <div className="text-blue-500">&gt; Deploying to production...</div>
                     <div className="text-success">[OK] Deployment successful</div>
                     <div className="text-warning">[LIVE] at https://client-app.com</div>
 
                     <div className="pt-2 space-y-1">
-                      <div className="text-brand-secondary/80">Performance: 100/100</div>
-                      <div className="text-brand-secondary/80">Accessibility: 100/100</div>
-                      <div className="text-brand-secondary/80">SEO: 98/100</div>
+                      <div className="text-cyan-400/80">Performance: 100/100</div>
+                      <div className="text-cyan-400/80">Accessibility: 100/100</div>
+                      <div className="text-cyan-400/80">SEO: 98/100</div>
                     </div>
 
-                    <div className="text-brand-secondary mt-4">
+                    <div className="text-cyan-400 mt-4">
                       <span className="inline-block">$</span>
-                      <span className="inline-block w-2 h-4 bg-brand-secondary ml-1" />
+                      <span className="inline-block w-2 h-4 bg-cyan-400 ml-1" />
                     </div>
                   </div>
                 </div>
@@ -164,10 +164,10 @@ export default function HomePage() {
               >
                 <div className="space-y-6">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-brand-primary/30 hover-lift will-change-transform transition-smooth">
-                      <solution.icon className="h-6 w-6 text-brand-secondary" />
+                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
+                      <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-brand-secondary transition-smooth">
+                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-cyan-400 transition-smooth">
                       {solution.title}
                     </h3>
                   </div>
@@ -211,7 +211,7 @@ export default function HomePage() {
 
             <div className="typography max-w-2xl mx-auto">
               <p className="text-xl text-text-secondary leading-relaxed">
-                Numbers don&apos;t lie - our clients see <span className="text-brand-secondary font-semibold">measurable results</span> that transform their businesses
+                Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
               </p>
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function HomePage() {
           {/* Bottom accent section */}
           <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
             <p className="text-text-muted text-sm font-medium">
-              Join <span className="text-brand-secondary font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
+              Join <span className="text-cyan-400 font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
             </p>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function HomePage() {
             <h2 className="text-responsive-md font-black text-text-inverted mb-6">
               <span className="gradient-text relative">
                 Free Business Tools
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-brand-secondary to-brand-tertiary rounded-full"></span>
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
               </span>
             </h2>
 
@@ -299,7 +299,7 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
                   <TrendingUp className="w-8 h-8 text-cyan-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-brand-secondary transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
                   ROI Calculator
                 </h3>
                 <p className="text-text-muted text-sm mb-4">
@@ -309,20 +309,20 @@ export default function HomePage() {
 
               <ul className="space-y-2 mb-6">
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Calculate potential revenue increase
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Understand conversion impact
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Make data-driven decisions
                 </li>
               </ul>
 
-              <div className="flex items-center text-brand-secondary font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
                 <span>Try Calculator</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -333,15 +333,15 @@ export default function HomePage() {
             {/* Cost Estimator */}
             <Link
               href="/cost-estimator"
-              className="group relative glass-card-light p-8 card-hover-glow border border-brand-secondary/20 hover:border-brand-secondary/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-brand-secondary to-brand-tertiary rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
 
               <div className="mb-6">
-                <div className="w-16 h-16 rounded-lg bg-brand-primary/10 flex items-center justify-center mb-4 group-hover:bg-brand-primary/20 transition-colors">
-                  <Calculator className="w-8 h-8 text-brand-secondary" />
+                <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
+                  <Calculator className="w-8 h-8 text-cyan-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-brand-secondary transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
                   Cost Estimator
                 </h3>
                 <p className="text-text-muted text-sm mb-4">
@@ -351,20 +351,20 @@ export default function HomePage() {
 
               <ul className="space-y-2 mb-6">
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Transparent pricing breakdown
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Timeline estimates included
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Feature-based pricing
                 </li>
               </ul>
 
-              <div className="flex items-center text-brand-secondary font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
                 <span>Get Estimate</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -375,15 +375,15 @@ export default function HomePage() {
             {/* Performance Calculator */}
             <Link
               href="/performance-calculator"
-              className="group relative glass-card-light p-8 card-hover-glow border border-brand-secondary/20 hover:border-brand-secondary/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-brand-secondary to-brand-tertiary rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
 
               <div className="mb-6">
-                <div className="w-16 h-16 rounded-lg bg-brand-primary/10 flex items-center justify-center mb-4 group-hover:bg-brand-primary/20 transition-colors">
-                  <Zap className="w-8 h-8 text-brand-secondary" />
+                <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
+                  <Zap className="w-8 h-8 text-cyan-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-brand-secondary transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
                   Performance Analyzer
                 </h3>
                 <p className="text-text-muted text-sm mb-4">
@@ -393,20 +393,20 @@ export default function HomePage() {
 
               <ul className="space-y-2 mb-6">
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Real PageSpeed analysis
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Revenue impact calculation
                 </li>
                 <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary"></div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                   Core Web Vitals insights
                 </li>
               </ul>
 
-              <div className="flex items-center text-brand-secondary font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
                 <span>Analyze Site</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -418,7 +418,7 @@ export default function HomePage() {
           <div className="text-center mt-12">
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 text-brand-secondary hover:text-brand-tertiary font-semibold transition-colors"
+              className="inline-flex items-center gap-2 text-cyan-400 hover:text-blue-500 font-semibold transition-colors"
             >
               View All Tools
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -444,7 +444,7 @@ export default function HomePage() {
       <section className="py-20 px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12 md:p-16">
-            <Rocket className="w-16 h-16 text-brand-secondary mx-auto mb-8" />
+            <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
 
             <h2 className="text-responsive-md font-black text-text-inverted mb-6">
               Your competitors ship faster.
