@@ -172,13 +172,13 @@ Guidance for Claude Code working with this Next.js 15 production application.
 - Location: tests/unit/
 - Test utilities, validation, pure functions
 - Mock external dependencies
-- Run: npm run test:unit
+- Run: pnpm test:unit
 
 **E2E Tests (Playwright):**
 - Location: e2e/
 - Test user flows, form submissions, navigation
 - Multiple browsers: chromium, firefox, webkit
-- Run: npm run test:e2e (all) or npm run test:e2e:fast (chromium only)
+- Run: pnpm test:e2e (all) or pnpm test:e2e:fast (chromium only)
 
 **Test Coverage:**
 - Validation schemas must have tests
@@ -201,7 +201,7 @@ Guidance for Claude Code working with this Next.js 15 production application.
 - Modular imports enabled for Heroicons
 
 **Bundle Analysis:**
-- Run ANALYZE=true npm run build before adding dependencies
+- Run ANALYZE=true pnpm build before adding dependencies
 - Keep first load JS under 180kB per page
 - Monitor bundle size in build output
 
@@ -275,8 +275,8 @@ Before committing any code, verify:
 - [ ] ARIA labels? (All interactive elements)
 - [ ] Next.js Image for images? (No img tags)
 - [ ] Meta description 120-160 chars? (SEO requirement)
-- [ ] Build succeeds? (npm run build)
-- [ ] Tests pass? (npm run test:all)
+- [ ] Build succeeds? (pnpm build)
+- [ ] Tests pass? (pnpm test:all)
 
 ## CRITICAL RULES - NEVER/ALWAYS
 
@@ -307,24 +307,24 @@ Before committing any code, verify:
 ## DEVELOPMENT COMMANDS
 
 **Development:**
-- npm run dev - Start development server
-- npm run build - Production build
-- npm run start - Start production server
-- npm run lint - Run ESLint
-- npm run typecheck - TypeScript type checking
-- npm run test:unit - Run unit tests
-- npm run test:e2e - Run E2E tests (all browsers)
-- npm run test:e2e:fast - Run E2E tests (chromium only)
-- npm run test:all - Run all checks (lint, typecheck, tests)
+- pnpm dev - Start development server
+- pnpm build - Production build
+- pnpm start - Start production server
+- pnpm lint - Run ESLint
+- pnpm typecheck - TypeScript type checking
+- pnpm test:unit - Run unit tests
+- pnpm test:e2e - Run E2E tests (all browsers)
+- pnpm test:e2e:fast - Run E2E tests (chromium only)
+- pnpm test:all - Run all checks (lint, typecheck, tests)
 
 **Analysis:**
-- ANALYZE=true npm run build - Bundle size analysis
-- npm run test:unit:coverage - Test coverage report
+- ANALYZE=true pnpm build - Bundle size analysis
+- pnpm test:unit:coverage - Test coverage report
 
 ## GIT WORKFLOW
 
 **Before Commit:**
-- Run: npm run lint && npm run typecheck
+- Run: pnpm lint && pnpm typecheck
 - Fix all errors and warnings
 - Verify build succeeds
 

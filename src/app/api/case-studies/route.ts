@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { CaseStudy } from '@/types/supabase-helpers';
 
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
     const { data: caseStudies, error } = await query;
 
     if (error) {
-      console.error('Failed to fetch case studies:', error);
+      logger.error('Failed to fetch case studies:', error as Error);
       return NextResponse.json(
         { error: 'Failed to fetch case studies' },
         { status: 500 }
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ caseStudies: caseStudies || [] });
   } catch (error) {
-    console.error('Case studies API error:', error);
+    logger.error('Case studies API error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

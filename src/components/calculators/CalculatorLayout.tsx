@@ -24,7 +24,7 @@ export function CalculatorLayout({
   showBackLink = true,
 }: CalculatorLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-cyan-600/10 dark:from-gray-900 dark:to-gray-800">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -34,17 +34,17 @@ export function CalculatorLayout({
             </div>
           )}
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-white">
             {title}
           </h1>
 
-          <p className="mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
             {description}
           </p>
         </div>
 
         {/* Calculator Content */}
-        <div className="rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 sm:p-8">
+        <div className="rounded-lg bg-white p-6 shadow-xl dark:bg-muted sm:p-8">
           {children}
         </div>
 
@@ -61,13 +61,13 @@ export function CalculatorLayout({
         )}
 
         {/* Trust Signals */}
-        <div className="mt-12 border-t border-gray-200 pt-8 dark:border-gray-700">
+        <div className="mt-12 border-t border-border pt-8 dark:border-border">
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="text-center">
               <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
                 500+
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Calculations Performed
               </div>
             </div>
@@ -76,7 +76,7 @@ export function CalculatorLayout({
               <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
                 98%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Accuracy Rate
               </div>
             </div>
@@ -85,7 +85,7 @@ export function CalculatorLayout({
               <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
                 Free
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 No Credit Card Required
               </div>
             </div>

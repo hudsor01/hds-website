@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
+import { logger } from '@/lib/logger';
 import { trackEvent } from '@/lib/analytics';
 
 interface PerformanceMetrics {
@@ -61,7 +62,7 @@ export default function PerformanceCalculatorPage() {
       calculateImpact(data.metrics);
     } catch (err) {
       setError('Failed to analyze website. Please check the URL and try again.');
-      console.error('Performance analysis error:', err);
+      logger.error('Performance analysis error:', err as Error);
     } finally {
       setIsAnalyzing(false);
     }
@@ -280,25 +281,25 @@ export default function PerformanceCalculatorPage() {
         <div>
           {/* Core Web Vitals Display */}
           {metrics && (
-            <div className="mb-6 rounded-lg bg-gray-50 p-6 dark:bg-gray-800">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+            <div className="mb-6 rounded-lg bg-muted p-6 dark:bg-muted">
+              <h3 className="mb-4 text-lg font-semibold text-foreground dark:text-white">
                 Core Web Vitals
               </h3>
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="text-center">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">LCP</div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">{metrics.lcp}</div>
-                  <div className="text-xs text-gray-500">Largest Contentful Paint</div>
+                  <div className="text-sm text-muted-foreground dark:text-muted-foreground">LCP</div>
+                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.lcp}</div>
+                  <div className="text-xs text-muted-foreground">Largest Contentful Paint</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">FCP</div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">{metrics.fcp}</div>
-                  <div className="text-xs text-gray-500">First Contentful Paint</div>
+                  <div className="text-sm text-muted-foreground dark:text-muted-foreground">FCP</div>
+                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.fcp}</div>
+                  <div className="text-xs text-muted-foreground">First Contentful Paint</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">CLS</div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">{metrics.cls}</div>
-                  <div className="text-xs text-gray-500">Cumulative Layout Shift</div>
+                  <div className="text-sm text-muted-foreground dark:text-muted-foreground">CLS</div>
+                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.cls}</div>
+                  <div className="text-xs text-muted-foreground">Cumulative Layout Shift</div>
                 </div>
               </div>
             </div>
@@ -315,7 +316,7 @@ export default function PerformanceCalculatorPage() {
               setShowResults(false);
               setMetrics(null);
             }}
-            className="mt-6 w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:text-muted dark:hover:bg-gray-600"
           >
             ← Analyze Another Site
           </button>
@@ -323,8 +324,8 @@ export default function PerformanceCalculatorPage() {
       )}
 
       {/* Performance Tips */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-white">
           How We Optimize Performance
         </h3>
 
@@ -337,13 +338,13 @@ export default function PerformanceCalculatorPage() {
             { title: 'Critical CSS', desc: 'Inline critical styles for faster rendering' },
             { title: 'Minification', desc: 'Compressed code for smaller file sizes' },
           ].map((tip, index) => (
-            <div key={index} className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+            <div key={index} className="flex items-start gap-3 rounded-lg border border-border p-3 dark:border-border">
               <svg className="h-5 w-5 flex-shrink-0 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <div>
-                <div className="font-medium text-gray-900 dark:text-white">{tip.title}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">{tip.desc}</div>
+                <div className="font-medium text-foreground dark:text-white">{tip.title}</div>
+                <div className="text-sm text-muted-foreground dark:text-muted-foreground">{tip.desc}</div>
               </div>
             </div>
           ))}

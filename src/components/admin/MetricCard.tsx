@@ -27,21 +27,21 @@ export function MetricCard({
   const changeColors = {
     increase: 'text-green-600 dark:text-green-400',
     decrease: 'text-red-600 dark:text-red-400',
-    neutral: 'text-gray-600 dark:text-gray-400',
+    neutral: 'text-muted-foreground dark:text-muted-foreground',
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+    <div className="rounded-lg border border-border bg-white p-6 shadow-sm dark:border-border dark:bg-muted">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
             {title}
           </p>
-          <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+          <p className="mt-2 text-3xl font-bold text-foreground dark:text-white">
             {value}
           </p>
           {subtitle && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
               {subtitle}
             </p>
           )}

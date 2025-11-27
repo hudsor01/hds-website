@@ -9,6 +9,7 @@ import {
   getStoredAttribution,
   getAttributionForSubmission,
 } from '@/lib/attribution';
+import { logger } from '@/lib/logger';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 export interface UseAttributionReturn {
@@ -45,10 +46,10 @@ export function useAttribution(): UseAttributionReturn {
       });
 
       if (!response.ok) {
-        console.warn('Failed to send attribution data');
+        logger.warn('Failed to send attribution data');
       }
     } catch (error) {
-      console.warn('Error sending attribution:', error);
+      logger.error('Error sending attribution:', error as Error);
     }
   };
 

@@ -349,10 +349,10 @@ export default function Home() {
     if (!selectedPayPeriod) {
       return (
         <div>
-          <div className="p-5 text-center bg-gray-50">
+          <div className="p-5 text-center bg-muted">
             <button
               onClick={backToForm}
-              className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-gray-700 transition-smooth"
+              className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
             >
               ← Back to Form
             </button>
@@ -374,10 +374,10 @@ export default function Home() {
 
     return (
       <div>
-        <div className="p-5 text-center bg-gray-50">
+        <div className="p-5 text-center bg-muted">
           <button
             onClick={backToForm}
-            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-gray-700 transition-smooth"
+            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
           >
             ← Back to Form
           </button>
@@ -401,10 +401,10 @@ export default function Home() {
   if (documentType === 'annual' && resultsVisible) {
     return (
       <div>
-        <div className="p-5 text-center bg-gray-50">
+        <div className="p-5 text-center bg-muted">
           <button
             onClick={backToForm}
-            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-gray-700 transition-smooth"
+            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
           >
             ← Back to Form
           </button>
@@ -421,7 +421,7 @@ export default function Home() {
   }
 
   return (
-    <div className="m-0 p-5 box-border font-sans bg-gradient-to-br from-gray-50 to-blue-200 min-h-screen text-gray-800">
+    <div className="m-0 p-5 box-border font-sans bg-cyan-600/10 min-h-screen text-foreground">
       <div className="max-w-[1000px] mx-auto bg-white rounded-[15px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Header */}
         <div className="bg-[#2c3e50] text-white text-center py-[25px] px-5 border-b-[3px] border-[#34495e]">
@@ -430,10 +430,10 @@ export default function Home() {
         </div>
 
         {/* Form Section */}
-        <div className="p-[30px] bg-gray-50 border-b border-gray-200">
+        <div className="p-[30px] bg-muted border-b border-border">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5 mb-5">
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Employee Name <span className="text-destructive">*</span>:
               </label>
               <input
@@ -441,7 +441,7 @@ export default function Home() {
                 value={paystubData.employeeName}
                 onChange={(e) => setPaystubData(prev => ({...prev, employeeName: e.target.value}))}
                 placeholder="Enter full name"
-                className={`p-3 ${formErrors.employeeName ? 'border-2 border-destructive' : 'border-2 border-gray-300'} rounded-lg text-base`}
+                className={`p-3 ${formErrors.employeeName ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.employeeName && (
                 <span className="text-destructive text-[0.8rem] mt-1">
@@ -451,7 +451,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Employee ID/SSN (Optional):
               </label>
               <input
@@ -459,12 +459,12 @@ export default function Home() {
                 value={paystubData.employeeId}
                 onChange={(e) => setPaystubData(prev => ({...prev, employeeId: e.target.value}))}
                 placeholder="XXX-XX-XXXX"
-                className="p-3 border-2 border-gray-300 rounded-lg text-base"
+                className="p-3 border-2 border-border rounded-lg text-base"
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Employer Name (Optional):
               </label>
               <input
@@ -472,12 +472,12 @@ export default function Home() {
                 value={paystubData.employerName}
                 onChange={(e) => setPaystubData(prev => ({...prev, employerName: e.target.value}))}
                 placeholder="Enter company name"
-                className="p-3 border-2 border-gray-300 rounded-lg text-base"
+                className="p-3 border-2 border-border rounded-lg text-base"
               />
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Hourly Rate ($) <span className="text-destructive">*</span>:
               </label>
               <input
@@ -487,7 +487,7 @@ export default function Home() {
                 value={paystubData.hourlyRate || ''}
                 onChange={(e) => setPaystubData(prev => ({...prev, hourlyRate: parseFloat(e.target.value) || 0}))}
                 placeholder="Enter hourly rate"
-                className={`p-3 ${formErrors.hourlyRate ? 'border-2 border-destructive' : 'border-2 border-gray-300'} rounded-lg text-base`}
+                className={`p-3 ${formErrors.hourlyRate ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.hourlyRate && (
                 <span className="text-destructive text-[0.8rem] mt-1">
@@ -497,7 +497,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Hours Per Pay Period <span className="text-destructive">*</span>:
               </label>
               <input
@@ -506,7 +506,7 @@ export default function Home() {
                 value={paystubData.hoursPerPeriod || ''}
                 onChange={(e) => setPaystubData(prev => ({...prev, hoursPerPeriod: parseInt(e.target.value) || 0}))}
                 placeholder="Enter hours per pay period"
-                className={`p-3 ${formErrors.hoursPerPeriod ? 'border-2 border-destructive' : 'border-2 border-gray-300'} rounded-lg text-base`}
+                className={`p-3 ${formErrors.hoursPerPeriod ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.hoursPerPeriod && (
                 <span className="text-destructive text-[0.8rem] mt-1">
@@ -516,13 +516,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Filing Status:
               </label>
               <select
                 value={paystubData.filingStatus}
                 onChange={(e) => setPaystubData(prev => ({...prev, filingStatus: e.target.value as FilingStatus}))}
-                className="p-3 border-2 border-gray-300 rounded-lg text-base bg-white text-gray-700"
+                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
               >
                 <option value="single">Single</option>
                 <option value="marriedJoint">Married filing jointly</option>
@@ -533,13 +533,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 Tax Year:
               </label>
               <select
                 value={paystubData.taxYear}
                 onChange={(e) => setPaystubData(prev => ({...prev, taxYear: parseInt(e.target.value)}))}
-                className="p-3 border-2 border-gray-300 rounded-lg text-base bg-white text-gray-700"
+                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
               >
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
@@ -551,13 +551,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-gray-700 text-[0.9rem]">
+              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
                 State (Optional):
               </label>
               <select
                 value={selectedState}
                 onChange={(e) => setSelectedState(e.target.value)}
-                className="p-3 border-2 border-gray-300 rounded-lg text-base bg-white text-gray-700"
+                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
               >
                 <option value="">Select state...</option>
                 <optgroup label="No State Income Tax">
@@ -604,7 +604,7 @@ export default function Home() {
                 <h3 className="text-[#2c3e50] mb-[15px] text-center text-[1.1rem] font-semibold tracking-[0.5px]">
                   YEAR-TO-DATE EARNINGS
                 </h3>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Total Hours:</span>
                   <span>{paystubData.totals.hours}</span>
                 </div>
@@ -616,7 +616,7 @@ export default function Home() {
                   <span>Gross Earnings (Subtotal):</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
-                <div className="flex-between py-[15px] px-0 border-t border-gray-200 font-bold text-[1.1rem]">
+                <div className="flex-between py-[15px] px-0 border-t border-border font-bold text-[1.1rem]">
                   <span>TOTAL GROSS INCOME:</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
@@ -626,27 +626,27 @@ export default function Home() {
                 <h3 className="text-[#2c3e50] mb-[15px] text-center text-[1.1rem] font-semibold tracking-[0.5px]">
                   YEAR-TO-DATE DEDUCTIONS
                 </h3>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Social Security Tax (6.2%):</span>
                   <span>{formatCurrency(paystubData.totals.socialSecurity)}</span>
                 </div>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Medicare Tax (1.45%):</span>
                   <span>{formatCurrency(paystubData.totals.medicare)}</span>
                 </div>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Additional Medicare Tax (0.9%):</span>
                   <span>{formatCurrency(0)}</span>
                 </div>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Other Deductions:</span>
                   <span>{formatCurrency(paystubData.totals.otherDeductions)}</span>
                 </div>
-                <div className="flex-between py-2.5 px-0 border-b border-gray-200">
+                <div className="flex-between py-2.5 px-0 border-b border-border">
                   <span>Total Deductions:</span>
                   <span>{formatCurrency(paystubData.totals.federalTax + paystubData.totals.socialSecurity + paystubData.totals.medicare)}</span>
                 </div>
-                <div className="flex-between py-[15px] px-0 border-t border-gray-200 font-bold text-[1.1rem]">
+                <div className="flex-between py-[15px] px-0 border-t border-border font-bold text-[1.1rem]">
                   <span>NET PAY:</span>
                   <span>{formatCurrency(paystubData.totals.netPay)}</span>
                 </div>
@@ -693,32 +693,32 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {paystubData.payPeriods.map((period, index) => (
-                      <tr key={period.period} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                      <tr key={period.period} className={index % 2 === 0 ? 'bg-muted' : 'bg-white'}>
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {period.period}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatDate(period.payDate)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {period.hours}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.grossPay)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.federalTax)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.socialSecurity)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.medicare)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.otherDeductions)}
                         </td>
-                        <td className="py-3 px-2.5 text-center border-b border-gray-300">
+                        <td className="py-3 px-2.5 text-center border-b border-border">
                           {formatCurrency(period.netPay)}
                         </td>
                       </tr>
@@ -729,7 +729,7 @@ export default function Home() {
             </div>
 
             {/* W-2 Tax Document Information */}
-            <div className="my-[30px] mx-0 bg-gradient-to-br from-yellow-100 to-yellow-200 p-[25px] rounded-xl border-2 border-yellow-500">
+            <div className="my-[30px] mx-0 bg-cyan-600/10 p-[25px] rounded-xl border-2 border-yellow-500">
               <h3 className="text-[#2c3e50] text-center mb-5 text-[1.2rem] font-semibold tracking-[0.5px]">
                 W-2 TAX DOCUMENT INFORMATION
               </h3>
@@ -762,7 +762,7 @@ export default function Home() {
             </div>
 
             {/* Individual Paystub Generator */}
-            <div className="bg-gradient-to-br from-green-50 to-green-200 p-[25px] rounded-xl border-2 border-green-500">
+            <div className="bg-cyan-600/10 p-[25px] rounded-xl border-2 border-green-500">
               <h3 className="text-[#2c3e50] text-center mb-[15px] text-[1.2rem] font-semibold tracking-[0.5px]">
                 INDIVIDUAL PAYSTUB GENERATOR
               </h3>
@@ -789,13 +789,13 @@ export default function Home() {
               <div className="flex justify-center gap-2.5 mt-5">
                 <button
                   onClick={generateIndividualPaystub}
-                  className="bg-gradient-to-br from-green-500 to-green-700 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Individual Paystub
                 </button>
                 <button
                   onClick={generateAnnualSummary}
-                  className="bg-gradient-to-br from-purple-600 to-purple-800 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Annual Summary
                 </button>

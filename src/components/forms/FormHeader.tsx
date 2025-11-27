@@ -7,7 +7,7 @@ export function FormHeader() {
       <h2 className="text-3xl font-bold text-white mb-3">
         Let&apos;s Build Something Amazing
       </h2>
-      <p className="text-gray-300 text-lg leading-relaxed container-narrow">
+      <p className="text-muted text-lg leading-relaxed container-narrow">
         Ready to transform your ideas into reality? Share your vision with us.
       </p>
     </div>

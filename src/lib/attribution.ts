@@ -3,6 +3,7 @@
  * Captures UTM parameters, referrer, and device information for lead source attribution
  */
 
+import { logger } from '@/lib/logger';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 /**
@@ -236,7 +237,7 @@ export function storeAttribution(attribution: LeadAttributionData): void {
     }
   } catch (error) {
     // localStorage might be disabled or full
-    console.warn('Failed to store attribution data:', error);
+    logger.error('Failed to store attribution data:', error as Error);
   }
 }
 
@@ -265,7 +266,7 @@ export function getStoredAttribution(): LeadAttributionData | null {
 
     return attribution;
   } catch (error) {
-    console.warn('Failed to retrieve attribution data:', error);
+    logger.error('Failed to retrieve attribution data:', error as Error);
     return null;
   }
 }
@@ -290,7 +291,7 @@ export function clearAttribution(): void {
     localStorage.removeItem(ATTRIBUTION_STORAGE_KEY);
     sessionStorage.removeItem('session_id');
   } catch (error) {
-    console.warn('Failed to clear attribution data:', error);
+    logger.error('Failed to clear attribution data:', error as Error);
   }
 }
 

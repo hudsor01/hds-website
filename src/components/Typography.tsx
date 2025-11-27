@@ -21,9 +21,9 @@ export const Typography = ({
       case 'hero':
         return 'text-clamp-2xl font-black text-white leading-none tracking-tight text-balance';
       case 'subtitle':
-        return 'text-responsive-md text-gray-300 leading-relaxed text-pretty';
+        return 'text-responsive-md text-muted leading-relaxed text-pretty';
       case 'body':
-        return 'text-gray-300 leading-relaxed';
+        return 'text-muted leading-relaxed';
       default:
         return '';
     }
@@ -44,10 +44,10 @@ export const Typography = ({
  */
 export const TYPOGRAPHY_CLASSES = {
   hero: "text-clamp-2xl font-black text-white leading-none tracking-tight text-balance",
-  subtitle: "text-responsive-md text-gray-300 leading-relaxed text-pretty",
-  body: "text-gray-300 leading-relaxed",
-  description: "text-xl text-gray-400 container-narrow",
-  stat: "text-responsive-sm font-semibold text-gray-300",
+  subtitle: "text-responsive-md text-muted leading-relaxed text-pretty",
+  body: "text-muted leading-relaxed",
+  description: "text-xl text-muted-foreground container-narrow",
+  stat: "text-responsive-sm font-semibold text-muted",
 } as const;
 
 export default Typography;

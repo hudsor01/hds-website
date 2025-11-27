@@ -25,7 +25,7 @@ export function AuthorCard({ author }: AuthorCardProps) {
             </Link>
           </h3>
           {author.bio && (
-            <p className="text-gray-300 text-sm mb-3">{author.bio}</p>
+            <p className="text-muted text-sm mb-3">{author.bio}</p>
           )}
           <div className="flex flex-wrap gap-3 text-sm">
             {author.website && (

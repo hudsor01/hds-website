@@ -72,7 +72,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
   const posts = postsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
@@ -85,7 +85,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       </div>
 
       {/* Author Header */}
-      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+      <section className="relative bg-background py-16 overflow-hidden">
         {author.cover_image && (
           <div className="absolute inset-0 opacity-20">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -123,7 +123,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           </h1>
 
           {author.bio && (
-            <p className="text-xl text-gray-300 container-narrow text-pretty mb-6">
+            <p className="text-xl text-muted container-narrow text-pretty mb-6">
               {author.bio}
             </p>
           )}
@@ -162,18 +162,18 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             )}
           </div>
 
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             {posts.length} {posts.length === 1 ? "article" : "articles"}
           </p>
         </div>
       </section>
 
       {/* Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="py-16 bg-cyan-600">
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">
-              <p className="text-gray-300 text-lg">No articles found for this author.</p>
+              <p className="text-muted text-lg">No articles found for this author.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

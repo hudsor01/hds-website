@@ -1,4 +1,5 @@
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter'
+import { logger } from '@/lib/logger';
 import { type NextRequest, NextResponse } from 'next/server'
 
 // Define expected CSP report fields for validation
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
     };
 
     // Log the sanitized CSP violation report
-    console.error('CSP Violation:', sanitizedReport);
+    logger.error('CSP Violation:', sanitizedReport);
 
     return new NextResponse(null, { status: 204 });
   } catch {

@@ -7,6 +7,9 @@
 
 import { useState } from 'react';
 import { Mail, Check, AlertCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface NewsletterSignupProps {
   variant?: 'inline' | 'sidebar' | 'modal';
@@ -66,9 +69,9 @@ export function NewsletterSignup({
   };
 
   const variantStyles = {
-    inline: 'rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800',
-    sidebar: 'rounded-lg bg-gradient-to-br from-cyan-50 to-blue-50 p-6 dark:from-gray-800 dark:to-gray-900',
-    modal: 'rounded-lg bg-white p-8 shadow-xl dark:bg-gray-800',
+    inline: 'rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted',
+    sidebar: 'rounded-lg bg-cyan-600/10 p-6 dark:from-gray-800 dark:to-gray-900',
+    modal: 'rounded-lg bg-white p-8 shadow-xl dark:bg-muted',
   };
 
   return (
@@ -81,27 +84,26 @@ export function NewsletterSignup({
         </div>
 
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-foreground dark:text-white">
             {title}
           </h3>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-muted-foreground">
             {description}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-4 space-y-3">
             <div className="flex gap-2">
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 disabled={status === 'loading' || status === 'success'}
-                className="flex-1 rounded-md border-gray-300 px-4 py-2 text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                className="flex-1"
               />
-              <button
+              <Button
                 type="submit"
                 disabled={status === 'loading' || status === 'success'}
-                className="inline-flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700 disabled:opacity-50"
               >
                 {status === 'loading' ? (
                   'Subscribing...'
@@ -113,24 +115,20 @@ export function NewsletterSignup({
                 ) : (
                   'Subscribe'
                 )}
-              </button>
+              </Button>
             </div>
 
             {message && (
-              <div
-                className={`flex items-center gap-2 text-sm ${
-                  status === 'success'
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
-                }`}
-              >
-                {status === 'error' && <AlertCircle className="h-4 w-4" />}
-                {status === 'success' && <Check className="h-4 w-4" />}
-                {message}
-              </div>
+              <Alert variant={status === 'error' ? 'destructive' : 'default'} className={status === 'success' ? 'border-green-500/50 bg-green-500/10' : ''}>
+                <AlertDescription className={`flex items-center gap-2 ${status === 'success' ? 'text-green-600 dark:text-green-400' : ''}`}>
+                  {status === 'error' && <AlertCircle className="h-4 w-4" />}
+                  {status === 'success' && <Check className="h-4 w-4" />}
+                  {message}
+                </AlertDescription>
+              </Alert>
             )}
 
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted-foreground">
               No spam. Unsubscribe anytime. We respect your privacy.
             </p>
           </form>

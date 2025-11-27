@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { WebVitalsInsert } from '@/types/supabase-helpers';
 import { z } from 'zod';
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
       .insert(webVitalData);
 
     if (error) {
-      console.error('Failed to store web vital:', error);
+      logger.error('Failed to store web vital:', error as Error);
       // Don't return error to client - fail silently
     }
 
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Web vitals error:', error);
+    logger.error('Web vitals error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

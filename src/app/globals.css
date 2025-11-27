@@ -634,6 +634,68 @@ body::after {
   }
 }
 
+/* ============================================
+   SEMANTIC SPACING UTILITIES
+   ============================================ */
+
+/* Gap Utilities - For flexbox and grid gaps */
+@utility gap-tight {
+  gap: 0.5rem;
+}
+
+@utility gap-content {
+  gap: 1rem;
+}
+
+@utility gap-comfortable {
+  gap: 1.5rem;
+}
+
+@utility gap-sections {
+  gap: 3rem;
+}
+
+/* Section Spacing - Vertical rhythm for page sections */
+@utility section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+/* Card Padding - Internal card spacing */
+@utility card-padding {
+  padding: 2rem;
+}
+
+@utility card-padding-sm {
+  padding: 1.5rem;
+}
+
+/* Content Block Margins */
+@utility mb-content-block {
+  margin-bottom: 3rem;
+}
+
+@utility mt-content-block {
+  margin-top: 3rem;
+}
+
+@utility mb-comfortable {
+  margin-bottom: 2rem;
+}
+
+/* Vertical Space Utilities */
+@utility space-y-tight {
+  & > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+@utility space-y-content {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
+
 @layer base {
 /* Base styles */
 * {
@@ -692,16 +754,7 @@ body {
     aspect-ratio: 32/9;
   }
 
-  /* Gradient animations */
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient-shift 3s ease infinite;
-  }
+  /* Professional animations - No gradients */
 
   /* Blob animations for floating effects */
   @keyframes blob {
@@ -1075,6 +1128,84 @@ body {
   border-radius: var(--radius-2xl);
 }
 
+/* ============================================
+   RESPONSIVE SPACING UTILITIES
+   ============================================ */
+
+/* Page Padding - Responsive horizontal gutters */
+.page-padding-x {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-padding-x {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-padding-x {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Page Padding - Full responsive padding */
+.page-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Grid 3 - Responsive 3-column grid */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Grid 4 - Responsive 4-column grid */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 /* Semantic layout & flex pattern component classes */
 .flex-center {
   display: flex;
@@ -1232,6 +1363,96 @@ body {
   cursor: pointer;
 }
 
+/* CTA Button variants - Critical utility classes */
+.cta-primary {
+  background: linear-gradient(90deg, var(--color-gradient-primary-start), var(--color-gradient-primary-end));
+  color: var(--color-text-inverted);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 6);
+  transition: all var(--duration-300);
+  box-shadow: 0 0 0 0 oklch(from var(--color-cyan-600) l c h / 0);
+  will-change: transform, box-shadow;
+}
+
+.cta-primary:hover {
+  box-shadow: 0 10px 15px -3px oklch(from var(--color-cyan-600) l c h / 0.25);
+  transform: translateY(-1px);
+}
+
+.cta-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 10px -3px oklch(from var(--color-cyan-600) l c h / 0.25);
+}
+
+.cta-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 6);
+  border: 2px solid var(--color-border-primary);
+  transition: all var(--duration-300);
+  will-change: transform, border-color, background-color;
+}
+
+.cta-secondary:hover {
+  border-color: var(--color-cyan-400);
+  background: oklch(from var(--color-cyan-400) l c h / 0.05);
+  color: var(--color-cyan-400);
+}
+
+.cta-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Hover effect utilities */
+.button-hover-glow {
+  position: relative;
+  transition: all var(--duration-300);
+  will-change: box-shadow;
+}
+
+.button-hover-glow:hover {
+  box-shadow: 0 10px 15px -3px oklch(from var(--color-cyan-600) l c h / 0.25),
+              0 4px 6px -2px oklch(from var(--color-cyan-600) l c h / 0.05);
+}
+
+.card-hover-glow {
+  transition: all var(--duration-500);
+  will-change: transform, box-shadow;
+}
+
+.card-hover-glow:hover {
+  box-shadow: 0 20px 25px -5px oklch(from var(--color-cyan-600) l c h / 0.1),
+              0 10px 10px -5px oklch(from var(--color-cyan-600) l c h / 0.04);
+  transform: translateY(-2px);
+}
+
+.hover-lift {
+  transition: transform var(--duration-300);
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hover-lift:active {
+  transform: translateY(0);
+}
+
+/* Gradient text utility */
+.text-cyan-400 {
+  background: linear-gradient(90deg, var(--color-gradient-primary-start), var(--color-gradient-primary-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 .text-responsive-xs {
   font-size: var(--text-sm);
 }
@@ -1252,12 +1473,22 @@ body {
   font-size: var(--text-2xl);
 }
 
+.text-responsive-2xl {
+  font-size: var(--text-3xl);
+}
+
+.text-responsive-3xl {
+  font-size: var(--text-4xl);
+}
+
 @media (min-width: 768px) {
   .text-responsive-xs { font-size: var(--text-base); }
   .text-responsive-sm { font-size: var(--text-lg); }
   .text-responsive-md { font-size: var(--text-xl); }
   .text-responsive-lg { font-size: var(--text-2xl); }
   .text-responsive-xl { font-size: var(--text-3xl); }
+  .text-responsive-2xl { font-size: var(--text-4xl); }
+  .text-responsive-3xl { font-size: var(--text-5xl); }
 }
 
 @media (min-width: 1024px) {
@@ -1266,174 +1497,11 @@ body {
   .text-responsive-md { font-size: var(--text-2xl); }
   .text-responsive-lg { font-size: var(--text-3xl); }
   .text-responsive-xl { font-size: var(--text-4xl); }
+  .text-responsive-2xl { font-size: var(--text-5xl); }
+  .text-responsive-3xl { font-size: 4rem; }
 }
 
-/* Semantic gradient classes using theme colors */
-.bg-gradient-to-r {
-  background: linear-gradient(to right, var(--tw-gradient-stops));
-}
-
-.bg-gradient-hero {
-  background: linear-gradient(135deg,
-    var(--color-bg-primary-dark),
-    var(--color-bg-secondary-dark),
-    var(--color-bg-tertiary-dark)
-  );
-}
-
-.bg-gradient-primary {
-  background: linear-gradient(90deg,
-    var(--color-gradient-primary-start),
-    var(--color-gradient-primary-end)
-  );
-}
-
-.bg-gradient-secondary {
-  background: linear-gradient(90deg,
-    var(--color-gradient-secondary-start),
-    var(--color-gradient-secondary-end)
-  );
-}
-
-.bg-gradient-accent {
-  background: linear-gradient(90deg,
-    var(--color-gradient-accent-start),
-    var(--color-gradient-accent-end)
-  );
-}
-
-/* Gradient classes with opacity support using semantic tokens */
-.bg-gradient-hero-5 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.05),
-    oklch(from var(--color-blue-500) l c h / 0.05),
-    oklch(from var(--color-brand-purple) l c h / 0.05)
-  );
-}
-
-.bg-gradient-hero-10 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.1),
-    oklch(from var(--color-blue-500) l c h / 0.1),
-    oklch(from var(--color-brand-purple) l c h / 0.1)
-  );
-}
-
-.bg-gradient-hero-20 {
-  background: linear-gradient(135deg,
-    oklch(from var(--color-cyan-600) l c h / 0.2),
-    oklch(from var(--color-blue-500) l c h / 0.2),
-    oklch(from var(--color-brand-purple) l c h / 0.2)
-  );
-}
-
-.bg-gradient-primary-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-primary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-primary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-primary-30 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-primary-start) l c h / 0.3),
-    oklch(from var(--color-gradient-primary-end) l c h / 0.3)
-  );
-}
-
-.bg-gradient-secondary-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-secondary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-secondary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-secondary-br-20 {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-gradient-secondary-start) l c h / 0.2),
-    oklch(from var(--color-gradient-secondary-end) l c h / 0.2)
-  );
-}
-
-.bg-gradient-secondary-hover {
-  background: linear-gradient(90deg,
-    var(--color-gradient-secondary-start),
-    var(--color-gradient-secondary-end)
-  );
-  transition: all var(--duration-150) var(--ease-out);
-}
-
-.bg-gradient-secondary-hover:hover {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-secondary-start) 0.85 c h),
-    oklch(from var(--color-gradient-secondary-end) 0.85 c h)
-  );
-}
-
-.bg-gradient-accent-20 {
-  background: linear-gradient(90deg,
-    oklch(from var(--color-gradient-accent-start) l c h / 0.2),
-    oklch(from var(--color-gradient-accent-end) l c h / 0.2)
-  );
-}
-
-/* Decorative semantic gradient classes */
-.bg-gradient-decorative-brand {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-brand-purple) l c h / 0.2),
-    oklch(from var(--color-brand-accent) l c h / 0.2)
-  );
-}
-
-.bg-gradient-decorative-brand-20 {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-brand-purple) l c h / 0.04),
-    oklch(from var(--color-brand-accent) l c h / 0.04)
-  );
-}
-
-.bg-gradient-decorative-warm {
-  background: linear-gradient(to bottom right,
-    oklch(from var(--color-warning) l c h / 0.2),
-    oklch(from var(--color-danger) l c h / 0.2)
-  );
-}
-
-/* Shine Effect for Interactive Elements */
-.shine-effect {
-  background: linear-gradient(to right,
-    transparent,
-    oklch(0.984 0.003 247.858 / 0.2),
-    transparent
-  );
-}
-
-/* Semantic grid pattern overlays */
-.grid-pattern {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.1) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.1) 50%, transparent 51%);
-  background-size: var(--spacing-15);
-}
-
-.grid-pattern-light {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(0.984 0.003 247.858 / 0.05) 50%, transparent 51%),
-    linear-gradient(0deg, transparent 49%, oklch(0.984 0.003 247.858 / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-5);
-}
-
-.grid-pattern-subtle {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-20);
-}
-
-.grid-pattern-minimal {
-  background-image:
-    linear-gradient(90deg, transparent 49%, oklch(from var(--color-cyan-600) l c h / 0.05) 50%, transparent 51%);
-  background-size: var(--spacing-30);
-}
+/* Professional solid color utilities - No gradients */
 
 /* Semantic blur overlay effects */
 .bg-blur-overlay {
@@ -1441,35 +1509,11 @@ body {
   background-color: oklch(0 0 0 / 0.1);
 }
 
-/* Semantic gradient border effect */
-.gradient-border {
+/* Professional border effect */
+.accent-border {
   position: relative;
-  background: linear-gradient(var(--color-bg-primary), var(--color-bg-primary)) padding-box,
-              linear-gradient(90deg, var(--color-cyan-400), var(--color-blue-500)) border-box;
-  border: 2px solid transparent;
+  border: 2px solid var(--color-cyan-400);
   border-radius: var(--radius-lg);
-}
-
-/* Common semantic overlay gradients */
-.overlay-gradient-dark {
-  background: linear-gradient(to top, oklch(0 0 0 / 0.5) 0%, transparent 100%);
-}
-
-.overlay-gradient-light {
-  background: linear-gradient(to top, oklch(0 0 0 / 0.2) 0%, transparent 50%, transparent 100%);
-}
-
-/* Semantic small accent gradients */
-.accent-gradient-success {
-  background: linear-gradient(to bottom right, var(--color-success), oklch(from var(--color-success) 0.75 c h));
-}
-
-.accent-gradient-warning {
-  background: linear-gradient(to bottom right, var(--color-warning), oklch(from var(--color-warning) 0.75 c h));
-}
-
-.accent-gradient-danger {
-  background: linear-gradient(to bottom right, var(--color-danger), oklch(from var(--color-danger) 0.75 c h));
 }
 
 /* Semantic glass morphism effects */

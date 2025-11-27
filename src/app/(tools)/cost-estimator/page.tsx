@@ -10,6 +10,10 @@ import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
 import { trackEvent } from '@/lib/analytics';
+import { Button } from '@/components/ui/Button';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CalculatorInputs {
   websiteType: string;
@@ -177,22 +181,23 @@ export default function CostEstimatorPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Website Type */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Website Type *
-            </label>
-            <select
+            <Label>Website Type *</Label>
+            <Select
               value={inputs.websiteType}
-              onChange={(e) => setInputs(prev => ({ ...prev, websiteType: e.target.value }))}
+              onValueChange={(value) => setInputs(prev => ({ ...prev, websiteType: value }))}
               required
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             >
-              <option value="">Select a type...</option>
-              {websiteTypes.map(type => (
-                <option key={type.value} value={type.value}>
-                  {type.label} (from ${type.basePrice.toLocaleString()})
-                </option>
-              ))}
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a type..." />
+              </SelectTrigger>
+              <SelectContent>
+                {websiteTypes.map(type => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label} (from ${type.basePrice.toLocaleString()})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Number of Pages */}
@@ -211,28 +216,24 @@ export default function CostEstimatorPage() {
 
           {/* Features */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Additional Features
-            </label>
+            <Label>Additional Features</Label>
             <div className="grid gap-3 sm:grid-cols-2">
               {availableFeatures.map(feature => (
                 <label
                   key={feature.value}
-                  className="relative flex cursor-pointer items-start rounded-lg border border-gray-300 p-4 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
+                  className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
                 >
                   <div className="flex h-5 items-center">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={inputs.features.includes(feature.value)}
-                      onChange={() => handleFeatureToggle(feature.value)}
-                      className="h-4 w-4 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                      onCheckedChange={() => handleFeatureToggle(feature.value)}
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <div className="font-medium text-gray-900 dark:text-white">
+                    <div className="font-medium text-foreground">
                       {feature.label}
                     </div>
-                    <div className="text-gray-500 dark:text-gray-400">
+                    <div className="text-muted-foreground">
                       +${feature.price.toLocaleString()}
                     </div>
                   </div>
@@ -243,65 +244,65 @@ export default function CostEstimatorPage() {
 
           {/* Design Complexity */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Design Complexity
-            </label>
-            <select
+            <Label>Design Complexity</Label>
+            <Select
               value={inputs.designComplexity}
-              onChange={(e) => setInputs(prev => ({ ...prev, designComplexity: e.target.value }))}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              onValueChange={(value) => setInputs(prev => ({ ...prev, designComplexity: value }))}
             >
-              <option value="basic">Basic Template (-20%)</option>
-              <option value="standard">Standard Custom Design</option>
-              <option value="custom">Fully Custom Design (+30%)</option>
-              <option value="premium">Premium/Luxury Design (+60%)</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="basic">Basic Template (-20%)</SelectItem>
+                <SelectItem value="standard">Standard Custom Design</SelectItem>
+                <SelectItem value="custom">Fully Custom Design (+30%)</SelectItem>
+                <SelectItem value="premium">Premium/Luxury Design (+60%)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Timeline */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Project Timeline
-            </label>
-            <select
+            <Label>Project Timeline</Label>
+            <Select
               value={inputs.timeline}
-              onChange={(e) => setInputs(prev => ({ ...prev, timeline: e.target.value }))}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              onValueChange={(value) => setInputs(prev => ({ ...prev, timeline: value }))}
             >
-              <option value="flexible">Flexible (Best Price)</option>
-              <option value="normal">Normal (4-12 weeks)</option>
-              <option value="urgent">Urgent (+25% Rush Fee)</option>
-            </select>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="flexible">Flexible (Best Price)</SelectItem>
+                <SelectItem value="normal">Normal (4-12 weeks)</SelectItem>
+                <SelectItem value="urgent">Urgent (+25% Rush Fee)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Maintenance */}
-          <div className="flex items-start">
-            <div className="flex h-5 items-center">
-              <input
-                id="maintenance"
-                type="checkbox"
-                checked={inputs.maintenanceNeeded}
-                onChange={(e) => setInputs(prev => ({ ...prev, maintenanceNeeded: e.target.checked }))}
-                className="h-4 w-4 rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="maintenance" className="font-medium text-gray-700 dark:text-gray-300">
+          <div className="flex items-start gap-3">
+            <Checkbox
+              id="maintenance"
+              checked={inputs.maintenanceNeeded}
+              onCheckedChange={(checked) => setInputs(prev => ({ ...prev, maintenanceNeeded: checked === true }))}
+            />
+            <div className="text-sm">
+              <Label htmlFor="maintenance" className="font-medium">
                 Include Maintenance Package
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
+              </Label>
+              <p className="text-muted-foreground">
                 Ongoing updates, security patches, and technical support
               </p>
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
             disabled={!inputs.websiteType}
-            className="w-full rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full"
           >
             Calculate Estimate
-          </button>
+          </Button>
         </form>
       ) : (
         <div>
@@ -311,12 +312,13 @@ export default function CostEstimatorPage() {
             inputs={inputs}
           />
 
-          <button
+          <Button
+            variant="outline"
             onClick={() => setShowResults(false)}
-            className="mt-6 w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            className="mt-6 w-full"
           >
-            ← Modify Estimate
-          </button>
+            Modify Estimate
+          </Button>
         </div>
       )}
 

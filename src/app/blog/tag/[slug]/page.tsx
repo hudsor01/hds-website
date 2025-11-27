@@ -72,7 +72,7 @@ export default async function TagPage({ params }: TagPageProps) {
   const posts = postsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
@@ -85,7 +85,7 @@ export default async function TagPage({ params }: TagPageProps) {
       </div>
 
       {/* Tag Header */}
-      <section className="relative bg-gradient-hero py-16 overflow-hidden">
+      <section className="relative bg-background py-16 overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
@@ -100,22 +100,22 @@ export default async function TagPage({ params }: TagPageProps) {
             {tag.name}
           </h1>
           {tag.description && (
-            <p className="text-xl text-gray-300 container-narrow text-pretty">
+            <p className="text-xl text-muted container-narrow text-pretty">
               {tag.description}
             </p>
           )}
-          <p className="text-gray-400 mt-4">
+          <p className="text-muted-foreground mt-4">
             {posts.length} {posts.length === 1 ? "article" : "articles"}
           </p>
         </div>
       </section>
 
       {/* Posts */}
-      <section className="py-16 bg-gradient-primary">
+      <section className="py-16 bg-cyan-600">
         <div className="container-wide">
           {posts.length === 0 ? (
             <div className="glass-card rounded-xl p-8 text-center">
-              <p className="text-gray-300 text-lg">No articles found for this tag.</p>
+              <p className="text-muted text-lg">No articles found for this tag.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

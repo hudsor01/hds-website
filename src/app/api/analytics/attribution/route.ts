@@ -189,7 +189,7 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      logger.error('Failed to retrieve attribution', error);
+      logger.error('Failed to retrieve attribution', error as Error);
       return NextResponse.json(
         { error: 'Failed to retrieve attribution data' },
         { status: 500 }

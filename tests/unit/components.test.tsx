@@ -5,7 +5,8 @@ import FloatingInput from '@/components/FloatingInput'
 import FloatingTextarea from '@/components/FloatingTextarea'
 import { Button } from '@/components/ui/Button'
 import { GlassCard } from '@/components/glass-card'
-import { CTAButton } from '@/components/cta-button'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 /**
  * Unit tests for core UI components
@@ -216,11 +217,11 @@ describe('Button Component', () => {
     expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center')
   })
 
-  it('should apply transition-smooth class', () => {
+  it('should apply transition-all class', () => {
     render(<Button>Click Me</Button>)
 
     const button = screen.getByRole('button', { name: 'Click Me' })
-    expect(button).toHaveClass('transition-smooth')
+    expect(button).toHaveClass('transition-all')
   })
 
   it('should render different variants', () => {
@@ -312,40 +313,70 @@ describe('GlassCard Component', () => {
   })
 })
 
-describe('CTAButton Component', () => {
-  it('should render with semantic classes', () => {
-    render(<CTAButton href="/test">Test CTA</CTAButton>)
+describe('Button Component (CTA Pattern)', () => {
+  it('should render as link with asChild', () => {
+    render(<Button asChild variant="default" size="default" trackConversion={true}>
+      <Link href="/test">
+        Test CTA
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>)
 
     const link = screen.getByRole('link', { name: /Test CTA/ })
-    expect(link).toHaveClass('button-base', 'cta-primary', 'will-change-transform', 'focus-ring')
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/test')
   })
 
   it('should render different variants', () => {
-    const { rerender } = render(<CTAButton href="/test" variant="primary">Primary</CTAButton>)
+    const { rerender } = render(<Button asChild variant="default" size="default" trackConversion={true}>
+      <Link href="/test">
+        Primary
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>)
     let link = screen.getByRole('link')
-    expect(link).toHaveClass('cta-primary')
+    expect(link).toHaveClass('bg-primary')
 
-    rerender(<CTAButton href="/test" variant="secondary">Secondary</CTAButton>)
+    rerender(<Button asChild variant="outline" size="default" trackConversion={true}>
+      <Link href="/test">
+        Secondary
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>)
     link = screen.getByRole('link')
-    expect(link).toHaveClass('cta-secondary', 'button-hover-glow')
+    expect(link).toHaveClass('border', 'bg-background')
   })
 
   it('should show arrow by default', () => {
-    const { container } = render(<CTAButton href="/test">With Arrow</CTAButton>)
+    const { container } = render(<Button asChild variant="default" size="default" trackConversion={true}>
+      <Link href="/test">
+        With Arrow
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>)
 
     const svg = container.querySelector('svg')
     expect(svg).toBeInTheDocument()
   })
 
-  it('should hide arrow when showArrow is false', () => {
-    const { container } = render(<CTAButton href="/test" showArrow={false}>No Arrow</CTAButton>)
+  it('should hide arrow when not included', () => {
+    const { container } = render(<Button asChild variant="default" size="default" trackConversion={true}>
+      <Link href="/test">
+        No Arrow
+      </Link>
+    </Button>)
 
     const svg = container.querySelector('svg')
     expect(svg).not.toBeInTheDocument()
   })
 
   it('should handle external links', () => {
-    render(<CTAButton href="https://external.com" external>External</CTAButton>)
+    render(<Button asChild variant="default" size="default" trackConversion={true}>
+      <a href="https://external.com" target="_blank" rel="noopener noreferrer">
+        External
+        <ArrowRight className="w-4 h-4" />
+      </a>
+    </Button>)
 
     const link = screen.getByRole('link')
     expect(link).toHaveAttribute('target', '_blank')

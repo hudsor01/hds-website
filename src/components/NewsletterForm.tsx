@@ -7,6 +7,9 @@ import type { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { logger } from '@/lib/logger';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { newsletterSchema } from '@/lib/schemas/contact';
 
 type FormData = z.infer<typeof newsletterSchema>;
@@ -49,21 +52,23 @@ async function submitNewsletter(data: FormData): Promise<{ success: boolean }> {
 // Success Message Component
 function SuccessMessage({ onReset }: { onReset: () => void }) {
   return (
-    <div className="p-6 bg-green-100 border border-green-300 rounded-lg">
-      <div className="flex items-center mb-4">
-        <CheckCircle2 className="w-8 h-8 text-green-600 mr-3" />
-        <h3 className="text-lg font-bold text-green-800">Thank You!</h3>
-      </div>
-      <p className="text-green-700 mb-4">
-        You&apos;ve been signed up for our newsletter. We&apos;ll send you updates on our latest content.
-      </p>
-      <button
-        onClick={onReset}
-        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm transition-colors"
-      >
-        Sign up another email
-      </button>
-    </div>
+    <Alert className="border-green-500/50 bg-green-500/10">
+      <CheckCircle2 className="h-5 w-5 text-green-600" />
+      <AlertTitle className="text-green-800 dark:text-green-200">Thank You!</AlertTitle>
+      <AlertDescription className="text-green-700 dark:text-green-300">
+        <p className="mb-4">
+          You&apos;ve been signed up for our newsletter. We&apos;ll send you updates on our latest content.
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onReset}
+          className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+        >
+          Sign up another email
+        </Button>
+      </AlertDescription>
+    </Alert>
   );
 }
 
@@ -139,26 +144,21 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                First Name
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input
                 id="firstName"
                 name="firstName"
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className={cn(
-                  'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
-                  field.state.meta.errors.length > 0
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300'
+                  field.state.meta.errors.length > 0 && 'border-red-500 focus-visible:ring-red-500'
                 )}
                 placeholder="Enter your first name"
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors[0]}</p>
+                <p className="text-sm text-red-600">{field.state.meta.errors[0]}</p>
               )}
             </div>
           )}
@@ -175,11 +175,9 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
           }}
         >
           {(field) => (
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
                 id="email"
                 name="email"
                 type="email"
@@ -187,15 +185,12 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className={cn(
-                  'w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500',
-                  field.state.meta.errors.length > 0
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300'
+                  field.state.meta.errors.length > 0 && 'border-red-500 focus-visible:ring-red-500'
                 )}
                 placeholder="Enter your email"
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="mt-1 text-sm text-red-600">{field.state.meta.errors[0]}</p>
+                <p className="text-sm text-red-600">{field.state.meta.errors[0]}</p>
               )}
             </div>
           )}
@@ -226,9 +221,11 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
 
         {/* Error Message */}
         {mutation.isError && (
-          <p className="text-sm text-red-600 text-center">
-            {mutation.error.message || 'An error occurred. Please try again.'}
-          </p>
+          <Alert variant="destructive">
+            <AlertDescription>
+              {mutation.error.message || 'An error occurred. Please try again.'}
+            </AlertDescription>
+          </Alert>
         )}
       </form>
     </div>

@@ -27,8 +27,8 @@ export function SimpleBarChart({
   const maxValue = Math.max(...data.map(d => d.value), 1);
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-      <h3 className="mb-6 text-lg font-semibold text-gray-900 dark:text-white">
+    <div className="rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted">
+      <h3 className="mb-6 text-lg font-semibold text-foreground dark:text-white">
         {title}
       </h3>
 
@@ -36,14 +36,14 @@ export function SimpleBarChart({
         {data.map((item, index) => (
           <div key={index}>
             <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700 dark:text-gray-300">
+              <span className="font-medium text-muted-foreground dark:text-muted">
                 {item.label}
               </span>
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-semibold text-foreground dark:text-white">
                 {valuePrefix}{item.value}{valueSuffix}
               </span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-muted">
               <div
                 className="h-full rounded-full bg-cyan-600 transition-all duration-500 dark:bg-cyan-400"
                 style={{
@@ -58,7 +58,7 @@ export function SimpleBarChart({
 
       {data.length === 0 && (
         <div className="py-8 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             No data available
           </p>
         </div>

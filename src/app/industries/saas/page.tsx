@@ -3,9 +3,10 @@
  * Tailored for B2B SaaS companies
  */
 
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, Zap, TrendingUp, Users, BarChart3, Clock, Shield } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { Zap, TrendingUp, Users, BarChart3, Clock, Shield } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function SaaSIndustryPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-cyan-600/10">
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
@@ -25,22 +26,28 @@ export default function SaaSIndustryPage() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Ship Features <span className="gradient-text">3x Faster</span>
+            Ship Features <span className="text-cyan-400">3x Faster</span>
             <br />
             Without Hiring
           </h1>
 
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
             Your customers want features. Your competitors are shipping. Stop being blocked by technical capacity.
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Free Technical Roadmap
-            </CTAButton>
-            <CTAButton href="/portfolio" variant="secondary" size="lg">
-              See SaaS Case Studies
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Free Technical Roadmap
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+            <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See SaaS Case Studies
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -85,7 +92,7 @@ export default function SaaSIndustryPage() {
       </section>
 
       {/* SaaS Metrics */}
-      <section className="py-16 px-4 bg-gray-800/50">
+      <section className="py-16 px-4 bg-muted/50">
         <div className="container-wide">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
             Built for SaaS Metrics That Matter
@@ -100,8 +107,8 @@ export default function SaaSIndustryPage() {
             ].map((stat, i) => (
               <div key={i} className="text-center glass-card p-6">
                 <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
-                <div className="text-4xl font-black gradient-text mb-2">{stat.metric}</div>
-                <div className="text-gray-300">{stat.label}</div>
+                <div className="text-4xl font-black text-cyan-400 mb-2">{stat.metric}</div>
+                <div className="text-muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -130,7 +137,7 @@ export default function SaaSIndustryPage() {
                 <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm">✓</span>
                 </div>
-                <span className="text-gray-300">{capability}</span>
+                <span className="text-muted">{capability}</span>
               </div>
             ))}
           </div>
@@ -155,12 +162,15 @@ export default function SaaSIndustryPage() {
             <h2 className="text-4xl font-black text-white mb-6">
               Ready to Ship Faster?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
               Get a free 30-minute technical roadmap showing exactly how to 10x your feature velocity.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Schedule Free Strategy Call
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Strategy Call
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

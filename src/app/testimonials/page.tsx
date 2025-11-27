@@ -86,7 +86,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function TestimonialsPage() {
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative pt-32 section-spacing page-padding-x">
         <div className="absolute inset-0 overflow-hidden">
@@ -105,7 +105,7 @@ export default function TestimonialsPage() {
             <div>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
                 <span className="inline-block">Real</span>
-                <span className="inline-block mx-4 gradient-text">Results</span>
+                <span className="inline-block mx-4 text-cyan-400">Results</span>
                 <span className="inline-block">Real Clients</span>
               </h1>
             </div>
@@ -148,7 +148,7 @@ export default function TestimonialsPage() {
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-clamp-xl font-black text-white mb-heading">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 What Our Clients Say
               </span>
             </h2>
@@ -188,7 +188,7 @@ export default function TestimonialsPage() {
                   <div className="font-semibold text-white">
                     {testimonial.name}
                   </div>
-                  <div className="text-caption text-gray-400">
+                  <div className="text-caption text-muted-foreground">
                     {testimonial.role} at {testimonial.company}
                   </div>
                   <div className="text-caption text-cyan-400 mt-2">
@@ -207,13 +207,13 @@ export default function TestimonialsPage() {
           <div className="glass-section card-padding text-center">
             <h2 className="text-clamp-xl font-black text-white mb-heading">
               Ready to be our next
-              <span className="block gradient-text mt-2">
+              <span className="block text-cyan-400 mt-2">
                 success story?
               </span>
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-gray-300 container-narrow mb-content-block">
+              <p className="text-subheading text-muted container-narrow mb-content-block">
                 Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
               </p>
             </div>
@@ -221,7 +221,7 @@ export default function TestimonialsPage() {
             <div className="flex flex-col sm:flex-row gap-content justify-center">
               <Link
                 href="/contact"
-                className="group inline-flex-center px-8 py-4 text-body font-semibold text-black bg-gradient-secondary-hover rounded-lg"
+                className="group inline-flex-center px-8 py-4 text-body font-semibold text-black bg-muted-hover rounded-lg"
               >
                 Start Your Transformation
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -229,7 +229,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-smooth"
+                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-border rounded-lg hover:border-cyan-400/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio
               </Link>
