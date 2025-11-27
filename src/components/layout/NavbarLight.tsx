@@ -17,7 +17,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 const navigation: NavigationItem[] = [
   { name: "Services", href: "/services" },
   { name: "Portfolio", href: "/portfolio" },
-  { name: "Tools", href: "/paystub-generator" },
+  { name: "Tools", href: "/tools" },
   { name: "About", href: "/about" },
   { name: "Pricing", href: "/pricing" },
 ];

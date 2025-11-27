@@ -1,5 +1,37 @@
-import type { NextConfig } from "next"
-import type { WebpackCompiler, WebpackCompilation } from '@/types/supabase-helpers';
+import type { NextConfig } from 'next'
+import bundleAnalyzer from '@next/bundle-analyzer'
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+// Webpack types for performance monitoring plugin
+interface WebpackAsset {
+  name: string
+  size: number
+}
+
+interface WebpackStats {
+  assets?: WebpackAsset[]
+}
+
+interface WebpackCompilation {
+  getStats: () => {
+    toJson: (options: { assets: boolean; chunks: boolean; modules: boolean }) => WebpackStats
+  }
+}
+
+interface WebpackCompiler {
+  hooks: {
+    afterEmit: {
+      tap: (name: string, callback: (compilation: WebpackCompilation) => void) => void
+    }
+  }
+}
+
+// Build-time logging utilities (uses stdout/stderr for build output)
+const buildLog = (message: string) => process.stdout.write(`${message}\n`)
+const buildWarn = (message: string) => process.stderr.write(`${message}\n`)
 
 // Performance budgets for Core Web Vitals
 const PERFORMANCE_BUDGETS = {
@@ -19,14 +51,11 @@ const PERFORMANCE_BUDGETS = {
   maxInitialJSSize: 200 * 1024, // 200KB gzipped
   maxPageJSSize: 300 * 1024, // 300KB gzipped per page
   maxCSSSize: 50 * 1024, // 50KB gzipped
-};
+}
 
 const nextConfig: NextConfig = {
   // Next.js 16 features - React Compiler for automatic optimization
   reactCompiler: true,
-
-  // Cache Components for granular caching control
-  cacheComponents: true,
 
   // Cache life profiles for different content types
   cacheLife: {
@@ -50,88 +79,93 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   trailingSlash: false,
-  generateBuildId: async () => {
-    // Optional: Add build ID generation if needed for caching
-    return null;
-  },
 
   typescript: {
     ignoreBuildErrors: false,
   },
 
   images: {
-    formats: ["image/webp"],
+    formats: ['image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: false,
-    contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';", // Removed 'unsafe-eval' and 'unsafe-inline' from script-src for better security
+    contentSecurityPolicy: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
 
   experimental: {
-    optimizePackageImports: ["@heroicons/react", "@vercel/analytics"],
+    optimizePackageImports: ['@heroicons/react', '@vercel/analytics'],
   },
 
-  // Turbopack configuration (empty for now, can be populated if needed)
+  // Transpile ESM packages that need to be compiled
+  transpilePackages: ['@react-pdf/renderer'],
+
+  // Turbopack configuration
   turbopack: {},
 
   productionBrowserSourceMaps: false,
 
   modularizeImports: {
-    "@heroicons/react/24/outline": {
-      transform: "@heroicons/react/24/outline/{{member}}",
+    '@heroicons/react/24/outline': {
+      transform: '@heroicons/react/24/outline/{{member}}',
     },
   },
 
   async headers() {
     return [
       {
-        source: "/_next/static/:path*",
+        source: '/_next/static/:path*',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
-      // Add security headers
+      // Security headers
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: [
           {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
           {
-            key: "X-Frame-Options",
-            value: "DENY",
+            key: 'X-Frame-Options',
+            value: 'DENY',
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
           },
           {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
           {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
           },
           {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },
-      // Content Security Policy header for enhanced security
+      // Content Security Policy header
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: [
           {
-            key: "Content-Security-Policy",
+            key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com", // Added vercel analytics
+              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
@@ -142,29 +176,13 @@ const nextConfig: NextConfig = {
             ].join('; '),
           },
         ],
-        // Only apply to HTML documents to avoid conflicts with API routes
-        has: [{ type: "header", key: "content-type", value: "text/html" }],
+        has: [{ type: 'header', key: 'content-type', value: 'text/html' }],
       },
-    ];
+    ]
   },
 
-  // Webpack configuration for bundle analysis and optimization
+  // Webpack configuration for optimization
   webpack: (config, { dev, isServer }) => {
-    // Bundle analyzer in development
-    if (process.env.ANALYZE === 'true') {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-      config.plugins.push(
-        new BundleAnalyzerPlugin({
-          analyzerMode: 'static',
-          reportFilename: isServer
-            ? '../analyze/server.html'
-            : './analyze/client.html',
-          openAnalyzer: true,
-        })
-      );
-    }
-
     // Performance monitoring in production builds
     if (!dev && !isServer) {
       config.optimization = {
@@ -174,7 +192,6 @@ const nextConfig: NextConfig = {
           cacheGroups: {
             default: false,
             vendors: false,
-            // Vendor chunk
             framework: {
               name: 'framework',
               chunks: 'all',
@@ -182,7 +199,6 @@ const nextConfig: NextConfig = {
               priority: 40,
               enforce: true,
             },
-            // Common libraries
             lib: {
               test: /[\\/]node_modules[\\/]/,
               name: 'lib',
@@ -190,7 +206,6 @@ const nextConfig: NextConfig = {
               minChunks: 1,
               reuseExistingChunk: true,
             },
-            // Shared components
             commons: {
               name: 'commons',
               minChunks: 2,
@@ -198,92 +213,84 @@ const nextConfig: NextConfig = {
             },
           },
         },
-      };
+      }
 
-      // Enhanced performance monitoring and optimization
+      // Performance monitoring plugin
       config.plugins.push({
         apply: (compiler: WebpackCompiler) => {
-          compiler.hooks.afterEmit.tap('PerformanceBudgetPlugin', (compilation: WebpackCompilation) => {
+          compiler.hooks.afterEmit.tap('PerformanceBudgetPlugin', (compilation) => {
             const stats = compilation.getStats().toJson({
               assets: true,
-              chunks: true, // Include chunk information
-              modules: true, // Include module information
-            });
+              chunks: true,
+              modules: true,
+            })
 
-            let totalJSSize = 0;
-            let totalCSSSize = 0;
-            let totalImageSize = 0;
-            const chunkSizes: Record<string, number> = {};
-            const assetsByType: Record<string, number> = {};
+            let totalJSSize = 0
+            let totalCSSSize = 0
+            let totalImageSize = 0
+            const chunkSizes: Record<string, number> = {}
+            const assetsByType: Record<string, number> = {}
 
-            stats.assets?.forEach((asset: { name: string; size: number }) => {
-              const size = asset.size;
+            stats.assets?.forEach((asset) => {
+              const size = asset.size
               if (asset.name.endsWith('.js')) {
-                totalJSSize += size;
-                // Track individual chunk sizes
-                const match = asset.name.match(/([a-zA-Z0-9_-]+)(\.[a-f0-9]+)?\.js/);
-                if (match && match[1]) {
-                  chunkSizes[match[1]] = (chunkSizes[match[1]] || 0) + size;
+                totalJSSize += size
+                const match = asset.name.match(/([a-zA-Z0-9_-]+)(\.[a-f0-9]+)?\.js/)
+                if (match?.[1]) {
+                  chunkSizes[match[1]] = (chunkSizes[match[1]] || 0) + size
                 }
               } else if (asset.name.endsWith('.css')) {
-                totalCSSSize += size;
+                totalCSSSize += size
               } else if (asset.name.match(/\.(png|jpe?g|gif|svg|webp)$/)) {
-                totalImageSize += size;
+                totalImageSize += size
               }
 
-              // Track all asset types
-              const ext = asset.name.split('.').pop();
+              const ext = asset.name.split('.').pop()
               if (ext) {
-                assetsByType[ext.toLowerCase()] = (assetsByType[ext.toLowerCase()] || 0) + size;
+                assetsByType[ext.toLowerCase()] = (assetsByType[ext.toLowerCase()] || 0) + size
               }
-            });
+            })
 
             // Check against budgets
             if (totalJSSize > PERFORMANCE_BUDGETS.maxInitialJSSize) {
-              console.warn(
-                `⚠️  JavaScript bundle size (${(totalJSSize / 1024).toFixed(2)}KB) exceeds budget (${(PERFORMANCE_BUDGETS.maxInitialJSSize / 1024).toFixed(2)}KB)`
-              );
+              buildWarn(
+                `Warning: JavaScript bundle size (${(totalJSSize / 1024).toFixed(2)}KB) exceeds budget (${(PERFORMANCE_BUDGETS.maxInitialJSSize / 1024).toFixed(2)}KB)`
+              )
             }
 
             if (totalCSSSize > PERFORMANCE_BUDGETS.maxCSSSize) {
-              console.warn(
-                `⚠️  CSS bundle size (${(totalCSSSize / 1024).toFixed(2)}KB) exceeds budget (${(PERFORMANCE_BUDGETS.maxCSSSize / 1024).toFixed(2)}KB)`
-              );
+              buildWarn(
+                `Warning: CSS bundle size (${(totalCSSSize / 1024).toFixed(2)}KB) exceeds budget (${(PERFORMANCE_BUDGETS.maxCSSSize / 1024).toFixed(2)}KB)`
+              )
             }
 
             // Log performance metrics
-            // eslint-disable-next-line no-console
-            console.log('\n📊 Performance Metrics:');
-            // eslint-disable-next-line no-console
-            console.log(`   JavaScript Bundle: ${(totalJSSize / 1024).toFixed(2)}KB`);
-            // eslint-disable-next-line no-console
-            console.log(`   CSS Bundle: ${(totalCSSSize / 1024).toFixed(2)}KB`);
-            // eslint-disable-next-line no-console
-            console.log(`   Images: ${(totalImageSize / 1024).toFixed(2)}KB`);
+            buildLog('\nPerformance Metrics:')
+            buildLog(`   JavaScript Bundle: ${(totalJSSize / 1024).toFixed(2)}KB`)
+            buildLog(`   CSS Bundle: ${(totalCSSSize / 1024).toFixed(2)}KB`)
+            buildLog(`   Images: ${(totalImageSize / 1024).toFixed(2)}KB`)
 
-            // Log chunk sizes that are larger than 50KB
+            // Log large chunks
             Object.entries(chunkSizes).forEach(([chunkName, size]) => {
-              if (size > 50 * 1024) { // 50KB
-                console.warn(`⚠️  Large chunk: ${chunkName} (${(size / 1024).toFixed(2)}KB)`);
+              if (size > 50 * 1024) {
+                buildWarn(`Warning: Large chunk: ${chunkName} (${(size / 1024).toFixed(2)}KB)`)
               }
-            });
+            })
 
             // Log assets by type
-            // eslint-disable-next-line no-console
-            console.log('   Assets by type:');
+            buildLog('   Assets by type:')
             Object.entries(assetsByType).forEach(([ext, size]) => {
-              // eslint-disable-next-line no-console
-              console.log(`     ${ext}: ${(size / 1024).toFixed(2)}KB`);
-            });
-          });
+              buildLog(`     ${ext}: ${(size / 1024).toFixed(2)}KB`)
+            })
+          })
         },
-      });
+      })
     }
 
-    return config;
+    return config
   },
-};
+}
 
 // Export performance budgets for use in CI/CD
-export { PERFORMANCE_BUDGETS };
-export default nextConfig;
+export { PERFORMANCE_BUDGETS }
+export default withBundleAnalyzer(nextConfig)

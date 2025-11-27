@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, User, Globe } from "lucide-react";
 import { getPostsByAuthor, getAuthorBySlug, getAuthors } from "@/lib/ghost";
@@ -88,11 +89,12 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       <section className="relative bg-background py-16 overflow-hidden">
         {author.cover_image && (
           <div className="absolute inset-0 opacity-20">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={author.cover_image}
               alt={author.name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="100vw"
             />
           </div>
         )}
@@ -109,11 +111,12 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
           {author.profile_image && (
             <div className="flex justify-center mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={author.profile_image}
                 alt={author.name}
-                className="w-32 h-32 rounded-full border-4 border-cyan-400"
+                width={128}
+                height={128}
+                className="w-32 h-32 rounded-full border-4 border-cyan-400 object-cover"
               />
             </div>
           )}

@@ -1,4 +1,5 @@
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Post } from "@/types/ghost-types";
 import { formatDateLong } from "@/lib/utils";
@@ -17,11 +18,12 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
       <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300 hover:scale-105 will-change-transform transform-gpu">
         {post.feature_image && (
           <div className="relative h-48 md:h-64 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={post.feature_image}
               alt={post.feature_image_alt || post.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}
@@ -71,11 +73,12 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
           {author && (
             <div className="flex flex-center gap-2 text-sm text-muted-foreground mb-4">
               {author.profile_image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={author.profile_image}
                   alt={author.name}
-                  className="w-6 h-6 rounded-full"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 rounded-full object-cover"
                 />
               )}
               <span>By {author.name}</span>

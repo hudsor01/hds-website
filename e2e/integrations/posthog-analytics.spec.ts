@@ -12,13 +12,47 @@ import { test, expect } from '@playwright/test'
  * - User identification
  */
 
+// Type definitions for PostHog client
+interface PostHogConfig {
+  token?: string
+  api_host?: string
+  session_recording?: {
+    captureConsoleLogs?: boolean
+  }
+  respect_dnt?: boolean
+}
+
+interface PostHogClient {
+  config?: PostHogConfig
+  capture: (event: string, properties?: Record<string, unknown>) => void
+  opt_out_capturing: () => void
+  has_opted_out_capturing?: () => boolean
+  get_config: (key: string) => unknown
+}
+
+interface PostHogEvent {
+  event?: string
+  properties?: {
+    $set?: {
+      email?: string
+    }
+  }
+}
+
+// Extend Window interface for PostHog
+declare global {
+  interface Window {
+    posthog?: PostHogClient
+  }
+}
+
 test.describe('PostHog - Initialization', () => {
   test('should load PostHog script', async ({ page }) => {
     await page.goto('/')
 
     // Check if PostHog is initialized
     const posthog = await page.evaluate(() => {
-      return typeof (window as any).posthog !== 'undefined'
+      return typeof window.posthog !== 'undefined'
     })
 
     // PostHog should be loaded
@@ -29,7 +63,7 @@ test.describe('PostHog - Initialization', () => {
     await page.goto('/')
 
     const hasValidKey = await page.evaluate(() => {
-      const ph = (window as any).posthog
+      const ph = window.posthog
       return ph && ph.config && ph.config.token
     })
 
@@ -40,7 +74,7 @@ test.describe('PostHog - Initialization', () => {
     await page.goto('/')
 
     const host = await page.evaluate(() => {
-      const ph = (window as any).posthog
+      const ph = window.posthog
       return ph && ph.config && ph.config.api_host
     })
 
@@ -53,11 +87,11 @@ test.describe('PostHog - Initialization', () => {
 
 test.describe('PostHog - Page View Tracking', () => {
   test('should track page view on initial load', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     // Intercept PostHog requests
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -70,7 +104,7 @@ test.describe('PostHog - Page View Tracking', () => {
     await page.waitForTimeout(2000)
 
     // Should have captured page view
-    const hasPageView = events.some((e: any) =>
+    const hasPageView = events.some((e) =>
       e.event === '$pageview' || e.event === 'pageview'
     )
 
@@ -78,10 +112,10 @@ test.describe('PostHog - Page View Tracking', () => {
   })
 
   test('should track navigation between pages', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -102,10 +136,10 @@ test.describe('PostHog - Page View Tracking', () => {
 
 test.describe('PostHog - Event Tracking', () => {
   test('should track form submission events', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -126,7 +160,7 @@ test.describe('PostHog - Event Tracking', () => {
     await page.waitForTimeout(3000)
 
     // Should track form submission
-    const hasFormEvent = events.some((e: any) =>
+    const hasFormEvent = events.some((e) =>
       e.event && (
         e.event.includes('form') ||
         e.event.includes('submit') ||
@@ -138,10 +172,10 @@ test.describe('PostHog - Event Tracking', () => {
   })
 
   test('should track CTA button clicks', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -164,10 +198,10 @@ test.describe('PostHog - Event Tracking', () => {
   })
 
   test('should track link clicks', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -187,10 +221,10 @@ test.describe('PostHog - Event Tracking', () => {
 
 test.describe('PostHog - User Identification', () => {
   test('should identify users after form submission', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -211,7 +245,7 @@ test.describe('PostHog - User Identification', () => {
     await page.waitForTimeout(3000)
 
     // Should have identified user with email
-    const hasIdentify = events.some((e: any) =>
+    const hasIdentify = events.some((e) =>
       e.event === '$identify' ||
       (e.properties && e.properties.$set && e.properties.$set.email === email)
     )
@@ -222,10 +256,10 @@ test.describe('PostHog - User Identification', () => {
 
 test.describe('PostHog - Conversion Tracking', () => {
   test('should track lead magnet downloads as conversions', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -248,7 +282,7 @@ test.describe('PostHog - Conversion Tracking', () => {
         await page.waitForTimeout(3000)
 
         // Should track conversion event
-        const hasConversion = events.some((e: any) =>
+        const hasConversion = events.some((e) =>
           e.event && (
             e.event.includes('conversion') ||
             e.event.includes('download') ||
@@ -262,10 +296,10 @@ test.describe('PostHog - Conversion Tracking', () => {
   })
 
   test('should track contact form submissions as conversions', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -292,7 +326,7 @@ test.describe('PostHog - Session Recording', () => {
     await page.goto('/')
 
     const recordingEnabled = await page.evaluate(() => {
-      const ph = (window as any).posthog
+      const ph = window.posthog
       return ph && ph.config && ph.config.session_recording
     })
 
@@ -306,7 +340,7 @@ test.describe('PostHog - Session Recording', () => {
     await page.goto('/')
 
     const captureConsole = await page.evaluate(() => {
-      const ph = (window as any).posthog
+      const ph = window.posthog
       return ph && ph.config && ph.config.session_recording?.captureConsoleLogs
     })
 
@@ -317,10 +351,10 @@ test.describe('PostHog - Session Recording', () => {
 
 test.describe('PostHog - Error Tracking', () => {
   test('should track JavaScript errors', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -331,7 +365,7 @@ test.describe('PostHog - Error Tracking', () => {
 
     // Trigger an error
     await page.evaluate(() => {
-      (window as any).posthog?.capture('$exception', {
+      window.posthog?.capture('$exception', {
         $exception_message: 'Test error',
         $exception_type: 'Error'
       })
@@ -340,7 +374,7 @@ test.describe('PostHog - Error Tracking', () => {
     await page.waitForTimeout(2000)
 
     // Should track error event
-    const hasError = events.some((e: any) =>
+    const hasError = events.some((e) =>
       e.event === '$exception' || (e.event && e.event.includes('error'))
     )
 
@@ -350,10 +384,10 @@ test.describe('PostHog - Error Tracking', () => {
 
 test.describe('PostHog - Performance Monitoring', () => {
   test('should track page load performance', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -369,7 +403,7 @@ test.describe('PostHog - Performance Monitoring', () => {
       const performance = window.performance
       const timing = performance.timing
 
-      ;(window as any).posthog?.capture('$performance_event', {
+      window.posthog?.capture('$performance_event', {
         loadTime: timing.loadEventEnd - timing.navigationStart,
         domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart
       })
@@ -383,10 +417,10 @@ test.describe('PostHog - Performance Monitoring', () => {
 
 test.describe('PostHog - Custom Properties', () => {
   test('should capture custom event properties', async ({ page }) => {
-    const events = []
+    const events: PostHogEvent[] = []
 
     await page.route('**/e/', (route) => {
-      const postData = route.request().postDataJSON()
+      const postData = route.request().postDataJSON() as PostHogEvent | null
       if (postData) {
         events.push(postData)
       }
@@ -397,7 +431,7 @@ test.describe('PostHog - Custom Properties', () => {
 
     // Send custom event with properties
     await page.evaluate(() => {
-      (window as any).posthog?.capture('custom_test_event', {
+      window.posthog?.capture('custom_test_event', {
         property1: 'value1',
         property2: 123,
         property3: true
@@ -407,7 +441,7 @@ test.describe('PostHog - Custom Properties', () => {
     await page.waitForTimeout(2000)
 
     // Should have captured custom event
-    const hasCustomEvent = events.some((e: any) =>
+    const hasCustomEvent = events.some((e) =>
       e.event === 'custom_test_event'
     )
 
@@ -425,7 +459,7 @@ test.describe('PostHog - Privacy Compliance', () => {
     await page.goto('/')
 
     const respectsDNT = await page.evaluate(() => {
-      const ph = (window as any).posthog
+      const ph = window.posthog
       return !ph || ph.has_opted_out_capturing?.() || ph.get_config('respect_dnt')
     })
 
@@ -438,11 +472,11 @@ test.describe('PostHog - Privacy Compliance', () => {
 
     // Opt out of tracking
     await page.evaluate(() => {
-      (window as any).posthog?.opt_out_capturing()
+      window.posthog?.opt_out_capturing()
     })
 
     const hasOptedOut = await page.evaluate(() => {
-      return (window as any).posthog?.has_opted_out_capturing?.()
+      return window.posthog?.has_opted_out_capturing?.()
     })
 
     expect(hasOptedOut).toBeTruthy()

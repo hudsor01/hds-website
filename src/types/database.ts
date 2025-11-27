@@ -974,6 +974,132 @@ export type Database = {
         }
         Relationships: []
       }
+      help_articles: {
+        Row: {
+          id: string
+          slug: string
+          category: string
+          title: string
+          content: string
+          excerpt: string | null
+          order_index: number
+          published: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          category: string
+          title: string
+          content: string
+          excerpt?: string | null
+          order_index?: number
+          published?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          category?: string
+          title?: string
+          content?: string
+          excerpt?: string | null
+          order_index?: number
+          published?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          id: string
+          request_id: string | null
+          client_name: string
+          company: string | null
+          role: string | null
+          rating: number
+          content: string
+          photo_url: string | null
+          video_url: string | null
+          service_type: string | null
+          approved: boolean
+          featured: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          request_id?: string | null
+          client_name: string
+          company?: string | null
+          role?: string | null
+          rating: number
+          content: string
+          photo_url?: string | null
+          video_url?: string | null
+          service_type?: string | null
+          approved?: boolean
+          featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          request_id?: string | null
+          client_name?: string
+          company?: string | null
+          role?: string | null
+          rating?: number
+          content?: string
+          photo_url?: string | null
+          video_url?: string | null
+          service_type?: string | null
+          approved?: boolean
+          featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonial_requests: {
+        Row: {
+          id: string
+          token: string
+          client_name: string
+          client_email: string | null
+          project_name: string | null
+          created_at: string
+          expires_at: string
+          submitted: boolean
+          submitted_at: string | null
+        }
+        Insert: {
+          id?: string
+          token: string
+          client_name: string
+          client_email?: string | null
+          project_name?: string | null
+          created_at?: string
+          expires_at: string
+          submitted?: boolean
+          submitted_at?: string | null
+        }
+        Update: {
+          id?: string
+          token?: string
+          client_name?: string
+          client_email?: string | null
+          project_name?: string | null
+          created_at?: string
+          expires_at?: string
+          submitted?: boolean
+          submitted_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       email_sequence_performance: {
