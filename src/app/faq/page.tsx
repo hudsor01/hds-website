@@ -7,8 +7,10 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/input';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Link from 'next/link'
-import { ArrowRight, ChevronDown, Search } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 
 const faqs = [
   {
@@ -119,17 +121,6 @@ const faqSchema = {
 
 export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(new Set());
-
-  const toggleQuestion = (question: string) => {
-    const newExpanded = new Set(expandedQuestions);
-    if (newExpanded.has(question)) {
-      newExpanded.delete(question);
-    } else {
-      newExpanded.add(question);
-    }
-    setExpandedQuestions(newExpanded);
-  };
 
   // Filter FAQs based on search query
   const filteredFaqs = searchQuery
@@ -166,12 +157,12 @@ export default function FAQPage() {
             <div className="max-w-2xl mx-auto">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
+                <Input
                   type="text"
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-lg text-white placeholder-muted-foreground focus:outline-none focus:border-cyan-500"
+                  className="pl-12"
                 />
               </div>
             </div>
@@ -183,7 +174,7 @@ export default function FAQPage() {
           <div className="container-wide max-w-4xl mx-auto">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">No results found for "{searchQuery}"</p>
+                <p className="text-muted-foreground text-lg">No results found for &quot;{searchQuery}&quot;</p>
               </div>
             ) : (
               <div className="space-y-12">
@@ -191,36 +182,24 @@ export default function FAQPage() {
                   <div key={catIndex}>
                     <h2 className="text-2xl font-bold text-white mb-6">{category.category}</h2>
 
-                    <div className="space-y-4">
-                      {category.questions.map((faq, qIndex) => {
-                        const questionId = `${catIndex}-${qIndex}`;
-                        const isExpanded = expandedQuestions.has(questionId);
-
-                        return (
-                          <div key={qIndex} className="glass-card overflow-hidden">
-                            <button
-                              onClick={() => toggleQuestion(questionId)}
-                              className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/50 transition-colors"
-                            >
-                              <span className="text-lg font-semibold text-white pr-8">
-                                {faq.question}
-                              </span>
-                              <ChevronDown
-                                className={`w-6 h-6 text-cyan-400 flex-shrink-0 transition-transform ${
-                                  isExpanded ? 'transform rotate-180' : ''
-                                }`}
-                              />
-                            </button>
-
-                            {isExpanded && (
-                              <div className="px-6 pb-6">
-                                <p className="text-muted leading-relaxed">{faq.answer}</p>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <Accordion type="single" collapsible className="space-y-4">
+                      {category.questions.map((faq, qIndex) => (
+                        <AccordionItem
+                          key={qIndex}
+                          value={`${catIndex}-${qIndex}`}
+                          className="glass-card overflow-hidden border-none"
+                        >
+                          <AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/50 hover:no-underline">
+                            <span className="text-lg font-semibold text-white pr-8">
+                              {faq.question}
+                            </span>
+                          </AccordionTrigger>
+                          <AccordionContent className="px-6 pb-6">
+                            <p className="text-muted leading-relaxed">{faq.answer}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
                   </div>
                 ))}
               </div>

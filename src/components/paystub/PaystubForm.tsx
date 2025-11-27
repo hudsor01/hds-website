@@ -2,6 +2,18 @@
 
 import { getIncomeTaxStates, getNoIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
 import type { FilingStatus, FormErrors, PaystubData } from '@/types/paystub'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/Button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface PaystubFormProps {
   paystubData: PaystubData
@@ -36,46 +48,39 @@ export function PaystubForm({
           Employee Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Employee Name *
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="employeeName">Employee Name *</Label>
+            <Input
+              id="employeeName"
               type="text"
               value={paystubData.employeeName}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employeeName: e.target.value }))}
-              className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.employeeName ? 'border-red-500 border-2' : 'border-border'
-              }`}
+              className={formErrors.employeeName ? 'border-red-500 border-2' : ''}
               placeholder="John Doe"
             />
             {formErrors.employeeName && (
-              <p className="text-red-500 text-xs mt-1">{formErrors.employeeName}</p>
+              <p className="text-red-500 text-xs">{formErrors.employeeName}</p>
             )}
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Employee ID
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="employeeId">Employee ID</Label>
+            <Input
+              id="employeeId"
               type="text"
               value={paystubData.employeeId}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employeeId: e.target.value }))}
-              className="w-full p-2.5 border border-border rounded-md text-sm"
               placeholder="EMP001"
             />
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Employer Name
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="employerName">Employer Name</Label>
+            <Input
+              id="employerName"
               type="text"
               value={paystubData.employerName}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employerName: e.target.value }))}
-              className="w-full p-2.5 border border-border rounded-md text-sm"
               placeholder="ABC Company Inc."
             />
           </div>
@@ -88,41 +93,35 @@ export function PaystubForm({
           Pay Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Hourly Rate *
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="hourlyRate">Hourly Rate *</Label>
+            <Input
+              id="hourlyRate"
               type="number"
               step="0.01"
               value={paystubData.hourlyRate || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hourlyRate: parseFloat(e.target.value) || 0 }))}
-              className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.hourlyRate ? 'border-red-500 border-2' : 'border-border'
-              }`}
+              className={formErrors.hourlyRate ? 'border-red-500 border-2' : ''}
               placeholder="25.00"
             />
             {formErrors.hourlyRate && (
-              <p className="text-red-500 text-xs mt-1">{formErrors.hourlyRate}</p>
+              <p className="text-red-500 text-xs">{formErrors.hourlyRate}</p>
             )}
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Hours Per Period *
-            </label>
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="hoursPerPeriod">Hours Per Period *</Label>
+            <Input
+              id="hoursPerPeriod"
               type="number"
               step="0.5"
               value={paystubData.hoursPerPeriod || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hoursPerPeriod: parseFloat(e.target.value) || 0 }))}
-              className={`w-full p-2.5 border rounded-md text-sm ${
-                formErrors.hoursPerPeriod ? 'border-red-500 border-2' : 'border-border'
-              }`}
+              className={formErrors.hoursPerPeriod ? 'border-red-500 border-2' : ''}
               placeholder="80"
             />
             {formErrors.hoursPerPeriod && (
-              <p className="text-red-500 text-xs mt-1">{formErrors.hoursPerPeriod}</p>
+              <p className="text-red-500 text-xs">{formErrors.hoursPerPeriod}</p>
             )}
           </div>
         </div>
@@ -134,86 +133,91 @@ export function PaystubForm({
           Tax Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Filing Status
-            </label>
-            <select
+          <div className="space-y-2">
+            <Label htmlFor="filingStatus">Filing Status</Label>
+            <Select
               value={paystubData.filingStatus}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, filingStatus: e.target.value as FilingStatus }))}
-              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
+              onValueChange={(value) => setPaystubData(prev => ({ ...prev, filingStatus: value as FilingStatus }))}
             >
-              <option value="single">Single</option>
-              <option value="married_jointly">Married Filing Jointly</option>
-              <option value="married_separately">Married Filing Separately</option>
-              <option value="head_of_household">Head of Household</option>
-            </select>
+              <SelectTrigger id="filingStatus">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="single">Single</SelectItem>
+                <SelectItem value="married_jointly">Married Filing Jointly</SelectItem>
+                <SelectItem value="married_separately">Married Filing Separately</SelectItem>
+                <SelectItem value="head_of_household">Head of Household</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              Tax Year
-            </label>
-            <select
-              value={paystubData.taxYear}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, taxYear: parseInt(e.target.value) }))}
-              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
+          <div className="space-y-2">
+            <Label htmlFor="taxYear">Tax Year</Label>
+            <Select
+              value={paystubData.taxYear.toString()}
+              onValueChange={(value) => setPaystubData(prev => ({ ...prev, taxYear: parseInt(value) }))}
             >
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-            </select>
+              <SelectTrigger id="taxYear">
+                <SelectValue placeholder="Select year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-muted-foreground">
-              State
-            </label>
-            <select
+          <div className="space-y-2">
+            <Label htmlFor="state">State</Label>
+            <Select
               value={selectedState}
-              onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full p-2.5 border border-border rounded-md text-sm bg-white"
+              onValueChange={setSelectedState}
             >
-              <option value="">Select State</option>
-              <optgroup label="No State Income Tax">
-                {getNoIncomeTaxStates().map((state) => (
-                  // use string properties from StateInfo so <option> value/key are strings
-                  <option key={state.value} value={state.label}>
-                    {state.label}
-                  </option>
-                ))}
-              </optgroup>
-              <optgroup label="State Income Tax">
-                {getIncomeTaxStates().map((state) => (
-                  <option key={state.value} value={state.label}>
-                    {state.label}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
+              <SelectTrigger id="state">
+                <SelectValue placeholder="Select State" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>No State Income Tax</SelectLabel>
+                  {getNoIncomeTaxStates().map((state) => (
+                    <SelectItem key={state.value} value={state.label}>
+                      {state.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>State Income Tax</SelectLabel>
+                  {getIncomeTaxStates().map((state) => (
+                    <SelectItem key={state.value} value={state.label}>
+                      {state.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
       <div className="flex-center gap-4">
-        <button
+        <Button
           onClick={onGenerate}
           disabled={isGenerating}
-          className={`button-base px-8 py-3 text-white rounded-md text-base transition-smooth ${
-            isGenerating
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'cta-primary'
-          }`}
+          size="lg"
+          className="px-8"
         >
           {isGenerating ? 'Generating...' : 'Generate Pay Stubs'}
-        </button>
+        </Button>
 
-        <button
+        <Button
           onClick={onClear}
-          className="button-base px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-md text-base transition-smooth"
+          variant="destructive"
+          size="lg"
+          className="px-8"
         >
           Clear Form
-        </button>
+        </Button>
       </div>
     </div>
   )

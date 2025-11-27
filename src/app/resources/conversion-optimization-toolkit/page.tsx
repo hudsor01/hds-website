@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Download, CheckCircle, BarChart3, Settings, TrendingUp, DollarSign, Clock } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
 
 export const metadata: Metadata = {
   title: "Free Conversion Optimization Toolkit 2025 - Templates & Guides | Hudson Digital",
@@ -236,41 +238,38 @@ export default function ConversionToolkitPage() {
                 <input type="hidden" name="resource" value="conversion-optimization-guide" />
 
                 <div>
-                  <input
+                  <Input
                     type="email"
                     name="email"
                     placeholder="Enter your business email"
                     required
-                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     type="text"
                     name="firstName"
                     placeholder="First name"
                     required
-                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     type="text"
                     name="company"
                     placeholder="Company name (optional)"
-                    className="w-full p-input bg-muted border border-gray-600 rounded-lg text-white placeholder-muted-foreground focus-ring transition-colors"
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
-                  className="w-full bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors flex-center gap-tight"
+                  className="w-full bg-green-400 text-black font-bold hover:bg-green-300"
                 >
                   <Download className="w-5 h-5" />
                   Get My Complete Toolkit
-                </button>
+                </Button>
               </form>
 
               <p className="text-caption text-muted-foreground mt-4">

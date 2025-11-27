@@ -1,5 +1,9 @@
 'use client'
 
+import { Button } from '@/components/ui/Button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+
 interface PaystubNavigationProps {
   selectedPeriod: number
   setSelectedPeriod: (period: number) => void
@@ -19,60 +23,50 @@ export function PaystubNavigation({
 }: PaystubNavigationProps) {
   return (
     <div className="p-5 text-center bg-muted">
-      <div className="mb-5">
-        <button
-          onClick={onBackToForm}
-          className="button-base px-5 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm mr-2.5 transition-smooth"
-        >
-          ← Back to Form
-        </button>
+      <div className="mb-5 flex flex-wrap justify-center gap-2">
+        <Button variant="secondary" onClick={onBackToForm}>
+          Back to Form
+        </Button>
 
-        <button
+        <Button
+          variant={documentType === 'paystub' ? 'default' : 'outline'}
           onClick={() => setDocumentType('paystub')}
-          className={`button-base px-5 py-2.5 rounded-md text-sm mr-2.5 transition-smooth ${
-            documentType === 'paystub'
-              ? 'cta-primary'
-              : 'bg-gray-200 text-muted-foreground hover:bg-gray-300'
-          }`}
         >
           Pay Stub
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant={documentType === 'annual' ? 'default' : 'outline'}
           onClick={() => setDocumentType('annual')}
-          className={`button-base px-5 py-2.5 rounded-md text-sm transition-smooth ${
-            documentType === 'annual'
-              ? 'cta-primary'
-              : 'bg-gray-200 text-muted-foreground hover:bg-gray-300'
-          }`}
         >
           W-2 Summary
-        </button>
+        </Button>
       </div>
 
       {documentType === 'paystub' && (
-        <div className="mb-5">
-          <label className="mr-2.5 font-medium">Select Pay Period:</label>
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
-            className="px-3 py-2 border border-border rounded-md text-sm bg-white"
+        <div className="mb-5 flex items-center justify-center gap-2">
+          <Label>Select Pay Period:</Label>
+          <Select
+            value={selectedPeriod.toString()}
+            onValueChange={(value) => setSelectedPeriod(parseInt(value))}
           >
-            {Array.from({ length: 26 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>
-                Period {i + 1}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 26 }, (_, i) => (
+                <SelectItem key={i + 1} value={(i + 1).toString()}>
+                  Period {i + 1}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       )}
 
-      <button
-        onClick={onPrint}
-        className="button-base px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition-smooth"
-      >
+      <Button onClick={onPrint} className="bg-green-600 hover:bg-green-700">
         Print {documentType === 'paystub' ? 'Pay Stub' : 'W-2 Summary'}
-      </button>
+      </Button>
     </div>
   )
 }

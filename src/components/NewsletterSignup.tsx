@@ -7,6 +7,9 @@
 
 import { useState } from 'react';
 import { Mail, Check, AlertCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface NewsletterSignupProps {
   variant?: 'inline' | 'sidebar' | 'modal';
@@ -84,24 +87,23 @@ export function NewsletterSignup({
           <h3 className="text-lg font-semibold text-foreground dark:text-white">
             {title}
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             {description}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-4 space-y-3">
             <div className="flex gap-2">
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 disabled={status === 'loading' || status === 'success'}
-                className="flex-1 rounded-md border-border px-4 py-2 text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 dark:border-gray-600 dark:bg-muted dark:text-white dark:placeholder-muted-foreground"
+                className="flex-1"
               />
-              <button
+              <Button
                 type="submit"
                 disabled={status === 'loading' || status === 'success'}
-                className="inline-flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700 disabled:opacity-50"
               >
                 {status === 'loading' ? (
                   'Subscribing...'
@@ -113,24 +115,20 @@ export function NewsletterSignup({
                 ) : (
                   'Subscribe'
                 )}
-              </button>
+              </Button>
             </div>
 
             {message && (
-              <div
-                className={`flex items-center gap-2 text-sm ${
-                  status === 'success'
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400'
-                }`}
-              >
-                {status === 'error' && <AlertCircle className="h-4 w-4" />}
-                {status === 'success' && <Check className="h-4 w-4" />}
-                {message}
-              </div>
+              <Alert variant={status === 'error' ? 'destructive' : 'default'} className={status === 'success' ? 'border-green-500/50 bg-green-500/10' : ''}>
+                <AlertDescription className={`flex items-center gap-2 ${status === 'success' ? 'text-green-600 dark:text-green-400' : ''}`}>
+                  {status === 'error' && <AlertCircle className="h-4 w-4" />}
+                  {status === 'success' && <Check className="h-4 w-4" />}
+                  {message}
+                </AlertDescription>
+              </Alert>
             )}
 
-            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               No spam. Unsubscribe anytime. We respect your privacy.
             </p>
           </form>

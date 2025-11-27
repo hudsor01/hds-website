@@ -7,6 +7,10 @@
 
 import { useState, type ReactNode } from 'react';
 import { Lock } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/Button';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface AuthWrapperProps {
   children: ReactNode;
@@ -17,7 +21,6 @@ const SESSION_KEY = 'admin_session';
 
 export function AuthWrapper({ children }: AuthWrapperProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Check for existing session during initialization
     if (typeof window === 'undefined') {
       return false;
     }
@@ -28,7 +31,6 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         const sessionData = JSON.parse(session);
         const now = Date.now();
 
-        // Session valid for 24 hours
         if (sessionData.expires > now) {
           return true;
         } else {
@@ -50,7 +52,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     if (password === ADMIN_PASSWORD) {
       const session = {
         authenticated: true,
-        expires: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
+        expires: Date.now() + (24 * 60 * 60 * 1000),
       };
 
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -72,54 +74,41 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
         <div className="w-full max-w-md">
-          <div className="rounded-lg border border-border bg-white p-8 shadow-lg dark:border-border dark:bg-muted">
-            <div className="mb-8 text-center">
+          <Card>
+            <CardHeader className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900">
                 <Lock className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
               </div>
-              <h2 className="text-2xl font-bold text-foreground dark:text-white">
-                Admin Dashboard
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground dark:text-muted-foreground">
-                Enter password to access analytics
-              </p>
-            </div>
+              <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
+              <CardDescription>Enter password to access analytics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter admin password"
+                    autoFocus
+                  />
+                  {error && (
+                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  )}
+                </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-muted-foreground dark:text-muted">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-border shadow-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
-                  placeholder="Enter admin password"
-                  autoFocus
-                />
-                {error && (
-                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                    {error}
-                  </p>
-                )}
-              </div>
+                <Button type="submit" className="w-full">
+                  Sign In
+                </Button>
+              </form>
 
-              <button
-                type="submit"
-                className="w-full rounded-md bg-cyan-600 px-4 py-2 text-white hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              >
-                Sign In
-              </button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+              <p className="mt-6 text-center text-xs text-muted-foreground">
                 Session valid for 24 hours
               </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -127,14 +116,10 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
 
   return (
     <div>
-      {/* Logout button in top right */}
       <div className="fixed right-4 top-4 z-50">
-        <button
-          onClick={handleLogout}
-          className="rounded-md bg-muted px-4 py-2 text-sm text-white hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
-        >
+        <Button variant="secondary" onClick={handleLogout}>
           Logout
-        </button>
+        </Button>
       </div>
       {children}
     </div>

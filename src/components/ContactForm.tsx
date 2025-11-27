@@ -6,33 +6,41 @@ import { submitContactForm, type ContactFormState } from '@/app/actions/contact'
 import { getServiceOptions, getContactTimeOptions, getBudgetOptions, getTimelineOptions } from '@/lib/form-utils'
 import { logger } from '@/lib/logger'
 import { toast } from 'sonner'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/Button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { CheckCircle2 } from 'lucide-react'
 
 // Submit button with built-in pending state
 function SubmitButton() {
   const { pending } = useFormStatus()
 
   return (
-    <button
+    <Button
       type="submit"
       disabled={pending}
-      className="cta-primary px-12 py-4 text-responsive-sm hover-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none will-change-transform transition-smooth"
+      size="lg"
+      className="px-12"
+      trackConversion
+      conversionLabel="Contact Form Submit"
+      conversionValue="high"
     >
       {pending ? (
         <span className="flex items-center">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-3"></div>
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current mr-3"></div>
           Sending...
         </span>
       ) : (
         'Send Message'
       )}
-    </button>
+    </Button>
   )
 }
 
 // Success Message Component
 function SuccessMessage({ onReset, className = '' }: { onReset: () => void; className?: string }) {
   const handleReset = () => {
-    // SSR-safe window reload
     if (typeof window !== 'undefined') {
       window.location.reload()
     } else {
@@ -43,20 +51,18 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
   return (
     <div className={`glass-card border-green-700/50 text-center ${className}`}>
       <div className="mb-6">
-        <svg className="w-16 h-16 mx-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+        <CheckCircle2 className="w-16 h-16 mx-auto text-green-400" />
       </div>
       <h2 className="text-responsive-md font-bold text-green-100 mb-4">Message Sent Successfully!</h2>
       <p className="text-green-200 mb-6">
         Thank you for contacting us. We&apos;ll get back to you within 24 hours.
       </p>
-      <button
+      <Button
         onClick={handleReset}
-        className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-smooth button-hover-glow"
+        className="bg-green-600 hover:bg-green-500"
       >
         Send Another Message
-      </button>
+      </Button>
     </div>
   )
 }
@@ -111,7 +117,6 @@ export default function ContactForm({ className = '' }: { className?: string }) 
 
   // Show success message if form was submitted successfully
   if (state?.success) {
-    // Track successful form submission for business intelligence
     logger.info('Contact form submission successful', {
       component: 'ContactForm',
       userFlow: 'lead_generation',
@@ -134,148 +139,135 @@ export default function ContactForm({ className = '' }: { className?: string }) 
       <form action={formAction} className="space-y-8">
         {/* Name Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input
+          <Input
             type="text"
             id="firstName"
             name="firstName"
             required
             placeholder="First Name"
             autoComplete="given-name"
-            className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth accent-cyan-500"
           />
 
-          <input
+          <Input
             type="text"
             id="lastName"
             name="lastName"
             required
             placeholder="Last Name"
             autoComplete="family-name"
-            className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth accent-cyan-500"
           />
         </div>
 
         {/* Email */}
-        <input
+        <Input
           type="email"
           id="email"
           name="email"
           required
           placeholder="Email Address"
           autoComplete="email"
-          className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth"
         />
 
         {/* Phone and Company */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input
+          <Input
             type="tel"
             id="phone"
             name="phone"
             placeholder="Phone Number (Optional)"
             autoComplete="tel"
-            className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth accent-cyan-500"
           />
 
-          <input
+          <Input
             type="text"
             id="company"
             name="company"
             placeholder="Company Name (Optional)"
             autoComplete="organization"
-            className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth accent-cyan-500"
           />
         </div>
 
         {/* Service and Time - Using native select for Server Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="relative">
-            <select
-              id="service"
-              name="service"
-              className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500"
-            >
-              {getServiceOptions().map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            id="service"
+            name="service"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {getServiceOptions().map(opt => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
 
-          <div className="relative">
-            <select
-              id="bestTimeToContact"
-              name="bestTimeToContact"
-              className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500"
-            >
-              {getContactTimeOptions().map((opt: {value: string, label: string}) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            id="bestTimeToContact"
+            name="bestTimeToContact"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {getContactTimeOptions().map((opt: {value: string, label: string}) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Budget and Timeline */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="relative">
-            <select
-              id="budget"
-              name="budget"
-              className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500"
-            >
-              {getBudgetOptions().map((opt: {value: string, label: string}) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            id="budget"
+            name="budget"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {getBudgetOptions().map((opt: {value: string, label: string}) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
 
-          <div className="relative">
-            <select
-              id="timeline"
-              name="timeline"
-              className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus-ring transition-smooth accent-cyan-500"
-            >
-              {getTimelineOptions().map((opt: {value: string, label: string}) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            id="timeline"
+            name="timeline"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {getTimelineOptions().map((opt: {value: string, label: string}) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Message */}
-        <textarea
+        <Textarea
           id="message"
           name="message"
           required
           placeholder="Tell us about your project..."
           rows={6}
-          className="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus-ring transition-smooth resize-none accent-cyan-500"
+          className="resize-none"
         />
 
         {/* Error Display */}
         {state && state.error && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4" data-testid="error-message">
-            <p className="text-red-400 text-sm">
+          <Alert variant="destructive" data-testid="error-message">
+            <AlertDescription>
               Error: {state.error}
               {state.message && `. ${state.message}`}
-            </p>
-          </div>
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Success message for non-success state but with message */}
         {state && state.message && !state.error && (
-          <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4" data-testid="success-message">
-            <p className="text-green-400 text-sm">
+          <Alert data-testid="success-message" className="border-green-500/30 bg-green-500/10">
+            <AlertDescription className="text-green-400">
               {state.message}
-            </p>
-          </div>
+            </AlertDescription>
+          </Alert>
         )}
 
         {/* Submit Button */}
