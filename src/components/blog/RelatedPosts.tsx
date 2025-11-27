@@ -1,4 +1,5 @@
 import { ArrowRight, Clock } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Post } from "@/types/ghost-types";
 import { formatDateLong } from "@/lib/utils";
@@ -23,11 +24,12 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
               <div className="glass-card rounded-xl overflow-hidden hover:border-cyan-300 transition-all duration-300">
                 {post.feature_image && (
                   <div className="relative h-48 overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={post.feature_image}
                       alt={post.feature_image_alt || post.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 )}

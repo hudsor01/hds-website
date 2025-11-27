@@ -1,4 +1,5 @@
 import { Globe } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Author } from "@/types/ghost-types";
 
@@ -11,11 +12,12 @@ export function AuthorCard({ author }: AuthorCardProps) {
     <div className="glass-card rounded-xl p-6">
       <div className="flex gap-4">
         {author.profile_image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={author.profile_image}
             alt={author.name}
-            className="w-16 h-16 rounded-full flex-shrink-0"
+            width={64}
+            height={64}
+            className="w-16 h-16 rounded-full flex-shrink-0 object-cover"
           />
         )}
         <div className="flex-1">

@@ -2,11 +2,18 @@
  * Next.js Proxy (formerly Middleware)
  * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
  * Official docs: https://nextjs.org/docs/messages/middleware-to-proxy
+ *
+ * Handles:
+ * - Supabase session refresh
+ * - Security headers
+ * - Rate limiting
+ * - CSRF protection
  */
 import { env } from '@/env'
 import { validateCsrfForMutation } from '@/lib/csrf'
 import { getClientIp, RATE_LIMIT_CONFIGS, unifiedRateLimiter, type RateLimitType } from '@/lib/rate-limiter'
 import { applySecurityHeaders } from '@/lib/security-headers'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Run on Edge Runtime for minimal overhead
@@ -24,9 +31,31 @@ export const config = {
 };
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+  let response = NextResponse.next({ request });
   const url = request.nextUrl;
   const clientIp = getClientIp(request);
+
+  // Supabase session refresh - must happen early to ensure auth cookies are set
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+  // Refresh auth token - this validates and refreshes the session
+  await supabase.auth.getUser();
 
   // Generate nonce for CSP
   const nonce = Math.random().toString(36).substring(2, 18);
