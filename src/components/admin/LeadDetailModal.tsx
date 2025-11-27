@@ -5,6 +5,7 @@
 
 'use client';
 
+import { logger } from '@/lib/logger';
 import { Building2, Calendar, Download, Globe, Mail, MessageSquare, Phone, Plus, TrendingUp, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -66,7 +67,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
       const data = await response.json();
       setNotes(data.notes || []);
     } catch (error) {
-      console.error('Failed to fetch notes:', error);
+      logger.error('Failed to fetch notes:', error as Error);
     }
   }, [lead]);
 
@@ -97,7 +98,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
         await fetchNotes();
       }
     } catch (error) {
-      console.error('Failed to add note:', error);
+      logger.error('Failed to add note:', error as Error);
     } finally {
       setIsAddingNote(false);
     }
@@ -118,7 +119,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
         onUpdate(lead.id, { contacted: true, contacted_at: new Date().toISOString() });
       }
     } catch (error) {
-      console.error('Failed to update lead:', error);
+      logger.error('Failed to update lead:', error as Error);
     } finally {
       setIsUpdating(false);
     }
@@ -137,7 +138,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
         onUpdate(lead.id, { converted: true, converted_at: new Date().toISOString() });
       }
     } catch (error) {
-      console.error('Failed to update lead:', error);
+      logger.error('Failed to update lead:', error as Error);
     } finally {
       setIsUpdating(false);
     }

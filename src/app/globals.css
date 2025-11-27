@@ -634,6 +634,68 @@ body::after {
   }
 }
 
+/* ============================================
+   SEMANTIC SPACING UTILITIES
+   ============================================ */
+
+/* Gap Utilities - For flexbox and grid gaps */
+@utility gap-tight {
+  gap: 0.5rem;
+}
+
+@utility gap-content {
+  gap: 1rem;
+}
+
+@utility gap-comfortable {
+  gap: 1.5rem;
+}
+
+@utility gap-sections {
+  gap: 3rem;
+}
+
+/* Section Spacing - Vertical rhythm for page sections */
+@utility section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+/* Card Padding - Internal card spacing */
+@utility card-padding {
+  padding: 2rem;
+}
+
+@utility card-padding-sm {
+  padding: 1.5rem;
+}
+
+/* Content Block Margins */
+@utility mb-content-block {
+  margin-bottom: 3rem;
+}
+
+@utility mt-content-block {
+  margin-top: 3rem;
+}
+
+@utility mb-comfortable {
+  margin-bottom: 2rem;
+}
+
+/* Vertical Space Utilities */
+@utility space-y-tight {
+  & > * + * {
+    margin-top: 0.5rem;
+  }
+}
+
+@utility space-y-content {
+  & > * + * {
+    margin-top: 1rem;
+  }
+}
+
 @layer base {
 /* Base styles */
 * {
@@ -1064,6 +1126,84 @@ body {
   backdrop-filter: blur(var(--blur-lg));
   border: 1px solid oklch(from var(--color-border-primary-dark) l c h / 0.5);
   border-radius: var(--radius-2xl);
+}
+
+/* ============================================
+   RESPONSIVE SPACING UTILITIES
+   ============================================ */
+
+/* Page Padding - Responsive horizontal gutters */
+.page-padding-x {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-padding-x {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-padding-x {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Page Padding - Full responsive padding */
+.page-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Grid 3 - Responsive 3-column grid */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Grid 4 - Responsive 4-column grid */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 /* Semantic layout & flex pattern component classes */

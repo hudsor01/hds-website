@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
+import { logger } from '@/lib/logger';
 import { trackEvent } from '@/lib/analytics';
 
 interface PerformanceMetrics {
@@ -61,7 +62,7 @@ export default function PerformanceCalculatorPage() {
       calculateImpact(data.metrics);
     } catch (err) {
       setError('Failed to analyze website. Please check the URL and try again.');
-      console.error('Performance analysis error:', err);
+      logger.error('Performance analysis error:', err as Error);
     } finally {
       setIsAnalyzing(false);
     }

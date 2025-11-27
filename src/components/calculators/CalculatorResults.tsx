@@ -6,6 +6,7 @@
 'use client';
 
 import { useAttribution } from '@/hooks/useAttribution';
+import { logger } from '@/lib/logger';
 import { trackConversion } from '@/lib/analytics';
 import { useState } from 'react';
 
@@ -76,7 +77,7 @@ export function CalculatorResults({
       }
     } catch (err) {
       setError('Failed to send results. Please try again.');
-      console.error('Calculator submission error:', err);
+      logger.error('Calculator submission error:', err as Error);
     } finally {
       setIsSubmitting(false);
     }

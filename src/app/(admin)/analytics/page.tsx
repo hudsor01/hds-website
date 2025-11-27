@@ -9,6 +9,7 @@ import { LeadDetailModal } from '@/components/admin/LeadDetailModal';
 import { MetricCard } from '@/components/admin/MetricCard';
 import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
+import { logger } from '@/lib/logger';
 import {
     Calendar,
     Download,
@@ -101,7 +102,7 @@ export default function AnalyticsDashboard() {
       const data = await response.json();
       setOverview(data);
     } catch (error) {
-      console.error('Failed to fetch analytics:', error);
+      logger.error('Failed to fetch analytics:', error as Error);
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +114,7 @@ export default function AnalyticsDashboard() {
       const data = await response.json();
       setTrends(data);
     } catch (error) {
-      console.error('Failed to fetch trends:', error);
+      logger.error('Failed to fetch trends:', error as Error);
     }
   }, [timeRange]);
 
@@ -131,7 +132,7 @@ export default function AnalyticsDashboard() {
       setAllLeads(fetchedLeads);
       setLeads(fetchedLeads); // Will be filtered by useEffect
     } catch (error) {
-      console.error('Failed to fetch leads:', error);
+      logger.error('Failed to fetch leads:', error as Error);
     }
   }, [qualityFilter]);
 

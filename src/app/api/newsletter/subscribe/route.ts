@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { Resend } from 'resend';
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
       .upsert(subscriberData as unknown as never); // Bypass type checking
 
     if (dbError) {
-      console.error('Failed to save subscriber:', dbError);
+      logger.error('Failed to save subscriber:', dbError);
       return NextResponse.json(
         { error: 'Failed to subscribe' },
         { status: 500 }
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
         });
       }
     } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError);
+      logger.error('Failed to send welcome email:', emailError as Error);
       // Don't fail the request if email fails
     }
 
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Newsletter subscription error:', error);
+    logger.error('Newsletter subscription error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
