@@ -13,7 +13,7 @@ export type LeadAttributionUpdate = Database['public']['Tables']['lead_attributi
 export type WebVitalsRow = Database['public']['Tables']['web_vitals']['Row'];
 export type WebVitalsInsert = Database['public']['Tables']['web_vitals']['Insert'];
 
-// Case Studies types (if exists in DB, otherwise define custom)
+// Case Studies types
 export interface CaseStudy {
   id: string;
   slug: string;
@@ -123,32 +123,4 @@ export interface LayoutShiftEntry extends PerformanceEntry {
 
 export interface FirstInputEntry extends PerformanceEntry {
   processingStart?: number;
-}
-
-// Webpack types for next.config.ts
-export interface WebpackCompilation {
-  getStats: () => {
-    toJson: (options: {
-      assets?: boolean;
-      chunks?: boolean;
-      modules?: boolean;
-    }) => {
-      assets?: Array<{
-        name: string;
-        size: number;
-      }>;
-    };
-  };
-}
-
-export interface WebpackCompiler {
-  hooks: {
-    afterEmit: {
-      tap: (name: string, callback: (compilation: WebpackCompilation) => void) => void;
-    };
-  };
-}
-
-export interface WebpackPlugin {
-  apply: (compiler: WebpackCompiler) => void;
 }

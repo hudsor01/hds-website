@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/ghost";
@@ -155,11 +156,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {primaryAuthor && (
                 <div className="flex flex-center gap-2">
                   {primaryAuthor.profile_image && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={primaryAuthor.profile_image}
                       alt={primaryAuthor.name}
-                      className="w-6 h-6 rounded-full"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6 rounded-full object-cover"
                     />
                   )}
                   <span>By {primaryAuthor.name}</span>
@@ -173,11 +175,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {post.feature_image && (
           <div className="container-wide py-8">
             <div className="relative aspect-video rounded-xl overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={post.feature_image}
                 alt={post.feature_image_alt || post.title}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1200px) 100vw, 1200px"
+                priority
               />
               {post.feature_image_caption && (
                 <div className="absolute bottom-0 left-0 right-0 bg-cyan-600/10 p-4">

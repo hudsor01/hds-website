@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -187,12 +188,13 @@ async function ProjectContent({ slug }: { slug: string }) {
               {/* Project Image */}
               <div className={`relative overflow-hidden rounded-2xl ${project.gradient_class} p-1`}>
                 <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-black/20">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={project.image_url}
                     alt={project.title}
-                    className="w-full h-full object-cover"
-                    loading="eager"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
                   />
                 </div>
               </div>
@@ -257,12 +259,12 @@ async function ProjectContent({ slug }: { slug: string }) {
                     <div
                       className={`${relatedProject.gradient_class} h-48 relative overflow-hidden`}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={relatedProject.image_url}
                         alt={relatedProject.title}
-                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                        loading="lazy"
+                        fill
+                        className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                        sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>
                     <div className="p-6">
