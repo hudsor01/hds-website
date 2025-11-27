@@ -50,14 +50,14 @@ export default function Error({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">
             Something went wrong
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-muted-foreground dark:text-muted-foreground mb-6">
             We encountered an unexpected error. Our team has been notified.
           </p>
           {error.digest && (
-            <p className="text-xs text-gray-500 dark:text-gray-500 mb-6 font-mono">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-6 font-mono">
               Error ID: {error.digest}
             </p>
           )}
@@ -72,14 +72,14 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            className="px-6 py-3 bg-gray-200 dark:bg-muted text-foreground dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
           >
             Go home
           </Link>
         </div>
 
-        <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="mt-8 p-4 bg-muted dark:bg-muted rounded-lg">
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             Need immediate assistance?{' '}
             <a
               href="mailto:hello@hudsondigitalsolutions.com"

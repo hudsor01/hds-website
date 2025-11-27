@@ -5,8 +5,9 @@
 
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { CTAButton } from '@/components/cta-button';
-import { Clock, Users, ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
+import { Clock, Users, ExternalLink, ArrowRight } from 'lucide-react';
 import { getCaseStudies } from '@/lib/case-studies';
 
 export const metadata: Metadata = {
@@ -23,12 +24,15 @@ async function CaseStudiesContent() {
     <>
       {caseStudies.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">
+              <p className="text-muted-foreground text-lg">
                 Case studies coming soon. Contact us to discuss your project!
               </p>
-              <CTAButton href="/contact" variant="primary" size="lg" className="mt-6">
-                Get Started
-              </CTAButton>
+              <Button asChild variant="default" size="lg" trackConversion={true} className="mt-6">
+      <Link href="/contact">
+        Get Started
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           ) : (
             <div className="grid gap-8">
@@ -52,24 +56,24 @@ async function CaseStudiesContent() {
                         {study.title}
                       </h2>
 
-                      <p className="text-lg text-gray-300 mb-6">
+                      <p className="text-lg text-muted mb-6">
                         {study.description}
                       </p>
 
                       {/* Metrics */}
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         {study.metrics.map((metric, i) => (
-                          <div key={i} className="bg-gray-800/50 rounded-lg p-4">
-                            <div className="text-2xl font-black gradient-text mb-1">
+                          <div key={i} className="bg-muted/50 rounded-lg p-4">
+                            <div className="text-2xl font-black text-cyan-400 mb-1">
                               {metric.value}
                             </div>
-                            <div className="text-sm text-gray-400">{metric.label}</div>
+                            <div className="text-sm text-muted-foreground">{metric.label}</div>
                           </div>
                         ))}
                       </div>
 
                       {/* Project Info */}
-                      <div className="flex gap-6 text-sm text-gray-400 mb-6">
+                      <div className="flex gap-6 text-sm text-muted-foreground mb-6">
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4" />
                           <span>{study.project_duration}</span>
@@ -80,17 +84,19 @@ async function CaseStudiesContent() {
                         </div>
                       </div>
 
-                      <CTAButton href={`/case-studies/${study.slug}`} variant="secondary" size="md">
-                        Read Full Case Study
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </CTAButton>
+                      <Button asChild variant="outline" size="default" trackConversion={true}>
+                        <Link href={`/case-studies/${study.slug}`}>
+                          Read Full Case Study
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </Link>
+                      </Button>
                     </div>
 
                     {/* Right Column - Testimonial */}
-                    <div className="bg-gray-800/50 rounded-lg p-6">
+                    <div className="bg-muted/50 rounded-lg p-6">
                       {study.testimonial_video_url ? (
                         <div className="mb-4">
-                          <div className="aspect-video rounded-lg overflow-hidden bg-gray-700">
+                          <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                             <iframe
                               src={study.testimonial_video_url.replace('watch?v=', 'embed/')}
                               title={`Video testimonial from ${study.testimonial_author}`}
@@ -102,7 +108,7 @@ async function CaseStudiesContent() {
                         </div>
                       ) : null}
 
-                      <blockquote className="text-lg text-gray-300 italic mb-4">
+                      <blockquote className="text-lg text-muted italic mb-4">
                         "{study.testimonial_text}"
                       </blockquote>
 
@@ -116,10 +122,10 @@ async function CaseStudiesContent() {
                           <div className="font-semibold text-white">
                             {study.testimonial_author}
                           </div>
-                          <div className="text-sm text-gray-400">
+                          <div className="text-sm text-muted-foreground">
                             {study.testimonial_role}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {study.client_name}
                           </div>
                         </div>
@@ -149,9 +155,12 @@ export default function CaseStudiesPage() {
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+              <Link href="/contact">
+                Start Your Project
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -177,12 +186,15 @@ export default function CaseStudiesPage() {
             <h2 className="text-4xl font-black text-white mb-6">
               Ready to Get Results Like These?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
               Let's discuss your project and create a custom solution that drives real business results.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project Today
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project Today
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

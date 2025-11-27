@@ -33,7 +33,7 @@ export function CTASection({
           )}
 
           <div className="typography">
-            <p className="text-xl text-gray-300 container-narrow mb-10">
+            <p className="text-xl text-muted container-narrow mb-10">
               {description}
             </p>
           </div>
@@ -42,8 +42,8 @@ export function CTASection({
             {buttons.map((button, index) => {
               const isPrimary = button.variant !== 'secondary';
               const buttonClass = isPrimary
-                ? 'group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-gradient-secondary-hover rounded-lg'
-                : 'inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-gray-700 rounded-lg hover:border-cyan-400/50 hover:bg-gray-900/50 transition-all duration-200';
+                ? 'group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-muted-hover rounded-lg'
+                : 'inline-flex-center px-8 py-4 text-base font-semibold text-white border-2 border-border rounded-lg hover:border-cyan-400/50 hover:bg-background/50 transition-all duration-200';
 
               return (
                 <Link key={index} href={button.href} className={buttonClass}>

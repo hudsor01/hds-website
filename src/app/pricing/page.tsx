@@ -122,7 +122,7 @@ const faqs = [
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative section-spacing">
         <div className="container-wide">
@@ -138,7 +138,7 @@ export default function PricingPage() {
             {/* Hero Heading */}
             <h1 className="text-clamp-2xl font-black text-white leading-[1.1] mb-heading text-balance">
               <span className="block">Development That</span>
-              <span className="block gradient-text">
+              <span className="block text-cyan-400">
                 Pays for Itself
               </span>
               <span className="block text-responsive-lg font-bold text-muted-foreground mt-subheading">
@@ -169,7 +169,7 @@ export default function PricingPage() {
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-primary text-white px-4 py-2 rounded-full text-caption font-bold">
+                    <span className="bg-cyan-600 text-white px-4 py-2 rounded-full text-caption font-bold">
                       MOST POPULAR
                     </span>
                   </div>
@@ -177,7 +177,7 @@ export default function PricingPage() {
 
                 <div className="text-center mb-comfortable">
                   <h3 className="text-card-title font-bold text-white mb-subheading text-balance group-hover:text-cyan-400 transition-colors">{tier.name}</h3>
-                  <div className="text-section-title font-black gradient-text mb-subheading">{tier.price}</div>
+                  <div className="text-section-title font-black text-cyan-400 mb-subheading">{tier.price}</div>
                   <div className="typography">
                     <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
                   </div>
@@ -198,7 +198,7 @@ export default function PricingPage() {
                     <ul className="space-y-tight">
                       {tier.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-content">
-                          <div className="w-2 h-2 rounded-full bg-gradient-secondary mt-2" />
+                          <div className="w-2 h-2 rounded-full bg-muted mt-2" />
                           <span className="text-caption text-muted-foreground">{feature}</span>
                         </li>
                       ))}
@@ -243,10 +243,10 @@ export default function PricingPage() {
         <div className="container-wide">
           <div className="text-center mb-content-block typography">
             <h2 className="text-responsive-lg font-black text-white mb-heading">
-              Frequently Asked <span className="gradient-text">Questions</span>
+              Frequently Asked <span className="text-cyan-400">Questions</span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-gray-400">
+              <p className="text-subheading text-muted-foreground">
                 Everything you need to know about our pricing and process
               </p>
             </div>
@@ -257,7 +257,7 @@ export default function PricingPage() {
               <div key={index} className="glass-card-light card-padding hover:border-cyan-400/50 transition-smooth">
                 <h3 className="text-subheading font-bold text-white mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
-                  <p className="text-gray-400 leading-relaxed text-pretty">{faq.answer}</p>
+                  <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
               </div>
             ))}
@@ -274,7 +274,7 @@ export default function PricingPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-gray-300 mb-heading container-narrow">
+              <p className="text-subheading text-muted mb-heading container-narrow">
                 Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to plug the leaks fast.
               </p>
               <p className="text-cyan-400 font-semibold mb-content-block">

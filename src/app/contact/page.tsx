@@ -47,12 +47,12 @@ function ContactFormSkeleton() {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative min-h-screen flex-center overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-primary-20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-600-20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-gradient-decorative-purple rounded-full blur-3xl" />
           <div className="absolute inset-0 grid-pattern" />
         </div>
@@ -71,14 +71,14 @@ export default function ContactPage() {
                 <h1 className="text-clamp-2xl font-black text-white leading-none tracking-tight text-balance">
                   <span className="inline-block">Get Your Free</span>
                   <br />
-                  <span className="inline-block gradient-text">ROI Roadmap</span>
+                  <span className="inline-block text-cyan-400">ROI Roadmap</span>
                   <br />
                   <span className="inline-block">in 30 Minutes</span>
                 </h1>
               </div>
 
               <div className="typography">
-                <p className="text-responsive-md text-gray-300 leading-relaxed text-pretty">
+                <p className="text-responsive-md text-muted leading-relaxed text-pretty">
                   See exactly where your tech stack is leaking revenue—and how to fix it. No sales pitch. No commitment. Just actionable insights you can use immediately.
                 </p>
               </div>
@@ -88,8 +88,8 @@ export default function ContactPage() {
                 <div className="glass-card-light card-padding-sm space-y-tight">
                   <h3 className="text-body-lg font-bold text-white mb-subheading">What Happens Next?</h3>
 
-                  <div className="flex items-start gap-content text-gray-300">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">1</span>
                     </div>
                     <div>
@@ -98,8 +98,8 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-content text-gray-300">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">2</span>
                     </div>
                     <div>
@@ -108,8 +108,8 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-content text-gray-300">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary-20 border border-cyan-400/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted">
+                    <div className="w-10 h-10 rounded-full bg-cyan-600-20 border border-cyan-400/30 flex-center shrink-0">
                       <span className="text-cyan-400 font-bold">3</span>
                     </div>
                     <div>
@@ -119,7 +119,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-content text-gray-300 px-4 py-2 bg-green-400/10 border border-green-400/30 rounded-lg">
+                <div className="flex items-center gap-content text-muted px-4 py-2 bg-green-400/10 border border-green-400/30 rounded-lg">
                   <Clock className="w-6 h-6 text-green-400 shrink-0" />
                   <div>
                     <p className="font-semibold text-white">Guaranteed Response</p>
@@ -129,7 +129,7 @@ export default function ContactPage() {
 
                 <div className="px-4 py-2 bg-cyan-400/10 border border-cyan-400/30 rounded-lg">
                   <p className="text-caption text-cyan-400 font-semibold mb-subheading">Join 50+ successful businesses</p>
-                  <p className="text-caption text-gray-400">Average 250% ROI within 6 months</p>
+                  <p className="text-caption text-muted-foreground">Average 250% ROI within 6 months</p>
                 </div>
               </div>
             </div>
@@ -137,12 +137,12 @@ export default function ContactPage() {
             {/* Right Column - Contact Form */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden glass-card card-padding shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-hero-5" />
+                <div className="absolute inset-0 bg-background-5" />
                 <div className="relative z-10">
                   <div className="text-center mb-comfortable">
                     <h2 className="text-card-title font-bold text-white mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
                     <div className="typography">
-                      <p className="text-gray-400 text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
+                      <p className="text-muted-foreground text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
                     </div>
                   </div>
 
@@ -181,12 +181,12 @@ export default function ContactPage() {
         <div className="container-wide">
           <div className="text-center mb-content-block">
             <h2 className="text-clamp-xl font-black text-white mb-heading text-balance">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Visit Our Office
               </span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-gray-300 container-narrow text-pretty">
+              <p className="text-subheading text-muted container-narrow text-pretty">
                 Located in the heart of Florida&apos;s tech corridor, ready to serve clients worldwide.
               </p>
             </div>

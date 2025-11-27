@@ -14,7 +14,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
   }
 
   return (
-    <section className="py-16 bg-gradient-primary">
+    <section className="py-16 bg-cyan-600">
       <div className="container-wide">
         <h2 className="text-3xl font-black text-white mb-8 text-balance">{title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -32,7 +32,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
                   </div>
                 )}
                 <div className="p-6">
-                  <div className="flex flex-center gap-3 text-sm text-gray-400 mb-3">
+                  <div className="flex flex-center gap-3 text-sm text-muted-foreground mb-3">
                     <span>{formatDateLong(post.published_at)}</span>
                     <span className="flex flex-center gap-1">
                       <Clock className="w-4 h-4" />
@@ -44,7 +44,7 @@ export function RelatedPosts({ posts, title = "Related Articles" }: RelatedPosts
                       {post.title}
                     </Link>
                   </h3>
-                  <p className="text-gray-300 mb-4 line-clamp-2 text-pretty">
+                  <p className="text-muted mb-4 line-clamp-2 text-pretty">
                     {post.excerpt || post.custom_excerpt}
                   </p>
                   <Link

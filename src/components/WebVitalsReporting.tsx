@@ -6,6 +6,7 @@
 'use client';
 
 import { useReportWebVitals } from 'next/web-vitals';
+import { logger } from '@/lib/logger';
 
 interface PostHogClient {
   capture: (event: string, properties: Record<string, unknown>) => void;
@@ -46,8 +47,7 @@ export function WebVitalsReporting() {
     // Log performance issues in development
     if (process.env.NODE_ENV === 'development') {
       const rating = metric.rating === 'poor' ? '🔴' : metric.rating === 'needs-improvement' ? '🟡' : '🟢';
-      // eslint-disable-next-line no-console
-      console.log(`${rating} ${metric.name}:`, metric.value, metric.rating);
+      logger.info(`${rating} ${metric.name}: ${metric.value} (${metric.rating})`);
     }
   });
 
@@ -84,6 +84,6 @@ async function storeWebVital(metric: WebVitalMetric) {
     });
   } catch (error) {
     // Silently fail - don't disrupt user experience
-    console.error('Failed to store web vital:', error);
+    logger.error('Failed to store web vital:', error as Error);
   }
 }

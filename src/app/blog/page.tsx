@@ -39,9 +39,9 @@ export default async function BlogPage() {
   const allPosts = allPostsResult.posts;
 
   return (
-    <main className="min-h-screen bg-gradient-primary">
+    <main className="min-h-screen bg-cyan-600">
       {/* Hero Section */}
-      <section className="relative bg-gradient-hero section-spacing overflow-hidden">
+      <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           <div className="absolute inset-0 grid-pattern-subtle"></div>
@@ -53,9 +53,9 @@ export default async function BlogPage() {
             Strategic Insights
           </div>
           <h1 className="text-clamp-xl font-black text-white mb-heading text-balance">
-            Business <span className="gradient-text">Strategy</span> Blog
+            Business <span className="text-cyan-400">Strategy</span> Blog
           </h1>
-          <p className="text-subheading text-gray-300 container-narrow text-pretty">
+          <p className="text-subheading text-muted container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -63,11 +63,11 @@ export default async function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="section-spacing bg-gradient-primary">
+        <section className="section-spacing bg-cyan-600">
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Articles</h2>
-              <p className="text-gray-300 text-pretty">Essential reading for ambitious business owners</p>
+              <p className="text-muted text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -80,19 +80,19 @@ export default async function BlogPage() {
       )}
 
       {/* All Posts */}
-      <section className="section-spacing bg-gradient-primary">
+      <section className="section-spacing bg-cyan-600">
         <div className="container-wide">
           <div className="flex flex-col lg:flex-row gap-comfortable">
             {/* Main Content */}
             <div className="flex-1">
               <div className="text-center lg:text-left mb-content-block">
                 <h2 className="text-section-title font-black text-white mb-subheading text-balance">All Articles</h2>
-                <p className="text-gray-300 text-pretty">Strategic insights for business growth and digital dominance</p>
+                <p className="text-muted text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
               {allPosts.length === 0 ? (
                 <div className="glass-card rounded-xl p-8 text-center">
-                  <p className="text-gray-300 text-lg">No articles found. Check back soon for new content!</p>
+                  <p className="text-muted text-lg">No articles found. Check back soon for new content!</p>
                 </div>
               ) : (
                 <div className="space-y-8">
@@ -108,14 +108,14 @@ export default async function BlogPage() {
               {/* Newsletter Signup - TODO: Implement Ghost newsletter integration */}
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
-                <p className="text-gray-300 mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
+                <p className="text-muted mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
                 <Link
                   href="/contact"
                   className="inline-block w-full text-center bg-cyan-400 text-black font-semibold py-2 px-6 rounded-lg hover:bg-cyan-500 transition-colors"
                 >
                   Contact Us to Subscribe
                 </Link>
-                <p className="text-xs text-gray-500 mt-2">Strategic insights, no spam.</p>
+                <p className="text-xs text-muted-foreground mt-2">Strategic insights, no spam.</p>
               </div>
 
               {/* Topics */}
@@ -124,7 +124,7 @@ export default async function BlogPage() {
               {/* CTA */}
               <div className="glass-card rounded-xl card-padding-sm text-center">
                 <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Ready to Dominate Your Market?</h3>
-                <p className="text-gray-300 mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
+                <p className="text-muted mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
                   className="inline-block bg-green-400 text-black font-semibold p-button rounded-lg hover:bg-green-500 transition-colors"

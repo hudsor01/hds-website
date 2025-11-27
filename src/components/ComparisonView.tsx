@@ -20,12 +20,12 @@ export function ComparisonView({
   setComparisonMode
 }: ComparisonViewProps) {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-6">
+    <div className="bg-white rounded-xl shadow-lg p-6 border border-border mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-900">Compare Vehicles</h2>
+        <h2 className="text-xl font-semibold text-foreground">Compare Vehicles</h2>
         <button
           onClick={() => setComparisonMode(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
+          className="text-muted-foreground hover:text-muted-foreground transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -34,7 +34,7 @@ export function ComparisonView({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-border">
               <th className="text-left py-2 px-3">Vehicle</th>
               <th className="text-right py-2 px-3">Purchase Price</th>
               <th className="text-right py-2 px-3">Down Payment</th>

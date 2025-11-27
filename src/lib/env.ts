@@ -6,6 +6,7 @@
  */
 
 import { z } from 'zod'
+import { logger } from '@/lib/logger';
 
 // Define the schema for all environment variables
 const envSchema = z.object({
@@ -47,8 +48,8 @@ function validateEnv() {
     const parsed = envSchema.safeParse(process.env)
 
     if (!parsed.success) {
-      console.error('❌ Environment variable validation failed:')
-      console.error(JSON.stringify(parsed.error.format(), null, 2))
+      logger.error('❌ Environment variable validation failed:')
+      logger.error(JSON.stringify(parsed.error.format(), null, 2))
 
       // In production, fail fast
       if (process.env.NODE_ENV === 'production') {
@@ -56,13 +57,13 @@ function validateEnv() {
       }
 
       // In development, warn but continue
-      console.warn('⚠️  Continuing with invalid environment variables (development mode)')
+      logger.warn('⚠️  Continuing with invalid environment variables (development mode)')
       return process.env as z.infer<typeof envSchema>
     }
 
     return parsed.data
   } catch (error) {
-    console.error('❌ Failed to validate environment variables:', error)
+    logger.error('❌ Failed to validate environment variables:', error as Error)
     throw error
   }
 }

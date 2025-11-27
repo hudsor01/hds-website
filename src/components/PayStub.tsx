@@ -39,7 +39,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
 
       <div className={cn(
         "max-w-[8.5in] min-h-[11in] mx-auto bg-white p-[1in]",
-        "font-sans text-[12px] text-black border border-gray-300"
+        "font-sans text-[12px] text-black border border-border"
       )}>
         {/* Header */}
         <div className="border-b-2 border-black pb-5 mb-5">
@@ -48,14 +48,14 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
               <h2 className="text-lg font-bold m-0 mb-2.5">EARNINGS STATEMENT</h2>
               <div>
                 <strong>{employeeData.employerName || '[EMPLOYER NAME]'}</strong><br/>
-                <span className="text-[10px] text-gray-600">
+                <span className="text-[10px] text-muted-foreground">
                   Pay Period: {formatDate(payPeriod.payDate)} - {formatDate(payPeriod.payDate)}<br/>
                   Pay Date: {formatDate(payPeriod.payDate)}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <div className="border border-black p-2.5 bg-gray-50">
+              <div className="border border-black p-2.5 bg-muted">
                 <strong>CHECK #{payPeriod.period.toString().padStart(4, '0')}</strong><br/>
                 <span className="text-base font-bold">
                   {formatCurrency(payPeriod.netPay)}
@@ -92,14 +92,14 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
             <div className="text-right"><strong>Hours</strong></div>
             <div className="text-right"><strong>Current</strong></div>
 
-            <div className="border-t border-gray-300 pt-1.5">Regular</div>
-            <div className="border-t border-gray-300 pt-1.5 text-right">
+            <div className="border-t border-border pt-1.5">Regular</div>
+            <div className="border-t border-border pt-1.5 text-right">
               {formatCurrency(employeeData.hourlyRate)}
             </div>
-            <div className="border-t border-gray-300 pt-1.5 text-right">
+            <div className="border-t border-border pt-1.5 text-right">
               {payPeriod.hours}
             </div>
-            <div className="border-t border-gray-300 pt-1.5 text-right">
+            <div className="border-t border-border pt-1.5 text-right">
               {formatCurrency(payPeriod.grossPay)}
             </div>
           </div>
@@ -117,11 +117,11 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
             <div className="text-right"><strong>Current</strong></div>
             <div className="text-right"><strong>YTD</strong></div>
 
-            <div className="border-t border-gray-300 pt-1.5">Federal Income Tax</div>
-            <div className="border-t border-gray-300 pt-1.5 text-right">
+            <div className="border-t border-border pt-1.5">Federal Income Tax</div>
+            <div className="border-t border-border pt-1.5 text-right">
               {formatCurrency(payPeriod.federalTax)}
             </div>
-            <div className="border-t border-gray-300 pt-1.5 text-right">
+            <div className="border-t border-border pt-1.5 text-right">
               {formatCurrency(ytdTotals.federalTax)}
             </div>
 
@@ -140,7 +140,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         </div>
 
         {/* Net Pay Summary */}
-        <div className="border-2 border-black p-4 bg-gray-100 mb-5">
+        <div className="border-2 border-black p-4 bg-muted mb-5">
           <div className="flex-between items-center text-base font-bold">
             <span>NET PAY:</span>
             <span>{formatCurrency(payPeriod.netPay)}</span>
@@ -167,7 +167,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-[10px] text-gray-600 border-t border-gray-300 pt-2.5">
+        <div className="mt-8 text-[10px] text-muted-foreground border-t border-border pt-2.5">
           <div className="text-center">
             This statement is for informational purposes only and does not constitute an official document.
             <br/>

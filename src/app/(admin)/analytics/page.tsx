@@ -9,6 +9,7 @@ import { LeadDetailModal } from '@/components/admin/LeadDetailModal';
 import { MetricCard } from '@/components/admin/MetricCard';
 import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
+import { logger } from '@/lib/logger';
 import {
     Calendar,
     Download,
@@ -101,7 +102,7 @@ export default function AnalyticsDashboard() {
       const data = await response.json();
       setOverview(data);
     } catch (error) {
-      console.error('Failed to fetch analytics:', error);
+      logger.error('Failed to fetch analytics:', error as Error);
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +114,7 @@ export default function AnalyticsDashboard() {
       const data = await response.json();
       setTrends(data);
     } catch (error) {
-      console.error('Failed to fetch trends:', error);
+      logger.error('Failed to fetch trends:', error as Error);
     }
   }, [timeRange]);
 
@@ -131,7 +132,7 @@ export default function AnalyticsDashboard() {
       setAllLeads(fetchedLeads);
       setLeads(fetchedLeads); // Will be filtered by useEffect
     } catch (error) {
-      console.error('Failed to fetch leads:', error);
+      logger.error('Failed to fetch leads:', error as Error);
     }
   }, [qualityFilter]);
 
@@ -230,9 +231,9 @@ export default function AnalyticsDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-muted dark:bg-background">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div className="border-b border-border bg-white dark:border-border dark:bg-muted">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
@@ -274,7 +275,7 @@ export default function AnalyticsDashboard() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Search and Filters Bar */}
-        <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+        <div className="mb-6 rounded-lg border border-border bg-white p-4 dark:border-border dark:bg-muted">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
@@ -298,11 +299,11 @@ export default function AnalyticsDashboard() {
 
             {/* Calculator Type Filter */}
             <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-gray-400" />
+              <Filter className="h-5 w-5 text-muted-foreground" />
               <select
                 value={calculatorFilter}
                 onChange={(e) => setCalculatorFilter(e.target.value)}
-                className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="rounded-md border-border py-2 pl-3 pr-10 text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
               >
                 <option value="all">All Calculators</option>
                 <option value="roi-calculator">ROI Calculator</option>
@@ -420,8 +421,8 @@ export default function AnalyticsDashboard() {
         )}
 
         {/* Recent Leads Table */}
-        <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
-          <div className="border-b border-gray-200 p-6 dark:border-gray-700">
+        <div className="rounded-lg border border-border bg-white dark:border-border dark:bg-muted">
+          <div className="border-b border-border p-6 dark:border-border">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-text-primary dark:text-text-inverted">
                 Recent Leads
@@ -445,8 +446,8 @@ export default function AnalyticsDashboard() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+            <table className="min-w-full divide-y divide-border dark:divide-border">
+              <thead className="bg-muted dark:bg-background">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
                     Lead
@@ -468,12 +469,12 @@ export default function AnalyticsDashboard() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+              <tbody className="divide-y divide-border bg-white dark:divide-border dark:bg-muted">
                 {leads.map((lead) => (
                   <tr
                     key={lead.id}
                     onClick={() => handleLeadClick(lead)}
-                    className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    className="cursor-pointer hover:bg-muted dark:hover:bg-muted transition-colors">
                     <td className="whitespace-nowrap px-6 py-4">
                       <div>
                         <div className="font-medium text-text-primary dark:text-text-inverted">

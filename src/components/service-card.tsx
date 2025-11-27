@@ -17,7 +17,7 @@ export function ServiceCard({
   description,
   features,
   icon,
-  gradient = "bg-gradient-secondary",
+  gradient = "bg-muted",
   pricing,
   className
 }: ServiceCardProps) {
@@ -37,7 +37,7 @@ export function ServiceCard({
         </div>
 
         {/* Description */}
-        <p className="text-gray-400 leading-relaxed">
+        <p className="text-muted-foreground leading-relaxed">
           {description}
         </p>
 
@@ -48,14 +48,14 @@ export function ServiceCard({
               <svg className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-gray-300">{feature}</span>
+              <span className="text-muted">{feature}</span>
             </li>
           ))}
         </ul>
 
         {/* Pricing */}
         {pricing && (
-          <div className="pt-4 border-t border-gray-700">
+          <div className="pt-4 border-t border-border">
             <p className="text-lg font-semibold text-cyan-400">{pricing}</p>
           </div>
         )}

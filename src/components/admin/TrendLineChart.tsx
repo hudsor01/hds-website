@@ -31,12 +31,12 @@ export function TrendLineChart({
 }: TrendLineChartProps) {
   if (datasets.length === 0 || datasets.every(d => d.data.length === 0)) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <h3 className="mb-6 text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted">
+        <h3 className="mb-6 text-lg font-semibold text-foreground dark:text-white">
           {title}
         </h3>
         <div className="py-8 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             No data available
           </p>
         </div>
@@ -65,8 +65,8 @@ export function TrendLineChart({
   const xLabels = allDates.filter((_, i) => i % labelInterval === 0 || i === allDates.length - 1);
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-      <h3 className="mb-6 text-lg font-semibold text-gray-900 dark:text-white">
+    <div className="rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted">
+      <h3 className="mb-6 text-lg font-semibold text-foreground dark:text-white">
         {title}
       </h3>
 
@@ -176,11 +176,11 @@ export function TrendLineChart({
           })}
         </svg>
       </div>
-      <div className="mt-4 flex items-center justify-center gap-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+      <div className="mt-4 flex items-center justify-center gap-4 border-t border-border pt-4 dark:border-border">
         {datasets.map(dataset => (
           <div key={dataset.label} className="flex items-center gap-2 text-sm">
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: dataset.color }} />
-            <span className="text-gray-600 dark:text-gray-400">{dataset.label}</span>
+            <span className="text-muted-foreground dark:text-muted-foreground">{dataset.label}</span>
           </div>
         ))}
       </div>

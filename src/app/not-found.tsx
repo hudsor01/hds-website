@@ -15,14 +15,14 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-primary flex-center px-6 relative">
+    <div className="min-h-screen bg-cyan-600 flex-center px-6 relative">
       <div className="container-narrow text-center">
         {/* 404 Visual */}
         <div className="mb-12">
-          <h1 className="text-8xl lg:text-9xl font-black gradient-text mb-4">
+          <h1 className="text-8xl lg:text-9xl font-black text-cyan-400 mb-4">
             404
           </h1>
-          <div className="w-32 h-1 bg-gradient-secondary mx-auto rounded-full"></div>
+          <div className="w-32 h-1 bg-muted mx-auto rounded-full"></div>
         </div>
         {/* Error Message */}
         <div className="mb-12">
@@ -88,7 +88,7 @@ export default function NotFound() {
           </div>
         </div>
         {/* Background Elements */}
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-secondary opacity-5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-muted opacity-5 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
       </div>
     </div>

@@ -1,5 +1,7 @@
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
 import {
+    ArrowRight,
     BarChart3,
     Calculator,
     Clock,
@@ -9,8 +11,7 @@ import {
     TrendingUp,
     Users,
     Zap
-} from 'lucide-react';
-import Link from 'next/link';
+} from 'lucide-react'
 import { NewsletterSignup } from '@/components/NewsletterSignup';
 
 export default function HomePage() {
@@ -43,63 +44,71 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-20 lg:py-32">
-        <div className="container-wide sm:px-6 lg:px-8 w-full">
-          <div className="lg:grid lg:grid-cols-5 lg:gap-12 items-center">
+      <section className="relative py-24 lg:py-40 px-4 sm:px-6">
+        <div className="container-wide">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
 
             {/* Left Side - Content */}
-            <div className="lg:col-span-3 lg:pr-8">
+            <div className="lg:pr-8">
               <div className="space-y-8">
                 <div>
-                  <h1 className="text-responsive-lg font-black text-text-inverted leading-[1.1] mb-6 text-balance">
-                    <span className="block">Stop Losing Revenue to</span>
-                    <span className="block gradient-text bg-clip-text text-transparent">
+                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-8">
+                    <span className="block mb-2">Stop Losing Revenue to</span>
+                    <span className="block text-cyan-400">
                       Technical Bottlenecks
                     </span>
-                    <span className="block text-responsive-md font-bold text-text-secondary mt-2">
-                      Ship 3x Faster, 60% Cheaper
-                    </span>
                   </h1>
-                </div>
-
-                <div className="typography">
-                  <p className="lead max-w-2xl text-pretty">
-                    We build and scale your technical operations in weeks, not months.
-                    No hiring delays. No training costs. Just proven senior talent ready to execute.
+                  <p className="text-responsive-xl font-bold text-cyan-400 mb-6">
+                    Ship 3x Faster, 60% Cheaper
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <CTAButton href="/contact" variant="primary" size="lg">
-                    See Your ROI in 30 Days
-                  </CTAButton>
-                  <CTAButton href="/portfolio" variant="primary" size="lg">
-                    View Case Studies
-                  </CTAButton>
+                <p className="text-xl text-muted leading-relaxed max-w-xl">
+                  We build and scale your technical operations in weeks, not months.
+                  No hiring delays. No training costs. Just proven senior talent ready to execute.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-6">
+                  <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        See Your ROI in 30 Days
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+                  <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        View Case Studies
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
                 </div>
 
                 {/* Trust Indicators */}
-                <div className="flex-center gap-6 pt-8 border-t border-border-primary">
-                  <div className="flex-center gap-2 text-text-secondary">
-                    <Clock className="w-5 h-5 text-success" />
-                    <span className="small">Average 250% ROI</span>
+                <div className="flex flex-wrap gap-8 pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-green-400" />
+                    </div>
+                    <span className="text-sm font-medium text-muted">Average 250% ROI</span>
                   </div>
-                  <div className="flex-center gap-2 text-text-secondary">
-                    <Users className="w-5 h-5 text-blue-500" />
-                    <span className="small">Zero onboarding time</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <span className="text-sm font-medium text-muted">Zero onboarding time</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Side - Terminal Display */}
-            <div className="lg:col-span-2 mt-16 lg:mt-0">
+            <div className="mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-gradient-hero-20 rounded-3xl blur-3xl" />
-                <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-primary-30 rounded-full blur-2xl" />
+                <div className="absolute inset-0 bg-cyan-500/20 rounded-3xl blur-3xl opacity-50" />
+                <div className="absolute top-4 right-4 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
@@ -143,17 +152,15 @@ export default function HomePage() {
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 sm:px-6">
         <div className="container-wide">
-          <div className="text-center mb-16 typography">
-            <h2 className="text-responsive-md font-black text-white mb-4">
+          <div className="text-center mb-20">
+            <h2 className="text-responsive-2xl font-black text-white mb-6">
               How We Solve Your Biggest Problems
             </h2>
-            <div className="typography">
-              <p className="large muted container-narrow">
-                Three ways we help SaaS companies go from struggling to scaling
-              </p>
-            </div>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Three ways we help SaaS companies go from struggling to scaling
+            </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -164,7 +171,7 @@ export default function HomePage() {
               >
                 <div className="space-y-6">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-gradient-hero-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
+                    <div className="p-3 rounded-xl bg-background-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-cyan-400" />
                     </div>
                     <h3 className="text-xl font-bold text-text-inverted group-hover:text-cyan-400 transition-smooth">
@@ -181,7 +188,7 @@ export default function HomePage() {
                   <div className="space-y-3">
                     {solution.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex-center space-x-3">
-                        <div className="w-2 h-2 rounded-full bg-gradient-secondary" />
+                        <div className="w-2 h-2 rounded-full bg-muted" />
                         <span className="text-responsive-sm text-muted-foreground">{feature}</span>
                       </div>
                     ))}
@@ -194,26 +201,24 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - Enhanced */}
-      <section className="relative py-20 px-4 bg-gradient-secondary overflow-hidden">
+      <section className="relative py-24 px-4 sm:px-6 bg-muted overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-600/5" />
+        <div className="absolute inset-0 bg-cyan-600/5" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
 
         <div className="container-wide relative">
-          <div className="text-center mb-20 typography">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="gradient-text relative">
+          <div className="text-center mb-24">
+            <h2 className="text-responsive-2xl font-black text-white mb-6">
+              <span className="text-cyan-400 relative inline-block">
                 Proven Impact
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
               </span>
             </h2>
 
-            <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-text-secondary leading-relaxed">
-                Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
-              </p>
-            </div>
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
+              Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
+            </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
@@ -226,34 +231,34 @@ export default function HomePage() {
                 {/* Card with enhanced styling */}
                 <div className="relative glass-card-light p-8 lg:p-10 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
                   {/* Top accent line */}
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
                   {/* Metric with enhanced styling */}
                   <div className="relative mb-4">
                     <div className="text-4xl lg:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-all duration-300 font-mono">
                       {result.metric}
                     </div>
-                    <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/10 to-blue-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <div className="absolute -inset-4 bg-cyan-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-gray-200 mb-3 group-hover:text-white transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-white transition-colors duration-300">
                     {result.label}
                   </div>
 
                   {/* Period with accent styling */}
-                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
+                  <div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-muted/50 rounded-full border border-border/50">
                     {result.period}
                   </div>
 
                   {/* Subtle glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-400/5 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-cyan-400/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 </div>
 
                 {/* Connecting dots for visual flow */}
                 {index < results.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
-                    <div className="w-3 h-0.5 bg-gradient-to-r from-cyan-400/50 to-transparent"></div>
+                    <div className="w-3 h-0.5 bg-cyan-400/50"></div>
                   </div>
                 )}
               </div>
@@ -270,21 +275,19 @@ export default function HomePage() {
       </section>
 
       {/* Free Tools Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-bg-primary-dark to-bg-secondary-dark">
+      <section className="py-24 px-4 sm:px-6 bg-background">
         <div className="container-wide">
-          <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-text-inverted mb-6">
-              <span className="gradient-text relative">
+          <div className="text-center mb-20">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6">
+              <span className="text-cyan-400 relative inline-block">
                 Free Business Tools
-                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
               </span>
             </h2>
 
-            <div className="typography max-w-2xl mx-auto">
-              <p className="text-xl text-text-secondary leading-relaxed">
-                Calculate your potential in 60 seconds. No signup required.
-              </p>
-            </div>
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
+              Calculate your potential in 60 seconds. No signup required.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -293,7 +296,7 @@ export default function HomePage() {
               href="/roi-calculator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
@@ -335,7 +338,7 @@ export default function HomePage() {
               href="/cost-estimator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
@@ -377,7 +380,7 @@ export default function HomePage() {
               href="/performance-calculator"
               className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
 
               <div className="mb-6">
                 <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
@@ -441,31 +444,37 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4 sm:px-6">
         <div className="container-wide text-center">
-          <div className="glass-section p-12 md:p-16">
-            <Rocket className="w-16 h-16 text-cyan-400 mx-auto mb-8" />
+          <div className="glass-section p-12 md:p-20">
+            <div className="w-20 h-20 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-8">
+              <Rocket className="w-10 h-10 text-cyan-400" />
+            </div>
 
-            <h2 className="text-responsive-md font-black text-text-inverted mb-6">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6 max-w-4xl mx-auto">
               Your competitors ship faster.
-              <span className="block gradient-text mt-2">
+              <span className="block text-cyan-400 mt-4">
                 Why don&apos;t you?
               </span>
             </h2>
 
-            <div className="typography">
-              <p className="large text-text-secondary mb-10 container-narrow">
-                Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
-              </p>
-            </div>
+            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+              Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
+            </p>
 
-            <div className="flex-center flex-col sm:flex-row gap-4">
-              <CTAButton href="/contact" variant="primary" size="lg">
-                Get Your Free Roadmap
-              </CTAButton>
-              <CTAButton href="/portfolio" variant="secondary" size="lg">
-                See Proven Results First
-              </CTAButton>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Your Free Roadmap
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+              <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See Proven Results First
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
             </div>
           </div>
         </div>

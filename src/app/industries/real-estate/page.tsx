@@ -3,9 +3,10 @@
  * Tailored for real estate companies and property management
  */
 
-import { CTAButton } from '@/components/cta-button';
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { ArrowRight, Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
-import { Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RealEstatePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-cyan-600/10">
       {/* Hero */}
       <section className="py-20 px-4">
         <div className="container-wide text-center">
@@ -25,20 +26,26 @@ export default function RealEstatePage() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Close More Deals With <span className="gradient-text">Modern Technology</span>
+            Close More Deals With <span className="text-cyan-400">Modern Technology</span>
           </h1>
 
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
             Your buyers are online. Your listings deserve better than outdated platforms. We build real estate technology that converts leads into closed deals.
           </p>
 
           <div className="flex justify-center gap-4">
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Get Free Platform Audit
-            </CTAButton>
-            <CTAButton href="/portfolio" variant="secondary" size="lg">
-              See Real Estate Projects
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Get Free Platform Audit
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
+            <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="/portfolio">
+        See Real Estate Projects
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>
@@ -83,7 +90,7 @@ export default function RealEstatePage() {
       </section>
 
       {/* Real Estate Metrics */}
-      <section className="py-16 px-4 bg-gray-800/50">
+      <section className="py-16 px-4 bg-muted/50">
         <div className="container-wide">
           <h2 className="text-3xl font-bold text-white text-center mb-12">
             Results That Close More Deals
@@ -98,8 +105,8 @@ export default function RealEstatePage() {
             ].map((stat, i) => (
               <div key={i} className="text-center glass-card p-6">
                 <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
-                <div className="text-4xl font-black gradient-text mb-2">{stat.metric}</div>
-                <div className="text-gray-300">{stat.label}</div>
+                <div className="text-4xl font-black text-cyan-400 mb-2">{stat.metric}</div>
+                <div className="text-muted">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -128,7 +135,7 @@ export default function RealEstatePage() {
                 <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm">✓</span>
                 </div>
-                <span className="text-gray-300">{capability}</span>
+                <span className="text-muted">{capability}</span>
               </div>
             ))}
           </div>
@@ -153,12 +160,15 @@ export default function RealEstatePage() {
             <h2 className="text-4xl font-black text-white mb-6">
               Ready to Close More Deals?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
               Get a free platform audit showing exactly how to increase lead conversions and close deals faster.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Schedule Free Consultation
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Schedule Free Consultation
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

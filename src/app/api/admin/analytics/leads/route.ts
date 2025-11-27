@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     const { data: leads, error } = await query;
 
     if (error) {
-      logger.error('Failed to fetch leads', error);
+      logger.error('Failed to fetch leads', error as Error);
       return NextResponse.json(
         { error: 'Failed to fetch leads' },
         { status: 500 }

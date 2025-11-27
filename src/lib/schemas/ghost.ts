@@ -6,6 +6,7 @@
  */
 
 import { z } from 'zod'
+import { logger } from '@/lib/logger';
 
 // Author schema
 export const ghostAuthorSchema = z.object({
@@ -148,7 +149,7 @@ export function parseGhostResponse<T>(
     return schema.parse(data)
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error(`Ghost CMS validation error in ${context}:`, {
+      logger.error(`Ghost CMS validation error in ${context}:`, {
         issues: error.issues,
         data: JSON.stringify(data, null, 2),
       })
@@ -162,7 +163,7 @@ export function parseGhostPosts(data: unknown): GhostPost[] {
   try {
     return z.array(ghostPostSchema).parse(data)
   } catch (error) {
-    console.error('Failed to validate Ghost posts:', error)
+    logger.error('Failed to validate Ghost posts:', error as Error)
     return []
   }
 }
@@ -172,7 +173,7 @@ export function parseGhostTags(data: unknown): GhostTag[] {
   try {
     return z.array(ghostTagSchema).parse(data)
   } catch (error) {
-    console.error('Failed to validate Ghost tags:', error)
+    logger.error('Failed to validate Ghost tags:', error as Error)
     return []
   }
 }
@@ -182,7 +183,7 @@ export function parseGhostAuthors(data: unknown): GhostAuthor[] {
   try {
     return z.array(ghostAuthorSchema).parse(data)
   } catch (error) {
-    console.error('Failed to validate Ghost authors:', error)
+    logger.error('Failed to validate Ghost authors:', error as Error)
     return []
   }
 }

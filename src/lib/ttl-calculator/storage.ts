@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type { SavedCalculation, VehicleInputs } from '../../types/ttl-types'
 import { calculatePayment, calculateTTL } from './calculator'
 import { calculateLeaseComparison } from './lease'
@@ -16,7 +17,7 @@ export function getSavedCalculations(): SavedCalculation[] {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   } catch (error) {
-    console.warn('Error loading saved calculations:', error);
+    logger.error('Error loading saved calculations:', error as Error);
     return [];
   }
 }
@@ -65,7 +66,7 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
     return id;
   } catch (error) {
-    console.warn('Error saving calculation:', error);
+    logger.error('Error saving calculation:', error as Error);
     throw new Error('Failed to save calculation');
   }
 }
@@ -86,7 +87,7 @@ export function deleteCalculation(id: string): void {
     const filtered = calculations.filter(calc => calc.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   } catch (error) {
-    console.warn('Error deleting calculation:', error);
+    logger.error('Error deleting calculation:', error as Error);
   }
 }
 
@@ -99,7 +100,7 @@ export function clearAllCalculations(): void {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.warn('Error clearing calculations:', error);
+    logger.error('Error clearing calculations:', error as Error);
   }
 }
 
@@ -116,6 +117,6 @@ export function updateCalculationName(id: string, newName: string): void {
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.warn('Error updating calculation name:', error);
+    logger.error('Error updating calculation name:', error as Error);
   }
 }

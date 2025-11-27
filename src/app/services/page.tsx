@@ -1,9 +1,9 @@
 'use client';
 
 import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
-import Link from "next/link";
-import { CTAButton } from '@/components/cta-button';
-import { BackgroundPattern } from "@/components/BackgroundPattern";
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button'
+import { BackgroundPattern } from '@/components/BackgroundPattern';
 
 interface Service {
   title: string;
@@ -27,7 +27,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $5,000",
     icon: Code2,
-    gradient: "bg-gradient-secondary",
+    gradient: "bg-muted",
   },
   {
     title: "Custom Solutions",
@@ -55,7 +55,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $2,000",
     icon: BarChart3,
-    gradient: "bg-gradient-secondary",
+    gradient: "bg-muted",
   },
 ];
 
@@ -107,7 +107,7 @@ const process: ProcessStep[] = [
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-gradient-hero">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative min-h-screen flex-center overflow-hidden">
         {/* Background Elements */}
@@ -124,9 +124,9 @@ export default function ServicesPage() {
             <div>
               <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
                 <span className="inline-block">Technical</span>
-                <span className="inline-block mx-4 gradient-text">Services</span>
+                <span className="inline-block mx-4 text-cyan-400">Services</span>
                 <span className="inline-block">That</span>
-                <span className="inline-block ml-4 gradient-text">Scale</span>
+                <span className="inline-block ml-4 text-cyan-400">Scale</span>
               </h1>
             </div>
 
@@ -138,13 +138,19 @@ export default function ServicesPage() {
 
             <div>
               <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
-                <CTAButton href="/contact" variant="primary" size="lg">
-                  Start Your Project
-                </CTAButton>
+                <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
 
-                <CTAButton href="#process" variant="secondary" size="lg">
-                  See Our Process
-                </CTAButton>
+                <Button asChild variant="outline" size="lg" trackConversion={true}>
+      <Link href="#process">
+        See Our Process
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
               </div>
             </div>
           </div>
@@ -155,7 +161,7 @@ export default function ServicesPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Our Services
               </span>
             </h2>
@@ -194,7 +200,7 @@ export default function ServicesPage() {
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
-                          <div className="w-5 h-5 rounded-full bg-gradient-secondary flex-center">
+                          <div className="w-5 h-5 rounded-full bg-muted flex-center">
                             <Check className="h-3 w-3 text-black" />
                           </div>
                         </div>
@@ -209,7 +215,7 @@ export default function ServicesPage() {
                   
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-hero-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-gradient-primary-30 hover:border-cyan-400 transition-all duration-300"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-background-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-cyan-600-30 hover:border-cyan-400 transition-all duration-300"
                   >
                     Get Started
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -225,7 +231,7 @@ export default function ServicesPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Proven Results
               </span>
             </h2>
@@ -254,7 +260,7 @@ export default function ServicesPage() {
         <div className="container-wide">
           <div className="text-center mb-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 Our Process
               </span>
             </h2>
@@ -297,7 +303,7 @@ export default function ServicesPage() {
           <div className="relative z-10 text-center glass-section p-12 md:p-16">
             <h2 className="text-responsive-md font-black text-white mb-6">
               Ready to accelerate 
-              <span className="gradient-text">
+              <span className="text-cyan-400">
                 {" "}your growth?
               </span>
             </h2>

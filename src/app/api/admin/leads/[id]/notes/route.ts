@@ -3,6 +3,7 @@
  * Handles creating and fetching notes for leads
  */
 
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { LeadNote, LeadNoteInsert } from '@/types/supabase-helpers';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -35,7 +36,7 @@ export async function GET(
       .order('created_at', { ascending: true })) as unknown as { data: LeadNote[] | null; error: unknown };
 
     if (error) {
-      console.error('Failed to fetch notes:', error);
+      logger.error('Failed to fetch notes:', error as Error);
       return NextResponse.json(
         { error: 'Failed to fetch notes' },
         { status: 500 }
@@ -44,7 +45,7 @@ export async function GET(
 
     return NextResponse.json({ notes: notes || [] });
   } catch (error) {
-    console.error('Notes fetch error:', error);
+    logger.error('Notes fetch error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -83,7 +84,7 @@ export async function POST(
       .single()) as unknown as { data: LeadNote | null; error: unknown };
 
     if (error) {
-      console.error('Failed to create note:', error);
+      logger.error('Failed to create note:', error as Error);
       return NextResponse.json(
         { error: 'Failed to create note' },
         { status: 500 }
@@ -99,7 +100,7 @@ export async function POST(
       );
     }
 
-    console.error('Note creation error:', error);
+    logger.error('Note creation error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

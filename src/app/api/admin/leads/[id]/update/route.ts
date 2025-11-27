@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import { z } from 'zod';
 
@@ -64,7 +65,7 @@ export async function PATCH(
       .single();
 
     if (error) {
-      console.error('Failed to update lead:', error);
+      logger.error('Failed to update lead:', error as Error);
       return NextResponse.json(
         { error: 'Failed to update lead' },
         { status: 500 }
@@ -80,7 +81,7 @@ export async function PATCH(
       );
     }
 
-    console.error('Lead update error:', error);
+    logger.error('Lead update error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

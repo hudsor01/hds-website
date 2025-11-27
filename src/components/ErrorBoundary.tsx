@@ -75,7 +75,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex-center p-6">
+    <div className="min-h-screen bg-background flex-center p-6">
       <div className="max-w-md w-full text-center">
         <div className="glass-card p-8 border border-danger/20">
           <AlertTriangle className="w-16 h-16 text-danger mx-auto mb-6" />

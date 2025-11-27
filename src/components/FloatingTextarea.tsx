@@ -56,11 +56,11 @@ export default function FloatingTextarea({
         rows={rows}
         className={`
           peer w-full px-4 pt-6 pb-2
-          bg-gray-800/50 border rounded-lg
+          bg-muted/50 border rounded-lg
           text-white placeholder-transparent resize-none
           transition-all duration-200 ease-in-out
           ${disabled
-            ? 'border-gray-700 cursor-not-allowed opacity-50'
+            ? 'border-border cursor-not-allowed opacity-50'
             : isFocused
               ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
               : 'border-gray-600 hover:border-gray-500'
@@ -97,8 +97,8 @@ export default function FloatingTextarea({
         className={`
           absolute inset-0 rounded-lg pointer-events-none
           transition-all duration-200 ease-in-out
-          ${isFocused 
-            ? 'ring-1 ring-cyan-400/30 ring-offset-1 ring-offset-transparent' 
+          ${isFocused
+            ? 'ring-1 ring-cyan-400/30'
             : ''
           }
         `}

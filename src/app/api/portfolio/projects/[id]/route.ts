@@ -25,7 +25,7 @@ const portfolioProjects: PortfolioProject[] = [
     category: "SaaS Platform",
     description: "Modern property management platform helping landlords streamline operations, tenant communications, and financial tracking with automated workflows.",
     image: "/portfolio/tenantflow.jpg",
-    gradient: "bg-gradient-primary",
+    gradient: "bg-cyan-600",
     stats: {
       properties: "1K+",
       efficiency: "+300%",
@@ -56,7 +56,7 @@ const portfolioProjects: PortfolioProject[] = [
     category: "Personal Portfolio",
     description: "Professional portfolio showcasing leadership experience, technical expertise, and project management capabilities with clean, modern design.",
     image: "/portfolio/richard-portfolio.jpg",
-    gradient: "bg-gradient-secondary",
+    gradient: "bg-muted",
     stats: {
       projects: "50+",
       experience: "10+ years",
@@ -71,7 +71,7 @@ const portfolioProjects: PortfolioProject[] = [
     category: "Business Website",
     description: "Company website showcasing full-stack development, revenue operations, and partnership management services with conversion-optimized design.",
     image: "/portfolio/hudson-digital.jpg",
-    gradient: "bg-gradient-primary",
+    gradient: "bg-cyan-600",
     stats: {
       leads: "+250%",
       performance: "98/100",

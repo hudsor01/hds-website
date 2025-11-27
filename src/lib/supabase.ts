@@ -9,6 +9,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger';
 import type { Database, Json } from '@/types/database'
 import {
   logEntrySchema,
@@ -21,7 +22,6 @@ import {
   pageViewSchema,
   analyticsQuerySchema,
 } from '@/lib/schemas'
-import { logger } from './logger'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -29,10 +29,10 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 // Only validate in runtime, not during build
 if (typeof window !== 'undefined' || process.env.NODE_ENV === 'development') {
   if (!supabaseUrl) {
-    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_URL')
+    logger.warn('Missing env var: NEXT_PUBLIC_SUPABASE_URL')
   }
   if (!supabaseAnonKey) {
-    console.warn('Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY')
+    logger.warn('Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY')
   }
 }
 
@@ -182,7 +182,7 @@ async function processBatchQueue() {
       try {
         await supabase.from(table).insert(data as never);
       } catch (error) {
-        console.error(`Batch insert failed for ${table}:`, error);
+        logger.error(`Batch insert failed for ${table}:`, error as Error);
       }
     }
   } finally {
@@ -205,7 +205,7 @@ function queueForBatch(table: string, data: unknown): void {
 
   // Process immediately if batch size reached
   if (batchQueue.length >= BATCH_SIZE) {
-    processBatchQueue().catch(console.error);
+    processBatchQueue().catch(logger.error);
   }
 }
 
@@ -226,8 +226,8 @@ export async function logToDatabase(
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid log entry data:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid log entry data:', {
         level,
         message,
         errors: validation.error.issues.map(issue => ({
@@ -259,7 +259,7 @@ export async function logToDatabase(
     }
   } catch (error) {
     // Fallback to console if database logging fails
-    console.error('Database logging failed:', error)
+    logger.error('Database logging failed:', error as Error)
   }
 }
 
@@ -279,8 +279,8 @@ export async function logCustomEvent(
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid custom event data:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid custom event data:', {
         eventName,
         errors: validation.error.issues.map(issue => ({
           path: issue.path.join('.'),
@@ -305,7 +305,7 @@ export async function logCustomEvent(
     // Most events can be batched for better performance
     queueForBatch('custom_events', eventData);
   } catch (error) {
-    console.error('Custom event logging failed:', error)
+    logger.error('Custom event logging failed:', error as Error)
   }
 }
 
@@ -329,8 +329,8 @@ export async function logWebVitals(
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid web vitals data:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid web vitals data:', {
         metric,
         errors: validation.error.issues.map(issue => ({
           path: issue.path.join('.'),
@@ -353,7 +353,7 @@ export async function logWebVitals(
     // Web vitals are non-critical, batch them
     queueForBatch('web_vitals', vitalsData);
   } catch (error) {
-    console.error('Web Vitals logging failed:', error)
+    logger.error('Web Vitals logging failed:', error as Error)
   }
 }
 
@@ -382,7 +382,7 @@ export async function enqueueLogProcessing(logData: Record<string, unknown>) {
     type SupabaseRPCFunction = (name: string, params: Record<string, unknown>) => Promise<unknown>;
     await (supabaseAdmin.rpc as unknown as SupabaseRPCFunction)('enqueue_log_processing', { log_data: logData })
   } catch (error) {
-    console.error('Queue enqueue failed:', error)
+    logger.error('Queue enqueue failed:', error as Error)
   }
 }
 
@@ -396,8 +396,8 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid analytics query:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid analytics query:', {
         errors: validation.error.issues.map(issue => ({
           path: issue.path.join('.'),
           message: issue.message
@@ -415,7 +415,7 @@ export async function queryAnalytics(query: string, variables?: Record<string, u
     if (error) {throw error}
     return data
   } catch (error) {
-    console.error('GraphQL query failed:', error)
+    logger.error('GraphQL query failed:', error as Error)
     return null
   }
 }
@@ -431,8 +431,8 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid webhook payload:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid webhook payload:', {
         eventType,
         errors: validation.error.issues.map(issue => ({
           path: issue.path.join('.'),
@@ -448,7 +448,7 @@ export async function triggerWebhook(eventType: string, payload: Record<string, 
       payload: payload
     })
   } catch (error) {
-    console.error('Webhook trigger failed:', error)
+    logger.error('Webhook trigger failed:', error as Error)
   }
 }
 
@@ -462,8 +462,8 @@ export async function updateLeadScore(leadId: string, score: number) {
     });
 
     if (!validation.success) {
-      // Use console.warn to avoid infinite recursion
-      console.warn('Invalid lead score update:', {
+      // Use logger.warn to avoid infinite recursion
+      logger.warn('Invalid lead score update:', {
         leadId,
         errors: validation.error.issues.map(issue => ({
           path: issue.path.join('.'),
@@ -478,7 +478,7 @@ export async function updateLeadScore(leadId: string, score: number) {
       .update({ lead_score: score, updated_at: new Date().toISOString() })
       .eq('id', leadId)
   } catch (error) {
-    console.error('Lead score update failed:', error)
+    logger.error('Lead score update failed:', error as Error)
   }
 }
 
@@ -529,7 +529,7 @@ export async function trackFunnelStep(
     // Funnel tracking is high-volume, batch it
     queueForBatch('conversion_funnel', funnelData);
   } catch (error) {
-    console.error('Funnel tracking failed:', error)
+    logger.error('Funnel tracking failed:', error as Error)
   }
 }
 
@@ -583,7 +583,7 @@ export async function recordTestResult(
     // A/B test results can be batched
     queueForBatch('ab_test_results', testData);
   } catch (error) {
-    console.error('A/B test recording failed:', error)
+    logger.error('A/B test recording failed:', error as Error)
   }
 }
 
@@ -632,7 +632,7 @@ export async function trackPageView(
     // Page views are high-volume, batch them
     queueForBatch('page_analytics', pageData);
   } catch (error) {
-    console.error('Page tracking failed:', error)
+    logger.error('Page tracking failed:', error as Error)
   }
 }
 
@@ -646,6 +646,6 @@ export async function logCronExecution(jobName: string, status: 'started' | 'com
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('Cron logging failed:', error)
+    logger.error('Cron logging failed:', error as Error)
   }
 }

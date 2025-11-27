@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { CTAButton } from '@/components/cta-button';
-import { ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
+import { Button } from '@/components/ui/Button'
+import { ArrowRight, ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
 import { getCaseStudyBySlug, getAllCaseStudySlugs } from '@/lib/case-studies';
 
 // Generate static params for all case studies
@@ -69,11 +69,11 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             {caseStudy.title}
           </h1>
 
-          <p className="text-2xl text-gray-300 mb-8 max-w-4xl">
+          <p className="text-2xl text-muted mb-8 max-w-4xl">
             {caseStudy.description}
           </p>
 
-          <div className="flex gap-6 text-gray-400">
+          <div className="flex gap-6 text-muted-foreground">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5" />
               <span>{caseStudy.project_duration}</span>
@@ -87,15 +87,15 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       </section>
 
       {/* Metrics Showcase */}
-      <section className="py-12 px-4 bg-gray-800/30">
+      <section className="py-12 px-4 bg-muted/30">
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-6">
             {caseStudy.metrics.map((metric, i) => (
               <div key={i} className="glass-card p-6 text-center">
-                <div className="text-5xl font-black gradient-text mb-2">
+                <div className="text-5xl font-black text-cyan-400 mb-2">
                   {metric.value}
                 </div>
-                <div className="text-gray-300">{metric.label}</div>
+                <div className="text-muted">{metric.label}</div>
               </div>
             ))}
           </div>
@@ -110,7 +110,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             <div>
               <h2 className="text-3xl font-bold text-white mb-6">The Challenge</h2>
               <div className="glass-card p-8">
-                <p className="text-lg text-gray-300 leading-relaxed whitespace-pre-line">
+                <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.challenge}
                 </p>
               </div>
@@ -120,7 +120,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             <div>
               <h2 className="text-3xl font-bold text-white mb-6">Our Solution</h2>
               <div className="glass-card p-8">
-                <p className="text-lg text-gray-300 leading-relaxed whitespace-pre-line">
+                <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.solution}
                 </p>
 
@@ -132,7 +132,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                       {caseStudy.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 bg-gray-700/50 border border-gray-600 rounded-full text-gray-300 text-sm"
+                          className="px-3 py-1 bg-muted/50 border border-gray-600 rounded-full text-muted text-sm"
                         >
                           {tech}
                         </span>
@@ -147,7 +147,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             <div>
               <h2 className="text-3xl font-bold text-white mb-6">The Results</h2>
               <div className="glass-card p-8">
-                <p className="text-lg text-gray-300 leading-relaxed whitespace-pre-line">
+                <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.results}
                 </p>
 
@@ -173,7 +173,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
               <div className="glass-card p-8">
                 {caseStudy.testimonial_video_url && (
                   <div className="mb-6">
-                    <div className="aspect-video rounded-lg overflow-hidden bg-gray-700">
+                    <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                       <iframe
                         src={caseStudy.testimonial_video_url.replace('watch?v=', 'embed/')}
                         title={`Video testimonial from ${caseStudy.testimonial_author}`}
@@ -185,7 +185,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                   </div>
                 )}
 
-                <blockquote className="text-2xl text-gray-300 italic mb-6">
+                <blockquote className="text-2xl text-muted italic mb-6">
                   "{caseStudy.testimonial_text}"
                 </blockquote>
 
@@ -199,10 +199,10 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                     <div className="font-bold text-white text-lg">
                       {caseStudy.testimonial_author}
                     </div>
-                    <div className="text-gray-400">
+                    <div className="text-muted-foreground">
                       {caseStudy.testimonial_role}
                     </div>
-                    <div className="text-gray-500">
+                    <div className="text-muted-foreground">
                       {caseStudy.client_name}
                     </div>
                   </div>
@@ -220,12 +220,15 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             <h2 className="text-4xl font-black text-white mb-6">
               Want Results Like This?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
               Let's discuss how we can help you achieve similar results for your business.
             </p>
-            <CTAButton href="/contact" variant="primary" size="lg">
-              Start Your Project
-            </CTAButton>
+            <Button asChild variant="default" size="lg" trackConversion={true}>
+      <Link href="/contact">
+        Start Your Project
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </Button>
           </div>
         </div>
       </section>

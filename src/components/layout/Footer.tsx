@@ -72,7 +72,7 @@ export default function Footer() {
       <div className="absolute inset-0 bg-[var(--color-nav-dark)]" />
       
       {/* Top border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gray-800/50" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
       <div className="relative">
         <div className="container-wide sm:px-6 lg:px-8 pt-16 pb-8">
@@ -96,15 +96,15 @@ export default function Footer() {
               
               {/* Quick Stats */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-gray-300">
+                <div className="flex items-center gap-2 text-muted">
                   <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">50+ Projects Delivered</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300">
+                <div className="flex items-center gap-2 text-muted">
                   <CheckCircle className="h-4 w-4 text-cyan-400" />
                   <span className="small">250% Average ROI</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-300">
+                <div className="flex items-center gap-2 text-muted">
                   <Clock className="h-4 w-4 text-cyan-400" />
                   <span className="small">Response within 2 hours</span>
                 </div>
@@ -168,7 +168,7 @@ export default function Footer() {
                 
                 <a
                   href="mailto:hello@hudsondigitalsolutions.com"
-                  className="flex-center gap-2 w-full px-4 py-3 rounded-lg border border-gray-600 text-gray-300 hover:text-white hover:border-cyan-400 hover:bg-cyan-400/5 transition-smooth focus-ring"
+                  className="flex-center gap-2 w-full px-4 py-3 rounded-lg border border-gray-600 text-muted hover:text-white hover:border-cyan-400 hover:bg-cyan-400/5 transition-smooth focus-ring"
                 >
                   <Mail className="h-4 w-4" />
                   <span className="small">hello@hudsondigitalsolutions.com</span>
@@ -197,7 +197,7 @@ export default function Footer() {
                       "p-2.5 rounded-lg",
                       "glass-card-light",
                       "border border-white/10",
-                      "text-gray-400 hover:text-cyan-400",
+                      "text-muted-foreground hover:text-cyan-400",
                       "hover:bg-white/10 hover:border-cyan-400/50",
                       "transition-smooth group",
                       "focus-ring"
@@ -219,7 +219,7 @@ export default function Footer() {
                 >
                   Privacy Policy
                 </Link>
-                <span className="text-gray-600">·</span>
+                <span className="text-muted-foreground">·</span>
                 <Link
                   href="/terms"
                   className="link-hover focus-ring rounded px-1"

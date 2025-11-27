@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: true });
 
     if (error) {
-      logger.error('Failed to fetch leads for trends', error);
+      logger.error('Failed to fetch leads for trends', error as Error);
       return NextResponse.json(
         { error: 'Failed to fetch trends' },
         { status: 500 }

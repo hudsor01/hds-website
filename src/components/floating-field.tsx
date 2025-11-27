@@ -2,38 +2,30 @@
 
 import { useState, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 
-// Shared styling logic
-const useFloatingFieldStyles = (value: string, isFocused: boolean, disabled: boolean, className?: string) => {
+// Shared styling logic for floating labels
+const useFloatingLabelStyles = (value: string, isFocused: boolean, disabled: boolean) => {
   const hasValue = value.length > 0
   const isActive = isFocused || hasValue
 
   const getLabelColor = () => {
-    if (disabled) {return 'text-text-secondary'}
+    if (disabled) {return 'text-muted-foreground'}
     if (isActive) {return 'text-cyan-400'}
-    return 'text-text-muted'
+    return 'text-muted-foreground'
   }
 
-  const getFieldClasses = () => cn(
-    "w-full px-4 py-3 bg-transparent border-2 rounded-lg transition-all duration-200 placeholder-transparent peer",
-    "focus-ring",
-    disabled
-      ? "border-border-primary-dark text-text-secondary cursor-not-allowed"
-      : isActive
-        ? "border-cyan-400 text-text-inverted"
-        : "border-border-primary-dark text-text-inverted hover:border-border-secondary-dark",
-    className
-  )
-
   const getLabelClasses = () => cn(
-    "absolute left-4 transition-all duration-200 pointer-events-none",
+    "absolute left-3 transition-all duration-200 pointer-events-none",
     getLabelColor(),
     isActive
-      ? "-top-2 text-sm bg-slate-950 px-2"
-      : "top-3 text-base"
+      ? "-top-2 text-xs bg-background px-1"
+      : "top-3 text-sm"
   )
 
-  return { getFieldClasses, getLabelClasses }
+  return { getLabelClasses, isActive }
 }
 
 // Floating Input Component
@@ -66,7 +58,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(({
   ...props
 }, ref) => {
   const [isFocused, setIsFocused] = useState(false)
-  const { getFieldClasses, getLabelClasses } = useFloatingFieldStyles(value, isFocused, disabled, className)
+  const { getLabelClasses, isActive } = useFloatingLabelStyles(value, isFocused, disabled)
 
   const handleFocus = () => setIsFocused(true)
   const handleBlur = () => {
@@ -76,7 +68,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(({
 
   return (
     <div className="relative">
-      <input
+      <Input
         ref={ref}
         name={name}
         value={value}
@@ -88,18 +80,22 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(({
         required={required}
         disabled={disabled}
         id={id || name}
-        placeholder={placeholder}
-        className={getFieldClasses()}
+        placeholder=" "
+        className={cn(
+          "pt-4 pb-2",
+          isActive && "border-cyan-400",
+          className
+        )}
         {...props}
       />
 
-      <label
+      <Label
         htmlFor={id || name}
         className={getLabelClasses()}
       >
         {placeholder}
-        {required && <span className="text-danger ml-1">*</span>}
-      </label>
+        {required && <span className="text-destructive ml-1">*</span>}
+      </Label>
     </div>
   )
 })
@@ -134,7 +130,7 @@ export const FloatingTextarea = forwardRef<HTMLTextAreaElement, FloatingTextarea
   ...props
 }, ref) => {
   const [isFocused, setIsFocused] = useState(false)
-  const { getFieldClasses, getLabelClasses } = useFloatingFieldStyles(value, isFocused, disabled, className)
+  const { getLabelClasses, isActive } = useFloatingLabelStyles(value, isFocused, disabled)
 
   const handleFocus = () => setIsFocused(true)
   const handleBlur = () => {
@@ -144,7 +140,7 @@ export const FloatingTextarea = forwardRef<HTMLTextAreaElement, FloatingTextarea
 
   return (
     <div className="relative">
-      <textarea
+      <Textarea
         ref={ref}
         name={name}
         value={value}
@@ -155,18 +151,22 @@ export const FloatingTextarea = forwardRef<HTMLTextAreaElement, FloatingTextarea
         required={required}
         disabled={disabled}
         id={id || name}
-        placeholder={placeholder}
-        className={getFieldClasses()}
+        placeholder=" "
+        className={cn(
+          "pt-6 pb-2 resize-none",
+          isActive && "border-cyan-400",
+          className
+        )}
         {...props}
       />
 
-      <label
+      <Label
         htmlFor={id || name}
         className={getLabelClasses()}
       >
         {placeholder}
-        {required && <span className="text-danger ml-1">*</span>}
-      </label>
+        {required && <span className="text-destructive ml-1">*</span>}
+      </Label>
     </div>
   )
 })

@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { CaseStudy, CaseStudyInsert, CaseStudyUpdate } from '@/types/supabase-helpers';
 import { z } from 'zod';
@@ -52,7 +53,7 @@ export async function GET(_request: NextRequest) {
       .order('created_at', { ascending: false })) as unknown as { data: CaseStudy[] | null; error: unknown };
 
     if (error) {
-      console.error('Failed to fetch case studies:', error);
+      logger.error('Failed to fetch case studies:', error as Error);
       return NextResponse.json(
         { error: 'Failed to fetch case studies' },
         { status: 500 }
@@ -61,7 +62,7 @@ export async function GET(_request: NextRequest) {
 
     return NextResponse.json({ caseStudies: caseStudies || [] });
   } catch (error) {
-    console.error('Admin case studies API error:', error);
+    logger.error('Admin case studies API error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -119,7 +120,7 @@ export async function POST(request: NextRequest) {
       .single()) as unknown as { data: CaseStudy | null; error: unknown };
 
     if (error) {
-      console.error('Failed to create case study:', error);
+      logger.error('Failed to create case study:', error as Error);
       return NextResponse.json(
         { error: 'Failed to create case study' },
         { status: 500 }
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Admin case studies POST error:', error);
+    logger.error('Admin case studies POST error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -175,7 +176,7 @@ export async function PUT(request: NextRequest) {
       .single()) as unknown as { data: CaseStudy | null; error: unknown };
 
     if (error) {
-      console.error('Failed to update case study:', error);
+      logger.error('Failed to update case study:', error as Error);
       return NextResponse.json(
         { error: 'Failed to update case study' },
         { status: 500 }
@@ -191,7 +192,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    console.error('Admin case studies PUT error:', error);
+    logger.error('Admin case studies PUT error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -225,7 +226,7 @@ export async function DELETE(request: NextRequest) {
       .eq('id', id);
 
     if (error) {
-      console.error('Failed to delete case study:', error);
+      logger.error('Failed to delete case study:', error as Error);
       return NextResponse.json(
         { error: 'Failed to delete case study' },
         { status: 500 }
@@ -234,7 +235,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Admin case studies DELETE error:', error);
+    logger.error('Admin case studies DELETE error:', error as Error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
