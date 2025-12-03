@@ -243,15 +243,8 @@ export async function logToDatabase(
     });
 
     if (!validation.success) {
-      // Use logger.warn to avoid infinite recursion
-      logger.warn('Invalid log entry data:', {
-        level,
-        message,
-        errors: validation.error.issues.map(issue => ({
-          path: issue.path.join('.'),
-          message: issue.message
-        })),
-      });
+      // Silent fail - don't log to avoid infinite recursion
+      return;
     }
 
     const logData = {
@@ -274,9 +267,8 @@ export async function logToDatabase(
       // Critical logs (warn/error) are inserted immediately
       await supabase.from('api_logs').insert(logData);
     }
-  } catch (error) {
-    // Fallback to console if database logging fails
-    logger.error('Database logging failed:', error as Error)
+  } catch {
+    // Silent fail - don't log to avoid infinite recursion
   }
 }
 
