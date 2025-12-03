@@ -127,3 +127,4 @@ src/app/test/
 /e2e/screenshots/
 /e2e/videos/
 
+.env.example
