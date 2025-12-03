@@ -10,6 +10,7 @@ import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Eye, Code } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 interface MetaInputs {
   pageTitle: string;
@@ -85,8 +86,11 @@ export default function MetaTagGeneratorPage() {
       await navigator.clipboard.writeText(generatedCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback for older browsers
+    } catch (error) {
+      // Fallback for browsers without clipboard API
+      logger.debug('Clipboard API unavailable, using fallback', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       const textArea = document.createElement('textarea');
       textArea.value = generatedCode;
       document.body.appendChild(textArea);

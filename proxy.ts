@@ -1,7 +1,7 @@
 /**
- * Next.js Proxy (formerly Middleware)
+ * Next.js 16 Proxy (formerly Middleware)
  * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
- * Official docs: https://nextjs.org/docs/messages/middleware-to-proxy
+ * Official docs: https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  *
  * Handles:
  * - Supabase session refresh
@@ -13,8 +13,20 @@ import { env } from '@/env'
 import { validateCsrfForMutation } from '@/lib/csrf'
 import { getClientIp, RATE_LIMIT_CONFIGS, unifiedRateLimiter, type RateLimitType } from '@/lib/rate-limiter'
 import { applySecurityHeaders } from '@/lib/security-headers'
-import { createServerClient } from '@supabase/ssr'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+
+// Validate required environment variables at startup
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required')
+}
+
+// Type assertion after validation
+const SUPABASE_URL: string = supabaseUrl
+const SUPABASE_ANON_KEY: string = supabaseAnonKey
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -37,14 +49,14 @@ export async function proxy(request: NextRequest) {
 
   // Supabase session refresh - must happen early to ensure auth cookies are set
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: CookieOptions }>) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -174,7 +186,7 @@ export async function proxy(request: NextRequest) {
 
 
   // Add timing header for performance monitoring
-  response.headers.set('Server-Timing', `middleware;dur=${Date.now() - parseInt(response.headers.get('X-Request-Time') || '0')}`);
+  response.headers.set('Server-Timing', `proxy;dur=${Date.now() - parseInt(response.headers.get('X-Request-Time') || '0')}`);
 
   return response;
 }

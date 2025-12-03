@@ -4,6 +4,7 @@ import { detectInjectionAttempt } from '@/lib/utils'
 import { NextResponse, type NextRequest } from 'next/server'
 import { newsletterSchema } from '@/lib/schemas/contact'
 import { env } from '@/env'
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -17,6 +18,17 @@ interface NewsletterSubscription {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 3 requests per minute for newsletter signups
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
+  if (!isAllowed) {
+    logger.warn('Newsletter signup rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const startTime = Date.now();
     logger.info('Newsletter signup API accessed', {
@@ -180,6 +192,17 @@ export async function POST(request: NextRequest) {
 
 // GET endpoint for retrieving subscribers (admin only)
 export async function GET(request: NextRequest) {
+  // Rate limiting - 60 requests per minute for admin
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Newsletter admin rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     // Verify this is an admin request
     const authHeader = request.headers.get('authorization');

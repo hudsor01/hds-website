@@ -7,6 +7,8 @@ import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { LeadNote, LeadNoteInsert } from '@/types/supabase-helpers';
 import { type NextRequest, NextResponse } from 'next/server';
+import { requireAdminAuth } from '@/lib/admin-auth';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
 
 const CreateNoteSchema = z.object({
@@ -17,9 +19,26 @@ const CreateNoteSchema = z.object({
 });
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Lead notes rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -57,6 +76,23 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Lead notes POST rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(

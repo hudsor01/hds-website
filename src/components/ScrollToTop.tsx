@@ -8,16 +8,18 @@ export default function ScrollToTop() {
 
   useEffect(() => {
     let ticking = false;
+    let rafId: number | null = null;
 
     const toggleVisibility = () => {
       const scrollY = window.scrollY;
+      const shouldShow = scrollY > 200;
 
-      // Only update state if visibility actually changes
-      if (scrollY > 200 && !isVisible) {
-        setIsVisible(true);
-      } else if (scrollY <= 200 && isVisible) {
-        setIsVisible(false);
-      }
+      // Use callback form of setState to avoid stale closure
+      // This prevents needing isVisible in the dependency array
+      setIsVisible((prev) => {
+        if (prev !== shouldShow) {return shouldShow;}
+        return prev; // No update needed
+      });
 
       ticking = false;
     };
@@ -25,7 +27,7 @@ export default function ScrollToTop() {
     const handleScroll = () => {
       // Throttle using requestAnimationFrame
       if (!ticking) {
-        window.requestAnimationFrame(toggleVisibility);
+        rafId = window.requestAnimationFrame(toggleVisibility);
         ticking = true;
       }
     };
@@ -38,8 +40,12 @@ export default function ScrollToTop() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      // Clean up any pending animation frame
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
-  }, [isVisible]); // Add isVisible to dependencies
+  }, []); // Empty deps - listener created once, avoids memory leak
 
   const scrollToTop = () => {
     window.scrollTo({

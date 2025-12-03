@@ -8,10 +8,16 @@
  */
 
 import { env } from '@/env'
+import { logger } from '@/lib/logger'
 
-// T3 env handles validation - use validated env vars directly
-// Fallback to dev secret only for local development when CSRF_SECRET is optional
-const CSRF_SECRET = env.CSRF_SECRET || 'dev-csrf-secret-not-for-production';
+// T3 env handles validation - CSRF_SECRET is required in production
+// In development, use a fallback secret for convenience
+const CSRF_SECRET = env.CSRF_SECRET || (() => {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('CSRF_SECRET environment variable is required in production');
+  }
+  return 'dev-csrf-secret-for-local-development-only';
+})();
 
 const TOKEN_LENGTH = 18;
 const TOKEN_EXPIRY = 60 * 60 * 1000; // 1 hour
@@ -111,7 +117,8 @@ export async function getCsrfTokenFromRequest(request: Request): Promise<string 
       return bodyToken;
     }
   } catch {
-    // Ignore errors if the request body is not form data
+    // Expected when request body is not form data (e.g., JSON body)
+    logger.debug('CSRF token not found in form data, checking other sources');
   }
 
   return null;

@@ -13,6 +13,7 @@ import { FileText, Plus, Trash2, Download, Save, RotateCcw } from 'lucide-react'
 import dynamic from 'next/dynamic';
 import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template';
 import { useHydrated } from '@/hooks/use-hydrated';
+import { logger } from '@/lib/logger';
 
 // Dynamic import for PDF to avoid SSR issues
 const PDFDownloadLink = dynamic(
@@ -71,8 +72,11 @@ const getDraftSnapshot = (): InvoiceData | null => {
     if (saved) {
       return JSON.parse(saved) as InvoiceData;
     }
-  } catch {
-    // Invalid JSON, ignore
+  } catch (error) {
+    // Log invalid localStorage data for debugging
+    logger.warn('Failed to parse invoice draft from localStorage', {
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
   return null;
 };

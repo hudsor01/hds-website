@@ -5,16 +5,28 @@
  * SECURITY: This endpoint requires admin authentication via Supabase session
  */
 
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { deleteTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-export async function DELETE(_request: Request, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Testimonial request DELETE rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {

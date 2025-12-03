@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
+import { logger } from '@/lib/logger';
 import {
   MessageSquare,
   Plus,
@@ -70,7 +71,10 @@ export default function TestimonialCollectorPage() {
         const data = await requestsRes.json();
         setRequests(data.requests || []);
       }
-    } catch {
+    } catch (error) {
+      logger.warn('Failed to load testimonials data', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       setError('Failed to load data');
     } finally {
       setIsLoading(false);
@@ -107,7 +111,10 @@ export default function TestimonialCollectorPage() {
         has_email: !!newRequest.clientEmail,
         has_project: !!newRequest.projectName,
       });
-    } catch {
+    } catch (error) {
+      logger.warn('Failed to create testimonial link', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       setError('Failed to create link. Please try again.');
     } finally {
       setIsCreating(false);

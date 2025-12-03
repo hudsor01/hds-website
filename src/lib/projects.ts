@@ -282,8 +282,12 @@ async function incrementProjectViews(projectId: string): Promise<void> {
         error: error.message,
       });
     }
-  } catch {
-    // Silent fail - non-critical operation
+  } catch (error) {
+    // Non-critical operation, but log for debugging
+    logger.debug('View count increment failed', {
+      projectId,
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 }
 
@@ -400,7 +404,10 @@ export function parseProjectStats(stats: unknown): Record<string, string> {
       return stats as Record<string, string>;
     }
     return {};
-  } catch {
+  } catch (error) {
+    logger.warn('Failed to parse project stats', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return {};
   }
 }

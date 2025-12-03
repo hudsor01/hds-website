@@ -242,5 +242,8 @@ export function castError(error: unknown): Error {
   return err;
 }
 
+// Export Logger type for use in function signatures
+export type { Logger };
+
 export { logger };
 export default logger;

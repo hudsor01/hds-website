@@ -9,6 +9,7 @@ import { useState, useCallback } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Key, RefreshCw, Shield, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 interface PasswordOptions {
   length: number;
@@ -137,8 +138,11 @@ export default function PasswordGeneratorPage() {
           i === index ? { ...p, copied: false } : p
         ));
       }, 2000);
-    } catch {
-      // Fallback
+    } catch (error) {
+      // Fallback for browsers without clipboard API
+      logger.debug('Clipboard API unavailable, using fallback', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       const textArea = document.createElement('textarea');
       textArea.value = passwordEntry.password;
       document.body.appendChild(textArea);

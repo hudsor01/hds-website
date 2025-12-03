@@ -6,6 +6,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { Resend } from 'resend';
 import { z } from 'zod';
@@ -16,6 +17,17 @@ const SubscribeSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 3 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
+  if (!isAllowed) {
+    logger.warn('Newsletter rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   // Initialize Resend here to avoid build-time errors
   const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   try {

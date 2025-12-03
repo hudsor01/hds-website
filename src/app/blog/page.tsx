@@ -105,7 +105,7 @@ export default async function BlogPage() {
 
             {/* Sidebar */}
             <aside className="w-full lg:w-80 space-y-8">
-              {/* Newsletter Signup - TODO: Implement Ghost newsletter integration */}
+              {/* Newsletter Signup */}
               <div className="glass-card rounded-xl p-6">
                 <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
                 <p className="text-muted mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>

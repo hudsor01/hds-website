@@ -12,10 +12,22 @@ import {
   timeRangeSchema,
   type TimeRange,
 } from '@/lib/schemas'
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 
 const logger = createServerLogger('graphql-analytics')
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request)
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
+  if (!isAllowed) {
+    logger.warn('GraphQL analytics rate limit exceeded', { ip: clientIp })
+    return NextResponse.json(
+      { errors: [{ message: 'Too many requests' }] },
+      { status: 429 }
+    )
+  }
+
   try {
     // Basic authentication check
     const authHeader = request.headers.get('authorization')

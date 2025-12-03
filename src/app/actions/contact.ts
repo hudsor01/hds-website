@@ -7,17 +7,27 @@ import { recordContactFormSubmission } from "@/lib/metrics"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
-import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from "@/lib/schemas/contact"
+import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type LeadScoring } from "@/lib/schemas/contact"
 import { resendEmailResponseSchema } from "@/lib/schemas"
-import { createServerLogger, castError } from "@/lib/logger"
+import { createServerLogger, castError, type Logger } from "@/lib/logger"
 import { notifyHighValueLead } from "@/lib/notifications"
 
-// Initialize Resend
+// ================================
+// CONFIGURATION
+// ================================
+
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-// Get client IP from headers
+const EMAIL_FROM_ADMIN = "Hudson Digital <noreply@hudsondigitalsolutions.com>"
+const EMAIL_FROM_PERSONAL = "Richard Hudson <hello@hudsondigitalsolutions.com>"
+const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
+
+// ================================
+// HELPER FUNCTIONS
+// ================================
+
 async function getClientIP(): Promise<string> {
   const headersList = await headers()
   const forwardedFor = headersList.get("x-forwarded-for")
@@ -34,6 +44,175 @@ async function getClientIP(): Promise<string> {
   }
 
   return "unknown"
+}
+
+/**
+ * Check for suspicious content in form fields
+ */
+function checkForSecurityThreats(
+  data: ContactFormData,
+  clientIP: string,
+  logger: Logger
+): boolean {
+  const fieldsToCheck = [
+    data.firstName,
+    data.lastName,
+    data.email,
+    data.message,
+    data.company,
+  ].filter(Boolean)
+
+  const hasSuspiciousContent = fieldsToCheck.some((field) =>
+    detectInjectionAttempt(field as string)
+  )
+
+  if (hasSuspiciousContent) {
+    logger.warn("Potential injection attempt detected", { clientIP })
+  }
+
+  return hasSuspiciousContent
+}
+
+/**
+ * Prepare email template variables from form data
+ */
+function prepareEmailVariables(data: ContactFormData) {
+  return {
+    firstName: data.firstName,
+    lastName: data.lastName || "",
+    company: data.company || "your business",
+    service: data.service || "web development",
+    email: data.email,
+  }
+}
+
+/**
+ * Send admin notification email
+ */
+async function sendAdminNotification(
+  data: ContactFormData,
+  leadScore: number,
+  sequenceId: LeadScoring['sequenceType'],
+  logger: Logger
+): Promise<boolean> {
+  if (!resend) {return false}
+
+  try {
+    const response = await resend.emails.send({
+      from: EMAIL_FROM_ADMIN,
+      to: [EMAIL_TO_ADMIN],
+      subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
+      html: generateAdminNotificationHTML(data, leadScore, sequenceId),
+    })
+
+    const validation = resendEmailResponseSchema.safeParse(response.data)
+    if (!validation.success) {
+      logger.warn('Admin email response validation failed', {
+        errors: validation.error.issues,
+      })
+    }
+    return true
+  } catch (error) {
+    logger.error("Failed to send admin notification", castError(error))
+    return false
+  }
+}
+
+/**
+ * Send welcome email to prospect
+ */
+async function sendWelcomeEmail(
+  data: ContactFormData,
+  sequenceId: LeadScoring['sequenceType'],
+  emailVariables: ReturnType<typeof prepareEmailVariables>,
+  logger: Logger
+): Promise<boolean> {
+  if (!resend) {return false}
+
+  const sequences = getEmailSequences()
+  const sequence = sequences[sequenceId as keyof typeof sequences]
+  if (!sequence) {return false}
+
+  try {
+    const processedContent = processEmailTemplate(sequence.content, emailVariables)
+    const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
+
+    const response = await resend.emails.send({
+      from: EMAIL_FROM_PERSONAL,
+      to: [data.email],
+      subject: processedSubject,
+      html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+        ${processedContent
+          .split("\n")
+          .map((line) => `<p>${escapeHtml(line)}</p>`)
+          .join("")}
+      </div>`,
+    })
+
+    const validation = resendEmailResponseSchema.safeParse(response.data)
+    if (!validation.success) {
+      logger.warn('Welcome email response validation failed', {
+        errors: validation.error.issues,
+      })
+    }
+    return true
+  } catch (error) {
+    logger.error("Failed to send welcome email", castError(error))
+    return false
+  }
+}
+
+/**
+ * Send notifications for high-value leads (Slack/Discord)
+ */
+async function sendLeadNotifications(
+  data: ContactFormData,
+  leadScore: number,
+  logger: Logger
+): Promise<void> {
+  try {
+    await notifyHighValueLead({
+      leadId: `contact-${Date.now()}`,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      company: data.company,
+      service: data.service,
+      budget: data.budget,
+      timeline: data.timeline,
+      leadScore: leadScore,
+      leadQuality: leadScore >= 80 ? 'hot' : leadScore >= 70 ? 'warm' : 'cold',
+      source: 'Contact Form',
+    })
+  } catch (error) {
+    logger.error("Failed to send lead notifications", castError(error))
+  }
+}
+
+/**
+ * Schedule follow-up email sequence
+ */
+async function scheduleFollowUpEmails(
+  data: ContactFormData,
+  sequenceId: LeadScoring['sequenceType'],
+  emailVariables: ReturnType<typeof prepareEmailVariables>,
+  logger: Logger
+): Promise<void> {
+  try {
+    await scheduleEmailSequence(
+      data.email,
+      `${data.firstName} ${data.lastName}`,
+      sequenceId,
+      emailVariables
+    )
+  } catch (error) {
+    logger.error("Failed to schedule email sequence", {
+      error: castError(error),
+      email: data.email,
+      sequenceId
+    })
+  }
 }
 
 // Generate admin notification email
@@ -102,6 +281,7 @@ export async function submitContactForm(
 
   try {
     logger.info('Contact form submission started');
+
     // Step 1: Rate limiting
     const clientIP = await getClientIP()
     const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
@@ -127,125 +307,24 @@ export async function submitContactForm(
 
     const data = validation.data
 
-    // Step 3: Detect injection attempts (for monitoring)
-    const fieldsToCheck = [
-      data.firstName,
-      data.lastName,
-      data.email,
-      data.message,
-      data.company,
-    ].filter(Boolean)
+    // Step 3: Security check (monitoring only)
+    checkForSecurityThreats(data, clientIP, logger)
 
-    const suspiciousActivity = fieldsToCheck.some((field) =>
-      detectInjectionAttempt(field as string)
-    )
-
-    if (suspiciousActivity) {
-      logger.warn("Potential injection attempt detected", { clientIP, fields: fieldsToCheck })
-    }
-
-    // Step 4: Calculate lead score
+    // Step 4: Calculate lead score and prepare email data
     const leadScoring = scoreLeadFromContactData(data)
     const leadScore = leadScoring.score
     const sequenceId = leadScoring.sequenceType
-    const sequence = getEmailSequences()[sequenceId]
+    const emailVariables = prepareEmailVariables(data)
 
-    // Prepare email variables
-    const emailVariables = {
-      firstName: data.firstName,
-      lastName: data.lastName || "",
-      company: data.company || "your business",
-      service: data.service || "web development",
-      email: data.email,
-    }
-
-    // Step 5: Send emails
+    // Step 5: Send emails and notifications
     if (resend) {
       try {
-        // Send admin notification
-        const adminEmailResponse = await resend.emails.send({
-          from: "Hudson Digital <noreply@hudsondigitalsolutions.com>",
-          to: ["hello@hudsondigitalsolutions.com"],
-          subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
-          html: generateAdminNotificationHTML(data, leadScore, sequenceId),
-        })
+        await sendAdminNotification(data, leadScore, sequenceId, logger)
+        await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
+        await sendLeadNotifications(data, leadScore, logger)
 
-        // Validate Resend admin email response
-        const adminEmailValidation = resendEmailResponseSchema.safeParse(adminEmailResponse.data)
-        if (!adminEmailValidation.success) {
-          logger.warn('Resend admin email response validation failed', {
-            errors: adminEmailValidation.error.issues,
-            response: adminEmailResponse.data,
-          })
-        }
-
-        // Send immediate welcome email to prospect
-        if (sequence) {
-          const processedContent = processEmailTemplate(sequence.content, emailVariables)
-          const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
-
-          const welcomeEmailResponse = await resend.emails.send({
-            from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
-            to: [data.email],
-            subject: processedSubject,
-            html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
-              ${processedContent
-                .split("\n")
-                .map((line) => `<p>${escapeHtml(line)}</p>`)
-                .join("")}
-            </div>`,
-          })
-
-          // Validate Resend welcome email response
-          const welcomeEmailValidation = resendEmailResponseSchema.safeParse(welcomeEmailResponse.data)
-          if (!welcomeEmailValidation.success) {
-            logger.warn('Resend welcome email response validation failed', {
-              errors: welcomeEmailValidation.error.issues,
-              response: welcomeEmailResponse.data,
-            })
-          }
-        }
-
-        // Send high-value lead notifications to Slack/Discord
-        try {
-          await notifyHighValueLead({
-            leadId: `contact-${Date.now()}`,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone,
-            company: data.company,
-            service: data.service,
-            budget: data.budget,
-            timeline: data.timeline,
-            leadScore: leadScore,
-            leadQuality: leadScore >= 80 ? 'hot' : leadScore >= 70 ? 'warm' : 'cold',
-            source: 'Contact Form',
-          });
-        } catch (notificationError) {
-          // Log but don't fail the submission if notifications fail
-          logger.error("Failed to send lead notifications", castError(notificationError));
-        }
-
-        // Record successful submission
         recordContactFormSubmission(true)
-
-        // Schedule follow-up emails with error handling
-        try {
-          await scheduleEmailSequence(
-            data.email,
-            `${data.firstName} ${data.lastName}`,
-            sequenceId,
-            emailVariables
-          )
-        } catch (scheduleError) {
-          // Log but don't fail the submission if email scheduling fails
-          logger.error("Failed to schedule email sequence", {
-            error: castError(scheduleError),
-            email: data.email,
-            sequenceId
-          })
-        }
+        await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
 
         logger.info('Contact form submission successful', {
           email: data.email,
@@ -266,23 +345,8 @@ export async function submitContactForm(
         }
       }
     } else {
-      // Schedule emails even without email service
-      try {
-        await scheduleEmailSequence(
-          data.email,
-          `${data.firstName} ${data.lastName}`,
-          sequenceId,
-          emailVariables
-        )
-      } catch (scheduleError) {
-        logger.error("Failed to schedule email sequence in test mode", {
-          error: castError(scheduleError),
-          email: data.email,
-          sequenceId
-        })
-      }
-
-      // In test environment, still consider it successful if validation passed
+      // Test mode: schedule emails without email service
+      await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
       recordContactFormSubmission(true)
 
       logger.info('Contact form submission successful (test mode)', {

@@ -7,9 +7,21 @@ import { type NextRequest, NextResponse, connection } from 'next/server';
 import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { CaseStudy } from '@/types/supabase-helpers';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
+
+  // Rate limiting - 100 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
+  if (!isAllowed) {
+    logger.warn('Case studies rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
 
   try {
     const { searchParams } = new URL(request.url);

@@ -1,9 +1,21 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger, castError } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 // Simplified RSS feed without complex security middleware
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const logger = createServerLogger('rss-feed');
+
+  // Rate limiting - 100 requests per minute (generous for RSS readers)
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
+  if (!isAllowed) {
+    logger.warn('RSS feed rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
 
   try {
     logger.info('RSS feed generation requested');

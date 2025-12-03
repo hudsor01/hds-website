@@ -10,12 +10,24 @@
  * SECURITY: Accessing unapproved testimonials requires admin authentication
  */
 
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  // Rate limiting - 100 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
+  if (!isAllowed) {
+    logger.warn('Testimonials rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     const url = new URL(request.url);
     const requestAll = url.searchParams.get('all') === 'true';

@@ -1,11 +1,28 @@
 /**
- * Supabase Client Configuration - Optimized for Performance
- * Full-featured database integration with:
- * - Connection pooling
- * - Request batching
- * - In-memory caching
- * - Fire-and-forget non-critical writes
- * - Retry logic for critical operations
+ * Supabase Client Configuration - Server-Side Data Layer
+ *
+ * IMPORTANT: This file provides server-side Supabase clients for PUBLIC data
+ * operations and ADMIN operations. These are singletons optimized for server
+ * contexts that don't require user authentication.
+ *
+ * WHICH CLIENT TO USE:
+ * ====================
+ *
+ * 1. For AUTHENTICATED user operations (login, user data, protected routes):
+ *    → Use `@/utils/supabase/server` (SSR-compatible, reads cookies)
+ *    → Use `@/utils/supabase/client` for client components
+ *
+ * 2. For PUBLIC data fetching (testimonials, blog posts, case studies):
+ *    → Use `supabase` from this file (singleton, anon key)
+ *
+ * 3. For ADMIN/SERVICE operations (API routes, background jobs, bypassing RLS):
+ *    → Use `supabaseAdmin` from this file (singleton, service role key)
+ *
+ * Performance optimizations included:
+ * - Connection pooling via keep-alive
+ * - Request batching for non-critical writes
+ * - In-memory caching with TTL
+ * - Fire-and-forget for analytics
  */
 
 import { createClient } from '@supabase/supabase-js'

@@ -43,9 +43,17 @@ export async function validateAdminAuth(): Promise<AuthResult> {
     // Check if user has admin privileges
     // Option 1: Check against email whitelist
     // Option 2: Check user metadata for admin role
-    const isAdmin = ADMIN_EMAILS.length === 0 || // If no whitelist, all authenticated users are admins
+    // SECURITY: Removed fail-open logic - empty ADMIN_EMAILS no longer grants access
+    const isAdmin =
       ADMIN_EMAILS.includes(user.email || '') ||
       user.user_metadata?.role === 'admin';
+
+    // Log warning if ADMIN_EMAILS is not configured in production
+    if (ADMIN_EMAILS.length === 0 && process.env.NODE_ENV === 'production') {
+      logger.warn('ADMIN_EMAILS not configured in production - no users will have admin access', {
+        component: 'AdminAuth',
+      });
+    }
 
     if (!isAdmin) {
       logger.warn('Admin API request from non-admin user', {

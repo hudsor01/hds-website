@@ -7,6 +7,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { CaseStudy, CaseStudyInsert, CaseStudyUpdate } from '@/types/supabase-helpers';
+import { requireAdminAuth } from '@/lib/admin-auth';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
 
 const CaseStudySchema = z.object({
@@ -38,7 +40,24 @@ const CaseStudySchema = z.object({
 });
 
 // GET - Fetch all case studies (including unpublished for admin)
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Admin case studies rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -72,6 +91,23 @@ export async function GET(_request: NextRequest) {
 
 // POST - Create new case study
 export async function POST(request: NextRequest) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Admin case studies POST rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     const body = await request.json();
     const validatedData = CaseStudySchema.parse(body);
@@ -146,6 +182,23 @@ export async function POST(request: NextRequest) {
 
 // PUT - Update existing case study
 export async function PUT(request: NextRequest) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Admin case studies PUT rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     const body = await request.json();
     const { id, ...updateData } = body;
@@ -202,6 +255,23 @@ export async function PUT(request: NextRequest) {
 
 // DELETE - Delete case study
 export async function DELETE(request: NextRequest) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Admin case studies DELETE rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
