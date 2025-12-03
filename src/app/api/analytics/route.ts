@@ -7,6 +7,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import { env } from '@/env';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('analytics-api');
 
@@ -19,6 +20,17 @@ interface AnalyticsEvent {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Analytics rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     // Parse request body
     const body = await request.json() as AnalyticsEvent;

@@ -70,8 +70,11 @@ export async function POST(request: Request) {
     logger.error('CSP Violation:', sanitizedReport);
 
     return new NextResponse(null, { status: 204 });
-  } catch {
-    // Return 400 for JSON parsing errors or other validation issues
+  } catch (error) {
+    // Log parsing errors for debugging
+    logger.warn('Invalid CSP report received', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return new NextResponse(null, { status: 400 });
   }
 }

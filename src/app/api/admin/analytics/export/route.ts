@@ -6,6 +6,8 @@
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
+import { requireAdminAuth } from '@/lib/admin-auth';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('analytics-export-api');
 
@@ -37,6 +39,23 @@ interface LeadExportData {
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
+
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Analytics export rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
 
   try {
     const { searchParams } = new URL(request.url);

@@ -7,6 +7,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { WebVitalsInsert } from '@/types/supabase-helpers';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
 
 const WebVitalSchema = z.object({
@@ -19,6 +20,17 @@ const WebVitalSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Web vitals rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json(

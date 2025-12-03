@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { logger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 // Define the project type
 interface PortfolioProject {
@@ -84,9 +85,20 @@ const portfolioProjects: PortfolioProject[] = [
 ];
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Rate limiting - 100 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
+  if (!isAllowed) {
+    logger.warn('Portfolio project rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   const { id } = await params;
   const projectId = Number(id);
-  
+
   try {
     logger.info('Specific portfolio project API accessed', {
       url: request.url,

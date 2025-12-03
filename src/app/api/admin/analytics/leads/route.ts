@@ -6,11 +6,30 @@
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
+import { requireAdminAuth } from '@/lib/admin-auth';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('analytics-leads-api');
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
+
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Analytics leads rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // Require admin authentication
+  const authError = await requireAdminAuth();
+  if (authError) {
+    return authError;
+  }
 
   try {
     const { searchParams } = new URL(request.url);
@@ -27,10 +46,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Build query
+    // Build query with JOIN to avoid N+1 problem
+    // Previously: 1 query for leads + N queries for attribution = N+1 queries
+    // Now: 1 query with left join = 1 query total
     let query = supabaseAdmin
       .from('calculator_leads')
-      .select('*');
+      .select(`
+        *,
+        attribution:lead_attribution(
+          first_touch_utm_source,
+          first_touch_utm_medium,
+          first_touch_utm_campaign,
+          last_touch_utm_source,
+          last_touch_utm_medium,
+          last_touch_utm_campaign,
+          referrer,
+          landing_page,
+          created_at
+        )
+      `);
 
     // Apply filters
     if (quality) {
@@ -57,22 +91,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Enrich leads with attribution data
-    const enrichedLeads = await Promise.all(
-      (leads || []).map(async (lead) => {
-        // Get attribution data
-        const { data: attribution } = await supabaseAdmin
-          .from('lead_attribution')
-          .select('*')
-          .eq('email', lead.email)
-          .single();
-
-        return {
-          ...lead,
-          attribution: attribution || null,
-        };
-      })
-    );
+    // Transform the joined data to match expected format
+    // Supabase returns attribution as an array, we want single object or null
+    const enrichedLeads = (leads || []).map((lead) => ({
+      ...lead,
+      attribution: Array.isArray(lead.attribution) && lead.attribution.length > 0
+        ? lead.attribution[0]
+        : lead.attribution || null,
+    }));
 
     logger.info('Leads fetched', { count: enrichedLeads.length, quality, calculatorType });
 

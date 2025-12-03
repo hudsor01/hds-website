@@ -9,10 +9,22 @@ import type { LeadAttributionData } from '@/types/analytics';
 import type { Database } from '@/types/database';
 import type { LeadAttributionRow, LeadAttributionInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { type NextRequest, NextResponse } from 'next/server';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('attribution-api');
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Attribution rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     // Parse request body
     const body = await request.json() as LeadAttributionData;
@@ -148,6 +160,17 @@ export async function POST(request: NextRequest) {
  * GET endpoint for retrieving attribution data
  */
 export async function GET(request: NextRequest) {
+  // Rate limiting - 100 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
+  if (!isAllowed) {
+    logger.warn('Attribution GET rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
