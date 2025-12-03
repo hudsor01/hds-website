@@ -8,6 +8,7 @@ import {
   detectInjectionAttempt
 } from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import {
   leadMagnetRequestSchema,
   resendEmailResponseSchema,
@@ -147,6 +148,17 @@ function generateAdminNotificationEmail(data: { email: string; firstName: string
 export async function POST(request: NextRequest) {
   const logger = createServerLogger('lead-magnet-api');
 
+  // Rate limiting - 3 downloads per 15 minutes per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
+  if (!isAllowed) {
+    logger.warn('Lead magnet rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.', success: false },
+      { status: 429 }
+    );
+  }
+
   try {
     logger.info('Lead magnet request received', {
       method: request.method,
@@ -157,7 +169,11 @@ export async function POST(request: NextRequest) {
     let rawBody;
     try {
       rawBody = await request.json();
-    } catch {
+    } catch (error) {
+      logger.warn('Invalid JSON in lead magnet request', {
+        error: error instanceof Error ? error.message : String(error),
+        url: request.url,
+      });
       return NextResponse.json(
         { error: 'Invalid request format', success: false },
         { status: 400 }

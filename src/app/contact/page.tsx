@@ -1,10 +1,18 @@
-'use client';
-
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { Clock } from 'lucide-react';
+import type { Metadata } from 'next';
 
-// Load the contact form - Server Actions need SSR
+export const metadata: Metadata = {
+  title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
+  description: 'Get a free 30-minute ROI roadmap for your business. See where your tech stack is leaking revenue and how to fix it. Guaranteed 2-hour response time.',
+  openGraph: {
+    title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
+    description: 'Get a free 30-minute ROI roadmap. No sales pitch, just actionable insights.',
+  },
+};
+
+// Load the contact form with client-side rendering
 const ContactForm = dynamic(() => import('@/components/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
@@ -42,8 +50,6 @@ function ContactFormSkeleton() {
     </div>
   );
 }
-
-// Client Component - metadata handled by layout
 
 export default function ContactPage() {
   return (
@@ -167,8 +173,6 @@ export default function ContactPage() {
                       </div>
                     </div>
                   </div>
-
-                  <ContactForm />
                  </div>
                </div>
              </div>

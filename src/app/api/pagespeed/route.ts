@@ -5,6 +5,7 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('pagespeed-api');
 const PAGESPEED_API_URL = 'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed';
@@ -28,6 +29,17 @@ interface PageSpeedResponse {
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
+
+  // Rate limiting - stricter for external API calls (5 requests per minute)
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('PageSpeed rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait before analyzing another URL.' },
+      { status: 429 }
+    );
+  }
 
   try {
     const { searchParams } = new URL(request.url);

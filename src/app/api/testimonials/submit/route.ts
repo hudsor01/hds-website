@@ -3,9 +3,10 @@
  * POST /api/testimonials/submit
  */
 
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { submitTestimonial, markRequestSubmitted, getTestimonialRequestByToken } from '@/lib/testimonials';
 import { logger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 interface SubmitTestimonialRequest {
   request_id?: string;
@@ -20,7 +21,18 @@ interface SubmitTestimonialRequest {
   service_type?: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Rate limiting - 3 submissions per 15 minutes per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
+  if (!isAllowed) {
+    logger.warn('Testimonial submission rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many submissions. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json() as SubmitTestimonialRequest;
 

@@ -1,9 +1,17 @@
-'use client';
-
 import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button'
 import { BackgroundPattern } from '@/components/BackgroundPattern';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Web Development Services | Hudson Digital Solutions',
+  description: 'Expert web development, custom solutions, and strategic consulting. React, Next.js, Node.js specialists delivering scalable technical solutions starting at $5,000.',
+  openGraph: {
+    title: 'Web Development Services | Hudson Digital Solutions',
+    description: 'Expert web development, custom solutions, and strategic consulting for growing businesses.',
+  },
+};
 
 interface Service {
   title: string;

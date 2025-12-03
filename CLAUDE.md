@@ -15,6 +15,35 @@ Guidance for Claude Code working with this Next.js 15 production application.
 - **SERVER-FIRST**: Default to Server Components. Client components ONLY for hooks/events/browser APIs.
 - **PERFORMANCE**: WebP images, monitor bundle size, lazy load heavy components.
 
+## DEVELOPMENT PRINCIPLES
+
+**YAGNI (You Aren't Gonna Need It):**
+Do not implement features, functionality, or infrastructure that is not immediately required for the current requirements. No speculative coding, no "just in case" implementations, no premature optimization. If it's not needed now, it will not be developed. This rule applies to libraries, frameworks, database schemas, API endpoints, and business logic.
+
+**Composition Over Inheritance:**
+All system components must be built using composition rather than inheritance hierarchies. Avoid deep inheritance trees. Prefer building functionality by combining smaller, independent components rather than creating parent-child class relationships. This ensures flexibility, testability, and prevents brittle code that breaks when parent classes change.
+
+**Explicit Data Flow & Type Safety:**
+All data must have clearly defined, strongly typed interfaces. No dynamic types, no implicit conversions, no untyped objects passed between functions. All inputs, outputs, and transformations must be explicitly declared with proper type annotations. Any data that crosses module boundaries must be validated and typed.
+
+**Small, Focused Modules (High Cohesion, Low Coupling):**
+Each module, class, function, and component must have a single, well-defined purpose. Modules must not exceed reasonable size limits and should only contain code directly related to their primary responsibility. Dependencies between modules must be minimal and clearly defined through explicit interfaces.
+
+**Fail Fast, Log Precisely:**
+Systems must validate inputs immediately and throw clear, specific errors when invalid data is encountered. Do not attempt to recover from invalid states silently. All error conditions must be logged with sufficient context to identify the root cause without requiring additional debugging. Error messages must be actionable.
+
+**Idempotency Everywhere:**
+All operations, especially those that modify state or interact with external systems, must be idempotent. Running the same operation multiple times must produce the same result as running it once. This applies to database operations, API calls, file operations, and any state-changing functions.
+
+**Predictable State Management:**
+All application state must be managed in a deterministic, traceable manner. No hidden global state, no implicit side effects, no shared mutable state between components. State changes must follow clear, predictable patterns with no race conditions or unexpected interactions.
+
+**Single Responsibility:**
+Every function, class, module, and service must have exactly one reason to change. If a component handles multiple concerns or domains, it must be split into separate components. This applies to business logic, data access, presentation, and infrastructure concerns.
+
+**Prefer Readability Over Cleverness:**
+Code must be written for human understanding first, performance second. No clever tricks, no overly compact syntax, no "smart" solutions that sacrifice clarity. The codebase must be understandable by any team member without requiring extensive documentation or explanation.
+
 ## PROJECT STRUCTURE
 
 **File Organization:**
@@ -251,8 +280,13 @@ Guidance for Claude Code working with this Next.js 15 production application.
 - Error handling with logger.error
 
 **Supabase (Database):**
-- Client from lib/supabase
-- Environment vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+Choose the right client based on your use case:
+- `@/utils/supabase/server` - SSR client for authenticated operations (Server Components needing user context)
+- `@/utils/supabase/client` - SSR client for authenticated client components
+- `@/lib/supabase` exports:
+  - `supabase` - Singleton for public data fetching (testimonials, case studies, etc.)
+  - `supabaseAdmin` - Service role for admin API routes and background jobs
+- Environment vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
 - Always check for errors in response
 - Log database errors, return user-friendly messages
 

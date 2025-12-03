@@ -1,10 +1,24 @@
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { generateCsrfToken } from '@/lib/csrf';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { createServerLogger, castError } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const logger = createServerLogger('csrf-token');
+
+  // Rate limiting - 100 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('CSRF token rate limit exceeded', { ip: clientIp });
+    return applySecurityHeaders(
+      NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
+      )
+    );
+  }
 
   try {
     logger.info('CSRF token generation requested');

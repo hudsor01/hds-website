@@ -6,12 +6,24 @@
  * SECURITY: These endpoints require admin authentication via Supabase session
  */
 
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { getTestimonialRequests, createTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Rate limiting - 60 requests per minute per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
+  if (!isAllowed) {
+    logger.warn('Testimonial requests rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -42,7 +54,18 @@ interface CreateRequestBody {
   projectName?: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Rate limiting - 5 requests per minute per IP for write operations
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
+  if (!isAllowed) {
+    logger.warn('Testimonial requests POST rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {

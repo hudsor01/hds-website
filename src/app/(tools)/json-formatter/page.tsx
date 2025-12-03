@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Braces, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 export default function JsonFormatterPage() {
   const [inputJson, setInputJson] = useState('');
@@ -89,8 +90,11 @@ export default function JsonFormatterPage() {
       await navigator.clipboard.writeText(outputJson);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback
+    } catch (error) {
+      // Fallback for browsers without clipboard API
+      logger.debug('Clipboard API unavailable, using fallback', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       const textArea = document.createElement('textarea');
       textArea.value = outputJson;
       document.body.appendChild(textArea);

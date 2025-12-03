@@ -23,8 +23,15 @@ export const env = createEnv({
     // Webhooks
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
 
-    // Security
-    CSRF_SECRET: z.string().min(16).optional(),
+    // Security - CSRF_SECRET is required in production
+    CSRF_SECRET: z
+      .string()
+      .min(32, 'CSRF_SECRET must be at least 32 characters')
+      .optional()
+      .refine(
+        (val) => process.env.NODE_ENV !== 'production' || !!val,
+        'CSRF_SECRET is required in production'
+      ),
     CRON_SECRET: z.string().optional(),
     SUPABASE_WEBHOOK_SECRET: z.string().optional(),
 

@@ -8,6 +8,7 @@ import { createServerLogger } from '@/lib/logger';
 import { supabaseAdmin } from '@/lib/supabase';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { notifyHighValueLead } from '@/lib/notifications';
+import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { Resend } from 'resend';
 import { env } from '@/env';
 
@@ -73,6 +74,17 @@ function getLeadQuality(score: number): 'hot' | 'warm' | 'cold' {
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting - 3 submissions per 15 minutes per IP
+  const clientIp = getClientIp(request);
+  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
+  if (!isAllowed) {
+    logger.warn('Calculator submission rate limit exceeded', { ip: clientIp });
+    return NextResponse.json(
+      { error: 'Too many submissions. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { calculator_type, email, inputs, results } = body;
