@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getPosts, getFeaturedPosts, getTags } from "@/lib/ghost";
+import { getPosts, getFeaturedPosts, getTags } from "@/lib/blog";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { TagList } from "@/components/blog/TagList";
 

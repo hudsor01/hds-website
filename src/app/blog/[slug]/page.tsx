@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
-import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/ghost";
+import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/blog";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
@@ -12,9 +12,6 @@ import { formatDateLong } from "@/lib/utils";
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
-
-// Next.js 16: Using cacheLife instead
-// export const revalidate = 60;
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -28,31 +25,30 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   return {
-    title: post.meta_title || `${post.title} - Hudson Digital Solutions`,
-    description: post.meta_description || post.excerpt || post.custom_excerpt,
+    title: `${post.title} - Hudson Digital Solutions`,
+    description: post.excerpt,
     keywords: post.tags?.map((tag) => tag.name)?.join(", "),
     openGraph: {
-      title: post.og_title || post.title,
-      description: post.og_description || post.excerpt || post.custom_excerpt,
-      images: post.og_image || post.feature_image ? [
+      title: post.title,
+      description: post.excerpt,
+      images: post.feature_image ? [
         {
-          url: post.og_image || post.feature_image || "",
+          url: post.feature_image,
           width: 1200,
           height: 630,
-          alt: post.feature_image_alt || post.title,
+          alt: post.title,
         },
       ] : [],
       type: "article",
       publishedTime: post.published_at,
-      modifiedTime: post.updated_at,
-      authors: post.authors?.map((author) => author.name),
+      authors: [post.author.name],
       tags: post.tags?.map((tag) => tag.name),
     },
     twitter: {
       card: "summary_large_image",
-      title: post.twitter_title || post.title,
-      description: post.twitter_description || post.excerpt || post.custom_excerpt,
-      images: post.twitter_image || post.feature_image ? [post.twitter_image || post.feature_image || ""] : [],
+      title: post.title,
+      description: post.excerpt,
+      images: post.feature_image ? [post.feature_image] : [],
     },
     alternates: {
       canonical: `https://hudsondigitalsolutions.com/blog/${post.slug}`,
@@ -66,7 +62,6 @@ export async function generateStaticParams() {
     slug: post.slug,
   }));
 
-  // Next.js 16: cacheComponents requires at least one static param
   if (results.length === 0) {
     return [{ slug: '__placeholder__' }];
   }
@@ -82,14 +77,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const primaryAuthor = post.primary_author || post.authors?.[0];
   const tags = post.tags || [];
-  const primaryTag = post.primary_tag || tags[0];
+  const primaryTag = tags[0];
 
-  let relatedPosts: Awaited<ReturnType<typeof getPostsByTag>>['posts'] = [];
+  let relatedPosts: Awaited<ReturnType<typeof getPostsByTag>> = [];
   if (primaryTag) {
-    const relatedResult = await getPostsByTag(primaryTag.slug, { limit: 3 });
-    relatedPosts = relatedResult.posts.filter((p) => p.id !== post.id).slice(0, 3);
+    const related = await getPostsByTag(primaryTag.slug);
+    relatedPosts = related.filter((p) => p.id !== post.id).slice(0, 3);
   }
 
   return (
@@ -135,9 +129,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </h1>
 
             {/* Excerpt */}
-            {(post.custom_excerpt || post.excerpt) && (
+            {post.excerpt && (
               <p className="text-xl text-muted mb-8 text-pretty">
-                {post.custom_excerpt || post.excerpt}
+                {post.excerpt}
               </p>
             )}
 
@@ -153,18 +147,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <Clock className="w-5 h-5" />
                 <span>{post.reading_time} min read</span>
               </div>
-              {primaryAuthor && (
+              {post.author && (
                 <div className="flex flex-center gap-2">
-                  {primaryAuthor.profile_image && (
+                  {post.author.profile_image && (
                     <Image
-                      src={primaryAuthor.profile_image}
-                      alt={primaryAuthor.name}
+                      src={post.author.profile_image}
+                      alt={post.author.name}
                       width={24}
                       height={24}
                       className="w-6 h-6 rounded-full object-cover"
                     />
                   )}
-                  <span>By {primaryAuthor.name}</span>
+                  <span>By {post.author.name}</span>
                 </div>
               )}
             </div>
@@ -177,17 +171,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <Image
                 src={post.feature_image}
-                alt={post.feature_image_alt || post.title}
+                alt={post.title}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1200px) 100vw, 1200px"
                 priority
               />
-              {post.feature_image_caption && (
-                <div className="absolute bottom-0 left-0 right-0 bg-cyan-600/10 p-4">
-                  <p className="text-sm text-muted">{post.feature_image_caption}</p>
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -198,9 +187,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* Author Bio */}
-        {primaryAuthor && (
+        {post.author && (
           <div className="container-narrow py-8">
-            <AuthorCard author={primaryAuthor} />
+            <AuthorCard author={post.author} />
           </div>
         )}
       </article>

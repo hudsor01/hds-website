@@ -32,22 +32,6 @@ export {
   type LeadScoring,
 } from './contact';
 
-// Ghost CMS validation schemas
-export {
-  ghostAuthorSchema,
-  ghostTagSchema,
-  ghostPostSchema,
-  ghostSettingsSchema,
-  parseGhostResponse,
-  parseGhostPosts,
-  parseGhostTags,
-  parseGhostAuthors,
-  type GhostAuthor,
-  type GhostTag,
-  type GhostPost,
-  type GhostSettings,
-} from './ghost';
-
 // API route schemas
 export {
   leadMagnetRequestSchema,

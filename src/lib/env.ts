@@ -16,10 +16,6 @@ const envSchema = z.object({
   // Email Service (Optional - for production email sending)
   RESEND_API_KEY: z.string().optional().or(z.literal('')),
 
-  // Ghost CMS (Optional - for blog)
-  GHOST_API_URL: z.string().url().optional().or(z.literal('')),
-  GHOST_CONTENT_API_KEY: z.string().optional().or(z.literal('')),
-
   // Analytics (Optional)
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional().or(z.literal('')),
   GA4_API_SECRET: z.string().optional().or(z.literal('')),
@@ -74,7 +70,6 @@ export const env = validateEnv()
 // Helper to check if a service is configured
 export const isServiceConfigured = {
   email: () => !!env.RESEND_API_KEY,
-  ghost: () => !!env.GHOST_API_URL && !!env.GHOST_CONTENT_API_KEY,
   analytics: {
     ga4: () => !!env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     posthog: () => !!env.NEXT_PUBLIC_POSTHOG_KEY,
