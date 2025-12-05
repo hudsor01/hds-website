@@ -3,20 +3,28 @@
  * Stores calculator results and triggers email sequences
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@supabase/supabase-js';
-import type { Database, Json } from '@/types/database';
-import { scheduleEmail } from '@/lib/scheduled-emails';
 import { notifyHighValueLead } from '@/lib/notifications';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { scheduleEmail } from '@/lib/scheduled-emails';
+import type { Database, Json } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
@@ -107,6 +115,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const supabase = createServiceClient();
+
     const body = await request.json();
 
     // Validate with Zod schema
@@ -135,7 +145,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in database
-    if (!createServiceClient()) {
+    if (!supabase) {
       logger.error('Supabase not configured');
       return NextResponse.json(
         { error: 'Database not configured' },
@@ -155,7 +165,7 @@ export async function POST(request: NextRequest) {
       lead_quality: leadQuality,
     } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
 
-    const { data: calculatorLead, error: dbError } = await createServiceClient()
+    const { data: calculatorLead, error: dbError } = await supabase
       .from('calculator_leads')
       .insert(insertData)
       .select()

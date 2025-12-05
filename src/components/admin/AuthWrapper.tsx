@@ -5,14 +5,8 @@
 
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
-import { Lock, Mail } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/Button';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { User } from '@supabase/supabase-js';
+import { useState, type ReactNode } from 'react';
+import { Lock } from 'lucide-react';
 
 interface AuthWrapperProps {
   children: ReactNode;
@@ -37,18 +31,33 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     };
 
     checkAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check for existing session during initialization
+    if (typeof window === 'undefined') {
+      return false;
+    }
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
+    const session = sessionStorage.getItem(SESSION_KEY);
+    if (session) {
+      try {
+        const sessionData = JSON.parse(session);
+        const now = Date.now();
+
+        // Session valid for 24 hours
+        if (sessionData.expires > now) {
+          return true;
+        } else {
+          sessionStorage.removeItem(SESSION_KEY);
+        }
+      } catch {
+        sessionStorage.removeItem(SESSION_KEY);
       }
-    );
+    }
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabase.auth]);
+    return false;
+  });
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,18 +86,6 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     setEmail('');
     setPassword('');
   };
-
-  // Show loading state while checking auth
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
-        <div className="text-center">
-          <div className="mx-auto mb-heading h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!user) {
     return (

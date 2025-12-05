@@ -3,15 +3,32 @@
  * Provides GraphQL interface for querying Supabase analytics data
  */
 
-import { type NextRequest, NextResponse } from 'next/server'
-import { createServerLogger } from '@/lib/logger'
-import { createClient } from '@supabase/supabase-js';
+import { createServerLogger } from '@/lib/logger';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import {
+    analyticsVariablesSchema,
+    graphqlRequestSchema,
+    timeRangeSchema,
+    type TimeRange,
+} from '@/lib/schemas';
 import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse, type NextRequest } from 'next/server';
+
+const logger = createServerLogger('graphql-analytics')
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
@@ -20,6 +37,10 @@ function createServiceClient() {
 async function queryAnalytics(query: string, variables: Record<string, unknown>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = createServiceClient() as any;
+
+  if (!supabase) {
+    throw new Error('Database not configured');
+  }
   // This is a simplified implementation - expand based on actual needs
   const { data, error } = await supabase.rpc('query_analytics', { query_text: query, vars: variables });
   if (error) {
@@ -27,15 +48,6 @@ async function queryAnalytics(query: string, variables: Record<string, unknown>)
   }
   return data;
 }
-import {
-  graphqlRequestSchema,
-  analyticsVariablesSchema,
-  timeRangeSchema,
-  type TimeRange,
-} from '@/lib/schemas'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
-
-const logger = createServerLogger('graphql-analytics')
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 60 requests per minute per IP
@@ -164,7 +176,13 @@ async function getPageViews(variables: Record<string, unknown>) {
       break
   }
 
-  const { data: pageViews, error } = await createServiceClient()
+  const supabase = createServiceClient()
+
+  if (!supabase) {
+    throw new Error('Database not configured')
+  }
+
+  const { data: pageViews, error } = await supabase
     .from('page_analytics')
     .select(`
       path,
@@ -232,7 +250,13 @@ async function getWebVitals(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 7)
   }
 
-  let query = createServiceClient()
+  const supabase = createServiceClient()
+
+  if (!supabase) {
+    throw new Error('Database not configured')
+  }
+
+  let query = supabase
     .from('web_vitals')
     .select('*')
     .gte('timestamp', startTime.toISOString())
@@ -299,7 +323,13 @@ async function getLeadStats(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 90)
   }
 
-  const { data: leads, error } = await createServiceClient()
+  const supabase = createServiceClient()
+
+  if (!supabase) {
+    throw new Error('Database not configured')
+  }
+
+  const { data: leads, error } = await supabase
     .from('leads')
     .select('*')
     .gte('created_at', startTime.toISOString())
@@ -360,7 +390,13 @@ async function getEventStats(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 7)
   }
 
-  let query = createServiceClient()
+  const supabase = createServiceClient()
+
+  if (!supabase) {
+    throw new Error('Database not configured')
+  }
+
+  let query = supabase
     .from('custom_events')
     .select('*')
     .gte('timestamp', startTime.toISOString())
@@ -421,7 +457,13 @@ async function getFunnelAnalytics(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 30)
   }
 
-  let query = createServiceClient()
+  const supabase = createServiceClient()
+
+  if (!supabase) {
+    throw new Error('Database not configured')
+  }
+
+  let query = supabase
     .from('conversion_funnel')
     .select('*')
     .gte('timestamp', startTime.toISOString())

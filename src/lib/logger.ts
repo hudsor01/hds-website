@@ -1,254 +1,243 @@
 /**
- * Unified Logger using Supabase (non-blocking)
- * Lightweight, non-blocking logging with sampling
- * NO PostHog - optimized for performance
+ * Unified Logging Implementation
+ * Provides server and client logging with PostHog integration
  */
 
-import analytics from './analytics';
+import type {
+  ErrorLogData,
+  LogContext,
+  Logger,
+  LogLevel,
+  ServerLogger
+} from '@/types/logger';
 
-// Stub logging functions - implement with actual database logging if needed
-async function logToDatabase(_level: string, _message: string, _context: Record<string, unknown>) {
-  // Non-blocking, fire-and-forget database logging
-  // Can be implemented with createServiceClient() if needed
+export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
+
+/**
+ * Cast unknown error to Error object
+ */
+export function castError(error: unknown): ErrorLogData {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack ?? undefined,
+      cause: (error as Error & { cause?: unknown }).cause ?? undefined
+    };
+  }
+
+  if (typeof error === 'string') {
+    return {
+      name: 'StringError',
+      message: error,
+      stack: undefined,
+      cause: undefined
+    };
+  }
+
+  if (error === null || error === undefined) {
+    return {
+      name: 'NullError',
+      message: String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  }
+
+  try {
+    return {
+      name: 'UnknownError',
+      message: typeof error === 'object' ? JSON.stringify(error) : String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  } catch {
+    return {
+      name: 'UnknownError',
+      message: String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  }
 }
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+/**
+ * Base logger implementation
+ */
+export class BaseLogger implements Logger {
+  private context: LogContext;
+  private sessionId: string;
+  private isBrowser: boolean;
 
-interface LogContext {
-  userId?: string;
-  sessionId?: string;
-  requestId?: string;
-  [key: string]: unknown;
-}
+  constructor(context: LogContext = {}) {
+    this.context = context;
+    this.sessionId = this.generateSessionId();
+    this.isBrowser = typeof window !== 'undefined';
 
-class Logger {
-  private static instance: Logger;
-  private context: LogContext = {};
-  private samplingRate = 0.1; // 10% sampling for non-critical logs
+    if (this.isBrowser) {
+      this.context.sessionId = this.sessionId;
+      this.context.isServer = false;
+    } else {
+      this.context.isServer = true;
+      this.context.environment = process.env.NODE_ENV ?? 'development';
+    }
+  }
 
-  private constructor() {
-    // Initialize with random session ID if client-side
+ private generateSessionId(): string {
     if (typeof window !== 'undefined') {
-      this.context.sessionId = this.generateSessionId();
+      // Browser environment
+      if (!window.__logger_sessionId) {
+        window.__logger_sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+      }
+      return window.__logger_sessionId;
+    } else {
+      // Server environment
+      return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     }
+ }
+
+  setContext(context: LogContext): void {
+    this.context = { ...this.context, ...context };
   }
 
-  static getInstance(): Logger {
-    if (!Logger.instance) {
-      Logger.instance = new Logger();
-    }
-    return Logger.instance;
+ clearContext(): void {
+    this.context = {};
   }
 
-  private generateSessionId(): string {
-    // Generate simple session ID (no external dependencies)
-    return `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  private shouldSample(level: LogLevel): boolean {
-    // Always log errors and warnings
-    if (level === 'error' || level === 'warn') {
-      return true;
-    }
-
-    // Skip sampling during build/prerendering (Next.js 16 cacheComponents compatibility)
-    if (typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
-      return false; // Don't log debug/info during build
-    }
-
-    // Sample info and debug logs at 10% rate (only at runtime)
-    return Math.random() < this.samplingRate;
-  }
-
-  private formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
-    const timestamp = new Date().toISOString();
-    const env = process.env.NODE_ENV;
-
-    if (env === 'production') {
-      // Structured JSON for Vercel logs
-      return JSON.stringify({
-        timestamp,
-        level,
-        message,
-        ...this.context,
-        ...(data && { data })
-      });
-    }
-
-    // Readable format for development
-    return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
-  }
-
-  private log(level: LogLevel, message: string, data?: Record<string, unknown>) {
-    // Sample logs to reduce overhead
-    if (!this.shouldSample(level)) {
-      return;
-    }
-
-    const formattedMessage = this.formatMessage(level, message, data);
-
-    // Console output based on level
-    switch (level) {
-      case 'debug':
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(formattedMessage, data || '');
-        }
-        break;
-      case 'info':
-        console.warn(formattedMessage, data || '');
-        break;
-      case 'warn':
-        console.warn(formattedMessage, data || '');
-        break;
-      case 'error':
-        console.error(formattedMessage, data || '');
-        break;
-    }
-
-    // Non-blocking analytics tracking (fire-and-forget)
-    if (typeof window !== 'undefined' && analytics) {
-      const analyticsData: Record<string, string | number | boolean | null | undefined> = {
-        message,
-        level,
-        timestamp: new Date().toISOString(),
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        ...Object.fromEntries(
-          Object.entries(this.context).filter(([, value]) =>
-            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
-          )
-        ),
-        ...(data && Object.fromEntries(
-          Object.entries(data).filter(([, value]) =>
-            typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean' || value === null || value === undefined
-          )
-        ))
-      };
-
-      // Fire-and-forget (non-blocking)
-      analytics.trackEvent(`log_${level}`, analyticsData);
-    }
-
-    // Non-blocking Supabase logging (fire-and-forget)
-    logToDatabase(level, message, {
-      ...this.context,
-      ...data,
+  private log(level: LogLevel, message: string, data?: unknown): void {
+    const logData = {
       timestamp: new Date().toISOString(),
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-      userAgent: typeof window !== 'undefined' ? navigator.userAgent : undefined
-    }).catch(() => {
-      // Silent fail - don't block execution
-    });
-  }
+      level,
+      message,
+      context: { ...this.context },
+      data
+    };
 
-  // Public methods matching console API
-  debug(message: string, data?: Record<string, unknown>) {
+    // Only log error and warn levels to console to comply with ESLint rules
+    if (process.env.NODE_ENV === 'development' || this.isBrowser) {
+      if (level === 'error') {
+        console.error(`[${level.toUpperCase()}] ${message}`, logData);
+      } else if (level === 'warn') {
+        console.warn(`[${level.toUpperCase()}] ${message}`, logData);
+      }
+    }
+
+    // In production, you might want to send to analytics or external logging service
+    // For now, we'll just log error and warn levels to console in production
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+      if (level === 'error' || level === 'warn') {
+        console.error(`[${level.toUpperCase()}] ${message}`, logData);
+      }
+    }
+ }
+
+  debug(message: string, data?: unknown): void {
     this.log('debug', message, data);
   }
 
-  info(message: string, data?: Record<string, unknown>) {
+  info(message: string, data?: unknown): void {
     this.log('info', message, data);
   }
 
-  warn(message: string, data?: Record<string, unknown>) {
+  warn(message: string, data?: unknown): void {
     this.log('warn', message, data);
   }
 
-  error(message: string, error?: Error | Record<string, unknown>) {
-    const errorData = error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    } : error as Record<string, unknown>;
-
+  error(message: string, error?: Error | unknown): void {
+    const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
-
-    // For errors, also track as a separate error event (fire-and-forget)
-    if (typeof window !== 'undefined' && analytics) {
-      // Fire-and-forget (non-blocking)
-      analytics.trackError(message, false);
-    }
   }
 
-  // Timing methods (non-blocking)
-  time(label: string) {
-    if (typeof performance !== 'undefined') {
+  time(label: string): void {
+    if (typeof performance !== 'undefined' && performance.mark) {
       performance.mark(`${label}-start`);
     }
   }
 
-  timeEnd(label: string) {
-    if (typeof performance !== 'undefined') {
+  timeEnd(label: string): void {
+    if (typeof performance !== 'undefined' && performance.mark && performance.measure) {
       performance.mark(`${label}-end`);
+      performance.measure(label, `${label}-start`, `${label}-end`);
 
-      try {
-        performance.measure(label, `${label}-start`, `${label}-end`);
-        const measure = performance.getEntriesByName(label)[0];
-
-        if (measure && analytics) {
-          // Fire-and-forget (non-blocking)
-          analytics.trackTiming('performance', label, measure.duration);
+      const entries = performance.getEntriesByName(label);
+      if (entries.length > 0) {
+        const firstEntry = entries[0];
+        if (firstEntry && typeof firstEntry.duration === 'number') {
+          this.debug(`${label} took ${firstEntry.duration.toFixed(2)}ms`);
         }
-
-        // Cleanup
-        performance.clearMarks(`${label}-start`);
-        performance.clearMarks(`${label}-end`);
-        performance.clearMeasures(label);
-      } catch {
-        // Silent fail
+        performance.clearMeasures?.(label);
       }
     }
   }
 
-  // Context management
-  setContext(context: LogContext) {
-    this.context = { ...this.context, ...context };
+  group(_label: string): void {
+    // No-op - console.group not allowed by ESLint rules
+    // Could implement custom grouping if needed
   }
 
-  getContext(): LogContext {
-    return { ...this.context };
+  groupEnd(): void {
+    // No-op - console.groupEnd not allowed by ESLint rules
   }
 
-  clearContext() {
-    this.context = {};
-    if (typeof window !== 'undefined') {
-      this.context.sessionId = this.generateSessionId();
-    }
+  table(_data: unknown): void {
+    // No-op - console.table not allowed by ESLint rules
+    // Could implement custom table display if needed
   }
 }
 
-// Export singleton instance
-const logger = Logger.getInstance();
-
-// Server-side logger factory
-export function createServerLogger(component?: string): Logger {
-  const serverLogger = Logger.getInstance();
-
-  if (component) {
-    serverLogger.setContext({ component });
+/**
+ * Server logger implementation with additional server-specific methods
+ */
+export class ServerLoggerImpl extends BaseLogger implements ServerLogger {
+  request(method: string, url: string, headers?: Record<string, string>): void {
+    this.debug(`HTTP ${method} ${url}`, { headers });
   }
 
-  return serverLogger;
+  response(status: number, duration?: number): void {
+    const message = `HTTP response ${status}${duration !== undefined ? ` in ${duration}ms` : ''}`;
+    this.debug(message);
+  }
+
+  database(query: string, duration?: number): void {
+    const message = `DB query${duration !== undefined ? ` took ${duration}ms` : ''}`;
+    this.debug(message, { query });
+  }
+
+ cache(operation: string, key: string, hit: boolean): void {
+    const message = `Cache ${operation} for ${key}: ${hit ? 'HIT' : 'MISS'}`;
+    this.debug(message);
+  }
 }
 
-// Helper to cast Error objects for logging
-export function castError(error: unknown): Error {
-  if (error instanceof Error) {
-    return error;
+/**
+ * Create a server logger instance with optional name for context
+ */
+export function createServerLogger(name?: string): ServerLogger {
+  const context: LogContext = {
+    component: name || 'server',
+    isServer: true,
+    environment: process.env.NODE_ENV ?? 'development',
+  };
+
+  if (name) {
+    context.loggerName = name;
   }
 
-  if (typeof error === 'string') {
-    return new Error(error);
-  }
-
-  const err = new Error('Unknown error');
-  // Attach the original error as a property for debugging
-  (err as Error & { originalError?: unknown }).originalError = error;
-  return err;
+  return new ServerLoggerImpl(context);
 }
 
-// Export Logger type for use in function signatures
-export type { Logger };
+/**
+ * Default logger instance for general use
+ */
+export const logger: Logger = new BaseLogger({
+  component: 'default',
+  isServer: typeof window === 'undefined',
+  environment: process.env.NODE_ENV ?? 'development',
+});
 
-export { logger };
-export default logger;
+// Add global type for session ID
+declare global {
+  interface Window {
+    __logger_sessionId?: string;
+  }
+}
