@@ -52,24 +52,6 @@ export interface EmailProcessResult {
 }
 
 // Feature Flag Types
-export const FEATURE_FLAGS = {
-  CONTACT_FORM_V2: 'contact_form_v2',
-  WEB_VITALS_TRACKING: 'web_vitals_tracking',
-  ENHANCED_LEAD_SCORING: 'enhanced_lead_scoring',
-  SESSION_RECORDING_ENABLED: 'session_recording_enabled',
-  PRICING_DISPLAY: 'pricing_display',
-} as const;
-
-export type FeatureFlagKey = typeof FEATURE_FLAGS[keyof typeof FEATURE_FLAGS];
-
-export interface FeatureFlagConfig {
-  description: string;
-  type: 'boolean' | 'string' | 'number';
-  defaultValue: boolean | string | number;
-  rolloutPercentage: number;
-}
-
-
 // Touch Interaction Types
 export interface TouchState {
   isTouching: boolean;

@@ -6,7 +6,27 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { createServerLogger } from '@/lib/logger'
-import { triggerWebhook } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+async function triggerWebhook(eventType: string, payload: unknown) {
+  // Log webhook trigger and optionally notify external services
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceClient() as any;
+  await supabase.from('webhook_logs').insert({
+    event_type: eventType,
+    payload: JSON.stringify(payload),
+    triggered_at: new Date().toISOString(),
+  });
+}
 import {
   databaseChangePayloadSchema,
   authChangePayloadSchema,

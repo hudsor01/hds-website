@@ -84,6 +84,3 @@ export interface TouchState {
   touchEnd: { x: number; y: number } | null;
   swipeDirection: "left" | "right" | "up" | "down" | null;
 }
-
-// Utility Types
-export type FeatureFlagKey = string;

@@ -88,10 +88,10 @@ export function CalculatorResults({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-comfortable">
       {/* Results Display */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-foreground dark:text-white">
+      <div className="space-y-content">
+        <h3 className="text-xl font-semibold text-foreground dark:text-primary-foreground">
           Your Results
         </h3>
 
@@ -100,10 +100,10 @@ export function CalculatorResults({
             <div
               key={index}
               className={`
-                rounded-lg border p-4
+                rounded-lg border card-padding-sm
                 ${
                   result.highlight
-                    ? 'border-cyan-200 bg-cyan-50 dark:border-cyan-800 dark:bg-cyan-900/20'
+                    ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
                     : 'border-border bg-muted dark:border-border dark:bg-muted'
                 }
               `}
@@ -117,8 +117,8 @@ export function CalculatorResults({
                     text-2xl font-bold
                     ${
                       result.highlight
-                        ? 'text-cyan-600 dark:text-cyan-400'
-                        : 'text-foreground dark:text-white'
+                        ? 'text-primary dark:text-accent'
+                        : 'text-foreground dark:text-primary-foreground'
                     }
                   `}
                 >
@@ -138,16 +138,16 @@ export function CalculatorResults({
 
       {/* Email Capture */}
       {showEmailCapture && !emailSubmitted && (
-        <div className="rounded-lg border-2 border-dashed border-cyan-300 bg-cyan-50/50 p-6 dark:border-cyan-700 dark:bg-cyan-900/10">
-          <h4 className="mb-2 text-lg font-semibold text-foreground dark:text-white">
+        <div className="rounded-lg border-2 border-dashed border-accent/60 bg-accent/10/50 card-padding dark:border-primary-hover dark:bg-primary-hover/10">
+          <h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-primary-foreground">
             Get Your Detailed Report
           </h4>
-          <p className="mb-4 text-sm text-muted-foreground dark:text-muted-foreground">
+          <p className="mb-heading text-sm text-muted-foreground dark:text-muted-foreground">
             Enter your email to receive a detailed breakdown and personalized recommendations.
           </p>
 
           <form onSubmit={handleEmailSubmit} className="space-y-3">
-            <div className="space-y-2">
+            <div className="space-y-tight">
               <Input
                 type="email"
                 value={email}
@@ -156,7 +156,7 @@ export function CalculatorResults({
                 required
               />
               {error && (
-                <p className="text-xs text-red-600 dark:text-red-400">
+                <p className="text-xs text-destructive-dark dark:text-destructive-text">
                   {error}
                 </p>
               )}
@@ -179,23 +179,23 @@ export function CalculatorResults({
 
       {/* Success Message */}
       {emailSubmitted && (
-        <Alert className="border-green-500/50 bg-green-500/10">
-          <CheckCircle2 className="h-5 w-5 text-green-600" />
-          <AlertTitle className="text-green-800 dark:text-green-200">
+        <Alert className="border-success/50 bg-success/10">
+          <CheckCircle2 className="h-5 w-5 text-success-dark" />
+          <AlertTitle className="text-success-darker dark:text-success-light">
             Report sent successfully!
           </AlertTitle>
-          <AlertDescription className="text-green-700 dark:text-green-300">
+          <AlertDescription className="text-success-darker dark:text-success-muted">
             Check your email for the detailed breakdown and next steps.
           </AlertDescription>
         </Alert>
       )}
 
       {/* CTA */}
-      <div className="rounded-lg bg-muted p-6 text-center">
-        <h4 className="mb-2 text-lg font-semibold text-foreground">
+      <div className="rounded-lg bg-muted card-padding text-center">
+        <h4 className="mb-subheading text-lg font-semibold text-foreground">
           Want to improve these numbers?
         </h4>
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="mb-heading text-sm text-muted-foreground">
           Let&apos;s discuss how we can help you achieve better results.
         </p>
         <Button asChild>

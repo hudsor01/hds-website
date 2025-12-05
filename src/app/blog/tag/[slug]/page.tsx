@@ -53,12 +53,12 @@ export default async function TagPage({ params }: TagPageProps) {
   const posts = await getPostsByTag(tag.slug);
 
   return (
-    <main className="min-h-screen bg-cyan-600">
+    <main className="min-h-screen bg-background">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+          className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Blog
@@ -66,14 +66,14 @@ export default async function TagPage({ params }: TagPageProps) {
       </div>
 
       {/* Header */}
-      <section className="relative bg-background py-16 overflow-hidden">
+      <section className="relative bg-background py-section-sm overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
         </div>
 
         <div className="relative container-wide text-center">
-          <span className="inline-block text-cyan-400 font-medium mb-4">Tag</span>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <span className="inline-block text-accent font-medium mb-heading">Tag</span>
+          <h1 className="text-4xl md:text-5xl font-black text-primary-foreground mb-heading">
             {tag.name}
           </h1>
           {tag.description && (
@@ -85,16 +85,16 @@ export default async function TagPage({ params }: TagPageProps) {
       </section>
 
       {/* Posts */}
-      <section className="py-16">
+      <section className="py-section-sm">
         <div className="container-wide">
           {posts.length > 0 ? (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
                 <BlogPostCard key={post.id} post={post} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-16">
+            <div className="text-center py-section-sm">
               <p className="text-muted-foreground text-lg">
                 No posts found with this tag yet. Check back soon!
               </p>

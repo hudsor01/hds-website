@@ -3,25 +3,10 @@
  * Dynamic location pages for SEO and local marketing
  */
 
-export interface LocationData {
-  slug: string;
-  city: string;
-  state: string;
-  stateCode: string;
-  tagline: string;
-  description: string;
-  metaDescription: string;
-  neighborhoods: string[];
-  stats: {
-    businesses: string;
-    projects: string;
-    satisfaction: string;
-  };
-  features: {
-    title: string;
-    description: string;
-  }[];
-}
+import type { LocationData } from '@/types/locations';
+
+// Re-export type for convenience
+export type { LocationData };
 
 export const TEXAS_LOCATIONS: LocationData[] = [
   {

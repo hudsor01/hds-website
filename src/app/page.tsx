@@ -46,21 +46,21 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-24 lg:py-40 px-4 sm:px-6">
+      <section className="relative py-section lg:py-40 px-4 sm:px-6">
         <div className="container-wide">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
 
             {/* Left Side - Content */}
             <div className="lg:pr-8">
-              <div className="space-y-8">
+              <div className="space-y-sections">
                 <div>
-                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-8">
-                    <span className="block mb-2">Stop Losing Revenue to</span>
-                    <span className="block text-cyan-400">
+                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-comfortable">
+                    <span className="block mb-subheading">Stop Losing Revenue to</span>
+                    <span className="block text-accent">
                       Technical Bottlenecks
                     </span>
                   </h1>
-                  <p className="text-responsive-xl font-bold text-cyan-400 mb-6">
+                  <p className="text-responsive-xl font-bold text-accent mb-content-block">
                     Ship 3x Faster, 60% Cheaper
                   </p>
                 </div>
@@ -70,7 +70,7 @@ export default function HomePage() {
                   No hiring delays. No training costs. Just proven senior talent ready to execute.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex flex-col sm:flex-row gap-comfortable">
                   <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         See Your ROI in 30 Days
@@ -86,16 +86,16 @@ export default function HomePage() {
                 </div>
 
                 {/* Trust Indicators */}
-                <div className="flex flex-wrap gap-8 pt-6">
+                <div className="flex flex-wrap gap-sections pt-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-green-400" />
+                    <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-success-text" />
                     </div>
                     <span className="text-sm font-medium text-muted">Average 250% ROI</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                      <Users className="w-5 h-5 text-blue-400" />
+                    <div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-info-text" />
                     </div>
                     <span className="text-sm font-medium text-muted">Zero onboarding time</span>
                   </div>
@@ -107,41 +107,41 @@ export default function HomePage() {
             <div className="mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-cyan-500/20 rounded-3xl blur-3xl opacity-50" />
-                <div className="absolute top-4 right-4 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl" />
+                <div className="absolute inset-0 bg-primary/80/20 rounded-3xl blur-3xl opacity-50" />
+                <div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
                 <div className="relative glass-card-light overflow-hidden">
                   {/* Terminal Header */}
                   <div className="bg-card/80 border-b border-border px-4 py-3 flex-between">
-                    <div className="flex-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500" />
-                      <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                      <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <div className="flex-center gap-tight">
+                      <div className="w-3 h-3 rounded-full bg-destructive" />
+                      <div className="w-3 h-3 rounded-full bg-warning" />
+                      <div className="w-3 h-3 rounded-full bg-success" />
                     </div>
                     <div className="text-xs text-muted-foreground font-mono">hudson-deploy.sh</div>
-                    <div className="w-3 h-3 bg-green-400 rounded-full" />
+                    <div className="w-3 h-3 bg-success-text rounded-full" />
                   </div>
 
                   {/* Terminal Content */}
-                  <div className="p-6 font-mono text-sm space-y-2" role="log">
-                    <div className="text-cyan-400">$ npm run deploy --production</div>
+                  <div className="card-padding font-mono text-sm space-y-tight" role="log">
+                    <div className="text-accent">$ npm run deploy --production</div>
                     <div className="text-muted-foreground">[OK] Build completed in 1.8s</div>
                     <div className="text-muted-foreground">[OK] Tests passed (147/147)</div>
                     <div className="text-muted-foreground">[OK] Security scan clean</div>
-                    <div className="text-blue-500">&gt; Deploying to production...</div>
+                    <div className="text-info">&gt; Deploying to production...</div>
                     <div className="text-success">[OK] Deployment successful</div>
                     <div className="text-warning">[LIVE] at https://client-app.com</div>
 
                     <div className="pt-2 space-y-1">
-                      <div className="text-cyan-400/80">Performance: 100/100</div>
-                      <div className="text-cyan-400/80">Accessibility: 100/100</div>
-                      <div className="text-cyan-400/80">SEO: 98/100</div>
+                      <div className="text-accent/80">Performance: 100/100</div>
+                      <div className="text-accent/80">Accessibility: 100/100</div>
+                      <div className="text-accent/80">SEO: 98/100</div>
                     </div>
 
-                    <div className="text-cyan-400 mt-4">
+                    <div className="text-accent mt-4">
                       <span className="inline-block">$</span>
-                      <span className="inline-block w-2 h-4 bg-cyan-400 ml-1" />
+                      <span className="inline-block w-2 h-4 bg-accent ml-1" />
                     </div>
                   </div>
                 </div>
@@ -152,10 +152,10 @@ export default function HomePage() {
       </section>
 
       {/* Solutions Grid */}
-      <section className="py-24 px-4 sm:px-6">
+      <section className="py-section px-4 sm:px-6">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-white mb-6">
+            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block">
               How We Solve Your Biggest Problems
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -163,18 +163,18 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-sections">
             {solutions.map((solution, index) => (
               <div
                 key={index}
-                className="group relative glass-card-light p-8 card-hover-glow transition-smooth"
+                className="group relative glass-card-light card-padding-lg card-hover-glow transition-smooth"
               >
-                <div className="space-y-6">
+                <div className="space-y-comfortable">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-background-20 border border-cyan-600/30 hover-lift will-change-transform transition-smooth">
-                      <solution.icon className="h-6 w-6 text-cyan-400" />
+                    <div className="p-3 rounded-xl bg-background-20 border border-primary/30 hover-lift will-change-transform transition-smooth">
+                      <solution.icon className="h-6 w-6 text-accent" />
                     </div>
-                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-cyan-400 transition-smooth">
+                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-accent transition-smooth">
                       {solution.title}
                     </h3>
                   </div>
@@ -201,27 +201,27 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - Enhanced */}
-      <section className="relative py-24 px-4 sm:px-6 bg-muted overflow-hidden">
+      <section className="relative py-section px-4 sm:px-6 bg-muted overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-cyan-600/5" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-primary/5" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-info-text/5 rounded-full blur-3xl" />
 
         <div className="container-wide relative">
           <div className="text-center mb-24">
-            <h2 className="text-responsive-2xl font-black text-white mb-6">
-              <span className="text-cyan-400 relative inline-block">
+            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block">
+              <span className="text-accent relative inline-block">
                 Proven Impact
-                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
               </span>
             </h2>
 
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
-              Numbers don&apos;t lie - our clients see <span className="text-cyan-400 font-semibold">measurable results</span> that transform their businesses
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-heading">
+              Numbers don&apos;t lie - our clients see <span className="text-accent font-semibold">measurable results</span> that transform their businesses
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-sections lg:gap-10">
             {results.map((result, index) => (
               <div
                 key={index}
@@ -229,20 +229,20 @@ export default function HomePage() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Card with enhanced styling */}
-                <div className="relative glass-card-light p-8 lg:p-10 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
+                <div className="relative glass-card-light card-padding-lg lg:p-10 card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 group-hover:transform group-hover:scale-105">
                   {/* Top accent line */}
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
                   {/* Metric with enhanced styling */}
-                  <div className="relative mb-4">
-                    <div className="text-4xl lg:text-5xl font-black text-white mb-2 group-hover:text-cyan-400 transition-all duration-300 font-mono">
+                  <div className="relative mb-heading">
+                    <div className="text-4xl lg:text-5xl font-black text-primary-foreground mb-subheading group-hover:text-accent transition-all duration-300 font-mono">
                       {result.metric}
                     </div>
-                    <div className="absolute -inset-4 bg-cyan-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                    <div className="absolute -inset-4 bg-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-sticky"></div>
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-white transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-primary-foreground transition-colors duration-300">
                     {result.label}
                   </div>
 
@@ -252,13 +252,13 @@ export default function HomePage() {
                   </div>
 
                   {/* Subtle glow effect */}
-                  <div className="absolute inset-0 bg-cyan-400/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-accent/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 </div>
 
                 {/* Connecting dots for visual flow */}
                 {index < results.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
-                    <div className="w-3 h-0.5 bg-cyan-400/50"></div>
+                    <div className="w-3 h-0.5 bg-accent/50"></div>
                   </div>
                 )}
               </div>
@@ -268,64 +268,64 @@ export default function HomePage() {
           {/* Bottom accent section */}
           <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
             <p className="text-text-muted text-sm font-medium">
-              Join <span className="text-cyan-400 font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
+              Join <span className="text-accent font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
             </p>
           </div>
         </div>
       </section>
 
       {/* Free Tools Section */}
-      <section className="py-24 px-4 sm:px-6 bg-background">
+      <section className="py-section px-4 sm:px-6 bg-background">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6">
-              <span className="text-cyan-400 relative inline-block">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block">
+              <span className="text-accent relative inline-block">
                 Free Business Tools
-                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-cyan-400 rounded-full"></span>
+                <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
               </span>
             </h2>
 
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-8">
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-heading">
               Calculate your potential in 60 seconds. No signup required.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-sections">
             {/* ROI Calculator */}
             <Link
               href="/roi-calculator"
-              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
-              <div className="mb-6">
-                <div className="w-16 h-16 rounded-lg bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:bg-cyan-500/20 transition-colors">
-                  <TrendingUp className="w-8 h-8 text-cyan-400" />
+              <div className="mb-content-block">
+                <div className="w-16 h-16 rounded-lg bg-primary/80/10 flex items-center justify-center mb-heading group-hover:bg-primary/80/20 transition-colors">
+                  <TrendingUp className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
                   ROI Calculator
                 </h3>
-                <p className="text-text-muted text-sm mb-4">
+                <p className="text-text-muted text-sm mb-heading">
                   See how much revenue you&apos;re leaving on the table with poor conversion rates
                 </p>
               </div>
 
-              <ul className="space-y-2 mb-6">
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+              <ul className="space-y-tight mb-content-block">
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Calculate potential revenue increase
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Understand conversion impact
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Make data-driven decisions
                 </li>
               </ul>
 
-              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
                 <span>Try Calculator</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -336,38 +336,38 @@ export default function HomePage() {
             {/* Cost Estimator */}
             <Link
               href="/cost-estimator"
-              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
-              <div className="mb-6">
-                <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
-                  <Calculator className="w-8 h-8 text-cyan-400" />
+              <div className="mb-content-block">
+                <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
+                  <Calculator className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
                   Cost Estimator
                 </h3>
-                <p className="text-text-muted text-sm mb-4">
+                <p className="text-text-muted text-sm mb-heading">
                   Get instant pricing for your website project based on features and complexity
                 </p>
               </div>
 
-              <ul className="space-y-2 mb-6">
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+              <ul className="space-y-tight mb-content-block">
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Transparent pricing breakdown
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Timeline estimates included
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Feature-based pricing
                 </li>
               </ul>
 
-              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
                 <span>Get Estimate</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -378,38 +378,38 @@ export default function HomePage() {
             {/* Performance Calculator */}
             <Link
               href="/performance-calculator"
-              className="group relative glass-card-light p-8 card-hover-glow border border-cyan-400/20 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
             >
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-cyan-400 rounded-b-full"></div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
-              <div className="mb-6">
-                <div className="w-16 h-16 rounded-lg bg-cyan-600/10 flex items-center justify-center mb-4 group-hover:bg-cyan-600/20 transition-colors">
-                  <Zap className="w-8 h-8 text-cyan-400" />
+              <div className="mb-content-block">
+                <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
+                  <Zap className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-2 group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
                   Performance Analyzer
                 </h3>
-                <p className="text-text-muted text-sm mb-4">
+                <p className="text-text-muted text-sm mb-heading">
                   Discover how much revenue slow performance is costing you every month
                 </p>
               </div>
 
-              <ul className="space-y-2 mb-6">
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+              <ul className="space-y-tight mb-content-block">
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Real PageSpeed analysis
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Revenue impact calculation
                 </li>
-                <li className="flex items-center gap-2 text-sm text-text-secondary">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Core Web Vitals insights
                 </li>
               </ul>
 
-              <div className="flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
                 <span>Analyze Site</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -421,7 +421,7 @@ export default function HomePage() {
           <div className="text-center mt-12">
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 text-cyan-400 hover:text-blue-500 font-semibold transition-colors"
+              className="inline-flex items-center gap-tight text-accent hover:text-info font-semibold transition-colors"
             >
               View All Tools
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -433,7 +433,7 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Signup */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide max-w-4xl mx-auto">
           <NewsletterSignup
             variant="inline"
@@ -444,16 +444,16 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 px-4 sm:px-6">
+      <section className="py-section px-4 sm:px-6">
         <div className="container-wide text-center">
           <div className="glass-section p-12 md:p-20">
-            <div className="w-20 h-20 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-8">
-              <Rocket className="w-10 h-10 text-cyan-400" />
+            <div className="w-20 h-20 rounded-2xl bg-primary/80/10 flex items-center justify-center mx-auto mb-comfortable">
+              <Rocket className="w-10 h-10 text-accent" />
             </div>
 
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-6 max-w-4xl mx-auto">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block max-w-4xl mx-auto">
               Your competitors ship faster.
-              <span className="block text-cyan-400 mt-4">
+              <span className="block text-accent mt-4">
                 Why don&apos;t you?
               </span>
             </h2>
@@ -462,7 +462,7 @@ export default function HomePage() {
               Every day you wait is revenue lost. Get a custom roadmap to 10x your technical velocity in our free 30-minute strategy call.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-comfortable justify-center">
               <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         Get Your Free Roadmap

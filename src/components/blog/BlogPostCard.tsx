@@ -13,7 +13,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
   return (
     <article className={`group ${featured ? "md:col-span-2" : ""}`}>
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="glass-card rounded-xl overflow-hidden hover:ring-2 hover:ring-cyan-400/50 transition-all">
+        <div className="glass-card rounded-xl overflow-hidden hover:ring-2 hover:ring-accent/50 transition-all">
           {post.feature_image && (
             <div className={`relative ${featured ? "aspect-[2/1]" : "aspect-video"}`}>
               <Image
@@ -25,21 +25,21 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
               />
             </div>
           )}
-          <div className="p-6">
+          <div className="card-padding">
             {post.tags?.[0] && (
-              <span className="inline-block text-sm text-cyan-400 font-medium mb-2">
+              <span className="inline-block text-sm text-accent font-medium mb-subheading">
                 {post.tags[0].name}
               </span>
             )}
-            <h3 className={`font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors ${featured ? "text-2xl" : "text-xl"}`}>
+            <h3 className={`font-bold text-primary-foreground mb-subheading group-hover:text-accent transition-colors ${featured ? "text-2xl" : "text-xl"}`}>
               {post.title}
             </h3>
             {post.excerpt && (
-              <p className="text-muted-foreground line-clamp-2 mb-4">
+              <p className="text-muted-foreground line-clamp-2 mb-heading">
                 {post.excerpt}
               </p>
             )}
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+            <div className="flex flex-wrap gap-content text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 <time dateTime={post.published_at}>{formatDate(post.published_at)}</time>

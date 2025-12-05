@@ -67,11 +67,11 @@ export function NotesSection({ lead }: NotesSectionProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-content">
       <h3 className="text-lg font-semibold">Notes & Activity Timeline</h3>
 
       {/* Add Note Form */}
-      <div className="rounded-lg border bg-muted p-4 space-y-3">
+      <div className="rounded-lg border bg-muted card-padding-sm space-y-3">
         <Select value={noteType} onValueChange={(value) => setNoteType(value as NoteType)}>
           <SelectTrigger className="w-40">
             <SelectValue />
@@ -103,8 +103,8 @@ export function NotesSection({ lead }: NotesSectionProps) {
           <p className="py-4 text-center text-sm text-muted-foreground">No activity yet</p>
         ) : (
           notes.map((note) => (
-            <div key={note.id} className="flex gap-3 rounded-lg border bg-background p-4">
-              <div className="flex-shrink-0">
+            <div key={note.id} className="flex gap-3 rounded-lg border bg-background card-padding-sm">
+              <div className="shrink-0">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                   {getNoteIcon(note.note_type)}
                 </div>

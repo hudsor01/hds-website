@@ -5,9 +5,10 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { analyticsLeadsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
 const logger = createServerLogger('analytics-leads-api');
 
@@ -33,23 +34,25 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const quality = searchParams.get('quality'); // hot, warm, cold
-    const calculatorType = searchParams.get('type');
-    const sortBy = searchParams.get('sortBy') || 'created_at';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
 
-    if (!supabaseAdmin) {
+    // Validate query parameters with Zod
+    const parseResult = safeParseSearchParams(searchParams, analyticsLeadsQuerySchema);
+    if (!parseResult.success) {
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
       return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
+        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
+        { status: 400 }
       );
     }
+
+    const { limit, quality, type: calculatorType, sortBy, sortOrder } = parseResult.data;
+
+    
 
     // Build query with JOIN to avoid N+1 problem
     // Previously: 1 query for leads + N queries for attribution = N+1 queries
     // Now: 1 query with left join = 1 query total
-    let query = supabaseAdmin
+    let query = (await createClient())
       .from('calculator_leads')
       .select(`
         *,

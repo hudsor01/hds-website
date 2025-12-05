@@ -59,26 +59,26 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       {/* Hero */}
       <section className="py-12 px-4">
         <div className="container-wide">
-          <div className="mb-6">
-            <span className="px-3 py-1 bg-cyan-900/30 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-semibold">
+          <div className="mb-content-block">
+            <span className="px-3 py-1 bg-primary-hover/30 border border-primary/30 rounded-full text-accent text-sm font-semibold">
               {caseStudy.industry} • {caseStudy.project_type}
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
+          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
             {caseStudy.title}
           </h1>
 
-          <p className="text-2xl text-muted mb-8 max-w-4xl">
+          <p className="text-2xl text-muted mb-comfortable max-w-4xl">
             {caseStudy.description}
           </p>
 
-          <div className="flex gap-6 text-muted-foreground">
-            <div className="flex items-center gap-2">
+          <div className="flex gap-comfortable text-muted-foreground">
+            <div className="flex items-center gap-tight">
               <Clock className="w-5 h-5" />
               <span>{caseStudy.project_duration}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-tight">
               <Users className="w-5 h-5" />
               <span>{caseStudy.team_size} team members</span>
             </div>
@@ -89,10 +89,10 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       {/* Metrics Showcase */}
       <section className="py-12 px-4 bg-muted/30">
         <div className="container-wide">
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-comfortable">
             {caseStudy.metrics.map((metric, i) => (
-              <div key={i} className="glass-card p-6 text-center">
-                <div className="text-5xl font-black text-cyan-400 mb-2">
+              <div key={i} className="glass-card card-padding text-center">
+                <div className="text-5xl font-black text-accent mb-subheading">
                   {metric.value}
                 </div>
                 <div className="text-muted">{metric.label}</div>
@@ -103,13 +103,13 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide max-w-5xl">
           <div className="grid gap-12">
             {/* Challenge */}
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">The Challenge</h2>
-              <div className="glass-card p-8">
+              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">The Challenge</h2>
+              <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.challenge}
                 </p>
@@ -118,21 +118,21 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Solution */}
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">Our Solution</h2>
-              <div className="glass-card p-8">
+              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">Our Solution</h2>
+              <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.solution}
                 </p>
 
                 {/* Technologies Used */}
                 {caseStudy.technologies && caseStudy.technologies.length > 0 && (
-                  <div className="mt-6">
-                    <h3 className="text-xl font-semibold text-white mb-4">Technologies Used</h3>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="mt-content-block">
+                    <h3 className="text-xl font-semibold text-primary-foreground mb-heading">Technologies Used</h3>
+                    <div className="flex flex-wrap gap-tight">
                       {caseStudy.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="px-3 py-1 bg-muted/50 border border-gray-600 rounded-full text-muted text-sm"
+                          className="px-3 py-1 bg-muted/50 border border-border rounded-full text-muted text-sm"
                         >
                           {tech}
                         </span>
@@ -145,19 +145,19 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Results */}
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">The Results</h2>
-              <div className="glass-card p-8">
+              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">The Results</h2>
+              <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.results}
                 </p>
 
                 {caseStudy.project_url && (
-                  <div className="mt-6">
+                  <div className="mt-content-block">
                     <a
                       href={caseStudy.project_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                      className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
                     >
                       View Live Project
                       <ExternalLink className="w-4 h-4" />
@@ -169,10 +169,10 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Testimonial */}
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">Client Testimonial</h2>
-              <div className="glass-card p-8">
+              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">Client Testimonial</h2>
+              <div className="glass-card card-padding-lg">
                 {caseStudy.testimonial_video_url && (
-                  <div className="mb-6">
+                  <div className="mb-content-block">
                     <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                       <iframe
                         src={caseStudy.testimonial_video_url.replace('watch?v=', 'embed/')}
@@ -185,18 +185,18 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                   </div>
                 )}
 
-                <blockquote className="text-2xl text-muted italic mb-6">
+                <blockquote className="text-2xl text-muted italic mb-content-block">
                   "{caseStudy.testimonial_text}"
                 </blockquote>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                    <span className="text-cyan-400 font-bold text-2xl">
+                <div className="flex items-center gap-content">
+                  <div className="w-16 h-16 rounded-full bg-primary/80/20 flex items-center justify-center">
+                    <span className="text-accent font-bold text-2xl">
                       {caseStudy.testimonial_author.charAt(0)}
                     </span>
                   </div>
                   <div>
-                    <div className="font-bold text-white text-lg">
+                    <div className="font-bold text-primary-foreground text-lg">
                       {caseStudy.testimonial_author}
                     </div>
                     <div className="text-muted-foreground">
@@ -214,13 +214,13 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-white mb-6">
+            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
               Want Results Like This?
             </h2>
-            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
               Let's discuss how we can help you achieve similar results for your business.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>
@@ -244,11 +244,11 @@ export default async function CaseStudyPage({
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-gradient-to-b from-background via-card to-background">
       {/* Back Button - Static */}
       <section className="py-8 px-4">
         <div className="container-wide">
-          <Link href="/case-studies" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors">
+          <Link href="/case-studies" className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors">
             <ArrowLeft className="w-4 h-4" />
             Back to Case Studies
           </Link>
@@ -257,9 +257,9 @@ export default async function CaseStudyPage({
 
       {/* Dynamic content with Suspense */}
       <Suspense fallback={
-        <div className="container-wide py-20 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
-          <p className="text-gray-400 text-lg mt-4">Loading case study...</p>
+        <div className="container-wide py-section text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+          <p className="text-muted-foreground text-lg mt-4">Loading case study...</p>
         </div>
       }>
         <CaseStudyContent slug={slug} />

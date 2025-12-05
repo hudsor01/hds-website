@@ -56,7 +56,7 @@ const toolkitItems = [
 
 export default function ConversionToolkitPage() {
   return (
-    <main className="min-h-screen bg-cyan-600">
+    <main className="min-h-screen bg-primary">
       {/* Hero Section */}
       <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -64,13 +64,13 @@ export default function ConversionToolkitPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-success-muted bg-success-text/10 text-success-text font-semibold text-lg">
             <Settings className="w-5 h-5" />
             Complete Toolkit
           </div>
 
-          <h1 className="text-clamp-xl font-black text-white mb-heading">
-            Conversion Optimization <span className="text-cyan-400">Toolkit</span>
+          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+            Conversion Optimization <span className="text-accent">Toolkit</span>
           </h1>
 
           <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
@@ -80,14 +80,14 @@ export default function ConversionToolkitPage() {
           <div className="flex flex-col sm:flex-row gap-content justify-center mb-content-block">
             <Link
               href="#download"
-              className="inline-flex flex-center gap-tight bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-body-lg"
+              className="inline-flex flex-center gap-tight bg-success-text text-black font-bold py-4 px-8 rounded-lg hover:bg-success-muted transition-colors text-body-lg"
             >
               <Download className="w-5 h-5" />
               Download Complete Toolkit
             </Link>
             <Link
               href="/contact"
-              className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
+              className="inline-flex flex-center gap-tight border border-accent text-accent font-semibold py-4 px-8 rounded-lg hover:bg-accent/10 transition-colors"
             >
               Get Professional Implementation
             </Link>
@@ -95,19 +95,19 @@ export default function ConversionToolkitPage() {
 
           <div className="grid-4 gap-comfortable text-center">
             <div>
-              <div className="text-section-title font-bold text-cyan-400">4</div>
+              <div className="text-section-title font-bold text-accent">4</div>
               <div className="text-muted-foreground">Tool Categories</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-green-400">15+</div>
+              <div className="text-section-title font-bold text-success-text">15+</div>
               <div className="text-muted-foreground">Templates</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-purple-400">$0</div>
+              <div className="text-section-title font-bold text-info">$0</div>
               <div className="text-muted-foreground">Cost</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-yellow-400">300%+</div>
+              <div className="text-section-title font-bold text-warning-text">300%+</div>
               <div className="text-muted-foreground">Avg ROI Boost</div>
             </div>
           </div>
@@ -115,10 +115,10 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Toolkit Contents */}
-      <section className="section-spacing bg-cyan-600">
+      <section className="section-spacing bg-primary">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-white mb-subheading">What&apos;s Inside the Toolkit</h2>
+            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">What&apos;s Inside the Toolkit</h2>
             <p className="text-muted max-w-2xl mx-auto">
               Complete set of tools and templates to systematically improve your conversion rates
             </p>
@@ -126,18 +126,18 @@ export default function ConversionToolkitPage() {
 
           <div className="grid md:grid-cols-2 gap-comfortable">
             {toolkitItems.map((item, index) => (
-              <div key={index} className="glass-card rounded-xl card-padding hover:border-cyan-300/50 transition-smooth">
+              <div key={index} className="glass-card rounded-xl card-padding hover:border-accent/60/50 transition-smooth">
                 <div className="flex items-start gap-content">
                   <div className="w-12 h-12 bg-muted-br-20 rounded-lg flex-center shrink-0">
-                    <item.icon className="w-6 h-6 text-cyan-400" />
+                    <item.icon className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-subheading font-bold text-white mb-subheading">{item.title}</h3>
+                    <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">{item.title}</h3>
                     <p className="text-muted mb-subheading">{item.description}</p>
                     <ul className="space-y-tight">
                       {item.items.map((subItem, subIndex) => (
-                        <li key={subIndex} className="flex items-start gap-2 text-muted text-sm">
-                          <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                        <li key={subIndex} className="flex items-start gap-tight text-muted text-sm">
+                          <CheckCircle className="w-4 h-4 text-success-text mt-0.5 shrink-0" />
                           {subItem}
                         </li>
                       ))}
@@ -151,35 +151,35 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Results Section */}
-      <section className="section-spacing bg-cyan-600">
+      <section className="section-spacing bg-primary">
         <div className="max-w-6xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-white mb-subheading">Proven Results</h2>
+            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Proven Results</h2>
             <p className="text-muted">Real outcomes from businesses using these tools</p>
           </div>
 
           <div className="grid-3 gap-comfortable">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-400/20 rounded-full flex-center mx-auto mb-subheading">
-                <TrendingUp className="w-8 h-8 text-green-400" />
+              <div className="w-16 h-16 bg-success-text/20 rounded-full flex-center mx-auto mb-subheading">
+                <TrendingUp className="w-8 h-8 text-success-text" />
               </div>
-              <div className="text-section-title font-bold text-green-400 mb-subheading">340%</div>
+              <div className="text-section-title font-bold text-success-text mb-subheading">340%</div>
               <div className="text-muted">Average conversion increase</div>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center mx-auto mb-subheading">
-                <DollarSign className="w-8 h-8 text-cyan-400" />
+              <div className="w-16 h-16 bg-accent/20 rounded-full flex-center mx-auto mb-subheading">
+                <DollarSign className="w-8 h-8 text-accent" />
               </div>
-              <div className="text-section-title font-bold text-cyan-400 mb-subheading">$185K</div>
+              <div className="text-section-title font-bold text-accent mb-subheading">$185K</div>
               <div className="text-muted">Average revenue increase</div>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-400/20 rounded-full flex-center mx-auto mb-subheading">
-                <Clock className="w-8 h-8 text-purple-400" />
+              <div className="w-16 h-16 bg-info/20 rounded-full flex-center mx-auto mb-subheading">
+                <Clock className="w-8 h-8 text-info" />
               </div>
-              <div className="text-section-title font-bold text-purple-400 mb-subheading">8 weeks</div>
+              <div className="text-section-title font-bold text-info mb-subheading">8 weeks</div>
               <div className="text-muted">Average time to results</div>
             </div>
           </div>
@@ -190,11 +190,11 @@ export default function ConversionToolkitPage() {
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-muted rounded-full flex-center text-white font-bold">
+                <div className="w-10 h-10 bg-muted rounded-full flex-center text-primary-foreground font-bold">
                   M
                 </div>
                 <div>
-                  <div className="text-cyan-400 font-semibold">Mike Chen</div>
+                  <div className="text-accent font-semibold">Mike Chen</div>
                   <div className="text-muted-foreground text-caption">SaaS Founder</div>
                 </div>
               </div>
@@ -205,11 +205,11 @@ export default function ConversionToolkitPage() {
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-cyan-600/10 rounded-full flex-center text-white font-bold">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex-center text-primary-foreground font-bold">
                   S
                 </div>
                 <div>
-                  <div className="text-green-400 font-semibold">Sarah Williams</div>
+                  <div className="text-success-text font-semibold">Sarah Williams</div>
                   <div className="text-muted-foreground text-caption">E-commerce Director</div>
                 </div>
               </div>
@@ -219,12 +219,12 @@ export default function ConversionToolkitPage() {
       </section>
 
       {/* Download Section */}
-      <section id="download" className="py-16 bg-cyan-600">
+      <section id="download" className="py-section-sm bg-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
-            <Settings className="w-16 h-16 text-green-400 mx-auto mb-6" />
+          <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
+            <Settings className="w-16 h-16 text-success-text mx-auto mb-content-block" />
             
-            <h2 className="text-3xl font-black text-white mb-4">
+            <h2 className="text-3xl font-black text-primary-foreground mb-heading">
               Download Your Complete Toolkit
             </h2>
 
@@ -265,7 +265,7 @@ export default function ConversionToolkitPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-green-400 text-black font-bold hover:bg-green-300"
+                  className="w-full bg-success-text text-black font-bold hover:bg-success-muted"
                 >
                   <Download className="w-5 h-5" />
                   Get My Complete Toolkit
@@ -278,13 +278,13 @@ export default function ConversionToolkitPage() {
             </div>
 
             <div className="mt-comfortable pt-8 border-t border-border">
-              <h3 className="text-body-lg font-bold text-white mb-subheading">Want Professional Implementation?</h3>
+              <h3 className="text-body-lg font-bold text-primary-foreground mb-subheading">Want Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
                 Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped 150+ businesses achieve an average 340% ROI.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
+                className="inline-flex flex-center gap-tight border border-accent text-accent font-semibold py-3 px-6 rounded-lg hover:bg-accent/10 transition-colors"
               >
                 Get Professional Help
               </Link>

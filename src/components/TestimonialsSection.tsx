@@ -61,11 +61,11 @@ const testimonials: Testimonial[] = [
 
 export function TestimonialsSection({ className }: { className?: string }) {
   return (
-    <section className={`py-16 px-4 sm:px-6 lg:px-8 ${className || ""}`}>
+    <section className={`py-section-sm px-4 sm:px-6 lg:px-8 ${className || ""}`}>
       <div className="container-wide">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-responsive-lg font-bold text-white mb-4">
+          <h2 className="text-responsive-lg font-bold text-primary-foreground mb-heading">
             What Our Clients Say
           </h2>
           <p className="text-muted-foreground text-lg container-narrow">
@@ -90,16 +90,16 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-background-10 p-6">
+                  <div className="absolute inset-0 bg-background-10 card-padding">
                     {/* Rating Stars */}
                     {testimonial.rating && (
-                      <div className="flex items-center gap-1 mb-4">
+                      <div className="flex items-center gap-1 mb-heading">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
                             className={cn(
                               "w-4 h-4",
-                              i < (testimonial.rating || 0) ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"
+                              i < (testimonial.rating || 0) ? "text-warning-text fill-yellow-400" : "text-muted-foreground"
                             )}
                             fill={i < (testimonial.rating || 0) ? "currentColor" : "none"}
                           />
@@ -108,13 +108,13 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     )}
 
                     {/* Testimonial Content */}
-                    <blockquote className="text-muted leading-relaxed mb-6 text-responsive-sm">
+                    <blockquote className="text-muted leading-relaxed mb-content-block text-responsive-sm">
                       &quot;{testimonial.content}&quot;
                     </blockquote>
 
                     {/* Author Info */}
                     <div className="mt-auto">
-                      <div className="font-semibold text-white text-sm">{testimonial.name}</div>
+                      <div className="font-semibold text-primary-foreground text-sm">{testimonial.name}</div>
                       <div className="text-muted-foreground text-xs">
                         {testimonial.role} at {testimonial.company}
                       </div>

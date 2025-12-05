@@ -8,8 +8,8 @@ interface AuthorCardProps {
 
 export function AuthorCard({ author }: AuthorCardProps) {
   return (
-    <div className="glass-card rounded-xl p-6">
-      <div className="flex items-start gap-4">
+    <div className="glass-card rounded-xl card-padding">
+      <div className="flex items-start gap-content">
         {author.profile_image && (
           <Image
             src={author.profile_image}
@@ -20,8 +20,8 @@ export function AuthorCard({ author }: AuthorCardProps) {
           />
         )}
         <div className="flex-1">
-          <Link href={`/blog/author/${author.slug}`} className="hover:text-cyan-400 transition-colors">
-            <h3 className="text-xl font-bold text-white">{author.name}</h3>
+          <Link href={`/blog/author/${author.slug}`} className="hover:text-accent transition-colors">
+            <h3 className="text-xl font-bold text-primary-foreground">{author.name}</h3>
           </Link>
           {author.bio && (
             <p className="text-muted-foreground mt-2">{author.bio}</p>

@@ -3,34 +3,10 @@
  * Static blog data - replace with your CMS integration as needed
  */
 
-export interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  feature_image: string | null;
-  published_at: string;
-  reading_time: number;
-  featured: boolean;
-  tags: BlogTag[];
-  author: BlogAuthor;
-}
+import type { BlogPost, BlogTag, BlogAuthor } from '@/types/blog';
 
-export interface BlogTag {
-  id: string;
-  slug: string;
-  name: string;
-  description?: string;
-}
-
-export interface BlogAuthor {
-  id: string;
-  slug: string;
-  name: string;
-  bio?: string;
-  profile_image?: string;
-}
+// Re-export types for convenience
+export type { BlogPost, BlogTag, BlogAuthor };
 
 // Static blog posts - add your content here or integrate with your CMS
 const blogPosts: BlogPost[] = [

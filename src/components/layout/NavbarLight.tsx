@@ -32,7 +32,7 @@ const NavbarLight = memo(function NavbarLight() {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-modal bg-background/20 backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -40,14 +40,14 @@ const NavbarLight = memo(function NavbarLight() {
       <div className="relative container-wide sm:px-6 lg:px-8">
         <div className="flex-between h-16">
           {/* Logo - Simplified and Professional */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-sections">
             <Link 
               href="/" 
-              className="group flex items-center gap-2.5 focus-ring rounded-lg"
+              className="group flex items-center gap-tight.5 focus-ring rounded-lg"
               aria-label="Hudson Digital Solutions - Home"
             >
               <div className="relative">
-                <Rocket className="w-8 h-8 text-cyan-400" />
+                <Rocket className="w-8 h-8 text-accent" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1">
@@ -55,7 +55,7 @@ const NavbarLight = memo(function NavbarLight() {
                     Hudson Digital Solutions
                   </span>
                 </div>
-                <div className="text-[10px] text-cyan-400/80 font-medium tracking-wider uppercase">
+                <div className="text-[var(--spacing-3)] text-accent/80 font-medium tracking-wider uppercase">
                   Ship 3x Faster, 60% Cheaper
                 </div>
               </div>
@@ -70,7 +70,7 @@ const NavbarLight = memo(function NavbarLight() {
                   className={cn(
                     "px-4 py-2 text-sm font-medium rounded-lg transition-smooth",
                     pathname === item.href
-                      ? "text-cyan-400 bg-cyan-400/10"
+                      ? "text-accent bg-accent/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                   role="menuitem"
@@ -102,7 +102,7 @@ const NavbarLight = memo(function NavbarLight() {
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}
-                className="button-base group cta-primary gap-2 overflow-hidden button-hover-glow"
+                className="button-base group cta-primary gap-tight overflow-hidden button-hover-glow"
                 aria-label="Get your free roadmap"
               >
                 <span className="relative">Start Shipping Faster</span>
@@ -139,7 +139,7 @@ const NavbarLight = memo(function NavbarLight() {
           id="mobile-menu"
         >
           {/* Mobile menu background - transparent floating */}
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
+          <div className="absolute inset-0 bg-background/30 backdrop-blur-xl" />
 
           <div className="relative px-4 pt-2 pb-4 space-y-1" role="menu" aria-label="Mobile navigation">
             {navigation.map((item) => (
@@ -150,7 +150,7 @@ const NavbarLight = memo(function NavbarLight() {
                 className={cn(
                   "block px-4 py-3 rounded-lg text-base font-medium transition-smooth",
                   pathname === item.href
-                    ? "bg-cyan-400/10 text-cyan-400"
+                    ? "bg-accent/10 text-accent"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
                 role="menuitem"
@@ -160,7 +160,7 @@ const NavbarLight = memo(function NavbarLight() {
               </Link>
             ))}
             
-            <div className="pt-4 space-y-2">
+            <div className="pt-4 space-y-tight">
               <Link
                 href="/contact"
                 onClick={() => handleNavClick()}

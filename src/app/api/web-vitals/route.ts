@@ -5,7 +5,16 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 import type { WebVitalsInsert } from '@/types/supabase-helpers';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
@@ -32,7 +41,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -58,7 +67,7 @@ export async function POST(request: NextRequest) {
       session_id: null,
     };
 
-    const { error } = await supabaseAdmin
+    const { error } = await createServiceClient()
       .from('web_vitals')
       .insert(webVitalData);
 

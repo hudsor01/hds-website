@@ -23,12 +23,12 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
   return (
     <div className="relative">
       {/* Save as PDF Button */}
-      <div className="no-print absolute -top-[60px] right-0 z-[1000]">
+      <div className="no-print absolute -top-[var(--spacing-16)] right-0 z-[1000]">
         <button
           onClick={handleSaveAsPDF}
           className={cn(
-            "flex items-center gap-2 px-6 py-3 rounded-md text-sm font-semibold transition-smooth",
-            "bg-accent text-white border-0 shadow-sm cursor-pointer",
+            "flex items-center gap-tight px-6 py-3 rounded-md text-sm font-semibold transition-smooth",
+            "bg-accent text-primary-foreground border-0 shadow-xs cursor-pointer",
             "hover:bg-accent/90 focus-ring"
           )}
         >
@@ -38,17 +38,17 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
       </div>
 
       <div className={cn(
-        "max-w-[8.5in] min-h-[11in] mx-auto bg-white p-[1in]",
-        "font-sans text-[12px] text-black border border-border"
+        "max-w-[8.5in] min-h-[11in] mx-auto bg-card p-[1in]",
+        "font-sans text-[var(--spacing-3)] text-black border border-border"
       )}>
         {/* Header */}
         <div className="border-b-2 border-black pb-5 mb-5">
           <div className="flex-between items-start">
             <div>
-              <h2 className="text-lg font-bold m-0 mb-2.5">EARNINGS STATEMENT</h2>
+              <h2 className="text-lg font-bold m-0 mb-subheading.5">EARNINGS STATEMENT</h2>
               <div>
                 <strong>{employeeData.employerName || '[EMPLOYER NAME]'}</strong><br/>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[var(--spacing-3)] text-muted-foreground">
                   Pay Period: {formatDate(payPeriod.payDate)} - {formatDate(payPeriod.payDate)}<br/>
                   Pay Date: {formatDate(payPeriod.payDate)}
                 </span>
@@ -68,14 +68,14 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         {/* Employee Information */}
         <div className="flex-between mb-5">
           <div>
-            <h4 className="m-0 mb-2.5 text-sm">EMPLOYEE</h4>
+            <h3 className="m-0 mb-subheading.5 text-sm">EMPLOYEE</h3>
             <div>
               <strong>{employeeData.employeeName}</strong><br/>
               {employeeData.employeeId && <span>ID: {employeeData.employeeId}<br/></span>}
             </div>
           </div>
           <div className="text-right">
-            <h4 className="m-0 mb-2.5 text-sm">PAY PERIOD</h4>
+            <h3 className="m-0 mb-subheading.5 text-sm">PAY PERIOD</h3>
             <div>
               Period {payPeriod.period} of 26<br/>
               Tax Year: {employeeData.taxYear}
@@ -85,8 +85,8 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
 
         {/* Earnings Section */}
         <div className="mb-5">
-          <h4 className="m-0 mb-2.5 text-sm border-b border-black pb-1.5">EARNINGS</h4>
-          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2.5 items-center">
+          <h3 className="m-0 mb-subheading.5 text-sm border-b border-black pb-1.5">EARNINGS</h3>
+          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-tight.5 items-center">
             <div><strong>Description</strong></div>
             <div className="text-right"><strong>Rate</strong></div>
             <div className="text-right"><strong>Hours</strong></div>
@@ -111,8 +111,8 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
 
         {/* Deductions Section */}
         <div className="mb-5">
-          <h4 className="m-0 mb-2.5 text-sm border-b border-black pb-1.5">DEDUCTIONS</h4>
-          <div className="grid grid-cols-[1fr_auto_auto] gap-2.5 items-center">
+          <h3 className="m-0 mb-subheading.5 text-sm border-b border-black pb-1.5">DEDUCTIONS</h3>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-tight.5 items-center">
             <div><strong>Description</strong></div>
             <div className="text-right"><strong>Current</strong></div>
             <div className="text-right"><strong>YTD</strong></div>
@@ -140,7 +140,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         </div>
 
         {/* Net Pay Summary */}
-        <div className="border-2 border-black p-4 bg-muted mb-5">
+        <div className="border-2 border-black card-padding-sm bg-muted mb-5">
           <div className="flex-between items-center text-base font-bold">
             <span>NET PAY:</span>
             <span>{formatCurrency(payPeriod.netPay)}</span>
@@ -149,8 +149,8 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
 
         {/* Year-to-Date Summary */}
         <div className="border-t border-black pt-4">
-          <h4 className="m-0 mb-2.5 text-sm">YEAR-TO-DATE TOTALS</h4>
-          <div className="grid grid-cols-[1fr_auto] gap-2.5 text-[11px]">
+          <h3 className="m-0 mb-subheading.5 text-sm">YEAR-TO-DATE TOTALS</h3>
+          <div className="grid grid-cols-[1fr_auto] gap-tight.5 text-[11px]">
             <div>Gross Earnings:</div>
             <div className="text-right">{formatCurrency(ytdTotals.grossPay)}</div>
             <div>Federal Income Tax:</div>
@@ -167,7 +167,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         </div>
 
         {/* Footer */}
-        <div className="mt-8 text-[10px] text-muted-foreground border-t border-border pt-2.5">
+        <div className="mt-heading text-[var(--spacing-3)] text-muted-foreground border-t border-border pt-2.5">
           <div className="text-center">
             This statement is for informational purposes only and does not constitute an official document.
             <br/>

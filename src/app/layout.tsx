@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import NavbarLight from "@/components/layout/NavbarLight";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -161,20 +162,22 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <ClientProviders>
-          <ErrorBoundary>
-            <NavbarLight />
-            <div id="main-content" className="min-h-screen pt-16">
-              {children}
-            </div>
-            <Footer />
-            <ScrollToTop />
-            <Analytics />
-            <SpeedInsights />
-            <WebVitalsReporting />
-          </ErrorBoundary>
-          <Toaster position="top-right" richColors theme="dark" />
-        </ClientProviders>
+        <NuqsAdapter>
+          <ClientProviders>
+            <ErrorBoundary>
+              <NavbarLight />
+              <div id="main-content" className="min-h-screen pt-16">
+                {children}
+              </div>
+              <Footer />
+              <ScrollToTop />
+              <Analytics />
+              <SpeedInsights />
+              <WebVitalsReporting />
+            </ErrorBoundary>
+            <Toaster position="top-right" richColors theme="dark" />
+          </ClientProviders>
+        </NuqsAdapter>
       </body>
     </html>
   );

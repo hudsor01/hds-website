@@ -155,17 +155,18 @@ describe('Newsletter Subscribe API', () => {
   });
 
   // Mock Supabase for newsletter tests
-  vi.mock('@/lib/supabase', () => ({
-    supabaseAdmin: {
+  vi.mock('@supabase/supabase-js', () => ({
+    createClient: vi.fn(() => ({
       from: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             single: vi.fn().mockResolvedValue({ data: null, error: null }),
           }),
         }),
+        insert: vi.fn().mockResolvedValue({ error: null }),
         upsert: vi.fn().mockResolvedValue({ error: null }),
       }),
-    },
+    })),
   }));
 
   it('should return 400 for invalid email', async () => {

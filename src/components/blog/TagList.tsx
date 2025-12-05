@@ -12,12 +12,12 @@ export function TagList({ tags }: TagListProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-tight">
       {tags.map((tag) => (
         <Link
           key={tag.id}
           href={`/blog/tag/${tag.slug}`}
-          className="flex items-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
+          className="flex items-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
         >
           <Tag className="w-4 h-4" />
           {tag.name}

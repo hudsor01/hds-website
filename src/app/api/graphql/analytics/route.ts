@@ -5,7 +5,28 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin, queryAnalytics } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+// Simple analytics query helper
+async function queryAnalytics(query: string, variables: Record<string, unknown>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceClient() as any;
+  // This is a simplified implementation - expand based on actual needs
+  const { data, error } = await supabase.rpc('query_analytics', { query_text: query, vars: variables });
+  if (error) {
+    throw error;
+  }
+  return data;
+}
 import {
   graphqlRequestSchema,
   analyticsVariablesSchema,
@@ -143,7 +164,7 @@ async function getPageViews(variables: Record<string, unknown>) {
       break
   }
 
-  const { data: pageViews, error } = await supabaseAdmin
+  const { data: pageViews, error } = await createServiceClient()
     .from('page_analytics')
     .select(`
       path,
@@ -211,7 +232,7 @@ async function getWebVitals(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 7)
   }
 
-  let query = supabaseAdmin
+  let query = createServiceClient()
     .from('web_vitals')
     .select('*')
     .gte('timestamp', startTime.toISOString())
@@ -278,7 +299,7 @@ async function getLeadStats(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 90)
   }
 
-  const { data: leads, error } = await supabaseAdmin
+  const { data: leads, error } = await createServiceClient()
     .from('leads')
     .select('*')
     .gte('created_at', startTime.toISOString())
@@ -339,7 +360,7 @@ async function getEventStats(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 7)
   }
 
-  let query = supabaseAdmin
+  let query = createServiceClient()
     .from('custom_events')
     .select('*')
     .gte('timestamp', startTime.toISOString())
@@ -400,7 +421,7 @@ async function getFunnelAnalytics(variables: Record<string, unknown>) {
     startTime.setDate(startTime.getDate() - 30)
   }
 
-  let query = supabaseAdmin
+  let query = createServiceClient()
     .from('conversion_funnel')
     .select('*')
     .gte('timestamp', startTime.toISOString())

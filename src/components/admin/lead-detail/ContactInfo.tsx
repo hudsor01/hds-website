@@ -19,7 +19,7 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
 
 export function ContactInfo({ lead }: ContactInfoProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-content">
       <h3 className="text-lg font-semibold">Contact Information</h3>
       <div className="space-y-3">
         <InfoItem icon={<Mail className="h-5 w-5" />} label="Email" value={lead.email} />

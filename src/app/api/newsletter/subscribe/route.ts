@@ -5,10 +5,19 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
-import { Resend } from 'resend';
+import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { z } from 'zod';
 
 const SubscribeSchema = z.object({
@@ -28,13 +37,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Initialize Resend here to avoid build-time errors
-  const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   try {
     const body = await request.json();
     const { email, source } = SubscribeSchema.parse(body);
 
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -42,7 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = (await supabaseAdmin
+    const { data: existing } = (await createServiceClient()
       .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
       .select('*')
       .eq('email', email)
@@ -66,7 +73,7 @@ export async function POST(request: NextRequest) {
       tags: [],
     };
 
-    const { error: dbError } = await supabaseAdmin
+    const { error: dbError } = await createServiceClient()
       .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
       .upsert(subscriberData as unknown as never); // Bypass type checking
 
@@ -80,8 +87,8 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email
     try {
-      if (resend) {
-        await resend.emails.send({
+      if (isResendConfigured()) {
+        await getResendClient().emails.send({
         from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',

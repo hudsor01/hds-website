@@ -5,7 +5,38 @@
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin, logCronExecution, enqueueLogProcessing } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+async function logCronExecution(jobName: string, status: string, error?: string) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (createServiceClient() as any)
+      .from('cron_logs')
+      .insert({ job_name: jobName, status, error_message: error });
+  } catch {
+    // Non-critical, don't fail the job
+  }
+}
+
+async function enqueueLogProcessing(data: Record<string, unknown>) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (createServiceClient() as any)
+      .from('processing_queue')
+      .insert({ data, created_at: new Date().toISOString() });
+  } catch {
+    // Non-critical, don't fail the job
+  }
+}
 import { cronAuthHeaderSchema } from '@/lib/schemas'
 
 const logger = createServerLogger('analytics-cron')
@@ -75,7 +106,7 @@ export async function POST(request: NextRequest) {
 async function processWebVitals(): Promise<number> {
   try {
     // Get unprocessed web vitals from last hour
-    const { data: vitals, error } = await supabaseAdmin
+    const { data: vitals, error } = await createServiceClient()
       .from('web_vitals')
       .select('*')
       .gte('timestamp', new Date(Date.now() - 60 * 60 * 1000).toISOString())
@@ -108,7 +139,7 @@ async function processWebVitals(): Promise<number> {
 async function processPageAnalytics(): Promise<number> {
   try {
     // Get page views from last hour
-    const { data: pageViews, error } = await supabaseAdmin
+    const { data: pageViews, error } = await createServiceClient()
       .from('page_analytics')
       .select('*')
       .gte('timestamp', new Date(Date.now() - 60 * 60 * 1000).toISOString())
@@ -148,7 +179,7 @@ async function processPageAnalytics(): Promise<number> {
 async function processCustomEvents(): Promise<number> {
   try {
     // Get custom events from last hour
-    const { data: events, error } = await supabaseAdmin
+    const { data: events, error } = await createServiceClient()
       .from('custom_events')
       .select('*')
       .gte('timestamp', new Date(Date.now() - 60 * 60 * 1000).toISOString())
@@ -182,7 +213,7 @@ async function processCustomEvents(): Promise<number> {
 async function processLeadScoring(): Promise<number> {
   try {
     // Get recent leads that need scoring updates
-    const { data: leads, error } = await supabaseAdmin
+    const { data: leads, error } = await createServiceClient()
       .from('leads')
       .select('*')
       .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
@@ -220,7 +251,7 @@ async function processLeadScoring(): Promise<number> {
 
       // Update lead score if it changed
       if (score !== lead.lead_score) {
-        await supabaseAdmin
+        await createServiceClient()
           .from('leads')
           .update({ lead_score: score, updated_at: new Date().toISOString() })
           .eq('id', lead.id)
@@ -240,7 +271,7 @@ async function processLeadScoring(): Promise<number> {
 async function processConversionFunnels(): Promise<number> {
   try {
     // Get funnel data from last hour
-    const { data: funnelSteps, error } = await supabaseAdmin
+    const { data: funnelSteps, error } = await createServiceClient()
       .from('conversion_funnel')
       .select('*')
       .gte('timestamp', new Date(Date.now() - 60 * 60 * 1000).toISOString())

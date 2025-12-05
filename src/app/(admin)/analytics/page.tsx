@@ -22,65 +22,13 @@ import {
     X,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-
-interface AnalyticsOverview {
-  totalLeads: number;
-  qualityBreakdown: { hot: number; warm: number; cold: number };
-  typeBreakdown: Record<string, number>;
-  conversionRate: string;
-  contactRate: string;
-  emailMetrics: {
-    sent: number;
-    opened: number;
-    clicked: number;
-    openRate: string;
-    clickRate: string;
-  };
-  sourceBreakdown: Record<string, number>;
-}
-
-interface DailyDataPoint {
-  date: string;
-  leads: number;
-  contacted: number;
-  conversions: number;
-  hot: number;
-  warm: number;
-  cold: number;
-}
-
-interface TrendsData {
-  dailyData: DailyDataPoint[];
-  cumulativeLeads: Array<{ date: string; value: number }>;
-  cumulativeConversions: Array<{ date: string; value: number }>;
-}
-
-interface Lead {
-  id: string;
-  email: string;
-  name: string | null;
-  company: string | null;
-  phone: string | null;
-  calculator_type: string;
-  inputs: Record<string, unknown>;
-  results: Record<string, unknown>;
-  lead_score: number;
-  lead_quality: string;
-  created_at: string;
-  contacted: boolean;
-  converted: boolean;
-  contacted_at: string | null;
-  converted_at: string | null;
-  conversion_value: number | null;
-  attribution: {
-    source: string;
-    medium: string;
-    campaign: string | null;
-    device_type: string | null;
-    browser: string | null;
-    referrer: string | null;
-  } | null;
-}
+import { useQueryState, parseAsString, parseAsStringEnum } from 'nuqs';
+import {
+    TIME_RANGES,
+    LEAD_QUALITIES,
+    CALCULATOR_TYPES,
+} from '@/lib/analytics/search-params';
+import type { AnalyticsOverview, TrendsData, Lead } from '@/types/admin-analytics';
 
 export default function AnalyticsDashboard() {
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
@@ -88,12 +36,14 @@ export default function AnalyticsDashboard() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [allLeads, setAllLeads] = useState<Lead[]>([]); // Store unfiltered leads for client-side search
   const [isLoading, setIsLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState('30');
-  const [qualityFilter, setQualityFilter] = useState('all');
-  const [calculatorFilter, setCalculatorFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // URL state with nuqs - filters persist in URL for sharing/bookmarking
+  const [timeRange, setTimeRange] = useQueryState('days', parseAsStringEnum([...TIME_RANGES]).withDefault('30'));
+  const [qualityFilter, setQualityFilter] = useQueryState('quality', parseAsStringEnum([...LEAD_QUALITIES]).withDefault('all'));
+  const [calculatorFilter, setCalculatorFilter] = useQueryState('calculator', parseAsStringEnum([...CALCULATOR_TYPES]).withDefault('all'));
+  const [searchQuery, setSearchQuery] = useQueryState('search', parseAsString.withDefault(''));
 
   const fetchAnalytics = useCallback(async () => {
     setIsLoading(true);
@@ -203,7 +153,7 @@ export default function AnalyticsDashboard() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-cyan-600 border-t-transparent"></div>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
           <p className="mt-4 text-text-secondary dark:text-text-secondary">Loading analytics...</p>
         </div>
       </div>
@@ -233,7 +183,7 @@ export default function AnalyticsDashboard() {
   return (
     <div className="min-h-screen bg-muted dark:bg-background">
       {/* Header */}
-      <div className="border-b border-border bg-white dark:border-border dark:bg-muted">
+      <div className="border-b border-border bg-card dark:border-border dark:bg-muted">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
@@ -246,13 +196,13 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Time Range Selector and Export */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-content">
+              <div className="flex items-center gap-tight">
                 <Calendar className="h-5 w-5 text-text-muted" />
                 <select
                   value={timeRange}
-                  onChange={(e) => setTimeRange(e.target.value)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  onChange={(e) => void setTimeRange(e.target.value as typeof timeRange)}
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
                 >
                   <option value="7">Last 7 days</option>
                   <option value="30">Last 30 days</option>
@@ -263,7 +213,7 @@ export default function AnalyticsDashboard() {
 
               <button
                 onClick={handleExport}
-                className="inline-flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="inline-flex items-center gap-tight rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
               >
                 <Download className="h-4 w-4" />
                 Export CSV
@@ -275,8 +225,8 @@ export default function AnalyticsDashboard() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Search and Filters Bar */}
-        <div className="mb-6 rounded-lg border border-border bg-white p-4 dark:border-border dark:bg-muted">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-content-block rounded-lg border border-border bg-card card-padding-sm dark:border-border dark:bg-muted">
+          <div className="flex flex-col gap-content sm:flex-row sm:items-center sm:justify-between">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" />
@@ -284,12 +234,12 @@ export default function AnalyticsDashboard() {
                 type="text"
                 placeholder="Search by email, name, or company..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted dark:placeholder-text-muted"
+                onChange={(e) => void setSearchQuery(e.target.value)}
+                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted dark:placeholder-text-muted"
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => void setSearchQuery('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary dark:hover:text-text-secondary"
                 >
                   <X className="h-4 w-4" />
@@ -298,17 +248,18 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Calculator Type Filter */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-tight">
               <Filter className="h-5 w-5 text-muted-foreground" />
               <select
                 value={calculatorFilter}
-                onChange={(e) => setCalculatorFilter(e.target.value)}
-                className="rounded-md border-border py-2 pl-3 pr-10 text-sm focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-muted dark:text-white"
+                onChange={(e) => void setCalculatorFilter(e.target.value as typeof calculatorFilter)}
+                className="rounded-md border-border py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border dark:bg-muted dark:text-primary-foreground"
               >
                 <option value="all">All Calculators</option>
                 <option value="roi-calculator">ROI Calculator</option>
                 <option value="cost-estimator">Cost Estimator</option>
                 <option value="performance-calculator">Performance Calculator</option>
+                <option value="texas-ttl-calculator">Texas TTL Calculator</option>
               </select>
             </div>
 
@@ -320,38 +271,38 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* Key Metrics */}
-        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-comfortable grid gap-comfortable sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Leads"
             value={overview.totalLeads}
             subtitle={`${timeRange} days`}
-            icon={<Users className="h-6 w-6 text-cyan-600" />}
+            icon={<Users className="h-6 w-6 text-primary" />}
           />
 
           <MetricCard
             title="Hot Leads"
             value={overview.qualityBreakdown.hot}
             subtitle="75+ lead score"
-            icon={<TrendingUp className="h-6 w-6 text-red-600" />}
+            icon={<TrendingUp className="h-6 w-6 text-destructive-dark" />}
           />
 
           <MetricCard
             title="Email Open Rate"
             value={`${overview.emailMetrics.openRate}%`}
             subtitle={`${overview.emailMetrics.opened} of ${overview.emailMetrics.sent} opened`}
-            icon={<Mail className="h-6 w-6 text-blue-600" />}
+            icon={<Mail className="h-6 w-6 text-info-dark" />}
           />
 
           <MetricCard
             title="Conversion Rate"
             value={`${overview.conversionRate}%`}
             subtitle="Leads to customers"
-            icon={<Target className="h-6 w-6 text-green-600" />}
+            icon={<Target className="h-6 w-6 text-success-dark" />}
           />
         </div>
 
         {/* Charts */}
-        <div className="mb-8 grid gap-6 lg:grid-cols-2">
+        <div className="mb-comfortable grid gap-comfortable lg:grid-cols-2">
           <SimpleBarChart
             title="Leads by Calculator Type"
             data={calculatorData}
@@ -363,7 +314,7 @@ export default function AnalyticsDashboard() {
           />
         </div>
 
-        <div className="mb-8">
+        <div className="mb-comfortable">
           <SimpleBarChart
             title="Lead Quality Distribution"
             data={qualityData}
@@ -372,12 +323,12 @@ export default function AnalyticsDashboard() {
 
         {/* Trend Charts */}
         {trends && (
-          <div className="mb-8 space-y-6">
+          <div className="mb-comfortable space-y-comfortable">
             <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverted">
               Trends Over Time
             </h2>
 
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-comfortable lg:grid-cols-2">
               <TrendLineChart
                 title="Daily Leads"
                 datasets={[{ label: 'Daily Leads', data: trends.dailyData.map(d => ({ date: d.date, value: d.leads })), color: '#06b6d4' }]}
@@ -389,7 +340,7 @@ export default function AnalyticsDashboard() {
               />
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-comfortable lg:grid-cols-2">
               <TrendLineChart
                 title="Cumulative Leads Growth"
                 datasets={[{ label: 'Cumulative Leads Growth', data: trends.cumulativeLeads, color: '#8b5cf6' }]}
@@ -421,20 +372,20 @@ export default function AnalyticsDashboard() {
         )}
 
         {/* Recent Leads Table */}
-        <div className="rounded-lg border border-border bg-white dark:border-border dark:bg-muted">
-          <div className="border-b border-border p-6 dark:border-border">
+        <div className="rounded-lg border border-border bg-card dark:border-border dark:bg-muted">
+          <div className="border-b border-border card-padding dark:border-border">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-text-primary dark:text-text-inverted">
                 Recent Leads
               </h3>
 
               {/* Quality Filter */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-tight">
                 <Filter className="h-5 w-5 text-text-muted" />
                 <select
                   value={qualityFilter}
-                  onChange={(e) => setQualityFilter(e.target.value)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-cyan-600 focus:ring-cyan-600 dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  onChange={(e) => void setQualityFilter(e.target.value as typeof qualityFilter)}
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
                 >
                   <option value="all">All Leads</option>
                   <option value="hot">Hot Leads Only</option>
@@ -469,7 +420,7 @@ export default function AnalyticsDashboard() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-white dark:divide-border dark:bg-muted">
+              <tbody className="divide-y divide-border bg-card dark:divide-border dark:bg-muted">
                 {leads.map((lead) => (
                   <tr
                     key={lead.id}
@@ -496,7 +447,7 @@ export default function AnalyticsDashboard() {
                       {lead.calculator_type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-tight">
                         <span className="text-sm font-medium text-text-primary dark:text-text-inverted">
                           {lead.lead_score}
                         </span>
@@ -520,14 +471,14 @@ export default function AnalyticsDashboard() {
                       )}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
-                      <div className="flex gap-2">
+                      <div className="flex gap-tight">
                         {lead.converted && (
                           <span className="inline-flex rounded-full bg-success/10 px-2 py-1 text-xs font-semibold text-success dark:bg-success/90 dark:text-success">
                             Converted
                           </span>
                         )}
                         {lead.contacted && !lead.converted && (
-                          <span className="inline-flex rounded-full bg-blue-500/10 px-2 py-1 text-xs font-semibold text-blue-500 dark:bg-blue-500/90 dark:text-blue-500">
+                          <span className="inline-flex rounded-full bg-info/10 px-2 py-1 text-xs font-semibold text-info dark:bg-info/90 dark:text-info">
                             Contacted
                           </span>
                         )}

@@ -75,22 +75,22 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
   };
 
   return (
-    <div className="min-h-screen bg-background flex-center p-6">
+    <div className="min-h-screen bg-background flex-center card-padding">
       <div className="max-w-md w-full text-center">
-        <div className="glass-card p-8 border border-danger/20">
-          <AlertTriangle className="w-16 h-16 text-danger mx-auto mb-6" />
+        <div className="glass-card card-padding-lg border border-danger/20">
+          <AlertTriangle className="w-16 h-16 text-danger mx-auto mb-content-block" />
 
-          <h2 className="text-2xl font-bold text-text-inverted mb-4">
+          <h2 className="text-2xl font-bold text-text-inverted mb-heading">
             Oops! Something went wrong
           </h2>
 
-          <p className="text-text-secondary mb-6">
+          <p className="text-text-secondary mb-content-block">
             We&apos;re sorry for the inconvenience. Please try refreshing the page or contact us if the problem persists.
           </p>
 
           {error && (
-            <details className="text-left mb-6 p-4 bg-bg-overlay/30 rounded-lg border border-danger/20">
-              <summary className="text-danger cursor-pointer mb-2 flex-between">
+            <details className="text-left mb-content-block card-padding-sm bg-bg-overlay/30 rounded-lg border border-danger/20">
+              <summary className="text-danger cursor-pointer mb-subheading flex-between">
                 <span>Error Details</span>
                 <button
                   onClick={copyErrorDetails}
@@ -110,10 +110,10 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                   {'\n'}
                   {error.stack}
                 </pre>
-                <div className="mt-3 pt-3 border-t border-danger/20 flex flex-col sm:flex-row gap-2">
+                <div className="mt-3 pt-3 border-t border-danger/20 flex flex-col sm:flex-row gap-tight">
                   <button
                     onClick={copyErrorDetails}
-                    className="flex items-center gap-2 text-xs link-primary py-1"
+                    className="flex items-center gap-tight text-xs link-primary py-1"
                   >
                     {copied ? (
                       <>
@@ -129,7 +129,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                   </button>
                   <button
                     onClick={reportError}
-                    className="flex items-center gap-2 text-xs link-primary py-1"
+                    className="flex items-center gap-tight text-xs link-primary py-1"
                   >
                     <AlertTriangle className="w-3 h-3" />
                     Report Error
@@ -142,14 +142,14 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           <div className="flex-center">
             <button
               onClick={resetErrorBoundary}
-              className="button-primary flex items-center gap-2"
+              className="button-primary flex items-center gap-tight"
             >
               <RotateCw className="w-5 h-5" />
               Try Again
             </button>
           </div>
 
-          <p className="text-sm text-text-muted mt-6">
+          <p className="text-sm text-text-muted mt-content-block">
             Need help? Contact us at{' '}
             <a
               href="mailto:hello@hudsondigitalsolutions.com"
@@ -229,7 +229,7 @@ export function ComponentErrorBoundary({
   return (
     <ErrorBoundary
       fallback={({ resetErrorBoundary }) => (
-        <div className="p-4 bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/40 rounded-lg">
+        <div className="card-padding-sm bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/40 rounded-lg">
           <p className="text-sm text-warning dark:text-warning">
             Failed to load {name}
           </p>

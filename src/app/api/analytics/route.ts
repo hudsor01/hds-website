@@ -5,7 +5,16 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 import { env } from '@/env';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
@@ -53,9 +62,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in Supabase if available
-    if (supabaseAdmin) {
+    if (createServiceClient()) {
       try {
-        await supabaseAdmin.from('custom_events').insert({
+        await createServiceClient().from('custom_events').insert({
           event_name: eventName,
           event_category: properties?.category as string || 'general',
           event_label: properties?.label as string || null,

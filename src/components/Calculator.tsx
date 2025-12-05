@@ -1,9 +1,9 @@
 "use client";
 
-import DOMPurify from 'dompurify'
-import { Car } from 'lucide-react'
+import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react'
 import Head from 'next/head'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { useCalculator } from '../providers/CalculatorProvider'
 import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
 import { ComparisonView } from './ComparisonView'
@@ -11,6 +11,7 @@ import { InputPanel } from './InputPanel/InputPanel'
 import { ResultsPanel } from './ResultsPanel'
 import { logger } from '@/lib/logger'
 import { JsonLd } from '@/components/JsonLd'
+import { saveCalculation, emailResults } from '@/app/actions/ttl-calculator'
 
 export function Calculator() {
   const {
@@ -30,6 +31,12 @@ export function Calculator() {
     name: string;
   }>>([]);
 
+  // Share modal state
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareCode, setShareCode] = useState<string | null>(null);
+  const [emailInput, setEmailInput] = useState('');
+  const [isPending, startTransition] = useTransition();
+
   const handleSaveCalculation = async () => {
     try {
       await saveCurrentCalculation();
@@ -40,243 +47,71 @@ export function Calculator() {
     }
  };
 
-  const handleEmailResults = () => {
-    const subject = encodeURIComponent('Texas TTL Calculator Results');
-    const body = encodeURIComponent(`
-Texas TTL Calculator Results
-
-Vehicle Information:
-- Purchase Price: $${DOMPurify.sanitize((vehicleInput.purchasePrice || 0).toFixed(2))}
-- Down Payment: $${DOMPurify.sanitize((vehicleInput.downPayment || 0).toFixed(2))}
-- Trade-In Value: $${DOMPurify.sanitize((vehicleInput.tradeInValue || 0).toFixed(2))}
-- County: ${DOMPurify.sanitize(vehicleInput.county || '')}
-
-TTL Breakdown:
-- Sales Tax (6.25%): $${DOMPurify.sanitize((calculationResults?.ttlResults?.salesTax || 0).toFixed(2))}
-- Title & Local Fees: $${DOMPurify.sanitize((calculationResults?.ttlResults?.titleFee || 0).toFixed(2))}
-- Registration: $${DOMPurify.sanitize((calculationResults?.ttlResults?.registrationFees || 0).toFixed(2))}
-${calculationResults?.ttlResults?.evFee && calculationResults?.ttlResults?.evFee > 0 ? `- EV Fee: $${DOMPurify.sanitize(calculationResults?.ttlResults?.evFee.toFixed(2))}\n` : ''}
-${calculationResults?.ttlResults?.emissions && calculationResults?.ttlResults?.emissions > 0 ? `- Emissions: $${DOMPurify.sanitize(calculationResults?.ttlResults?.emissions.toFixed(2))}\n` : ''}
-- Total TTL: $${DOMPurify.sanitize((calculationResults?.ttlResults?.totalTTL || 0).toFixed(2))}
-
-Monthly Payment:
-- Loan Amount: $${DOMPurify.sanitize((calculationResults?.paymentResults?.loanAmount || 0).toFixed(2))}
-- Term: ${DOMPurify.sanitize(vehicleInput.loanTermMonths.toString())} months
-- Interest Rate: ${DOMPurify.sanitize(vehicleInput.interestRate.toString())}% APR
-- Monthly Payment: $${DOMPurify.sanitize((calculationResults?.paymentResults?.monthlyPayment || 0).toFixed(2))}
-- Total Interest: $${DOMPurify.sanitize((calculationResults?.paymentResults?.totalInterest || 0).toFixed(2))}
-- Total Amount Financed: $${DOMPurify.sanitize((calculationResults?.paymentResults?.totalFinanced || 0).toFixed(2))}
-    `);
-
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
-  };
-
-  const handleShareLink = () => {
-    const params = new URLSearchParams();
-    Object.entries(vehicleInput).forEach(([key, value]) => {
-      params.append(key, value.toString());
-    });
-
-    const shareableUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
-
-    navigator.clipboard.writeText(shareableUrl)
-      .then(() => {
-        alert('Shareable link copied to clipboard!');
-      })
-      .catch(err => {
-        logger.error('Failed to copy link', err as Error);
-        prompt('Copy this link to share your calculation:', shareableUrl);
-      });
-  };
-
-  const handlePrintPDF = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Please allow popups to print the calculation');
+  const handleEmailResults = async () => {
+    if (!shareCode) {
+      // First save to get a share code
+      await handleShareLink();
       return;
     }
 
-    const printContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Texas TTL Calculator - Results</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #33;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          h1 {
-            color: #2563eb;
-            border-bottom: 2px solid #2563eb;
-            padding-bottom: 10px;
-          }
-          h2 {
-            color: #4b5563;
-            margin-top: 20px;
-          }
-          .section {
-            margin-bottom: 30px;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-          }
-          th, td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-          }
-          th {
-            background-color: #f1f5f9;
-          }
-          .total {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #2563eb;
-          }
-          .footer {
-            margin-top: 40px;
-            font-size: 0.8em;
-            color: #6b7280;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-          }
-          @media print {
-            body {
-              padding: 0;
-              margin: 0;
-            }
-            .no-print {
-              display: none;
-            }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="no-print" style="text-align: right; margin-bottom: 20px;">
-          <button onclick="window.print()">Print PDF</button>
-        </div>
+    if (!emailInput || !emailInput.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
 
-        <h1>Texas TTL Calculator - Results</h1>
-
-        <div class="section">
-          <h2>Vehicle Information</h2>
-          <table>
-            <tr>
-              <th>Purchase Price</th>
-              <td>$${DOMPurify.sanitize((vehicleInput.purchasePrice || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Down Payment</th>
-              <td>$${DOMPurify.sanitize((vehicleInput.downPayment || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Trade-In Value</th>
-              <td>$${DOMPurify.sanitize((vehicleInput.tradeInValue || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>County</th>
-              <td>${DOMPurify.sanitize(vehicleInput.county || '')}</td>
-            </tr>
-            <tr>
-              <th>Vehicle Type</th>
-              <td>${DOMPurify.sanitize(vehicleInput.isNewVehicle ? 'New' : 'Used')} ${DOMPurify.sanitize(vehicleInput.isElectric ? 'Electric' : '')} Vehicle</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="section">
-          <h2>TTL Breakdown</h2>
-          <table>
-            <tr>
-              <th>Sales Tax (6.25%)</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.ttlResults?.salesTax || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Title & Local Fees</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.ttlResults?.titleFee || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Registration</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.ttlResults?.registrationFees || 0).toFixed(2))}</td>
-            </tr>
-            ${calculationResults?.ttlResults?.evFee && calculationResults?.ttlResults?.evFee > 0 ? `
-            <tr>
-              <th>EV Fee</th>
-              <td>$${DOMPurify.sanitize(calculationResults?.ttlResults?.evFee.toFixed(2))}</td>
-            </tr>` : ''}
-            ${calculationResults?.ttlResults?.emissions && calculationResults?.ttlResults?.emissions > 0 ? `
-            <tr>
-              <th>Emissions</th>
-              <td>$${DOMPurify.sanitize(calculationResults?.ttlResults?.emissions.toFixed(2))}</td>
-            </tr>` : ''}
-            <tr>
-              <th>Total TTL</th>
-              <td class="total">$${DOMPurify.sanitize((calculationResults?.ttlResults?.totalTTL || 0).toFixed(2))}</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="section">
-          <h2>Monthly Payment</h2>
-          <table>
-            <tr>
-              <th>Loan Amount</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.paymentResults?.loanAmount || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Term</th>
-              <td>${DOMPurify.sanitize((vehicleInput.loanTermMonths || 0).toString())} months</td>
-            </tr>
-            <tr>
-              <th>Interest Rate</th>
-              <td>${DOMPurify.sanitize((vehicleInput.interestRate || 0).toString())}% APR</td>
-            </tr>
-            <tr>
-              <th>Monthly Payment</th>
-              <td class="total">$${DOMPurify.sanitize((calculationResults?.paymentResults?.monthlyPayment || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Total Interest</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.paymentResults?.totalInterest || 0).toFixed(2))}</td>
-            </tr>
-            <tr>
-              <th>Total Amount Financed</th>
-              <td>$${DOMPurify.sanitize((calculationResults?.paymentResults?.totalFinanced || 0).toFixed(2))}</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="footer">
-          <p>Generated on ${DOMPurify.sanitize(new Date().toLocaleDateString())} by Texas TTL Calculator</p>
-          <p>Note: This calculator provides estimates based on Texas state fees and regulations. Actual fees may vary by county and specific circumstances. Always verify with your local Texas DMV office.</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Sanitize the entire content before writing
-    const sanitizedContent = DOMPurify.sanitize(printContent, {
-      ALLOWED_TAGS: ['!doctype', 'html', 'head', 'title', 'style', 'body', 'div', 'h1', 'h2', 'table', 'tr', 'th', 'td', 'button', 'p'],
-      ALLOWED_ATTR: ['class', 'style', 'onclick', 'type', 'rel']
+    startTransition(async () => {
+      const result = await emailResults(shareCode, emailInput);
+      if (result.success) {
+        toast.success('Results sent to your email!');
+        setEmailInput('');
+      } else {
+        toast.error(result.error || 'Failed to send email');
+      }
     });
+  };
 
-    printWindow.document.open();
-    printWindow.document.write(sanitizedContent);
-    printWindow.document.close();
+  const handleShareLink = async () => {
+    if (!calculationResults) {
+      toast.error('No calculation results to share');
+      return;
+    }
 
-    printWindow.onload = function() {
-      setTimeout(() => {
-        printWindow.focus();
-        printWindow.print();
-      }, 500);
-    };
+    startTransition(async () => {
+      const result = await saveCalculation(vehicleInput, calculationResults);
+
+      if (result.success && result.shareCode) {
+        setShareCode(result.shareCode);
+        setShowShareModal(true);
+
+        const shareableUrl = `${window.location.origin}${window.location.pathname}?c=${result.shareCode}`;
+
+        try {
+          await navigator.clipboard.writeText(shareableUrl);
+          toast.success('Link copied to clipboard!');
+        } catch {
+          // Clipboard failed, modal will show the link
+          logger.info('Clipboard API not available');
+        }
+      } else {
+        toast.error(result.error || 'Failed to create share link');
+      }
+    });
+  };
+
+  const copyShareLink = async () => {
+    if (!shareCode) {return;}
+    const shareableUrl = `${window.location.origin}${window.location.pathname}?c=${shareCode}`;
+    try {
+      await navigator.clipboard.writeText(shareableUrl);
+      toast.success('Link copied to clipboard!');
+    } catch {
+      toast.error('Failed to copy link');
+    }
+  };
+
+  const handlePrintPDF = () => {
+    // Uses CSS @media print styles from print.css
+    window.print();
   };
 
   const addToComparison = () => {
@@ -327,7 +162,7 @@ Monthly Payment:
   };
 
   return (
-    <div className="min-h-screen bg-cyan-600/10 py-8 px-4">
+    <div className="min-h-screen bg-primary/10 py-8 px-4">
       <Head>
         <title>Texas TTL Calculator - Calculate Vehicle Tax, Title, and License Fees</title>
         <meta name="description" content="Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers." />
@@ -354,7 +189,7 @@ Monthly Payment:
       }} />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-comfortable">
           <div className="flex items-center justify-center gap-3 mb-3">
             <Car className="w-10 h-10 text-primary" />
             <h1 className="text-4xl font-bold text-foreground">Texas TTL Calculator</h1>
@@ -371,7 +206,7 @@ Monthly Payment:
           />
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-comfortable">
           <div className="lg:col-span-2">
             <InputPanel
               vehicleInput={vehicleInput}
@@ -399,11 +234,93 @@ Monthly Payment:
         </div>
 
         {/* Footer with disclaimer */}
-        <div className="mt-12 text-center text-sm text-muted-foreground">
+        <div className="mt-12 text-center text-sm text-muted-foreground print-footer">
           <p>Disclaimer: This calculator provides estimates based on Texas state fees and regulations. Actual fees may vary.</p>
           <p>Always verify with your local Texas DMV office for the most accurate information.</p>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 no-print" onClick={() => setShowShareModal(false)}>
+          <div
+            className="bg-card rounded-lg shadow-xl p-6 max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <Share2 className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold text-foreground">Share Your Results</h2>
+            </div>
+
+            {/* Share Link */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Shareable Link
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={shareCode ? `${window.location.origin}${window.location.pathname}?c=${shareCode}` : ''}
+                  className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm text-foreground border border-border"
+                />
+                <button
+                  onClick={copyShareLink}
+                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                  aria-label="Copy link"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">This link will work for 90 days</p>
+            </div>
+
+            {/* Email Results */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Email Results
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+                <button
+                  onClick={handleEmailResults}
+                  disabled={isPending || !emailInput}
+                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Send email"
+                >
+                  <Mail className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Print Button */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowShareModal(false);
+                  setTimeout(handlePrintPDF, 100);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
+              >
+                <Printer className="w-4 h-4" />
+                Print Results
+              </button>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

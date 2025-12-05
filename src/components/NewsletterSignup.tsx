@@ -69,22 +69,22 @@ export function NewsletterSignup({
   };
 
   const variantStyles = {
-    inline: 'rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted',
-    sidebar: 'rounded-lg bg-cyan-600/10 p-6 dark:from-gray-800 dark:to-gray-900',
-    modal: 'rounded-lg bg-white p-8 shadow-xl dark:bg-muted',
+    inline: 'rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted',
+    sidebar: 'rounded-lg bg-primary/10 card-padding dark:from-card dark:to-background',
+    modal: 'rounded-lg bg-card card-padding-lg shadow-xl dark:bg-muted',
   };
 
   return (
     <div className={variantStyles[variant]}>
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900">
-            <Mail className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+        <div className="shrink-0">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
+            <Mail className="h-5 w-5 text-primary dark:text-accent" />
           </div>
         </div>
 
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground dark:text-white">
+          <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
             {title}
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -92,7 +92,7 @@ export function NewsletterSignup({
           </p>
 
           <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-            <div className="flex gap-2">
+            <div className="flex gap-tight">
               <Input
                 type="email"
                 value={email}
@@ -119,8 +119,8 @@ export function NewsletterSignup({
             </div>
 
             {message && (
-              <Alert variant={status === 'error' ? 'destructive' : 'default'} className={status === 'success' ? 'border-green-500/50 bg-green-500/10' : ''}>
-                <AlertDescription className={`flex items-center gap-2 ${status === 'success' ? 'text-green-600 dark:text-green-400' : ''}`}>
+              <Alert variant={status === 'error' ? 'destructive' : 'default'} className={status === 'success' ? 'border-success/50 bg-success/10' : ''}>
+                <AlertDescription className={`flex items-center gap-tight ${status === 'success' ? 'text-success-dark dark:text-success-text' : ''}`}>
                   {status === 'error' && <AlertCircle className="h-4 w-4" />}
                   {status === 'success' && <Check className="h-4 w-4" />}
                   {message}

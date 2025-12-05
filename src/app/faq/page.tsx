@@ -141,15 +141,15 @@ export default function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <main className="min-h-screen bg-cyan-600/10">
+      <main className="min-h-screen bg-primary/10">
         {/* Hero */}
-        <section className="py-20 px-4">
+        <section className="py-section px-4">
           <div className="container-wide text-center">
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-              Frequently Asked <span className="text-cyan-400">Questions</span>
+            <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+              Frequently Asked <span className="text-accent">Questions</span>
             </h1>
 
-            <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-muted mb-comfortable max-w-3xl mx-auto">
               Everything you need to know about our web development services, process, and pricing.
             </p>
 
@@ -170,7 +170,7 @@ export default function FAQPage() {
         </section>
 
         {/* FAQ Categories */}
-        <section className="py-16 px-4">
+        <section className="py-section-sm px-4">
           <div className="container-wide max-w-4xl mx-auto">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-12">
@@ -180,9 +180,9 @@ export default function FAQPage() {
               <div className="space-y-12">
                 {filteredFaqs.map((category, catIndex) => (
                   <div key={catIndex}>
-                    <h2 className="text-2xl font-bold text-white mb-6">{category.category}</h2>
+                    <h2 className="text-2xl font-bold text-primary-foreground mb-content-block">{category.category}</h2>
 
-                    <Accordion type="single" collapsible className="space-y-4">
+                    <Accordion type="single" collapsible className="space-y-content">
                       {category.questions.map((faq, qIndex) => (
                         <AccordionItem
                           key={qIndex}
@@ -190,7 +190,7 @@ export default function FAQPage() {
                           className="glass-card overflow-hidden border-none"
                         >
                           <AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/50 hover:no-underline">
-                            <span className="text-lg font-semibold text-white pr-8">
+                            <span className="text-lg font-semibold text-primary-foreground pr-8">
                               {faq.question}
                             </span>
                           </AccordionTrigger>
@@ -208,13 +208,13 @@ export default function FAQPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-20 px-4">
+        <section className="py-section px-4">
           <div className="container-wide text-center">
             <div className="glass-section p-12">
-              <h2 className="text-4xl font-black text-white mb-6">
+              <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
                 Still Have Questions?
               </h2>
-              <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+              <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
                 Schedule a free consultation call and we&apos;ll answer all your questions about your project.
               </p>
               <Button asChild variant="default" size="lg" trackConversion={true}>

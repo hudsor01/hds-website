@@ -7,12 +7,30 @@ import userEvent from '@testing-library/user-event'
  * Tests ContactForm validation, submission, and error handling
  */
 
+// Mock Supabase environment variables
+vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'https://test.supabase.co')
+vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'test-anon-key')
+vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'test-service-role-key')
+
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: vi.fn(),
     refresh: vi.fn(),
   }),
+}))
+
+// Mock Supabase client
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: vi.fn(() => ({
+    from: vi.fn(() => ({
+      insert: vi.fn(() => ({ select: vi.fn(() => ({ single: vi.fn() })) })),
+      select: vi.fn(() => ({ eq: vi.fn(() => ({ single: vi.fn() })) })),
+    })),
+    auth: {
+      getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null })),
+    },
+  })),
 }))
 
 describe('ContactForm Component', () => {
@@ -88,7 +106,7 @@ describe('ContactForm Component', () => {
     // Form should exist
     const form = container.querySelector('form')
     expect(form).toBeInTheDocument()
-    expect(form).toHaveClass('space-y-8')
+    expect(form).toHaveClass('space-y-sections')
   })
 
   it('should have textarea for message', async () => {

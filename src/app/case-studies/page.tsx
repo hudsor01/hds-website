@@ -27,7 +27,7 @@ async function CaseStudiesContent() {
               <p className="text-muted-foreground text-lg">
                 Case studies coming soon. Contact us to discuss your project!
               </p>
-              <Button asChild variant="default" size="lg" trackConversion={true} className="mt-6">
+              <Button asChild variant="default" size="lg" trackConversion={true} className="mt-content-block">
       <Link href="/contact">
         Get Started
         <ArrowRight className="w-4 h-4" />
@@ -35,36 +35,36 @@ async function CaseStudiesContent() {
     </Button>
             </div>
           ) : (
-            <div className="grid gap-8">
+            <div className="grid gap-sections">
               {caseStudies.map((study) => (
-                <div key={study.id} className="glass-card p-8">
-                  <div className="grid md:grid-cols-2 gap-8">
+                <div key={study.id} className="glass-card card-padding-lg">
+                  <div className="grid md:grid-cols-2 gap-sections">
                     {/* Left Column - Project Details */}
                     <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="px-3 py-1 bg-cyan-900/30 border border-cyan-500/30 rounded-full text-cyan-400 text-sm font-semibold">
+                      <div className="flex items-center gap-3 mb-heading">
+                        <span className="px-3 py-1 bg-primary-hover/30 border border-primary/30 rounded-full text-accent text-sm font-semibold">
                           {study.industry}
                         </span>
                         {study.featured && (
-                          <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 rounded-full text-yellow-400 text-sm font-semibold">
+                          <span className="px-3 py-1 bg-warning-bg-dark/30 border border-warning/30 rounded-full text-warning-text text-sm font-semibold">
                             Featured
                           </span>
                         )}
                       </div>
 
-                      <h2 className="text-3xl font-bold text-white mb-3">
+                      <h2 className="text-3xl font-bold text-primary-foreground mb-3">
                         {study.title}
                       </h2>
 
-                      <p className="text-lg text-muted mb-6">
+                      <p className="text-lg text-muted mb-content-block">
                         {study.description}
                       </p>
 
                       {/* Metrics */}
-                      <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="grid grid-cols-2 gap-content mb-content-block">
                         {study.metrics.map((metric, i) => (
-                          <div key={i} className="bg-muted/50 rounded-lg p-4">
-                            <div className="text-2xl font-black text-cyan-400 mb-1">
+                          <div key={i} className="bg-muted/50 rounded-lg card-padding-sm">
+                            <div className="text-2xl font-black text-accent mb-1">
                               {metric.value}
                             </div>
                             <div className="text-sm text-muted-foreground">{metric.label}</div>
@@ -73,12 +73,12 @@ async function CaseStudiesContent() {
                       </div>
 
                       {/* Project Info */}
-                      <div className="flex gap-6 text-sm text-muted-foreground mb-6">
-                        <div className="flex items-center gap-2">
+                      <div className="flex gap-comfortable text-sm text-muted-foreground mb-content-block">
+                        <div className="flex items-center gap-tight">
                           <Clock className="w-4 h-4" />
                           <span>{study.project_duration}</span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-tight">
                           <Users className="w-4 h-4" />
                           <span>{study.team_size} team members</span>
                         </div>
@@ -93,9 +93,9 @@ async function CaseStudiesContent() {
                     </div>
 
                     {/* Right Column - Testimonial */}
-                    <div className="bg-muted/50 rounded-lg p-6">
+                    <div className="bg-muted/50 rounded-lg card-padding">
                       {study.testimonial_video_url ? (
-                        <div className="mb-4">
+                        <div className="mb-heading">
                           <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                             <iframe
                               src={study.testimonial_video_url.replace('watch?v=', 'embed/')}
@@ -108,18 +108,18 @@ async function CaseStudiesContent() {
                         </div>
                       ) : null}
 
-                      <blockquote className="text-lg text-muted italic mb-4">
+                      <blockquote className="text-lg text-muted italic mb-heading">
                         "{study.testimonial_text}"
                       </blockquote>
 
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                          <span className="text-cyan-400 font-bold text-xl">
+                        <div className="w-12 h-12 rounded-full bg-primary/80/20 flex items-center justify-center">
+                          <span className="text-accent font-bold text-xl">
                             {study.testimonial_author.charAt(0)}
                           </span>
                         </div>
                         <div>
-                          <div className="font-semibold text-white">
+                          <div className="font-semibold text-primary-foreground">
                             {study.testimonial_author}
                           </div>
                           <div className="text-sm text-muted-foreground">
@@ -142,19 +142,19 @@ async function CaseStudiesContent() {
 
 export default function CaseStudiesPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-gradient-to-b from-background via-card to-background">
       {/* Hero - Static, prerendered */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Real Results From <span className="gradient-text">Real Projects</span>
+          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+            Real Results From <span className="text-accent">Real Projects</span>
           </h1>
 
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-comfortable max-w-3xl mx-auto">
             See how we've helped businesses scale, increase conversions, and solve complex technical challenges.
           </p>
 
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-content">
             <Button asChild variant="default" size="lg" trackConversion={true}>
               <Link href="/contact">
                 Start Your Project
@@ -166,12 +166,12 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* Case Studies Grid - Dynamic with Suspense */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide">
           <Suspense fallback={
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
-              <p className="text-gray-400 text-lg mt-4">Loading case studies...</p>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+              <p className="text-muted-foreground text-lg mt-4">Loading case studies...</p>
             </div>
           }>
             <CaseStudiesContent />
@@ -180,13 +180,13 @@ export default function CaseStudiesPage() {
       </section>
 
       {/* CTA - Static, prerendered */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-white mb-6">
+            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
               Ready to Get Results Like These?
             </h2>
-            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
               Let's discuss your project and create a custom solution that drives real business results.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>

@@ -298,11 +298,11 @@ describe('GlassCard Component', () => {
   it('should apply different padding sizes', () => {
     const { container, rerender } = render(<GlassCard padding="sm">Content</GlassCard>)
     let card = container.firstChild
-    expect(card).toHaveClass('p-4')
+    expect(card).toHaveClass('card-padding-sm')
 
     rerender(<GlassCard padding="lg">Content</GlassCard>)
     card = container.firstChild
-    expect(card).toHaveClass('p-8')
+    expect(card).toHaveClass('card-padding-lg')
   })
 
   it('should merge custom className', () => {

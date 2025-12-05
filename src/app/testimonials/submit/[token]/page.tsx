@@ -48,10 +48,10 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
       <div className="min-h-screen bg-muted/30 flex items-center justify-center">
         <div className="container-narrow py-12">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted dark:bg-success-bg-dark/30 flex items-center justify-center">
+              <CheckCircle2 className="w-8 h-8 text-success-dark" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground mb-4">
+            <h1 className="text-2xl font-bold text-foreground mb-heading">
               Already Submitted
             </h1>
             <p className="text-muted-foreground">
@@ -70,19 +70,19 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
       <div className="min-h-screen bg-muted/30 flex items-center justify-center">
         <div className="container-narrow py-12">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
-              <AlertCircle className="w-8 h-8 text-yellow-600" />
+            <div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-warning-muted dark:bg-warning-bg-dark/30 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-warning-dark" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground mb-4">
+            <h1 className="text-2xl font-bold text-foreground mb-heading">
               Link Expired
             </h1>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-content-block">
               This testimonial link has expired. If you&apos;d still like to share
               your feedback, please contact us for a new link.
             </p>
             <Link
               href="/testimonials/submit"
-              className="inline-block px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors"
+              className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary-hover transition-colors"
             >
               Submit Public Testimonial
             </Link>
@@ -94,11 +94,11 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <div className="container-narrow py-12 md:py-20">
+      <div className="container-narrow py-12 md:py-section">
         <div className="max-w-2xl mx-auto">
           {/* Personalized Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-heading">
               Thank You, {request.client_name}!
             </h1>
             <p className="text-lg text-muted-foreground">
@@ -109,7 +109,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
           </div>
 
           {/* Form */}
-          <div className="bg-white dark:bg-card rounded-xl shadow-lg border border-border p-6 md:p-8">
+          <div className="bg-card dark:bg-card rounded-xl shadow-lg border border-border card-padding md:card-padding-lg">
             <TestimonialForm
               requestId={request.id}
               token={token}
@@ -118,7 +118,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
           </div>
 
           {/* Footer Note */}
-          <p className="text-sm text-muted-foreground text-center mt-6">
+          <p className="text-sm text-muted-foreground text-center mt-content-block">
             By submitting, you agree that your testimonial may be used on our website
             and marketing materials.
           </p>

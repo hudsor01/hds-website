@@ -5,7 +5,16 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { z } from 'zod';
@@ -127,7 +136,7 @@ async function handleNewLead(body: unknown) {
 
     const { data } = validation.data;
 
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -135,7 +144,7 @@ async function handleNewLead(body: unknown) {
     }
 
     // Store lead in database
-    const { data: lead, error: dbError } = await supabaseAdmin
+    const { data: lead, error: dbError } = await createServiceClient()
       .from('calculator_leads')
       .insert({
         email: data.email,
@@ -260,14 +269,14 @@ async function handleUpdateLead(body: unknown) {
 
     const { data } = validation.data;
 
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
       );
     }
 
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await createServiceClient()
       .from('calculator_leads')
       .update(data.updates)
       .eq('id', data.leadId);

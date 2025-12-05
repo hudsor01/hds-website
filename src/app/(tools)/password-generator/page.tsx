@@ -162,11 +162,11 @@ export default function PasswordGeneratorPage() {
 
   const getStrengthColor = (strength: GeneratedPassword['strength']) => {
     switch (strength) {
-      case 'weak': return 'text-red-500 bg-red-100 dark:bg-red-900/30';
-      case 'fair': return 'text-orange-500 bg-orange-100 dark:bg-orange-900/30';
-      case 'good': return 'text-yellow-500 bg-yellow-100 dark:bg-yellow-900/30';
-      case 'strong': return 'text-green-500 bg-green-100 dark:bg-green-900/30';
-      case 'very-strong': return 'text-cyan-500 bg-cyan-100 dark:bg-cyan-900/30';
+      case 'weak': return 'text-destructive bg-destructive-muted dark:bg-destructive-bg-dark/30';
+      case 'fair': return 'text-orange bg-orange/20 dark:bg-orange-text/30';
+      case 'good': return 'text-warning bg-warning-muted dark:bg-warning-bg-dark/30';
+      case 'strong': return 'text-success bg-success-muted dark:bg-success-bg-dark/30';
+      case 'very-strong': return 'text-primary/80 bg-accent/20 dark:bg-primary-hover/30';
     }
   };
 
@@ -192,11 +192,11 @@ export default function PasswordGeneratorPage() {
       'very-strong': 'w-full',
     };
     const colors = {
-      'weak': 'bg-red-500',
-      'fair': 'bg-orange-500',
-      'good': 'bg-yellow-500',
-      'strong': 'bg-green-500',
-      'very-strong': 'bg-cyan-500',
+      'weak': 'bg-destructive',
+      'fair': 'bg-orange',
+      'good': 'bg-warning',
+      'strong': 'bg-success',
+      'very-strong': 'bg-primary/80',
     };
     return { width: widths[strength], color: colors[strength] };
   };
@@ -208,19 +208,19 @@ export default function PasswordGeneratorPage() {
       title="Password Generator"
       description="Generate secure, random passwords with customizable length and character options"
       icon={
-        <Key className="h-8 w-8 text-cyan-600" />
+        <Key className="h-8 w-8 text-primary" />
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-comfortable">
         {/* Options */}
-        <div className="space-y-4">
+        <div className="space-y-content">
           {/* Length Slider */}
           <div>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-subheading">
               <label className="text-sm font-medium text-foreground">
                 Password Length
               </label>
-              <span className="text-lg font-bold text-cyan-600">{options.length}</span>
+              <span className="text-lg font-bold text-primary">{options.length}</span>
             </div>
             <input
               type="range"
@@ -245,7 +245,7 @@ export default function PasswordGeneratorPage() {
                 type="checkbox"
                 checked={options.uppercase}
                 onChange={(e) => setOptions(prev => ({ ...prev, uppercase: e.target.checked }))}
-                className="w-4 h-4 text-cyan-600 rounded border-border focus:ring-cyan-500"
+                className="w-4 h-4 text-primary rounded border-border focus:ring-primary"
               />
               <div>
                 <div className="text-sm font-medium text-foreground">Uppercase</div>
@@ -258,7 +258,7 @@ export default function PasswordGeneratorPage() {
                 type="checkbox"
                 checked={options.lowercase}
                 onChange={(e) => setOptions(prev => ({ ...prev, lowercase: e.target.checked }))}
-                className="w-4 h-4 text-cyan-600 rounded border-border focus:ring-cyan-500"
+                className="w-4 h-4 text-primary rounded border-border focus:ring-primary"
               />
               <div>
                 <div className="text-sm font-medium text-foreground">Lowercase</div>
@@ -271,7 +271,7 @@ export default function PasswordGeneratorPage() {
                 type="checkbox"
                 checked={options.numbers}
                 onChange={(e) => setOptions(prev => ({ ...prev, numbers: e.target.checked }))}
-                className="w-4 h-4 text-cyan-600 rounded border-border focus:ring-cyan-500"
+                className="w-4 h-4 text-primary rounded border-border focus:ring-primary"
               />
               <div>
                 <div className="text-sm font-medium text-foreground">Numbers</div>
@@ -284,7 +284,7 @@ export default function PasswordGeneratorPage() {
                 type="checkbox"
                 checked={options.symbols}
                 onChange={(e) => setOptions(prev => ({ ...prev, symbols: e.target.checked }))}
-                className="w-4 h-4 text-cyan-600 rounded border-border focus:ring-cyan-500"
+                className="w-4 h-4 text-primary rounded border-border focus:ring-primary"
               />
               <div>
                 <div className="text-sm font-medium text-foreground">Symbols</div>
@@ -295,7 +295,7 @@ export default function PasswordGeneratorPage() {
 
           {/* Count */}
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
+            <label className="block text-sm font-medium text-foreground mb-subheading">
               Number of Passwords
             </label>
             <select
@@ -315,14 +315,14 @@ export default function PasswordGeneratorPage() {
         <button
           onClick={handleGenerate}
           disabled={!atLeastOneSelected}
-          className="w-full flex items-center justify-center gap-2 rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className="w-5 h-5" />
           Generate {count > 1 ? 'Passwords' : 'Password'}
         </button>
 
         {!atLeastOneSelected && (
-          <p className="text-sm text-red-500 text-center">
+          <p className="text-sm text-destructive text-center">
             Please select at least one character type
           </p>
         )}
@@ -339,15 +339,15 @@ export default function PasswordGeneratorPage() {
               return (
                 <div
                   key={index}
-                  className="rounded-lg border border-border p-4 space-y-3"
+                  className="rounded-lg border border-border card-padding-sm space-y-3"
                 >
                   <div className="flex items-center gap-3">
-                    <code className="flex-1 font-mono text-sm bg-gray-900 text-gray-100 p-3 rounded-md overflow-x-auto">
+                    <code className="flex-1 font-mono text-sm bg-background text-foreground p-3 rounded-md overflow-x-auto">
                       {item.password}
                     </code>
                     <button
                       onClick={() => copyToClipboard(index)}
-                      className="flex items-center gap-1 rounded-md bg-cyan-600 px-3 py-2 text-xs font-medium text-white hover:bg-cyan-700 transition-colors flex-shrink-0"
+                      className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-primary-hover transition-colors shrink-0"
                     >
                       {item.copied ? (
                         <>
@@ -380,13 +380,13 @@ export default function PasswordGeneratorPage() {
         )}
 
         {/* Security Notice */}
-        <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+        <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
           <div className="flex">
-            <div className="flex-shrink-0">
-              <Shield className="h-5 w-5 text-blue-400" />
+            <div className="shrink-0">
+              <Shield className="h-5 w-5 text-info-text" />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+              <p className="text-sm text-info-darker dark:text-info-muted">
                 <strong>Security Notice:</strong> Passwords are generated entirely in your browser. No passwords are sent to or stored on any server.
               </p>
             </div>
@@ -395,14 +395,14 @@ export default function PasswordGeneratorPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Password Security Tips
         </h3>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Use Unique Passwords
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -410,8 +410,8 @@ export default function PasswordGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Length Over Complexity
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -419,8 +419,8 @@ export default function PasswordGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Use a Password Manager
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -428,8 +428,8 @@ export default function PasswordGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Enable 2FA
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

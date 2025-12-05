@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { Resend } from 'resend';
 import { type ZodError } from 'zod';
+import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import {
   escapeHtml,
@@ -15,8 +15,6 @@ import {
   discordWebhookRequestSchema,
   type LeadMagnetRequest,
 } from '@/lib/schemas';
-
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Lead magnet resources configuration
 const LEAD_MAGNETS = {
@@ -213,12 +211,12 @@ export async function POST(request: NextRequest) {
     }
     
     // Send emails if Resend is configured
-    if (resend) {
+    if (isResendConfigured()) {
       try {
         const resource = LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS];
 
         // Send download email to user
-        const userEmailResponse = await resend.emails.send({
+        const userEmailResponse = await getResendClient().emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: [data.email],
           subject: sanitizeEmailHeader(`Your ${resource.title} is Ready for Download`),
@@ -235,7 +233,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Send notification to admin
-        const adminEmailResponse = await resend.emails.send({
+        const adminEmailResponse = await getResendClient().emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
           to: ['hello@hudsondigitalsolutions.com'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),

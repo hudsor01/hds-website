@@ -17,23 +17,23 @@ export const metadata: Metadata = {
 
 export default function EcommercePage() {
   return (
-    <main className="min-h-screen bg-cyan-600/10">
+    <main className="min-h-screen bg-primary/10">
       {/* Hero */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
-          <div className="inline-block mb-4 px-4 py-2 bg-cyan-900/30 border border-cyan-500/30 rounded-full">
-            <span className="text-cyan-400 font-semibold text-sm">Built for E-commerce</span>
+          <div className="inline-block mb-heading px-4 py-2 bg-primary-hover/30 border border-primary/30 rounded-full">
+            <span className="text-accent font-semibold text-sm">Built for E-commerce</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Convert More Visitors Into <span className="text-cyan-400">Paying Customers</span>
+          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+            Convert More Visitors Into <span className="text-accent">Paying Customers</span>
           </h1>
 
-          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted mb-comfortable max-w-3xl mx-auto">
             Your store is live but sales are stuck. Every slow page load costs you money. We build e-commerce experiences that convert.
           </p>
 
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-content">
             <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         Get Free Store Audit
@@ -51,13 +51,13 @@ export default function EcommercePage() {
       </section>
 
       {/* E-commerce Pain Points */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Common E-commerce Problems We Solve
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-sections">
             {[
               {
                 icon: ShoppingCart,
@@ -78,11 +78,11 @@ export default function EcommercePage() {
                 solution: 'Seamless payment integration. Support for 100+ payment methods. Global commerce ready.',
               },
             ].map((item, i) => (
-              <div key={i} className="glass-card p-6">
-                <item.icon className="w-12 h-12 text-cyan-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-red-400 mb-2 font-semibold">Problem: {item.problem}</p>
-                <p className="text-green-400">Solution: {item.solution}</p>
+              <div key={i} className="glass-card card-padding">
+                <item.icon className="w-12 h-12 text-accent mb-heading" />
+                <h3 className="text-xl font-bold text-primary-foreground mb-3">{item.title}</h3>
+                <p className="text-destructive-text mb-subheading font-semibold">Problem: {item.problem}</p>
+                <p className="text-success-text">Solution: {item.solution}</p>
               </div>
             ))}
           </div>
@@ -90,22 +90,22 @@ export default function EcommercePage() {
       </section>
 
       {/* E-commerce Metrics */}
-      <section className="py-16 px-4 bg-muted/50">
+      <section className="py-section-sm px-4 bg-muted/50">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Results That Impact Your Bottom Line
           </h2>
 
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-comfortable">
             {[
               { metric: '40%', label: 'Higher Conversion Rate', icon: TrendingUp },
               { metric: '2.5x', label: 'Faster Page Load', icon: Zap },
               { metric: '60%', label: 'Mobile Sales Increase', icon: Smartphone },
               { metric: '35%', label: 'Average Revenue Lift', icon: DollarSign },
             ].map((stat, i) => (
-              <div key={i} className="text-center glass-card p-6">
-                <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
-                <div className="text-4xl font-black text-cyan-400 mb-2">{stat.metric}</div>
+              <div key={i} className="text-center glass-card card-padding">
+                <stat.icon className="w-10 h-10 text-accent mx-auto mb-3" />
+                <div className="text-4xl font-black text-accent mb-subheading">{stat.metric}</div>
                 <div className="text-muted">{stat.label}</div>
               </div>
             ))}
@@ -114,13 +114,13 @@ export default function EcommercePage() {
       </section>
 
       {/* Technical Capabilities */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Full-Stack E-commerce Development
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-sections max-w-4xl mx-auto">
             {[
               'Custom Shopify & WooCommerce development',
               'Headless commerce architecture',
@@ -132,8 +132,8 @@ export default function EcommercePage() {
               'Analytics & A/B testing setup',
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm">✓</span>
+                <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
+                  <span className="text-primary-foreground text-sm">✓</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>
@@ -143,7 +143,7 @@ export default function EcommercePage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide max-w-4xl mx-auto">
           <NewsletterSignup
             variant="sidebar"
@@ -154,13 +154,13 @@ export default function EcommercePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-white mb-6">
+            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
               Ready to Increase Your Sales?
             </h2>
-            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
               Get a free e-commerce audit showing exactly how to improve your conversion rate and revenue.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>

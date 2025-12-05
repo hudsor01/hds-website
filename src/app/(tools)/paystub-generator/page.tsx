@@ -352,7 +352,7 @@ export default function Home() {
           <div className="p-5 text-center bg-muted">
             <button
               onClick={backToForm}
-              className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
+              className="px-5 py-2.5 mr-2.5 bg-muted-foreground text-primary-foreground border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
             >
               ← Back to Form
             </button>
@@ -377,13 +377,13 @@ export default function Home() {
         <div className="p-5 text-center bg-muted">
           <button
             onClick={backToForm}
-            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
+            className="px-5 py-2.5 mr-2.5 bg-muted-foreground text-primary-foreground border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
           >
             ← Back to Form
           </button>
           <button
             onClick={() => window.print()}
-            className="px-5 py-2.5 bg-accent text-white border-0 rounded cursor-pointer hover:bg-accent/90 transition-smooth"
+            className="px-5 py-2.5 bg-accent text-primary-foreground border-0 rounded cursor-pointer hover:bg-accent/90 transition-smooth"
           >
             Print Pay Stub
           </button>
@@ -404,13 +404,13 @@ export default function Home() {
         <div className="p-5 text-center bg-muted">
           <button
             onClick={backToForm}
-            className="px-5 py-2.5 mr-2.5 bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
+            className="px-5 py-2.5 mr-2.5 bg-muted-foreground text-primary-foreground border-0 rounded cursor-pointer hover:bg-muted transition-smooth"
           >
             ← Back to Form
           </button>
           <button
             onClick={() => window.print()}
-            className="px-5 py-2.5 bg-accent text-white border-0 rounded cursor-pointer hover:bg-accent/90 transition-smooth"
+            className="px-5 py-2.5 bg-accent text-primary-foreground border-0 rounded cursor-pointer hover:bg-accent/90 transition-smooth"
           >
             Print Annual Summary
           </button>
@@ -421,19 +421,19 @@ export default function Home() {
   }
 
   return (
-    <div className="m-0 p-5 box-border font-sans bg-cyan-600/10 min-h-screen text-foreground">
-      <div className="max-w-[1000px] mx-auto bg-white rounded-[15px] shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden">
+    <div className="m-0 p-5 box-border font-sans bg-primary/10 min-h-screen text-foreground">
+      <div className="max-w-[1000px] mx-auto bg-card rounded-[var(--spacing-4)] shadow-[0_10px_30px_rgba(0,0,0,0.1)] overflow-hidden">
         {/* Header */}
-        <div className="bg-[#2c3e50] text-white text-center py-[25px] px-5 border-b-[3px] border-[#34495e]">
-          <h1 className="text-[1.8rem] mb-[5px] font-semibold tracking-[1px]">PAYROLL RECORD SUMMARY</h1>
-          <p className="text-base text-[#bdc3c7] m-0">Tax Year {paystubData.taxYear}</p>
+        <div className="bg-[#2c3e50] text-primary-foreground text-center py-[var(--spacing-6)] px-5 border-b-[3px] border-[#34495e]">
+          <h1 className="text-[var(--text-3xl)] mb-[var(--spacing-1)] font-semibold tracking-[1px]">PAYROLL RECORD SUMMARY</h1>
+          <p className="text-base text-muted-foreground m-0">Tax Year {paystubData.taxYear}</p>
         </div>
 
         {/* Form Section */}
-        <div className="p-[30px] bg-muted border-b border-border">
+        <div className="p-[var(--spacing-8)] bg-muted border-b border-border">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5 mb-5">
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Employee Name <span className="text-destructive">*</span>:
               </label>
               <input
@@ -444,14 +444,14 @@ export default function Home() {
                 className={`p-3 ${formErrors.employeeName ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.employeeName && (
-                <span className="text-destructive text-[0.8rem] mt-1">
+                <span className="text-destructive text-[var(--text-sm)] mt-1">
                   {formErrors.employeeName}
                 </span>
               )}
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Employee ID/SSN (Optional):
               </label>
               <input
@@ -464,7 +464,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Employer Name (Optional):
               </label>
               <input
@@ -477,7 +477,7 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Hourly Rate ($) <span className="text-destructive">*</span>:
               </label>
               <input
@@ -490,14 +490,14 @@ export default function Home() {
                 className={`p-3 ${formErrors.hourlyRate ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.hourlyRate && (
-                <span className="text-destructive text-[0.8rem] mt-1">
+                <span className="text-destructive text-[var(--text-sm)] mt-1">
                   {formErrors.hourlyRate}
                 </span>
               )}
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Hours Per Pay Period <span className="text-destructive">*</span>:
               </label>
               <input
@@ -509,20 +509,20 @@ export default function Home() {
                 className={`p-3 ${formErrors.hoursPerPeriod ? 'border-2 border-destructive' : 'border-2 border-border'} rounded-lg text-base`}
               />
               {formErrors.hoursPerPeriod && (
-                <span className="text-destructive text-[0.8rem] mt-1">
+                <span className="text-destructive text-[var(--text-sm)] mt-1">
                   {formErrors.hoursPerPeriod}
                 </span>
               )}
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Filing Status:
               </label>
               <select
                 value={paystubData.filingStatus}
                 onChange={(e) => setPaystubData(prev => ({...prev, filingStatus: e.target.value as FilingStatus}))}
-                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
+                className="p-3 border-2 border-border rounded-lg text-base bg-card text-muted-foreground"
               >
                 <option value="single">Single</option>
                 <option value="marriedJoint">Married filing jointly</option>
@@ -533,13 +533,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 Tax Year:
               </label>
               <select
                 value={paystubData.taxYear}
                 onChange={(e) => setPaystubData(prev => ({...prev, taxYear: parseInt(e.target.value)}))}
-                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
+                className="p-3 border-2 border-border rounded-lg text-base bg-card text-muted-foreground"
               >
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
@@ -551,13 +551,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-semibold mb-2 text-muted-foreground text-[0.9rem]">
+              <label className="font-semibold mb-subheading text-muted-foreground text-[var(--text-sm)]">
                 State (Optional):
               </label>
               <select
                 value={selectedState}
                 onChange={(e) => setSelectedState(e.target.value)}
-                className="p-3 border-2 border-border rounded-lg text-base bg-white text-muted-foreground"
+                className="p-3 border-2 border-border rounded-lg text-base bg-card text-muted-foreground"
               >
                 <option value="">Select state...</option>
                 <optgroup label="No State Income Tax">
@@ -578,17 +578,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex gap-[15px] items-center">
+          <div className="flex gap-[var(--spacing-4)] items-center">
             <button
               onClick={generatePaystubs}
               disabled={isGenerating}
-              className={`flex-1 p-[15px] ${isGenerating ? 'bg-gray-600' : 'bg-[#2c3e50]'} text-white border-0 rounded-lg text-[1.1rem] font-semibold ${isGenerating ? 'cursor-not-allowed' : 'cursor-pointer'} shadow-[0_4px_15px_rgba(44,62,80,0.3)] ${isGenerating ? 'opacity-70' : 'opacity-100'} transition-smooth`}
+              className={`flex-1 p-[var(--spacing-4)] ${isGenerating ? 'bg-muted-foreground' : 'bg-[#2c3e50]'} text-primary-foreground border-0 rounded-lg text-[var(--text-lg)] font-semibold ${isGenerating ? 'cursor-not-allowed' : 'cursor-pointer'} shadow-[0_4px_15px_rgba(44,62,80,0.3)] ${isGenerating ? 'opacity-70' : 'opacity-100'} transition-smooth`}
             >
               {isGenerating ? 'Generating...' : 'Generate Payroll Records'}
             </button>
             <button
               onClick={handleClearForm}
-              className="py-[15px] px-[25px] bg-gray-600 text-white border-0 rounded-lg text-base font-semibold cursor-pointer shadow-[0_4px_15px_rgba(108,117,125,0.3)] hover:bg-[#5a6268] transition-smooth"
+              className="py-[var(--spacing-4)] px-[var(--spacing-6)] bg-muted-foreground text-primary-foreground border-0 rounded-lg text-base font-semibold cursor-pointer shadow-[0_4px_15px_rgba(108,117,125,0.3)] hover:bg-[#5a6268] transition-smooth"
             >
               Clear Form
             </button>
@@ -597,11 +597,11 @@ export default function Home() {
 
         {/* Results Section */}
         {resultsVisible && (
-          <div id="resultsSection" className="p-[30px] block">
+          <div id="resultsSection" className="p-[var(--spacing-8)] block">
             {/* Summary Cards */}
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5 mb-[30px]">
-              <div className="bg-white rounded-xl p-5 shadow-[0_5px_15px_rgba(0,0,0,0.05)] border-t-4 border-green-500">
-                <h3 className="text-[#2c3e50] mb-[15px] text-center text-[1.1rem] font-semibold tracking-[0.5px]">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5 mb-[var(--spacing-8)]">
+              <div className="bg-card rounded-xl p-5 shadow-[0_5px_15px_rgba(0,0,0,0.05)] border-t-4 border-success">
+                <h3 className="text-foreground mb-[var(--spacing-4)] text-center text-[var(--text-lg)] font-semibold tracking-[0.5px]">
                   YEAR-TO-DATE EARNINGS
                 </h3>
                 <div className="flex-between py-2.5 px-0 border-b border-border">
@@ -616,14 +616,14 @@ export default function Home() {
                   <span>Gross Earnings (Subtotal):</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
-                <div className="flex-between py-[15px] px-0 border-t border-border font-bold text-[1.1rem]">
+                <div className="flex-between py-[var(--spacing-4)] px-0 border-t border-border font-bold text-[var(--text-lg)]">
                   <span>TOTAL GROSS INCOME:</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-5 shadow-[0_5px_15px_rgba(0,0,0,0.05)] border-t-4 border-green-500">
-                <h3 className="text-[#2c3e50] mb-[15px] text-center text-[1.1rem] font-semibold tracking-[0.5px]">
+              <div className="bg-card rounded-xl p-5 shadow-[0_5px_15px_rgba(0,0,0,0.05)] border-t-4 border-success">
+                <h3 className="text-foreground mb-[var(--spacing-4)] text-center text-[var(--text-lg)] font-semibold tracking-[0.5px]">
                   YEAR-TO-DATE DEDUCTIONS
                 </h3>
                 <div className="flex-between py-2.5 px-0 border-b border-border">
@@ -646,7 +646,7 @@ export default function Home() {
                   <span>Total Deductions:</span>
                   <span>{formatCurrency(paystubData.totals.federalTax + paystubData.totals.socialSecurity + paystubData.totals.medicare)}</span>
                 </div>
-                <div className="flex-between py-[15px] px-0 border-t border-border font-bold text-[1.1rem]">
+                <div className="flex-between py-[var(--spacing-4)] px-0 border-t border-border font-bold text-[var(--text-lg)]">
                   <span>NET PAY:</span>
                   <span>{formatCurrency(paystubData.totals.netPay)}</span>
                 </div>
@@ -655,45 +655,45 @@ export default function Home() {
 
             {/* Pay Periods Table */}
             <div>
-              <h3 className="text-[#2c3e50] mb-5 text-center text-[1.2rem] font-semibold tracking-[0.5px]">
+              <h3 className="text-foreground mb-5 text-center text-[var(--text-xl)] font-semibold tracking-[0.5px]">
                 PAYROLL PERIODS (BI-WEEKLY - 26 PERIODS PER YEAR)
               </h3>
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse bg-white shadow-[0_5px_15px_rgba(0,0,0,0.05)] rounded-lg overflow-hidden">
+                <table className="w-full border-collapse bg-card shadow-[0_5px_15px_rgba(0,0,0,0.05)] rounded-lg overflow-hidden">
                   <thead>
                     <tr>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Period
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Pay Date
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Hours
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Gross Pay
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Fed Tax
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Social Security
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Medicare
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Other Deductions
                       </th>
-                      <th className="bg-green-500 text-white py-[15px] px-2.5 text-center font-semibold">
+                      <th className="bg-success text-primary-foreground py-[var(--spacing-4)] px-2.5 text-center font-semibold">
                         Net Pay
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {paystubData.payPeriods.map((period, index) => (
-                      <tr key={period.period} className={index % 2 === 0 ? 'bg-muted' : 'bg-white'}>
+                      <tr key={period.period} className={index % 2 === 0 ? 'bg-muted' : 'bg-card'}>
                         <td className="py-3 px-2.5 text-center border-b border-border">
                           {period.period}
                         </td>
@@ -729,32 +729,32 @@ export default function Home() {
             </div>
 
             {/* W-2 Tax Document Information */}
-            <div className="my-[30px] mx-0 bg-cyan-600/10 p-[25px] rounded-xl border-2 border-yellow-500">
-              <h3 className="text-[#2c3e50] text-center mb-5 text-[1.2rem] font-semibold tracking-[0.5px]">
+            <div className="my-[var(--spacing-8)] mx-0 bg-primary/10 p-[var(--spacing-6)] rounded-xl border-2 border-warning">
+              <h3 className="text-foreground text-center mb-5 text-[var(--text-xl)] font-semibold tracking-[0.5px]">
                 W-2 TAX DOCUMENT INFORMATION
               </h3>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[15px]">
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[var(--spacing-4)]">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 1 - Wages, tips, other compensation:</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 2 - Federal income tax withheld:</span>
                   <span>{formatCurrency(paystubData.totals.federalTax)}</span>
                 </div>
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 3 - Social security wages:</span>
                   <span>{formatCurrency(Math.min(paystubData.totals.grossPay, getCurrentTaxData()?.ssWageBase || 0))}</span>
                 </div>
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 4 - Social security tax withheld:</span>
                   <span>{formatCurrency(paystubData.totals.socialSecurity)}</span>
                 </div>
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 5 - Medicare wages and tips:</span>
                   <span>{formatCurrency(paystubData.totals.grossPay)}</span>
                 </div>
-                <div className="flex-between p-[15px] bg-white rounded-lg border-l-4 border-yellow-500">
+                <div className="flex-between p-[var(--spacing-4)] bg-card rounded-lg border-l-4 border-warning">
                   <span>Box 6 - Medicare tax withheld:</span>
                   <span>{formatCurrency(paystubData.totals.medicare)}</span>
                 </div>
@@ -762,21 +762,21 @@ export default function Home() {
             </div>
 
             {/* Individual Paystub Generator */}
-            <div className="bg-cyan-600/10 p-[25px] rounded-xl border-2 border-green-500">
-              <h3 className="text-[#2c3e50] text-center mb-[15px] text-[1.2rem] font-semibold tracking-[0.5px]">
+            <div className="bg-primary/10 p-[var(--spacing-6)] rounded-xl border-2 border-success">
+              <h3 className="text-foreground text-center mb-[var(--spacing-4)] text-[var(--text-xl)] font-semibold tracking-[0.5px]">
                 INDIVIDUAL PAYSTUB GENERATOR
               </h3>
-              <p className="text-center mb-[15px] text-green-700">
+              <p className="text-center mb-[var(--spacing-4)] text-success-darker">
                 Generate individual paystubs for rental applications, loan approvals,
                 or income verification purposes.
               </p>
-              <div className="flex-center gap-[15px] flex-wrap">
+              <div className="flex-center gap-[var(--spacing-4)] flex-wrap">
                 <div>
                   <label className="mr-2.5 font-semibold">Select Pay Period:</label>
                   <select
                     value={selectedPeriod}
                     onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
-                    className="py-2 px-3 rounded-md border border-gray-400"
+                    className="py-2 px-3 rounded-md border border-border"
                   >
                     {paystubData.payPeriods.map(period => (
                       <option key={period.period} value={period.period}>
@@ -786,16 +786,16 @@ export default function Home() {
                   </select>
                 </div>
               </div>
-              <div className="flex justify-center gap-2.5 mt-5">
+              <div className="flex justify-center gap-tight.5 mt-5">
                 <button
                   onClick={generateIndividualPaystub}
-                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-primary/10 text-primary-foreground border-0 py-3 px-[var(--spacing-8)] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Individual Paystub
                 </button>
                 <button
                   onClick={generateAnnualSummary}
-                  className="bg-cyan-600/10 text-white border-0 py-3 px-[30px] rounded-lg font-semibold cursor-pointer"
+                  className="bg-primary/10 text-primary-foreground border-0 py-3 px-[var(--spacing-8)] rounded-lg font-semibold cursor-pointer"
                 >
                   Generate Annual Summary
                 </button>

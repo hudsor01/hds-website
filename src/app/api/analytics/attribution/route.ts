@@ -4,10 +4,18 @@
  */
 
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { LeadAttributionData } from '@/types/analytics';
+import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
+import type { LeadAttributionData } from '@/types/analytics';
 import type { LeadAttributionRow, LeadAttributionInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 import { type NextRequest, NextResponse } from 'next/server';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
@@ -64,7 +72,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in Supabase
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       logger.error('Supabase admin client not available');
       return NextResponse.json(
         { error: 'Database not configured' },
@@ -73,7 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if attribution already exists for this email/session
-    const { data: existing } = await supabaseAdmin
+    const { data: existing } = await createServiceClient()
       .from('lead_attribution')
       .select('id, email, first_visit_at, visit_count')
       .eq(email ? 'email' : 'session_id', (email || session_id) as string)
@@ -81,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       // Update last visit time and visit count
-      await supabaseAdmin
+      await createServiceClient()
         .from('lead_attribution')
         .update({
           last_visit_at: new Date().toISOString(),
@@ -119,7 +127,7 @@ export async function POST(request: NextRequest) {
       last_visit_at: new Date().toISOString(),
     };
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await createServiceClient()
       .from('lead_attribution')
       .insert(insertData)
       .select()
@@ -183,7 +191,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -191,7 +199,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Query attribution data
-    const query = supabaseAdmin
+    const query = createServiceClient()
       .from('lead_attribution')
       .select('*');
 

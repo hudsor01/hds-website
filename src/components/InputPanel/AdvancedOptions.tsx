@@ -23,15 +23,15 @@ export function AdvancedOptions({
   comparisonVehicles
 }: AdvancedOptionsProps) {
   return (
-    <div className="rounded-none border bg-card p-4">
-      <div className="flex items-center gap-2 mb-3">
+    <div className="rounded-none border bg-card card-padding-sm">
+      <div className="flex items-center gap-tight mb-3">
         <Settings className="w-5 h-5 text-foreground" />
         <h3 className="text-lg font-medium">Advanced Options</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-content">
         {/* Credit Score */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Credit Score</Label>
           <Input
             type="number"
@@ -44,7 +44,7 @@ export function AdvancedOptions({
         </div>
 
         {/* Rebate Amount */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Rebate Amount</Label>
           <Input
             type="number"

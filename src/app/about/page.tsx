@@ -53,18 +53,18 @@ export default function AboutPage() {
       <section className="relative min-h-screen flex-center overflow-hidden">
         <BackgroundPattern variant="hero" />
         
-        <div className="relative z-10 container-wide text-center">
-          <div className="space-y-8">
+        <div className="relative z-sticky container-wide text-center">
+          <div className="space-y-sections">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 text-cyan-400 font-semibold text-sm blur-backdrop">
+              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/60/30 bg-accent/10 text-accent font-semibold text-sm blur-backdrop">
                 Our Story
               </span>
             </div>
 
             <div>
-              <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
+              <h1 className="text-responsive-lg font-black text-primary-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block mr-4">Built for</span>
-                <span className="inline-block mr-4 text-cyan-400">Excellence</span>
+                <span className="inline-block mr-4 text-accent">Excellence</span>
               </h1>
             </div>
 
@@ -81,8 +81,8 @@ export default function AboutPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-lg font-black text-white mb-6 text-balance">
-              <span className="text-cyan-400">
+            <h2 className="text-responsive-lg font-black text-primary-foreground mb-content-block text-balance">
+              <span className="text-accent">
                 Our Story
               </span>
             </h2>
@@ -96,23 +96,23 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
             {/* Story Content */}
             <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
-              <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-cyan-400 transition-smooth">
+              <h3 className="text-2xl font-bold text-primary-foreground mb-content-block group-hover:text-accent transition-smooth">
                 Forged in Revenue Operations, Refined in Code
               </h3>
-              <div className="space-y-6 text-muted-foreground leading-relaxed typography">
+              <div className="space-y-comfortable text-muted-foreground leading-relaxed typography">
                 <p>
                   Most agencies learned web development in bootcamps. We learned it in the trenches of enterprise revenue operations—where every line of code either makes money or loses it.
                 </p>
                 <p>
-                  With <strong className="text-cyan-400">$3.7M+ in revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
-                  <strong className="text-purple-400"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
+                  With <strong className="text-accent">$3.7M+ in revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
+                  <strong className="text-info"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
                 </p>
                 <p>
-                  That&apos;s why our clients see <strong className="text-pink-400">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship{' '}
+                  That&apos;s why our clients see <strong className="text-accent">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship{' '}
                   <Link href="/services" className="link-primary font-semibold">revenue engines</Link> backed by analytics,
-                  A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-green-400">does this make money?</strong>
+                  A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-success-text">does this make money?</strong>
                 </p>
-                <p className="text-white font-semibold">
+                <p className="text-primary-foreground font-semibold">
                   We&apos;re not another agency promising &quot;beautiful websites.&quot; We&apos;re revenue engineers who happen to write beautiful code.{' '}
                   <Link href="/contact" className="link-primary">Let&apos;s talk about your project</Link>.
                 </p>
@@ -120,13 +120,13 @@ export default function AboutPage() {
             </div>
 
             {/* Mission & Vision Cards */}
-            <div className="space-y-8">
+            <div className="space-y-sections">
               <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
-                <div className="flex-center gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-muted-br-20 border border-cyan-500/30">
-                    <Rocket className="w-8 h-8 text-cyan-400" />
+                <div className="flex-center gap-content mb-heading">
+                  <div className="p-3 rounded-xl bg-muted-br-20 border border-primary/30">
+                    <Rocket className="w-8 h-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">
+                  <h3 className="text-xl font-bold text-primary-foreground group-hover:text-accent transition-smooth">
                     Our Mission
                   </h3>
                 </div>
@@ -135,12 +135,12 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="group relative glass-card-light card-padding card-hover-glow-purple transition-smooth">
-                <div className="flex-center gap-4 mb-4">
-                  <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
-                    <Eye className="w-8 h-8 text-purple-400" />
+              <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
+                <div className="flex-center gap-content mb-heading">
+                  <div className="p-3 rounded-xl bg-info/20 border border-info/30">
+                    <Eye className="w-8 h-8 text-info" />
                   </div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-smooth">
+                  <h3 className="text-xl font-bold text-primary-foreground group-hover:text-info transition-smooth">
                     Our Guarantee
                   </h3>
                 </div>
@@ -158,8 +158,8 @@ export default function AboutPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="text-cyan-400">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
+              <span className="text-accent">
                 Technical Arsenal
               </span>
             </h2>
@@ -170,13 +170,13 @@ export default function AboutPage() {
           
           <div className="grid-4">
             <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
-              <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-muted-br-20 border border-cyan-500/30">
-                  <Code2 className="w-6 h-6 text-cyan-400" />
+              <div className="flex-center gap-3 mb-heading">
+                <div className="p-3 rounded-xl bg-muted-br-20 border border-primary/30">
+                  <Code2 className="w-6 h-6 text-accent" />
                 </div>
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-smooth">Development</h3>
+                <h3 className="text-lg font-bold text-primary-foreground group-hover:text-accent transition-smooth">Development</h3>
               </div>
-              <ul className="text-muted-foreground space-y-2 text-sm group-hover:text-foreground transition-smooth">
+              <ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
                 <li>• Next.js 15 & React 19</li>
                 <li>• TypeScript & Node.js</li>
                 <li>• Progressive Web Apps</li>
@@ -185,13 +185,13 @@ export default function AboutPage() {
             </div>
 
             <div className="group relative glass-card-light card-padding-sm card-hover-glow-emerald transition-smooth">
-              <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-muted-br-20 border border-emerald-500/30">
-                  <BarChart3 className="w-6 h-6 text-emerald-400" />
+              <div className="flex-center gap-3 mb-heading">
+                <div className="p-3 rounded-xl bg-muted-br-20 border border-success/30">
+                  <BarChart3 className="w-6 h-6 text-success-text" />
                 </div>
-                <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-smooth">Analytics</h3>
+                <h3 className="text-lg font-bold text-primary-foreground group-hover:text-success-text transition-smooth">Analytics</h3>
               </div>
-              <ul className="text-muted-foreground space-y-2 text-sm group-hover:text-foreground transition-smooth">
+              <ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
                 <li>• Revenue Attribution</li>
                 <li>• Conversion Optimization</li>
                 <li>• A/B Testing</li>
@@ -200,13 +200,13 @@ export default function AboutPage() {
             </div>
 
             <div className="group relative glass-card-light card-padding-sm card-hover-glow-orange transition-smooth">
-              <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-decorative-orange border border-orange-500/30">
-                  <Zap className="w-6 h-6 text-orange-400" />
+              <div className="flex-center gap-3 mb-heading">
+                <div className="p-3 rounded-xl bg-gradient-decorative-orange border border-orange/30">
+                  <Zap className="w-6 h-6 text-orange-text" />
                 </div>
-                <h3 className="text-lg font-bold text-white group-hover:text-orange-400 transition-smooth">Operations</h3>
+                <h3 className="text-lg font-bold text-primary-foreground group-hover:text-orange-text transition-smooth">Operations</h3>
               </div>
-              <ul className="text-muted-foreground space-y-2 text-sm group-hover:text-foreground transition-smooth">
+              <ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
                 <li>• Process Automation</li>
                 <li>• CRM Integration</li>
                 <li>• Email Marketing</li>
@@ -214,14 +214,14 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="group relative glass-card-light card-padding-sm card-hover-glow-purple transition-smooth">
-              <div className="flex-center gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-gradient-decorative-purple border border-purple-500/30">
-                  <ShieldCheck className="w-6 h-6 text-purple-400" />
+            <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
+              <div className="flex-center gap-3 mb-heading">
+                <div className="p-3 rounded-xl bg-info/20 border border-info/30">
+                  <ShieldCheck className="w-6 h-6 text-info" />
                 </div>
-                <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-smooth">Security</h3>
+                <h3 className="text-lg font-bold text-primary-foreground group-hover:text-info transition-smooth">Security</h3>
               </div>
-              <ul className="text-muted-foreground space-y-2 text-sm group-hover:text-foreground transition-smooth">
+              <ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
                 <li>• Zero-Trust Architecture</li>
                 <li>• GDPR Compliance</li>
                 <li>• Performance Security</li>
@@ -236,8 +236,8 @@ export default function AboutPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="text-cyan-400">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
+              <span className="text-accent">
                 The Revenue Engineer Behind the Code
               </span>
             </h2>
@@ -247,41 +247,41 @@ export default function AboutPage() {
           </div>
 
           <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
-            <div className="space-y-8 text-muted-foreground leading-relaxed">
-              <p className="text-lg group-hover:text-white transition-smooth">
-                Before writing a single line of client code, I spent 5+ years as a <strong className="text-cyan-400">revenue operations professional</strong> at enterprise SaaS companies.
-                I didn&apos;t build features—I built systems that generated <strong className="text-cyan-400">$3.7M+ in measurable revenue impact</strong>.
+            <div className="space-y-sections text-muted-foreground leading-relaxed">
+              <p className="text-lg group-hover:text-primary-foreground transition-smooth">
+                Before writing a single line of client code, I spent 5+ years as a <strong className="text-accent">revenue operations professional</strong> at enterprise SaaS companies.
+                I didn&apos;t build features—I built systems that generated <strong className="text-accent">$3.7M+ in measurable revenue impact</strong>.
               </p>
 
-              <p className="text-lg group-hover:text-white transition-smooth">
-                Here&apos;s what I learned: <strong className="text-purple-400">most websites fail not because of bad technology, but because of bad economics</strong>.
+              <p className="text-lg group-hover:text-primary-foreground transition-smooth">
+                Here&apos;s what I learned: <strong className="text-info">most websites fail not because of bad technology, but because of bad economics</strong>.
                 Agencies charge $50K for a beautiful site that converts at 1.2%. We charge $5K-8K for a revenue-optimized machine that converts at 4%+. The math is simple.
               </p>
 
-              <p className="text-lg group-hover:text-white transition-smooth">
+              <p className="text-lg group-hover:text-primary-foreground transition-smooth">
                 When I discovered businesses were hemorrhaging money on bloated agencies and junior developers who couldn&apos;t spell &quot;ROI,&quot; I knew there was a gap.
-                Hudson Digital Solutions fills that gap: <strong className="text-pink-400">enterprise-grade development at startup prices, with revenue accountability baked into every line of code</strong>.
+                Hudson Digital Solutions fills that gap: <strong className="text-accent">enterprise-grade development at startup prices, with revenue accountability baked into every line of code</strong>.
               </p>
 
-              <p className="text-xl text-white font-bold border-l-4 border-cyan-400 pl-6 py-4 bg-cyan-400/5">
+              <p className="text-xl text-primary-foreground font-bold border-l-4 border-accent pl-6 py-4 bg-accent/5">
                 &quot;I don&apos;t care how beautiful your code is if it doesn&apos;t make money. Ship results or ship nothing.&quot;
               </p>
 
-              <div className="grid md:grid-cols-4 gap-8 mt-12 pt-8 border-t border-white/20">
+              <div className="grid md:grid-cols-4 gap-sections mt-12 pt-8 border-t border-white/20">
                 <div className="text-center">
-                  <div className="text-3xl font-black text-cyan-400 mb-2 group-hover:text-white transition-smooth">5+</div>
+                  <div className="text-3xl font-black text-accent mb-subheading group-hover:text-primary-foreground transition-smooth">5+</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Years in RevOps</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-purple-400 mb-2 group-hover:text-white transition-smooth">$3.7M+</div>
+                  <div className="text-3xl font-black text-info mb-subheading group-hover:text-primary-foreground transition-smooth">$3.7M+</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Revenue Impact</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-pink-400 mb-2 group-hover:text-white transition-smooth">250%</div>
+                  <div className="text-3xl font-black text-accent mb-subheading group-hover:text-primary-foreground transition-smooth">250%</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Avg Client ROI</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-green-400 mb-2 group-hover:text-white transition-smooth">50+</div>
+                  <div className="text-3xl font-black text-success-text mb-subheading group-hover:text-primary-foreground transition-smooth">50+</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Businesses Transformed</div>
                 </div>
               </div>
@@ -294,8 +294,8 @@ export default function AboutPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
-              <span className="text-cyan-400">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
+              <span className="text-accent">
                 Engineering Principles
               </span>
             </h2>
@@ -306,37 +306,37 @@ export default function AboutPage() {
           
           <div className="grid-3">
             <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-muted-br-20 border border-cyan-500/30">
-                  <Lightbulb className="w-8 h-8 text-cyan-400" />
+              <div className="flex items-center gap-content mb-content-block">
+                <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-primary/30">
+                  <Lightbulb className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-smooth">Performance First</h3>
+                <h3 className="text-xl font-bold text-primary-foreground group-hover:text-accent transition-smooth">Performance First</h3>
               </div>
-              <p className="text-muted group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-primary-foreground transition-smooth">
                 Every millisecond matters. We engineer for speed because fast sites convert better, rank higher, and deliver superior user experiences.
               </p>
             </div>
 
             <div className="group relative glass-card-light card-padding card-hover-glow-emerald transition-smooth">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-muted-br-20 border border-emerald-500/30">
-                  <BarChart3 className="w-8 h-8 text-emerald-400" />
+              <div className="flex items-center gap-content mb-content-block">
+                <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-success/30">
+                  <BarChart3 className="w-8 h-8 text-success-text" />
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-smooth">Data Driven</h3>
+                <h3 className="text-xl font-bold text-primary-foreground group-hover:text-success-text transition-smooth">Data Driven</h3>
               </div>
-              <p className="text-muted group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-primary-foreground transition-smooth">
                 Assumptions kill businesses. Every decision is backed by data, every feature is measured, and every optimization is validated.
               </p>
             </div>
 
             <div className="group relative glass-card-light card-padding card-hover-glow-orange transition-smooth">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 rounded-2xl bg-gradient-decorative-orange border border-orange-500/30">
-                  <Settings className="w-8 h-8 text-orange-400" />
+              <div className="flex items-center gap-content mb-content-block">
+                <div className="card-padding-sm rounded-2xl bg-gradient-decorative-orange border border-orange/30">
+                  <Settings className="w-8 h-8 text-orange-text" />
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-smooth">Scalable Architecture</h3>
+                <h3 className="text-xl font-bold text-primary-foreground group-hover:text-orange-text transition-smooth">Scalable Architecture</h3>
               </div>
-              <p className="text-muted group-hover:text-white transition-smooth">
+              <p className="text-muted group-hover:text-primary-foreground transition-smooth">
                 We build for tomorrow&apos;s growth, not just today&apos;s needs. Every solution is architected to scale with your business ambitions.
               </p>
             </div>
@@ -347,10 +347,10 @@ export default function AboutPage() {
       {/* Call to Action */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section card-padding">
-            <h2 className="text-clamp-xl font-black text-white mb-6 text-balance">
+          <div className="relative z-sticky text-center glass-section card-padding">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
               Ready to engineer
-              <span className="text-cyan-400">
+              <span className="text-accent">
                 {" "}your success?
               </span>
             </h2>
@@ -359,19 +359,19 @@ export default function AboutPage() {
               Stop settling for ordinary. Let&apos;s build something that doesn&apos;t just work—it dominates.
             </p>
             
-            <div className="flex flex-col sm:flex-row flex-center gap-4">
+            <div className="flex flex-col sm:flex-row flex-center gap-content">
               <Link
                 href="/contact"
                 className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative z-10">Start Your Project</span>
+                <span className="relative z-sticky">Start Your Project</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               
               <Link
                 href="/services"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-gray-600 text-white font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-smooth"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border text-primary-foreground font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-smooth"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

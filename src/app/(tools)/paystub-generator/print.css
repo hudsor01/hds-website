@@ -1,10 +1,10 @@
 @media print {
   /* Hide navigation and buttons when printing */
-  .bg-gray-100,
+  .bg-secondary,
   .rounded-t-xl,
   .border-b,
-  .flex.justify-center.gap-4.mt-8,
-  .bg-blue-50.border-l-4.border-blue-500.p-4.mb-6.rounded,
+  .flex.justify-center.gap-content.mt-heading,
+  .bg-info-light.border-l-4.border-info.card-padding-sm.mb-content-block.rounded,
   button,
   [class*="button"],
   .no-print {
@@ -23,14 +23,14 @@
     margin: 0;
   }
 
-  .bg-white.rounded-b-xl.shadow-lg.p-6,
-  .bg-white.rounded-t-xl.p-8.text-center {
+  .bg-card.rounded-b-xl.shadow-lg.card-padding,
+  .bg-card.rounded-t-xl.card-padding-lg.text-center {
     box-shadow: none !important;
     border-radius: 0 !important;
     padding: 10px !important;
   }
 
-  .bg-gradient-to-r.from-green-600.to-green-700.text-white {
+  .bg-gradient-to-r.from-success.to-success-dark.text-primary-foreground {
     background: #2e7d32 !important;
     -webkit-print-color-adjust: exact;
     color-adjust: exact;
@@ -47,14 +47,14 @@
   }
 
   /* Keep cards visible but adjust for print */
-  .grid.grid-cols-1.md\:grid-cols-3.gap-6.mb-8 > div {
+  .grid.grid-cols-1.md\:grid-cols-3.gap-comfortable.mb-comfortable > div {
     box-shadow: none !important;
     border: 1px solid #ccc !important;
     margin-bottom: 10px !important;
   }
 
   /* Add page breaks for better printing */
-  .bg-white.border.border-gray-200.rounded-lg.p-6.shadow-sm {
+  .bg-card.border.border-border.rounded-lg.card-padding.shadow-sm {
     page-break-inside: avoid;
   }
 
@@ -97,8 +97,8 @@
   }
 
   /* Preserve colors for important elements */
-  .text-green-600,
-  .font-semibold.text-green-700 {
+  .text-success-dark,
+  .font-semibold.text-success-darker {
     color: #2e7d32 !important;
     -webkit-print-color-adjust: exact;
     color-adjust: exact;

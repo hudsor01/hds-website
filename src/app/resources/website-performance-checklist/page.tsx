@@ -116,7 +116,7 @@ const checklistItems = [
 
 export default function WebsiteChecklistPage() {
   return (
-    <main className="min-h-screen bg-cyan-600">
+    <main className="min-h-screen bg-primary">
       {/* Hero Section */}
       <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -124,13 +124,13 @@ export default function WebsiteChecklistPage() {
         </div>
         
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
-          <div className="inline-flex flex-center gap-2 px-4 py-2 mb-8 rounded-full border border-green-300 bg-green-400/10 text-green-400 font-semibold text-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-success-muted bg-success-text/10 text-success-text font-semibold text-lg">
             <FileText className="w-5 h-5" />
             Free Resource
           </div>
 
-          <h1 className="text-clamp-xl font-black text-white mb-heading">
-            Website Performance <span className="text-cyan-400">Checklist</span>
+          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+            Website Performance <span className="text-accent">Checklist</span>
           </h1>
 
           <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
@@ -140,14 +140,14 @@ export default function WebsiteChecklistPage() {
           <div className="flex flex-col sm:flex-row gap-content justify-center mb-content-block">
             <Link
               href="#download"
-              className="inline-flex flex-center gap-tight bg-green-400 text-black font-bold py-4 px-8 rounded-lg hover:bg-green-300 transition-colors text-body-lg"
+              className="inline-flex flex-center gap-tight bg-success-text text-black font-bold py-4 px-8 rounded-lg hover:bg-success-muted transition-colors text-body-lg"
             >
               <Download className="w-5 h-5" />
               Download Free Checklist
             </Link>
             <Link
               href="/contact"
-              className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-4 px-8 rounded-lg hover:bg-cyan-400/10 transition-colors"
+              className="inline-flex flex-center gap-tight border border-accent text-accent font-semibold py-4 px-8 rounded-lg hover:bg-accent/10 transition-colors"
             >
               Get Professional Audit
             </Link>
@@ -155,19 +155,19 @@ export default function WebsiteChecklistPage() {
 
           <div className="grid-4 gap-comfortable text-center">
             <div>
-              <div className="text-section-title font-bold text-cyan-400">47</div>
+              <div className="text-section-title font-bold text-accent">47</div>
               <div className="text-muted-foreground">Checkpoints</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-green-400">300%+</div>
+              <div className="text-section-title font-bold text-success-text">300%+</div>
               <div className="text-muted-foreground">Avg ROI Boost</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-purple-400">6</div>
+              <div className="text-section-title font-bold text-info">6</div>
               <div className="text-muted-foreground">Key Categories</div>
             </div>
             <div>
-              <div className="text-section-title font-bold text-yellow-400">FREE</div>
+              <div className="text-section-title font-bold text-warning-text">FREE</div>
               <div className="text-muted-foreground">No Cost</div>
             </div>
           </div>
@@ -175,10 +175,10 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Checklist Preview */}
-      <section className="section-spacing bg-cyan-600">
+      <section className="section-spacing bg-primary">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-white mb-subheading">Checklist Preview</h2>
+            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Checklist Preview</h2>
             <p className="text-muted max-w-2xl mx-auto">
               Get a glimpse of what&apos;s inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
             </p>
@@ -186,22 +186,22 @@ export default function WebsiteChecklistPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
             {checklistItems.map((section, index) => (
-              <div key={section.category} className="glass-card rounded-xl card-padding-sm hover:border-cyan-300/50 transition-smooth">
-                <h3 className="text-subheading font-bold text-white mb-subheading flex flex-center gap-tight">
-                  <span className="w-8 h-8 bg-cyan-400 text-black rounded-full flex-center text-caption font-bold">
+              <div key={section.category} className="glass-card rounded-xl card-padding-sm hover:border-accent/60/50 transition-smooth">
+                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading flex flex-center gap-tight">
+                  <span className="w-8 h-8 bg-accent text-black rounded-full flex-center text-caption font-bold">
                     {index + 1}
                   </span>
                   {section.category}
                 </h3>
                 <ul className="space-y-tight">
                   {section.items.slice(0, 4).map((item, itemIndex) => (
-                    <li key={itemIndex} className="flex items-start gap-2 text-muted text-sm">
-                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+                    <li key={itemIndex} className="flex items-start gap-tight text-muted text-sm">
+                      <CheckCircle className="w-4 h-4 text-success-text mt-0.5 shrink-0" />
                       {item}
                     </li>
                   ))}
                   {section.items.length > 4 && (
-                    <li className="text-cyan-400 text-caption font-medium">
+                    <li className="text-accent text-caption font-medium">
                       +{section.items.length - 4} more items in full checklist
                     </li>
                   )}
@@ -213,65 +213,65 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="section-spacing bg-cyan-600">
+      <section className="section-spacing bg-primary">
         <div className="max-w-4xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-white mb-subheading">Why This Checklist Works</h2>
+            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Why This Checklist Works</h2>
             <p className="text-muted">Based on real results from 150+ client projects</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-comfortable">
             <div className="space-y-comfortable">
               <div className="flex items-start gap-content">
-                <div className="w-12 h-12 bg-green-400/20 rounded-lg flex-center shrink-0">
-                  <BarChart3 className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 bg-success-text/20 rounded-lg flex-center shrink-0">
+                  <BarChart3 className="w-6 h-6 text-success-text" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-white mb-subheading">Data-Driven Results</h3>
+                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Data-Driven Results</h3>
                   <p className="text-muted">Every checkpoint is based on analysis of high-performing websites and conversion optimization best practices.</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-content">
-                <div className="w-12 h-12 bg-cyan-400/20 rounded-lg flex-center shrink-0">
-                  <Zap className="w-6 h-6 text-cyan-400" />
+                <div className="w-12 h-12 bg-accent/20 rounded-lg flex-center shrink-0">
+                  <Zap className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-white mb-subheading">Quick Implementation</h3>
+                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Quick Implementation</h3>
                   <p className="text-muted">Each item includes clear action steps that can be implemented immediately, no technical expertise required.</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-content">
-                <div className="w-12 h-12 bg-purple-400/20 rounded-lg flex-center shrink-0">
-                  <Target className="w-6 h-6 text-purple-400" />
+                <div className="w-12 h-12 bg-info/20 rounded-lg flex-center shrink-0">
+                  <Target className="w-6 h-6 text-info" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-white mb-subheading">ROI-Focused</h3>
+                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">ROI-Focused</h3>
                   <p className="text-muted">Prioritized by impact - tackle the highest-return optimizations first to maximize your results.</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-comfortable">
-              <div className="bg-muted-20 border border-green-400/30 rounded-lg card-padding-sm">
-                <h3 className="text-subheading font-bold text-white mb-subheading">Real Client Results</h3>
+              <div className="bg-muted-20 border border-success-text/30 rounded-lg card-padding-sm">
+                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Real Client Results</h3>
                 <div className="space-y-tight">
                   <div className="flex justify-between">
                     <span className="text-muted">Conversion Rate Increase:</span>
-                    <span className="text-green-400 font-bold">340% avg</span>
+                    <span className="text-success-text font-bold">340% avg</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">Page Speed Improvement:</span>
-                    <span className="text-cyan-400 font-bold">65% faster</span>
+                    <span className="text-accent font-bold">65% faster</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">SEO Ranking Boost:</span>
-                    <span className="text-purple-400 font-bold">2.3x increase</span>
+                    <span className="text-info font-bold">2.3x increase</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">Revenue Impact:</span>
-                    <span className="text-yellow-400 font-bold">$50K-500K+</span>
+                    <span className="text-warning-text font-bold">$50K-500K+</span>
                   </div>
                 </div>
               </div>
@@ -280,7 +280,7 @@ export default function WebsiteChecklistPage() {
                 <blockquote className="text-muted italic mb-subheading">
                   &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
-                <div className="text-cyan-400 font-semibold">— Sarah M., E-commerce Director</div>
+                <div className="text-accent font-semibold">— Sarah M., E-commerce Director</div>
               </div>
             </div>
           </div>
@@ -288,12 +288,12 @@ export default function WebsiteChecklistPage() {
       </section>
 
       {/* Download Section */}
-      <section id="download" className="py-16 bg-cyan-600">
+      <section id="download" className="py-section-sm bg-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-card rounded-2xl p-8 lg:p-12 text-center">
-            <FileText className="w-16 h-16 text-green-400 mx-auto mb-6" />
+          <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
+            <FileText className="w-16 h-16 text-success-text mx-auto mb-content-block" />
             
-            <h2 className="text-3xl font-black text-white mb-4">
+            <h2 className="text-3xl font-black text-primary-foreground mb-heading">
               Download Your Free Checklist
             </h2>
 
@@ -326,7 +326,7 @@ export default function WebsiteChecklistPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-green-400 text-black font-bold hover:bg-green-300"
+                  className="w-full bg-success-text text-black font-bold hover:bg-success-muted"
                 >
                   <Download className="w-5 h-5" />
                   Get My Free Checklist
@@ -339,13 +339,13 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="mt-comfortable pt-8 border-t border-border">
-              <h3 className="text-body-lg font-bold text-white mb-subheading">Need Professional Implementation?</h3>
+              <h3 className="text-body-lg font-bold text-primary-foreground mb-subheading">Need Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
                 Want us to handle the optimization for you? Our team has implemented these strategies for 150+ businesses with an average 340% ROI.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex flex-center gap-tight border border-cyan-400 text-cyan-400 font-semibold py-3 px-6 rounded-lg hover:bg-cyan-400/10 transition-colors"
+                className="inline-flex flex-center gap-tight border border-accent text-accent font-semibold py-3 px-6 rounded-lg hover:bg-accent/10 transition-colors"
               >
                 Get Professional Help
               </Link>

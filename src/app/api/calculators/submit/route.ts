@@ -5,15 +5,36 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import type { Database, Json } from '@/types/database';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-import { Resend } from 'resend';
-import { env } from '@/env';
+import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { z } from 'zod';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+// Schema for calculator submission
+const calculatorSubmitSchema = z.object({
+  calculator_type: z.enum([
+    'roi-calculator',
+    'cost-estimator',
+    'performance-calculator',
+    'texas-ttl-calculator',
+  ]),
+  email: z.string().email('Invalid email address').toLowerCase().trim(),
+  inputs: z.record(z.string(), z.unknown()),
+  results: z.record(z.string(), z.unknown()).optional().default({}),
+});
 
 const logger = createServerLogger('calculator-api');
-const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 // Lead scoring based on calculator inputs
 function calculateLeadScore(
@@ -87,15 +108,20 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { calculator_type, email, inputs, results } = body;
 
-    // Validate required fields
-    if (!calculator_type || !email || !inputs) {
+    // Validate with Zod schema
+    const parseResult = calculatorSubmitSchema.safeParse(body);
+    if (!parseResult.success) {
+      const errors = parseResult.error.flatten();
+      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
+      logger.warn('Invalid calculator submission', { errors: errors.fieldErrors });
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: firstError, details: errors.fieldErrors },
         { status: 400 }
       );
     }
+
+    const { calculator_type, email, inputs, results } = parseResult.data;
 
     // Calculate lead score
     const leadScore = calculateLeadScore(calculator_type, inputs);
@@ -109,7 +135,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in database
-    if (!supabaseAdmin) {
+    if (!createServiceClient()) {
       logger.error('Supabase not configured');
       return NextResponse.json(
         { error: 'Database not configured' },
@@ -117,19 +143,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: calculatorLead, error: dbError } = await supabaseAdmin
+    const insertData = {
+      calculator_type: calculator_type as string,
+      email,
+      name: typeof inputs.name === 'string' ? inputs.name : null,
+      company: typeof inputs.company === 'string' ? inputs.company : null,
+      phone: typeof inputs.phone === 'string' ? inputs.phone : null,
+      inputs: inputs as Json,
+      results: (results || {}) as Json,
+      lead_score: leadScore,
+      lead_quality: leadQuality,
+    } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
+
+    const { data: calculatorLead, error: dbError } = await createServiceClient()
       .from('calculator_leads')
-      .insert({
-        calculator_type,
-        email,
-        name: inputs.name as string || null,
-        company: inputs.company as string || null,
-        phone: inputs.phone as string || null,
-        inputs,
-        results: results || {},
-        lead_score: leadScore,
-        lead_quality: leadQuality,
-      })
+      .insert(insertData)
       .select()
       .single();
 
@@ -142,7 +170,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send immediate email with results
-    if (resend) {
+    if (isResendConfigured()) {
       try {
         const emailContent = generateResultsEmail(
           calculator_type,
@@ -150,7 +178,7 @@ export async function POST(request: NextRequest) {
           results
         );
 
-        await resend.emails.send({
+        await getResendClient().emails.send({
           from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
           to: email,
           subject: `Your ${getCalculatorName(calculator_type)} Results`,
@@ -164,15 +192,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Extract name for notifications
+    const inputName = typeof inputs.name === 'string' ? inputs.name : '';
+    const nameParts = inputName.split(' ');
+    const firstName = nameParts[0] || email.split('@')[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     // Send high-value lead notifications to Slack/Discord
     try {
       await notifyHighValueLead({
         leadId: calculatorLead.id,
-        firstName: (inputs.name as string)?.split(' ')[0] || email.split('@')[0],
-        lastName: (inputs.name as string)?.split(' ').slice(1).join(' ') || '',
+        firstName,
+        lastName,
         email,
-        phone: inputs.phone as string,
-        company: inputs.company as string,
+        phone: typeof inputs.phone === 'string' ? inputs.phone : undefined,
+        company: typeof inputs.company === 'string' ? inputs.company : undefined,
         leadScore: leadScore,
         leadQuality: leadQuality,
         source: `Calculator - ${getCalculatorName(calculator_type)}`,
@@ -191,7 +225,7 @@ export async function POST(request: NextRequest) {
     try {
       await scheduleEmail({
         recipientEmail: email,
-        recipientName: (inputs.name as string) || email.split('@')[0],
+        recipientName: inputName || email.split('@')[0] || 'there',
         sequenceId,
         stepId: 'followup-1',
         scheduledFor: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days

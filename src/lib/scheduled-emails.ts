@@ -4,13 +4,24 @@
  * Uses Supabase for persistent storage (no memory leaks)
  */
 
-import { Resend } from "resend";
+import { getResendClient, isResendConfigured } from "@/lib/resend-client";
 import type {
   EmailQueueStats,
   EmailProcessResult,
 } from "@/types/utils";
 import { createServerLogger } from "@/lib/logger";
-import { supabaseAdmin } from "@/lib/supabase";
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+const supabaseAdmin = createServiceClient();
 import {
   scheduleEmailParamsSchema,
   cancelEmailSequenceParamsSchema,
@@ -27,9 +38,7 @@ emailLogger.setContext({
   service: 'email-queue'
 });
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+
 
 export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> {
   const {
@@ -210,7 +219,7 @@ async function sendScheduledEmail(
     retry_count: number;
   }
 ): Promise<void> {
-  if (!resend) {
+  if (!isResendConfigured()) {
     const errorMsg = "Email service not configured";
     emailLogger.warn('Resend API not configured', {
       emailId: scheduledEmail.id,
@@ -312,7 +321,7 @@ async function sendScheduledEmail(
       </div>
     `;
 
-    const emailResponse = await resend.emails.send({
+    const emailResponse = await getResendClient().emails.send({
       from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
       to: [scheduledEmail.recipient_email],
       subject: sanitizeEmailHeader(processedSubject),

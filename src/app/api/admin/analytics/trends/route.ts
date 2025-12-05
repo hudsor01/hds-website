@@ -5,9 +5,11 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { analyticsTrendsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import type { TrendsLead, DailyDataPoint } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-trends-api');
 
@@ -33,14 +35,20 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const days = parseInt(searchParams.get('days') || '30');
 
-    if (!supabaseAdmin) {
+    // Validate query parameters with Zod
+    const parseResult = safeParseSearchParams(searchParams, analyticsTrendsQuerySchema);
+    if (!parseResult.success) {
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
       return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
+        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
+        { status: 400 }
       );
     }
+
+    const { days } = parseResult.data;
+
+    
 
     // Calculate date range
     const endDate = new Date();
@@ -48,7 +56,7 @@ export async function GET(request: NextRequest) {
     startDate.setDate(startDate.getDate() - days);
 
     // Fetch all leads within date range
-    const { data: leads, error } = await supabaseAdmin
+    const { data: leads, error } = await (await createClient())
       .from('calculator_leads')
       .select('created_at, contacted, converted, lead_quality, calculator_type')
       .gte('created_at', startDate.toISOString())
@@ -88,28 +96,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-interface Lead {
-  created_at: string;
-  contacted: boolean;
-  converted: boolean;
-  lead_quality: string | null;
-  calculator_type: string;
-}
-
-interface DailyDataPoint {
-  date: string;
-  leads: number;
-  contacted: number;
-  conversions: number;
-  hot: number;
-  warm: number;
-  cold: number;
-  roi: number;
-  cost: number;
-  performance: number;
-}
-
-function groupLeadsByDate(leads: Lead[], days: number): DailyDataPoint[] {
+function groupLeadsByDate(leads: TrendsLead[], days: number): DailyDataPoint[] {
   // Create a map to store daily counts
   const dateMap = new Map<string, DailyDataPoint>();
 

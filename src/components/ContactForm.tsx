@@ -49,17 +49,17 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
   }
 
   return (
-    <div className={`glass-card border-green-700/50 text-center ${className}`}>
-      <div className="mb-6">
-        <CheckCircle2 className="w-16 h-16 mx-auto text-green-400" />
+    <div className={`glass-card border-success-dark/50 text-center ${className}`}>
+      <div className="mb-content-block">
+        <CheckCircle2 className="w-16 h-16 mx-auto text-success-text" />
       </div>
-      <h2 className="text-responsive-md font-bold text-green-100 mb-4">Message Sent Successfully!</h2>
-      <p className="text-green-200 mb-6">
+      <h2 className="text-responsive-md font-bold text-success-foreground mb-heading">Message Sent Successfully!</h2>
+      <p className="text-success-light mb-content-block">
         Thank you for contacting us. We&apos;ll get back to you within 24 hours.
       </p>
       <Button
         onClick={handleReset}
-        className="bg-green-600 hover:bg-green-500"
+        className="bg-success-dark hover:bg-success"
       >
         Send Another Message
       </Button>
@@ -70,8 +70,8 @@ function SuccessMessage({ onReset, className = '' }: { onReset: () => void; clas
 // Form Header Component
 function FormHeader() {
   return (
-    <div className="mb-8">
-      <h2 className="text-responsive-md text-cyan-400 mb-2">
+    <div className="mb-comfortable">
+      <h2 className="text-responsive-md text-accent mb-subheading">
         Let&apos;s Build Something Amazing
       </h2>
       <p className="text-muted-foreground">
@@ -136,9 +136,9 @@ export default function ContactForm({ className = '' }: { className?: string }) 
     <div className={`glass-card ${className}`}>
       <FormHeader />
 
-      <form action={formAction} className="space-y-8">
+      <form action={formAction} className="space-y-sections">
         {/* Name Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
           <Input
             type="text"
             id="firstName"
@@ -169,7 +169,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
         />
 
         {/* Phone and Company */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
           <Input
             type="tel"
             id="phone"
@@ -188,11 +188,11 @@ export default function ContactForm({ className = '' }: { className?: string }) 
         </div>
 
         {/* Service and Time - Using native select for Server Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
           <select
             id="service"
             name="service"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           >
             {getServiceOptions().map(opt => (
               <option key={opt.value} value={opt.value}>
@@ -204,7 +204,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
           <select
             id="bestTimeToContact"
             name="bestTimeToContact"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           >
             {getContactTimeOptions().map((opt: {value: string, label: string}) => (
               <option key={opt.value} value={opt.value}>
@@ -215,11 +215,11 @@ export default function ContactForm({ className = '' }: { className?: string }) 
         </div>
 
         {/* Budget and Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
           <select
             id="budget"
             name="budget"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           >
             {getBudgetOptions().map((opt: {value: string, label: string}) => (
               <option key={opt.value} value={opt.value}>
@@ -231,7 +231,7 @@ export default function ContactForm({ className = '' }: { className?: string }) 
           <select
             id="timeline"
             name="timeline"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
           >
             {getTimelineOptions().map((opt: {value: string, label: string}) => (
               <option key={opt.value} value={opt.value}>
@@ -263,8 +263,8 @@ export default function ContactForm({ className = '' }: { className?: string }) 
 
         {/* Success message for non-success state but with message */}
         {state && state.message && !state.error && (
-          <Alert data-testid="success-message" className="border-green-500/30 bg-green-500/10">
-            <AlertDescription className="text-green-400">
+          <Alert data-testid="success-message" className="border-success/30 bg-success/10">
+            <AlertDescription className="text-success-text">
               {state.message}
             </AlertDescription>
           </Alert>

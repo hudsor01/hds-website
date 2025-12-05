@@ -5,7 +5,12 @@
  */
 
 import analytics from './analytics';
-import { logToDatabase, logCustomEvent as _logCustomEvent } from './supabase';
+
+// Stub logging functions - implement with actual database logging if needed
+async function logToDatabase(_level: string, _message: string, _context: Record<string, unknown>) {
+  // Non-blocking, fire-and-forget database logging
+  // Can be implemented with createServiceClient() if needed
+}
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 

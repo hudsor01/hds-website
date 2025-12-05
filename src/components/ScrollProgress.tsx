@@ -77,7 +77,7 @@ export default function ScrollProgress() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 h-1 bg-muted/50 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 h-1 bg-muted/50 backdrop-blur-xs"
       style={{ zIndex: PROGRESS_BAR_Z_INDEX }}
       role="progressbar"
       aria-label="Reading progress"
@@ -86,7 +86,7 @@ export default function ScrollProgress() {
       aria-valuemax={100}
     >
       <div
-        className="h-full bg-cyan-600/10 transition-all duration-150 ease-out"
+        className="h-full bg-primary/10 transition-all duration-150 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

@@ -7,7 +7,7 @@
 
 import { useState } from 'react';
 import { Star, Send, CheckCircle2 } from 'lucide-react';
-import { SERVICE_TYPES } from '@/lib/testimonials';
+import { SERVICE_TYPES } from '@/lib/testimonials/types';
 import { trackEvent } from '@/lib/analytics';
 
 interface TestimonialFormProps {
@@ -86,10 +86,10 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
   if (isSubmitted) {
     return (
       <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-          <CheckCircle2 className="w-8 h-8 text-green-600" />
+        <div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted dark:bg-success-bg-dark/30 flex items-center justify-center">
+          <CheckCircle2 className="w-8 h-8 text-success-dark" />
         </div>
-        <h2 className="text-2xl font-bold text-foreground mb-4">
+        <h2 className="text-2xl font-bold text-foreground mb-heading">
           Thank You!
         </h2>
         <p className="text-muted-foreground">
@@ -101,11 +101,11 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-comfortable">
       {/* Rating */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-3">
-          How would you rate your experience? <span className="text-red-500">*</span>
+          How would you rate your experience? <span className="text-destructive">*</span>
         </label>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -121,8 +121,8 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
               <Star
                 className={`w-8 h-8 ${
                   star <= (hoveredRating ?? formData.rating)
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-300'
+                    ? 'fill-yellow-400 text-warning-text'
+                    : 'text-muted-foreground'
                 }`}
               />
             </button>
@@ -140,7 +140,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
       {/* Name */}
       <div>
         <label htmlFor="client_name" className="block text-sm font-medium text-foreground mb-1">
-          Your Name <span className="text-red-500">*</span>
+          Your Name <span className="text-destructive">*</span>
         </label>
         <input
           id="client_name"
@@ -154,7 +154,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
       </div>
 
       {/* Company & Role */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-content sm:grid-cols-2">
         <div>
           <label htmlFor="company" className="block text-sm font-medium text-foreground mb-1">
             Company (Optional)
@@ -206,7 +206,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
       {/* Testimonial Content */}
       <div>
         <label htmlFor="content" className="block text-sm font-medium text-foreground mb-1">
-          Your Testimonial <span className="text-red-500">*</span>
+          Your Testimonial <span className="text-destructive">*</span>
         </label>
         <textarea
           id="content"
@@ -243,7 +243,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
 
       {/* Error Message */}
       {error && (
-        <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+        <div className="card-padding-sm rounded-lg bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm">
           {error}
         </div>
       )}
@@ -252,7 +252,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex items-center justify-center gap-2 rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
           'Submitting...'

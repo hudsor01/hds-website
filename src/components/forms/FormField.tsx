@@ -13,7 +13,7 @@ export function FormField({ error, touched, children }: FormFieldProps) {
     <div>
       {children}
       {touched && error && (
-        <p className="text-red-400 text-sm mt-1">{error}</p>
+        <p className="text-destructive-text text-sm mt-1">{error}</p>
       )}
     </div>
   )

@@ -15,7 +15,7 @@ export function addSkipToMainLink() {
   skipLink.href = "#main-content";
   skipLink.textContent = "Skip to main content";
   skipLink.className =
-    "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-secondary-600 focus:text-white focus:rounded-md focus:text-sm font-medium";
+    "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-modal focus:px-4 focus:py-2 focus:bg-secondary-600 focus:text-primary-foreground focus:rounded-md focus:text-sm font-medium";
   skipLink.style.cssText = `
     position: absolute;
     left: -10000px;

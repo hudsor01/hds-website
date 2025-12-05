@@ -7,7 +7,7 @@
 
 import { useState, useEffect, type ReactNode } from 'react';
 import { Lock, Mail } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
@@ -83,7 +83,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-cyan-600 border-t-transparent" />
+          <div className="mx-auto mb-heading h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
@@ -96,15 +96,15 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         <div className="w-full max-w-md">
           <Card>
             <CardHeader className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900">
-                <Lock className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
+              <div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
+                <Lock className="h-8 w-8 text-primary dark:text-accent" />
               </div>
               <CardTitle className="text-2xl">Admin Dashboard</CardTitle>
               <CardDescription>Sign in to access the admin panel</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
+              <form onSubmit={handleSubmit} className="space-y-content">
+                <div className="space-y-tight">
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -121,7 +121,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-tight">
                   <Label htmlFor="password">Password</Label>
                   <Input
                     type="password"
@@ -134,7 +134,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 </div>
 
                 {error && (
-                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                  <p className="text-sm text-destructive-dark dark:text-destructive-text">{error}</p>
                 )}
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
@@ -142,7 +142,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 </Button>
               </form>
 
-              <p className="mt-6 text-center text-xs text-muted-foreground">
+              <p className="mt-content-block text-center text-xs text-muted-foreground">
                 Use your Supabase credentials to sign in
               </p>
             </CardContent>
@@ -154,7 +154,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
 
   return (
     <div>
-      <div className="fixed right-4 top-4 z-50 flex items-center gap-3">
+      <div className="fixed right-4 top-4 z-modal flex items-center gap-3">
         <span className="text-sm text-muted-foreground">
           {user.email}
         </span>

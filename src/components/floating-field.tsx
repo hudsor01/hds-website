@@ -13,12 +13,12 @@ const useFloatingLabelStyles = (value: string, isFocused: boolean, disabled: boo
 
   const getLabelColor = () => {
     if (disabled) {return 'text-muted-foreground'}
-    if (isActive) {return 'text-cyan-400'}
+    if (isActive) {return 'text-accent'}
     return 'text-muted-foreground'
   }
 
   const getLabelClasses = () => cn(
-    "absolute left-3 transition-all duration-200 pointer-events-none",
+    "absolute left-3 transition-all duration-150 pointer-events-none",
     getLabelColor(),
     isActive
       ? "-top-2 text-xs bg-background px-1"
@@ -83,7 +83,7 @@ export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(({
         placeholder=" "
         className={cn(
           "pt-4 pb-2",
-          isActive && "border-cyan-400",
+          isActive && "border-accent",
           className
         )}
         {...props}
@@ -154,7 +154,7 @@ export const FloatingTextarea = forwardRef<HTMLTextAreaElement, FloatingTextarea
         placeholder=" "
         className={cn(
           "pt-6 pb-2 resize-none",
-          isActive && "border-cyan-400",
+          isActive && "border-accent",
           className
         )}
         {...props}

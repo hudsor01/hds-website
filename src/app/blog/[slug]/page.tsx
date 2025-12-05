@@ -87,12 +87,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-cyan-600">
+    <main className="min-h-screen bg-background">
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
           href="/blog"
-          className="inline-flex flex-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+          className="inline-flex flex-center gap-tight text-accent hover:text-accent/80 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Blog
@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Article Header */}
       <article className="pb-16">
-        <header className="relative bg-background py-16 overflow-hidden">
+        <header className="relative bg-background py-section-sm overflow-hidden">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
           </div>
@@ -109,12 +109,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="relative container-narrow">
             {/* Tags */}
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex flex-wrap gap-tight mb-content-block">
                 {tags.map((tag) => (
                   <Link
                     key={tag.id}
                     href={`/blog/tag/${tag.slug}`}
-                    className="flex flex-center gap-1 text-sm text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20 px-3 py-1 rounded-full transition-colors"
+                    className="flex flex-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
                   >
                     <Tag className="w-4 h-4" />
                     {tag.name}
@@ -124,31 +124,31 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Title */}
-            <h1 className="text-clamp-xl font-black text-white mb-6 text-balance">
+            <h1 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
               {post.title}
             </h1>
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="text-xl text-muted mb-8 text-pretty">
+              <p className="text-xl text-muted mb-comfortable text-pretty">
                 {post.excerpt}
               </p>
             )}
 
             {/* Meta */}
-            <div className="flex flex-wrap gap-6 text-muted-foreground">
-              <div className="flex flex-center gap-2">
+            <div className="flex flex-wrap gap-comfortable text-muted-foreground">
+              <div className="flex flex-center gap-tight">
                 <Calendar className="w-5 h-5" />
                 <time dateTime={post.published_at}>
                   {formatDateLong(post.published_at)}
                 </time>
               </div>
-              <div className="flex flex-center gap-2">
+              <div className="flex flex-center gap-tight">
                 <Clock className="w-5 h-5" />
                 <span>{post.reading_time} min read</span>
               </div>
               {post.author && (
-                <div className="flex flex-center gap-2">
+                <div className="flex flex-center gap-tight">
                   {post.author.profile_image && (
                     <Image
                       src={post.author.profile_image}
@@ -200,18 +200,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       {/* CTA Section */}
-      <section className="py-16 bg-cyan-600">
+      <section className="py-section-sm bg-primary">
         <div className="container-narrow">
-          <div className="glass-card rounded-xl p-8 text-center">
-            <h2 className="text-3xl font-black text-white mb-4 text-balance">
+          <div className="glass-card rounded-xl card-padding-lg text-center">
+            <h2 className="text-3xl font-black text-primary-foreground mb-heading text-balance">
               Ready to Build Your Competitive Advantage?
             </h2>
-            <p className="text-xl text-muted mb-8 text-pretty">
+            <p className="text-xl text-muted mb-comfortable text-pretty">
               Let&apos;s engineer a digital solution that dominates your market.
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-green-400 text-black font-semibold py-3 px-8 rounded-lg hover:bg-green-500 transition-colors text-lg"
+              className="inline-block bg-success-text text-black font-semibold py-3 px-8 rounded-lg hover:bg-success transition-colors text-lg"
             >
               Get Started Today
             </Link>

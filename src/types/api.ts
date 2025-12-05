@@ -195,40 +195,6 @@ export interface CreateTestimonialInput {
   service?: string;
 }
 
-// Portfolio Project Types
-export interface PortfolioProject {
-  id: string;
-  title: string;
-  description: string;
-  image?: string;
-  tags?: string[];
-  tech?: string[];
-  url?: string;
-  githubUrl?: string;
-  featured?: boolean;
-  gradient?: string;
-  category?: string;
-  stats?: Record<string, string | number>;
-  link?: string;
-  createdAt: string;
-  updatedAt?: string;
-}
-
-export interface CreatePortfolioProjectInput {
-  title: string;
-  description: string;
-  image?: string;
-  tags?: string[];
-  tech?: string[];
-  url?: string;
-  githubUrl?: string;
-  featured?: boolean;
-  gradient?: string;
-  category?: string;
-  stats?: Record<string, string | number>;
-  link?: string;
-}
-
 // Analytics Event Types
 export type AnalyticsEventProperties = Record<string, string | number | boolean | null | undefined>;
 

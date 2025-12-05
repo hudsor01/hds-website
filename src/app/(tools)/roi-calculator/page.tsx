@@ -127,14 +127,14 @@ export default function ROICalculatorPage() {
       title="Website ROI Calculator"
       description="Calculate how much additional revenue you could generate by improving your website's conversion rate"
       icon={
-        <svg className="h-8 w-8 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       }
     >
       {!showResults ? (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-comfortable">
+          <div className="grid gap-comfortable md:grid-cols-2">
             <CalculatorInput
               label="Monthly Website Traffic"
               id="monthlyTraffic"
@@ -189,15 +189,15 @@ export default function ROICalculatorPage() {
             />
           </div>
 
-          <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+          <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
             <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+              <div className="shrink-0">
+                <svg className="h-5 w-5 text-info-text" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               </div>
               <div className="ml-3 flex-1">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+                <p className="text-sm text-info-darker dark:text-info-muted">
                   <strong>Industry Average:</strong> Most businesses see 15-50% conversion rate improvements with professional website optimization.
                 </p>
               </div>
@@ -206,7 +206,7 @@ export default function ROICalculatorPage() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             Calculate My ROI
           </button>
@@ -221,7 +221,7 @@ export default function ROICalculatorPage() {
 
           <button
             onClick={() => setShowResults(false)}
-            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:text-muted dark:hover:bg-gray-600"
+            className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:text-muted dark:hover:bg-muted-foreground"
           >
             ← Recalculate
           </button>
@@ -229,43 +229,43 @@ export default function ROICalculatorPage() {
       )}
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           How We Help You Achieve These Results
-        </h3>
+        </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Conversion Optimization
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               A/B testing, UX improvements, and optimized user flows that increase conversions.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Performance Optimization
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Faster load times mean better user experience and higher conversion rates.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Strategic Design
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Data-driven design decisions that guide visitors toward conversion.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Analytics & Testing
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Continuous monitoring and improvement based on real user data.
             </p>

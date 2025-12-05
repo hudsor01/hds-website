@@ -277,15 +277,15 @@ export default function InvoiceGeneratorPage() {
     <CalculatorLayout
       title="Invoice Generator"
       description="Create professional invoices and download them as PDF"
-      icon={<FileText className="h-8 w-8 text-cyan-600" />}
+      icon={<FileText className="h-8 w-8 text-primary" />}
     >
-      <div className="space-y-8">
+      <div className="space-y-sections">
         {/* Your Company Info */}
-        <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Your Company Information
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Company Name"
               id="companyName"
@@ -315,7 +315,7 @@ export default function InvoiceGeneratorPage() {
               value={invoiceData.companyPhone}
               onChange={(e) => handleInputChange('companyPhone', e.target.value)}
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-tight">
               <CalculatorInput
                 label="City"
                 id="companyCity"
@@ -342,11 +342,11 @@ export default function InvoiceGeneratorPage() {
         </section>
 
         {/* Client Info */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Bill To (Client)
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Client Name"
               id="clientName"
@@ -377,7 +377,7 @@ export default function InvoiceGeneratorPage() {
               value={invoiceData.clientEmail}
               onChange={(e) => handleInputChange('clientEmail', e.target.value)}
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-tight">
               <CalculatorInput
                 label="City"
                 id="clientCity"
@@ -404,11 +404,11 @@ export default function InvoiceGeneratorPage() {
         </section>
 
         {/* Invoice Details */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Invoice Details
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-4">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-4">
             <CalculatorInput
               label="Invoice Number"
               id="invoiceNumber"
@@ -450,15 +450,15 @@ export default function InvoiceGeneratorPage() {
         </section>
 
         {/* Line Items */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Line Items
-            </h3>
+            </h2>
             <button
               type="button"
               onClick={addLineItem}
-              className="flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
             >
               <Plus className="w-4 h-4" />
               Add Item
@@ -466,7 +466,7 @@ export default function InvoiceGeneratorPage() {
           </div>
 
           {/* Table Header */}
-          <div className="hidden sm:grid sm:grid-cols-12 gap-2 text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
+          <div className="hidden sm:grid sm:grid-cols-12 gap-tight text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
             <div className="col-span-5">Description</div>
             <div className="col-span-2 text-center">Qty</div>
             <div className="col-span-2 text-right">Rate</div>
@@ -476,7 +476,7 @@ export default function InvoiceGeneratorPage() {
 
           {/* Line Items */}
           {invoiceData.lineItems.map((item) => (
-            <div key={item.id} className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-start pb-3 border-b border-border last:border-0">
+            <div key={item.id} className="grid grid-cols-1 sm:grid-cols-12 gap-tight items-start pb-3 border-b border-border last:border-0">
               <div className="sm:col-span-5">
                 <label className="sm:hidden text-xs text-muted-foreground">Description</label>
                 <input
@@ -521,7 +521,7 @@ export default function InvoiceGeneratorPage() {
                   type="button"
                   onClick={() => removeLineItem(item.id)}
                   disabled={invoiceData.lineItems.length === 1}
-                  className="p-2 text-muted-foreground hover:text-red-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
                   aria-label="Remove line item"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -532,16 +532,16 @@ export default function InvoiceGeneratorPage() {
         </section>
 
         {/* Totals */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <div className="flex justify-end">
             <div className="w-full sm:w-80 space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-medium">{formatCurrency(computedTotals.subtotal)}</span>
               </div>
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-content">
                 <span className="text-sm text-muted-foreground">Tax Rate</span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-tight">
                   <input
                     type="number"
                     min="0"
@@ -562,14 +562,14 @@ export default function InvoiceGeneratorPage() {
               )}
               <div className="flex justify-between pt-3 border-t border-border">
                 <span className="text-lg font-semibold text-foreground">Total</span>
-                <span className="text-xl font-bold text-cyan-600">{formatCurrency(computedTotals.total)}</span>
+                <span className="text-xl font-bold text-primary">{formatCurrency(computedTotals.total)}</span>
               </div>
             </div>
           </div>
         </section>
 
         {/* Notes */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <label className="block text-sm font-medium text-foreground">
             Notes / Terms
           </label>
@@ -587,7 +587,7 @@ export default function InvoiceGeneratorPage() {
           <button
             type="button"
             onClick={saveDraft}
-            className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+            className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
           >
             <Save className="w-4 h-4" />
             Save Draft
@@ -597,7 +597,7 @@ export default function InvoiceGeneratorPage() {
             <button
               type="button"
               onClick={clearDraft}
-              className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+              className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
             >
               <RotateCcw className="w-4 h-4" />
               Clear Draft
@@ -608,7 +608,7 @@ export default function InvoiceGeneratorPage() {
             <PDFDownloadLink
               document={<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />}
               fileName={`${invoiceData.invoiceNumber}.pdf`}
-              className="flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-700"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('invoice_downloaded', {
                   invoice_number: invoiceData.invoiceNumber,
@@ -639,43 +639,43 @@ export default function InvoiceGeneratorPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Invoice Best Practices
-        </h3>
+        </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Clear Payment Terms
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Always specify payment terms upfront. Net 30 is standard, but consider offering discounts for early payment.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Detailed Descriptions
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Include specific descriptions of services or products. This helps prevent disputes and makes record-keeping easier.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Sequential Numbering
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Use a consistent invoice numbering system. This helps with organization and is often required for tax purposes.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Keep Records
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Save copies of all invoices for at least 7 years for tax and legal purposes.
             </p>

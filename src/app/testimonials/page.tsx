@@ -77,7 +77,7 @@ const StarRating = ({ rating }: { rating: number }) => {
       {[...Array(5)].map((_, i) => (
         <Star
           key={i}
-          className={`w-5 h-5 ${i < rating ? 'text-cyan-400 fill-cyan-400' : 'text-muted-foreground'}`}
+          className={`w-5 h-5 ${i < rating ? 'text-accent fill-cyan-400' : 'text-muted-foreground'}`}
         />
       ))}
     </div>
@@ -90,22 +90,22 @@ export default function TestimonialsPage() {
       {/* Hero Section */}
       <section className="relative pt-32 section-spacing page-padding-x">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full"></div>
-          <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
+          <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/80/10 blur-3xl rounded-full"></div>
+          <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-info/10 blur-3xl rounded-full"></div>
         </div>
 
-        <div className="relative z-10 container-wide">
+        <div className="relative z-sticky container-wide">
           <div className="text-center space-y-comfortable">
             <div>
-              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium inline-block">
+              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-caption font-medium inline-block">
                 Client Success Stories
               </span>
             </div>
 
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight text-balance">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block">Real</span>
-                <span className="inline-block mx-4 text-cyan-400">Results</span>
+                <span className="inline-block mx-4 text-accent">Results</span>
                 <span className="inline-block">Real Clients</span>
               </h1>
             </div>
@@ -124,19 +124,19 @@ export default function TestimonialsPage() {
         <div className="container-wide">
           <div className="grid-4 gap-comfortable">
             <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">100%</div>
+              <div className="text-responsive-lg font-black text-accent">100%</div>
               <div className="text-caption text-muted-foreground mt-1">Client Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">50+</div>
+              <div className="text-responsive-lg font-black text-accent">50+</div>
               <div className="text-caption text-muted-foreground mt-1">Projects Delivered</div>
             </div>
             <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">3.5x</div>
+              <div className="text-responsive-lg font-black text-accent">3.5x</div>
               <div className="text-caption text-muted-foreground mt-1">Average ROI</div>
             </div>
             <div className="text-center">
-              <div className="text-responsive-lg font-black text-cyan-400">24hr</div>
+              <div className="text-responsive-lg font-black text-accent">24hr</div>
               <div className="text-caption text-muted-foreground mt-1">Response Time</div>
             </div>
           </div>
@@ -147,8 +147,8 @@ export default function TestimonialsPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block">
-            <h2 className="text-clamp-xl font-black text-white mb-heading">
-              <span className="text-cyan-400">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+              <span className="text-accent">
                 What Our Clients Say
               </span>
             </h2>
@@ -161,7 +161,7 @@ export default function TestimonialsPage() {
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="glass-card-light card-padding card-hover-glow transition-smooth snap-center flex-shrink-0 w-[90vw] md:w-auto"
+                className="glass-card-light card-padding card-hover-glow transition-smooth snap-center shrink-0 w-[90vw] md:w-auto"
               >
                 {/* Rating */}
                 <div className="mb-subheading">
@@ -170,14 +170,14 @@ export default function TestimonialsPage() {
 
                 {/* Highlight Label */}
                 <div className="mb-card-content">
-                  <span className="px-4 py-2 rounded-full bg-cyan-400/10 text-cyan-400 text-caption font-semibold">
+                  <span className="px-4 py-2 rounded-full bg-accent/10 text-accent text-caption font-semibold">
                     {testimonial.highlight}
                   </span>
                 </div>
 
                 {/* Quote */}
-                <div className="mb-6">
-                  <MessageCircle className="w-8 h-8 text-cyan-400/30 mb-3" />
+                <div className="mb-content-block">
+                  <MessageCircle className="w-8 h-8 text-accent/30 mb-3" />
                   <p className="text-muted-foreground leading-relaxed">
                     &ldquo;{testimonial.content}&rdquo;
                   </p>
@@ -185,13 +185,13 @@ export default function TestimonialsPage() {
 
                 {/* Client Info */}
                 <div className="border-t border-border pt-6">
-                  <div className="font-semibold text-white">
+                  <div className="font-semibold text-primary-foreground">
                     {testimonial.name}
                   </div>
                   <div className="text-caption text-muted-foreground">
                     {testimonial.role} at {testimonial.company}
                   </div>
-                  <div className="text-caption text-cyan-400 mt-2">
+                  <div className="text-caption text-accent mt-2">
                     {testimonial.service}
                   </div>
                 </div>
@@ -205,9 +205,9 @@ export default function TestimonialsPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="glass-section card-padding text-center">
-            <h2 className="text-clamp-xl font-black text-white mb-heading">
+            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
               Ready to be our next
-              <span className="block text-cyan-400 mt-2">
+              <span className="block text-accent mt-2">
                 success story?
               </span>
             </h2>
@@ -229,7 +229,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-body font-semibold text-white border-2 border-border rounded-lg hover:border-cyan-400/50 hover:bg-background/50 transition-smooth"
+                className="inline-flex-center px-8 py-4 text-body font-semibold text-primary-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio
               </Link>

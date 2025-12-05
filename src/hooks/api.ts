@@ -4,8 +4,6 @@ import type {
   User,
   Testimonial,
   CreateTestimonialInput,
-  PortfolioProject,
-  CreatePortfolioProjectInput,
   NewsletterSubscribersResponse,
   TrackEventInput,
 } from '@/types/api';
@@ -13,7 +11,6 @@ import type {
 // Query keys
 export const QUERY_KEYS = {
   testimonials: ['testimonials'] as const,
-  portfolioProjects: ['portfolio-projects'] as const,
   newsletterSubscribers: ['newsletter-subscribers'] as const,
   user: ['user'] as const,
   contact: ['contact'] as const,
@@ -41,43 +38,6 @@ export function useCreateTestimonial() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.testimonials });
-    },
-  });
-}
-
-// Portfolio projects hooks
-export function usePortfolioProjects(options?: UseQueryOptions<PortfolioProject[], Error>) {
-  return useQuery({
-    queryKey: QUERY_KEYS.portfolioProjects,
-    queryFn: async () => {
-      const response = await apiClient.getPortfolioProjects();
-      return response.data?.projects || [];
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    ...options,
-  });
-}
-
-export function usePortfolioProject(id: string) {
-  return useQuery({
-    queryKey: ['portfolio-project', id],
-    queryFn: async () => {
-      const response = await apiClient.getPortfolioProject(id);
-      return response.data?.project;
-    },
-    enabled: !!id,
-  });
-}
-
-export function useCreatePortfolioProject() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: CreatePortfolioProjectInput) => {
-      return await apiClient.createPortfolioProject(data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.portfolioProjects });
     },
   });
 }

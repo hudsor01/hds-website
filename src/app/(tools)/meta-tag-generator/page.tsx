@@ -112,16 +112,16 @@ export default function MetaTagGeneratorPage() {
       title="Meta Tag Generator"
       description="Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your website"
       icon={
-        <Code className="h-8 w-8 text-cyan-600" />
+        <Code className="h-8 w-8 text-primary" />
       }
     >
       {!showResults ? (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-comfortable">
           {/* Required Fields */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <div className="space-y-content">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Required Information
-            </h3>
+            </h2>
 
             <div>
               <CalculatorInput
@@ -136,7 +136,7 @@ export default function MetaTagGeneratorPage() {
               />
               <div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
                 <div
-                  className={`h-full transition-all ${titleOptimal ? 'bg-green-500' : titleLength > 60 ? 'bg-red-500' : 'bg-yellow-500'}`}
+                  className={`h-full transition-all ${titleOptimal ? 'bg-success' : titleLength > 60 ? 'bg-destructive' : 'bg-warning'}`}
                   style={{ width: `${Math.min((titleLength / 60) * 100, 100)}%` }}
                 />
               </div>
@@ -144,25 +144,25 @@ export default function MetaTagGeneratorPage() {
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
-                Page Description <span className="text-red-500">*</span>
+                Page Description <span className="text-destructive">*</span>
               </label>
               <textarea
                 value={inputs.pageDescription}
                 onChange={(e) => handleInputChange('pageDescription', e.target.value)}
-                className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
                 rows={3}
                 required
                 maxLength={170}
                 placeholder="A compelling description of your page (150-160 characters)"
               />
               <div className="flex justify-between items-center mt-1">
-                <span className={`text-xs ${descriptionOptimal ? 'text-green-600' : descriptionLength > 160 ? 'text-red-600' : 'text-yellow-600'}`}>
+                <span className={`text-xs ${descriptionOptimal ? 'text-success-dark' : descriptionLength > 160 ? 'text-destructive-dark' : 'text-warning-dark'}`}>
                   {descriptionLength}/160 characters {descriptionOptimal ? '(optimal)' : descriptionLength > 160 ? '(too long)' : '(add more)'}
                 </span>
               </div>
               <div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
                 <div
-                  className={`h-full transition-all ${descriptionOptimal ? 'bg-green-500' : descriptionLength > 160 ? 'bg-red-500' : 'bg-yellow-500'}`}
+                  className={`h-full transition-all ${descriptionOptimal ? 'bg-success' : descriptionLength > 160 ? 'bg-destructive' : 'bg-warning'}`}
                   style={{ width: `${Math.min((descriptionLength / 160) * 100, 100)}%` }}
                 />
               </div>
@@ -181,12 +181,12 @@ export default function MetaTagGeneratorPage() {
           </div>
 
           {/* Optional Fields */}
-          <div className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <div className="space-y-content border-t border-border pt-6">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Optional Information
-            </h3>
+            </h2>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-content md:grid-cols-2">
               <CalculatorInput
                 label="Keywords"
                 id="keywords"
@@ -241,20 +241,20 @@ export default function MetaTagGeneratorPage() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             Generate Meta Tags
           </button>
         </form>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-comfortable">
           {/* Tabs */}
           <div className="flex border-b border-border">
             <button
               onClick={() => setActiveTab('code')}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'code'
-                  ? 'border-cyan-500 text-cyan-600'
+                  ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -263,9 +263,9 @@ export default function MetaTagGeneratorPage() {
             </button>
             <button
               onClick={() => setActiveTab('preview')}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'preview'
-                  ? 'border-cyan-500 text-cyan-600'
+                  ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -278,7 +278,7 @@ export default function MetaTagGeneratorPage() {
             <div className="relative">
               <button
                 onClick={copyToClipboard}
-                className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-cyan-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-cyan-700 transition-colors"
+                className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-hover transition-colors"
               >
                 {copied ? (
                   <>
@@ -292,25 +292,25 @@ export default function MetaTagGeneratorPage() {
                   </>
                 )}
               </button>
-              <pre className="rounded-lg bg-gray-900 p-4 pt-12 overflow-x-auto">
-                <code className="text-sm text-gray-100 whitespace-pre-wrap break-all">
+              <pre className="rounded-lg bg-background card-padding-sm pt-12 overflow-x-auto">
+                <code className="text-sm text-foreground whitespace-pre-wrap break-all">
                   {generatedCode}
                 </code>
               </pre>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-comfortable">
               {/* Google Preview */}
               <div>
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3">Google Search Preview</h4>
-                <div className="rounded-lg border border-border p-4 bg-white dark:bg-gray-800">
-                  <div className="text-blue-600 text-lg hover:underline cursor-pointer truncate">
+                <h3 className="text-sm font-semibold text-muted-foreground mb-3">Google Search Preview</h3>
+                <div className="rounded-lg border border-border card-padding-sm bg-card dark:bg-card">
+                  <div className="text-info-dark text-lg hover:underline cursor-pointer truncate">
                     {inputs.pageTitle || 'Page Title'}
                   </div>
-                  <div className="text-green-700 text-sm truncate">
+                  <div className="text-success-darker text-sm truncate">
                     {inputs.pageUrl || 'https://example.com'}
                   </div>
-                  <div className="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2">
+                  <div className="text-muted-foreground dark:text-muted-foreground text-sm mt-1 line-clamp-2">
                     {inputs.pageDescription || 'Page description will appear here...'}
                   </div>
                 </div>
@@ -318,18 +318,18 @@ export default function MetaTagGeneratorPage() {
 
               {/* Social Preview */}
               <div>
-                <h4 className="text-sm font-semibold text-muted-foreground mb-3">Social Media Preview</h4>
+                <h3 className="text-sm font-semibold text-muted-foreground mb-3">Social Media Preview</h3>
                 <div className="rounded-lg border border-border overflow-hidden max-w-md">
                   {inputs.imageUrl ? (
-                    <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <div className="h-48 bg-secondary dark:bg-card flex items-center justify-center">
                       <span className="text-muted-foreground text-sm">Image: {inputs.imageUrl}</span>
                     </div>
                   ) : (
-                    <div className="h-48 bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
+                    <div className="h-48 bg-gradient-to-br from-primary to-info flex items-center justify-center">
+                      <span className="text-primary-foreground text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
                     </div>
                   )}
-                  <div className="p-4 bg-white dark:bg-gray-800">
+                  <div className="card-padding-sm bg-card dark:bg-card">
                     <div className="text-xs text-muted-foreground uppercase mb-1">
                       {inputs.siteName || new URL(inputs.pageUrl || 'https://example.com').hostname}
                     </div>
@@ -347,7 +347,7 @@ export default function MetaTagGeneratorPage() {
 
           <button
             onClick={() => setShowResults(false)}
-            className="w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:hover:bg-gray-600"
+            className="w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-muted-foreground"
           >
             ← Edit Information
           </button>
@@ -355,43 +355,43 @@ export default function MetaTagGeneratorPage() {
       )}
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Meta Tag Best Practices
-        </h3>
+        </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Title Tag
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Keep between 50-60 characters. Include your primary keyword near the beginning.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Meta Description
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Aim for 150-160 characters. Include a call-to-action and your target keyword.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Open Graph Images
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Use 1200x630px images for optimal display on Facebook and LinkedIn.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Twitter Cards
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               summary_large_image provides the most visual impact for content sharing.
             </p>

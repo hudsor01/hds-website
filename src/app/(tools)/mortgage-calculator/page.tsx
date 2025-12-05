@@ -212,10 +212,10 @@ export default function MortgageCalculatorPage() {
     <CalculatorLayout
       title="Mortgage Calculator"
       description="Calculate your monthly mortgage payment, including principal, interest, taxes, and insurance"
-      icon={<Home className="h-8 w-8 text-cyan-600" />}
+      icon={<Home className="h-8 w-8 text-primary" />}
     >
       {!showResults ? (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-comfortable">
           {/* Home Price */}
           <CalculatorInput
             label="Home Price"
@@ -231,16 +231,16 @@ export default function MortgageCalculatorPage() {
           />
 
           {/* Down Payment */}
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-foreground">Down Payment</label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-tight">
                 <button
                   type="button"
                   onClick={() => setUsePercent(true)}
                   className={`px-2 py-1 text-xs rounded ${
                     usePercent
-                      ? 'bg-cyan-600 text-white'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
@@ -251,7 +251,7 @@ export default function MortgageCalculatorPage() {
                   onClick={() => setUsePercent(false)}
                   className={`px-2 py-1 text-xs rounded ${
                     !usePercent
-                      ? 'bg-cyan-600 text-white'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
@@ -288,14 +288,14 @@ export default function MortgageCalculatorPage() {
               />
             )}
             {inputs.downPaymentPercent < 20 && (
-              <p className="text-xs text-yellow-600 dark:text-yellow-400">
+              <p className="text-xs text-warning-dark dark:text-warning-text">
                 PMI is typically required for down payments less than 20%
               </p>
             )}
           </div>
 
           {/* Loan Details */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-content md:grid-cols-2">
             <CalculatorInput
               label="Interest Rate"
               id="interestRate"
@@ -328,12 +328,12 @@ export default function MortgageCalculatorPage() {
           </div>
 
           {/* Additional Costs */}
-          <div className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <div className="space-y-content border-t border-border pt-6">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Additional Costs (Optional)
-            </h3>
+            </h2>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-content md:grid-cols-2">
               <CalculatorInput
                 label="Annual Property Tax"
                 id="propertyTax"
@@ -386,7 +386,7 @@ export default function MortgageCalculatorPage() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             Calculate Payment
           </button>
@@ -401,7 +401,7 @@ export default function MortgageCalculatorPage() {
 
           <button
             onClick={() => setShowResults(false)}
-            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:hover:bg-gray-600"
+            className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-muted-foreground"
           >
             ← Recalculate
           </button>
@@ -409,43 +409,43 @@ export default function MortgageCalculatorPage() {
       )}
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Understanding Your Mortgage
-        </h3>
+        </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Principal vs Interest
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Early payments go mostly toward interest. As you pay down the loan, more goes to principal.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               20% Down Payment
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Putting 20% down typically eliminates PMI and gets you better interest rates.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               15 vs 30 Year
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               15-year loans have higher payments but save significantly on total interest paid.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Total Cost of Ownership
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Don't forget taxes, insurance, maintenance, and HOA fees in your budget.
             </p>

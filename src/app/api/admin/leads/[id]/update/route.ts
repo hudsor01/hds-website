@@ -5,7 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
@@ -39,12 +39,7 @@ export async function PATCH(
   }
 
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    
 
     const body = await request.json();
 
@@ -76,7 +71,7 @@ export async function PATCH(
     }
 
     // Update lead in database
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await (await createClient())
       .from('calculator_leads')
       .update(updates)
       .eq('id', params.id)

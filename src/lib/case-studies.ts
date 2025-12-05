@@ -4,7 +4,7 @@
  */
 
 import { cache } from 'react';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { logger } from './logger';
 
 export interface CaseStudy {
@@ -39,6 +39,7 @@ export interface CaseStudy {
  */
 export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .select('*')
@@ -70,6 +71,7 @@ export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
  */
 export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy | null> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .select('*')
@@ -103,6 +105,7 @@ export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy 
  */
 export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution')
       .select('slug')
@@ -133,6 +136,7 @@ export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
  */
 export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
   try {
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('case_studies' as 'lead_attribution')
       .select('*')

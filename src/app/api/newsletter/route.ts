@@ -1,5 +1,23 @@
 import { logger } from '@/lib/logger'
-import { isSupabaseAdminConfigured, supabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database';
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
+
+function isSupabaseAdminConfigured(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'placeholder'
+  );
+}
 import { detectInjectionAttempt } from '@/lib/utils'
 import { NextResponse, type NextRequest } from 'next/server'
 import { newsletterSchema } from '@/lib/schemas/contact'
@@ -110,7 +128,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Check if Supabase admin is configured
-    if (!isSupabaseAdminConfigured() || !supabaseAdmin) {
+    if (!isSupabaseAdminConfigured() || !createServiceClient()) {
       logger.warn('Supabase admin not configured, skipping newsletter subscription save');
       return NextResponse.json({
         message: 'Thank you for subscribing to our newsletter! (development mode)',
@@ -119,7 +137,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save to leads table with newsletter source
-    const { error } = await supabaseAdmin
+    const { error } = await createServiceClient()
       .from('leads')
       .insert([{
         email: subscriptionData.email,
@@ -225,7 +243,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Check if Supabase admin is configured
-    if (!isSupabaseAdminConfigured() || !supabaseAdmin) {
+    if (!isSupabaseAdminConfigured() || !createServiceClient()) {
       logger.warn('Supabase admin not configured, returning empty subscribers list');
       return NextResponse.json({
         subscribers: [],
@@ -240,7 +258,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const { data, error, count } = await supabaseAdmin
+    const { data, error, count } = await createServiceClient()
       .from('leads')
       .select('email, name, source, created_at', { count: 'exact' })
       .eq('source', 'newsletter-form') // Filter for newsletter signups only

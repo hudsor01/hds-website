@@ -5,7 +5,7 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import type { CaseStudy, CaseStudyInsert, CaseStudyUpdate } from '@/types/supabase-helpers';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
@@ -59,14 +59,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    
 
-    const { data: caseStudies, error } = (await supabaseAdmin
+    const { data: caseStudies, error } = (await (await createClient())
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .select('*')
       .order('created_at', { ascending: false })) as unknown as { data: CaseStudy[] | null; error: unknown };
@@ -112,15 +107,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = CaseStudySchema.parse(body);
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    
 
     // Check if slug already exists
-    const { data: existing } = (await supabaseAdmin
+    const { data: existing } = (await (await createClient())
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .select('id')
       .eq('slug', validatedData.slug)
@@ -149,7 +139,7 @@ export async function POST(request: NextRequest) {
       project_duration: validatedData.project_duration || null,
     };
 
-    const { data: caseStudy, error } = (await supabaseAdmin
+    const { data: caseStudy, error } = (await (await createClient())
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .insert(insertData as unknown as never) // Bypass type checking for custom table
       .select()
@@ -212,16 +202,11 @@ export async function PUT(request: NextRequest) {
 
     const validatedData = CaseStudySchema.partial().parse(updateData);
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    
 
     const updateFields: CaseStudyUpdate = validatedData as CaseStudyUpdate;
 
-    const { data: caseStudy, error } = (await supabaseAdmin
+    const { data: caseStudy, error } = (await (await createClient())
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .update(updateFields as unknown as never) // Bypass type checking
       .eq('id', id)
@@ -253,6 +238,11 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+// UUID validation schema for DELETE
+const deleteQuerySchema = z.object({
+  id: z.string().uuid('Invalid case study ID format'),
+});
+
 // DELETE - Delete case study
 export async function DELETE(request: NextRequest) {
   // Rate limiting - 5 requests per minute per IP for write operations
@@ -274,23 +264,22 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const idParam = searchParams.get('id');
 
-    if (!id) {
+    // Validate UUID format
+    const parseResult = deleteQuerySchema.safeParse({ id: idParam });
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Case study ID is required' },
+        { error: 'Invalid case study ID', details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const { id } = parseResult.data;
 
-    const { error } = await supabaseAdmin
+    
+
+    const { error } = await (await createClient())
       .from('case_studies' as 'lead_attribution') // Type assertion for custom table
       .delete()
       .eq('id', id);

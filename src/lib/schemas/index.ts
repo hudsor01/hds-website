@@ -197,3 +197,12 @@ export {
   type CompletePaystub,
   type PaystubGenerationRequest,
 } from './paystub';
+
+// Query params and validation utilities
+export {
+  parseSearchParams,
+  safeParseSearchParams,
+  formatValidationError,
+  createValidationErrorResponse,
+  type FormattedValidationError,
+} from './query-params';

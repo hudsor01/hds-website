@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Next.js 16: Using cacheLife instead
-// export const revalidate = 60;
+// Static blog data - no revalidation needed
+// For dynamic content, use React cache() at data layer + revalidate here
 
 export default async function BlogPage() {
   const [featuredPosts, allPostsResult, tags] = await Promise.all([
@@ -39,7 +39,7 @@ export default async function BlogPage() {
   const allPosts = allPostsResult.posts;
 
   return (
-    <main className="min-h-screen bg-cyan-600">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -48,12 +48,12 @@ export default async function BlogPage() {
         </div>
 
         <div className="relative container-wide text-center">
-          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-cyan-300 bg-cyan-400/10 text-cyan-400 font-semibold text-body-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-accent/60 bg-accent/10 text-accent font-semibold text-body-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-clamp-xl font-black text-white mb-heading text-balance">
-            Business <span className="text-cyan-400">Strategy</span> Blog
+          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading text-balance">
+            Business <span className="text-accent">Strategy</span> Blog
           </h1>
           <p className="text-subheading text-muted container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
@@ -63,14 +63,14 @@ export default async function BlogPage() {
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && (
-        <section className="section-spacing bg-cyan-600">
+        <section className="section-spacing bg-primary">
           <div className="container-wide">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-black text-white mb-4 text-balance">Featured Articles</h2>
+              <h2 className="text-3xl font-black text-primary-foreground mb-heading text-balance">Featured Articles</h2>
               <p className="text-muted text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sections">
               {featuredPosts.map((post) => (
                 <BlogPostCard key={post.id} post={post} featured />
               ))}
@@ -80,22 +80,22 @@ export default async function BlogPage() {
       )}
 
       {/* All Posts */}
-      <section className="section-spacing bg-cyan-600">
+      <section className="section-spacing bg-primary">
         <div className="container-wide">
           <div className="flex flex-col lg:flex-row gap-comfortable">
             {/* Main Content */}
             <div className="flex-1">
               <div className="text-center lg:text-left mb-content-block">
-                <h2 className="text-section-title font-black text-white mb-subheading text-balance">All Articles</h2>
+                <h2 className="text-section-title font-black text-primary-foreground mb-subheading text-balance">All Articles</h2>
                 <p className="text-muted text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
               {allPosts.length === 0 ? (
-                <div className="glass-card rounded-xl p-8 text-center">
+                <div className="glass-card rounded-xl card-padding-lg text-center">
                   <p className="text-muted text-lg">No articles found. Check back soon for new content!</p>
                 </div>
               ) : (
-                <div className="space-y-8">
+                <div className="space-y-sections">
                   {allPosts.map((post) => (
                     <BlogPostCard key={post.id} post={post} />
                   ))}
@@ -104,14 +104,14 @@ export default async function BlogPage() {
             </div>
 
             {/* Sidebar */}
-            <aside className="w-full lg:w-80 space-y-8">
+            <aside className="w-full lg:w-80 space-y-sections">
               {/* Newsletter Signup */}
-              <div className="glass-card rounded-xl p-6">
-                <h3 className="text-xl font-bold text-white mb-4 text-balance">Stay Updated</h3>
-                <p className="text-muted mb-4 text-pretty">Get strategic insights delivered to your inbox.</p>
+              <div className="glass-card rounded-xl card-padding">
+                <h3 className="text-xl font-bold text-primary-foreground mb-heading text-balance">Stay Updated</h3>
+                <p className="text-muted mb-heading text-pretty">Get strategic insights delivered to your inbox.</p>
                 <Link
                   href="/contact"
-                  className="inline-block w-full text-center bg-cyan-400 text-black font-semibold py-2 px-6 rounded-lg hover:bg-cyan-500 transition-colors"
+                  className="inline-block w-full text-center bg-accent text-black font-semibold py-2 px-6 rounded-lg hover:bg-primary/80 transition-colors"
                 >
                   Contact Us to Subscribe
                 </Link>
@@ -123,11 +123,11 @@ export default async function BlogPage() {
 
               {/* CTA */}
               <div className="glass-card rounded-xl card-padding-sm text-center">
-                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">Ready to Dominate Your Market?</h3>
+                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
                 <p className="text-muted mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
-                  className="inline-block bg-green-400 text-black font-semibold p-button rounded-lg hover:bg-green-500 transition-colors"
+                  className="inline-block bg-success-text text-black font-semibold p-button rounded-lg hover:bg-success transition-colors"
                 >
                   Get Started
                 </Link>

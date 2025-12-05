@@ -23,7 +23,7 @@ export function PaystubNavigation({
 }: PaystubNavigationProps) {
   return (
     <div className="p-5 text-center bg-muted">
-      <div className="mb-5 flex flex-wrap justify-center gap-2">
+      <div className="mb-5 flex flex-wrap justify-center gap-tight">
         <Button variant="secondary" onClick={onBackToForm}>
           Back to Form
         </Button>
@@ -44,7 +44,7 @@ export function PaystubNavigation({
       </div>
 
       {documentType === 'paystub' && (
-        <div className="mb-5 flex items-center justify-center gap-2">
+        <div className="mb-5 flex items-center justify-center gap-tight">
           <Label>Select Pay Period:</Label>
           <Select
             value={selectedPeriod.toString()}
@@ -64,7 +64,7 @@ export function PaystubNavigation({
         </div>
       )}
 
-      <Button onClick={onPrint} className="bg-green-600 hover:bg-green-700">
+      <Button onClick={onPrint} className="bg-success-dark hover:bg-success-darker">
         Print {documentType === 'paystub' ? 'Pay Stub' : 'W-2 Summary'}
       </Button>
     </div>

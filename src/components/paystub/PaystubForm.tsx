@@ -37,33 +37,33 @@ export function PaystubForm({
   isGenerating
 }: PaystubFormProps) {
   return (
-    <div className="p-8 font-sans container-narrow">
-      <h1 className="text-3xl font-bold mb-8 text-center text-foreground">
+    <div className="card-padding-lg font-sans container-narrow">
+      <h1 className="text-3xl font-bold mb-comfortable text-center text-foreground">
         Professional Pay Stub Generator
       </h1>
 
       {/* Employee Information */}
-      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Employee Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="employeeName">Employee Name *</Label>
             <Input
               id="employeeName"
               type="text"
               value={paystubData.employeeName}
               onChange={(e) => setPaystubData(prev => ({ ...prev, employeeName: e.target.value }))}
-              className={formErrors.employeeName ? 'border-red-500 border-2' : ''}
+              className={formErrors.employeeName ? 'border-destructive border-2' : ''}
               placeholder="John Doe"
             />
             {formErrors.employeeName && (
-              <p className="text-red-500 text-xs">{formErrors.employeeName}</p>
+              <p className="text-destructive text-xs">{formErrors.employeeName}</p>
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="employeeId">Employee ID</Label>
             <Input
               id="employeeId"
@@ -74,7 +74,7 @@ export function PaystubForm({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="employerName">Employer Name</Label>
             <Input
               id="employerName"
@@ -88,12 +88,12 @@ export function PaystubForm({
       </div>
 
       {/* Pay Information */}
-      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Pay Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="hourlyRate">Hourly Rate *</Label>
             <Input
               id="hourlyRate"
@@ -101,15 +101,15 @@ export function PaystubForm({
               step="0.01"
               value={paystubData.hourlyRate || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hourlyRate: parseFloat(e.target.value) || 0 }))}
-              className={formErrors.hourlyRate ? 'border-red-500 border-2' : ''}
+              className={formErrors.hourlyRate ? 'border-destructive border-2' : ''}
               placeholder="25.00"
             />
             {formErrors.hourlyRate && (
-              <p className="text-red-500 text-xs">{formErrors.hourlyRate}</p>
+              <p className="text-destructive text-xs">{formErrors.hourlyRate}</p>
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="hoursPerPeriod">Hours Per Period *</Label>
             <Input
               id="hoursPerPeriod"
@@ -117,23 +117,23 @@ export function PaystubForm({
               step="0.5"
               value={paystubData.hoursPerPeriod || ''}
               onChange={(e) => setPaystubData(prev => ({ ...prev, hoursPerPeriod: parseFloat(e.target.value) || 0 }))}
-              className={formErrors.hoursPerPeriod ? 'border-red-500 border-2' : ''}
+              className={formErrors.hoursPerPeriod ? 'border-destructive border-2' : ''}
               placeholder="80"
             />
             {formErrors.hoursPerPeriod && (
-              <p className="text-red-500 text-xs">{formErrors.hoursPerPeriod}</p>
+              <p className="text-destructive text-xs">{formErrors.hoursPerPeriod}</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Tax Information */}
-      <div className="mb-8 p-6 bg-muted rounded-lg border border-border">
+      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Tax Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="filingStatus">Filing Status</Label>
             <Select
               value={paystubData.filingStatus}
@@ -151,7 +151,7 @@ export function PaystubForm({
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="taxYear">Tax Year</Label>
             <Select
               value={paystubData.taxYear.toString()}
@@ -167,7 +167,7 @@ export function PaystubForm({
             </Select>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-tight">
             <Label htmlFor="state">State</Label>
             <Select
               value={selectedState}
@@ -200,7 +200,7 @@ export function PaystubForm({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex-center gap-4">
+      <div className="flex-center gap-content">
         <Button
           onClick={onGenerate}
           disabled={isGenerating}

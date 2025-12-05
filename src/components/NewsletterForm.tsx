@@ -52,18 +52,18 @@ async function submitNewsletter(data: FormData): Promise<{ success: boolean }> {
 // Success Message Component
 function SuccessMessage({ onReset }: { onReset: () => void }) {
   return (
-    <Alert className="border-green-500/50 bg-green-500/10">
-      <CheckCircle2 className="h-5 w-5 text-green-600" />
-      <AlertTitle className="text-green-800 dark:text-green-200">Thank You!</AlertTitle>
-      <AlertDescription className="text-green-700 dark:text-green-300">
-        <p className="mb-4">
+    <Alert className="border-success/50 bg-success/10">
+      <CheckCircle2 className="h-5 w-5 text-success-dark" />
+      <AlertTitle className="text-success-darker dark:text-success-light">Thank You!</AlertTitle>
+      <AlertDescription className="text-success-darker dark:text-success-muted">
+        <p className="mb-heading">
           You&apos;ve been signed up for our newsletter. We&apos;ll send you updates on our latest content.
         </p>
         <Button
           variant="outline"
           size="sm"
           onClick={onReset}
-          className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+          className="border-success text-success-dark hover:bg-success-dark hover:text-primary-foreground"
         >
           Sign up another email
         </Button>
@@ -131,7 +131,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
           e.preventDefault();
           form.handleSubmit();
         }}
-        className="space-y-4"
+        className="space-y-content"
       >
         {/* First Name Field */}
         <form.Field
@@ -144,7 +144,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
           }}
         >
           {(field) => (
-            <div className="space-y-2">
+            <div className="space-y-tight">
               <Label htmlFor="firstName">First Name</Label>
               <Input
                 id="firstName"
@@ -153,12 +153,12 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className={cn(
-                  field.state.meta.errors.length > 0 && 'border-red-500 focus-visible:ring-red-500'
+                  field.state.meta.errors.length > 0 && 'border-destructive focus-visible:ring-destructive'
                 )}
                 placeholder="Enter your first name"
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-600">{field.state.meta.errors[0]}</p>
+                <p className="text-sm text-destructive-dark">{field.state.meta.errors[0]}</p>
               )}
             </div>
           )}
@@ -175,7 +175,7 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
           }}
         >
           {(field) => (
-            <div className="space-y-2">
+            <div className="space-y-tight">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -185,12 +185,12 @@ export function NewsletterForm({ onSuccess, onError }: NewsletterFormProps) {
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 className={cn(
-                  field.state.meta.errors.length > 0 && 'border-red-500 focus-visible:ring-red-500'
+                  field.state.meta.errors.length > 0 && 'border-destructive focus-visible:ring-destructive'
                 )}
                 placeholder="Enter your email"
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-600">{field.state.meta.errors[0]}</p>
+                <p className="text-sm text-destructive-dark">{field.state.meta.errors[0]}</p>
               )}
             </div>
           )}
