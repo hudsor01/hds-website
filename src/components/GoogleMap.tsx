@@ -12,7 +12,7 @@ export default function GoogleMap() {
         </p>
       </div>
       
-      <div className="relative rounded-xl overflow-hidden shadow-2xl border border-accent/60/30">
+      <div className="relative rounded-xl overflow-hidden shadow-2xl border border-accent/30">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435519.2274138779!2d-97.3307073!3d32.7766642!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c19f77b45974b%3A0xb9ec9ba4f647678f!2sDallas-Fort%20Worth%20Metroplex%2C%20TX!5e0!3m2!1sen!2sus!4v1645123456789!5m2!1sen!2sus"
           width="100%"
