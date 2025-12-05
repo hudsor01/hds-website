@@ -45,7 +45,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
         <div className="border-b-2 border-black pb-5 mb-5">
           <div className="flex-between items-start">
             <div>
-              <h2 className="text-lg font-bold m-0 mb-subheading.5">EARNINGS STATEMENT</h2>
+              <h2 className="text-lg font-bold m-0 mb-5">EARNINGS STATEMENT</h2>
               <div>
                 <strong>{employeeData.employerName || '[EMPLOYER NAME]'}</strong><br/>
                 <span className="text-[var(--spacing-3)] text-muted-foreground">
