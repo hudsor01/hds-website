@@ -23,7 +23,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
   return (
     <div className="relative">
       {/* Save as PDF Button */}
-      <div className="no-print absolute -top-[var(--spacing-16)] right-0 z-[1000]">
+      <div className="no-print absolute -top-[var(--spacing-16)] right-0 z-modal">
         <button
           onClick={handleSaveAsPDF}
           className={cn(
