@@ -3,22 +3,28 @@
  * Handles email list subscriptions and welcome email
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { createClient } from '@supabase/supabase-js';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import type { Database } from '@/types/database';
+import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 function createServiceClient() {
-  return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 }
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
-import { getResendClient, isResendConfigured } from '@/lib/resend-client';
-import { z } from 'zod';
 
 const SubscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -41,7 +47,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, source } = SubscribeSchema.parse(body);
 
-    if (!createServiceClient()) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -49,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = (await createServiceClient()
+    const { data: existing } = (await supabase
       .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
       .select('*')
       .eq('email', email)
@@ -73,7 +81,7 @@ export async function POST(request: NextRequest) {
       tags: [],
     };
 
-    const { error: dbError } = await createServiceClient()
+    const { error: dbError } = await supabase
       .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
       .upsert(subscriberData as unknown as never); // Bypass type checking
 

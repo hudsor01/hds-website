@@ -3,22 +3,30 @@
  * Receives and processes analytics events from the client
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@supabase/supabase-js';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
+
+const logger = createServerLogger('analytics-api');
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
-import { env } from '@/env';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-
-const logger = createServerLogger('analytics-api');
 
 interface AnalyticsEvent {
   eventName: string;
@@ -41,6 +49,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const supabase = createServiceClient();
+
     // Parse request body
     const body = await request.json() as AnalyticsEvent;
     const { eventName, properties, timestamp, sessionId, userId } = body;
@@ -62,9 +72,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in Supabase if available
-    if (createServiceClient()) {
+    if (supabase) {
       try {
-        await createServiceClient().from('custom_events').insert({
+        await supabase.from('custom_events').insert({
           event_name: eventName,
           event_category: properties?.category as string || 'general',
           event_label: properties?.label as string || null,

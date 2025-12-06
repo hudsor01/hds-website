@@ -1,91 +1,99 @@
 /**
  * Authentication Wrapper for Admin Dashboard
- * Uses Supabase Auth for secure session-based authentication
+ * Uses Supabase Auth for session-based access control
  */
 
-'use client';
+'use client'
 
-import { useState, type ReactNode } from 'react';
-import { Lock } from 'lucide-react';
+import type { User } from '@supabase/supabase-js'
+import { Lock, Mail } from 'lucide-react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
+
+import { Button } from '@/components/ui/Button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { createClient } from '@/lib/supabase/client'
 
 interface AuthWrapperProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export function AuthWrapper({ children }: AuthWrapperProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const supabase = createClient();
+  const supabase = createClient()
 
   useEffect(() => {
-    // Check initial auth state
-    const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
+    let isMounted = true
 
-    checkAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Check for existing session during initialization
-    if (typeof window === 'undefined') {
-      return false;
+    const init = async () => {
+      const { data } = await supabase.auth.getUser()
+      if (!isMounted) {return}
+      setUser(data.user)
+      setLoading(false)
     }
 
-    const session = sessionStorage.getItem(SESSION_KEY);
-    if (session) {
-      try {
-        const sessionData = JSON.parse(session);
-        const now = Date.now();
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) {return}
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
-        // Session valid for 24 hours
-        if (sessionData.expires > now) {
-          return true;
-        } else {
-          sessionStorage.removeItem(SESSION_KEY);
-        }
-      } catch {
-        sessionStorage.removeItem(SESSION_KEY);
-      }
+    init()
+
+    return () => {
+      isMounted = false
+      authListener.subscription.unsubscribe()
     }
+  }, [supabase])
 
-    return false;
-  });
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsSubmitting(true);
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setIsSubmitting(true)
 
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
-      });
+      })
 
       if (signInError) {
-        setError(signInError.message);
-        setPassword('');
+        setError(signInError.message)
+        setPassword('')
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError('An unexpected error occurred')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setEmail('');
-    setPassword('');
-  };
+    await supabase.auth.signOut()
+    setEmail('')
+    setPassword('')
+  }
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
+        <p className="text-muted-foreground">Checking session…</p>
+      </div>
+    )
+  }
 
   if (!user) {
     return (
@@ -135,7 +143,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                 )}
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                  {isSubmitting ? 'Signing in…' : 'Sign In'}
                 </Button>
               </form>
 
@@ -146,20 +154,18 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
           </Card>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div>
       <div className="fixed right-4 top-4 z-modal flex items-center gap-3">
-        <span className="text-sm text-muted-foreground">
-          {user.email}
-        </span>
+        <span className="text-sm text-muted-foreground">{user.email}</span>
         <Button variant="secondary" onClick={handleLogout}>
           Logout
         </Button>
       </div>
       {children}
     </div>
-  );
+  )
 }

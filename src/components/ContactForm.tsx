@@ -1,10 +1,15 @@
 'use client'
 
 import { submitContactForm, type ContactFormState } from '@/app/actions/contact'
+import { Button } from '@/components/ui/Button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { getBudgetOptions, getContactTimeOptions, getServiceOptions, getTimelineOptions } from '@/lib/form-utils'
 import { logger } from '@/lib/logger'
 import { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
+import { CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 // Submit button with built-in pending state

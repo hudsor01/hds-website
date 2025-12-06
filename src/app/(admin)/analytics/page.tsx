@@ -11,24 +11,24 @@ import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
 import { logger } from '@/lib/logger';
 import {
-    Calendar,
-    Download,
-    Filter,
-    Mail,
-    Search,
-    Target,
-    TrendingUp,
-    Users,
-    X,
-} from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { useQueryState, parseAsString, parseAsStringEnum } from 'nuqs';
+  CALCULATOR_TYPES,
+  LEAD_QUALITIES,
+  TIME_RANGES,
+} from '@/lib/search-params';
+import type { AnalyticsOverview, Lead, TrendsData } from '@/types/admin-analytics';
 import {
-    TIME_RANGES,
-    LEAD_QUALITIES,
-    CALCULATOR_TYPES,
-} from '@/lib/analytics/search-params';
-import type { AnalyticsOverview, TrendsData, Lead } from '@/types/admin-analytics';
+  Calendar,
+  Download,
+  Filter,
+  Mail,
+  Search,
+  Target,
+  TrendingUp,
+  Users,
+  X,
+} from 'lucide-react';
+import { parseAsString, parseAsStringEnum, useQueryState } from 'nuqs';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function AnalyticsDashboard() {
   const [overview, setOverview] = useState<AnalyticsOverview | null>(null);

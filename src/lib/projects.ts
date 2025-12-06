@@ -3,10 +3,10 @@
  * Handles all project-related data fetching with Supabase
  */
 
-import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { cache } from 'react';
 import { logger } from './logger';
 
 type Project = Database['public']['Tables']['projects']['Row'];
@@ -14,9 +14,17 @@ type ProjectInsert = Database['public']['Tables']['projects']['Insert'];
 
 // Service role client ONLY for background operations with no user context
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !publicKey) {
+    logger.error('Supabase environment variables are not configured for projects service client');
+    return null;
+  }
+
   return createSupabaseClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    publicKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
@@ -210,6 +218,10 @@ export const getProjectCategories = cache(async (): Promise<string[]> => {
 async function incrementProjectViews(projectId: string): Promise<void> {
   try {
     const adminClient = createServiceClient();
+
+    if (!adminClient) {
+      return;
+    }
     const { data: project } = await adminClient
       .from('projects')
       .select('view_count')

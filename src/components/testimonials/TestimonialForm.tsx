@@ -5,10 +5,10 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Star, Send, CheckCircle2 } from 'lucide-react';
-import { SERVICE_TYPES } from '@/lib/testimonials/types';
 import { trackEvent } from '@/lib/analytics';
+import { SERVICE_TYPES } from '@/types/testimonials';
+import { CheckCircle2, Send, Star } from 'lucide-react';
+import { useState } from 'react';
 
 interface TestimonialFormProps {
   requestId?: string;

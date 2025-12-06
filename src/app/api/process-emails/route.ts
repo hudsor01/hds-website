@@ -1,44 +1,49 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { castError, createServerLogger } from "@/lib/logger";
 import {
-  processEmailsEndpoint,
   getEmailQueueStats,
+  processEmailsEndpoint,
 } from "@/lib/scheduled-emails";
-import { applySecurityHeaders } from "@/lib/security-headers";
-import { createServerLogger, castError } from "@/lib/logger";
 import { cronAuthHeaderSchema } from '@/lib/schemas';
+import { applySecurityHeaders } from "@/lib/security-headers";
+import { NextResponse, type NextRequest } from "next/server";
 
-// This endpoint would typically be called by a cron job or scheduled task
-// In production, you'd want to secure this endpoint with authentication
+function authenticateCronRequest(request: NextRequest, logger: ReturnType<typeof createServerLogger>) {
+  const authHeader = request.headers.get("authorization");
+  const expectedToken = process.env.CRON_SECRET;
+
+  if (!expectedToken) {
+    logger.error("CRON_SECRET environment variable is not set");
+    return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+  }
+
+  const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
+  if (!authValidation.success) {
+    logger.error('Invalid cron auth header format', {
+      errors: authValidation.error.issues,
+      providedAuth: authHeader ? 'Bearer ***' : 'none',
+    });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (authHeader !== `Bearer ${expectedToken}`) {
+    logger.warn('Unauthorized cron request');
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  return null;
+}
 
 export async function POST(request: NextRequest) {
   const logger = createServerLogger('process-emails-cron');
 
   try {
     logger.info('Processing emails cron job started');
-    // Validate authentication header
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET;
-
-    if (!expectedToken) {
-      logger.error("CRON_SECRET environment variable is not set");
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    const authError = authenticateCronRequest(request, logger);
+    if (authError) {
+      return applySecurityHeaders(authError);
     }
 
-    // Validate cron auth header format
-    const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
-    if (!authValidation.success) {
-      logger.error('Invalid cron auth header format', {
-        errors: authValidation.error.issues,
-        providedAuth: authHeader ? 'Bearer ***' : 'none',
-      });
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    logger.info("Processing scheduled emails", { authHeader: authHeader ? 'Bearer ***' : 'none' });
+    logger.info("Processing scheduled emails");
 
     const result = await processEmailsEndpoint();
 
@@ -71,27 +76,9 @@ export async function GET(request: NextRequest) {
 
   try {
     logger.info('Email stats requested');
-    // Validate authentication header
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET;
-
-    if (!expectedToken) {
-      logger.error("CRON_SECRET environment variable is not set");
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-    }
-
-    // Validate cron auth header format
-    const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
-    if (!authValidation.success) {
-      logger.error('Invalid cron auth header format', {
-        errors: authValidation.error.issues,
-        providedAuth: authHeader ? 'Bearer ***' : 'none',
-      });
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authError = authenticateCronRequest(request, logger);
+    if (authError) {
+      return applySecurityHeaders(authError);
     }
 
     const stats = getEmailQueueStats();

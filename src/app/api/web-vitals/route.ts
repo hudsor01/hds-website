@@ -3,21 +3,27 @@
  * Stores Core Web Vitals metrics for performance monitoring
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { createClient } from '@supabase/supabase-js';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import type { Database } from '@/types/database';
+import type { WebVitalsInsert } from '@/types/supabase-helpers';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 function createServiceClient() {
-  return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 }
-import type { WebVitalsInsert } from '@/types/supabase-helpers';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-import { z } from 'zod';
 
 const WebVitalSchema = z.object({
   name: z.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB']),
@@ -41,7 +47,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    if (!createServiceClient()) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -67,7 +75,7 @@ export async function POST(request: NextRequest) {
       session_id: null,
     };
 
-    const { error } = await createServiceClient()
+    const { error } = await supabase
       .from('web_vitals')
       .insert(webVitalData);
 

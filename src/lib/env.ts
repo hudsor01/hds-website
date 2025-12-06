@@ -5,8 +5,8 @@
  * configuration errors early. All env vars are type-safe and validated.
  */
 
-import { z } from 'zod'
 import { logger } from '@/lib/logger';
+import { z } from 'zod';
 
 // Define the schema for all environment variables
 const envSchema = z.object({
@@ -31,8 +31,8 @@ const envSchema = z.object({
 
   // Supabase (Optional)
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional().or(z.literal('')),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional().or(z.literal('')),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().optional().or(z.literal('')),
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().optional().or(z.literal('')),
+  SUPABASE_PUBLISHABLE_KEY: z.string().optional().or(z.literal('')),
 
   // Notifications (Optional)
   DISCORD_WEBHOOK_URL: z.string().url().optional().or(z.literal('')),
@@ -74,7 +74,7 @@ export const isServiceConfigured = {
     ga4: () => !!env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     posthog: () => !!env.NEXT_PUBLIC_POSTHOG_KEY,
   },
-  supabase: () => !!env.NEXT_PUBLIC_SUPABASE_URL && !!env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  supabase: () => !!env.NEXT_PUBLIC_SUPABASE_URL && !!env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   discord: () => !!env.DISCORD_WEBHOOK_URL,
 }
 

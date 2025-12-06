@@ -1,11 +1,24 @@
-import { logger } from '@/lib/logger'
-import { createClient } from '@supabase/supabase-js';
+import { env } from '@/env';
+import { logger } from '@/lib/logger';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { newsletterSchema } from '@/lib/schemas/contact';
+import { detectInjectionAttempt } from '@/lib/utils';
 import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse, type NextRequest } from 'next/server';
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
@@ -13,16 +26,11 @@ function createServiceClient() {
 function isSupabaseAdminConfigured(): boolean {
   return Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.SUPABASE_PUBLISHABLE_KEY &&
     process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'placeholder'
+    process.env.SUPABASE_PUBLISHABLE_KEY !== 'placeholder'
   );
 }
-import { detectInjectionAttempt } from '@/lib/utils'
-import { NextResponse, type NextRequest } from 'next/server'
-import { newsletterSchema } from '@/lib/schemas/contact'
-import { env } from '@/env'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -83,9 +91,9 @@ export async function POST(request: NextRequest) {
       firstName: body.firstName,
       source: body.source || 'newsletter-form'
     };
-    
+
     const validation = newsletterSchema.safeParse(parsedBody);
-    
+
     if (!validation.success) {
       const errors: Record<string, string[]> = {};
       validation.error.issues.forEach(issue => {
@@ -95,13 +103,13 @@ export async function POST(request: NextRequest) {
         }
         errors[key].push(issue.message);
       });
-      
+
       return NextResponse.json(
         { error: 'Validation failed', errors },
         { status: 400 }
       );
     }
-    
+
     const validatedData = validation.data;
 
     // Check for injection attempts
@@ -127,8 +135,10 @@ export async function POST(request: NextRequest) {
       user_agent: userAgent || undefined,
     };
 
+    const supabase = createServiceClient();
+
     // Check if Supabase admin is configured
-    if (!isSupabaseAdminConfigured() || !createServiceClient()) {
+    if (!isSupabaseAdminConfigured() || !supabase) {
       logger.warn('Supabase admin not configured, skipping newsletter subscription save');
       return NextResponse.json({
         message: 'Thank you for subscribing to our newsletter! (development mode)',
@@ -137,7 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save to leads table with newsletter source
-    const { error } = await createServiceClient()
+    const { error } = await supabase
       .from('leads')
       .insert([{
         email: subscriptionData.email,
@@ -224,13 +234,13 @@ export async function GET(request: NextRequest) {
   try {
     // Verify this is an admin request
     const authHeader = request.headers.get('authorization');
-    
+
     // Check for admin token (should match the one configured in env)
     if (!env.ADMIN_API_TOKEN) {
       logger.error('ADMIN_API_TOKEN not configured');
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
-    
+
     if (authHeader !== `Bearer ${env.ADMIN_API_TOKEN}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -258,7 +268,16 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const { data, error, count } = await createServiceClient()
+    const supabaseClient = createServiceClient();
+    if (!supabaseClient) {
+      logger.error('Failed to create Supabase client');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    const { data, error, count } = await supabaseClient
       .from('leads')
       .select('email, name, source, created_at', { count: 'exact' })
       .eq('source', 'newsletter-form') // Filter for newsletter signups only

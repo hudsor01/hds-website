@@ -4,15 +4,11 @@
  * Note: Types and constants are in ./testimonials/types.ts for client component compatibility
  */
 
-import { randomBytes } from 'crypto';
 import { createClient } from '@/lib/supabase/server';
-import type { TestimonialRequest, Testimonial, ServiceType } from './testimonials/types';
-// eslint-disable-next-line no-duplicate-imports
-import { SERVICE_TYPES } from './testimonials/types';
+import { randomBytes } from 'crypto';
+import type { ServiceType, Testimonial, TestimonialRequest } from '../types/testimonials';
 
-// Re-export types for backwards compatibility with server-side imports
-export type { TestimonialRequest, Testimonial, ServiceType };
-export { SERVICE_TYPES };
+export type { ServiceType, Testimonial, TestimonialRequest };
 
 /**
  * Generate a cryptographically secure unique token for testimonial requests

@@ -2,14 +2,12 @@
  * Resend Email Client Singleton
  * Provides safe, lazy initialization of Resend client with proper error handling
  *
- * Official docs: https://resend.com/docs/send-with-nextjs
- *
  * This pattern prevents runtime errors when RESEND_API_KEY is missing
  * and provides clear error messages when email sending is attempted
  */
 
-import { Resend } from 'resend';
 import { env } from '@/env';
+import { Resend } from 'resend';
 
 let resendInstance: Resend | null = null;
 let initializationError: string | null = null;

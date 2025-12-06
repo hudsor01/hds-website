@@ -4,32 +4,38 @@
  * Uses Supabase for persistent storage (no memory leaks)
  */
 
-import { getResendClient, isResendConfigured } from "@/lib/resend-client";
-import type {
-  EmailQueueStats,
-  EmailProcessResult,
-} from "@/types/utils";
 import { createServerLogger } from "@/lib/logger";
-import { createClient } from '@supabase/supabase-js';
+import { getResendClient, isResendConfigured } from "@/lib/resend-client";
+import {
+  cancelEmailSequenceParamsSchema,
+  resendEmailResponseSchema,
+  scheduleEmailParamsSchema,
+  type ScheduleEmailParams,
+} from '@/lib/schemas';
 import type { Database } from '@/types/database';
+import type {
+  EmailProcessResult,
+  EmailQueueStats,
+} from "@/types/utils";
+import { createClient } from '@supabase/supabase-js';
+import { getEmailSequences, processEmailTemplate } from "./email-utils";
+import { escapeHtml, sanitizeEmailHeader } from "./utils";
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !publicKey) {
+    emailLogger.error('Supabase environment variables are not configured for scheduled emails');
+    return null;
+  }
+
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    publicKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
-
-const supabaseAdmin = createServiceClient();
-import {
-  scheduleEmailParamsSchema,
-  cancelEmailSequenceParamsSchema,
-  resendEmailResponseSchema,
-  type ScheduleEmailParams,
-} from '@/lib/schemas';
-import { getEmailSequences, processEmailTemplate } from "./email-utils";
-import { escapeHtml, sanitizeEmailHeader } from "./utils";
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger();
@@ -65,7 +71,13 @@ export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> 
   }
 
   try {
-    const { data, error } = await supabaseAdmin
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return;
+    }
+
+    const { data, error } = await supabase
       .from('scheduled_emails')
       .insert({
         recipient_email: recipientEmail,
@@ -154,7 +166,13 @@ export async function processPendingEmails(): Promise<void> {
 
   try {
     // Fetch pending emails from Supabase
-    const { data: pendingEmails, error } = await supabaseAdmin
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return;
+    }
+
+    const { data: pendingEmails, error } = await supabase
       .from('scheduled_emails')
       .select('*')
       .eq('status', 'pending')
@@ -188,7 +206,7 @@ export async function processPendingEmails(): Promise<void> {
         });
 
         // Increment retry count
-        await supabaseAdmin
+        await supabase
           .from('scheduled_emails')
           .update({
             retry_count: scheduledEmail.retry_count + 1,
@@ -219,6 +237,12 @@ async function sendScheduledEmail(
     retry_count: number;
   }
 ): Promise<void> {
+  const supabase = createServiceClient();
+
+  if (!supabase) {
+    return;
+  }
+
   if (!isResendConfigured()) {
     const errorMsg = "Email service not configured";
     emailLogger.warn('Resend API not configured', {
@@ -228,7 +252,7 @@ async function sendScheduledEmail(
       hasApiKey: !!process.env.RESEND_API_KEY
     });
 
-    await supabaseAdmin
+    await supabase
       .from('scheduled_emails')
       .update({
         status: 'failed',
@@ -245,7 +269,7 @@ async function sendScheduledEmail(
   if (!sequence) {
     const errorMsg = `Email sequence not found: ${scheduledEmail.sequence_id}`;
 
-    await supabaseAdmin
+    await supabase
       .from('scheduled_emails')
       .update({
         status: 'failed',
@@ -340,7 +364,7 @@ async function sendScheduledEmail(
     }
 
     // Update status in Supabase
-    await supabaseAdmin
+    await supabase
       .from('scheduled_emails')
       .update({
         status: 'sent',
@@ -359,7 +383,7 @@ async function sendScheduledEmail(
     const errorMsg = error instanceof Error ? error.message : "Unknown error";
 
     // Update status in Supabase
-    await supabaseAdmin
+    await supabase
       .from('scheduled_emails')
       .update({
         status: scheduledEmail.retry_count >= 2 ? 'failed' : 'pending',
@@ -385,7 +409,18 @@ async function sendScheduledEmail(
  */
 export async function getEmailQueueStats(): Promise<EmailQueueStats> {
   try {
-    const { data, error } = await supabaseAdmin
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return {
+        pending: 0,
+        sent: 0,
+        failed: 0,
+        total: 0,
+      };
+    }
+
+    const { data, error } = await supabase
       .from('scheduled_emails')
       .select('status');
 
@@ -447,7 +482,13 @@ export async function cancelEmailSequence(
   }
 
   try {
-    let query = supabaseAdmin
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return;
+    }
+
+    let query = supabase
       .from('scheduled_emails')
       .delete()
       .eq('recipient_email', recipientEmail)
@@ -516,7 +557,13 @@ export async function processEmailsEndpoint(): Promise<EmailProcessResult> {
 // Export queue stats for backwards compatibility
 export async function getScheduledEmailsQueue() {
   try {
-    const { data, error } = await supabaseAdmin
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return [];
+    }
+
+    const { data, error } = await supabase
       .from('scheduled_emails')
       .select('*')
       .eq('status', 'pending')

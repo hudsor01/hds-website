@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * Unit tests for form components
@@ -9,8 +9,8 @@ import userEvent from '@testing-library/user-event'
 
 // Mock Supabase environment variables
 vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', 'https://test.supabase.co')
-vi.stubEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY', 'test-anon-key')
-vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'test-service-role-key')
+vi.stubEnv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'test-publishable-key')
+vi.stubEnv('SUPABASE_PUBLISHABLE_KEY', 'test-service-role-key')
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({

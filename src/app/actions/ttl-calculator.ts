@@ -1,16 +1,24 @@
 'use server';
 
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/types/database';
 import { logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
+import type { Database } from '@/types/database';
+import type { CalculationResults, VehicleInputs } from '@/types/ttl-types';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
-import type { VehicleInputs, CalculationResults } from '@/types/ttl-types';
 
 function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
   return createSupabaseClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    supabaseUrl,
+    serviceRoleKey,
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
@@ -32,7 +40,7 @@ interface TTLCalculationRecord {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ttlTable = (client: ReturnType<typeof createServiceClient>) => client.from('ttl_calculations' as any) as any;
+const ttlTable = (client: NonNullable<ReturnType<typeof createServiceClient>>) => client.from('ttl_calculations' as any) as any;
 
 
 
@@ -108,6 +116,12 @@ export async function saveCalculation(
   email?: string
 ): Promise<{ success: boolean; shareCode?: string; error?: string }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
     // Validate input
     const validation = saveCalculationSchema.safeParse({ inputs, results, name, email });
     if (!validation.success) {
@@ -121,7 +135,7 @@ export async function saveCalculation(
     const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
-      const { data: existing } = await ttlTable(createServiceClient())
+      const { data: existing } = await ttlTable(supabase)
         .select('share_code')
         .eq('share_code', shareCode)
         .single();
@@ -137,7 +151,7 @@ export async function saveCalculation(
     }
 
     // Insert into database
-    const { error: insertError } = await ttlTable(createServiceClient())
+    const { error: insertError } = await ttlTable(supabase)
       .insert({
         share_code: shareCode,
         inputs: inputs as unknown as Record<string, unknown>,
@@ -175,12 +189,18 @@ export async function loadCalculation(
   shareCode: string
 ): Promise<{ success: boolean; data?: { inputs: VehicleInputs; results: CalculationResults; name?: string }; error?: string }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
     if (!shareCode || shareCode.length < 6) {
       return { success: false, error: 'Invalid share code' };
     }
 
     // Fetch calculation
-    const { data, error: fetchError } = await ttlTable(createServiceClient())
+    const { data, error: fetchError } = await ttlTable(supabase)
       .select('inputs, results, name, view_count')
       .eq('share_code', shareCode)
       .single() as { data: TTLCalculationRecord | null; error: unknown };
@@ -191,7 +211,7 @@ export async function loadCalculation(
     }
 
     // Increment view count (fire-and-forget via service role)
-    ttlTable(createServiceClient())
+    ttlTable(supabase)
       .update({
         view_count: (data.view_count || 0) + 1,
         last_viewed_at: new Date().toISOString(),
@@ -222,6 +242,12 @@ export async function emailResults(
   email: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
     // Validate input
     const validation = emailResultsSchema.safeParse({ shareCode, email });
     if (!validation.success) {
@@ -229,7 +255,7 @@ export async function emailResults(
     }
 
     // Fetch calculation
-    const { data, error: fetchError } = await ttlTable(createServiceClient())
+    const { data, error: fetchError } = await ttlTable(supabase)
       .select('inputs, results, name')
       .eq('share_code', shareCode)
       .single() as { data: TTLCalculationRecord | null; error: unknown };
@@ -390,12 +416,23 @@ export async function getCalculatorAnalytics(): Promise<{
   recentCalculations: number;
 }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return {
+        totalCalculations: 0,
+        topCounties: [],
+        avgPurchasePrice: 0,
+        recentCalculations: 0,
+      };
+    }
+
     // Total calculations
-    const { count: totalCalculations } = await ttlTable(createServiceClient())
+    const { count: totalCalculations } = await ttlTable(supabase)
       .select('*', { count: 'exact', head: true });
 
     // Top counties
-    const { data: countyData } = await ttlTable(createServiceClient())
+    const { data: countyData } = await ttlTable(supabase)
       .select('county')
       .not('county', 'is', null) as { data: Array<{ county: string }> | null };
 
@@ -412,7 +449,7 @@ export async function getCalculatorAnalytics(): Promise<{
       .map(([county, count]) => ({ county, count }));
 
     // Average purchase price
-    const { data: priceData } = await ttlTable(createServiceClient())
+    const { data: priceData } = await ttlTable(supabase)
       .select('purchase_price')
       .not('purchase_price', 'is', null) as { data: Array<{ purchase_price: number }> | null };
 
@@ -424,7 +461,7 @@ export async function getCalculatorAnalytics(): Promise<{
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { count: recentCalculations } = await ttlTable(createServiceClient())
+    const { count: recentCalculations } = await ttlTable(supabase)
       .select('*', { count: 'exact', head: true })
       .gte('created_at', sevenDaysAgo.toISOString());
 

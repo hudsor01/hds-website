@@ -3,40 +3,52 @@
  * Processes database events and triggers for real-time updates
  */
 
-import { type NextRequest, NextResponse } from 'next/server'
-import { headers } from 'next/headers'
-import { createServerLogger } from '@/lib/logger'
-import { createClient } from '@supabase/supabase-js';
+import { createServerLogger } from '@/lib/logger';
+import {
+    authChangePayloadSchema,
+    databaseChangePayloadSchema,
+    eventDataSchema,
+    leadDataSchema,
+    storageChangePayloadSchema,
+    type AuthChangePayload,
+    type DatabaseChangePayload,
+    type StorageChangePayload,
+} from '@/lib/schemas';
 import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { headers } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
 
 function createServiceClient() {
-  return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
 }
 
 async function triggerWebhook(eventType: string, payload: unknown) {
   // Log webhook trigger and optionally notify external services
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = createServiceClient() as any;
+
+  if (!supabase) {
+    logger.error('Supabase client not available for webhook logging');
+    return;
+  }
+
   await supabase.from('webhook_logs').insert({
     event_type: eventType,
     payload: JSON.stringify(payload),
     triggered_at: new Date().toISOString(),
   });
 }
-import {
-  databaseChangePayloadSchema,
-  authChangePayloadSchema,
-  storageChangePayloadSchema,
-  leadDataSchema,
-  eventDataSchema,
-  type DatabaseChangePayload,
-  type AuthChangePayload,
-  type StorageChangePayload,
-} from '@/lib/schemas'
 
 const logger = createServerLogger('supabase-webhook')
 
