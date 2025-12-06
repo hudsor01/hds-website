@@ -1,8 +1,8 @@
-import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button'
-import { BackgroundPattern } from '@/components/BackgroundPattern';
+import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, BarChart3, Check, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Web Development Services | Hudson Digital Solutions',
@@ -94,7 +94,7 @@ const process: ProcessStep[] = [
     icon: Search,
   },
   {
-    step: "02", 
+    step: "02",
     title: "Strategy",
     description: "Develop a comprehensive technical strategy with clear timelines and success metrics.",
     icon: ClipboardList,
@@ -193,17 +193,17 @@ export default function ServicesPage() {
                       <Icon className="h-8 w-8 text-accent" />
                     </div>
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-text-inverted mb-heading group-hover:text-accent transition-colors">
                     {service.title}
                   </h3>
-                  
+
                   <div className="typography mb-content-block">
                     <p className="muted leading-relaxed">
                       {service.description}
                     </p>
                   </div>
-                  
+
                   <div className="space-y-3 mb-comfortable">
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
@@ -216,11 +216,11 @@ export default function ServicesPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="mb-content-block">
                     <p className="text-2xl font-bold text-primary-foreground">{service.pricing}</p>
                   </div>
-                  
+
                   <Link
                     href="/contact"
                     className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-background-20 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-primary-30 hover:border-accent transition-all duration-300"
@@ -310,18 +310,18 @@ export default function ServicesPage() {
         <div className="container-wide">
           <div className="relative z-sticky text-center glass-section p-12 md:p-16">
             <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
-              Ready to accelerate 
+              Ready to accelerate
               <span className="text-accent">
                 {" "}your growth?
               </span>
             </h2>
-            
+
             <div className="typography">
               <p className="large muted container-narrow mb-10">
                 Let&apos;s discuss your specific technical needs and create a custom solution that drives real results for your business.
               </p>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row flex-center gap-content">
               <Link
                 href="/contact"

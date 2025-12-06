@@ -3,11 +3,11 @@
  * Tailored for online retail businesses
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, ShoppingCart, TrendingUp, Smartphone, CreditCard, Zap, DollarSign } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, CreditCard, DollarSign, ShoppingCart, Smartphone, TrendingUp, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'E-commerce Development Solutions | Increase Sales 40%',

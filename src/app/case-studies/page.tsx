@@ -3,12 +3,12 @@
  * Displays portfolio of completed projects with video testimonials
  */
 
-import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import { Button } from '@/components/ui/Button';
-import Link from 'next/link';
-import { Clock, Users, ExternalLink, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { getCaseStudies } from '@/lib/case-studies';
+import { ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Case Studies | Real Results From Real Projects',

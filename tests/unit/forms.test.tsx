@@ -39,7 +39,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should render all form fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     // Check for all required fields using placeholders
@@ -49,7 +49,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should show required fields with proper validation', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     // Check that required fields have required attribute
@@ -58,7 +58,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should validate email format', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     const emailInput = screen.getByPlaceholderText(/email address/i)
@@ -69,7 +69,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should accept valid email input', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const user = userEvent.setup()
     render(<ContactForm />)
 
@@ -82,7 +82,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should have submit button', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     const submitButton = screen.getByRole('button', { name: /send message/i })
@@ -91,7 +91,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should have all form select fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     // Check for select fields (service, time, budget, timeline)
@@ -100,7 +100,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should render form with proper structure', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const { container } = render(<ContactForm />)
 
     // Form should exist
@@ -110,7 +110,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should have textarea for message', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const { container } = render(<ContactForm />)
 
     const textarea = container.querySelector('textarea')
@@ -119,7 +119,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should accept user input in form fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const user = userEvent.setup()
 
     render(<ContactForm />)
@@ -130,7 +130,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should have proper form classes', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const { container } = render(<ContactForm />)
 
     // Form should have glass-card styling
@@ -139,7 +139,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should have proper input classes', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     const nameInput = screen.getByPlaceholderText(/first name/i)
@@ -149,7 +149,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should indicate required fields visually', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     // Look for required fields
@@ -161,7 +161,7 @@ describe('ContactForm Component', () => {
   })
 
   it('should render form header', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     render(<ContactForm />)
 
     // Check for header text
@@ -208,7 +208,7 @@ describe('Form Validation Utilities', () => {
 
 describe('Form Field Components', () => {
   it('should render FloatingInput with proper attributes', async () => {
-    const { default: FloatingInput } = await import('@/components/FloatingInput')
+    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
     const mockOnChange = vi.fn()
 
     render(
@@ -246,7 +246,7 @@ describe('Form Field Components', () => {
   })
 
   it('should call onChange handlers when typing', async () => {
-    const { default: FloatingInput } = await import('@/components/FloatingInput')
+    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
     const user = userEvent.setup()
     const mockOnChange = vi.fn()
 

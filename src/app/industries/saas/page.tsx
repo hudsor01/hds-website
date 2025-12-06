@@ -3,11 +3,11 @@
  * Tailored for B2B SaaS companies
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Zap, TrendingUp, Users, BarChart3, Clock, Shield } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, BarChart3, Clock, Shield, TrendingUp, Users, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Technical Solutions for SaaS Companies | Ship 3x Faster',

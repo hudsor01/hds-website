@@ -3,13 +3,13 @@
  * Detailed view of a single case study with full story
  */
 
+import { Button } from '@/components/ui/button';
+import { getAllCaseStudySlugs, getCaseStudyBySlug } from '@/lib/case-studies';
+import { ArrowLeft, ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button'
-import { ArrowRight, ArrowLeft, ExternalLink, Clock, Users } from 'lucide-react';
-import { getCaseStudyBySlug, getAllCaseStudySlugs } from '@/lib/case-studies';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 // Generate static params for all case studies
 export async function generateStaticParams() {

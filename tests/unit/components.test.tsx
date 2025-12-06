@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import FloatingTextarea from '@/components/FloatingTextarea'
+import { GlassCard } from '@/components/glass-card'
+import FloatingInput from '@/components/InputPanel/FloatingInput'
+import { Button } from '@/components/ui/button'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import FloatingInput from '@/components/FloatingInput'
-import FloatingTextarea from '@/components/FloatingTextarea'
-import { Button } from '@/components/ui/Button'
-import { GlassCard } from '@/components/glass-card'
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * Unit tests for core UI components

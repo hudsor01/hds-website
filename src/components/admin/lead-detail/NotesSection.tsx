@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { Calendar, Mail, MessageSquare, Phone, Plus, TrendingUp } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { logger } from '@/lib/logger';
+import { Calendar, Mail, MessageSquare, Phone, Plus, TrendingUp } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Lead, Note } from './types';
 
 interface NotesSectionProps {

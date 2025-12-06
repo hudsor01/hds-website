@@ -1,8 +1,8 @@
 import { logger } from '@/lib/logger';
-import type { SavedCalculation, VehicleInputs } from '../../types/ttl-types'
-import { calculatePayment, calculateTTL } from './calculator'
-import { calculateLeaseComparison } from './lease'
-import { calculateTCO } from './tco'
+import type { CalculationResults, SavedCalculation, VehicleInputs } from '../../types/ttl-types';
+import { calculatePayment, calculateTTL } from './calculator';
+import { calculateLeaseComparison } from './lease';
+import { calculateTCO } from './tco';
 
 const STORAGE_KEY = 'texas-ttl-saved-calculations';
 const MAX_SAVED = 20;
@@ -22,7 +22,7 @@ export function getSavedCalculations(): SavedCalculation[] {
   }
 }
 
-export function saveCalculation(input: VehicleInputs, name?: string): string {
+export function saveCalculation(input: VehicleInputs, name?: string, results?: CalculationResults): string {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
     throw new Error('Cannot save calculations on server side');
@@ -31,17 +31,26 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
   try {
     const calculations = getSavedCalculations();
 
-    // Calculate all results
-    const ttlResults = calculateTTL(input);
-    const paymentResults = calculatePayment(
-      input.purchasePrice,
-      input.downPayment,
-      ttlResults.totalTTL,
-      input.interestRate,
-      input.loanTermMonths
-    );
-    const tcoResults = calculateTCO(input);
-    const leaseComparisonResults = calculateLeaseComparison(input);
+    // Calculate all results if not provided
+    const calculationResults = results || (() => {
+      const ttlResults = calculateTTL(input);
+      const paymentResults = calculatePayment(
+        input.purchasePrice,
+        input.downPayment,
+        ttlResults.totalTTL,
+        input.interestRate,
+        input.loanTermMonths
+      );
+      const tcoResults = calculateTCO(input);
+      const leaseComparisonResults = calculateLeaseComparison(input);
+
+      return {
+        ttlResults: ttlResults,
+        paymentResults: paymentResults,
+        tcoResults: tcoResults,
+        leaseComparisonResults: leaseComparisonResults
+      };
+    })();
 
     const id = `calc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     const calculation: SavedCalculation = {
@@ -49,12 +58,7 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
       name: name || `Vehicle - ${new Date().toLocaleDateString()}`,
       timestamp: Date.now(),
       inputs: input,
-      results: {
-        ttlResults: ttlResults,
-        paymentResults: paymentResults,
-        tcoResults: tcoResults,
-        leaseComparisonResults: leaseComparisonResults
-      }
+      results: calculationResults
     };
 
     // Add new calculation at the beginning
@@ -65,7 +69,7 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
     return id;
-  } catch (error) {
+ } catch (error) {
     logger.error('Error saving calculation:', error as Error);
     throw new Error('Failed to save calculation');
   }

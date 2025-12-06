@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { toast } from 'sonner'
-import type { PaystubData, PayPeriod, TaxData, FilingStatus } from '@/types/paystub'
-import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
-import { calculateFederalTax, calculateSocialSecurity, calculateMedicare } from '@/lib/paystub-calculator/tax-calculations'
-import { formatCurrency, formatDate } from '@/lib/utils'
-import { PayStub } from '@/components/PayStub'
 import { AnnualWageSummary } from '@/components/AnnualWageSummary'
-import { saveFormData, loadFormData, clearFormData } from '@/lib/paystub-calculator/storage'
-import { getNoIncomeTaxStates, getIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
-import type { FormErrors } from '@/types/common'
+import { PayStub } from '@/components/paystub/PayStub'
 import { logger } from '@/lib/logger'
+import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
+import { getIncomeTaxStates, getNoIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
+import { clearFormData, loadFormData, saveFormData } from '@/lib/paystub-calculator/storage'
+import { calculateFederalTax, calculateMedicare, calculateSocialSecurity } from '@/lib/paystub-calculator/tax-calculations'
 import { paystubFormSchema } from '@/lib/schemas'
+import { formatCurrency, formatDate } from '@/lib/utils'
+import type { FormErrors } from '@/types/common'
+import type { FilingStatus, PayPeriod, PaystubData, TaxData } from '@/types/paystub'
+import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function Home() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -344,7 +344,7 @@ export default function Home() {
   // Render individual pay stub
  if (documentType === 'paystub' && resultsVisible) {
     const selectedPayPeriod = paystubData.payPeriods[selectedPeriod - 1]
-    
+
     // Handle case where selectedPayPeriod is undefined
     if (!selectedPayPeriod) {
       return (
@@ -363,7 +363,7 @@ export default function Home() {
         </div>
       )
     }
-    
+
     const ytdTotals = {
       grossPay: paystubData.totals.grossPay * (selectedPeriod / 26),
       federalTax: paystubData.totals.federalTax * (selectedPeriod / 26),

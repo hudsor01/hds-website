@@ -1,8 +1,8 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { BarChart3, CheckCircle, Clock, DollarSign, Download, Settings, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Download, CheckCircle, BarChart3, Settings, TrendingUp, DollarSign, Clock } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/input";
 
 export const metadata: Metadata = {
   title: "Free Conversion Optimization Toolkit 2025 - Templates & Guides | Hudson Digital",
@@ -62,7 +62,7 @@ export default function ConversionToolkitPage() {
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
         </div>
-        
+
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">
           <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-success-muted bg-success-text/10 text-success-text font-semibold text-lg">
             <Settings className="w-5 h-5" />
@@ -223,7 +223,7 @@ export default function ConversionToolkitPage() {
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
             <Settings className="w-16 h-16 text-success-text mx-auto mb-content-block" />
-            
+
             <h2 className="text-3xl font-black text-primary-foreground mb-heading">
               Download Your Complete Toolkit
             </h2>

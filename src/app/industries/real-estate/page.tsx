@@ -3,11 +3,11 @@
  * Tailored for real estate companies and property management
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Home, MapPin, Search, Smartphone, TrendingUp, Users } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Real Estate Software Development | Lead Management & Property Listings',

@@ -1,73 +1,50 @@
 "use client";
 
-import { logger } from '@/lib/logger'
-import { useCallback, useEffect, useState } from 'react'
-import { calculatePayment, calculateTTL } from '../lib/ttl-calculator/calculator'
-import { calculateLeaseComparison } from '../lib/ttl-calculator/lease'
-import { clearAllCalculations, deleteCalculation, getSavedCalculations, saveCalculation } from '../lib/ttl-calculator/storage'
-import { calculateTCO } from '../lib/ttl-calculator/tco'
-import type { CalculationResults, SavedCalculation, VehicleInputs } from '../types/ttl-types'
-
-// Helper function to ensure VehicleInputs has all required fields with defaults
-function ensureVehicleInputsComplete(input: Partial<VehicleInputs>): VehicleInputs {
-  // Explicitly handle each field to ensure no undefined values in the final result
-  const result: VehicleInputs = {
-    purchasePrice: input.purchasePrice ?? 30000,
-    tradeInValue: input.tradeInValue ?? 0,
-    vehicleWeight: input.vehicleWeight ?? 4000,
-    isElectric: input.isElectric ?? false,
-    isNewVehicle: input.isNewVehicle ?? true,
-    county: typeof input.county === 'string' ? input.county : 'Dallas',
-    loanTermMonths: input.loanTermMonths ?? 60,
-    interestRate: input.interestRate ?? 6.5,
-    downPayment: input.downPayment ?? 5000,
-    paymentFrequency: typeof input.paymentFrequency === 'string' ? input.paymentFrequency : 'monthly',
-    zipCode: typeof input.zipCode === 'string' ? input.zipCode : '75201',
-    // Use static default date to avoid SSR/Client hydration mismatch
-    // Will be updated on client after mount if needed
-    loanStartDate: typeof input.loanStartDate === 'string' ? input.loanStartDate : '2024-01-01',
-    leaseMileage: input.leaseMileage ?? 12000,
-    leaseBuyout: input.leaseBuyout ?? 0,
-    residualValue: input.residualValue ?? 0,
-    moneyFactor: input.moneyFactor ?? 0,
-  };
-
-  return result;
-}
+import { logger } from '@/lib/logger';
+import { useCallback, useEffect, useState } from 'react';
+import type { SavedCalculation, VehicleInputs } from '../types/ttl-types';
+import { useCalculationState } from './use-calculation-state';
+import { useCalculationStorage } from './use-calculation-storage';
+import { useVehicleCalculations } from './use-vehicle-calculations';
 
 export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
-  const [vehicleInput, setVehicleInput] = useState<VehicleInputs>(() => {
-    return ensureVehicleInputsComplete(initialInput || {});
-  });
+  // Use the specialized hooks
+  const { calculate: performCalculation } = useVehicleCalculations();
+  const {
+    loadSavedCalculations,
+    saveCalculation,
+    deleteSavedCalculation,
+    clearAllSaved
+  } = useCalculationStorage();
+  const {
+    vehicleInput,
+    setVehicleInput,
+    calculationResults,
+    setCalculationResults,
+    isLoading,
+    setIsLoading,
+    error,
+    setError,
+    updateInput
+  } = useCalculationState(initialInput);
 
-  const [calculationResults, setCalculationResults] = useState<CalculationResults | null>(null);
-  const [savedCalculations, setSavedCalculations] = useState<SavedCalculation[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // Local state for saved calculations since the storage hook doesn't manage this
+  const [localSavedCalculations, setLocalSavedCalculations] = useState<SavedCalculation[]>([]);
 
-  const loadSavedCalculations = useCallback(() => {
+ const loadSavedCalculationsWithState = useCallback(() => {
     try {
-      const calculations = getSavedCalculations();
-      setSavedCalculations(calculations);
+      const calculations = loadSavedCalculations();
+      setLocalSavedCalculations(calculations);
     } catch (err) {
       setError('Failed to load saved calculations');
       logger.error('Error loading saved calculations:', err as Error);
     }
-  }, []);
+  }, [loadSavedCalculations, setError]);
 
   // Load saved calculations on mount
   useEffect(() => {
-    const loadCalculations = async () => {
-      try {
-        const calculations = getSavedCalculations();
-        setSavedCalculations(calculations);
-      } catch (err) {
-        setError('Failed to load saved calculations');
-        logger.error('Error loading saved calculations:', err as Error);
-      }
-    };
-    loadCalculations();
-  }, []);
+    loadSavedCalculationsWithState();
+ }, [loadSavedCalculationsWithState]);
 
   const calculate = useCallback(() => {
     try {
@@ -79,49 +56,21 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
         throw new Error('Purchase price is required');
       }
 
-      const ttlResults = calculateTTL(vehicleInput);
-      const paymentResults = calculatePayment(
-        vehicleInput.purchasePrice,
-        vehicleInput.downPayment || 0,
-        ttlResults.totalTTL,
-        vehicleInput.interestRate || 0,
-        vehicleInput.loanTermMonths || 60
-      );
-
-      // Calculate TCO
-      const tcoResults = calculateTCO(vehicleInput);
-
-      // Calculate lease comparison
-      const leaseComparisonResults = calculateLeaseComparison({
-        ...vehicleInput,
-        // Ensure required fields have defaults
-        loanStartDate: vehicleInput.loanStartDate ?? new Date().toISOString().split('T')[0],
-        leaseMileage: vehicleInput.leaseMileage || 12000,
-        leaseBuyout: vehicleInput.leaseBuyout || 0,
-        residualValue: vehicleInput.residualValue || 0,
-        moneyFactor: vehicleInput.moneyFactor || 0
-      });
-
-      setCalculationResults({
-        ttlResults: ttlResults,
-        paymentResults: paymentResults,
-        tcoResults: tcoResults,
-        leaseComparisonResults: leaseComparisonResults
-      });
-
+      const results = performCalculation(vehicleInput);
+      setCalculationResults(results);
       setIsLoading(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Calculation failed');
       setIsLoading(false);
       logger.error('Calculation error:', err as Error);
     }
-  }, [vehicleInput]);
+  }, [vehicleInput, performCalculation, setCalculationResults, setIsLoading, setError]);
 
   const saveCurrentCalculation = useCallback(async (name?: string): Promise<string> => {
     try {
       setIsLoading(true);
-      const id = saveCalculation(vehicleInput, name);
-      loadSavedCalculations();
+      const id = saveCalculation(vehicleInput, calculationResults ?? { ttlResults: undefined, paymentResults: undefined, tcoResults: undefined, leaseComparisonResults: undefined }, name);
+      loadSavedCalculationsWithState();
       setIsLoading(false);
       return id;
     } catch (err) {
@@ -129,11 +78,11 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       setIsLoading(false);
       throw err;
     }
-  }, [vehicleInput, loadSavedCalculations]);
+  }, [vehicleInput, calculationResults, saveCalculation, loadSavedCalculationsWithState, setIsLoading, setError]);
 
   const loadSavedCalculation = useCallback((id: string) => {
     try {
-      const calculation = getSavedCalculations().find(calc => calc.id === id);
+      const calculation = localSavedCalculations.find(calc => calc.id === id);
       if (calculation) {
         setVehicleInput(calculation.inputs);
         setCalculationResults(calculation.results);
@@ -142,48 +91,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
       setError('Failed to load saved calculation');
       logger.error('Error loading saved calculation:', err as Error);
     }
-  }, []);
-
-  const deleteSavedCalculation = useCallback((id: string) => {
-    try {
-      deleteCalculation(id);
-      loadSavedCalculations();
-    } catch (err) {
-      setError('Failed to delete calculation');
-      logger.error('Error deleting calculation:', err as Error);
-    }
-  }, [loadSavedCalculations]);
-
-  const clearAllSaved = useCallback(() => {
-    try {
-      clearAllCalculations();
-      setSavedCalculations([]);
-    } catch (err) {
-      setError('Failed to clear calculations');
-      logger.error('Error clearing calculations:', err as Error);
-    }
-  }, []);
-
-  const updateInput = useCallback((field: keyof VehicleInputs, value: unknown) => {
-    setVehicleInput(prev => {
-      // Ensure required string fields are not set to undefined or null
-      let safeValue = value;
-      if (field === 'loanStartDate' && (!value || typeof value !== 'string')) {
-        safeValue = new Date().toISOString().split('T')[0];
-      } else if (field === 'county' && (!value || typeof value !== 'string')) {
-        safeValue = 'Dallas';
-      } else if (field === 'paymentFrequency' && (!value || (value !== 'monthly' && value !== 'biweekly' && value !== 'weekly'))) {
-        safeValue = 'monthly';
-      } else if (field === 'zipCode' && (!value || typeof value !== 'string')) {
-        safeValue = '75201';
-      }
-
-      return {
-        ...prev,
-        [field]: safeValue
-      };
-    });
-  }, []);
+  }, [localSavedCalculations, setVehicleInput, setCalculationResults, setError]);
 
   // Auto-calculate when inputs change
   useEffect(() => {
@@ -196,7 +104,7 @@ export function useCalculations(initialInput?: Partial<VehicleInputs> | null) {
     vehicleInput,
     setVehicleInput,
     calculationResults,
-    savedCalculations,
+    savedCalculations: localSavedCalculations,
     isLoading,
     error,
     calculate,

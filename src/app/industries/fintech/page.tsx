@@ -3,11 +3,11 @@
  * Tailored for financial technology companies
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Lock, TrendingUp, CreditCard, AlertTriangle, Zap, DollarSign, Shield } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, ArrowRight, CreditCard, DollarSign, Lock, Shield, TrendingUp, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Secure FinTech Development | PCI DSS Compliant Solutions',

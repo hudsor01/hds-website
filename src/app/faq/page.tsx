@@ -5,12 +5,12 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/input';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import Link from 'next/link'
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ArrowRight, Search } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 const faqs = [
   {

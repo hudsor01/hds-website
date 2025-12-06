@@ -1,7 +1,7 @@
-import { Suspense } from 'react'
-import { Calculator } from '@/components/Calculator'
-import { CalculatorProvider } from '@/providers/CalculatorProvider'
-import './print.css'
+import { Calculator } from '@/components/calculators/Calculator';
+import { CalculatorProvider } from '@/providers/CalculatorProvider';
+import { Suspense } from 'react';
+import './print.css';
 
 function TTLCalculatorContent() {
   return (

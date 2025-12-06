@@ -1,18 +1,18 @@
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
 import {
-    ArrowRight,
-    BarChart3,
-    Calculator,
-    Clock,
-    Code2,
-    Rocket,
-    Settings,
-    TrendingUp,
-    Users,
-    Zap
-} from 'lucide-react'
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+  ArrowRight,
+  BarChart3,
+  Calculator,
+  Clock,
+  Code2,
+  Rocket,
+  Settings,
+  TrendingUp,
+  Users,
+  Zap
+} from 'lucide-react';
+import Link from 'next/link';
 
 export default function HomePage() {
   const solutions = [

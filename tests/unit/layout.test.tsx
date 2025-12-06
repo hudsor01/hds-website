@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * Unit tests for layout and utility components
@@ -18,7 +18,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should render children when there is no error', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     render(
       <ErrorBoundary>
@@ -30,7 +30,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should catch and display errors', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Test error')
@@ -52,7 +52,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should have a reset mechanism', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
       if (shouldThrow) {
@@ -79,7 +79,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should log errors to console or analytics', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
     const consoleSpy = vi.spyOn(console, 'error')
 
     const ThrowError = () => {

@@ -1,7 +1,7 @@
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 import { Clock } from 'lucide-react';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 // Load the contact form with client-side rendering
-const ContactForm = dynamic(() => import('@/components/ContactForm'), {
+const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
 

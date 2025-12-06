@@ -1,18 +1,18 @@
+import { BackgroundPattern } from "@/components/magicui/BackgroundPattern";
+import { SEO_CONFIG } from "@/utils/seo";
+import {
+    ArrowRight,
+    BarChart3,
+    Code2,
+    Eye,
+    Lightbulb,
+    Rocket,
+    Settings,
+    ShieldCheck,
+    Zap
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Rocket,
-  Eye,
-  Code2,
-  BarChart3,
-  Lightbulb,
-  Settings,
-  ShieldCheck,
-  Zap,
-  ArrowRight
-} from "lucide-react";
-import { BackgroundPattern } from "@/components/BackgroundPattern";
-import { SEO_CONFIG } from "@/utils/seo";
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
@@ -52,7 +52,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex-center overflow-hidden">
         <BackgroundPattern variant="hero" />
-        
+
         <div className="relative z-sticky container-wide text-center">
           <div className="space-y-sections">
             <div>
@@ -167,7 +167,7 @@ export default function AboutPage() {
               Forged through enterprise-level battles, refined through startup agility, and sharpened by revenue-focused engineering.
             </p>
           </div>
-          
+
           <div className="grid-4">
             <div className="group relative glass-card-light card-padding-sm card-hover-glow transition-smooth">
               <div className="flex-center gap-3 mb-heading">
@@ -303,7 +303,7 @@ export default function AboutPage() {
               The core beliefs that drive every line of code, every design decision, and every strategic recommendation.
             </p>
           </div>
-          
+
           <div className="grid-3">
             <div className="group relative glass-card-light card-padding card-hover-glow transition-smooth">
               <div className="flex items-center gap-content mb-content-block">
@@ -354,11 +354,11 @@ export default function AboutPage() {
                 {" "}your success?
               </span>
             </h2>
-            
+
             <p className="text-xl text-muted container-narrow mb-10 text-pretty">
               Stop settling for ordinary. Let&apos;s build something that doesn&apos;t just work—it dominates.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row flex-center gap-content">
               <Link
                 href="/contact"
@@ -368,7 +368,7 @@ export default function AboutPage() {
                 <span className="relative z-sticky">Start Your Project</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              
+
               <Link
                 href="/services"
                 className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border text-primary-foreground font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-smooth"

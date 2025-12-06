@@ -3,11 +3,11 @@
  * Tailored for healthcare providers and medical technology companies
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Shield, Heart, Users, Activity, Clock, Smartphone } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { Activity, ArrowRight, Clock, Heart, Shield, Smartphone, Users } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'HIPAA-Compliant Healthcare Software Development',

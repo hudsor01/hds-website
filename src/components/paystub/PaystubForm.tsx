@@ -1,10 +1,8 @@
 'use client'
 
-import { getIncomeTaxStates, getNoIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
-import type { FilingStatus, FormErrors, PaystubData } from '@/types/paystub'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/Button'
 import {
   Select,
   SelectContent,
@@ -14,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { getIncomeTaxStates, getNoIncomeTaxStates } from '@/lib/paystub-calculator/states-utils'
+import type { FilingStatus, FormErrors, PaystubData } from '@/types/paystub'
 
 interface PaystubFormProps {
   paystubData: PaystubData

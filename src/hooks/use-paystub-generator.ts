@@ -1,24 +1,24 @@
 "use client";
 
-import type { FormErrors } from "@/types/common"
+import type { FormErrors } from "@/types/common";
 import type {
   FilingStatus,
   PayPeriod,
   PaystubData,
   TaxData,
-} from "@/types/paystub"
-import { useCallback, useEffect, useState } from "react"
-import { toast } from "sonner"
+} from "@/types/paystub";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 // import { getPayDatesForYear } from "@/lib/paystub-utils";
-import { logger } from '@/lib/logger'
-import
-  {
-    calculateFederalTax,
-    calculateMedicare,
-    calculateSocialSecurity,
-  } from "@/lib/paystub-calculator/tax-calculations"
-import { clearFormData, loadFormData, saveFormData } from "@/lib/paystub-calculator/storage"
-import { validateForm } from "@/lib/validation"
+import { logger } from '@/lib/logger';
+import { clearFormData, loadFormData, saveFormData } from "@/lib/paystub-calculator/storage";
+import {
+  calculateFederalTax,
+  calculateMedicare,
+  calculateSocialSecurity,
+} from "@/lib/paystub-calculator/tax-calculations";
+import { FormValidator } from "@/lib/validation";
+import { z } from 'zod';
 
 export function usePaystubGenerator() {
   const [paystubData, setPaystubData] = useState<PaystubData>({
@@ -174,14 +174,22 @@ export function usePaystubGenerator() {
       }
     })
 
-    // Validate form
-    const validation = validateForm({
-      employeeName: paystubData.employeeName,
-      hourlyRate: paystubData.hourlyRate,
-      hoursPerPeriod: paystubData.hoursPerPeriod,
-    });
+    // Validate form using the FormValidator class
+    const validation = FormValidator.validateForm(
+      {
+        employeeName: paystubData.employeeName,
+        hourlyRate: paystubData.hourlyRate,
+        hoursPerPeriod: paystubData.hoursPerPeriod,
+      },
+      // We need to provide a schema for validation - using a simple schema for now
+      z.object({
+        employeeName: z.string().min(1, 'Employee name is required'),
+        hourlyRate: z.number().min(0.01, 'Hourly rate must be greater than 0'),
+        hoursPerPeriod: z.number().min(1, 'Hours per period must be at least 1'),
+      })
+    );
 
-    setFormErrors(validation.errors);
+    setFormErrors(validation.errors || {});
 
     if (!validation.isValid) {
       logger.warn('Paystub generation blocked by validation errors', {

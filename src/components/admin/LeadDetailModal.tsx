@@ -5,17 +5,17 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/Button';
 import { logger } from '@/lib/logger';
-import { LeadScoreCard } from './lead-detail/LeadScoreCard';
-import { ContactInfo } from './lead-detail/ContactInfo';
+import { Mail } from 'lucide-react';
+import { useState } from 'react';
 import { AttributionInfo } from './lead-detail/AttributionInfo';
 import { CalculatorDetails } from './lead-detail/CalculatorDetails';
-import { StatusTimeline } from './lead-detail/StatusTimeline';
+import { ContactInfo } from './lead-detail/ContactInfo';
+import { LeadScoreCard } from './lead-detail/LeadScoreCard';
 import { NotesSection } from './lead-detail/NotesSection';
+import { StatusTimeline } from './lead-detail/StatusTimeline';
 import type { Lead } from './lead-detail/types';
 
 interface LeadDetailModalProps {

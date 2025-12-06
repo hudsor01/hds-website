@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 /**
  * Unit tests for navigation components
@@ -26,7 +26,7 @@ describe('NavbarLight Component', () => {
 
   it('should render navigation links', async () => {
     // Dynamically import to avoid SSR issues
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     render(<NavbarLight />)
 
     // Check for main navigation links
@@ -34,7 +34,7 @@ describe('NavbarLight Component', () => {
   })
 
   it('should apply semantic nav-dark background', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const { container } = render(<NavbarLight />)
 
     const nav = container.querySelector('nav')
@@ -42,7 +42,7 @@ describe('NavbarLight Component', () => {
   })
 
   it('should show company logo/name', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     render(<NavbarLight />)
 
     // Look for company name or logo
@@ -51,7 +51,7 @@ describe('NavbarLight Component', () => {
   })
 
   it('should highlight active navigation item', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     render(<NavbarLight />)
 
     // Active link should have specific styling
@@ -60,7 +60,7 @@ describe('NavbarLight Component', () => {
   })
 
   it('should be responsive on mobile', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const { container } = render(<NavbarLight />)
 
     // Should have mobile menu button or responsive classes
@@ -69,7 +69,7 @@ describe('NavbarLight Component', () => {
   })
 
   it('should apply focus-ring on keyboard navigation', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const user = userEvent.setup()
     render(<NavbarLight />)
 
@@ -187,7 +187,7 @@ describe('Navigation Accessibility', () => {
   })
 
   it('should have proper heading hierarchy', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const { container } = render(<NavbarLight />)
 
     // Navigation should not have h1 elements
@@ -213,7 +213,7 @@ describe('Navigation Accessibility', () => {
 
 describe('Navigation Performance', () => {
   it('should not cause layout shifts', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const { container } = render(<NavbarLight />)
 
     const nav = container.querySelector('nav')
@@ -223,7 +223,7 @@ describe('Navigation Performance', () => {
   })
 
   it('should use semantic HTML elements', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     const { container } = render(<NavbarLight />)
 
     // Should use <nav> element
@@ -232,7 +232,7 @@ describe('Navigation Performance', () => {
   })
 
   it('should use proper link elements for navigation', async () => {
-    const { default: NavbarLight } = await import('@/components/layout/NavbarLight')
+    const { default: NavbarLight } = await import('@/components/layout/Navbar')
     render(<NavbarLight />)
 
     const links = screen.getAllByRole('link')

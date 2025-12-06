@@ -9,7 +9,7 @@ import type { User } from '@supabase/supabase-js'
 import { Lock, Mail } from 'lucide-react'
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
