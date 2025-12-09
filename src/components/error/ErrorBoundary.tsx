@@ -80,11 +80,11 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
         <div className="glass-card card-padding-lg border border-danger/20">
           <AlertTriangle className="w-16 h-16 text-danger mx-auto mb-content-block" />
 
-          <h2 className="text-2xl font-bold text-text-inverted mb-heading">
+          <h2 className="text-2xl font-bold text-foreground mb-heading">
             Oops! Something went wrong
           </h2>
 
-          <p className="text-text-secondary mb-content-block">
+          <p className="text-secondary-foreground mb-content-block">
             We&apos;re sorry for the inconvenience. Please try refreshing the page or contact us if the problem persists.
           </p>
 
@@ -100,12 +100,12 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                   {copied ? (
                     <Check className="w-4 h-4 text-success" />
                   ) : (
-                    <Clipboard className="w-4 h-4 text-text-muted" />
+                    <Clipboard className="w-4 h-4 text-muted-foreground" />
                   )}
                 </button>
               </summary>
               <div className="mt-3">
-                <pre className="text-xs text-text-secondary overflow-auto scrollbar-hide whitespace-pre-wrap">
+                <pre className="text-xs text-secondary-foreground overflow-auto scrollbar-hide whitespace-pre-wrap">
                   {error.message}
                   {'\n'}
                   {error.stack}
@@ -149,7 +149,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
             </button>
           </div>
 
-          <p className="text-sm text-text-muted mt-content-block">
+          <p className="text-sm text-muted-foreground mt-content-block">
             Need help? Contact us at{' '}
             <a
               href="mailto:hello@hudsondigitalsolutions.com"

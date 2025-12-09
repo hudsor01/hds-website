@@ -54,7 +54,7 @@ export default function HomePage() {
             <div className="lg:pr-8">
               <div className="space-y-sections">
                 <div>
-                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-comfortable text-balance">
+                  <h1 className="text-responsive-3xl font-black text-foreground leading-tight mb-comfortable text-balance">
                     <span className="block mb-subheading">Stop Losing Revenue to</span>
                     <span className="block text-accent">
                       Technical Bottlenecks
@@ -155,7 +155,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block text-balance">
+            <h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
               How We Solve Your Biggest Problems
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -174,7 +174,7 @@ export default function HomePage() {
                     <div className="p-3 rounded-xl bg-background-20 border border-primary/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-accent" />
                     </div>
-                    <h3 className="text-xl font-bold text-text-inverted group-hover:text-accent transition-smooth">
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">
                       {solution.title}
                     </h3>
                   </div>
@@ -209,7 +209,7 @@ export default function HomePage() {
 
         <div className="container-wide relative">
           <div className="text-center mb-24">
-            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block text-balance">
+            <h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
               <span className="text-accent relative inline-block">
                 Proven Impact
                 <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
@@ -235,14 +235,14 @@ export default function HomePage() {
 
                   {/* Metric with enhanced styling */}
                   <div className="relative mb-heading">
-                    <div className="text-4xl lg:text-5xl font-black text-primary-foreground mb-subheading group-hover:text-accent transition-all duration-300 font-mono">
+                    <div className="text-4xl lg:text-5xl font-black text-foreground mb-subheading group-hover:text-accent transition-all duration-300 font-mono">
                       {result.metric}
                     </div>
                     <div className="absolute -inset-4 bg-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-sticky"></div>
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-primary-foreground transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-foreground transition-colors duration-300">
                     {result.label}
                   </div>
 
@@ -267,7 +267,7 @@ export default function HomePage() {
 
           {/* Bottom accent section */}
           <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
-            <p className="text-text-muted text-sm font-medium">
+            <p className="text-muted-foreground text-sm font-medium">
               Join <span className="text-accent font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
             </p>
           </div>
@@ -278,7 +278,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6 bg-background">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block text-balance">
+            <h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
               <span className="text-accent relative inline-block">
                 Free Business Tools
                 <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
@@ -302,24 +302,24 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-lg bg-primary/80/10 flex items-center justify-center mb-heading group-hover:bg-primary/80/20 transition-colors">
                   <TrendingUp className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
+                <h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
                   ROI Calculator
                 </h3>
-                <p className="text-text-muted text-sm mb-heading">
+                <p className="text-muted-foreground text-sm mb-heading">
                   See how much revenue you&apos;re leaving on the table with poor conversion rates
                 </p>
               </div>
 
               <ul className="space-y-tight mb-content-block">
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Calculate potential revenue increase
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Understand conversion impact
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Make data-driven decisions
                 </li>
@@ -344,24 +344,24 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
                   <Calculator className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
+                <h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
                   Cost Estimator
                 </h3>
-                <p className="text-text-muted text-sm mb-heading">
+                <p className="text-muted-foreground text-sm mb-heading">
                   Get instant pricing for your website project based on features and complexity
                 </p>
               </div>
 
               <ul className="space-y-tight mb-content-block">
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Transparent pricing breakdown
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Timeline estimates included
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Feature-based pricing
                 </li>
@@ -386,24 +386,24 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
                   <Zap className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-bold text-text-inverted mb-subheading group-hover:text-accent transition-colors">
+                <h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
                   Performance Analyzer
                 </h3>
-                <p className="text-text-muted text-sm mb-heading">
+                <p className="text-muted-foreground text-sm mb-heading">
                   Discover how much revenue slow performance is costing you every month
                 </p>
               </div>
 
               <ul className="space-y-tight mb-content-block">
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Real PageSpeed analysis
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Revenue impact calculation
                 </li>
-                <li className="flex items-center gap-tight text-sm text-text-secondary">
+                <li className="flex items-center gap-tight text-sm text-secondary-foreground">
                   <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
                   Core Web Vitals insights
                 </li>
@@ -451,7 +451,7 @@ export default function HomePage() {
               <Rocket className="w-10 h-10 text-accent" />
             </div>
 
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block max-w-4xl mx-auto text-balance">
+            <h2 className="text-responsive-2xl font-black text-foreground mb-content-block max-w-4xl mx-auto text-balance">
               Your competitors ship faster.
               <span className="block text-accent mt-4">
                 Why don&apos;t you?

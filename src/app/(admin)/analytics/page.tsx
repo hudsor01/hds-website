@@ -154,7 +154,7 @@ export default function AnalyticsDashboard() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-          <p className="mt-4 text-text-secondary dark:text-text-secondary">Loading analytics...</p>
+          <p className="mt-4 text-secondary-foreground dark:text-secondary-foreground">Loading analytics...</p>
         </div>
       </div>
     );
@@ -187,10 +187,10 @@ export default function AnalyticsDashboard() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-text-primary dark:text-text-inverted">
+              <h1 className="text-3xl font-bold text-foreground dark:text-foreground">
                 Analytics Dashboard
               </h1>
-              <p className="mt-1 text-sm text-text-secondary dark:text-text-secondary">
+              <p className="mt-1 text-sm text-secondary-foreground dark:text-secondary-foreground">
                 Calculator leads, attribution, and email performance
               </p>
             </div>
@@ -198,11 +198,11 @@ export default function AnalyticsDashboard() {
             {/* Time Range Selector and Export */}
             <div className="flex items-center gap-content">
               <div className="flex items-center gap-tight">
-                <Calendar className="h-5 w-5 text-text-muted" />
+                <Calendar className="h-5 w-5 text-muted-foreground" />
                 <select
                   value={timeRange}
                   onChange={(e) => void setTimeRange(e.target.value as typeof timeRange)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-foreground"
                 >
                   <option value="7">Last 7 days</option>
                   <option value="30">Last 30 days</option>
@@ -213,7 +213,7 @@ export default function AnalyticsDashboard() {
 
               <button
                 onClick={handleExport}
-                className="inline-flex items-center gap-tight rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+                className="inline-flex items-center gap-tight rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
               >
                 <Download className="h-4 w-4" />
                 Export CSV
@@ -229,18 +229,18 @@ export default function AnalyticsDashboard() {
           <div className="flex flex-col gap-content sm:flex-row sm:items-center sm:justify-between">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" />
+              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search by email, name, or company..."
                 value={searchQuery}
                 onChange={(e) => void setSearchQuery(e.target.value)}
-                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted dark:placeholder-text-muted"
+                className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-foreground dark:placeholder-text-muted"
               />
               {searchQuery && (
                 <button
                   onClick={() => void setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary dark:hover:text-text-secondary"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary-foreground dark:hover:text-secondary-foreground"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -253,7 +253,7 @@ export default function AnalyticsDashboard() {
               <select
                 value={calculatorFilter}
                 onChange={(e) => void setCalculatorFilter(e.target.value as typeof calculatorFilter)}
-                className="rounded-md border-border py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border dark:bg-muted dark:text-primary-foreground"
+                className="rounded-md border-border py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border dark:bg-muted dark:text-foreground"
               >
                 <option value="all">All Calculators</option>
                 <option value="roi-calculator">ROI Calculator</option>
@@ -264,7 +264,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Results Count */}
-            <div className="text-sm text-text-secondary dark:text-text-secondary">
+            <div className="text-sm text-secondary-foreground dark:text-secondary-foreground">
               Showing {leads.length} of {allLeads.length} leads
             </div>
           </div>
@@ -324,7 +324,7 @@ export default function AnalyticsDashboard() {
         {/* Trend Charts */}
         {trends && (
           <div className="mb-comfortable space-y-comfortable">
-            <h2 className="text-xl font-semibold text-text-primary dark:text-text-inverted">
+            <h2 className="text-xl font-semibold text-foreground dark:text-foreground">
               Trends Over Time
             </h2>
 
@@ -375,17 +375,17 @@ export default function AnalyticsDashboard() {
         <div className="rounded-lg border border-border bg-card dark:border-border dark:bg-muted">
           <div className="border-b border-border card-padding dark:border-border">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-text-primary dark:text-text-inverted">
+              <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
                 Recent Leads
               </h3>
 
               {/* Quality Filter */}
               <div className="flex items-center gap-tight">
-                <Filter className="h-5 w-5 text-text-muted" />
+                <Filter className="h-5 w-5 text-muted-foreground" />
                 <select
                   value={qualityFilter}
                   onChange={(e) => void setQualityFilter(e.target.value as typeof qualityFilter)}
-                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-text-inverted"
+                  className="rounded-md border-border-primary py-2 pl-3 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-foreground"
                 >
                   <option value="all">All Leads</option>
                   <option value="hot">Hot Leads Only</option>
@@ -400,22 +400,22 @@ export default function AnalyticsDashboard() {
             <table className="min-w-full divide-y divide-border dark:divide-border">
               <thead className="bg-muted dark:bg-background">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Lead
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Calculator
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Score
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Source
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary dark:text-text-secondary">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-secondary-foreground dark:text-secondary-foreground">
                     Date
                   </th>
                 </tr>
@@ -428,27 +428,27 @@ export default function AnalyticsDashboard() {
                     className="cursor-pointer hover:bg-muted dark:hover:bg-muted transition-colors">
                     <td className="whitespace-nowrap px-6 py-4">
                       <div>
-                        <div className="font-medium text-text-primary dark:text-text-inverted">
+                        <div className="font-medium text-foreground dark:text-foreground">
                           {lead.name || lead.email}
                         </div>
                         {lead.name && (
-                          <div className="text-sm text-text-secondary dark:text-text-secondary">
+                          <div className="text-sm text-secondary-foreground dark:text-secondary-foreground">
                             {lead.email}
                           </div>
                         )}
                         {lead.company && (
-                          <div className="text-sm text-text-secondary dark:text-text-secondary">
+                          <div className="text-sm text-secondary-foreground dark:text-secondary-foreground">
                             {lead.company}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-text-primary dark:text-text-secondary">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground dark:text-secondary-foreground">
                       {lead.calculator_type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center gap-tight">
-                        <span className="text-sm font-medium text-text-primary dark:text-text-inverted">
+                        <span className="text-sm font-medium text-foreground dark:text-foreground">
                           {lead.lead_score}
                         </span>
                         <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
@@ -456,16 +456,16 @@ export default function AnalyticsDashboard() {
                             ? 'bg-danger/10 text-danger dark:bg-danger/90 dark:text-danger'
                             : lead.lead_quality === 'warm'
                             ? 'bg-warning/10 text-warning dark:bg-warning/90 dark:text-warning'
-                            : 'bg-border-primary/10 text-text-primary dark:bg-bg-tertiary-dark dark:text-text-secondary'
+                            : 'bg-border-primary/10 text-foreground dark:bg-bg-tertiary-dark dark:text-secondary-foreground'
                         }`}>
                           {lead.lead_quality}
                         </span>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-text-secondary dark:text-text-secondary">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-foreground dark:text-secondary-foreground">
                       {lead.attribution?.source || 'direct'}
                       {lead.attribution?.campaign && (
-                        <div className="text-xs text-text-muted">
+                        <div className="text-xs text-muted-foreground">
                           {lead.attribution.campaign}
                         </div>
                       )}
@@ -483,13 +483,13 @@ export default function AnalyticsDashboard() {
                           </span>
                         )}
                         {!lead.contacted && !lead.converted && (
-                          <span className="inline-flex rounded-full bg-border-primary/10 px-2 py-1 text-xs font-semibold text-text-primary dark:bg-bg-tertiary-dark dark:text-text-secondary">
+                          <span className="inline-flex rounded-full bg-border-primary/10 px-2 py-1 text-xs font-semibold text-foreground dark:bg-bg-tertiary-dark dark:text-secondary-foreground">
                             New
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-text-secondary dark:text-text-secondary">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-foreground dark:text-secondary-foreground">
                       {new Date(lead.created_at).toLocaleDateString()}
                     </td>
                   </tr>
@@ -499,7 +499,7 @@ export default function AnalyticsDashboard() {
 
             {leads.length === 0 && (
               <div className="py-12 text-center">
-                <p className="text-sm text-text-secondary dark:text-text-secondary">
+                <p className="text-sm text-secondary-foreground dark:text-secondary-foreground">
                   No leads found matching the current filters
                 </p>
               </div>

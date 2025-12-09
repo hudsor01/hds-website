@@ -36,7 +36,7 @@ export default function FloatingInput({
   // Simplify nested ternary for label color
   const getLabelColor = () => {
     if (isFocused && shouldFloat) {return 'text-accent'}
-    if (shouldFloat) {return 'text-text-secondary'}
+    if (shouldFloat) {return 'text-secondary-foreground'}
     return ''
   }
 
@@ -60,7 +60,7 @@ export default function FloatingInput({
         className={`
           peer w-full px-4 pt-6 pb-2
           bg-muted/50 border rounded-lg
-          text-primary-foreground placeholder-transparent
+          text-foreground placeholder-transparent
           transition-all duration-150 ease-in-out
           ${disabled
             ? 'border-border cursor-not-allowed opacity-50'
@@ -79,7 +79,7 @@ export default function FloatingInput({
           absolute left-4 transition-all duration-150 ease-in-out pointer-events-none
           ${shouldFloat 
             ? 'top-2 text-xs text-accent'
-            : 'top-1/2 -translate-y-1/2 text-base text-text-muted'
+            : 'top-1/2 -translate-y-1/2 text-base text-muted-foreground'
           }
           ${getLabelColor()}
         `}

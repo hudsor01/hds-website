@@ -25,7 +25,7 @@ export function CTASection({
       <div className="container-wide">
         <div className="glass-section p-12 md:p-16 text-center">
           {typeof title === 'string' ? (
-            <h2 className="text-clamp-xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-clamp-xl font-black text-foreground mb-content-block">
               {title}
             </h2>
           ) : (
@@ -43,7 +43,7 @@ export function CTASection({
               const isPrimary = button.variant !== 'secondary';
               const buttonClass = isPrimary
                 ? 'group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-muted-hover rounded-lg'
-                : 'inline-flex-center px-8 py-4 text-base font-semibold text-primary-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-all duration-150';
+                : 'inline-flex-center px-8 py-4 text-base font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-all duration-150';
 
               return (
                 <Link key={index} href={button.href} className={buttonClass}>

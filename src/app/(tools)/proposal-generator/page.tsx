@@ -642,7 +642,7 @@ export default function ProposalGeneratorPage() {
             <PDFDownloadLink
               document={<ProposalDocument data={{ ...proposalData, total: computedTotal }} />}
               fileName={getFileName()}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('proposal_downloaded', {
                   project_name: proposalData.projectName,
@@ -675,13 +675,13 @@ export default function ProposalGeneratorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
           Proposal Tips
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Scope
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -690,7 +690,7 @@ export default function ProposalGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Value-Based Pricing
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -699,7 +699,7 @@ export default function ProposalGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Realistic Timeline
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -708,7 +708,7 @@ export default function ProposalGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Expiration Date
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

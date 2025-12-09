@@ -75,7 +75,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
       <div className="container-wide">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-responsive-lg font-bold text-primary-foreground mb-heading">
+          <h2 className="text-responsive-lg font-bold text-foreground mb-heading">
             What Our Clients Say
           </h2>
           <p className="text-muted-foreground text-lg container-narrow">
@@ -124,7 +124,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
 
                     {/* Author Info */}
                     <div className="mt-auto">
-                      <div className="font-semibold text-primary-foreground text-sm">{testimonial.name}</div>
+                      <div className="font-semibold text-foreground text-sm">{testimonial.name}</div>
                       <div className="text-muted-foreground text-xs">
                         {testimonial.role} at {testimonial.company}
                       </div>

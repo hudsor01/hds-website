@@ -57,7 +57,7 @@ export function NewsletterSignup({
         </div>
 
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+          <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
             {title}
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">

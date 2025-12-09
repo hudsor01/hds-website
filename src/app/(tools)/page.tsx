@@ -72,7 +72,7 @@ export default function ToolsPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-section sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-heading text-4xl font-bold tracking-tight text-foreground dark:text-primary-foreground sm:text-5xl">
+          <h1 className="mb-heading text-4xl font-bold tracking-tight text-foreground dark:text-foreground sm:text-5xl">
             Free Business Tools
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
@@ -97,7 +97,7 @@ export default function ToolsPage() {
                 </div>
 
                 {/* Content */}
-                <h3 className="mb-subheading text-xl font-semibold text-foreground dark:text-primary-foreground">
+                <h3 className="mb-subheading text-xl font-semibold text-foreground dark:text-foreground">
                   {tool.title}
                 </h3>
 
@@ -120,7 +120,7 @@ export default function ToolsPage() {
                 {/* CTA */}
                 <Link
                   href={tool.href}
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
                 >
                   {tool.cta}
                   <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +137,7 @@ export default function ToolsPage() {
       <section className="px-4 py-section-sm sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="rounded-2xl bg-primary/10 card-padding-lg text-center shadow-xl sm:p-12">
-            <h2 className="mb-heading text-3xl font-bold text-primary-foreground">
+            <h2 className="mb-heading text-3xl font-bold text-foreground">
               Ready to Take Action?
             </h2>
               <p className="mb-comfortable text-lg text-accent/30">
@@ -152,7 +152,7 @@ export default function ToolsPage() {
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-card/10"
+                className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-foreground hover:bg-card/10"
               >
                 View Services
               </Link>

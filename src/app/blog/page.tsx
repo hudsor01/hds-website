@@ -52,7 +52,7 @@ export default async function BlogPage() {
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
-          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading text-balance">
+          <h1 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
             Business <span className="text-accent">Strategy</span> Blog
           </h1>
           <p className="text-subheading text-muted container-narrow text-pretty">
@@ -66,7 +66,7 @@ export default async function BlogPage() {
         <section className="section-spacing bg-primary">
           <div className="container-wide">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-black text-primary-foreground mb-heading text-balance">Featured Articles</h2>
+              <h2 className="text-3xl font-black text-foreground mb-heading text-balance">Featured Articles</h2>
               <p className="text-muted text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
@@ -86,7 +86,7 @@ export default async function BlogPage() {
             {/* Main Content */}
             <div className="flex-1">
               <div className="text-center lg:text-left mb-content-block">
-                <h2 className="text-section-title font-black text-primary-foreground mb-subheading text-balance">All Articles</h2>
+                <h2 className="text-section-title font-black text-foreground mb-subheading text-balance">All Articles</h2>
                 <p className="text-muted text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
@@ -107,7 +107,7 @@ export default async function BlogPage() {
             <aside className="w-full lg:w-80 space-y-sections">
               {/* Newsletter Signup */}
               <div className="glass-card rounded-xl card-padding">
-                <h3 className="text-xl font-bold text-primary-foreground mb-heading text-balance">Stay Updated</h3>
+                <h3 className="text-xl font-bold text-foreground mb-heading text-balance">Stay Updated</h3>
                 <p className="text-muted mb-heading text-pretty">Get strategic insights delivered to your inbox.</p>
                 <Link
                   href="/contact"
@@ -123,7 +123,7 @@ export default async function BlogPage() {
 
               {/* CTA */}
               <div className="glass-card rounded-xl card-padding-sm text-center">
-                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
+                <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
                 <p className="text-muted mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"

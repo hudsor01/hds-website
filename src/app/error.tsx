@@ -50,7 +50,7 @@ export default function Error({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-foreground dark:text-primary-foreground mb-subheading">
+          <h1 className="text-2xl font-bold text-foreground dark:text-foreground mb-subheading">
             Something went wrong
           </h1>
           <p className="text-muted-foreground dark:text-muted-foreground mb-content-block">
@@ -72,7 +72,7 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="px-6 py-3 bg-secondary dark:bg-muted text-foreground dark:text-primary-foreground rounded-lg hover:bg-muted dark:hover:bg-muted-foreground transition-colors"
+            className="px-6 py-3 bg-secondary dark:bg-muted text-foreground dark:text-foreground rounded-lg hover:bg-muted dark:hover:bg-muted-foreground transition-colors"
           >
             Go home
           </Link>
