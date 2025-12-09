@@ -124,7 +124,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Title */}
-            <h1 className="text-clamp-xl font-black text-primary-foreground mb-content-block text-balance">
+            <h1 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
               {post.title}
             </h1>
 
@@ -203,7 +203,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <section className="py-section-sm bg-primary">
         <div className="container-narrow">
           <div className="glass-card rounded-xl card-padding-lg text-center">
-            <h2 className="text-3xl font-black text-primary-foreground mb-heading text-balance">
+            <h2 className="text-3xl font-black text-foreground mb-heading text-balance">
               Ready to Build Your Competitive Advantage?
             </h2>
             <p className="text-xl text-muted mb-comfortable text-pretty">

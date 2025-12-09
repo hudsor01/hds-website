@@ -73,7 +73,7 @@ export default async function TagPage({ params }: TagPageProps) {
 
         <div className="relative container-wide text-center">
           <span className="inline-block text-accent font-medium mb-heading">Tag</span>
-          <h1 className="text-4xl md:text-5xl font-black text-primary-foreground mb-heading">
+          <h1 className="text-4xl md:text-5xl font-black text-foreground mb-heading">
             {tag.name}
           </h1>
           {tag.description && (

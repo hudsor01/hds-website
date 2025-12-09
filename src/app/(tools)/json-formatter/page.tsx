@@ -214,7 +214,7 @@ export default function JsonFormatterPage() {
           <button
             onClick={formatJson}
             disabled={!inputJson.trim()}
-            className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Format
           </button>
@@ -283,13 +283,13 @@ export default function JsonFormatterPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
           JSON Tips
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Common Errors
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -298,7 +298,7 @@ export default function JsonFormatterPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Data Types
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -307,7 +307,7 @@ export default function JsonFormatterPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Minification
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -316,7 +316,7 @@ export default function JsonFormatterPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Formatting
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

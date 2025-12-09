@@ -127,7 +127,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   {project.category}
                 </div>
 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-primary-foreground leading-tight">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-tight">
                   {project.title}
                 </h1>
 
@@ -207,11 +207,11 @@ async function ProjectContent({ slug }: { slug: string }) {
           <section className="relative py-12">
             <div className="container-wide sm:px-6 lg:px-8">
               <div className="glass-section card-padding-lg">
-                <h2 className="text-2xl font-bold text-primary-foreground mb-comfortable">Project Impact</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-comfortable">Project Impact</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-sections">
                   {Object.entries(stats).map(([key, value]) => (
                     <div key={key} className="text-center">
-                      <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-subheading">
+                      <div className="text-3xl md:text-4xl font-bold text-foreground mb-subheading">
                         {value}
                       </div>
                       <div className="text-sm text-muted-foreground capitalize">
@@ -229,7 +229,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         <section className="relative py-12">
           <div className="container-wide sm:px-6 lg:px-8">
             <div className="glass-section card-padding-lg">
-              <h2 className="text-2xl font-bold text-primary-foreground mb-content-block">Technologies Used</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-content-block">Technologies Used</h2>
               <div className="flex flex-wrap gap-3">
                 {project.tech_stack.map((tech) => (
                   <span
@@ -248,7 +248,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         {relatedProjects.length > 0 && (
           <section className="relative py-12">
             <div className="container-wide sm:px-6 lg:px-8">
-              <h2 className="text-3xl font-bold text-primary-foreground mb-comfortable">Related Projects</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-comfortable">Related Projects</h2>
               <div className="grid md:grid-cols-3 gap-sections">
                 {relatedProjects.map((relatedProject) => (
                   <Link
@@ -269,7 +269,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                     </div>
                     <div className="card-padding">
                       <div className="text-sm text-accent mb-subheading">{relatedProject.category}</div>
-                      <h3 className="text-xl font-bold text-primary-foreground mb-subheading group-hover:text-accent transition-colors">
+                      <h3 className="text-xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
                         {relatedProject.title}
                       </h3>
                       <p className="text-muted-foreground text-sm line-clamp-2">
@@ -287,7 +287,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         <section className="relative py-section px-4">
           <div className="container-wide">
             <div className="glass-section p-12 md:p-16 text-center">
-              <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+              <h2 className="text-4xl font-black text-foreground mb-content-block">
                 Ready to create your
                 <span className="text-accent"> success story?</span>
               </h2>
@@ -312,7 +312,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-hero text-primary-foreground">
+    <main className="min-h-screen bg-gradient-hero text-foreground">
       <Analytics />
 
       {/* Back Button - Static, prerendered */}

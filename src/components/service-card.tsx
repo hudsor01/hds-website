@@ -31,9 +31,9 @@ export function ServiceCard({
             "hover-lift transition-smooth will-change-transform",
             gradient.startsWith('bg-gradient-') ? gradient : `bg-gradient-to-br ${gradient}`
           )}>
-            <Icon icon={icon} size="lg" className="text-primary-foreground" />
+            <Icon icon={icon} size="lg" className="text-foreground" />
           </div>
-          <h3 className="text-xl font-bold text-primary-foreground">{title}</h3>
+          <h3 className="text-xl font-bold text-foreground">{title}</h3>
         </div>
 
         {/* Description */}

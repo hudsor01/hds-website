@@ -25,7 +25,7 @@ export default function FinTechPage() {
             <span className="text-accent font-semibold text-sm">PCI DSS Certified Development</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+          <h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
             Build FinTech That <span className="text-accent">Banks Trust</span>
           </h1>
 
@@ -53,7 +53,7 @@ export default function FinTechPage() {
       {/* FinTech Pain Points */}
       <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             FinTech Technical Challenges We Solve
           </h2>
 
@@ -80,7 +80,7 @@ export default function FinTechPage() {
             ].map((item, i) => (
               <div key={i} className="glass-card card-padding">
                 <item.icon className="w-12 h-12 text-accent mb-heading" />
-                <h3 className="text-xl font-bold text-primary-foreground mb-3">{item.title}</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
                 <p className="text-destructive-text mb-subheading font-semibold">Problem: {item.problem}</p>
                 <p className="text-success-text">Solution: {item.solution}</p>
               </div>
@@ -92,7 +92,7 @@ export default function FinTechPage() {
       {/* FinTech Metrics */}
       <section className="py-section-sm px-4 bg-muted/50">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             Performance Metrics That Matter in Finance
           </h2>
 
@@ -116,7 +116,7 @@ export default function FinTechPage() {
       {/* Technical Capabilities */}
       <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             FinTech-Specific Technical Expertise
           </h2>
 
@@ -133,7 +133,7 @@ export default function FinTechPage() {
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
-                  <span className="text-primary-foreground text-sm">✓</span>
+                  <span className="text-foreground text-sm">✓</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>
@@ -157,7 +157,7 @@ export default function FinTechPage() {
       <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Build Compliant FinTech?
             </h2>
             <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">

@@ -103,7 +103,7 @@ export default function TestimonialsPage() {
             </div>
 
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary-foreground leading-none tracking-tight text-balance">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block">Real</span>
                 <span className="inline-block mx-4 text-accent">Results</span>
                 <span className="inline-block">Real Clients</span>
@@ -147,7 +147,7 @@ export default function TestimonialsPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block">
-            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+            <h2 className="text-clamp-xl font-black text-foreground mb-heading">
               <span className="text-accent">
                 What Our Clients Say
               </span>
@@ -185,7 +185,7 @@ export default function TestimonialsPage() {
 
                 {/* Client Info */}
                 <div className="border-t border-border pt-6">
-                  <div className="font-semibold text-primary-foreground">
+                  <div className="font-semibold text-foreground">
                     {testimonial.name}
                   </div>
                   <div className="text-caption text-muted-foreground">
@@ -205,7 +205,7 @@ export default function TestimonialsPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="glass-section card-padding text-center">
-            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+            <h2 className="text-clamp-xl font-black text-foreground mb-heading">
               Ready to be our next
               <span className="block text-accent mt-2">
                 success story?
@@ -229,7 +229,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/portfolio"
-                className="inline-flex-center px-8 py-4 text-body font-semibold text-primary-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
+                className="inline-flex-center px-8 py-4 text-body font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio
               </Link>

@@ -25,7 +25,7 @@ export default function SaaSIndustryPage() {
             <span className="text-accent font-semibold text-sm">Built for SaaS Companies</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+          <h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
             Ship Features <span className="text-accent">3x Faster</span>
             <br />
             Without Hiring
@@ -55,7 +55,7 @@ export default function SaaSIndustryPage() {
       {/* SaaS-Specific Pain Points */}
       <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             Common SaaS Technical Bottlenecks We Solve
           </h2>
 
@@ -82,7 +82,7 @@ export default function SaaSIndustryPage() {
             ].map((item, i) => (
               <div key={i} className="glass-card card-padding">
                 <item.icon className="w-12 h-12 text-accent mb-heading" />
-                <h3 className="text-xl font-bold text-primary-foreground mb-3">{item.title}</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
                 <p className="text-destructive-text mb-subheading font-semibold">Problem: {item.problem}</p>
                 <p className="text-success-text">Solution: {item.solution}</p>
               </div>
@@ -94,7 +94,7 @@ export default function SaaSIndustryPage() {
       {/* SaaS Metrics */}
       <section className="py-section-sm px-4 bg-muted/50">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             Built for SaaS Metrics That Matter
           </h2>
 
@@ -118,7 +118,7 @@ export default function SaaSIndustryPage() {
       {/* Technical Capabilities */}
       <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground text-center mb-12">
             Full-Stack SaaS Development
           </h2>
 
@@ -135,7 +135,7 @@ export default function SaaSIndustryPage() {
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
-                  <span className="text-primary-foreground text-sm">✓</span>
+                  <span className="text-foreground text-sm">✓</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>
@@ -159,7 +159,7 @@ export default function SaaSIndustryPage() {
       <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Ship Faster?
             </h2>
             <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">

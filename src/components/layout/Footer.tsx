@@ -82,7 +82,7 @@ export default function Footer() {
               <div className="mb-content-block">
                 <div className="flex items-center gap-tight mb-3">
                   <Rocket className="w-7 h-7 text-accent" />
-                  <h3 className="text-xl font-bold text-primary-foreground">
+                  <h3 className="text-xl font-bold text-foreground">
                     HDS
                   </h3>
                 </div>
@@ -114,7 +114,7 @@ export default function Footer() {
             {/* Solutions Links */}
             <div className="md:col-span-1">
               <nav aria-label="Solutions navigation">
-                <h4 className="text-primary-foreground font-semibold mb-heading">Solutions</h4>
+                <h4 className="text-foreground font-semibold mb-heading">Solutions</h4>
                 <ul className="space-y-tight" role="list">
                 {footerLinks.solutions.map((link) => (
                   <li key={link.name}>
@@ -134,7 +134,7 @@ export default function Footer() {
             {/* Company Links */}
             <div className="md:col-span-1">
               <nav aria-label="Company navigation">
-                <h4 className="text-primary-foreground font-semibold mb-heading">Company</h4>
+                <h4 className="text-foreground font-semibold mb-heading">Company</h4>
                 <ul className="space-y-tight" role="list">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
@@ -153,7 +153,7 @@ export default function Footer() {
 
             {/* CTA Section */}
             <div className="md:col-span-1">
-              <h4 className="text-primary-foreground font-semibold mb-heading">Ready to Ship Faster?</h4>
+              <h4 className="text-foreground font-semibold mb-heading">Ready to Ship Faster?</h4>
               <p className="small muted mb-heading">
                 Get your free technical roadmap and see how we can help you ship 3x faster.
               </p>
@@ -168,7 +168,7 @@ export default function Footer() {
 
                 <a
                   href="mailto:hello@hudsondigitalsolutions.com"
-                  className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-primary-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+                  className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
                 >
                   <Mail className="h-4 w-4" />
                   <span className="small">hello@hudsondigitalsolutions.com</span>

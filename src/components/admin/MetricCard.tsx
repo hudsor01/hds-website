@@ -37,7 +37,7 @@ export function MetricCard({
           <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
             {title}
           </p>
-          <p className="mt-2 text-3xl font-bold text-foreground dark:text-primary-foreground">
+          <p className="mt-2 text-3xl font-bold text-foreground dark:text-foreground">
             {value}
           </p>
           {subtitle && (

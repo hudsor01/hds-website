@@ -31,7 +31,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
                 {post.tags[0].name}
               </span>
             )}
-            <h3 className={`font-bold text-primary-foreground mb-subheading group-hover:text-accent transition-colors ${featured ? "text-2xl" : "text-xl"}`}>
+            <h3 className={`font-bold text-foreground mb-subheading group-hover:text-accent transition-colors ${featured ? "text-2xl" : "text-xl"}`}>
               {post.title}
             </h3>
             {post.excerpt && (

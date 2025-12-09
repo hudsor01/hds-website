@@ -69,7 +69,7 @@ export default function ConversionToolkitPage() {
             Complete Toolkit
           </div>
 
-          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+          <h1 className="text-clamp-xl font-black text-foreground mb-heading">
             Conversion Optimization <span className="text-accent">Toolkit</span>
           </h1>
 
@@ -118,7 +118,7 @@ export default function ConversionToolkitPage() {
       <section className="section-spacing bg-primary">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">What&apos;s Inside the Toolkit</h2>
+            <h2 className="text-section-title font-black text-foreground mb-subheading">What&apos;s Inside the Toolkit</h2>
             <p className="text-muted max-w-2xl mx-auto">
               Complete set of tools and templates to systematically improve your conversion rates
             </p>
@@ -132,7 +132,7 @@ export default function ConversionToolkitPage() {
                     <item.icon className="w-6 h-6 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">{item.title}</h3>
+                    <h3 className="text-subheading font-bold text-foreground mb-subheading">{item.title}</h3>
                     <p className="text-muted mb-subheading">{item.description}</p>
                     <ul className="space-y-tight">
                       {item.items.map((subItem, subIndex) => (
@@ -154,7 +154,7 @@ export default function ConversionToolkitPage() {
       <section className="section-spacing bg-primary">
         <div className="max-w-6xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Proven Results</h2>
+            <h2 className="text-section-title font-black text-foreground mb-subheading">Proven Results</h2>
             <p className="text-muted">Real outcomes from businesses using these tools</p>
           </div>
 
@@ -190,7 +190,7 @@ export default function ConversionToolkitPage() {
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-muted rounded-full flex-center text-primary-foreground font-bold">
+                <div className="w-10 h-10 bg-muted rounded-full flex-center text-foreground font-bold">
                   M
                 </div>
                 <div>
@@ -205,7 +205,7 @@ export default function ConversionToolkitPage() {
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
               <div className="flex flex-center gap-tight">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex-center text-primary-foreground font-bold">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex-center text-foreground font-bold">
                   S
                 </div>
                 <div>
@@ -224,7 +224,7 @@ export default function ConversionToolkitPage() {
           <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
             <Settings className="w-16 h-16 text-success-text mx-auto mb-content-block" />
 
-            <h2 className="text-3xl font-black text-primary-foreground mb-heading">
+            <h2 className="text-3xl font-black text-foreground mb-heading">
               Download Your Complete Toolkit
             </h2>
 
@@ -278,7 +278,7 @@ export default function ConversionToolkitPage() {
             </div>
 
             <div className="mt-comfortable pt-8 border-t border-border">
-              <h3 className="text-body-lg font-bold text-primary-foreground mb-subheading">Want Professional Implementation?</h3>
+              <h3 className="text-body-lg font-bold text-foreground mb-subheading">Want Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
                 Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped 150+ businesses achieve an average 340% ROI.
               </p>

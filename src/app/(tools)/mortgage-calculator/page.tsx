@@ -41,13 +41,13 @@ export default function MortgageCalculatorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
           Understanding Your Mortgage
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Principal vs Interest
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -56,7 +56,7 @@ export default function MortgageCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               20% Down Payment
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -65,7 +65,7 @@ export default function MortgageCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               15 vs 30 Year
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -74,7 +74,7 @@ export default function MortgageCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Total Cost of Ownership
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

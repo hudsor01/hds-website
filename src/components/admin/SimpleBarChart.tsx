@@ -28,7 +28,7 @@ export function SimpleBarChart({
 
   return (
     <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
-      <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-primary-foreground">
+      <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
         {title}
       </h3>
 
@@ -39,7 +39,7 @@ export function SimpleBarChart({
               <span className="font-medium text-muted-foreground dark:text-muted">
                 {item.label}
               </span>
-              <span className="font-semibold text-foreground dark:text-primary-foreground">
+              <span className="font-semibold text-foreground dark:text-foreground">
                 {valuePrefix}{item.value}{valueSuffix}
               </span>
             </div>

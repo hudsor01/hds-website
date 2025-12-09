@@ -4,7 +4,7 @@ export default function GoogleMap() {
   return (
     <div className="w-full">
       <div className="text-center mb-comfortable">
-        <h2 className="text-3xl font-bold text-primary-foreground mb-heading">
+        <h2 className="text-3xl font-bold text-foreground mb-heading">
           Dallas-Fort Worth Metroplex
         </h2>
         <p className="text-muted text-lg">

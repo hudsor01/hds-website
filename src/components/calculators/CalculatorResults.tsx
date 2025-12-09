@@ -91,7 +91,7 @@ export function CalculatorResults({
     <div className="space-y-comfortable">
       {/* Results Display */}
       <div className="space-y-content">
-        <h3 className="text-xl font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-xl font-semibold text-foreground dark:text-foreground">
           Your Results
         </h3>
 
@@ -118,7 +118,7 @@ export function CalculatorResults({
                     ${
                       result.highlight
                         ? 'text-primary dark:text-accent'
-                        : 'text-foreground dark:text-primary-foreground'
+                        : 'text-foreground dark:text-foreground'
                     }
                   `}
                 >
@@ -139,7 +139,7 @@ export function CalculatorResults({
       {/* Email Capture */}
       {showEmailCapture && !emailSubmitted && (
         <div className="rounded-lg border-2 border-dashed border-accent/60 bg-accent/10/50 card-padding dark:border-primary-hover dark:bg-primary-hover/10">
-          <h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-primary-foreground">
+          <h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-foreground">
             Get Your Detailed Report
           </h4>
           <p className="mb-heading text-sm text-muted-foreground dark:text-muted-foreground">

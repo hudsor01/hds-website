@@ -122,7 +122,7 @@ export default function TipCalculatorPage() {
                 onClick={() => selectTipPreset(preset.value)}
                 className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
                   !useCustomTip && inputs.tipPercent === preset.value
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-primary text-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
@@ -134,7 +134,7 @@ export default function TipCalculatorPage() {
               onClick={enableCustomTip}
               className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
                 useCustomTip
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
@@ -278,13 +278,13 @@ export default function TipCalculatorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
           Tipping Guide
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Restaurant Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -293,7 +293,7 @@ export default function TipCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Delivery & Takeout
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -302,7 +302,7 @@ export default function TipCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Bar Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -311,7 +311,7 @@ export default function TipCalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Large Parties
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

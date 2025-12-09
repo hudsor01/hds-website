@@ -65,8 +65,8 @@ interface IconButtonProps {
 }
 
 const buttonVariants = {
-  default: 'text-muted-foreground hover:text-primary-foreground hover:bg-muted/50',
-  ghost: 'text-muted-foreground hover:text-primary-foreground hover:bg-transparent',
+  default: 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+  ghost: 'text-muted-foreground hover:text-foreground hover:bg-transparent',
   primary: 'text-accent hover:text-accent/80 hover:bg-accent/10',
   danger: 'text-destructive-text hover:text-destructive-muted hover:bg-destructive/10'
 }

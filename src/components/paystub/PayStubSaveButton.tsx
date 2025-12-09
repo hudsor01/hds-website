@@ -13,7 +13,7 @@ export const PayStubSaveButton: React.FC<PayStubSaveButtonProps> = ({ onSave }) 
         onClick={onSave}
         className={cn(
           "flex items-center gap-tight px-6 py-3 rounded-md text-sm font-semibold transition-smooth",
-          "bg-accent text-primary-foreground border-0 shadow-xs cursor-pointer",
+          "bg-accent text-foreground border-0 shadow-xs cursor-pointer",
           "hover:bg-accent/90 focus-ring"
         )}
       >

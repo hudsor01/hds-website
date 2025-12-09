@@ -315,7 +315,7 @@ export default function PasswordGeneratorPage() {
         <button
           onClick={handleGenerate}
           disabled={!atLeastOneSelected}
-          className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshCw className="w-5 h-5" />
           Generate {count > 1 ? 'Passwords' : 'Password'}
@@ -347,7 +347,7 @@ export default function PasswordGeneratorPage() {
                     </code>
                     <button
                       onClick={() => copyToClipboard(index)}
-                      className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-primary-hover transition-colors shrink-0"
+                      className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-xs font-medium text-foreground hover:bg-primary-hover transition-colors shrink-0"
                     >
                       {item.copied ? (
                         <>
@@ -396,13 +396,13 @@ export default function PasswordGeneratorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
           Password Security Tips
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Unique Passwords
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -411,7 +411,7 @@ export default function PasswordGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Length Over Complexity
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -420,7 +420,7 @@ export default function PasswordGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use a Password Manager
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -429,7 +429,7 @@ export default function PasswordGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Enable 2FA
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

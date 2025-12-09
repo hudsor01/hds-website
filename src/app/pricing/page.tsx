@@ -136,7 +136,7 @@ export default function PricingPage() {
             </div>
 
             {/* Hero Heading */}
-            <h1 className="text-clamp-2xl font-black text-primary-foreground leading-[1.1] mb-heading text-balance">
+            <h1 className="text-clamp-2xl font-black text-foreground leading-[1.1] mb-heading text-balance">
               <span className="block">Development That</span>
               <span className="block text-accent">
                 Pays for Itself
@@ -169,14 +169,14 @@ export default function PricingPage() {
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-caption font-bold">
+                    <span className="bg-primary text-foreground px-4 py-2 rounded-full text-caption font-bold">
                       MOST POPULAR
                     </span>
                   </div>
                 )}
 
                 <div className="text-center mb-comfortable">
-                  <h3 className="text-card-title font-bold text-primary-foreground mb-subheading text-balance group-hover:text-accent transition-colors">{tier.name}</h3>
+                  <h3 className="text-card-title font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">{tier.name}</h3>
                   <div className="text-section-title font-black text-accent mb-subheading">{tier.price}</div>
                   <div className="typography">
                     <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
@@ -242,7 +242,7 @@ export default function PricingPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block typography">
-            <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
+            <h2 className="text-responsive-lg font-black text-foreground mb-heading">
               Frequently Asked <span className="text-accent">Questions</span>
             </h2>
             <div className="typography">
@@ -255,7 +255,7 @@ export default function PricingPage() {
           <div className="space-y-content">
             {faqs.map((faq, index) => (
               <div key={index} className="glass-card-light card-padding hover:border-accent/50 transition-smooth">
-                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading text-balance">{faq.question}</h3>
+                <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
@@ -269,7 +269,7 @@ export default function PricingPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
           <div className="glass-section card-padding">
-            <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
+            <h2 className="text-responsive-lg font-black text-foreground mb-heading">
               Ready for Development That Actually Makes Money?
             </h2>
 

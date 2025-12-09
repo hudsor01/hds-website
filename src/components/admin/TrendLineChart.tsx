@@ -32,7 +32,7 @@ export function TrendLineChart({
   if (datasets.length === 0 || datasets.every(d => d.data.length === 0)) {
     return (
       <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
-        <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
           {title}
         </h3>
         <div className="py-8 text-center">
@@ -66,7 +66,7 @@ export function TrendLineChart({
 
   return (
     <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
-      <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-primary-foreground">
+      <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
         {title}
       </h3>
 

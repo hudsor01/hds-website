@@ -13,7 +13,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   return (
     <section className="py-section-sm bg-background">
       <div className="container-wide">
-        <h2 className="text-2xl font-bold text-primary-foreground mb-comfortable">Related Posts</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-comfortable">Related Posts</h2>
         <div className="grid gap-sections md:grid-cols-3">
           {posts.map((post) => (
             <BlogPostCard key={post.id} post={post} />

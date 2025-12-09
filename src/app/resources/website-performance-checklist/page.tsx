@@ -128,7 +128,7 @@ export default function WebsiteChecklistPage() {
             Free Resource
           </div>
 
-          <h1 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+          <h1 className="text-clamp-xl font-black text-foreground mb-heading">
             Website Performance <span className="text-accent">Checklist</span>
           </h1>
 
@@ -177,7 +177,7 @@ export default function WebsiteChecklistPage() {
       <section className="section-spacing bg-primary">
         <div className="max-w-7xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Checklist Preview</h2>
+            <h2 className="text-section-title font-black text-foreground mb-subheading">Checklist Preview</h2>
             <p className="text-muted max-w-2xl mx-auto">
               Get a glimpse of what&apos;s inside our comprehensive performance checklist. Each section includes detailed action items with clear success criteria.
             </p>
@@ -186,7 +186,7 @@ export default function WebsiteChecklistPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
             {checklistItems.map((section, index) => (
               <div key={section.category} className="glass-card rounded-xl card-padding-sm hover:border-accent/60/50 transition-smooth">
-                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading flex flex-center gap-tight">
+                <h3 className="text-subheading font-bold text-foreground mb-subheading flex flex-center gap-tight">
                   <span className="w-8 h-8 bg-accent text-black rounded-full flex-center text-caption font-bold">
                     {index + 1}
                   </span>
@@ -215,7 +215,7 @@ export default function WebsiteChecklistPage() {
       <section className="section-spacing bg-primary">
         <div className="max-w-4xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
-            <h2 className="text-section-title font-black text-primary-foreground mb-subheading">Why This Checklist Works</h2>
+            <h2 className="text-section-title font-black text-foreground mb-subheading">Why This Checklist Works</h2>
             <p className="text-muted">Based on real results from 150+ client projects</p>
           </div>
 
@@ -226,7 +226,7 @@ export default function WebsiteChecklistPage() {
                   <BarChart3 className="w-6 h-6 text-success-text" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Data-Driven Results</h3>
+                  <h3 className="text-subheading font-bold text-foreground mb-subheading">Data-Driven Results</h3>
                   <p className="text-muted">Every checkpoint is based on analysis of high-performing websites and conversion optimization best practices.</p>
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function WebsiteChecklistPage() {
                   <Zap className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Quick Implementation</h3>
+                  <h3 className="text-subheading font-bold text-foreground mb-subheading">Quick Implementation</h3>
                   <p className="text-muted">Each item includes clear action steps that can be implemented immediately, no technical expertise required.</p>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function WebsiteChecklistPage() {
                   <Target className="w-6 h-6 text-info" />
                 </div>
                 <div>
-                  <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">ROI-Focused</h3>
+                  <h3 className="text-subheading font-bold text-foreground mb-subheading">ROI-Focused</h3>
                   <p className="text-muted">Prioritized by impact - tackle the highest-return optimizations first to maximize your results.</p>
                 </div>
               </div>
@@ -254,7 +254,7 @@ export default function WebsiteChecklistPage() {
 
             <div className="space-y-comfortable">
               <div className="bg-muted-20 border border-success-text/30 rounded-lg card-padding-sm">
-                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading">Real Client Results</h3>
+                <h3 className="text-subheading font-bold text-foreground mb-subheading">Real Client Results</h3>
                 <div className="space-y-tight">
                   <div className="flex justify-between">
                     <span className="text-muted">Conversion Rate Increase:</span>
@@ -292,7 +292,7 @@ export default function WebsiteChecklistPage() {
           <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
             <FileText className="w-16 h-16 text-success-text mx-auto mb-content-block" />
 
-            <h2 className="text-3xl font-black text-primary-foreground mb-heading">
+            <h2 className="text-3xl font-black text-foreground mb-heading">
               Download Your Free Checklist
             </h2>
 
@@ -338,7 +338,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="mt-comfortable pt-8 border-t border-border">
-              <h3 className="text-body-lg font-bold text-primary-foreground mb-subheading">Need Professional Implementation?</h3>
+              <h3 className="text-body-lg font-bold text-foreground mb-subheading">Need Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
                 Want us to handle the optimization for you? Our team has implemented these strategies for 150+ businesses with an average 340% ROI.
               </p>

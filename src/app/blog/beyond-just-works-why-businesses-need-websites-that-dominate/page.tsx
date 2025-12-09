@@ -174,7 +174,7 @@ export default function BlogPost() {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl lg:text-5xl font-black text-primary-foreground mb-content-block leading-tight">
+          <h1 className="text-4xl lg:text-5xl font-black text-foreground mb-content-block leading-tight">
             Beyond &apos;Just Works&apos;: Why Businesses Need Websites That Dominate
           </h1>
 
@@ -206,7 +206,7 @@ export default function BlogPost() {
               
               <hr className="border-border my-8" />
               
-              <h2 className="text-3xl font-bold text-primary-foreground mb-heading">The Great Website Deception</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-heading">The Great Website Deception</h2>
               
               <p>Every day, thousands of businesses launch websites that &quot;just work.&quot; They load. They display information. They tick all the basic boxes.</p>
               
@@ -216,7 +216,7 @@ export default function BlogPost() {
               
               <p>This is why Hudson Digital Solutions doesn&apos;t build websites. We engineer competitive advantages.</p>
               
-              <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">The Fatal Flaw of &quot;Good Enough&quot;</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">The Fatal Flaw of &quot;Good Enough&quot;</h2>
               
               <p>Most agencies will tell you that a &quot;good enough&quot; website is sufficient. They&apos;ll deliver something that checks all the obvious boxes:</p>
               
@@ -240,7 +240,7 @@ export default function BlogPost() {
               
               <p>The difference isn&apos;t in the code—it&apos;s in the philosophy.</p>
               
-              <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">BUILD. DEPLOY. DOMINATE. - More Than a Tagline</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">BUILD. DEPLOY. DOMINATE. - More Than a Tagline</h2>
               
               <p>Our three-word philosophy represents a fundamental shift in how we think about digital presence:</p>
               
@@ -283,10 +283,10 @@ export default function BlogPost() {
               <p>But speed is just the entry fee. Real performance means your website becomes a lead-generation machine that works harder than your best salesperson:</p>
               
               <ul className="space-y-tight ml-6">
-                <li><strong className="text-primary-foreground">Progressive Web App technology</strong> that works offline and feels like a native app</li>
-                <li><strong className="text-primary-foreground">Predictive loading</strong> that serves content before users even click</li>
-                <li><strong className="text-primary-foreground">Smart caching strategies</strong> that make return visits instantaneous</li>
-                <li><strong className="text-primary-foreground">Conversion optimization</strong> built into every interaction</li>
+                <li><strong className="text-foreground">Progressive Web App technology</strong> that works offline and feels like a native app</li>
+                <li><strong className="text-foreground">Predictive loading</strong> that serves content before users even click</li>
+                <li><strong className="text-foreground">Smart caching strategies</strong> that make return visits instantaneous</li>
+                <li><strong className="text-foreground">Conversion optimization</strong> built into every interaction</li>
               </ul>
               
               <h3 className="text-2xl font-bold text-accent mb-3 mt-heading">DOMINATE (Market Leadership Through Digital Superiority)</h3>
@@ -297,25 +297,25 @@ export default function BlogPost() {
               
               <p>True digital dominance means your website becomes an unfair advantage:</p>
               
-              <p><strong className="text-primary-foreground">Authority Building:</strong> Your site doesn&apos;t just showcase your expertise—it demonstrates it through superior user experience, technical innovation, and strategic content that positions you as the obvious choice.</p>
+              <p><strong className="text-foreground">Authority Building:</strong> Your site doesn&apos;t just showcase your expertise—it demonstrates it through superior user experience, technical innovation, and strategic content that positions you as the obvious choice.</p>
               
-              <p><strong className="text-primary-foreground">Competitive Intelligence:</strong> We build systems that help you understand exactly how you stack up against competitors, where opportunities exist, and how to capitalize on market gaps.</p>
+              <p><strong className="text-foreground">Competitive Intelligence:</strong> We build systems that help you understand exactly how you stack up against competitors, where opportunities exist, and how to capitalize on market gaps.</p>
               
-              <p><strong className="text-primary-foreground">Scalable Systems:</strong> Every website we build is architected to handle 10x your current traffic and business complexity without breaking a sweat.</p>
+              <p><strong className="text-foreground">Scalable Systems:</strong> Every website we build is architected to handle 10x your current traffic and business complexity without breaking a sweat.</p>
               
-              <p><strong className="text-primary-foreground">Data-Driven Evolution:</strong> Your website gets smarter over time, automatically optimizing based on real user behavior and business performance metrics.</p>
+              <p><strong className="text-foreground">Data-Driven Evolution:</strong> Your website gets smarter over time, automatically optimizing based on real user behavior and business performance metrics.</p>
               
-              <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">The Cost of Digital Mediocrity</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">The Cost of Digital Mediocrity</h2>
               
               <p>Let&apos;s talk numbers. The average business website converts at 2.35%. That means for every 100 visitors, you&apos;re losing 97-98 potential customers.</p>
               
               <p>But here&apos;s the real cost:</p>
               
               <ul className="space-y-tight ml-6">
-                <li><strong className="text-primary-foreground">Lost Revenue:</strong> Those missed conversions aren&apos;t just lost sales—they&apos;re customers going to competitors</li>
-                <li><strong className="text-primary-foreground">Inflated Marketing Costs:</strong> When your website doesn&apos;t convert, you need 3-4x more traffic to hit the same revenue targets</li>
-                <li><strong className="text-primary-foreground">Brand Damage:</strong> Every poor digital experience tells customers you don&apos;t pay attention to details that matter</li>
-                <li><strong className="text-primary-foreground">Opportunity Cost:</strong> While you&apos;re managing a mediocre website, competitors with superior digital experiences are capturing market share</li>
+                <li><strong className="text-foreground">Lost Revenue:</strong> Those missed conversions aren&apos;t just lost sales—they&apos;re customers going to competitors</li>
+                <li><strong className="text-foreground">Inflated Marketing Costs:</strong> When your website doesn&apos;t convert, you need 3-4x more traffic to hit the same revenue targets</li>
+                <li><strong className="text-foreground">Brand Damage:</strong> Every poor digital experience tells customers you don&apos;t pay attention to details that matter</li>
+                <li><strong className="text-foreground">Opportunity Cost:</strong> While you&apos;re managing a mediocre website, competitors with superior digital experiences are capturing market share</li>
               </ul>
               
               <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-8">
@@ -330,7 +330,7 @@ export default function BlogPost() {
                 <p className="mt-3">These aren&apos;t vanity metrics—they&apos;re business transformation outcomes.</p>
               </div>
               
-              <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Ready to Stop Settling?</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Ready to Stop Settling?</h2>
               
               <p>If you&apos;re still reading, you&apos;re already thinking differently than most business owners. You understand that in today&apos;s market, digital mediocrity is a business death sentence.</p>
               
@@ -339,10 +339,10 @@ export default function BlogPost() {
               <p><strong className="text-accent">Here&apos;s what happens next:</strong></p>
               
               <ol className="space-y-tight ml-6">
-                <li><strong className="text-primary-foreground">Strategic Discovery Call:</strong> We&apos;ll audit your current digital presence and identify exactly where you&apos;re losing revenue to digital mediocrity</li>
-                <li><strong className="text-primary-foreground">Competitive Analysis:</strong> We&apos;ll show you precisely how your competitors are winning (or losing) in the digital space</li>
-                <li><strong className="text-primary-foreground">Domination Blueprint:</strong> We&apos;ll create a custom roadmap for establishing digital dominance in your market</li>
-                <li><strong className="text-primary-foreground">Engineering Excellence:</strong> We&apos;ll build a digital presence that doesn&apos;t just represent your business—it accelerates it</li>
+                <li><strong className="text-foreground">Strategic Discovery Call:</strong> We&apos;ll audit your current digital presence and identify exactly where you&apos;re losing revenue to digital mediocrity</li>
+                <li><strong className="text-foreground">Competitive Analysis:</strong> We&apos;ll show you precisely how your competitors are winning (or losing) in the digital space</li>
+                <li><strong className="text-foreground">Domination Blueprint:</strong> We&apos;ll create a custom roadmap for establishing digital dominance in your market</li>
+                <li><strong className="text-foreground">Engineering Excellence:</strong> We&apos;ll build a digital presence that doesn&apos;t just represent your business—it accelerates it</li>
               </ol>
               
               <p><strong className="text-accent">Ready to engineer your competitive advantage?</strong></p>
@@ -352,7 +352,7 @@ export default function BlogPost() {
               <p>Your website will either be a competitive advantage or a competitive liability. There&apos;s no middle ground anymore.</p>
               
               <div className="bg-primary/10 border border-accent/30 rounded-lg card-padding-lg my-12 text-center">
-                <h3 className="text-2xl font-bold text-primary-foreground mb-heading">Ready to Dominate Your Market?</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-heading">Ready to Dominate Your Market?</h3>
                 <p className="text-muted mb-content-block">Let&apos;s discuss how to engineer your digital dominance.</p>
                 <Link
                   href="/contact"
@@ -370,7 +370,7 @@ export default function BlogPost() {
               <hr className="border-border my-8" />
               
               <div className="bg-background/40 border border-border rounded-lg card-padding">
-                <p><strong className="text-primary-foreground">About Hudson Digital Solutions</strong></p>
+                <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
                 <p className="mt-2">We don&apos;t build websites that &quot;just work&quot;—we engineer digital competitive advantages for ambitious businesses. With an average ROI of 340% and a 98% client success rate, we&apos;ve helped over 150 companies transform their digital presence from a business expense into their most powerful growth engine.</p>
                 <p className="mt-4">
                   <strong className="text-accent">Ready to dominate your market digitally?</strong>{" "}
@@ -407,7 +407,7 @@ export default function BlogPost() {
 
             {/* CTA */}
             <div className="glass-morphism bg-background/80 border border-success-muted rounded-xl card-padding-lg text-center">
-              <h3 className="text-2xl font-bold text-primary-foreground mb-heading">
+              <h3 className="text-2xl font-bold text-foreground mb-heading">
                 Ready to Build Something That Dominates?
               </h3>
               <p className="text-muted mb-content-block">

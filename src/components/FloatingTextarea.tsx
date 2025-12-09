@@ -34,7 +34,7 @@ export default function FloatingTextarea({
   // Simplify nested ternary for label color
   const getLabelColor = () => {
     if (isFocused && shouldFloat) {return 'text-accent'}
-    if (shouldFloat) {return 'text-text-secondary'}
+    if (shouldFloat) {return 'text-secondary-foreground'}
     return ''
   }
 
@@ -57,7 +57,7 @@ export default function FloatingTextarea({
         className={`
           peer w-full px-4 pt-6 pb-2
           bg-muted/50 border rounded-lg
-          text-primary-foreground placeholder-transparent resize-none
+          text-foreground placeholder-transparent resize-none
           transition-all duration-150 ease-in-out
           ${disabled
             ? 'border-border cursor-not-allowed opacity-50'
@@ -76,7 +76,7 @@ export default function FloatingTextarea({
           absolute left-4 transition-all duration-150 ease-in-out pointer-events-none
           ${shouldFloat 
             ? 'top-2 text-xs text-accent'
-            : 'top-6 text-base text-text-muted'
+            : 'top-6 text-base text-muted-foreground'
           }
           ${getLabelColor()}
         `}
@@ -87,7 +87,7 @@ export default function FloatingTextarea({
 
       {/* Character count indicator */}
       {value.length > 0 && (
-        <div className="absolute bottom-2 right-4 text-xs text-text-muted">
+        <div className="absolute bottom-2 right-4 text-xs text-muted-foreground">
           {value.length} characters
         </div>
       )}

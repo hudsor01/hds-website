@@ -19,7 +19,7 @@ export const Typography = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'hero':
-        return 'text-clamp-2xl font-black text-primary-foreground leading-none tracking-tight text-balance';
+        return 'text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance';
       case 'subtitle':
         return 'text-responsive-md text-muted leading-relaxed text-pretty';
       case 'body':
@@ -43,7 +43,7 @@ export const Typography = ({
  * Typography tokens for consistent text styling
  */
 export const TYPOGRAPHY_CLASSES = {
-  hero: "text-clamp-2xl font-black text-primary-foreground leading-none tracking-tight text-balance",
+  hero: "text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance",
   subtitle: "text-responsive-md text-muted leading-relaxed text-pretty",
   body: "text-muted leading-relaxed",
   description: "text-xl text-muted-foreground container-narrow",

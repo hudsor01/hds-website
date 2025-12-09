@@ -123,7 +123,7 @@ export default function WebsiteCostGuidePost() {
               <span>By Hudson Digital Solutions</span>
             </div>
 
-            <h1 className="text-4xl lg:text-5xl font-black text-primary-foreground mb-content-block leading-tight">
+            <h1 className="text-4xl lg:text-5xl font-black text-foreground mb-content-block leading-tight">
               Small Business Website Cost 2025: Complete Pricing Guide
             </h1>
 
@@ -161,24 +161,24 @@ export default function WebsiteCostGuidePost() {
                   </ul>
                 </div>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading">The Real Question Isn&apos;t &quot;How Much?&quot;</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading">The Real Question Isn&apos;t &quot;How Much?&quot;</h2>
                 
                 <p>Every day, small business owners ask: <strong className="text-accent">&quot;How much does a website cost?&quot;</strong></p>
                 
                 <p>But that&apos;s the wrong question.</p>
                 
-                <p>The right question is: <strong className="text-primary-foreground">&quot;What&apos;s the return on investment for each website option, and which choice positions my business for growth?&quot;</strong></p>
+                <p>The right question is: <strong className="text-foreground">&quot;What&apos;s the return on investment for each website option, and which choice positions my business for growth?&quot;</strong></p>
                 
                 <p>After helping 150+ small businesses navigate this decision, I&apos;ve learned that the cheapest option is rarely the most economical, and the most expensive isn&apos;t always the best value.</p>
 
                 <p>This guide breaks down the true costs, hidden expenses, and ROI potential of each approach so you can make an informed investment decision.</p>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Option 1: DIY Website Builders</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Option 1: DIY Website Builders</h2>
                 
                 <p><strong className="text-accent">Upfront Cost: $10-50/month</strong></p>
                 <p><strong className="text-accent">True Cost: $500-2,000/year + opportunity cost</strong></p>
                 
-                <p><strong className="text-primary-foreground">Popular Platforms:</strong></p>
+                <p><strong className="text-foreground">Popular Platforms:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Wix: $14-39/month</li>
                   <li>Squarespace: $16-40/month</li>
@@ -186,7 +186,7 @@ export default function WebsiteCostGuidePost() {
                   <li>Shopify: $29-299/month (e-commerce)</li>
                 </ul>
 
-                <p><strong className="text-primary-foreground">Hidden Costs:</strong></p>
+                <p><strong className="text-foreground">Hidden Costs:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Premium templates: $50-200</li>
                   <li>Stock photos: $10-50/image</li>
@@ -201,7 +201,7 @@ export default function WebsiteCostGuidePost() {
                   <p className="mt-2">At $50/hour (conservative business owner value), that&apos;s $2,000-4,000 in opportunity cost.</p>
                 </div>
 
-                <p><strong className="text-primary-foreground">Best For:</strong></p>
+                <p><strong className="text-foreground">Best For:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Very early-stage businesses testing market fit</li>
                   <li>Personal brands with simple needs</li>
@@ -209,12 +209,12 @@ export default function WebsiteCostGuidePost() {
                   <li>Companies comfortable with limitations</li>
                 </ul>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Option 2: Freelance Web Designer</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Option 2: Freelance Web Designer</h2>
                 
                 <p><strong className="text-accent">Cost Range: $500-5,000</strong></p>
                 <p><strong className="text-accent">Average: $1,500-3,000</strong></p>
                 
-                <p><strong className="text-primary-foreground">What You Get:</strong></p>
+                <p><strong className="text-foreground">What You Get:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Custom design (usually template-based)</li>
                   <li>Basic SEO setup</li>
@@ -224,7 +224,7 @@ export default function WebsiteCostGuidePost() {
                   <li>Basic analytics setup</li>
                 </ul>
 
-                <p><strong className="text-primary-foreground">Additional Costs:</strong></p>
+                <p><strong className="text-foreground">Additional Costs:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Hosting: $10-50/month</li>
                   <li>Domain: $12-20/year</li>
@@ -233,7 +233,7 @@ export default function WebsiteCostGuidePost() {
                   <li>Security monitoring: $20-50/month</li>
                 </ul>
 
-                <p><strong className="text-primary-foreground">The Freelancer Gamble:</strong></p>
+                <p><strong className="text-foreground">The Freelancer Gamble:</strong></p>
                 <p>Freelance quality varies dramatically. You might get:</p>
                 <ul className="space-y-tight ml-6">
                   <li>Exceptional value from an experienced professional</li>
@@ -246,12 +246,12 @@ export default function WebsiteCostGuidePost() {
                   <p><strong className="text-success-text">Success Story:</strong> Local restaurant hired freelancer for $2,500. Site increased online orders by 180% in first 6 months, generating additional $45,000 in revenue. ROI: 1,700%</p>
                 </div>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Option 3: Professional Web Development Agency</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Option 3: Professional Web Development Agency</h2>
                 
                 <p><strong className="text-accent">Cost Range: $3,000-25,000</strong></p>
                 <p><strong className="text-accent">Small Business Sweet Spot: $5,000-12,000</strong></p>
                 
-                <p><strong className="text-primary-foreground">Professional Agency Includes:</strong></p>
+                <p><strong className="text-foreground">Professional Agency Includes:</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li>Strategic discovery and planning</li>
                   <li>Custom design system</li>
@@ -265,7 +265,7 @@ export default function WebsiteCostGuidePost() {
                   <li>Ongoing support and maintenance</li>
                 </ul>
 
-                <p><strong className="text-primary-foreground">Why the Higher Cost?</strong></p>
+                <p><strong className="text-foreground">Why the Higher Cost?</strong></p>
                 <ul className="space-y-tight ml-6">
                   <li><strong className="text-accent">Team Expertise:</strong> Designers, developers, strategists, and project managers</li>
                   <li><strong className="text-accent">Business Focus:</strong> Websites engineered for specific business outcomes</li>
@@ -277,29 +277,29 @@ export default function WebsiteCostGuidePost() {
                   <p><strong className="text-accent">ROI Reality:</strong> Professional websites typically generate 3-10x their investment in the first year through improved conversion rates, SEO performance, and brand credibility.</p>
                 </div>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Hidden Costs Every Small Business Must Consider</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Hidden Costs Every Small Business Must Consider</h2>
                 
                 <h3 className="text-2xl font-bold text-accent mb-3 mt-heading">Ongoing Maintenance (Often Overlooked)</h3>
                 
                 <ul className="space-y-tight ml-6">
-                  <li><strong className="text-primary-foreground">Security Updates:</strong> $50-200/month</li>
-                  <li><strong className="text-primary-foreground">Content Updates:</strong> $100-500/month</li>
-                  <li><strong className="text-primary-foreground">Performance Monitoring:</strong> $25-100/month</li>
-                  <li><strong className="text-primary-foreground">Backup Services:</strong> $10-50/month</li>
-                  <li><strong className="text-primary-foreground">SEO Optimization:</strong> $300-2,000/month</li>
+                  <li><strong className="text-foreground">Security Updates:</strong> $50-200/month</li>
+                  <li><strong className="text-foreground">Content Updates:</strong> $100-500/month</li>
+                  <li><strong className="text-foreground">Performance Monitoring:</strong> $25-100/month</li>
+                  <li><strong className="text-foreground">Backup Services:</strong> $10-50/month</li>
+                  <li><strong className="text-foreground">SEO Optimization:</strong> $300-2,000/month</li>
                 </ul>
 
                 <h3 className="text-2xl font-bold text-accent mb-3 mt-heading">Integration Costs</h3>
                 
                 <ul className="space-y-tight ml-6">
-                  <li><strong className="text-primary-foreground">Email Marketing:</strong> $20-300/month</li>
-                  <li><strong className="text-primary-foreground">CRM Integration:</strong> $50-500/month</li>
-                  <li><strong className="text-primary-foreground">E-commerce Platform:</strong> $29-299/month</li>
-                  <li><strong className="text-primary-foreground">Analytics Tools:</strong> $100-1,000/month</li>
-                  <li><strong className="text-primary-foreground">Live Chat Software:</strong> $20-200/month</li>
+                  <li><strong className="text-foreground">Email Marketing:</strong> $20-300/month</li>
+                  <li><strong className="text-foreground">CRM Integration:</strong> $50-500/month</li>
+                  <li><strong className="text-foreground">E-commerce Platform:</strong> $29-299/month</li>
+                  <li><strong className="text-foreground">Analytics Tools:</strong> $100-1,000/month</li>
+                  <li><strong className="text-foreground">Live Chat Software:</strong> $20-200/month</li>
                 </ul>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">ROI Analysis by Investment Level</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">ROI Analysis by Investment Level</h2>
                 
                 <div className="grid md:grid-cols-3 gap-comfortable my-8">
                   <div className="bg-background/40 border border-border rounded-lg card-padding">
@@ -324,7 +324,7 @@ export default function WebsiteCostGuidePost() {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">How to Choose the Right Investment Level</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">How to Choose the Right Investment Level</h2>
                 
                 <h3 className="text-2xl font-bold text-accent mb-3 mt-heading">Choose DIY When:</h3>
                 <ul className="space-y-tight ml-6">
@@ -355,7 +355,7 @@ export default function WebsiteCostGuidePost() {
                   <p><strong className="text-success-text">Hudson Digital Approach:</strong> We help small businesses invest strategically in websites that grow with them. Our $8,000-15,000 professional sites typically generate $50,000-200,000+ in additional annual revenue within 18 months.</p>
                 </div>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Red Flags to Avoid</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Red Flags to Avoid</h2>
                 
                 <h3 className="text-2xl font-bold text-destructive-text mb-3 mt-heading">DIY Red Flags:</h3>
                 <ul className="space-y-tight ml-6">
@@ -383,15 +383,15 @@ export default function WebsiteCostGuidePost() {
                   <li>Pressure tactics or unrealistic promises</li>
                 </ul>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">2025 Cost Trends and Predictions</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">2025 Cost Trends and Predictions</h2>
                 
-                <p><strong className="text-primary-foreground">AI Integration Costs:</strong> Expect to see $500-2,000 add-ons for AI-powered features like chatbots, content generation, and personalization.</p>
+                <p><strong className="text-foreground">AI Integration Costs:</strong> Expect to see $500-2,000 add-ons for AI-powered features like chatbots, content generation, and personalization.</p>
                 
-                <p><strong className="text-primary-foreground">Performance Requirements:</strong> Google&apos;s emphasis on Core Web Vitals means performance optimization is becoming non-negotiable, adding $1,000-3,000 to professional projects.</p>
+                <p><strong className="text-foreground">Performance Requirements:</strong> Google&apos;s emphasis on Core Web Vitals means performance optimization is becoming non-negotiable, adding $1,000-3,000 to professional projects.</p>
                 
-                <p><strong className="text-primary-foreground">Security Compliance:</strong> Increased data privacy regulations mean security features will add $500-1,500 to professional websites.</p>
+                <p><strong className="text-foreground">Security Compliance:</strong> Increased data privacy regulations mean security features will add $500-1,500 to professional websites.</p>
 
-                <h2 className="text-3xl font-bold text-primary-foreground mb-heading mt-12">Making the Investment Decision</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Making the Investment Decision</h2>
                 
                 <p>The best website investment isn&apos;t about finding the cheapest option—it&apos;s about maximizing return on investment.</p>
                 
@@ -406,7 +406,7 @@ export default function WebsiteCostGuidePost() {
                 <p>A $10,000 professional website that generates $100,000 in additional revenue is infinitely more valuable than a $1,000 site that generates $5,000.</p>
 
                 <div className="bg-primary/10 border border-accent/30 rounded-lg card-padding-lg my-12 text-center">
-                  <h3 className="text-2xl font-bold text-primary-foreground mb-heading">Ready to Make the Right Investment?</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-heading">Ready to Make the Right Investment?</h3>
                   <p className="text-muted mb-content-block">Get a custom website cost estimate based on your specific business needs and growth goals.</p>
                   <Link
                     href="/contact"
@@ -420,7 +420,7 @@ export default function WebsiteCostGuidePost() {
                 <hr className="border-border my-8" />
 
                 <div className="bg-background/40 border border-border rounded-lg card-padding">
-                  <p><strong className="text-primary-foreground">About Hudson Digital Solutions</strong></p>
+                  <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
                   <p className="mt-2">We help small businesses make smart website investments that drive real growth. Our strategic approach has helped 150+ companies achieve an average 340% ROI through professional web development that focuses on business outcomes, not just beautiful design.</p>
                   <p className="mt-4">
                     <strong className="text-accent">Ready to discuss your website investment?</strong>{" "}
@@ -455,7 +455,7 @@ export default function WebsiteCostGuidePost() {
               </div>
 
               <div className="glass-morphism bg-background/80 border border-success-muted rounded-xl card-padding-lg text-center">
-                <h3 className="text-2xl font-bold text-primary-foreground mb-heading">
+                <h3 className="text-2xl font-bold text-foreground mb-heading">
                   Get a Custom Website Cost Analysis
                 </h3>
                 <p className="text-muted mb-content-block">

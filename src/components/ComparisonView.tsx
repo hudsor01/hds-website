@@ -76,7 +76,7 @@ export function ComparisonView({
       <div className="flex gap-tight mt-4">
         <button
           onClick={clearComparison}
-          className="px-4 py-2 bg-destructive text-primary-foreground rounded-lg hover:bg-destructive-dark transition-colors"
+          className="px-4 py-2 bg-destructive text-foreground rounded-lg hover:bg-destructive-dark transition-colors"
         >
           Clear All
         </button>

@@ -82,7 +82,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
             </p>
             <Link
               href="/testimonials/submit"
-              className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary-hover transition-colors"
+              className="inline-block px-6 py-3 bg-primary text-foreground rounded-lg font-semibold hover:bg-primary-hover transition-colors"
             >
               Submit Public Testimonial
             </Link>
