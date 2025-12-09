@@ -30,13 +30,75 @@ export function createMockRateLimiter() {
 
 /**
  * Create a mock UnifiedRateLimiter class for testing
+ * This mock implements actual rate limiting logic to support tests that verify limits
  */
 export function createMockUnifiedRateLimiterClass() {
   return class MockUnifiedRateLimiter {
-    store = new Map();
-    checkLimit = mock().mockResolvedValue(true);
-    getLimitInfo = mock().mockResolvedValue({ remaining: 10, isLimited: false, resetTime: Date.now() + 60000 });
-    destroy = mock();
+    store = new Map<string, { count: number; resetTime: number }>();
+    cleanupInterval: NodeJS.Timeout | null = null;
+
+    private buildKey(identifier: string, limitType: keyof typeof MOCK_RATE_LIMIT_CONFIGS): string {
+      return `${limitType}:${identifier}`;
+    }
+
+    async checkLimit(identifier: string, limitType: keyof typeof MOCK_RATE_LIMIT_CONFIGS = 'default'): Promise<boolean> {
+      const config = MOCK_RATE_LIMIT_CONFIGS[limitType];
+      const key = this.buildKey(identifier, limitType);
+      const now = Date.now();
+      const entry = this.store.get(key);
+
+      if (!entry || now > entry.resetTime) {
+        // Create new entry or reset expired one
+        this.store.set(key, {
+          count: 1,
+          resetTime: now + config.windowMs,
+        });
+        return true;
+      }
+
+      if (entry.count >= config.maxRequests) {
+        return false;
+      }
+
+      // Increment count
+      entry.count++;
+      this.store.set(key, entry);
+      return true;
+    }
+
+    async getLimitInfo(identifier: string, limitType: keyof typeof MOCK_RATE_LIMIT_CONFIGS = 'default'): Promise<{
+      remaining: number;
+      resetTime: number;
+      isLimited: boolean;
+    }> {
+      const config = MOCK_RATE_LIMIT_CONFIGS[limitType];
+      const key = this.buildKey(identifier, limitType);
+      const now = Date.now();
+      const entry = this.store.get(key);
+
+      if (!entry || now > entry.resetTime) {
+        return {
+          remaining: config.maxRequests,
+          resetTime: now + config.windowMs,
+          isLimited: false,
+        };
+      }
+
+      const remaining = Math.max(0, config.maxRequests - entry.count);
+      return {
+        remaining,
+        resetTime: entry.resetTime,
+        isLimited: entry.count >= config.maxRequests,
+      };
+    }
+
+    destroy(): void {
+      if (this.cleanupInterval) {
+        clearInterval(this.cleanupInterval);
+        this.cleanupInterval = null;
+      }
+      this.store.clear();
+    }
   };
 }
 
@@ -51,6 +113,29 @@ export const MOCK_RATE_LIMIT_CONFIGS = {
   newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
   readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
 } as const;
+
+/**
+ * Create a mock getClientIp function that implements real IP parsing logic
+ * This mirrors the real implementation to support tests that verify IP extraction
+ */
+export function createMockGetClientIp() {
+  return (request: { headers: { get: (name: string) => string | null } }): string => {
+    const xff = request.headers.get('x-forwarded-for');
+    if (xff) {
+      const ip = xff.split(',')[0]?.trim();
+      if (ip) {
+        return ip;
+      }
+    }
+
+    const realIp = request.headers.get('x-real-ip');
+    if (realIp?.trim()) {
+      return realIp.trim();
+    }
+
+    return '127.0.0.1';
+  };
+}
 
 export function createMockResend() {
   return mock().mockImplementation(() => ({
@@ -94,7 +179,7 @@ export function setupApiMocks() {
     UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
     unifiedRateLimiter: mockRateLimiter,
     getUnifiedRateLimiter: () => mockRateLimiter,
-    getClientIp: mock().mockReturnValue('127.0.0.1'),
+    getClientIp: createMockGetClientIp(),
     RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS,
   }));
 
@@ -160,7 +245,7 @@ export function setupContactFormMocks() {
     UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
     unifiedRateLimiter: mockRateLimiter,
     getUnifiedRateLimiter: () => mockRateLimiter,
-    getClientIp: mock().mockReturnValue('127.0.0.1'),
+    getClientIp: createMockGetClientIp(),
     RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS,
   }));
 

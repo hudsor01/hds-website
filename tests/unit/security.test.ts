@@ -179,6 +179,7 @@ describe('Rate Limiter', () => {
   let rateLimiterModule: typeof RateLimiterTypes;
 
   beforeEach(async () => {
+    // Dynamic import to get the module (mocked or real depending on execution order)
     rateLimiterModule = await import('@/lib/rate-limiter');
   });
 
