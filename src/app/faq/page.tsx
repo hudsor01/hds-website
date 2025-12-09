@@ -145,7 +145,7 @@ export default function FAQPage() {
         {/* Hero */}
         <section className="py-section px-4">
           <div className="container-wide text-center">
-            <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+            <h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
               Frequently Asked <span className="text-accent">Questions</span>
             </h1>
 
@@ -180,7 +180,7 @@ export default function FAQPage() {
               <div className="space-y-12">
                 {filteredFaqs.map((category, catIndex) => (
                   <div key={catIndex}>
-                    <h2 className="text-2xl font-bold text-primary-foreground mb-content-block">{category.category}</h2>
+                    <h2 className="text-2xl font-bold text-foreground mb-content-block">{category.category}</h2>
 
                     <Accordion type="single" collapsible className="space-y-content">
                       {category.questions.map((faq, qIndex) => (
@@ -190,7 +190,7 @@ export default function FAQPage() {
                           className="glass-card overflow-hidden border-none"
                         >
                           <AccordionTrigger className="px-6 py-4 text-left hover:bg-muted/50 hover:no-underline">
-                            <span className="text-lg font-semibold text-primary-foreground pr-8">
+                            <span className="text-lg font-semibold text-foreground pr-8">
                               {faq.question}
                             </span>
                           </AccordionTrigger>
@@ -211,7 +211,7 @@ export default function FAQPage() {
         <section className="py-section px-4">
           <div className="container-wide text-center">
             <div className="glass-section p-12">
-              <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+              <h2 className="text-4xl font-black text-foreground mb-content-block">
                 Still Have Questions?
               </h2>
               <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">

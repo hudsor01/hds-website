@@ -241,7 +241,7 @@ export default function MetaTagGeneratorPage() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             Generate Meta Tags
           </button>
@@ -278,7 +278,7 @@ export default function MetaTagGeneratorPage() {
             <div className="relative">
               <button
                 onClick={copyToClipboard}
-                className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary-hover transition-colors"
+                className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-foreground hover:bg-primary-hover transition-colors"
               >
                 {copied ? (
                   <>
@@ -326,7 +326,7 @@ export default function MetaTagGeneratorPage() {
                     </div>
                   ) : (
                     <div className="h-48 bg-gradient-to-br from-primary to-info flex items-center justify-center">
-                      <span className="text-primary-foreground text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
+                      <span className="text-foreground text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
                     </div>
                   )}
                   <div className="card-padding-sm bg-card dark:bg-card">
@@ -356,13 +356,13 @@ export default function MetaTagGeneratorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
           Meta Tag Best Practices
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Title Tag
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -371,7 +371,7 @@ export default function MetaTagGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Meta Description
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -380,7 +380,7 @@ export default function MetaTagGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Open Graph Images
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -389,7 +389,7 @@ export default function MetaTagGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Twitter Cards
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

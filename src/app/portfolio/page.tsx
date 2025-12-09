@@ -39,7 +39,7 @@ async function PortfolioProjects() {
                 key={index}
                 className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
               >
-                <div className="text-page-title font-bold text-primary-foreground mb-subheading">{stat.value}</div>
+                <div className="text-page-title font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="text-muted-foreground">{stat.label}</div>
               </div>
             ))}
@@ -51,7 +51,7 @@ async function PortfolioProjects() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block">
-            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+            <h2 className="text-clamp-xl font-black text-foreground mb-heading">
               <span className="text-accent">
                 Featured Projects
               </span>
@@ -82,7 +82,7 @@ async function PortfolioProjects() {
                         {/* Grid pattern overlay */}
                         <div className="absolute inset-0 grid-pattern-light" />
 
-                        <div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-primary-foreground">
+                        <div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-foreground">
                           <div className="inline-flex flex-center gap-tight px-3 py-1 rounded-full glass-card-light text-sm mb-heading mx-auto">
                             <Code2 className="w-4 h-4" />
                             {project.category}
@@ -118,7 +118,7 @@ async function PortfolioProjects() {
                           <div className="grid grid-cols-3 gap-comfortable mb-comfortable">
                             {Object.entries(stats).map(([key, value]) => (
                               <div key={key} className="text-center">
-                                <div className="text-2xl font-bold text-primary-foreground mb-1">{value}</div>
+                                <div className="text-2xl font-bold text-foreground mb-1">{value}</div>
                                 <div className="text-sm text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
                               </div>
                             ))}
@@ -153,7 +153,7 @@ export default function PortfolioPage() {
   return (
     <>
       <Analytics />
-      <main className="min-h-screen bg-background text-primary-foreground">
+      <main className="min-h-screen bg-background text-foreground">
         {/* Animated background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-info rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -179,7 +179,7 @@ export default function PortfolioPage() {
               </div>
 
               <div>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary-foreground leading-none tracking-tight text-balance">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-none tracking-tight text-balance">
                   <span className="inline-block mr-4">Our</span>
                   <span className="inline-block mr-4 text-accent">Portfolio</span>
                 </h1>
@@ -227,7 +227,7 @@ export default function PortfolioPage() {
         <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
             <div className="relative z-sticky text-center glass-section card-padding">
-              <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading">
+              <h2 className="text-clamp-xl font-black text-foreground mb-heading">
                 Ready to create your
                 <span className="text-accent">
                   {" "}success story?

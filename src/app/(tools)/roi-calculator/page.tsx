@@ -39,13 +39,13 @@ export default function ROICalculatorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
           How We Help You Achieve These Results
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Conversion Optimization
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -54,7 +54,7 @@ export default function ROICalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Performance Optimization
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -63,7 +63,7 @@ export default function ROICalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Strategic Design
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -72,7 +72,7 @@ export default function ROICalculatorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Analytics & Testing
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

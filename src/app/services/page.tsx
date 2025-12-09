@@ -130,7 +130,7 @@ export default function ServicesPage() {
             </div>
 
             <div>
-              <h1 className="text-responsive-lg font-black text-primary-foreground leading-none tracking-tight text-balance">
+              <h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block">Technical</span>
                 <span className="inline-block mx-4 text-accent">Services</span>
                 <span className="inline-block">That</span>
@@ -168,7 +168,7 @@ export default function ServicesPage() {
       <section id="services-list" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Our Services
               </span>
@@ -194,7 +194,7 @@ export default function ServicesPage() {
                     </div>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-text-inverted mb-heading group-hover:text-accent transition-colors">
+                  <h3 className="text-2xl font-bold text-foreground mb-heading group-hover:text-accent transition-colors">
                     {service.title}
                   </h3>
 
@@ -218,7 +218,7 @@ export default function ServicesPage() {
                   </div>
 
                   <div className="mb-content-block">
-                    <p className="text-2xl font-bold text-primary-foreground">{service.pricing}</p>
+                    <p className="text-2xl font-bold text-foreground">{service.pricing}</p>
                   </div>
 
                   <Link
@@ -238,7 +238,7 @@ export default function ServicesPage() {
       <section className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Proven Results
               </span>
@@ -256,7 +256,7 @@ export default function ServicesPage() {
                 key={index}
                 className="relative glass-card-light card-padding-lg card-hover-glow transition-all duration-300 text-center"
               >
-                <div className="text-4xl font-bold text-primary-foreground mb-subheading">{stat.value}</div>
+                <div className="text-4xl font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
               </div>
             ))}
@@ -267,7 +267,7 @@ export default function ServicesPage() {
       <section id="process" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Our Process
               </span>
@@ -291,7 +291,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
                 <div className="text-accent font-bold text-lg mb-subheading">{step.step}</div>
-                <h3 className="text-xl font-bold text-text-inverted mb-heading group-hover:text-accent transition-colors">
+                <h3 className="text-xl font-bold text-foreground mb-heading group-hover:text-accent transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -309,7 +309,7 @@ export default function ServicesPage() {
       <section className="relative py-section px-4">
         <div className="container-wide">
           <div className="relative z-sticky text-center glass-section p-12 md:p-16">
-            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               Ready to accelerate
               <span className="text-accent">
                 {" "}your growth?
@@ -334,7 +334,7 @@ export default function ServicesPage() {
 
               <Link
                 href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-foreground font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-all duration-300"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

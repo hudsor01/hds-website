@@ -34,7 +34,7 @@ export function CalculatorLayout({
             </div>
           )}
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-primary-foreground">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-foreground">
             {title}
           </h1>
 

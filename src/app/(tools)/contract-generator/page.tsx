@@ -504,7 +504,7 @@ export default function ContractGeneratorPage() {
             <PDFDownloadLink
               document={<ContractDocument data={contractData} />}
               fileName={getFileName()}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('contract_downloaded', {
                   template: contractData.template,
@@ -536,13 +536,13 @@ export default function ContractGeneratorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
           Contract Tips
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Be Specific
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -551,7 +551,7 @@ export default function ContractGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Payment Terms
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -560,7 +560,7 @@ export default function ContractGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Legal Review
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -569,7 +569,7 @@ export default function ContractGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Keep Copies
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

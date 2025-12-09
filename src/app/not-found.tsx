@@ -26,10 +26,10 @@ export default function NotFound() {
         </div>
         {/* Error Message */}
         <div className="mb-12">
-          <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
+          <h2 className="text-responsive-lg font-black text-foreground mb-heading">
             Page Not Found
           </h2>
-          <p className="text-xl text-text-secondary mb-comfortable leading-relaxed">
+          <p className="text-xl text-secondary-foreground mb-comfortable leading-relaxed">
             The page you&apos;re looking for has vanished into the digital void.
             But don&apos;t worry—our navigation system is still operational.
           </p>
@@ -49,7 +49,7 @@ export default function NotFound() {
           <Link href="/contact" passHref>
             <button
               type="button"
-              className="flex items-center gap-tight border-2 border-success-text text-primary-foreground font-bold py-4 px-8 rounded-lg text-lg bg-success-text/10 hover:bg-success-text/20 blur-backdrop transition-all duration-300"
+              className="flex items-center gap-tight border-2 border-success-text text-foreground font-bold py-4 px-8 rounded-lg text-lg bg-success-text/10 hover:bg-success-text/20 blur-backdrop transition-all duration-300"
               aria-label="Contact us for help"
             >
               <MessageSquare className="w-6 h-6" />
@@ -59,7 +59,7 @@ export default function NotFound() {
         </div>
         {/* Quick Links */}
         <div className="mt-16">
-          <h3 className="text-lg font-semibold text-text-muted mb-content-block">Or explore these sections:</h3>
+          <h3 className="text-lg font-semibold text-muted-foreground mb-content-block">Or explore these sections:</h3>
           <div className="flex flex-wrap justify-center gap-content">
             <Link href="/services" passHref>
               <button

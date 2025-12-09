@@ -65,7 +65,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+          <h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
             {caseStudy.title}
           </h1>
 
@@ -108,7 +108,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
           <div className="grid gap-12">
             {/* Challenge */}
             <div>
-              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">The Challenge</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-content-block">The Challenge</h2>
               <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.challenge}
@@ -118,7 +118,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Solution */}
             <div>
-              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">Our Solution</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-content-block">Our Solution</h2>
               <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.solution}
@@ -127,7 +127,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                 {/* Technologies Used */}
                 {caseStudy.technologies && caseStudy.technologies.length > 0 && (
                   <div className="mt-content-block">
-                    <h3 className="text-xl font-semibold text-primary-foreground mb-heading">Technologies Used</h3>
+                    <h3 className="text-xl font-semibold text-foreground mb-heading">Technologies Used</h3>
                     <div className="flex flex-wrap gap-tight">
                       {caseStudy.technologies.map((tech, i) => (
                         <span
@@ -145,7 +145,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Results */}
             <div>
-              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">The Results</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-content-block">The Results</h2>
               <div className="glass-card card-padding-lg">
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.results}
@@ -169,7 +169,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
             {/* Testimonial */}
             <div>
-              <h2 className="text-3xl font-bold text-primary-foreground mb-content-block">Client Testimonial</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-content-block">Client Testimonial</h2>
               <div className="glass-card card-padding-lg">
                 {caseStudy.testimonial_video_url && (
                   <div className="mb-content-block">
@@ -196,7 +196,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                     </span>
                   </div>
                   <div>
-                    <div className="font-bold text-primary-foreground text-lg">
+                    <div className="font-bold text-foreground text-lg">
                       {caseStudy.testimonial_author}
                     </div>
                     <div className="text-muted-foreground">
@@ -217,7 +217,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-4xl font-black text-foreground mb-content-block">
               Want Results Like This?
             </h2>
             <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">

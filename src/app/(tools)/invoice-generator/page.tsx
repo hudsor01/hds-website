@@ -608,7 +608,7 @@ export default function InvoiceGeneratorPage() {
             <PDFDownloadLink
               document={<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />}
               fileName={`${invoiceData.invoiceNumber}.pdf`}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('invoice_downloaded', {
                   invoice_number: invoiceData.invoiceNumber,
@@ -640,13 +640,13 @@ export default function InvoiceGeneratorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h2 className="text-lg font-semibold text-foreground dark:text-foreground">
           Invoice Best Practices
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Payment Terms
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -655,7 +655,7 @@ export default function InvoiceGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Detailed Descriptions
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -664,7 +664,7 @@ export default function InvoiceGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Sequential Numbering
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -673,7 +673,7 @@ export default function InvoiceGeneratorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Keep Records
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

@@ -358,7 +358,7 @@ export default function TestimonialCollectorPage() {
                 <p>No private collection links created yet.</p>
                 <button
                   onClick={() => setActiveTab('create')}
-                  className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
+                  className="mt-4 px-4 py-2 bg-primary text-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
                 >
                   Create Your First Link
                 </button>
@@ -473,7 +473,7 @@ export default function TestimonialCollectorPage() {
                     />
                     <button
                       onClick={copyLink}
-                      className="flex items-center gap-tight px-4 py-2 bg-success-dark text-primary-foreground rounded-md text-sm font-medium hover:bg-success-darker"
+                      className="flex items-center gap-tight px-4 py-2 bg-success-dark text-foreground rounded-md text-sm font-medium hover:bg-success-darker"
                     >
                       {copiedLink ? (
                         <>
@@ -531,7 +531,7 @@ export default function TestimonialCollectorPage() {
                 <button
                   type="submit"
                   disabled={!newRequest.clientName.trim() || isCreating}
-                  className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-5 h-5" />
                   {isCreating ? 'Creating...' : 'Create Private Link'}
@@ -548,13 +548,13 @@ export default function TestimonialCollectorPage() {
 
       {/* Educational Content */}
       <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
+        <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
           Testimonial Collection Tips
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Private Links
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -563,7 +563,7 @@ export default function TestimonialCollectorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Ask at the Right Time
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -572,7 +572,7 @@ export default function TestimonialCollectorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Review Before Publishing
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -581,7 +581,7 @@ export default function TestimonialCollectorPage() {
           </div>
 
           <div className="rounded-lg border border-border card-padding-sm dark:border-border">
-            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Feature Your Best
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

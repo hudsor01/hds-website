@@ -84,7 +84,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
               />
             )}
             <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-5xl font-black text-primary-foreground mb-heading">
+              <h1 className="text-4xl md:text-5xl font-black text-foreground mb-heading">
                 {author.name}
               </h1>
               {author.bio && (
@@ -100,7 +100,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       {/* Posts */}
       <section className="py-section-sm">
         <div className="container-wide">
-          <h2 className="text-2xl font-bold text-primary-foreground mb-comfortable">
+          <h2 className="text-2xl font-bold text-foreground mb-comfortable">
             Articles by {author.name}
           </h2>
           {posts.length > 0 ? (

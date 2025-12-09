@@ -74,7 +74,7 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <h1 className="text-clamp-2xl font-black text-primary-foreground leading-none tracking-tight text-balance">
+                <h1 className="text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance">
                   <span className="inline-block">Get Your Free</span>
                   <br />
                   <span className="inline-block text-accent">ROI Roadmap</span>
@@ -92,14 +92,14 @@ export default function ContactPage() {
               {/* Contact Info - Enhanced */}
               <div className="space-y-content">
                 <div className="glass-card-light card-padding-sm space-y-tight">
-                  <h3 className="text-body-lg font-bold text-primary-foreground mb-subheading">What Happens Next?</h3>
+                  <h3 className="text-body-lg font-bold text-foreground mb-subheading">What Happens Next?</h3>
 
                   <div className="flex items-start gap-content text-muted">
                     <div className="w-10 h-10 rounded-full bg-primary-20 border border-accent/30 flex-center shrink-0">
                       <span className="text-accent font-bold">1</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-primary-foreground">We respond within 2 hours</p>
+                      <p className="font-semibold text-foreground">We respond within 2 hours</p>
                       <p className="text-caption">Get a confirmation email with next steps</p>
                     </div>
                   </div>
@@ -109,7 +109,7 @@ export default function ContactPage() {
                       <span className="text-accent font-bold">2</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-primary-foreground">30-minute strategy call</p>
+                      <p className="font-semibold text-foreground">30-minute strategy call</p>
                       <p className="text-caption">We analyze your needs and identify revenue opportunities</p>
                     </div>
                   </div>
@@ -119,7 +119,7 @@ export default function ContactPage() {
                       <span className="text-accent font-bold">3</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-primary-foreground">Get your custom roadmap</p>
+                      <p className="font-semibold text-foreground">Get your custom roadmap</p>
                       <p className="text-caption">Detailed plan with ROI projections you can use immediately</p>
                     </div>
                   </div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                 <div className="flex items-center gap-content text-muted px-4 py-2 bg-success-text/10 border border-success-text/30 rounded-lg">
                   <Clock className="w-6 h-6 text-success-text shrink-0" />
                   <div>
-                    <p className="font-semibold text-primary-foreground">Guaranteed Response</p>
+                    <p className="font-semibold text-foreground">Guaranteed Response</p>
                     <p className="text-caption">Within 2 hours during business hours</p>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function ContactPage() {
                 <div className="absolute inset-0 bg-background-5" />
                 <div className="relative z-sticky">
                   <div className="text-center mb-comfortable">
-                    <h2 className="text-card-title font-bold text-primary-foreground mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
+                    <h2 className="text-card-title font-bold text-foreground mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
                     <div className="typography">
                       <p className="text-muted-foreground text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
                     </div>
@@ -184,7 +184,7 @@ export default function ContactPage() {
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block">
-            <h2 className="text-clamp-xl font-black text-primary-foreground mb-heading text-balance">
+            <h2 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
               <span className="text-accent">
                 Visit Our Office
               </span>

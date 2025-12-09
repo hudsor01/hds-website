@@ -28,7 +28,7 @@ export default function PrivacyPage() {
 
           <div className="glass-card card-padding-lg typography">
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Information We Collect</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Information We Collect</h2>
               <div className="text-muted space-y-content">
                 <p>We collect information you provide directly to us, such as when you:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Automatically Collected Information</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Automatically Collected Information</h2>
               <div className="text-muted space-y-content">
                 <p>We automatically collect certain information when you visit our website:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Cookies and Tracking</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Cookies and Tracking</h2>
               <div className="text-muted space-y-content">
                 <p>We use cookies and similar technologies to:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">How We Use Your Information</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">How We Use Your Information</h2>
               <div className="text-muted space-y-content">
                 <p>We use the information we collect to:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Information Sharing</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Information Sharing</h2>
               <div className="text-muted space-y-content">
                 <p>We do not sell, trade, or rent your personal information. We may share your information only in these limited circumstances:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Third-Party Services</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Third-Party Services</h2>
               <div className="text-muted space-y-content">
                 <p>Our website uses third-party services that may collect information:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -110,7 +110,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Data Security</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Data Security</h2>
               <div className="text-muted space-y-content">
                 <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Your Rights</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Your Rights</h2>
               <div className="text-muted space-y-content">
                 <p>You have the right to:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -138,7 +138,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Data Retention</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Data Retention</h2>
               <div className="text-muted space-y-content">
                 <p>We retain your personal information only as long as necessary to fulfill the purposes for which it was collected, including:</p>
                 <ul className="list-disc pl-6 space-y-tight">
@@ -151,21 +151,21 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Children&apos;s Privacy</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Children&apos;s Privacy</h2>
               <div className="text-muted space-y-content">
                 <p>Our services are not directed to children under 13. We do not knowingly collect personal information from children under 13. If you become aware that a child has provided us with personal information, please contact us.</p>
               </div>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Changes to This Policy</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Changes to This Policy</h2>
               <div className="text-muted space-y-content">
                 <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the &quot;Last updated&quot; date.</p>
               </div>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-primary-foreground mb-heading">Contact Us</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-heading">Contact Us</h2>
               <div className="text-muted space-y-content">
                 <p>If you have any questions about this privacy policy or our privacy practices, please contact us:</p>
                 <div className="bg-background/50 card-padding-sm rounded-lg">

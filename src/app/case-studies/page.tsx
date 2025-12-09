@@ -52,7 +52,7 @@ async function CaseStudiesContent() {
                         )}
                       </div>
 
-                      <h2 className="text-3xl font-bold text-primary-foreground mb-3">
+                      <h2 className="text-3xl font-bold text-foreground mb-3">
                         {study.title}
                       </h2>
 
@@ -119,7 +119,7 @@ async function CaseStudiesContent() {
                           </span>
                         </div>
                         <div>
-                          <div className="font-semibold text-primary-foreground">
+                          <div className="font-semibold text-foreground">
                             {study.testimonial_author}
                           </div>
                           <div className="text-sm text-muted-foreground">
@@ -146,7 +146,7 @@ export default function CaseStudiesPage() {
       {/* Hero - Static, prerendered */}
       <section className="py-section px-4">
         <div className="container-wide text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+          <h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
             Real Results From <span className="text-accent">Real Projects</span>
           </h1>
 
@@ -183,7 +183,7 @@ export default function CaseStudiesPage() {
       <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Get Results Like These?
             </h2>
             <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
