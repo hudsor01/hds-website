@@ -5,13 +5,40 @@
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
 
-// Mock environment variables for CSRF
+// Mock environment variables - must include all env vars used by rate-limiter and logger
 mock.module('@/env', () => ({
   env: {
-    CSRF_SECRET: 'test-csrf-secret-for-testing-only',
+    NODE_ENV: 'test',
+    CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
     KV_REST_API_URL: undefined,
     KV_REST_API_TOKEN: undefined,
+    RESEND_API_KEY: 'test-resend-key',
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
+    npm_package_version: '1.0.0',
+    BASE_URL: 'http://localhost:3000',
+    NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'test-anon-key',
   },
+}));
+
+// Mock logger to avoid initialization issues
+mock.module('@/lib/logger', () => ({
+  logger: {
+    info: mock(),
+    warn: mock(),
+    error: mock(),
+    debug: mock(),
+    setContext: mock(),
+  },
+  createServerLogger: () => ({
+    info: mock(),
+    warn: mock(),
+    error: mock(),
+    debug: mock(),
+    setContext: mock(),
+  }),
+  castError: (error: unknown) => error instanceof Error ? error : new Error(String(error)),
 }));
 
 // ================================
