@@ -1,9 +1,13 @@
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'bun:test'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'bun:test'
 
 describe('Component Variations with CVA', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   describe('Input Component', () => {
     it('should render currency variant with dollar sign', () => {
       render(
