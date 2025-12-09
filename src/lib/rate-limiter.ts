@@ -293,8 +293,24 @@ export class UnifiedRateLimiter {
   }
 }
 
-// Singleton instance
-export const unifiedRateLimiter = new UnifiedRateLimiter();
+// Lazy singleton factory — avoids side-effects during module import
+let _unifiedRateLimiter: UnifiedRateLimiter | null = null;
+
+export function getUnifiedRateLimiter(): UnifiedRateLimiter {
+  if (!_unifiedRateLimiter) {
+    _unifiedRateLimiter = new UnifiedRateLimiter();
+  }
+  return _unifiedRateLimiter;
+}
+
+// Legacy export for backwards compatibility (lazy initialized)
+export const unifiedRateLimiter = {
+  checkLimit: (identifier: string, limitType?: RateLimitType) =>
+    getUnifiedRateLimiter().checkLimit(identifier, limitType),
+  getLimitInfo: (identifier: string, limitType?: RateLimitType) =>
+    getUnifiedRateLimiter().getLimitInfo(identifier, limitType),
+  destroy: () => getUnifiedRateLimiter().destroy(),
+};
 
 // Helper function to get client IP from NextRequest
 export function getClientIp(request: NextRequest): string {
