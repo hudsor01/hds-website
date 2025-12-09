@@ -36,6 +36,12 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const supabase = createClient()
 
   useEffect(() => {
+    // During SSG/build, supabase client may be null
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     let isMounted = true
 
     const init = async () => {
@@ -61,6 +67,10 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!supabase) {
+      setError('Authentication not available')
+      return
+    }
     setError('')
     setIsSubmitting(true)
 
@@ -82,6 +92,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   }
 
   const handleLogout = async () => {
+    if (!supabase) {return}
     await supabase.auth.signOut()
     setEmail('')
     setPassword('')
