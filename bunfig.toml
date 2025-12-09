@@ -1,0 +1,37 @@
+[test]
+# Test configuration for bun test
+preload = ["./tests/setup.ts"]
+
+# Use happy-dom for better React 19 compatibility
+environment = "happy-dom"
+
+# Include patterns - only tests/ directory, not e2e/
+# Be very explicit to avoid Playwright files
+include = [
+  "tests/**/*.test.ts",
+  "tests/**/*.test.tsx"
+]
+
+# Exclude patterns - CRITICAL: exclude all Playwright to prevent global collision
+exclude = [
+  "**/node_modules/**",
+  "**/.next/**",
+  "**/e2e/**",
+  "**/*.spec.ts",
+  "**/*.spec.tsx",
+  "**/playwright*/**",
+  "**/test-results/**",
+  "**/playwright-report/**"
+]
+
+# Coverage
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "./coverage"
+
+# Bail on first failure to prevent cascade errors
+bail = 0
+
+# Run tests serially to prevent test isolation issues and Playwright global pollution
+# When all tests run in parallel, Playwright's globals can interfere with Bun's test runner
+pool = "serial"

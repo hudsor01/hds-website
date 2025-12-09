@@ -1,3 +1,17 @@
+/**
+ * Contact Form E2E Tests
+ * =============================================================================
+ *
+ * Tests for the ContactForm component which uses TanStack Form + shadcn/ui Field
+ * components. The form includes text inputs, email, phone, textarea, and
+ * Radix UI Select dropdowns.
+ *
+ * Key Testing Patterns:
+ * - Input fields: Use standard Playwright fill() with #id selectors
+ * - Radix Select: Click trigger, then click option from dropdown
+ * - Form submission: Monitor for success message or error state
+ */
+
 import { test, expect, type TestInfo, type Route } from '@playwright/test'
 import { createTestLogger } from './test-logger'
 
@@ -10,160 +24,276 @@ test.describe('Contact Form', () => {
     // Check form is visible
     await expect(page.locator('form')).toBeVisible()
 
-    // Check all required fields are present
-    await expect(page.locator('input[name="firstName"]')).toBeVisible()
-    await expect(page.locator('input[name="lastName"]')).toBeVisible()
-    await expect(page.locator('input[name="email"]')).toBeVisible()
-    await expect(page.locator('textarea[name="message"]')).toBeVisible()
+    // Check all text input fields are present (using id selectors)
+    await expect(page.locator('#firstName')).toBeVisible()
+    await expect(page.locator('#lastName')).toBeVisible()
+    await expect(page.locator('#email')).toBeVisible()
+    await expect(page.locator('#phone')).toBeVisible()
+    await expect(page.locator('#company')).toBeVisible()
+    await expect(page.locator('#message')).toBeVisible()
 
-    // Check optional fields
-    await expect(page.locator('input[name="phone"]')).toBeVisible()
-    await expect(page.locator('input[name="company"]')).toBeVisible()
-    await expect(page.locator('select[name="service"]')).toBeVisible()
-    await expect(page.locator('select[name="bestTimeToContact"]')).toBeVisible()
-    await expect(page.locator('select[name="budget"]')).toBeVisible()
-    await expect(page.locator('select[name="timeline"]')).toBeVisible()
+    // Check Radix Select triggers are present (they use role="combobox")
+    const selectTriggers = page.locator('[role="combobox"]')
+    await expect(selectTriggers).toHaveCount(4) // service, bestTimeToContact, budget, timeline
+  })
+
+  test('should allow filling text input fields', async ({ page }) => {
+    // Fill text fields
+    await page.fill('#firstName', 'John')
+    await page.fill('#lastName', 'Doe')
+    await page.fill('#email', 'john.doe@example.com')
+    await page.fill('#phone', '555-123-4567')
+    await page.fill('#company', 'Acme Corp')
+    await page.fill('#message', 'This is a test message.')
+
+    // Verify values are set
+    await expect(page.locator('#firstName')).toHaveValue('John')
+    await expect(page.locator('#lastName')).toHaveValue('Doe')
+    await expect(page.locator('#email')).toHaveValue('john.doe@example.com')
+    await expect(page.locator('#phone')).toHaveValue('555-123-4567')
+    await expect(page.locator('#company')).toHaveValue('Acme Corp')
+    await expect(page.locator('#message')).toHaveValue('This is a test message.')
+  })
+
+  test('should allow selecting options from Radix Select dropdowns', async ({ page }) => {
+    // Select service option
+    const serviceSelect = page.locator('#service')
+    await serviceSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+
+    // Select best time to contact
+    const timeSelect = page.locator('#bestTimeToContact')
+    await timeSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).click()
+
+    // Select budget
+    const budgetSelect = page.locator('#budget')
+    await budgetSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).click()
+
+    // Select timeline
+    const timelineSelect = page.locator('#timeline')
+    await timelineSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).click()
   })
 
   test('should show validation errors for empty required fields', async ({ page }) => {
-    // Try to submit empty form
+    // Try to submit empty form by clicking submit button
     await page.locator('button[type="submit"]').click()
 
     // Browser native validation should prevent submission
     // Check that form is still visible (not replaced with success message)
     await expect(page.locator('form')).toBeVisible()
+
+    // The firstName field should show browser validation (required)
+    const firstNameInput = page.locator('#firstName')
+    const isInvalid = await firstNameInput.evaluate((el: HTMLInputElement) => !el.validity.valid)
+    expect(isInvalid).toBe(true)
   })
 
-  test('should successfully submit form with valid data', async ({ page }) => {
-    // Fill in required fields
-    await page.fill('input[name="firstName"]', 'John')
-    await page.fill('input[name="lastName"]', 'Doe')
-    await page.fill('input[name="email"]', 'john.doe@example.com')
-    await page.fill('textarea[name="message"]', 'This is a test message for the contact form.')
+  test('should successfully submit form with valid data', async ({ page }, testInfo: TestInfo) => {
+    const logger = createTestLogger(testInfo.title)
 
-    // Fill optional fields
-    await page.fill('input[name="phone"]', '555-123-4567')
-    await page.fill('input[name="company"]', 'Test Company')
-    await page.selectOption('select[name="service"]', 'web-development')
-    await page.selectOption('select[name="bestTimeToContact"]', 'morning')
-    await page.selectOption('select[name="budget"]', '5k-15k')
-    await page.selectOption('select[name="timeline"]', '1-month')
+    // Fill in required text fields
+    await page.fill('#firstName', 'John')
+    await page.fill('#lastName', 'Doe')
+    await page.fill('#email', 'john.doe@example.com')
+    await page.fill('#message', 'This is a test message for the contact form. I am interested in your web development services.')
+
+    // Fill optional text fields
+    await page.fill('#phone', '555-123-4567')
+    await page.fill('#company', 'Test Company Inc')
+
+    logger.step('Filled text fields')
+
+    // Select service (Radix Select)
+    await page.locator('#service').click()
+    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+
+    // Select best time to contact
+    await page.locator('#bestTimeToContact').click()
+    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).click()
+
+    // Select budget
+    await page.locator('#budget').click()
+    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).click()
+
+    // Select timeline
+    await page.locator('#timeline').click()
+    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).click()
+
+    logger.step('Selected dropdown options')
 
     // Submit form
     await page.locator('button[type="submit"]').click()
 
     // Wait for either success message or error
-    await page.waitForSelector('text=/Thank you|Success|sent|error/i', { timeout: 10000 })
+    await page.waitForSelector('text=/Thank you|Success|sent|error/i', { timeout: 15000 })
 
-    // Check for success indicators (form might show success message or redirect)
+    // Check for success indicators
     const successVisible = await page.locator('text=/Thank you|Success|sent successfully/i').isVisible().catch(() => false)
     const errorVisible = await page.locator('text=/error|failed|try again/i').isVisible().catch(() => false)
 
-    // If we're in test environment without email service, we might get a specific error
-    // In production, this should succeed
+    // In test environment without email service, we might get an error
+    // In production with proper config, this should succeed
     expect(successVisible || errorVisible).toBeTruthy()
+
+    if (successVisible) {
+      logger.success('Form submitted successfully')
+    } else if (errorVisible) {
+      logger.warn('Form submission returned an error (expected in test environment)')
+    }
   })
 
   test('should show pending state while submitting', async ({ page }, testInfo: TestInfo) => {
-    const logger = createTestLogger(testInfo.title);
-    // Fill in form
-    await page.fill('input[name="firstName"]', 'Jane')
-    await page.fill('input[name="lastName"]', 'Smith')
-    await page.fill('input[name="email"]', 'jane.smith@example.com')
-    await page.fill('textarea[name="message"]', 'Testing pending state')
+    const logger = createTestLogger(testInfo.title)
 
-    // Start monitoring the submit button
+    // Fill in minimum required fields
+    await page.fill('#firstName', 'Jane')
+    await page.fill('#lastName', 'Smith')
+    await page.fill('#email', 'jane.smith@example.com')
+    await page.fill('#message', 'Testing pending state during form submission.')
+
+    // Get submit button
     const submitButton = page.locator('button[type="submit"]')
 
-    // For Server Actions, we can't intercept the request, but we can slow down the response
-    // by intercepting the fetch that Server Actions use internally
-    await page.route('**/_next/**', async (route: Route) => {
+    // Intercept and delay API calls to make pending state visible
+    await page.route('**/api/**', async (route: Route) => {
       if (route.request().method() === 'POST') {
-        // Add a delay to simulate slower network request
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise(resolve => setTimeout(resolve, 1500))
       }
-      route.continue()
+      await route.continue()
     })
 
-    // Get initial button state
+    // Get initial button text
     const initialText = await submitButton.textContent()
-    expect(initialText).toBe('Send Message')
+    logger.step(`Initial button text: ${initialText}`)
 
-    // Click submit button and immediately check for disabled state
+    // Click submit
     const submitPromise = submitButton.click()
 
-    // Wait a tiny bit for React to process the form submission
-    await page.waitForTimeout(50)
+    // Wait a moment for React state update
+    await page.waitForTimeout(100)
 
-    // Check if the button becomes disabled or shows loading state
-    // In modern React with Server Actions, the pending state might be very brief
+    // Check for loading state
     try {
-      await expect(submitButton).toBeDisabled({ timeout: 1000 })
-      logger.step('Button was disabled during submission')
-    } catch {
-      // If pending state is too fast, check if the form was actually submitted
-      try {
-        await expect(submitButton).toContainText('Sending...', { timeout: 1000 })
-        logger.step('Button showed loading state')
-      } catch {
-        // Form might have already completed - check for success/error message
-        const hasResult = await page.locator('[data-testid="success-message"], [data-testid="error-message"], text=/Thank you|Success|Error|failed/i').first().isVisible().catch(() => false)
+      // Button should show loading text or be disabled
+      const buttonText = await submitButton.textContent()
+      const isDisabled = await submitButton.isDisabled()
+
+      if (buttonText?.includes('Submitting') || buttonText?.includes('...') || isDisabled) {
+        logger.success('Button shows loading state')
+      } else {
+        // Form might have completed quickly
+        const hasResult = await page.locator('text=/Thank you|error/i').isVisible().catch(() => false)
         if (hasResult) {
-          logger.step('Form completed quickly without catching pending state')
-        } else {
-          logger.warn('Could not verify pending state or form completion')
+          logger.step('Form completed before catching loading state')
         }
       }
+    } catch {
+      logger.warn('Could not verify loading state')
     }
 
-    // Wait for the submission to complete
     await submitPromise
   })
 
-  test('should handle rate limiting gracefully', async ({ page }) => {
-    // Submit form multiple times quickly to trigger rate limiting
-    for (let i = 0; i < 4; i++) {
-      await page.fill('input[name="firstName"]', `User${i}`)
-      await page.fill('input[name="lastName"]', 'Test')
-      await page.fill('input[name="email"]', `user${i}@example.com`)
-      await page.fill('textarea[name="message"]', `Test message ${i}`)
+  test('should allow resending after successful submission', async ({ page }, testInfo: TestInfo) => {
+    const logger = createTestLogger(testInfo.title)
 
-      await page.locator('button[type="submit"]').click()
+    // Fill and submit form
+    await page.fill('#firstName', 'Test')
+    await page.fill('#lastName', 'User')
+    await page.fill('#email', 'test@example.com')
+    await page.fill('#message', 'Test message for resend flow.')
 
-      // Wait a bit between submissions
-      await page.waitForTimeout(1000)
+    await page.locator('button[type="submit"]').click()
 
-      // If we hit rate limit, we should see an error message
-      if (i === 3) {
-        const rateLimitError = await page.locator('text=/too many|rate limit|try again.*minutes/i').isVisible().catch(() => false)
-        if (rateLimitError) {
-          expect(rateLimitError).toBeTruthy()
-          break
-        }
+    // Wait for result
+    await page.waitForSelector('text=/Thank you|error/i', { timeout: 15000 })
+
+    const successVisible = await page.locator('text=/Thank you/i').isVisible().catch(() => false)
+
+    if (successVisible) {
+      logger.step('Form submitted successfully, looking for reset button')
+
+      // Check for "Send another message" button
+      const resetButton = page.locator('button', { hasText: /another message/i })
+
+      if (await resetButton.isVisible()) {
+        await resetButton.click()
+
+        // Form should be visible again with empty fields
+        await expect(page.locator('form')).toBeVisible()
+        await expect(page.locator('#firstName')).toHaveValue('')
+        logger.success('Form reset successfully')
+      } else {
+        logger.warn('Reset button not found - form may not support resend')
       }
-
-      // Reset form if successful
-      const successVisible = await page.locator('text=/Thank you|Success/i').isVisible().catch(() => false)
-      if (successVisible) {
-        await page.reload()
-      }
+    } else {
+      logger.warn('Form did not show success (expected in test environment)')
     }
   })
 
   test('should preserve form data on validation error', async ({ page }) => {
-    // Fill in some fields but leave required field empty
-    await page.fill('input[name="firstName"]', 'John')
-    await page.fill('input[name="email"]', 'invalid-email') // Invalid email format
-    await page.fill('textarea[name="message"]', 'Test message')
+    // Fill in some fields with an invalid email
+    await page.fill('#firstName', 'John')
+    await page.fill('#lastName', 'Doe')
+    await page.fill('#email', 'invalid-email') // Invalid format
+    await page.fill('#message', 'Test message that should be preserved.')
 
     // Try to submit
     await page.locator('button[type="submit"]').click()
 
-    // Wait a moment for validation
+    // Wait a moment for any validation
     await page.waitForTimeout(500)
 
     // Check that form data is preserved
-    await expect(page.locator('input[name="firstName"]')).toHaveValue('John')
-    await expect(page.locator('textarea[name="message"]')).toHaveValue('Test message')
+    await expect(page.locator('#firstName')).toHaveValue('John')
+    await expect(page.locator('#lastName')).toHaveValue('Doe')
+    await expect(page.locator('#email')).toHaveValue('invalid-email')
+    await expect(page.locator('#message')).toHaveValue('Test message that should be preserved.')
+  })
+
+  test('should have accessible form structure', async ({ page }) => {
+    // Check that all inputs have associated labels (via htmlFor/id)
+    const firstNameLabel = page.locator('label[for="firstName"]')
+    await expect(firstNameLabel).toBeVisible()
+
+    const emailLabel = page.locator('label[for="email"]')
+    await expect(emailLabel).toBeVisible()
+
+    const messageLabel = page.locator('label[for="message"]')
+    await expect(messageLabel).toBeVisible()
+
+    // Check that form has proper structure
+    const form = page.locator('form')
+    await expect(form).toBeVisible()
+
+    // Check submit button is accessible
+    const submitButton = page.locator('button[type="submit"]')
+    await expect(submitButton).toBeEnabled()
+    await expect(submitButton).toHaveText(/submit/i)
+  })
+
+  test('should handle keyboard navigation', async ({ page }) => {
+    // Focus on first name and tab through fields
+    await page.locator('#firstName').focus()
+    await expect(page.locator('#firstName')).toBeFocused()
+
+    // Tab to next field
+    await page.keyboard.press('Tab')
+
+    // Should move to lastName
+    await expect(page.locator('#lastName')).toBeFocused()
+
+    // Continue tabbing through form
+    await page.keyboard.press('Tab')
+    await expect(page.locator('#email')).toBeFocused()
+
+    await page.keyboard.press('Tab')
+    await expect(page.locator('#phone')).toBeFocused()
+
+    await page.keyboard.press('Tab')
+    await expect(page.locator('#company')).toBeFocused()
   })
 })

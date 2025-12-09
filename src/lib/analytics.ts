@@ -1,30 +1,24 @@
 /**
  * Unified Analytics Module
- * Lightweight analytics tracking using Supabase only
- * No external dependencies - optimized for performance
+ * Migrated to Vercel Analytics for better performance and reliability
+ * Lightweight, non-blocking analytics with Vercel Analytics
  */
 
+import { track as vercelTrack } from '@vercel/analytics';
 import type {
-  EventProperties,
-  PageViewProperties,
-  UserProperties,
+    EventProperties,
+    PageViewProperties,
+    UserProperties,
 } from "@/types/analytics";
-import {
-  postHogEventSchema,
-  conversionDataSchema,
-  pageViewPropertiesSchema,
-  userPropertiesSchema,
-} from '@/lib/schemas';
-import { getAttributionForSubmission } from '@/lib/attribution';
+
+type AnalyticsValue = string | number | boolean | null | undefined;
 
 /**
  * Analytics Manager - Lightweight, non-blocking analytics
- * Only tracks critical events to Supabase
- * Sampling strategy: 10% of non-critical events
+ * Uses Vercel Analytics for reliable event tracking
  */
 class AnalyticsManager {
   private initialized = false;
-  private samplingRate = 0.1; // 10% sampling for non-critical events
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -33,289 +27,205 @@ class AnalyticsManager {
   }
 
   /**
-   * Determine if event should be sampled
+   * Track custom event
    */
-  private shouldSample(eventName: string): boolean {
-    // Always track critical events
-    const criticalEvents = [
-      'form_submission',
-      'lead_captured',
-      'conversion',
-      'error',
-      'purchase',
-      'sign_up'
-    ];
-
-    if (criticalEvents.includes(eventName)) {
-      return true;
-    }
-
-    // Sample non-critical events at 10% rate
-    return Math.random() < this.samplingRate;
-  }
-
-  /**
-   * Track custom events (non-blocking)
-   */
-  trackEvent(eventName: string, properties?: EventProperties) {
-    // Skip if not initialized or shouldn't sample
-    if (!this.initialized || !this.shouldSample(eventName)) {
-      return;
-    }
-
-    // Validate event data
-    const validation = postHogEventSchema.safeParse({
-      event: eventName,
-      properties,
-    });
-
-    if (!validation.success) {
-      // Silent fail for invalid events (don't spam logs)
-      return;
-    }
-
-    // Fire-and-forget to backend (non-blocking)
-    if (eventName === "form_submission" || eventName === "lead_captured" || eventName === "conversion") {
-      this.sendToBackend(eventName, properties).catch(() => {
-        // Silent fail - don't block user experience
-      });
-    }
-  }
-
-  /**
-   * Track page views (non-blocking, sampled)
-   */
-  trackPageView(properties?: PageViewProperties) {
-    if (!this.initialized || !this.shouldSample('pageview')) {
-      return;
-    }
-
-    // Validate page view properties
-    if (properties) {
-      const validation = pageViewPropertiesSchema.safeParse(properties);
-      if (!validation.success) {
-        return; // Silent fail
-      }
-    }
-
-    // Fire-and-forget (non-blocking)
-    const pageData = {
-      url: window.location.href,
-      path: window.location.pathname,
-      referrer: document.referrer,
-      title: document.title,
-      ...properties,
-    };
-
-    this.sendToBackend('pageview', pageData).catch(() => {});
-  }
-
-  /**
-   * Identify user (always tracked, non-blocking)
-   */
-  identify(userId: string, properties?: UserProperties) {
+  trackEvent(eventName: string, properties?: EventProperties): void {
     if (!this.initialized) {
       return;
     }
 
-    // Validate user properties
-    if (properties) {
-      const validation = userPropertiesSchema.safeParse(properties);
-      if (!validation.success) {
-        return; // Silent fail
-      }
+    try {
+      vercelTrack(eventName, properties);
+    } catch (error) {
+      console.warn('Failed to track event:', error);
     }
-
-    // Fire-and-forget (non-blocking)
-    this.sendToBackend('user_identified', {
-      user_id: userId,
-      ...properties,
-    }).catch(() => {});
   }
 
   /**
-   * Track conversion events (always tracked, non-blocking)
-   * Automatically includes attribution data
+   * Track page view
+   */
+  trackPageView(properties?: PageViewProperties): void {
+    if (!this.initialized) {
+      return;
+    }
+
+    try {
+      vercelTrack('page_view', properties as Record<string, AnalyticsValue>);
+    } catch (error) {
+      console.warn('Failed to track page view:', error);
+    }
+  }
+
+  /**
+   * Identify user (Vercel Analytics doesn't support user identification)
+   */
+  identify(userId: string, properties?: UserProperties): void {
+    if (!this.initialized) {
+      return;
+    }
+
+    try {
+      // Vercel Analytics doesn't support user identification
+      // We can track it as an event instead
+      vercelTrack('user_identified', { userId, ...properties });
+    } catch (error) {
+      console.warn('Failed to identify user:', error);
+    }
+  }
+
+  /**
+   * Track conversion
    */
   trackConversion(
     conversionType: string,
     value?: number,
-    properties?: EventProperties
-  ) {
+    currency = 'USD',
+    properties?: Record<string, AnalyticsValue>
+  ): void {
     if (!this.initialized) {
       return;
     }
 
-    // Validate conversion data
-    const validation = conversionDataSchema.safeParse({
-      event: conversionType,
-      value,
-    });
-
-    if (!validation.success) {
-      return; // Silent fail
+    try {
+      vercelTrack('conversion', {
+        conversionType,
+        value,
+        currency,
+        ...properties
+      });
+    } catch (error) {
+      console.warn('Failed to track conversion:', error);
     }
-
-    // Include attribution data with conversion
-    const attribution = getAttributionForSubmission();
-
-    const conversionData = {
-      conversion_type: conversionType,
-      conversion_value: value,
-      utm_source: attribution.utm_params?.utm_source,
-      utm_medium: attribution.utm_params?.utm_medium,
-      utm_campaign: attribution.utm_params?.utm_campaign,
-      source: attribution.source,
-      medium: attribution.medium,
-      device_type: attribution.device_type,
-      ...properties,
-    };
-
-    this.trackEvent("conversion", conversionData);
   }
 
   /**
-   * Track timing events (sampled)
+   * Track timing/performance metrics
    */
   trackTiming(
     category: string,
-    variable: string,
+    action: string,
     time: number,
     label?: string
-  ) {
-    // Basic validation
-    if (!category || !variable || time < 0) {
-      return;
-    }
-
-    this.trackEvent("timing_complete", {
-      timing_category: category,
-      timing_variable: variable,
-      timing_time: time,
-      timing_label: label,
-    });
-  }
-
-  /**
-   * Track errors (always tracked, non-blocking)
-   */
-  trackError(error: Error | string, fatal = false) {
+  ): void {
     if (!this.initialized) {
       return;
     }
 
-    const errorData = {
-      error_message: typeof error === "string" ? error : error.message,
-      error_stack: typeof error === "object" ? error.stack : undefined,
-      error_fatal: fatal,
-      page_url: typeof window !== "undefined" ? window.location.href : undefined,
-    };
-
-    // Fire-and-forget (non-blocking)
-    this.sendToBackend("error", errorData).catch(() => {});
-  }
-
-  /**
-   * Track form interactions (sampled)
-   * Includes attribution data for form submissions
-   */
-  trackFormInteraction(formName: string, action: string, fieldName?: string) {
-    const properties: EventProperties = {
-      form_name: formName,
-      form_action: action,
-      field_name: fieldName,
-    };
-
-    // For form submissions, include attribution
-    if (action === 'submit' || action === 'submitted') {
-      const attribution = getAttributionForSubmission();
-      properties.utm_source = attribution.utm_params?.utm_source;
-      properties.utm_medium = attribution.utm_params?.utm_medium;
-      properties.utm_campaign = attribution.utm_params?.utm_campaign;
-      properties.source = attribution.source;
-      properties.medium = attribution.medium;
+    try {
+      vercelTrack('timing', {
+        category,
+        action,
+        time,
+        label
+      });
+    } catch (error) {
+      console.warn('Failed to track timing:', error);
     }
-
-    this.trackEvent("form_interaction", properties);
   }
 
   /**
-   * Track CTA clicks (sampled)
+   * Track error
    */
-  trackCTAClick(ctaName: string, location: string, destination?: string) {
-    this.trackEvent("cta_click", {
-      cta_name: ctaName,
-      cta_location: location,
-      cta_destination: destination,
-    });
-  }
-
-  /**
-   * Track scroll depth (sampled)
-   */
-  trackScrollDepth(percentage: number) {
-    // Basic validation
-    if (percentage < 0 || percentage > 100) {
+  trackError(error: Error | string, fatal = false): void {
+    if (!this.initialized) {
       return;
     }
 
-    this.trackEvent("scroll_depth", {
-      depth_percentage: percentage,
-      page_height: typeof document !== "undefined" ? document.body.scrollHeight : 0,
-    });
+    try {
+      const errorMessage = error instanceof Error ? error.message : error;
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      vercelTrack('error', {
+        message: errorMessage,
+        stack: errorStack,
+        fatal
+      });
+    } catch (err) {
+      console.warn('Failed to track error:', err);
+    }
   }
 
   /**
-   * Track time on page (sampled)
+   * Track form interaction
    */
-  trackTimeOnPage(seconds: number) {
-    // Basic validation
-    if (seconds < 0) {
+  trackFormInteraction(
+    formName: string,
+    action: string,
+    fieldName?: string
+  ): void {
+    if (!this.initialized) {
       return;
     }
 
-    this.trackEvent("time_on_page", {
-      time_seconds: seconds,
-      page_url: typeof window !== "undefined" ? window.location.href : undefined,
-    });
+    try {
+      vercelTrack('form_interaction', {
+        formName,
+        action,
+        fieldName
+      });
+    } catch (error) {
+      console.warn('Failed to track form interaction:', error);
+    }
   }
 
   /**
-   * Send critical events to backend (non-blocking, fire-and-forget)
+   * Track CTA click
    */
-  private async sendToBackend(eventName: string, properties?: EventProperties): Promise<void> {
-    const payload = {
-      event: eventName,
-      properties,
-      timestamp: new Date().toISOString(),
-    };
-
-    // Validate backend analytics payload
-    const validation = postHogEventSchema.safeParse(payload);
-
-    if (!validation.success) {
-      return; // Silent fail
+  trackCTAClick(
+    ctaName: string,
+    location: string,
+    destination?: string
+  ): void {
+    if (!this.initialized) {
+      return;
     }
 
-    // Fire-and-forget fetch (no await in caller)
-    fetch("/api/analytics", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-      // Use keepalive to ensure request completes even if page unloads
-      keepalive: true,
-    }).catch(() => {
-      // Silent fail - don't throw errors or log
-    });
+    try {
+      vercelTrack('cta_click', {
+        ctaName,
+        location,
+        destination
+      });
+    } catch (error) {
+      console.warn('Failed to track CTA click:', error);
+    }
   }
 
   /**
-   * Reset user (no-op since we removed PostHog)
+   * Track scroll depth
    */
-  reset() {
-    // No-op: Kept for backwards compatibility
+  trackScrollDepth(percentage: number): void {
+    if (!this.initialized) {
+      return;
+    }
+
+    try {
+      vercelTrack('scroll_depth', { percentage });
+    } catch (error) {
+      console.warn('Failed to track scroll depth:', error);
+    }
+  }
+
+  /**
+   * Track time on page
+   */
+  trackTimeOnPage(seconds: number): void {
+    if (!this.initialized) {
+      return;
+    }
+
+    try {
+      vercelTrack('time_on_page', { seconds });
+    } catch (error) {
+      console.warn('Failed to track time on page:', error);
+    }
+  }
+
+  /**
+   * Reset analytics (no-op for Vercel Analytics)
+   */
+  reset(): void {
+    // Vercel Analytics doesn't support resetting
   }
 }
 
@@ -335,17 +245,18 @@ export const identify = (userId: string, properties?: UserProperties) =>
 export const trackConversion = (
   conversionType: string,
   value?: number,
-  properties?: EventProperties
-) => analytics.trackConversion(conversionType, value, properties);
+  currency?: string,
+  properties?: Record<string, AnalyticsValue>
+) => analytics.trackConversion(conversionType, value, currency, properties);
 
 export const trackTiming = (
   category: string,
-  variable: string,
+  action: string,
   time: number,
   label?: string
-) => analytics.trackTiming(category, variable, time, label);
+) => analytics.trackTiming(category, action, time, label);
 
-export const trackError = (error: Error | string, fatal = false) =>
+export const trackError = (error: Error | string, fatal?: boolean) =>
   analytics.trackError(error, fatal);
 
 export const trackFormInteraction = (

@@ -1,8 +1,8 @@
-import { Search, ClipboardList, Zap, Rocket, ArrowRight, Check, Settings, Code2, BarChart3 } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button'
-import { BackgroundPattern } from '@/components/BackgroundPattern';
+import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, BarChart3, Check, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Web Development Services | Hudson Digital Solutions',
@@ -49,7 +49,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $8,000",
     icon: Settings,
-    gradient: "bg-gradient-decorative-purple",
+    gradient: "bg-info/20",
   },
   {
     title: "Strategic Consulting",
@@ -94,7 +94,7 @@ const process: ProcessStep[] = [
     icon: Search,
   },
   {
-    step: "02", 
+    step: "02",
     title: "Strategy",
     description: "Develop a comprehensive technical strategy with clear timelines and success metrics.",
     icon: ClipboardList,
@@ -121,20 +121,20 @@ export default function ServicesPage() {
         {/* Background Elements */}
         <BackgroundPattern variant="default" />
 
-        <div className="relative z-10 container-wide sm:px-6 lg:px-8 text-center">
-          <div className="space-y-8">
+        <div className="relative z-sticky container-wide sm:px-6 lg:px-8 text-center">
+          <div className="space-y-sections">
             <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 text-cyan-400 font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-responsive-sm blur-backdrop">
                 Professional Services
               </span>
             </div>
 
             <div>
-              <h1 className="text-responsive-lg font-black text-white leading-none tracking-tight text-balance">
+              <h1 className="text-responsive-lg font-black text-primary-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block">Technical</span>
-                <span className="inline-block mx-4 text-cyan-400">Services</span>
+                <span className="inline-block mx-4 text-accent">Services</span>
                 <span className="inline-block">That</span>
-                <span className="inline-block ml-4 text-cyan-400">Scale</span>
+                <span className="inline-block ml-4 text-accent">Scale</span>
               </h1>
             </div>
 
@@ -145,7 +145,7 @@ export default function ServicesPage() {
             </div>
 
             <div>
-              <div className="flex-center flex-col sm:flex-row gap-4 mt-12">
+              <div className="flex-center flex-col sm:flex-row gap-content mt-12">
                 <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         Start Your Project
@@ -165,11 +165,11 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Services Section */}
-      <section id="services-list" className="relative py-20 px-4">
+      <section id="services-list" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="text-cyan-400">
+            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+              <span className="text-accent">
                 Our Services
               </span>
             </h2>
@@ -180,31 +180,31 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-sections mb-16">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
                 <div
                   key={index}
-                  className="group relative glass-card-light p-8 card-hover-glow transition-all duration-300"
+                  className="group relative glass-card-light card-padding-lg card-hover-glow transition-all duration-300"
                 >
-                  <div className="flex-center mb-6">
-                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-cyan-500/30`}>
-                      <Icon className="h-8 w-8 text-cyan-400" />
+                  <div className="flex-center mb-content-block">
+                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-primary/30`}>
+                      <Icon className="h-8 w-8 text-accent" />
                     </div>
                   </div>
-                  
-                  <h3 className="text-2xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
+
+                  <h3 className="text-2xl font-bold text-text-inverted mb-heading group-hover:text-accent transition-colors">
                     {service.title}
                   </h3>
-                  
-                  <div className="typography mb-6">
+
+                  <div className="typography mb-content-block">
                     <p className="muted leading-relaxed">
                       {service.description}
                     </p>
                   </div>
-                  
-                  <div className="space-y-3 mb-8">
+
+                  <div className="space-y-3 mb-comfortable">
                     {service.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <div className="shrink-0 mr-3 mt-1">
@@ -216,14 +216,14 @@ export default function ServicesPage() {
                       </div>
                     ))}
                   </div>
-                  
-                  <div className="mb-6">
-                    <p className="text-2xl font-bold text-white">{service.pricing}</p>
+
+                  <div className="mb-content-block">
+                    <p className="text-2xl font-bold text-primary-foreground">{service.pricing}</p>
                   </div>
-                  
+
                   <Link
                     href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-background-20 border border-cyan-400/30 text-cyan-400 font-semibold rounded-lg hover:bg-cyan-600-30 hover:border-cyan-400 transition-all duration-300"
+                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-background-20 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-primary-30 hover:border-accent transition-all duration-300"
                   >
                     Get Started
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -235,11 +235,11 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Stats Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="text-cyan-400">
+            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+              <span className="text-accent">
                 Proven Results
               </span>
             </h2>
@@ -250,13 +250,13 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-comfortable mb-16">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="relative glass-card-light p-8 card-hover-glow transition-all duration-300 text-center"
+                className="relative glass-card-light card-padding-lg card-hover-glow transition-all duration-300 text-center"
               >
-                <div className="text-4xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-4xl font-bold text-primary-foreground mb-subheading">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
               </div>
             ))}
@@ -264,11 +264,11 @@ export default function ServicesPage() {
         </div>
       </section>
       {/* Process Section */}
-      <section id="process" className="relative py-20 px-4">
+      <section id="process" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              <span className="text-cyan-400">
+            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+              <span className="text-accent">
                 Our Process
               </span>
             </h2>
@@ -279,19 +279,19 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-sections mb-16">
             {process.map((step, index) => (
               <div
                 key={index}
-                className="group relative glass-card p-8 card-hover-glow transition-all duration-300 text-center"
+                className="group relative glass-card card-padding-lg card-hover-glow transition-all duration-300 text-center"
               >
-                <div className="mb-4 flex justify-center">
-                  <div className="w-16 h-16 bg-cyan-400/20 rounded-full flex-center">
-                    <step.icon className="w-8 h-8 text-cyan-400" />
+                <div className="mb-heading flex justify-center">
+                  <div className="w-16 h-16 bg-accent/20 rounded-full flex-center">
+                    <step.icon className="w-8 h-8 text-accent" />
                   </div>
                 </div>
-                <div className="text-cyan-400 font-bold text-lg mb-2">{step.step}</div>
-                <h3 className="text-xl font-bold text-text-inverted mb-4 group-hover:text-cyan-400 transition-colors">
+                <div className="text-accent font-bold text-lg mb-subheading">{step.step}</div>
+                <h3 className="text-xl font-bold text-text-inverted mb-heading group-hover:text-accent transition-colors">
                   {step.title}
                 </h3>
                 <div className="typography">
@@ -306,35 +306,35 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-section px-4">
         <div className="container-wide">
-          <div className="relative z-10 text-center glass-section p-12 md:p-16">
-            <h2 className="text-responsive-md font-black text-white mb-6">
-              Ready to accelerate 
-              <span className="text-cyan-400">
+          <div className="relative z-sticky text-center glass-section p-12 md:p-16">
+            <h2 className="text-responsive-md font-black text-primary-foreground mb-content-block">
+              Ready to accelerate
+              <span className="text-accent">
                 {" "}your growth?
               </span>
             </h2>
-            
+
             <div className="typography">
               <p className="large muted container-narrow mb-10">
                 Let&apos;s discuss your specific technical needs and create a custom solution that drives real results for your business.
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row flex-center gap-4">
+
+            <div className="flex flex-col sm:flex-row flex-center gap-content">
               <Link
                 href="/contact"
                 className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
               >
                 <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative z-10">Start Your Project</span>
+                <span className="relative z-sticky">Start Your Project</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
                 href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-text-inverted font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-all duration-300"
               >
                 Explore Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

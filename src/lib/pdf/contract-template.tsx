@@ -10,6 +10,10 @@ import {
   View,
   StyleSheet,
 } from '@react-pdf/renderer';
+import type { ContractTemplate, ContractData } from '@/types/pdf-templates';
+
+// Re-export types for convenience
+export type { ContractTemplate, ContractData };
 
 const styles = StyleSheet.create({
   page: {
@@ -139,38 +143,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-
-export type ContractTemplate = 'service-agreement' | 'nda' | 'freelance-contract';
-
-export interface ContractData {
-  // Template
-  template: ContractTemplate;
-  // Provider/Company Info
-  providerName: string;
-  providerAddress: string;
-  providerCity: string;
-  providerState: string;
-  providerZip: string;
-  providerEmail: string;
-  // Client Info
-  clientName: string;
-  clientCompany: string;
-  clientAddress: string;
-  clientCity: string;
-  clientState: string;
-  clientZip: string;
-  clientEmail: string;
-  // Contract Details
-  effectiveDate: string;
-  endDate: string;
-  // Terms
-  scopeOfWork: string;
-  paymentTerms: string;
-  paymentAmount: string;
-  timeline: string;
-  // Custom
-  customClauses: string;
-}
 
 interface ContractDocumentProps {
   data: ContractData;

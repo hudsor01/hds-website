@@ -3,15 +3,31 @@
  * Stores lead attribution data for marketing analytics
  */
 
-import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { LeadAttributionData } from '@/types/analytics';
-import type { Database } from '@/types/database';
-import type { LeadAttributionRow, LeadAttributionInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
+import { castError, createServerLogger } from '@/lib/logger';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
+import type { Database, Json } from '@/types/database';
+import type { LeadAttributionInsert } from '@/types/supabase-helpers';
+import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 const logger = createServerLogger('attribution-api');
+
+function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
+  return createClient<Database>(
+    supabaseUrl,
+    serviceRoleKey,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 60 requests per minute per IP
@@ -26,16 +42,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Parse request body
-    const body = await request.json() as LeadAttributionData;
+    const supabase = createServiceClient();
 
-    // Validate required fields
-    if (!body.email && !body.session_id) {
+    if (!supabase) {
+      logger.error('Supabase admin client not available');
       return NextResponse.json(
-        { error: 'Either email or session_id is required' },
+        { error: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    // Parse and validate request body
+    const parseResult = leadAttributionRequestSchema.safeParse(await request.json());
+
+    if (!parseResult.success) {
+      const issues = parseResult.error.flatten();
+      return NextResponse.json(
+        { error: 'Invalid attribution payload', details: issues.fieldErrors },
         { status: 400 }
       );
     }
+
+    const body: LeadAttributionRequest = parseResult.data;
 
     // Extract attribution data
     const {
@@ -63,25 +91,24 @@ export async function POST(request: NextRequest) {
       session_id,
     });
 
-    // Store in Supabase
-    if (!supabaseAdmin) {
-      logger.error('Supabase admin client not available');
+    // Check if attribution already exists for this email/session
+    const { data: existing, error: existingError } = await supabase
+      .from('lead_attribution')
+      .select('id, email, first_visit_at, visit_count')
+      .eq(email ? 'email' : 'session_id', (email ?? session_id) as string)
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to read existing attribution', castError(existingError));
       return NextResponse.json(
-        { error: 'Database not configured' },
+        { error: 'Unable to read existing attribution' },
         { status: 500 }
       );
     }
 
-    // Check if attribution already exists for this email/session
-    const { data: existing } = await supabaseAdmin
-      .from('lead_attribution')
-      .select('id, email, first_visit_at, visit_count')
-      .eq(email ? 'email' : 'session_id', (email || session_id) as string)
-      .single() as SupabaseQueryResult<Pick<LeadAttributionRow, 'id' | 'email' | 'first_visit_at' | 'visit_count'>>;
-
     if (existing) {
       // Update last visit time and visit count
-      await supabaseAdmin
+      const { error: updateError } = await supabase
         .from('lead_attribution')
         .update({
           last_visit_at: new Date().toISOString(),
@@ -89,6 +116,10 @@ export async function POST(request: NextRequest) {
           current_page,
         })
         .eq('id', existing.id);
+
+      if (updateError) {
+        logger.error('Failed to update attribution', castError(updateError));
+      }
 
       logger.info('Updated existing attribution', { id: existing.id });
 
@@ -101,13 +132,13 @@ export async function POST(request: NextRequest) {
 
     // Create new attribution record
     const insertData: LeadAttributionInsert = {
-      email: email || '',
+      email: email || 'anonymous@unknown.local',
       source: source || 'direct',
       medium: medium || 'none',
       campaign: campaign || null,
       term: term || null,
       content: content || null,
-      utm_params: utm_params ? (utm_params as unknown as Database['public']['Tables']['lead_attribution']['Row']['utm_params']) : null,
+      utm_params: (utm_params ?? null) as Json | null,
       referrer: referrer || null,
       landing_page: landing_page || '',
       current_page: current_page || null,
@@ -119,11 +150,11 @@ export async function POST(request: NextRequest) {
       last_visit_at: new Date().toISOString(),
     };
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('lead_attribution')
       .insert(insertData)
-      .select()
-      .single() as SupabaseQueryResult<LeadAttributionRow>;
+      .select('id')
+      .single();
 
     if (error) {
       logger.error('Failed to store attribution', error as Error);
@@ -148,7 +179,7 @@ export async function POST(request: NextRequest) {
       first_visit: true,
     });
   } catch (error) {
-    logger.error('Attribution API error', error instanceof Error ? error : new Error(String(error)));
+    logger.error('Attribution API error', castError(error));
     return NextResponse.json(
       { error: 'Failed to process attribution data' },
       { status: 500 }
@@ -172,6 +203,15 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const session_id = searchParams.get('session_id');
@@ -183,15 +223,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     // Query attribution data
-    const query = supabaseAdmin
+    const query = supabase
       .from('lead_attribution')
       .select('*');
 

@@ -27,7 +27,6 @@ export async function GET(_request: NextRequest) {
     // Check environment variables (without exposing values)
     const envStatus = {
       RESEND_API_KEY: !!env.RESEND_API_KEY,
-      NEXT_PUBLIC_GA_MEASUREMENT_ID: !!env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     };
 
     // Overall health status

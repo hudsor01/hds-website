@@ -90,9 +90,9 @@ export default function TipCalculatorPage() {
     <CalculatorLayout
       title="Tip Calculator"
       description="Calculate the perfect tip and easily split bills among friends"
-      icon={<Receipt className="h-8 w-8 text-cyan-600" />}
+      icon={<Receipt className="h-8 w-8 text-primary" />}
     >
-      <div className="space-y-6">
+      <div className="space-y-comfortable">
         {/* Bill Amount */}
         <CalculatorInput
           label="Bill Amount"
@@ -114,7 +114,7 @@ export default function TipCalculatorPage() {
             Select Tip Percentage
           </label>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-5 gap-tight">
             {TIP_PRESETS.map((preset) => (
               <button
                 key={preset.value}
@@ -122,7 +122,7 @@ export default function TipCalculatorPage() {
                 onClick={() => selectTipPreset(preset.value)}
                 className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
                   !useCustomTip && inputs.tipPercent === preset.value
-                    ? 'bg-cyan-600 text-white'
+                    ? 'bg-primary text-primary-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
               >
@@ -134,7 +134,7 @@ export default function TipCalculatorPage() {
               onClick={enableCustomTip}
               className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
                 useCustomTip
-                  ? 'bg-cyan-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
@@ -160,12 +160,12 @@ export default function TipCalculatorPage() {
 
         {/* Split Bill */}
         <div className="space-y-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <label className="flex items-center gap-tight text-sm font-medium text-foreground">
             <Users className="w-4 h-4" />
             Split Bill
           </label>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-content">
             <button
               type="button"
               onClick={() => setInputs(prev => ({ ...prev, splitCount: Math.max(1, prev.splitCount - 1) }))}
@@ -193,14 +193,14 @@ export default function TipCalculatorPage() {
 
         {/* Results */}
         {hasCalculated && inputs.billAmount > 0 && (
-          <div className="space-y-4 border-t border-border pt-6">
+          <div className="space-y-content border-t border-border pt-6">
             {/* Per Person (if splitting) */}
             {inputs.splitCount > 1 && (
-              <div className="rounded-lg bg-cyan-50 dark:bg-cyan-900/20 p-6">
-                <h4 className="text-sm font-medium text-cyan-700 dark:text-cyan-300 mb-4">
+              <div className="rounded-lg bg-accent/10 dark:bg-primary-hover/20 card-padding">
+                <h4 className="text-sm font-medium text-primary-hover dark:text-accent/80 mb-heading">
                   Per Person ({inputs.splitCount} people)
                 </h4>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-content">
                   <div className="text-center">
                     <div className="text-sm text-muted-foreground mb-1">Bill</div>
                     <div className="text-lg font-semibold text-foreground">
@@ -215,7 +215,7 @@ export default function TipCalculatorPage() {
                   </div>
                   <div className="text-center">
                     <div className="text-sm text-muted-foreground mb-1">Total</div>
-                    <div className="text-xl font-bold text-cyan-600">
+                    <div className="text-xl font-bold text-primary">
                       {formatCurrency(results.perPersonTotal)}
                     </div>
                   </div>
@@ -224,8 +224,8 @@ export default function TipCalculatorPage() {
             )}
 
             {/* Total Summary */}
-            <div className="rounded-lg border border-border p-6">
-              <h4 className="text-sm font-medium text-muted-foreground mb-4">
+            <div className="rounded-lg border border-border card-padding">
+              <h4 className="text-sm font-medium text-muted-foreground mb-heading">
                 Total Summary
               </h4>
               <div className="space-y-3">
@@ -246,7 +246,7 @@ export default function TipCalculatorPage() {
                 </div>
                 <div className="border-t border-border pt-3 flex justify-between items-center">
                   <span className="font-semibold text-foreground">Total</span>
-                  <span className="text-2xl font-bold text-cyan-600">
+                  <span className="text-2xl font-bold text-primary">
                     {formatCurrency(results.totalAmount)}
                   </span>
                 </div>
@@ -254,11 +254,11 @@ export default function TipCalculatorPage() {
             </div>
 
             {/* Quick Reference */}
-            <div className="rounded-lg bg-muted/50 p-4">
+            <div className="rounded-lg bg-muted/50 card-padding-sm">
               <h4 className="text-sm font-medium text-muted-foreground mb-3">
                 Quick Reference for {formatCurrency(inputs.billAmount)}
               </h4>
-              <div className="grid grid-cols-4 gap-2 text-center">
+              <div className="grid grid-cols-4 gap-tight text-center">
                 {TIP_PRESETS.map((preset) => {
                   const tip = inputs.billAmount * (preset.value / 100);
                   return (
@@ -277,14 +277,14 @@ export default function TipCalculatorPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Tipping Guide
         </h3>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Restaurant Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -292,8 +292,8 @@ export default function TipCalculatorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Delivery & Takeout
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -301,8 +301,8 @@ export default function TipCalculatorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Bar Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -310,8 +310,8 @@ export default function TipCalculatorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Large Parties
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

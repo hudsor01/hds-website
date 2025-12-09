@@ -10,11 +10,11 @@ interface FinancingInputsProps {
 
 export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsProps) {
   return (
-    <div className="rounded-none border bg-card p-4">
+    <div className="rounded-none border bg-card card-padding-sm">
       <h3 className="text-lg font-medium mb-3">Financing Information</h3>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-content">
+        <div className="space-y-tight">
           <Label>Interest Rate (%)</Label>
           <Input
             type="number"
@@ -25,7 +25,7 @@ export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsPr
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Payment Frequency</Label>
           <Select
             value={vehicleInput.paymentFrequency}

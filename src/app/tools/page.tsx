@@ -166,18 +166,18 @@ export default function ToolsPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)] py-16 md:py-24">
+      <section className="bg-[var(--primary)] text-[var(--primary-foreground)] py-section-sm md:py-section">
         <div className="container-wide text-center">
-          <Badge variant="secondary" className="mb-4 bg-[var(--color-text-inverted)]/10 text-[var(--color-text-inverted)] border-0">
+          <Badge variant="secondary" className="mb-heading bg-[var(--primary-foreground)]/10 text-[var(--primary-foreground)] border-0">
             <Sparkles className="size-4 mr-1" />
             Free Business Tools
           </Badge>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-content-block">
             Tools to Grow Your Business
           </h1>
 
-          <p className="text-xl text-[var(--color-text-inverted)]/90 max-w-3xl mx-auto">
+          <p className="text-xl text-[var(--primary-foreground)]/90 max-w-3xl mx-auto">
             Free calculators, generators, and utilities to help you make smarter business decisions. No signup required.
           </p>
         </div>
@@ -189,42 +189,42 @@ export default function ToolsPage() {
         if (categoryTools.length === 0) {return null;}
 
         return (
-          <section key={category.key} className="py-12 md:py-16 border-b">
+          <section key={category.key} className="py-12 md:py-section-sm border-b">
             <div className="container-wide">
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+              <div className="mb-comfortable">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-subheading">
                   {category.name}
                 </h2>
                 <p className="text-muted-foreground">{category.description}</p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
                 {categoryTools.map((tool) => {
                   const Icon = tool.icon;
                   return (
                     <Link key={tool.href} href={tool.href} className="group">
-                      <Card className="h-full hover:border-[var(--color-brand-primary)] hover:shadow-lg transition-all">
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="size-12 rounded-lg bg-[var(--color-brand-primary)]/10 flex items-center justify-center text-[var(--color-brand-primary)]">
+                      <Card className="h-full hover:border-[var(--primary)] hover:shadow-lg transition-all">
+                        <CardContent className="card-padding">
+                          <div className="flex items-start justify-between mb-heading">
+                            <div className="size-12 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)]">
                               <Icon className="size-6" />
                             </div>
                             {tool.isNew && (
-                              <Badge className="bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)]">
+                              <Badge className="bg-[var(--primary)] text-[var(--primary-foreground)]">
                                 New
                               </Badge>
                             )}
                           </div>
 
-                          <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-[var(--color-brand-primary)] transition-colors">
+                          <h3 className="text-lg font-semibold text-foreground mb-subheading group-hover:text-[var(--primary)] transition-colors">
                             {tool.name}
                           </h3>
 
-                          <p className="text-sm text-muted-foreground mb-4">
+                          <p className="text-sm text-muted-foreground mb-heading">
                             {tool.description}
                           </p>
 
-                          <span className="inline-flex items-center gap-2 text-[var(--color-brand-primary)] font-medium text-sm">
+                          <span className="inline-flex items-center gap-tight text-[var(--primary)] font-medium text-sm">
                             Use tool
                             <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                           </span>
@@ -240,17 +240,17 @@ export default function ToolsPage() {
       })}
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-muted/30">
+      <section className="py-section-sm md:py-section bg-muted/30">
         <div className="container-wide text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-heading">
             Need a Custom Tool?
           </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground mb-comfortable max-w-2xl mx-auto">
             We build custom calculators, dashboards, and business tools tailored to your specific needs.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-tight px-6 py-3 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Get a Custom Quote
             <ArrowRight className="size-5" />

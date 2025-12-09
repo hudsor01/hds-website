@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 
 /**
  * Unit tests for layout and utility components
@@ -10,15 +10,16 @@ describe('ErrorBoundary Component', () => {
   // Suppress console errors in tests
   const originalError = console.error
   beforeEach(() => {
-    console.error = vi.fn()
+    console.error = mock()
   })
 
   afterEach(() => {
+    cleanup();
     console.error = originalError
   })
 
   it('should render children when there is no error', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     render(
       <ErrorBoundary>
@@ -30,7 +31,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should catch and display errors', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Test error')
@@ -52,7 +53,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should have a reset mechanism', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
 
     const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
       if (shouldThrow) {
@@ -79,8 +80,11 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should log errors to console or analytics', async () => {
-    const { default: ErrorBoundary } = await import('@/components/ErrorBoundary')
-    const consoleSpy = vi.spyOn(console, 'error')
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    // Note: Bun doesn't have built-in spy support, just verify error UI renders
+    const originalError = console.error
+    let errorLogged = false
+    console.error = () => { errorLogged = true }
 
     const ThrowError = () => {
       throw new Error('Test error')
@@ -92,12 +96,101 @@ describe('ErrorBoundary Component', () => {
       </ErrorBoundary>
     )
 
-    // Error should be logged
-    if (!consoleSpy.mock.calls.length) {
+    // Error should be logged or UI should show error
+    if (!errorLogged) {
       expect(screen.queryByText(/error/i)).toBeInTheDocument()
-    } else {
-      expect(consoleSpy).toHaveBeenCalled()
     }
+
+    // Restore original console.error
+    console.error = originalError
+  })
+
+  it('should handle copy error details functionality', async () => {
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+
+    const ThrowError = () => {
+      throw new Error('Test copy error')
+    }
+
+    render(
+      <ErrorBoundary>
+        <ThrowError />
+      </ErrorBoundary>
+    )
+
+    // Should show error details section
+    const errorDetails = screen.getByText('Error Details')
+    expect(errorDetails).toBeInTheDocument()
+
+    // Should have copy button
+    const copyButton = screen.getByTitle('Copy error details')
+    expect(copyButton).toBeInTheDocument()
+  })
+
+  it('should handle report error functionality', async () => {
+    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+
+    const ThrowError = () => {
+      throw new Error('Test report error')
+    }
+
+    render(
+      <ErrorBoundary>
+        <ThrowError />
+      </ErrorBoundary>
+    )
+
+    // Should have report error button
+    const reportButton = screen.getByText('Report Error')
+    expect(reportButton).toBeInTheDocument()
+  })
+
+  it('should render ComponentErrorBoundary with minimal UI', async () => {
+    const { ComponentErrorBoundary } = await import('@/components/error/ErrorBoundary')
+
+    const ThrowError = () => {
+      throw new Error('Component error')
+    }
+
+    render(
+      <ComponentErrorBoundary name="Test Component">
+        <ThrowError />
+      </ComponentErrorBoundary>
+    )
+
+    // Should show component-specific error message
+    expect(screen.getByText('Failed to load Test Component')).toBeInTheDocument()
+
+    // Should have retry button
+    expect(screen.getByText('Retry')).toBeInTheDocument()
+  })
+
+  it('should handle withErrorBoundary HOC', async () => {
+    const { withErrorBoundary } = await import('@/components/error/ErrorBoundary')
+
+    const TestComponent = ({ title }: { title: string }) => <h1>{title}</h1>
+    const WrappedComponent = withErrorBoundary(TestComponent)
+
+    render(<WrappedComponent title="Test" />)
+
+    expect(screen.getByText('Test')).toBeInTheDocument()
+  })
+
+  it('should handle AsyncErrorBoundary for chunk load errors', async () => {
+    const { AsyncErrorBoundary } = await import('@/components/error/ErrorBoundary')
+
+    const ThrowChunkError = () => {
+      throw new Error('Loading chunk 123 failed')
+    }
+
+    render(
+      <AsyncErrorBoundary>
+        <ThrowChunkError />
+      </AsyncErrorBoundary>
+    )
+
+    // Should show error UI for chunk errors - check for specific error heading
+    expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument()
   })
 })
 

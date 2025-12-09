@@ -136,14 +136,6 @@ function optimizeInternalLinking() {
   });
 }
 
-// Submit URL to Google for indexing (requires Search Console API)
-export function requestGoogleIndexing() {
-  // This would require proper Google Search Console API integration
-  // Request indexing for URL implementation would go here
-  // In production, implement Google Indexing API:
-  // https://developers.google.com/search/apis/indexing-api/v3/quickstart
-}
-
 // Generate sitemap entry for dynamic pages
 export function generateSitemapEntry(page: {
   url: string;

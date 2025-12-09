@@ -10,9 +10,6 @@ export type LeadAttributionRow = Database['public']['Tables']['lead_attribution'
 export type LeadAttributionInsert = Database['public']['Tables']['lead_attribution']['Insert'];
 export type LeadAttributionUpdate = Database['public']['Tables']['lead_attribution']['Update'];
 
-export type WebVitalsRow = Database['public']['Tables']['web_vitals']['Row'];
-export type WebVitalsInsert = Database['public']['Tables']['web_vitals']['Insert'];
-
 // Case Studies types
 export interface CaseStudy {
   id: string;

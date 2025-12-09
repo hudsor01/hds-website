@@ -10,6 +10,10 @@ import {
   View,
   StyleSheet,
 } from '@react-pdf/renderer';
+import type { InvoiceLineItem, InvoiceData } from '@/types/pdf-templates';
+
+// Re-export types for convenience
+export type { InvoiceLineItem, InvoiceData };
 
 // Styles for the PDF document
 const styles = StyleSheet.create({
@@ -214,47 +218,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
-
-export interface InvoiceLineItem {
-  id: string;
-  description: string;
-  quantity: number;
-  rate: number;
-  amount: number;
-}
-
-export interface InvoiceData {
-  // Company Info
-  companyName: string;
-  companyAddress: string;
-  companyCity: string;
-  companyState: string;
-  companyZip: string;
-  companyEmail: string;
-  companyPhone: string;
-  // Client Info
-  clientName: string;
-  clientCompany: string;
-  clientAddress: string;
-  clientCity: string;
-  clientState: string;
-  clientZip: string;
-  clientEmail: string;
-  // Invoice Details
-  invoiceNumber: string;
-  invoiceDate: string;
-  dueDate: string;
-  // Line Items
-  lineItems: InvoiceLineItem[];
-  // Totals
-  subtotal: number;
-  taxRate: number;
-  taxAmount: number;
-  total: number;
-  // Additional
-  notes: string;
-  paymentTerms: string;
-}
 
 interface InvoiceDocumentProps {
   data: InvoiceData;

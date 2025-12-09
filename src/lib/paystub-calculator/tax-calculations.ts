@@ -1,13 +1,13 @@
-import type { TaxData } from "@/types/paystub"
-import { getCurrentTaxData } from "./paystub-utils"
+import type { TaxData } from "@/types/paystub";
+import { getCurrentTaxData } from "./paystub-utils";
 
 export const calculateFederalTax = (
   grossPay: number,
   filingStatus: keyof TaxData["federalBrackets"],
-  annualGross: number,
-  _year?: number
+  ytdGross: number,
+  year?: number
 ) => {
-  const yearData = getCurrentTaxData();
+  const yearData = getCurrentTaxData(year);
   if (!yearData) {
     return 0;
   }
@@ -23,7 +23,7 @@ export const calculateFederalTax = (
   let tax = 0;
   let previousLimit = 0;
   let remainingGrossPay = grossPay;
-  const taxableIncome = annualGross + grossPay;
+  const taxableIncome = ytdGross + grossPay;
 
   for (let i = 0; i < brackets.length; i++) {
     const bracket = brackets[i];
@@ -47,9 +47,9 @@ export const calculateFederalTax = (
 
     // Calculate how much of the current pay period falls in this bracket
     let portionInBracket = 0;
-    if (annualGross < bracketEnd) {
+    if (ytdGross < bracketEnd) {
       // Current pay period overlaps with this bracket
-      const bracketOverlapStart = Math.max(annualGross, bracketStart);
+      const bracketOverlapStart = Math.max(ytdGross, bracketStart);
       const bracketOverlapEnd = Math.min(taxableIncome, bracketEnd);
       portionInBracket = Math.min(
         remainingGrossPay,
@@ -75,9 +75,9 @@ export const calculateFederalTax = (
 export const calculateSocialSecurity = (
   grossPay: number,
   ytdGross: number,
-  _year?: number
+  year?: number
 ) => {
-  const yearData = getCurrentTaxData();
+  const yearData = getCurrentTaxData(year);
   if (!yearData) {
     return 0;
   }
@@ -98,9 +98,9 @@ export const calculateMedicare = (
   grossPay: number,
   ytdGross: number,
   filingStatus: keyof TaxData["additionalMedicareThreshold"],
-  _year?: number
+  year?: number
 ) => {
-  const yearData = getCurrentTaxData();
+  const yearData = getCurrentTaxData(year);
   if (!yearData) {
     return 0;
   }
@@ -125,3 +125,6 @@ export const calculateMedicare = (
 
   return medicare + additionalMedicare;
 };
+
+// Remove the wrapper function and just export the state tax calculation directly
+// The state tax calculation is now in its own file to avoid circular dependencies

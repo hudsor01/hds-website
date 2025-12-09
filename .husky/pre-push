@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+export PATH="$HOME/.bun/bin:$PATH"
 # Run lint, typecheck, and unit tests before push
 # E2E tests skipped temporarily due to middleware runtime issue
-npm run lint && npm run typecheck && npm run test:unit
+bun run lint && bun run typecheck && bun run test:unit

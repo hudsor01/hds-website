@@ -1,0 +1,61 @@
+/**
+ * Attribution Tracking Hook
+ * Automatically captures and tracks lead attribution data
+ */
+
+import { useState } from 'react';
+import {
+  captureAttribution,
+  getAttributionForSubmission,
+} from '@/lib/attribution';
+import { logger } from '@/lib/logger';
+import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
+
+export interface UseAttributionReturn {
+  attribution: LeadAttributionData | null;
+  isLoading: boolean;
+  utmParams: UTMParameters;
+  sendAttribution: (email?: string) => Promise<void>;
+}
+
+/**
+ * Hook for managing lead attribution
+ * Captures UTM parameters, referrer, and device information
+ */
+export function useAttribution(): UseAttributionReturn {
+  const [attribution] = useState<LeadAttributionData | null>(() => captureAttribution());
+
+  /**
+   * Send attribution data to backend
+   */
+  const sendAttribution = async (email?: string) => {
+    const attributionData = getAttributionForSubmission();
+
+    if (email) {
+      attributionData.email = email;
+    }
+
+    try {
+      const response = await fetch('/api/analytics/attribution', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(attributionData),
+      });
+
+      if (!response.ok) {
+        logger.warn('Failed to send attribution data');
+      }
+    } catch (error) {
+      logger.error('Error sending attribution:', error as Error);
+    }
+  };
+
+  return {
+    attribution,
+    isLoading: false,
+    utmParams: attribution?.utm_params || {},
+    sendAttribution,
+  };
+}

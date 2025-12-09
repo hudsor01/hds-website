@@ -26,12 +26,12 @@ export function InputPanel({
  return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-tight">
           <Calculator className="w-5 h-5 text-primary" />
           <CardTitle>Vehicle Information</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-content">
         <VehicleInputs vehicleInput={vehicleInput} updateInput={updateInput} />
         <FinancingInputs vehicleInput={vehicleInput} updateInput={updateInput} />
         <AdvancedOptions

@@ -130,15 +130,15 @@ export default function PricingPage() {
 
             {/* Section Label */}
             <div className="inline-block mb-comfortable">
-              <span className="px-4 py-2 rounded-full border border-cyan-400/30 bg-cyan-400/5 text-cyan-400 text-caption font-medium">
+              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-caption font-medium">
                 Transparent Pricing
               </span>
             </div>
 
             {/* Hero Heading */}
-            <h1 className="text-clamp-2xl font-black text-white leading-[1.1] mb-heading text-balance">
+            <h1 className="text-clamp-2xl font-black text-primary-foreground leading-[1.1] mb-heading text-balance">
               <span className="block">Development That</span>
-              <span className="block text-cyan-400">
+              <span className="block text-accent">
                 Pays for Itself
               </span>
               <span className="block text-responsive-lg font-bold text-muted-foreground mt-subheading">
@@ -164,20 +164,20 @@ export default function PricingPage() {
               <div
                 key={tier.name}
                 className={`group relative glass-card-light card-padding card-hover-glow transition-smooth ${
-                  tier.popular ? 'border-cyan-400/50 shadow-xl shadow-cyan-500/10' : ''
+                  tier.popular ? 'border-accent/50 shadow-xl shadow-cyan-500/10' : ''
                 }`}
               >
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-cyan-600 text-white px-4 py-2 rounded-full text-caption font-bold">
+                    <span className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-caption font-bold">
                       MOST POPULAR
                     </span>
                   </div>
                 )}
 
                 <div className="text-center mb-comfortable">
-                  <h3 className="text-card-title font-bold text-white mb-subheading text-balance group-hover:text-cyan-400 transition-colors">{tier.name}</h3>
-                  <div className="text-section-title font-black text-cyan-400 mb-subheading">{tier.price}</div>
+                  <h3 className="text-card-title font-bold text-primary-foreground mb-subheading text-balance group-hover:text-accent transition-colors">{tier.name}</h3>
+                  <div className="text-section-title font-black text-accent mb-subheading">{tier.price}</div>
                   <div className="typography">
                     <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
                   </div>
@@ -185,8 +185,8 @@ export default function PricingPage() {
 
                 {/* ROI Badge */}
                 {tier.roi && (
-                  <div className="mb-card-content p-button bg-green-400/10 border border-green-400/30 rounded-lg">
-                    <p className="text-caption font-bold text-green-400 text-center">{tier.roi}</p>
+                  <div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
+                    <p className="text-caption font-bold text-success-text text-center">{tier.roi}</p>
                   </div>
                 )}
 
@@ -242,8 +242,8 @@ export default function PricingPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block typography">
-            <h2 className="text-responsive-lg font-black text-white mb-heading">
-              Frequently Asked <span className="text-cyan-400">Questions</span>
+            <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
+              Frequently Asked <span className="text-accent">Questions</span>
             </h2>
             <div className="typography">
               <p className="text-subheading text-muted-foreground">
@@ -254,8 +254,8 @@ export default function PricingPage() {
 
           <div className="space-y-content">
             {faqs.map((faq, index) => (
-              <div key={index} className="glass-card-light card-padding hover:border-cyan-400/50 transition-smooth">
-                <h3 className="text-subheading font-bold text-white mb-subheading text-balance">{faq.question}</h3>
+              <div key={index} className="glass-card-light card-padding hover:border-accent/50 transition-smooth">
+                <h3 className="text-subheading font-bold text-primary-foreground mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
@@ -269,7 +269,7 @@ export default function PricingPage() {
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
           <div className="glass-section card-padding">
-            <h2 className="text-responsive-lg font-black text-white mb-heading">
+            <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
               Ready for Development That Actually Makes Money?
             </h2>
 
@@ -277,7 +277,7 @@ export default function PricingPage() {
               <p className="text-subheading text-muted mb-heading container-narrow">
                 Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to plug the leaks fast.
               </p>
-              <p className="text-cyan-400 font-semibold mb-content-block">
+              <p className="text-accent font-semibold mb-content-block">
                 No sales pitch. No commitment. Just a detailed roadmap you can use immediately (even if you never hire us).
               </p>
             </div>

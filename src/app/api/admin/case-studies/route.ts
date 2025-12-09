@@ -5,11 +5,14 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { CaseStudy, CaseStudyInsert, CaseStudyUpdate } from '@/types/supabase-helpers';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
+import type { Database } from '@/types/database';
+
+type CaseStudyInsert = Database['public']['Tables']['case_studies']['Insert'];
+type CaseStudyUpdate = Database['public']['Tables']['case_studies']['Update'];
 
 const CaseStudySchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -59,17 +62,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const supabase = await createClient();
 
-    const { data: caseStudies, error } = (await supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+    const { data: caseStudies, error } = await supabase
+      .from('case_studies')
       .select('*')
-      .order('created_at', { ascending: false })) as unknown as { data: CaseStudy[] | null; error: unknown };
+      .order('created_at', { ascending: false });
 
     if (error) {
       logger.error('Failed to fetch case studies:', error as Error);
@@ -111,20 +109,19 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = CaseStudySchema.parse(body);
-
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const supabase = await createClient();
 
     // Check if slug already exists
-    const { data: existing } = (await supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+    const { data: existing, error: existingError } = await supabase
+      .from('case_studies')
       .select('id')
       .eq('slug', validatedData.slug)
-      .single()) as unknown as { data: Pick<CaseStudy, 'id'> | null; error: unknown };
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to check case study slug uniqueness', existingError as Error);
+      return NextResponse.json({ error: 'Unable to validate slug' }, { status: 500 });
+    }
 
     if (existing) {
       return NextResponse.json(
@@ -134,26 +131,35 @@ export async function POST(request: NextRequest) {
     }
 
     const insertData: CaseStudyInsert = {
-      ...validatedData,
+      title: validatedData.title,
       slug: validatedData.slug,
-      client_logo_url: null,
-      client_industry: validatedData.industry,
-      testimonial: validatedData.testimonial_text ? {
-        quote: validatedData.testimonial_text,
-        author: validatedData.testimonial_author || '',
-        role: validatedData.testimonial_role || '',
-        company: validatedData.client_name,
-      } : null,
-      video_testimonial_url: validatedData.testimonial_video_url || null,
+      client_name: validatedData.client_name,
+      industry: validatedData.industry,
+      project_type: validatedData.project_type,
+      description: validatedData.description,
+      challenge: validatedData.challenge,
+      solution: validatedData.solution,
+      results: validatedData.results,
+      technologies: validatedData.technologies.length ? validatedData.technologies : null,
+      metrics: validatedData.metrics.length ? validatedData.metrics : null,
+      testimonial_author: validatedData.testimonial_author || null,
+      testimonial_role: validatedData.testimonial_role || null,
+      testimonial_text: validatedData.testimonial_text || null,
+      testimonial_video_url: validatedData.testimonial_video_url || null,
+      thumbnail_url: validatedData.thumbnail_url || null,
+      featured_image_url: validatedData.featured_image_url || null,
       project_url: validatedData.project_url || null,
       project_duration: validatedData.project_duration || null,
-    };
+      team_size: validatedData.team_size ?? null,
+      published: validatedData.published ?? false,
+      featured: validatedData.featured ?? false,
+    } satisfies CaseStudyInsert;
 
-    const { data: caseStudy, error } = (await supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
-      .insert(insertData as unknown as never) // Bypass type checking for custom table
-      .select()
-      .single()) as unknown as { data: CaseStudy | null; error: unknown };
+    const { data: caseStudy, error } = await supabase
+      .from('case_studies')
+      .insert(insertData)
+      .select('*')
+      .maybeSingle();
 
     if (error) {
       logger.error('Failed to create case study:', error as Error);
@@ -211,22 +217,31 @@ export async function PUT(request: NextRequest) {
     }
 
     const validatedData = CaseStudySchema.partial().parse(updateData);
+    const supabase = await createClient();
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const updateFields: CaseStudyUpdate = {
+      ...validatedData,
+      technologies: validatedData.technologies ?? undefined,
+      metrics: validatedData.metrics ?? undefined,
+      testimonial_author: validatedData.testimonial_author ?? undefined,
+      testimonial_role: validatedData.testimonial_role ?? undefined,
+      testimonial_text: validatedData.testimonial_text ?? undefined,
+      testimonial_video_url: validatedData.testimonial_video_url ?? undefined,
+      thumbnail_url: validatedData.thumbnail_url ?? undefined,
+      featured_image_url: validatedData.featured_image_url ?? undefined,
+      project_url: validatedData.project_url ?? undefined,
+      project_duration: validatedData.project_duration ?? undefined,
+      team_size: validatedData.team_size ?? undefined,
+      published: validatedData.published ?? undefined,
+      featured: validatedData.featured ?? undefined,
+    };
 
-    const updateFields: CaseStudyUpdate = validatedData as CaseStudyUpdate;
-
-    const { data: caseStudy, error } = (await supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
-      .update(updateFields as unknown as never) // Bypass type checking
+    const { data: caseStudy, error } = await supabase
+      .from('case_studies')
+      .update(updateFields)
       .eq('id', id)
-      .select()
-      .single()) as unknown as { data: CaseStudy | null; error: unknown };
+      .select('*')
+      .maybeSingle();
 
     if (error) {
       logger.error('Failed to update case study:', error as Error);
@@ -253,6 +268,11 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+// UUID validation schema for DELETE
+const deleteQuerySchema = z.object({
+  id: z.string().uuid('Invalid case study ID format'),
+});
+
 // DELETE - Delete case study
 export async function DELETE(request: NextRequest) {
   // Rate limiting - 5 requests per minute per IP for write operations
@@ -274,24 +294,22 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const idParam = searchParams.get('id');
 
-    if (!id) {
+    // Validate UUID format
+    const parseResult = deleteQuerySchema.safeParse({ id: idParam });
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: 'Case study ID is required' },
+        { error: 'Invalid case study ID', details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
 
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const { id } = parseResult.data;
+    const supabase = await createClient();
 
-    const { error } = await supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+    const { error } = await supabase
+      .from('case_studies')
       .delete()
       .eq('id', id);
 

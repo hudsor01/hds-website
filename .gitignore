@@ -38,6 +38,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.mcp.json
 
 # direnv
 .envrc
@@ -53,6 +54,7 @@ next-env.d.ts
 __tests__/
 test-*.html
 test-*.ts
+!tests/test-utils.ts
 test-*.js
 *-test-suite.ts
 *-test-report.*
@@ -127,3 +129,4 @@ src/app/test/
 /e2e/screenshots/
 /e2e/videos/
 
+.env.example

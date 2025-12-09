@@ -1,27 +1,22 @@
 /**
  * Security Utilities Tests
  * Tests for CSRF token handling, rate limiting, and admin authentication
+ *
+ * NOTE: This file relies on the env mock from tests/setup.ts preload.
+ * Do NOT add file-level mock.module() calls here as they can conflict
+ * with the preload mocks and cause import failures in CI.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
 
-// Mock environment variables for CSRF
-vi.mock('@/env', () => ({
-  env: {
-    CSRF_SECRET: 'test-csrf-secret-for-testing-only',
-    KV_REST_API_URL: undefined,
-    KV_REST_API_TOKEN: undefined,
-  },
-}));
+// Import types for use in tests (type-only imports don't load modules)
+import type * as CsrfTypes from '@/lib/csrf';
+import type * as RateLimiterTypes from '@/lib/rate-limiter';
+import type { NextRequest } from 'next/server';
 
 // ================================
 // CSRF Token Tests
 // ================================
-
-// Import types for use in tests
-import type { NextRequest } from 'next/server';
-import type * as CsrfTypes from '@/lib/csrf';
-import type * as RateLimiterTypes from '@/lib/rate-limiter';
 
 describe('CSRF Token Utilities', () => {
   let csrfModule: typeof CsrfTypes;
@@ -184,7 +179,7 @@ describe('Rate Limiter', () => {
   let rateLimiterModule: typeof RateLimiterTypes;
 
   beforeEach(async () => {
-    vi.resetModules();
+    // Dynamic import to get the module (mocked or real depending on execution order)
     rateLimiterModule = await import('@/lib/rate-limiter');
   });
 
@@ -272,8 +267,8 @@ describe('Rate Limiter', () => {
     it('should extract IP from x-forwarded-for header', () => {
       const mockRequest = {
         headers: {
-          get: vi.fn((name: string) => {
-            if (name === 'x-forwarded-for') {return '192.168.1.1, 10.0.0.1';}
+          get: mock((name: string) => {
+            if (name === 'x-forwarded-for') { return '192.168.1.1, 10.0.0.1'; }
             return null;
           }),
         },
@@ -286,8 +281,8 @@ describe('Rate Limiter', () => {
     it('should extract IP from x-real-ip header', () => {
       const mockRequest = {
         headers: {
-          get: vi.fn((name: string) => {
-            if (name === 'x-real-ip') {return '192.168.1.2';}
+          get: mock((name: string) => {
+            if (name === 'x-real-ip') { return '192.168.1.2'; }
             return null;
           }),
         },
@@ -300,7 +295,7 @@ describe('Rate Limiter', () => {
     it('should return localhost when no IP headers present', () => {
       const mockRequest = {
         headers: {
-          get: vi.fn(() => null),
+          get: mock(() => null),
         },
       } as unknown as NextRequest;
 
@@ -311,8 +306,8 @@ describe('Rate Limiter', () => {
     it('should handle empty x-forwarded-for header', () => {
       const mockRequest = {
         headers: {
-          get: vi.fn((name: string) => {
-            if (name === 'x-forwarded-for') {return '';}
+          get: mock((name: string) => {
+            if (name === 'x-forwarded-for') { return ''; }
             return null;
           }),
         },

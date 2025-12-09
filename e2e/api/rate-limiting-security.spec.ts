@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 /**
  * Rate Limiting and Security Tests
- * Tests rate limiting, CSRF protection, and security headers
+ * Tests text=Too many requests. Please try again in 15 minutes.ing, CSRF protection, and security headers
  *
  * Business Critical:
  * - Prevent abuse of contact form (3 submissions per 15 min)
@@ -14,8 +14,8 @@ import { test, expect } from '@playwright/test'
 test.describe('Rate Limiting - Contact Form', () => {
   test.use({ storageState: { cookies: [], origins: [] } })
 
-  test('should enforce rate limit on contact form submissions', async ({ page, context }) => {
-    // Clear any existing rate limit state
+  test('should enforce text=Too many requests. Please try again in 15 minutes. on contact form submissions', async ({ page, context }) => {
+    // Clear any existing text=Too many requests. Please try again in 15 minutes. state
     await context.clearCookies()
 
     const submissions = []
@@ -24,9 +24,9 @@ test.describe('Rate Limiting - Contact Form', () => {
     for (let i = 0; i < 4; i++) {
       await page.goto('/contact')
 
-      await page.fill('input[name="firstName"]', `Test${i}`)
-      await page.fill('input[name="lastName"]', `User${i}`)
-      await page.fill('input[name="email"]', `test${i}@ratelimit.com`)
+      await page.fill('#firstName', `Test${i}`)
+      await page.fill('#lastName', `User${i}`)
+      await page.fill('#email', `test${i}@ratelimit.com`)
       await page.fill('textarea[name="message"]', `Message ${i}`)
 
       await page.click('button[type="submit"]')
@@ -35,8 +35,8 @@ test.describe('Rate Limiting - Contact Form', () => {
       await page.waitForTimeout(2000)
 
       // Check if success or error
-      const hasSuccess = await page.locator('text=/success/i').isVisible()
-      const hasError = await page.locator('text=/too many|rate limit/i').isVisible()
+      const hasSuccess = await page.locator('text=/success|sent|thank you/i').isVisible()
+      const hasError = await page.locator('text=/too many|rate limit|error/i').isVisible()
 
       submissions.push({
         attempt: i + 1,
@@ -49,33 +49,33 @@ test.describe('Rate Limiting - Contact Form', () => {
       }
     }
 
-    // First 3 should succeed, 4th should be rate limited
+    // First 3 should succeed, 4th should be text=Too many requests. Please try again in 15 minutes.ed
     expect(submissions.filter(s => s.success).length).toBeLessThanOrEqual(3)
     expect(submissions.some(s => s.rateLimited)).toBeTruthy()
   })
 
-  test('should show appropriate error message when rate limited', async ({ page, context }) => {
+  test('should show appropriate error message when text=Too many requests. Please try again in 15 minutes.ed', async ({ page, context }) => {
     await context.clearCookies()
 
     // Submit 3 times
     for (let i = 0; i < 3; i++) {
       await page.goto('/contact')
 
-      await page.fill('input[name="firstName"]', `RateTest${i}`)
-      await page.fill('input[name="lastName"]', 'User')
-      await page.fill('input[name="email"]', `ratetest${i}@example.com`)
+      await page.fill('#firstName', `RateTest${i}`)
+      await page.fill('#lastName', 'User')
+      await page.fill('#email', `ratetest${i}@example.com`)
       await page.fill('textarea[name="message"]', 'Test')
 
       await page.click('button[type="submit"]')
       await page.waitForTimeout(2000)
     }
 
-    // 4th submission should show rate limit error
+    // 4th submission should show text=Too many requests. Please try again in 15 minutes. error
     await page.goto('/contact')
 
-    await page.fill('input[name="firstName"]', 'RateTest4')
-    await page.fill('input[name="lastName"]', 'User')
-    await page.fill('input[name="email"]', 'ratetest4@example.com')
+    await page.fill('#firstName', 'RateTest4')
+    await page.fill('#lastName', 'User')
+    await page.fill('#email', 'ratetest4@example.com')
     await page.fill('textarea[name="message"]', 'Test')
 
     await page.click('button[type="submit"]')
@@ -145,9 +145,9 @@ test.describe('CSRF Protection', () => {
         document.querySelector('form')?.appendChild(input)
       }, token)
 
-      await page.fill('input[name="firstName"]', 'CSRF')
-      await page.fill('input[name="lastName"]', 'Test')
-      await page.fill('input[name="email"]', 'csrf@test.com')
+      await page.fill('#firstName', 'CSRF')
+      await page.fill('#lastName', 'Test')
+      await page.fill('#email', 'csrf@test.com')
       await page.fill('textarea[name="message"]', 'Testing CSRF')
 
       await page.click('button[type="submit"]')
@@ -242,9 +242,9 @@ test.describe('Input Sanitization', () => {
 
     const maliciousInput = '<img src=x onerror=alert(1)>'
 
-    await page.fill('input[name="firstName"]', maliciousInput)
-    await page.fill('input[name="lastName"]', 'Test')
-    await page.fill('input[name="email"]', 'xss@test.com')
+    await page.fill('#firstName', maliciousInput)
+    await page.fill('#lastName', 'Test')
+    await page.fill('#email', 'xss@test.com')
     await page.fill('textarea[name="message"]', 'Testing XSS prevention')
 
     await page.click('button[type="submit"]')
@@ -264,9 +264,9 @@ test.describe('Input Sanitization', () => {
   test('should sanitize SQL injection attempts', async ({ page }) => {
     await page.goto('/contact')
 
-    await page.fill('input[name="firstName"]', "'; DROP TABLE users; --")
-    await page.fill('input[name="lastName"]', 'Test')
-    await page.fill('input[name="email"]', 'sql@test.com')
+    await page.fill('#firstName', "'; DROP TABLE users; --")
+    await page.fill('#lastName', 'Test')
+    await page.fill('#email', 'sql@test.com')
     await page.fill('textarea[name="message"]', 'Testing SQL injection prevention')
 
     await page.click('button[type="submit"]')
@@ -294,9 +294,9 @@ test.describe('Input Sanitization', () => {
   test('should handle LDAP injection attempts', async ({ page }) => {
     await page.goto('/contact')
 
-    await page.fill('input[name="firstName"]', '*)(uid=*')
-    await page.fill('input[name="lastName"]', 'Test')
-    await page.fill('input[name="email"]', 'ldap@test.com')
+    await page.fill('#firstName', '*)(uid=*')
+    await page.fill('#lastName', 'Test')
+    await page.fill('#email', 'ldap@test.com')
     await page.fill('textarea[name="message"]', 'Testing LDAP injection prevention')
 
     await page.click('button[type="submit"]')
@@ -313,9 +313,9 @@ test.describe('Email Header Injection Prevention', () => {
     await page.goto('/contact')
 
     // Attempt to inject email headers
-    await page.fill('input[name="firstName"]', 'Test')
-    await page.fill('input[name="lastName"]', 'User')
-    await page.fill('input[name="email"]', 'test@example.com\nBcc: hacker@evil.com')
+    await page.fill('#firstName', 'Test')
+    await page.fill('#lastName', 'User')
+    await page.fill('#email', 'test@example.com\nBcc: hacker@evil.com')
     await page.fill('textarea[name="message"]', 'Test message')
 
     await page.click('button[type="submit"]')

@@ -15,31 +15,31 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-cyan-600 flex-center px-6 relative">
+    <div className="min-h-screen bg-primary flex-center px-6 relative">
       <div className="container-narrow text-center">
         {/* 404 Visual */}
         <div className="mb-12">
-          <h1 className="text-8xl lg:text-9xl font-black text-cyan-400 mb-4">
+          <h1 className="text-8xl lg:text-9xl font-black text-accent mb-heading">
             404
           </h1>
           <div className="w-32 h-1 bg-muted mx-auto rounded-full"></div>
         </div>
         {/* Error Message */}
         <div className="mb-12">
-          <h2 className="text-responsive-lg font-black text-white mb-4">
+          <h2 className="text-responsive-lg font-black text-primary-foreground mb-heading">
             Page Not Found
           </h2>
-          <p className="text-xl text-text-secondary mb-8 leading-relaxed">
+          <p className="text-xl text-text-secondary mb-comfortable leading-relaxed">
             The page you&apos;re looking for has vanished into the digital void.
             But don&apos;t worry—our navigation system is still operational.
           </p>
         </div>
         {/* Action Buttons */}
-        <div className="flex flex-wrap justify-center gap-6 mb-8">
+        <div className="flex flex-wrap justify-center gap-comfortable mb-comfortable">
           <Link href="/" passHref>
             <button
               type="button"
-              className="flex items-center gap-2 cta-primary text-lg shadow-lg shadow-cyan-500/25"
+              className="flex items-center gap-tight cta-primary text-lg shadow-lg shadow-cyan-500/25"
               aria-label="Return to homepage"
             >
               <Home className="w-6 h-6" />
@@ -49,7 +49,7 @@ export default function NotFound() {
           <Link href="/contact" passHref>
             <button
               type="button"
-              className="flex items-center gap-2 border-2 border-green-400 text-white font-bold py-4 px-8 rounded-lg text-lg bg-green-400/10 hover:bg-green-400/20 blur-backdrop transition-all duration-300"
+              className="flex items-center gap-tight border-2 border-success-text text-primary-foreground font-bold py-4 px-8 rounded-lg text-lg bg-success-text/10 hover:bg-success-text/20 blur-backdrop transition-all duration-300"
               aria-label="Contact us for help"
             >
               <MessageSquare className="w-6 h-6" />
@@ -59,12 +59,12 @@ export default function NotFound() {
         </div>
         {/* Quick Links */}
         <div className="mt-16">
-          <h3 className="text-lg font-semibold text-text-muted mb-6">Or explore these sections:</h3>
-          <div className="flex flex-wrap justify-center gap-4">
+          <h3 className="text-lg font-semibold text-text-muted mb-content-block">Or explore these sections:</h3>
+          <div className="flex flex-wrap justify-center gap-content">
             <Link href="/services" passHref>
               <button
                 type="button"
-                className="text-cyan-400 font-medium hover:text-secondary-300 transition-colors"
+                className="text-accent font-medium hover:text-secondary-300 transition-colors"
               >
                 Services
               </button>
@@ -72,7 +72,7 @@ export default function NotFound() {
             <Link href="/about" passHref>
               <button
                 type="button"
-                className="text-green-400 font-medium hover:text-accent-300 transition-colors"
+                className="text-success-text font-medium hover:text-accent-300 transition-colors"
               >
                 About
               </button>
@@ -80,7 +80,7 @@ export default function NotFound() {
             <Link href="/portfolio" passHref>
               <button
                 type="button"
-                className="text-orange-400 font-medium hover:text-warning-300 transition-colors"
+                className="text-orange-text font-medium hover:text-warning-muted transition-colors"
               >
                 Portfolio
               </button>

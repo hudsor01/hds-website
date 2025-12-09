@@ -4,12 +4,14 @@
  */
 
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { LeadNote, LeadNoteInsert } from '@/types/supabase-helpers';
+import { createClient } from '@/lib/supabase/server';
+import type { Database } from '@/types/database';
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
+
+type LeadNoteInsert = Database['public']['Tables']['lead_notes']['Insert'];
 
 const CreateNoteSchema = z.object({
   note_type: z.enum(['note', 'status_change', 'email_sent', 'call', 'meeting']),
@@ -20,17 +22,16 @@ const CreateNoteSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  // Rate limiting - 60 requests per minute per IP
+  const { id } = await params;
+
+  // Rate limiting
   const clientIp = getClientIp(request);
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Lead notes rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   // Require admin authentication
@@ -40,51 +41,39 @@ export async function GET(
   }
 
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
+    const supabase = await createClient();
 
-    // Fetch all notes for this lead
-    const { data: notes, error } = (await supabaseAdmin
-      .from('lead_notes' as 'lead_attribution') // Type assertion for custom table
+    // Fetch all notes for this lead (RLS enforces admin access)
+    const { data: notes, error } = await supabase
+      .from('lead_notes')
       .select('*')
-      .eq('lead_id', params.id)
-      .order('created_at', { ascending: true })) as unknown as { data: LeadNote[] | null; error: unknown };
+      .eq('lead_id', id)
+      .order('created_at', { ascending: true });
 
     if (error) {
       logger.error('Failed to fetch notes:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch notes' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
     }
 
     return NextResponse.json({ notes: notes || [] });
   } catch (error) {
     logger.error('Notes fetch error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  // Rate limiting - 5 requests per minute per IP for write operations
+  const { id } = await params;
+
+  // Rate limiting
   const clientIp = getClientIp(request);
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Lead notes POST rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   // Require admin authentication
@@ -94,52 +83,38 @@ export async function POST(
   }
 
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
+    const supabase = await createClient();
     const body = await request.json();
 
     // Validate input
     const validatedData = CreateNoteSchema.parse(body);
 
-    // Insert note
+    // Insert note (RLS enforces admin access)
     const noteData: LeadNoteInsert = {
-      lead_id: params.id,
-      note: validatedData.content,
+      lead_id: id,
+      content: validatedData.content,
+      note_type: validatedData.note_type,
       created_by: validatedData.created_by || 'admin',
     };
 
-    const { data: note, error } = (await supabaseAdmin
-      .from('lead_notes' as 'lead_attribution') // Type assertion for custom table
-      .insert(noteData as unknown as never) // Bypass type checking
-      .select()
-      .single()) as unknown as { data: LeadNote | null; error: unknown };
+    const { data: note, error } = await supabase
+      .from('lead_notes')
+      .insert(noteData)
+      .select('*')
+      .maybeSingle();
 
     if (error) {
       logger.error('Failed to create note:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to create note' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Failed to create note' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, note });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
     }
 
     logger.error('Note creation error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

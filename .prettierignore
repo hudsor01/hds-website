@@ -1,26 +1,29 @@
-# Dependencies
 node_modules
-
-# Build outputs
 .next
 out
 dist
 build
-
-# Environment files
 .env*
-
-# Logs
 *.log
-
-# Test results
 coverage
 test-results
 playwright-report
-
-# Generated files
 .vercel
-.turbo
-
-# Tailwind output
 **/*.css.map
+dist/
+build/
+.next/
+coverage/
+.env
+.env.*
+package-lock.json
+*.log
+logs/
+test-results/
+playwright-report/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+CHANGELOG.md
+*.md

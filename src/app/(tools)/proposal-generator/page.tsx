@@ -303,15 +303,15 @@ export default function ProposalGeneratorPage() {
     <CalculatorLayout
       title="Proposal Generator"
       description="Create professional project proposals and download them as PDF"
-      icon={<FileSpreadsheet className="h-8 w-8 text-cyan-600" />}
+      icon={<FileSpreadsheet className="h-8 w-8 text-primary" />}
     >
-      <div className="space-y-8">
+      <div className="space-y-sections">
         {/* Your Company Info */}
-        <section className="space-y-4">
+        <section className="space-y-content">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Your Company Information
           </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Company Name"
               id="companyName"
@@ -340,7 +340,7 @@ export default function ProposalGeneratorPage() {
               value={proposalData.companyAddress}
               onChange={(e) => handleInputChange('companyAddress', e.target.value)}
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-tight">
               <CalculatorInput
                 label="City"
                 id="companyCity"
@@ -379,11 +379,11 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Client Info */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Client Information
           </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-content sm:grid-cols-3">
             <CalculatorInput
               label="Client Name"
               id="clientName"
@@ -411,11 +411,11 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Project Info */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Project Details
           </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-content sm:grid-cols-3">
             <CalculatorInput
               label="Project Name"
               id="projectName"
@@ -455,7 +455,7 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Scope of Work */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Scope of Work
@@ -463,14 +463,14 @@ export default function ProposalGeneratorPage() {
             <button
               type="button"
               onClick={addScopeItem}
-              className="flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
             >
               <Plus className="w-4 h-4" />
               Add Item
             </button>
           </div>
           {proposalData.scopeItems.map((item, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="flex gap-tight">
               <input
                 type="text"
                 value={item}
@@ -482,7 +482,7 @@ export default function ProposalGeneratorPage() {
                 type="button"
                 onClick={() => removeScopeItem(index)}
                 disabled={proposalData.scopeItems.length === 1}
-                className="p-2 text-muted-foreground hover:text-red-500 disabled:opacity-30"
+                className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
                 aria-label="Remove scope item"
               >
                 <Trash2 className="w-4 h-4" />
@@ -492,7 +492,7 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Timeline / Milestones */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Timeline / Milestones
@@ -500,14 +500,14 @@ export default function ProposalGeneratorPage() {
             <button
               type="button"
               onClick={addMilestone}
-              className="flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
             >
               <Plus className="w-4 h-4" />
               Add Phase
             </button>
           </div>
           {proposalData.milestones.map((milestone) => (
-            <div key={milestone.id} className="grid grid-cols-12 gap-2 items-start">
+            <div key={milestone.id} className="grid grid-cols-12 gap-tight items-start">
               <input
                 type="text"
                 value={milestone.phase}
@@ -533,7 +533,7 @@ export default function ProposalGeneratorPage() {
                 type="button"
                 onClick={() => removeMilestone(milestone.id)}
                 disabled={proposalData.milestones.length === 1}
-                className="col-span-1 p-2 text-muted-foreground hover:text-red-500 disabled:opacity-30"
+                className="col-span-1 p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
                 aria-label="Remove milestone"
               >
                 <Trash2 className="w-4 h-4" />
@@ -543,7 +543,7 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Pricing */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Pricing
@@ -551,14 +551,14 @@ export default function ProposalGeneratorPage() {
             <button
               type="button"
               onClick={addPricingItem}
-              className="flex items-center gap-1 text-sm text-cyan-600 hover:text-cyan-700"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
             >
               <Plus className="w-4 h-4" />
               Add Item
             </button>
           </div>
           {proposalData.pricingItems.map((item) => (
-            <div key={item.id} className="flex gap-2 items-start">
+            <div key={item.id} className="flex gap-tight items-start">
               <input
                 type="text"
                 value={item.description}
@@ -579,7 +579,7 @@ export default function ProposalGeneratorPage() {
                 type="button"
                 onClick={() => removePricingItem(item.id)}
                 disabled={proposalData.pricingItems.length === 1}
-                className="p-2 text-muted-foreground hover:text-red-500 disabled:opacity-30"
+                className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
                 aria-label="Remove pricing item"
               >
                 <Trash2 className="w-4 h-4" />
@@ -589,7 +589,7 @@ export default function ProposalGeneratorPage() {
           <div className="flex justify-end pt-4 border-t border-border">
             <div className="text-right">
               <span className="text-sm text-muted-foreground mr-4">Total:</span>
-              <span className="text-xl font-bold text-cyan-600">{formatCurrency(computedTotal)}</span>
+              <span className="text-xl font-bold text-primary">{formatCurrency(computedTotal)}</span>
             </div>
           </div>
           <CalculatorInput
@@ -603,7 +603,7 @@ export default function ProposalGeneratorPage() {
         </section>
 
         {/* Terms */}
-        <section className="space-y-4 border-t border-border pt-6">
+        <section className="space-y-content border-t border-border pt-6">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Terms & Conditions
           </h3>
@@ -621,7 +621,7 @@ export default function ProposalGeneratorPage() {
           <button
             type="button"
             onClick={saveDraft}
-            className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+            className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
           >
             <Save className="w-4 h-4" />
             Save Draft
@@ -631,7 +631,7 @@ export default function ProposalGeneratorPage() {
             <button
               type="button"
               onClick={clearDraft}
-              className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+              className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
             >
               <RotateCcw className="w-4 h-4" />
               Clear Draft
@@ -642,7 +642,7 @@ export default function ProposalGeneratorPage() {
             <PDFDownloadLink
               document={<ProposalDocument data={{ ...proposalData, total: computedTotal }} />}
               fileName={getFileName()}
-              className="flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-700"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('proposal_downloaded', {
                   project_name: proposalData.projectName,
@@ -674,14 +674,14 @@ export default function ProposalGeneratorPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Proposal Tips
         </h3>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Clear Scope
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -689,8 +689,8 @@ export default function ProposalGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Value-Based Pricing
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -698,8 +698,8 @@ export default function ProposalGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Realistic Timeline
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -707,8 +707,8 @@ export default function ProposalGeneratorPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Expiration Date
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

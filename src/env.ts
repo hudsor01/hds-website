@@ -18,7 +18,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1).optional(),
 
     // Database
-    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+    SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
 
     // Webhooks
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
@@ -38,9 +38,6 @@ export const env = createEnv({
     // Vercel KV for distributed rate limiting
     KV_REST_API_URL: z.string().url().optional(),
     KV_REST_API_TOKEN: z.string().optional(),
-
-    // Analytics
-    GA4_API_SECRET: z.string().optional(),
 
     // SEO
     GOOGLE_SITE_VERIFICATION: z.string().optional(),
@@ -68,11 +65,8 @@ export const env = createEnv({
   client: {
     // Supabase
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
 
-    // Analytics
-    NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
-    
     // Base URL
     NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000"),
   },
@@ -84,14 +78,13 @@ export const env = createEnv({
   runtimeEnv: {
     // Server
     RESEND_API_KEY: process.env.RESEND_API_KEY,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
     SUPABASE_WEBHOOK_SECRET: process.env.SUPABASE_WEBHOOK_SECRET,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
-    GA4_API_SECRET: process.env.GA4_API_SECRET,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     BASE_URL: process.env.BASE_URL,
     ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,
@@ -101,8 +94,7 @@ export const env = createEnv({
 
     // Client
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
 

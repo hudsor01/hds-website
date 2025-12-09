@@ -13,7 +13,7 @@ interface StatsBarProps {
 export function StatsBar({
   stats,
   variant = 'default',
-  valueColor = 'text-cyan-400',
+  valueColor = 'text-accent',
   columns = 4,
 }: StatsBarProps) {
   const gridCols = {
@@ -29,7 +29,7 @@ export function StatsBar({
   return (
     <section className={sectionClass}>
       <div className="container-wide">
-        <div className={`grid ${gridCols[columns]} gap-6 md:gap-8`}>
+        <div className={`grid ${gridCols[columns]} gap-comfortable md:gap-sections`}>
           {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className={`text-responsive-lg font-black ${valueColor}`}>

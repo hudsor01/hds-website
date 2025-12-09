@@ -68,11 +68,11 @@ const tools = [
 
 export default function ToolsPage() {
   return (
-    <main className="min-h-screen bg-cyan-600/10 dark:from-gray-900 dark:to-gray-800">
+    <main className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
       {/* Hero Section */}
-      <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden px-4 py-section sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-white sm:text-5xl">
+          <h1 className="mb-heading text-4xl font-bold tracking-tight text-foreground dark:text-primary-foreground sm:text-5xl">
             Free Business Tools
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
@@ -83,33 +83,33 @@ export default function ToolsPage() {
       </section>
 
       {/* Tools Grid */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-section-sm sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => (
               <div
                 key={tool.href}
-                className="group relative flex flex-col rounded-lg border border-border bg-white p-6 shadow-sm transition-all hover:shadow-lg dark:border-border dark:bg-muted"
+                className="group relative flex flex-col rounded-lg border border-border bg-card card-padding shadow-xs transition-all hover:shadow-lg dark:border-border dark:bg-muted"
               >
                 {/* Icon */}
-                <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-lg bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-400">
+                <div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-primary-hover dark:text-accent">
                   {tool.icon}
                 </div>
 
                 {/* Content */}
-                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
+                <h3 className="mb-subheading text-xl font-semibold text-foreground dark:text-primary-foreground">
                   {tool.title}
                 </h3>
 
-                <p className="mb-4 flex-1 text-sm text-muted-foreground dark:text-muted-foreground">
+                <p className="mb-heading flex-1 text-sm text-muted-foreground dark:text-muted-foreground">
                   {tool.description}
                 </p>
 
                 {/* Benefits */}
-                <ul className="mb-6 space-y-2">
+                <ul className="mb-content-block space-y-tight">
                   {tool.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
-                      <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <li key={index} className="flex items-start gap-tight text-sm text-muted-foreground dark:text-muted-foreground">
+                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-primary dark:text-accent" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       {benefit}
@@ -120,7 +120,7 @@ export default function ToolsPage() {
                 {/* CTA */}
                 <Link
                   href={tool.href}
-                  className="inline-flex items-center justify-center rounded-md bg-cyan-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
                 >
                   {tool.cta}
                   <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -134,25 +134,25 @@ export default function ToolsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-section-sm sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl bg-cyan-600/10 p-8 text-center shadow-xl sm:p-12">
-            <h2 className="mb-4 text-3xl font-bold text-white">
+          <div className="rounded-2xl bg-primary/10 card-padding-lg text-center shadow-xl sm:p-12">
+            <h2 className="mb-heading text-3xl font-bold text-primary-foreground">
               Ready to Take Action?
             </h2>
-              <p className="mb-8 text-lg text-cyan-100">
+              <p className="mb-comfortable text-lg text-accent/30">
               These calculators show the potential. Let&apos;s make it reality. Schedule a free consultation to discuss your project.
             </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+            <div className="flex flex-col gap-content sm:flex-row sm:justify-center">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-base font-semibold text-cyan-600 shadow-sm hover:bg-muted"
+                className="inline-flex items-center justify-center rounded-md bg-card px-6 py-3 text-base font-semibold text-primary shadow-xs hover:bg-muted"
               >
                 Schedule Consultation
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-white hover:bg-white/10"
+                className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-card/10"
               >
                 View Services
               </Link>
@@ -164,9 +164,9 @@ export default function ToolsPage() {
       {/* Trust Signals */}
       <section className="border-t border-border px-4 py-12 dark:border-border">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-sections sm:grid-cols-3">
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
                 500+
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -175,7 +175,7 @@ export default function ToolsPage() {
             </div>
 
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
                 98%
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -184,7 +184,7 @@ export default function ToolsPage() {
             </div>
 
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
                 100%
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">

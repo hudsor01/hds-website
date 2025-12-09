@@ -3,12 +3,27 @@
  * Stores Core Web Vitals metrics for performance monitoring
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { WebVitalsInsert } from '@/types/supabase-helpers';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import type { Database } from '@/types/database-local';
+// import type { WebVitalsInsert } from '@/types/supabase-helpers';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 const WebVitalSchema = z.object({
   name: z.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB']),
@@ -32,7 +47,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    if (!supabaseAdmin) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -47,7 +64,7 @@ export async function POST(request: NextRequest) {
     const referer = request.headers.get('referer') || request.url;
 
     // Insert web vital
-    const webVitalData: WebVitalsInsert = {
+    const webVitalData = {
       metric_type: validatedData.name,
       value: validatedData.value,
       rating: validatedData.rating || null,
@@ -58,7 +75,8 @@ export async function POST(request: NextRequest) {
       session_id: null,
     };
 
-    const { error } = await supabaseAdmin
+    // Store web vitals data
+    const { error } = await supabase
       .from('web_vitals')
       .insert(webVitalData);
 

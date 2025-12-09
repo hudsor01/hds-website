@@ -5,17 +5,17 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/Button';
 import { logger } from '@/lib/logger';
-import { LeadScoreCard } from './lead-detail/LeadScoreCard';
-import { ContactInfo } from './lead-detail/ContactInfo';
+import { Mail } from 'lucide-react';
+import { useState } from 'react';
 import { AttributionInfo } from './lead-detail/AttributionInfo';
 import { CalculatorDetails } from './lead-detail/CalculatorDetails';
-import { StatusTimeline } from './lead-detail/StatusTimeline';
+import { ContactInfo } from './lead-detail/ContactInfo';
+import { LeadScoreCard } from './lead-detail/LeadScoreCard';
 import { NotesSection } from './lead-detail/NotesSection';
+import { StatusTimeline } from './lead-detail/StatusTimeline';
 import type { Lead } from './lead-detail/types';
 
 interface LeadDetailModalProps {
@@ -84,12 +84,12 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             </Button>
           )}
           {!lead.converted && (
-            <Button onClick={handleMarkConverted} disabled={isUpdating} className="bg-green-600 hover:bg-green-700">
+            <Button onClick={handleMarkConverted} disabled={isUpdating} className="bg-success-dark hover:bg-success-darker">
               Mark as Converted
             </Button>
           )}
           <Button variant="outline" asChild>
-            <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-2">
+            <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-tight">
               <Mail className="h-4 w-4" />
               Send Email
             </a>
@@ -98,7 +98,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
 
         <LeadScoreCard lead={lead} />
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-comfortable lg:grid-cols-2">
           <ContactInfo lead={lead} />
           {lead.attribution && <AttributionInfo attribution={lead.attribution} />}
         </div>

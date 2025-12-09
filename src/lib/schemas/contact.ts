@@ -78,7 +78,7 @@ export const emailSequenceConfigSchema = z.object({
 export const newsletterSchema = z.object({
   email: emailSchema,
   firstName: nameSchema.optional(),
-  source: z.enum(['footer', 'popup', 'blog', 'contact']).default('footer'),
+  source: z.string().min(2).default('footer'),
 });
 
 // Contact form response
@@ -93,8 +93,8 @@ export const contactFormResponseSchema = apiResponseSchema(
 
 export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
   const factors = {
-    hasHighBudget: !!data.budget && ['25-50K', '50K+'].includes(data.budget),
-    hasUrgentTimeline: !!data.timeline && ['ASAP', '1 month'].includes(data.timeline),
+    hasHighBudget: !!data.budget && ['15k-50k', '50k-plus'].includes(data.budget),
+    hasUrgentTimeline: !!data.timeline && ['asap', '1-month'].includes(data.timeline),
     hasSpecificService: !!data.service && data.service !== 'other',
     hasCompany: !!data.company,
     messageLength: data.message.length,

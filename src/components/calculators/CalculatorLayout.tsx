@@ -24,17 +24,17 @@ export function CalculatorLayout({
   showBackLink = true,
 }: CalculatorLayoutProps) {
   return (
-    <div className="min-h-screen bg-cyan-600/10 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
       <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8 text-center">
+        <div className="mb-comfortable text-center">
           {icon && (
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-900">
+            <div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
               {icon}
             </div>
           )}
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-white">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-primary-foreground">
             {title}
           </h1>
 
@@ -44,16 +44,16 @@ export function CalculatorLayout({
         </div>
 
         {/* Calculator Content */}
-        <div className="rounded-lg bg-white p-6 shadow-xl dark:bg-muted sm:p-8">
+        <div className="rounded-lg bg-card card-padding shadow-xl dark:bg-muted sm:card-padding-lg">
           {children}
         </div>
 
         {/* Back Link */}
         {showBackLink && (
-          <div className="mt-8 text-center">
+          <div className="mt-heading text-center">
             <Link
               href="/services"
-              className="text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
+              className="text-sm text-primary hover:text-primary-hover dark:text-accent dark:hover:text-accent/80"
             >
               ← Back to Services
             </Link>
@@ -62,9 +62,9 @@ export function CalculatorLayout({
 
         {/* Trust Signals */}
         <div className="mt-12 border-t border-border pt-8 dark:border-border">
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-comfortable sm:grid-cols-3">
             <div className="text-center">
-              <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="text-2xl font-bold text-primary dark:text-accent">
                 500+
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -73,7 +73,7 @@ export function CalculatorLayout({
             </div>
 
             <div className="text-center">
-              <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="text-2xl font-bold text-primary dark:text-accent">
                 98%
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -82,7 +82,7 @@ export function CalculatorLayout({
             </div>
 
             <div className="text-center">
-              <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+              <div className="text-2xl font-bold text-primary dark:text-accent">
                 Free
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">

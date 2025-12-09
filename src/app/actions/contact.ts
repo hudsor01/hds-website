@@ -1,24 +1,20 @@
 'use server'
 
 import { headers } from "next/headers"
-import { Resend } from "resend"
+import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type LeadScoring } from "@/lib/schemas/contact"
-import { resendEmailResponseSchema } from "@/lib/schemas"
+import { resendEmailResponseSchema } from "@/lib/schemas/external"
 import { createServerLogger, castError, type Logger } from "@/lib/logger"
 import { notifyHighValueLead } from "@/lib/notifications"
 
 // ================================
 // CONFIGURATION
 // ================================
-
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null
 
 const EMAIL_FROM_ADMIN = "Hudson Digital <noreply@hudsondigitalsolutions.com>"
 const EMAIL_FROM_PERSONAL = "Richard Hudson <hello@hudsondigitalsolutions.com>"
@@ -95,10 +91,10 @@ async function sendAdminNotification(
   sequenceId: LeadScoring['sequenceType'],
   logger: Logger
 ): Promise<boolean> {
-  if (!resend) {return false}
+  if (!isResendConfigured()) {return false}
 
   try {
-    const response = await resend.emails.send({
+    const response = await getResendClient().emails.send({
       from: EMAIL_FROM_ADMIN,
       to: [EMAIL_TO_ADMIN],
       subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
@@ -127,7 +123,7 @@ async function sendWelcomeEmail(
   emailVariables: ReturnType<typeof prepareEmailVariables>,
   logger: Logger
 ): Promise<boolean> {
-  if (!resend) {return false}
+  if (!isResendConfigured()) {return false}
 
   const sequences = getEmailSequences()
   const sequence = sequences[sequenceId as keyof typeof sequences]
@@ -137,7 +133,7 @@ async function sendWelcomeEmail(
     const processedContent = processEmailTemplate(sequence.content, emailVariables)
     const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
 
-    const response = await resend.emails.send({
+    const response = await getResendClient().emails.send({
       from: EMAIL_FROM_PERSONAL,
       to: [data.email],
       subject: processedSubject,
@@ -317,7 +313,7 @@ export async function submitContactForm(
     const emailVariables = prepareEmailVariables(data)
 
     // Step 5: Send emails and notifications
-    if (resend) {
+    if (isResendConfigured()) {
       try {
         await sendAdminNotification(data, leadScore, sequenceId, logger)
         await sendWelcomeEmail(data, sequenceId, emailVariables, logger)

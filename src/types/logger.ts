@@ -1,6 +1,6 @@
 /**
  * Logger Type Definitions
- * Unified logging interface for PostHog + Vercel integration
+ * Unified logging interface for Vercel Analytics integration
  */
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
@@ -76,7 +76,7 @@ export interface ClientLogger extends Logger {
   userAction(action: string, data?: Record<string, unknown>): void;
 }
 
-// Event types for PostHog integration
+// Event types for analytics integration
 export interface LogEvent {
   event: string;
   properties: {

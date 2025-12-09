@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { logger } from '@/lib/logger';
 
 // Admin email whitelist - users with these emails can access admin features

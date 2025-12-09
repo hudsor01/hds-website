@@ -7,19 +7,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { submitTestimonial, markRequestSubmitted, getTestimonialRequestByToken } from '@/lib/testimonials';
 import { logger } from '@/lib/logger';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-
-interface SubmitTestimonialRequest {
-  request_id?: string;
-  token?: string;
-  client_name: string;
-  company?: string;
-  role?: string;
-  rating: number;
-  content: string;
-  photo_url?: string;
-  video_url?: string;
-  service_type?: string;
-}
+import { testimonialSubmitSchema } from '@/lib/schemas/query-params';
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 3 submissions per 15 minutes per IP
@@ -34,29 +22,22 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json() as SubmitTestimonialRequest;
+    const rawBody = await request.json();
 
-    // Validate required fields
-    if (!body.client_name?.trim()) {
+    // Validate request body with Zod
+    const parseResult = testimonialSubmitSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      const errors = parseResult.error.flatten();
+      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
+      logger.warn('Invalid testimonial submission', { errors: errors.fieldErrors });
       return NextResponse.json(
-        { error: 'Name is required' },
+        { error: firstError, details: errors.fieldErrors },
         { status: 400 }
       );
     }
 
-    if (!body.content?.trim() || body.content.length < 20) {
-      return NextResponse.json(
-        { error: 'Testimonial must be at least 20 characters' },
-        { status: 400 }
-      );
-    }
-
-    if (!body.rating || body.rating < 1 || body.rating > 5) {
-      return NextResponse.json(
-        { error: 'Rating must be between 1 and 5' },
-        { status: 400 }
-      );
-    }
+    const body = parseResult.data;
+    let requestId = body.request_id;
 
     // If token provided, validate it and mark as submitted
     if (body.token) {
@@ -84,12 +65,12 @@ export async function POST(request: NextRequest) {
       }
 
       // Set request_id from the validated request
-      body.request_id = testimonialRequest.id;
+      requestId = testimonialRequest.id;
     }
 
     // Submit the testimonial
     const testimonial = await submitTestimonial({
-      request_id: body.request_id,
+      request_id: requestId,
       client_name: body.client_name,
       company: body.company,
       role: body.role,

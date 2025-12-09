@@ -187,14 +187,13 @@ export const backendAnalyticsPayloadSchema = z.object({
 export type BackendAnalyticsPayload = z.infer<typeof backendAnalyticsPayloadSchema>;
 
 // ============================================================================
-// PostHog Event Schema
+// Generic Analytics Event Schema
 // ============================================================================
 
-export const postHogEventSchema = z.object({
+export const analyticsEventSchema = z.object({
   event: z.string(),
   properties: eventPropertiesSchema,
   timestamp: z.string().datetime().optional(),
-  distinct_id: z.string().optional(),
 });
 
-export type PostHogEvent = z.infer<typeof postHogEventSchema>;
+export type AnalyticsEvent = z.infer<typeof analyticsEventSchema>;

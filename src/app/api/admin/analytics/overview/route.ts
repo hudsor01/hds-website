@@ -5,9 +5,10 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { analyticsOverviewQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
 const logger = createServerLogger('analytics-overview-api');
 
@@ -33,27 +34,33 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const days = parseInt(searchParams.get('days') || '30');
 
-    if (!supabaseAdmin) {
+    // Validate query parameters with Zod
+    const parseResult = safeParseSearchParams(searchParams, analyticsOverviewQuerySchema);
+    if (!parseResult.success) {
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
       return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
+        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
+        { status: 400 }
       );
     }
+
+    const { days } = parseResult.data;
+
+    
 
     // Calculate date range
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
     // Total calculator leads
-    const { count: totalLeads } = await supabaseAdmin
+    const { count: totalLeads } = await (await createClient())
       .from('calculator_leads')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', startDate.toISOString());
 
     // Leads by quality
-    const { data: leadsByQuality } = await supabaseAdmin
+    const { data: leadsByQuality } = await (await createClient())
       .from('calculator_leads')
       .select('lead_quality')
       .gte('created_at', startDate.toISOString());
@@ -65,7 +72,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Leads by calculator type
-    const { data: leadsByType } = await supabaseAdmin
+    const { data: leadsByType } = await (await createClient())
       .from('calculator_leads')
       .select('calculator_type')
       .gte('created_at', startDate.toISOString());
@@ -76,20 +83,20 @@ export async function GET(request: NextRequest) {
     }, {} as Record<string, number>) || {};
 
     // Conversion metrics
-    const { count: convertedLeads } = await supabaseAdmin
+    const { count: convertedLeads } = await (await createClient())
       .from('calculator_leads')
       .select('*', { count: 'exact', head: true })
       .eq('converted', true)
       .gte('created_at', startDate.toISOString());
 
-    const { count: contactedLeads } = await supabaseAdmin
+    const { count: contactedLeads } = await (await createClient())
       .from('calculator_leads')
       .select('*', { count: 'exact', head: true })
       .eq('contacted', true)
       .gte('created_at', startDate.toISOString());
 
     // Email metrics
-    const { data: emailEngagement } = await supabaseAdmin
+    const { data: emailEngagement } = await (await createClient())
       .from('email_engagement')
       .select('event_type')
       .gte('created_at', startDate.toISOString());
@@ -102,7 +109,7 @@ export async function GET(request: NextRequest) {
     };
 
     // Traffic sources
-    const { data: attributionData } = await supabaseAdmin
+    const { data: attributionData } = await (await createClient())
       .from('lead_attribution')
       .select('source, medium')
       .gte('first_visit_at', startDate.toISOString());

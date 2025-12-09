@@ -3,6 +3,18 @@
  * Dynamic location pages for SEO and local marketing
  */
 
+// Location type definition
+export interface LocationFeature {
+  title: string;
+  description: string;
+}
+
+export interface LocationStats {
+  businesses: string;
+  projects: string;
+  satisfaction: string;
+}
+
 export interface LocationData {
   slug: string;
   city: string;
@@ -12,15 +24,8 @@ export interface LocationData {
   description: string;
   metaDescription: string;
   neighborhoods: string[];
-  stats: {
-    businesses: string;
-    projects: string;
-    satisfaction: string;
-  };
-  features: {
-    title: string;
-    description: string;
-  }[];
+  stats: LocationStats;
+  features: LocationFeature[];
 }
 
 export const TEXAS_LOCATIONS: LocationData[] = [

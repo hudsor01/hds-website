@@ -2,6 +2,8 @@
  * Test logger utility for structured test output
  */
 
+import { logger } from '../src/lib/logger';
+
 export interface TestLogger {
   step: (message: string) => void;
   analysis: (component: string, property: string, value?: unknown) => void;
@@ -18,28 +20,28 @@ export function createTestLogger(testName: string): TestLogger {
 
   return {
     step: (message: string) => {
-      console.log(`${prefix} STEP: ${message}`);
+      logger.info(`${prefix} STEP: ${message}`);
     },
     analysis: (component: string, property: string, value?: unknown) => {
-      console.log(`${prefix} ANALYSIS: ${component} - ${property}:`, value);
+      logger.info(`${prefix} ANALYSIS: ${component} - ${property}:`, { value });
     },
     verify: (description: string, value: unknown, expected?: unknown) => {
-      console.log(`${prefix} VERIFY: ${description}:`, value, expected !== undefined ? `(expected: ${expected})` : '');
+      logger.info(`${prefix} VERIFY: ${description}:`, { value, expected: expected !== undefined ? expected : undefined });
     },
     info: (message: string) => {
-      console.log(`${prefix} INFO: ${message}`);
+      logger.info(`${prefix} INFO: ${message}`);
     },
     warn: (message: string) => {
-      console.warn(`${prefix} WARN: ${message}`);
+      logger.warn(`${prefix} WARN: ${message}`);
     },
     error: (message: string, error?: unknown) => {
-      console.error(`${prefix} ERROR: ${message}`, error);
+      logger.error(`${prefix} ERROR: ${message}`, error);
     },
     screenshot: (path: string, description?: string) => {
-      console.log(`${prefix} SCREENSHOT: ${path}${description ? ` - ${description}` : ''}`);
+      logger.info(`${prefix} SCREENSHOT: ${path}${description ? ` - ${description}` : ''}`);
     },
     complete: (message: string) => {
-      console.log(`${prefix} COMPLETE: ${message}`);
+      logger.info(`${prefix} COMPLETE: ${message}`);
     },
   };
 }

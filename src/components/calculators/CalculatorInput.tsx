@@ -30,7 +30,7 @@ export function CalculatorInput({
   ...props
 }: CalculatorInputProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-tight">
       <Label htmlFor={id}>{label}</Label>
 
       <div className="relative">
@@ -45,7 +45,7 @@ export function CalculatorInput({
           className={cn(
             prefix && 'pl-7',
             suffix && 'pr-12',
-            error && 'border-red-500 focus-visible:ring-red-500',
+            error && 'border-destructive focus-visible:ring-destructive',
             className
           )}
           {...props}
@@ -63,7 +63,7 @@ export function CalculatorInput({
       )}
 
       {error && (
-        <p className="text-xs text-red-500">{error}</p>
+        <p className="text-xs text-destructive">{error}</p>
       )}
     </div>
   );

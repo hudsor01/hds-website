@@ -65,10 +65,10 @@ interface IconButtonProps {
 }
 
 const buttonVariants = {
-  default: 'text-muted-foreground hover:text-white hover:bg-muted/50',
-  ghost: 'text-muted-foreground hover:text-white hover:bg-transparent',
-  primary: 'text-cyan-400 hover:text-cyan-300 hover:bg-cyan-400/10',
-  danger: 'text-red-400 hover:text-red-300 hover:bg-red-400/10'
+  default: 'text-muted-foreground hover:text-primary-foreground hover:bg-muted/50',
+  ghost: 'text-muted-foreground hover:text-primary-foreground hover:bg-transparent',
+  primary: 'text-accent hover:text-accent/80 hover:bg-accent/10',
+  danger: 'text-destructive-text hover:text-destructive-muted hover:bg-destructive/10'
 }
 
 const buttonSizes = {
@@ -76,7 +76,7 @@ const buttonSizes = {
   sm: 'p-1.5',
   md: 'p-2',
   lg: 'p-3',
-  xl: 'p-4'
+  xl: 'card-padding-sm'
 }
 
 export function IconButton({

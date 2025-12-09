@@ -3,10 +3,6 @@
  * Consolidates inline interfaces from form components, hooks, and utilities
  */
 
-// Loading State Types (importing from hooks to avoid duplication)
-import type { LoadingState, UseLoadingStateOptions } from './hooks'
-export type { LoadingState, UseLoadingStateOptions };
-
 // Form Submission States
 export type FormSubmissionState = 
   | 'idle' 

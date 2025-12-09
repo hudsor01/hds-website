@@ -3,13 +3,29 @@
  * Handles email list subscriptions and welcome email
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
-import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
-import { Resend } from 'resend';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
+
+function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 const SubscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -28,13 +44,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Initialize Resend here to avoid build-time errors
-  const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   try {
     const body = await request.json();
     const { email, source } = SubscribeSchema.parse(body);
 
-    if (!supabaseAdmin) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -42,11 +58,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = (await supabaseAdmin
-      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
+    const { data: existing, error: existingError } = await supabase
+      .from('newsletter_subscribers')
       .select('*')
       .eq('email', email)
-      .single()) as unknown as SupabaseQueryResult<NewsletterSubscriber>;
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to check existing subscriber:', existingError as Error);
+      return NextResponse.json({ error: 'Unable to process subscription' }, { status: 500 });
+    }
 
     if (existing && existing.status === 'active') {
       return NextResponse.json(
@@ -61,14 +82,12 @@ export async function POST(request: NextRequest) {
       status: 'active',
       source: source || 'website',
       subscribed_at: new Date().toISOString(),
-      first_name: null,
       unsubscribed_at: null,
-      tags: [],
     };
 
-    const { error: dbError } = await supabaseAdmin
-      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
-      .upsert(subscriberData as unknown as never); // Bypass type checking
+    const { error: dbError } = await supabase
+      .from('newsletter_subscribers')
+      .upsert(subscriberData);
 
     if (dbError) {
       logger.error('Failed to save subscriber:', dbError);
@@ -80,8 +99,8 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email
     try {
-      if (resend) {
-        await resend.emails.send({
+      if (isResendConfigured()) {
+        await getResendClient().emails.send({
         from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',

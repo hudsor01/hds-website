@@ -179,13 +179,13 @@ export default function PerformanceCalculatorPage() {
       title="Performance Savings Calculator"
       description="Discover how much revenue you're losing due to slow website performance"
       icon={
-        <svg className="h-8 w-8 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       }
     >
       {!showResults ? (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-comfortable">
           <CalculatorInput
             label="Website URL"
             id="websiteUrl"
@@ -197,7 +197,7 @@ export default function PerformanceCalculatorPage() {
             required
           />
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-comfortable md:grid-cols-2">
             <CalculatorInput
               label="Monthly Visitors"
               id="monthlyVisitors"
@@ -239,19 +239,19 @@ export default function PerformanceCalculatorPage() {
           </div>
 
           {error && (
-            <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <div className="rounded-lg bg-destructive-light card-padding-sm dark:bg-destructive-bg-dark/20">
+              <p className="text-sm text-destructive-dark dark:text-destructive-text">{error}</p>
             </div>
           )}
 
           <button
             type="submit"
             disabled={isAnalyzing}
-            className="w-full rounded-md bg-cyan-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             {isAnalyzing ? (
               <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -262,15 +262,15 @@ export default function PerformanceCalculatorPage() {
             )}
           </button>
 
-          <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
+          <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
             <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+              <div className="shrink-0">
+                <svg className="h-5 w-5 text-info-text" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+                <p className="text-sm text-info-darker dark:text-info-muted">
                   <strong>Industry Data:</strong> A 1-second delay in page load time can reduce conversions by 7%. Pages loading in under 2 seconds have the highest conversion rates.
                 </p>
               </div>
@@ -281,24 +281,24 @@ export default function PerformanceCalculatorPage() {
         <div>
           {/* Core Web Vitals Display */}
           {metrics && (
-            <div className="mb-6 rounded-lg bg-muted p-6 dark:bg-muted">
-              <h3 className="mb-4 text-lg font-semibold text-foreground dark:text-white">
+            <div className="mb-content-block rounded-lg bg-muted card-padding dark:bg-muted">
+              <h3 className="mb-heading text-lg font-semibold text-foreground dark:text-primary-foreground">
                 Core Web Vitals
               </h3>
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid gap-content sm:grid-cols-3">
                 <div className="text-center">
                   <div className="text-sm text-muted-foreground dark:text-muted-foreground">LCP</div>
-                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.lcp}</div>
+                  <div className="text-xl font-bold text-foreground dark:text-primary-foreground">{metrics.lcp}</div>
                   <div className="text-xs text-muted-foreground">Largest Contentful Paint</div>
                 </div>
                 <div className="text-center">
                   <div className="text-sm text-muted-foreground dark:text-muted-foreground">FCP</div>
-                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.fcp}</div>
+                  <div className="text-xl font-bold text-foreground dark:text-primary-foreground">{metrics.fcp}</div>
                   <div className="text-xs text-muted-foreground">First Contentful Paint</div>
                 </div>
                 <div className="text-center">
                   <div className="text-sm text-muted-foreground dark:text-muted-foreground">CLS</div>
-                  <div className="text-xl font-bold text-foreground dark:text-white">{metrics.cls}</div>
+                  <div className="text-xl font-bold text-foreground dark:text-primary-foreground">{metrics.cls}</div>
                   <div className="text-xs text-muted-foreground">Cumulative Layout Shift</div>
                 </div>
               </div>
@@ -316,7 +316,7 @@ export default function PerformanceCalculatorPage() {
               setShowResults(false);
               setMetrics(null);
             }}
-            className="mt-6 w-full rounded-md border border-border bg-white px-6 py-3 text-base font-semibold text-muted-foreground shadow-sm hover:bg-muted dark:border-gray-600 dark:bg-muted dark:text-muted dark:hover:bg-gray-600"
+            className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:text-muted dark:hover:bg-muted-foreground"
           >
             ← Analyze Another Site
           </button>
@@ -324,8 +324,8 @@ export default function PerformanceCalculatorPage() {
       )}
 
       {/* Performance Tips */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           How We Optimize Performance
         </h3>
 
@@ -339,11 +339,11 @@ export default function PerformanceCalculatorPage() {
             { title: 'Minification', desc: 'Compressed code for smaller file sizes' },
           ].map((tip, index) => (
             <div key={index} className="flex items-start gap-3 rounded-lg border border-border p-3 dark:border-border">
-              <svg className="h-5 w-5 flex-shrink-0 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-5 w-5 shrink-0 text-primary dark:text-accent" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <div>
-                <div className="font-medium text-foreground dark:text-white">{tip.title}</div>
+                <div className="font-medium text-foreground dark:text-primary-foreground">{tip.title}</div>
                 <div className="text-sm text-muted-foreground dark:text-muted-foreground">{tip.desc}</div>
               </div>
             </div>

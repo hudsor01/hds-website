@@ -1,25 +1,24 @@
-import type { Post } from "@/types/ghost-types";
+import type { BlogPost } from "@/lib/blog";
 
 interface BlogPostContentProps {
-  post: Post;
+  post: BlogPost;
 }
 
 export function BlogPostContent({ post }: BlogPostContentProps) {
+  if (!post.content) {
+    return (
+      <div className="prose prose-invert prose-cyan max-w-none">
+        <p className="text-muted-foreground">
+          This post content is coming soon. Check back later for the full article.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
-      className="prose prose-lg prose-invert max-w-none
-        prose-headings:text-white prose-headings:font-bold
-        prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
-        prose-p:text-muted prose-p:leading-relaxed
-        prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:underline
-        prose-strong:text-white prose-strong:font-semibold
-        prose-code:text-cyan-300 prose-code:bg-muted prose-code:px-2 prose-code:py-1 prose-code:rounded
-        prose-pre:bg-background prose-pre:border prose-pre:border-border
-        prose-blockquote:border-l-4 prose-blockquote:border-cyan-400 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground
-        prose-ul:text-muted prose-ol:text-muted
-        prose-li:text-muted prose-li:leading-relaxed
-        prose-img:rounded-lg prose-img:shadow-lg"
-      dangerouslySetInnerHTML={{ __html: post.html }}
+      className="prose prose-invert prose-cyan max-w-none"
+      dangerouslySetInnerHTML={{ __html: post.content }}
     />
   );
 }

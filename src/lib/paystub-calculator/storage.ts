@@ -11,7 +11,11 @@ interface PaystubFormData {
   filingStatus: string;
   taxYear: number;
   state?: string;
+  savedAt?: number;
 }
+
+const EXPIRATION_DAYS = 30;
+const EXPIRATION_MS = EXPIRATION_DAYS * 24 * 60 * 60 * 1000;
 
 export function saveFormData(data: PaystubFormData): void {
   // Check if we're in a browser environment to prevent SSR crashes
@@ -20,7 +24,11 @@ export function saveFormData(data: PaystubFormData): void {
   }
 
   try {
-    localStorage.setItem(PAYSTUB_STORAGE_KEY, JSON.stringify(data));
+    const payload: PaystubFormData = {
+      ...data,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(PAYSTUB_STORAGE_KEY, JSON.stringify(payload));
   } catch (error) {
     logger.error('Error saving paystub form data:', error as Error);
   }
@@ -34,7 +42,17 @@ export function loadFormData(): PaystubFormData | null {
 
   try {
     const saved = localStorage.getItem(PAYSTUB_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
+    if (!saved) {
+      return null;
+    }
+
+    const parsed = JSON.parse(saved) as PaystubFormData;
+    if (parsed.savedAt && Date.now() - parsed.savedAt > EXPIRATION_MS) {
+      localStorage.removeItem(PAYSTUB_STORAGE_KEY);
+      return null;
+    }
+
+    return parsed;
   } catch (error) {
     logger.error('Error loading paystub form data:', error as Error);
     return null;

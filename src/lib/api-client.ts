@@ -6,8 +6,6 @@ import type {
   NewsletterSubscribersResponse,
   Testimonial,
   CreateTestimonialInput,
-  PortfolioProject,
-  CreatePortfolioProjectInput,
   TrackEventInput,
 } from '@/types/api';
 
@@ -130,27 +128,7 @@ class ApiClient {
     });
   }
 
-  // Portfolio projects endpoints
-  async getPortfolioProjects() {
-    return this.fetcher<ApiResponse<{ projects: PortfolioProject[] }>>('/api/portfolio/projects', {
-      method: 'GET',
-    });
-  }
-
-  async getPortfolioProject(id: string) {
-    return this.fetcher<ApiResponse<{ project: PortfolioProject }>>(`/api/portfolio/projects/${id}`, {
-      method: 'GET',
-    });
-  }
-
-  async createPortfolioProject(data: CreatePortfolioProjectInput) {
-    return this.fetcher<ApiResponse>('/api/portfolio/projects', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  // Analytics endpoints
+// Analytics endpoints
   async trackEvent(eventData: TrackEventInput) {
     return this.fetcher<ApiResponse>('/api/analytics', {
       method: 'POST',

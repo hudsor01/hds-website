@@ -22,9 +22,10 @@ test.describe('User Flow Validation', () => {
       await expect(page).toHaveURL(/.*contact/)
 
       // Fill out contact form
-      await page.fill('input[name="name"]', 'John Doe')
-      await page.fill('input[name="email"]', 'john@example.com')
-      await page.fill('input[name="company"]', 'Acme Corp')
+      await page.fill('#firstName', 'John')
+      await page.fill('#lastName', 'Doe')
+      await page.fill('#email', 'john@example.com')
+      await page.fill('#company', 'Acme Corp')
       await page.fill('textarea[name="message"]', 'I would like to discuss a web development project.')
 
       // Submit form
@@ -209,15 +210,15 @@ test.describe('User Flow Validation', () => {
       await expect(page.locator('h1, h2').filter({ hasText: /paystub/i })).toBeVisible()
 
       // Fill out employee information
-      const nameInput = page.locator('input[name="employeeName"]')
+      const nameInput = page.locator('#employeeName')
       if (await nameInput.count() > 0) {
         await nameInput.fill('John Doe')
 
         // Fill additional required fields
-        await page.fill('input[name="hourlyRate"]', '25.00')
+        await page.fill('#hourlyRate', '25.00')
 
         // Submit/Generate
-        const generateButton = page.locator('button:has-text("Generate")').first()
+        const generateButton = page.locator('button:has-text("Generate Pay Stubs")').first()
         if (await generateButton.count() > 0) {
           await generateButton.click()
           await page.waitForTimeout(1000)
@@ -235,10 +236,10 @@ test.describe('User Flow Validation', () => {
       await page.goto('/paystub-generator')
 
       // Fill out form
-      const nameInput = page.locator('input[name="employeeName"]')
+      const nameInput = page.locator('#employeeName')
       if (await nameInput.count() > 0) {
         await nameInput.fill('Test User')
-        await page.fill('input[name="hourlyRate"]', '30.00')
+        await page.fill('#hourlyRate', '30.00')
 
         // Wait for data to be saved
         await page.waitForTimeout(500)
@@ -255,14 +256,14 @@ test.describe('User Flow Validation', () => {
     test('should generate and preview PDF', async ({ page }) => {
       await page.goto('/paystub-generator')
 
-      const nameInput = page.locator('input[name="employeeName"]')
+      const nameInput = page.locator('#employeeName')
       if (await nameInput.count() > 0) {
         // Fill required fields
         await nameInput.fill('Jane Smith')
-        await page.fill('input[name="hourlyRate"]', '35.00')
+        await page.fill('#hourlyRate', '35.00')
 
         // Generate paystub
-        const generateButton = page.locator('button:has-text("Generate")').first()
+        const generateButton = page.locator('button:has-text("Generate Pay Stubs")').first()
         if (await generateButton.count() > 0) {
           await generateButton.click()
           await page.waitForTimeout(1000)

@@ -33,7 +33,7 @@ export default function FloatingTextarea({
 
   // Simplify nested ternary for label color
   const getLabelColor = () => {
-    if (isFocused && shouldFloat) {return 'text-cyan-400'}
+    if (isFocused && shouldFloat) {return 'text-accent'}
     if (shouldFloat) {return 'text-text-secondary'}
     return ''
   }
@@ -57,13 +57,13 @@ export default function FloatingTextarea({
         className={`
           peer w-full px-4 pt-6 pb-2
           bg-muted/50 border rounded-lg
-          text-white placeholder-transparent resize-none
-          transition-all duration-200 ease-in-out
+          text-primary-foreground placeholder-transparent resize-none
+          transition-all duration-150 ease-in-out
           ${disabled
             ? 'border-border cursor-not-allowed opacity-50'
             : isFocused
-              ? 'border-cyan-400 ring-2 ring-cyan-400/20 shadow-lg shadow-cyan-500/10'
-              : 'border-gray-600 hover:border-gray-500'
+              ? 'border-accent ring-2 ring-accent/20 shadow-lg shadow-cyan-500/10'
+              : 'border-border hover:border-border'
           }
           focus-ring
         `}
@@ -73,9 +73,9 @@ export default function FloatingTextarea({
       <label
         htmlFor={id}
         className={`
-          absolute left-4 transition-all duration-200 ease-in-out pointer-events-none
+          absolute left-4 transition-all duration-150 ease-in-out pointer-events-none
           ${shouldFloat 
-            ? 'top-2 text-xs text-cyan-400'
+            ? 'top-2 text-xs text-accent'
             : 'top-6 text-base text-text-muted'
           }
           ${getLabelColor()}
@@ -96,9 +96,9 @@ export default function FloatingTextarea({
       <div
         className={`
           absolute inset-0 rounded-lg pointer-events-none
-          transition-all duration-200 ease-in-out
+          transition-all duration-150 ease-in-out
           ${isFocused
-            ? 'ring-1 ring-cyan-400/30'
+            ? 'ring-1 ring-accent/30'
             : ''
           }
         `}

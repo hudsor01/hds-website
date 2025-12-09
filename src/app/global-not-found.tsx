@@ -98,14 +98,14 @@ export default function GlobalNotFound() {
               borderRadius: '8px',
               border: '1px solid #e5e7eb',
             }}>
-              <h3 style={{
+              <h2 style={{
                 fontSize: '18px',
                 fontWeight: '600',
                 marginBottom: '16px',
                 color: '#111827',
               }}>
                 Popular Pages
-              </h3>
+              </h2>
 
               <div style={{
                 display: 'grid',

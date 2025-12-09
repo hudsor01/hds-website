@@ -20,8 +20,8 @@ export function ComparisonView({
   setComparisonMode
 }: ComparisonViewProps) {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border border-border mb-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-card rounded-xl shadow-lg card-padding border border-border mb-content-block">
+      <div className="flex items-center justify-between mb-heading">
         <h2 className="text-xl font-semibold text-foreground">Compare Vehicles</h2>
         <button
           onClick={() => setComparisonMode(false)}
@@ -49,7 +49,7 @@ export function ComparisonView({
           </thead>
           <tbody>
             {comparisonVehicles.map((vehicle, index) => (
-              <tr key={index} className="border-b border-gray-100">
+              <tr key={index} className="border-b border-border">
                 <td className="py-3 px-3 font-medium">{vehicle.name}</td>
                 <td className="py-3 px-3 text-right">${vehicle.input.purchasePrice.toLocaleString()}</td>
                 <td className="py-3 px-3 text-right">${vehicle.input.downPayment.toLocaleString()}</td>
@@ -62,7 +62,7 @@ export function ComparisonView({
                 <td className="py-3 px-3 text-right">
                 <button
                   onClick={() => removeFromComparison(index)}
-                  className="text-red-500 hover:text-red-700 transition-colors"
+                  className="text-destructive hover:text-destructive-darker transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -73,10 +73,10 @@ export function ComparisonView({
         </table>
       </div>
 
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-tight mt-4">
         <button
           onClick={clearComparison}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+          className="px-4 py-2 bg-destructive text-primary-foreground rounded-lg hover:bg-destructive-dark transition-colors"
         >
           Clear All
         </button>

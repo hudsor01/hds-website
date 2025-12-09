@@ -19,7 +19,7 @@ function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string
 
 export function AttributionInfo({ attribution }: AttributionInfoProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-content">
       <h3 className="text-lg font-semibold">Traffic Attribution</h3>
       <div className="space-y-3">
         <InfoItem

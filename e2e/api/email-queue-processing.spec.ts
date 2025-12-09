@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 /**
  * Email Queue Processing API Tests
@@ -341,15 +341,15 @@ test.describe('Email Queue Processing - Integration', () => {
     // First, submit a contact form to create scheduled emails
     await page.goto('/contact')
 
-    await page.fill('input[name="firstName"]', 'Queue')
-    await page.fill('input[name="lastName"]', 'Test')
-    await page.fill('input[name="email"]', 'queuetest@example.com')
+    await page.fill('#firstName', 'Queue')
+    await page.fill('#lastName', 'Test')
+    await page.fill('#email', 'queuetest@example.com')
     await page.fill('textarea[name="message"]', 'Testing email queue')
 
     await page.click('button[type="submit"]')
 
     // Wait for submission
-    await expect(page.locator('text=/success/i')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('text=Message Sent Successfully!')).toBeVisible({ timeout: 10000 })
 
     // Now trigger email queue processing
     const cronSecret = process.env.CRON_SECRET || 'test-cron-secret'

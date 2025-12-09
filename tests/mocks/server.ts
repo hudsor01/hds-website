@@ -1,5 +1,5 @@
+import { afterAll, afterEach, beforeAll } from 'bun:test'
 import { setupServer } from 'msw/node'
-import { beforeAll, afterEach, afterAll } from 'vitest'
 import { handlers } from './handlers'
 
 /**

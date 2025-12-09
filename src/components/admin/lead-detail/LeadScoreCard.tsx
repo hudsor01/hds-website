@@ -15,7 +15,7 @@ export function LeadScoreCard({ lead }: LeadScoreCardProps) {
   };
 
   return (
-    <div className="rounded-lg bg-muted p-4">
+    <div className="rounded-lg bg-muted card-padding-sm">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">Lead Score</p>

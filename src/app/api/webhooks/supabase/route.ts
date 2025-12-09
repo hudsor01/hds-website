@@ -3,20 +3,57 @@
  * Processes database events and triggers for real-time updates
  */
 
-import { type NextRequest, NextResponse } from 'next/server'
-import { headers } from 'next/headers'
-import { createServerLogger } from '@/lib/logger'
-import { triggerWebhook } from '@/lib/supabase'
+import { createServerLogger } from '@/lib/logger';
 import {
-  databaseChangePayloadSchema,
-  authChangePayloadSchema,
-  storageChangePayloadSchema,
-  leadDataSchema,
-  eventDataSchema,
-  type DatabaseChangePayload,
-  type AuthChangePayload,
-  type StorageChangePayload,
-} from '@/lib/schemas'
+    authChangePayloadSchema,
+    databaseChangePayloadSchema,
+    storageChangePayloadSchema,
+    type AuthChangePayload,
+    type DatabaseChangePayload,
+    type StorageChangePayload,
+} from '@/lib/schemas/api';
+import {
+    eventDataSchema,
+    leadDataSchema,
+} from '@/lib/schemas/supabase';
+import type { Database, Json } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { headers } from 'next/headers';
+import { NextResponse, type NextRequest } from 'next/server';
+
+function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
+
+async function triggerWebhook(eventType: string, payload: unknown) {
+  // Log webhook trigger and optionally notify external services
+  const supabase = createServiceClient();
+
+  if (!supabase) {
+    logger.error('Supabase client not available for webhook logging');
+    return;
+  }
+
+  const payloadData = (payload ?? {}) as Json;
+
+  await supabase
+    .from('webhook_logs')
+    .insert({
+      event_type: eventType,
+      payload: payloadData,
+      triggered_at: new Date().toISOString(),
+    });
+}
 
 const logger = createServerLogger('supabase-webhook')
 

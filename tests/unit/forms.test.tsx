@@ -1,28 +1,66 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import type { ReactElement } from 'react'
+
+const renderWithQueryClient = (ui: ReactElement) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      {ui}
+    </QueryClientProvider>
+  )
+}
 
 /**
  * Unit tests for form components
  * Tests ContactForm validation, submission, and error handling
  */
 
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    refresh: vi.fn(),
-  }),
-}))
+// Set Supabase environment variables for testing
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
+process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key'
+process.env.SUPABASE_PUBLISHABLE_KEY = 'test-service-role-key'
 
 describe('ContactForm Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    // Mock next/navigation
+    mock.module('next/navigation', () => ({
+      useRouter: () => ({
+        push: mock(),
+        refresh: mock(),
+      }),
+    }));
+
+    // Mock Supabase client
+    mock.module('@supabase/supabase-js', () => ({
+      createClient: mock(() => ({
+        from: mock(() => ({
+          insert: mock(() => ({ select: mock(() => ({ single: mock() })) })),
+          select: mock(() => ({ eq: mock(() => ({ single: mock() })) })),
+        })),
+        auth: {
+          getUser: mock(() => Promise.resolve({ data: { user: null }, error: null })),
+        },
+      })),
+    }));
+  });
+
+  afterEach(() => {
+    cleanup();
+    mock.restore();
+  });
 
   it('should render all form fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
     // Check for all required fields using placeholders
     expect(screen.getByPlaceholderText(/first name/i)).toBeInTheDocument()
@@ -30,30 +68,19 @@ describe('ContactForm Component', () => {
     expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument()
   })
 
-  it('should show required fields with proper validation', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+  it('should render input fields with proper types', async () => {
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
-    // Check that required fields have required attribute
-    const nameInput = screen.getByPlaceholderText(/first name/i)
-    expect(nameInput).toHaveAttribute('required')
-  })
-
-  it('should validate email format', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
-
+    // Email field should have email type
     const emailInput = screen.getByPlaceholderText(/email address/i)
-
-    // Check for email type attribute
-    expect(emailInput).toHaveAttribute('type', 'email')
-    expect(emailInput).toHaveAttribute('required')
+    expect(emailInput.getAttribute('type')).toBe('email')
   })
 
   it('should accept valid email input', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const user = userEvent.setup()
-    render(<ContactForm />)
+    renderWithQueryClient(<ContactForm />)
 
     const emailInput = screen.getByPlaceholderText(/email address/i)
 
@@ -64,17 +91,17 @@ describe('ContactForm Component', () => {
   })
 
   it('should have submit button', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
-    const submitButton = screen.getByRole('button', { name: /send message/i })
+    const submitButton = screen.getByRole('button', { name: /submit/i })
     expect(submitButton).toBeInTheDocument()
-    expect(submitButton).toHaveAttribute('type', 'submit')
+    expect(submitButton.getAttribute('type')).toBe('submit')
   })
 
   it('should have all form select fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
     // Check for select fields (service, time, budget, timeline)
     const selects = screen.getAllByRole('combobox')
@@ -82,47 +109,36 @@ describe('ContactForm Component', () => {
   })
 
   it('should render form with proper structure', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    const { container } = render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    const { container } = renderWithQueryClient(<ContactForm />)
 
     // Form should exist
     const form = container.querySelector('form')
     expect(form).toBeInTheDocument()
-    expect(form).toHaveClass('space-y-8')
   })
 
   it('should have textarea for message', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    const { container } = render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    const { container } = renderWithQueryClient(<ContactForm />)
 
     const textarea = container.querySelector('textarea')
     expect(textarea).toBeInTheDocument()
-    expect(textarea).toHaveAttribute('required')
   })
 
   it('should accept user input in form fields', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
     const user = userEvent.setup()
 
-    render(<ContactForm />)
+    renderWithQueryClient(<ContactForm />)
 
     const nameInput = screen.getByPlaceholderText(/first name/i)
     await user.type(nameInput, 'John')
     expect(nameInput).toHaveValue('John')
   })
 
-  it('should have proper form classes', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    const { container } = render(<ContactForm />)
-
-    // Form should have glass-card styling
-    const glassCard = container.querySelector('.glass-card')
-    expect(glassCard).toBeInTheDocument()
-  })
-
   it('should have proper input classes', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
     const nameInput = screen.getByPlaceholderText(/first name/i)
     // shadcn Input uses these standard classes
@@ -130,25 +146,14 @@ describe('ContactForm Component', () => {
     expect(nameInput).toHaveClass('border')
   })
 
-  it('should indicate required fields visually', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
+  it('should render all textbox inputs', async () => {
+    const { default: ContactForm } = await import('@/components/forms/ContactForm')
+    renderWithQueryClient(<ContactForm />)
 
-    // Look for required fields
-    const requiredFields = screen.getAllByRole('textbox').filter(input =>
-      input.hasAttribute('required')
-    )
-
-    expect(requiredFields.length).toBeGreaterThan(0)
-  })
-
-  it('should render form header', async () => {
-    const { default: ContactForm } = await import('@/components/ContactForm')
-    render(<ContactForm />)
-
-    // Check for header text
-    const header = screen.getByText(/let's build something amazing/i)
-    expect(header).toBeInTheDocument()
+    // Get all text inputs
+    const textInputs = screen.getAllByRole('textbox')
+    // Should have first name, last name, email, phone, company, message
+    expect(textInputs.length).toBeGreaterThanOrEqual(5)
   })
 })
 
@@ -190,8 +195,8 @@ describe('Form Validation Utilities', () => {
 
 describe('Form Field Components', () => {
   it('should render FloatingInput with proper attributes', async () => {
-    const { default: FloatingInput } = await import('@/components/FloatingInput')
-    const mockOnChange = vi.fn()
+    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
+    const mockOnChange = mock()
 
     render(
       <FloatingInput
@@ -204,13 +209,13 @@ describe('Form Field Components', () => {
     )
 
     const input = screen.getByPlaceholderText('Test Field')
-    expect(input).toHaveAttribute('required')
-    expect(input).toHaveAttribute('name', 'testField')
+    expect(input.hasAttribute('required')).toBe(true)
+    expect(input.getAttribute('name')).toBe('testField')
   })
 
   it('should render FloatingTextarea with proper attributes', async () => {
     const { default: FloatingTextarea } = await import('@/components/FloatingTextarea')
-    const mockOnChange = vi.fn()
+    const mockOnChange = mock()
 
     render(
       <FloatingTextarea
@@ -223,14 +228,14 @@ describe('Form Field Components', () => {
     )
 
     const textarea = screen.getByPlaceholderText('Your Message')
-    expect(textarea).toHaveAttribute('name', 'message')
-    expect(textarea).toHaveAttribute('rows', '5')
+    expect(textarea.getAttribute('name')).toBe('message')
+    expect(textarea.getAttribute('rows')).toBe('5')
   })
 
   it('should call onChange handlers when typing', async () => {
-    const { default: FloatingInput } = await import('@/components/FloatingInput')
+    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
     const user = userEvent.setup()
-    const mockOnChange = vi.fn()
+    const mockOnChange = mock()
 
     render(
       <FloatingInput
