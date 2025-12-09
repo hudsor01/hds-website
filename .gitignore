@@ -54,6 +54,7 @@ next-env.d.ts
 __tests__/
 test-*.html
 test-*.ts
+!tests/test-utils.ts
 test-*.js
 *-test-suite.ts
 *-test-report.*
