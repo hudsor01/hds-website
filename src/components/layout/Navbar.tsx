@@ -1,7 +1,6 @@
 "use client";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { cn } from "@/lib/utils";
-import type { NavigationItem } from "@/types/components";
 import {
   ArrowRight,
   Menu,
@@ -11,6 +10,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memo, useCallback, useState } from "react";
+
+interface NavigationItem {
+  name: string;
+  href: string;
+}
 
 const navigation: NavigationItem[] = [
   { name: "Services", href: "/services" },

@@ -1,28 +1,21 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
+import { cleanupMocks, setupNextMocks } from '../test-utils';
 
 /**
  * Unit tests for navigation components
  * Tests NavbarLight and Footer functionality
  */
 
-// Mock next/link
-vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  ),
-}))
-
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/',
-}))
-
 describe('NavbarLight Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    setupNextMocks();
+  });
+
+  afterEach(() => {
+    cleanupMocks();
+  });
 
   it('should render navigation links', async () => {
     // Dynamically import to avoid SSR issues
@@ -83,8 +76,12 @@ describe('NavbarLight Component', () => {
 
 describe('Footer Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    setupNextMocks();
+  });
+
+  afterEach(() => {
+    cleanupMocks();
+  });
 
   it('should render footer content', async () => {
     const { default: Footer } = await import('@/components/layout/Footer')

@@ -5,11 +5,13 @@
 
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
-import type { LeadNote, LeadNoteInsert } from '@/types/supabase-helpers';
+import type { Database } from '@/types/database';
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
+
+type LeadNoteInsert = Database['public']['Tables']['lead_notes']['Insert'];
 
 const CreateNoteSchema = z.object({
   note_type: z.enum(['note', 'status_change', 'email_sent', 'call', 'meeting']),
@@ -43,10 +45,10 @@ export async function GET(
 
     // Fetch all notes for this lead (RLS enforces admin access)
     const { data: notes, error } = await supabase
-      .from('lead_notes' as 'lead_attribution')
+      .from('lead_notes')
       .select('*')
       .eq('lead_id', id)
-      .order('created_at', { ascending: true }) as unknown as { data: LeadNote[] | null; error: unknown };
+      .order('created_at', { ascending: true });
 
     if (error) {
       logger.error('Failed to fetch notes:', error as Error);
@@ -90,15 +92,16 @@ export async function POST(
     // Insert note (RLS enforces admin access)
     const noteData: LeadNoteInsert = {
       lead_id: id,
-      note: validatedData.content,
+      content: validatedData.content,
+      note_type: validatedData.note_type,
       created_by: validatedData.created_by || 'admin',
     };
 
     const { data: note, error } = await supabase
-      .from('lead_notes' as 'lead_attribution')
-      .insert(noteData as unknown as never)
-      .select()
-      .single() as unknown as { data: LeadNote | null; error: unknown };
+      .from('lead_notes')
+      .insert(noteData)
+      .select('*')
+      .maybeSingle();
 
     if (error) {
       logger.error('Failed to create note:', error as Error);

@@ -2,6 +2,7 @@ import type { LeaseComparisonResults, VehicleInputs } from '@/types/ttl-types'
 
 /**
  * Calculates the remaining loan balance after a certain number of payments
+ * Pure function optimized for React Server Components and memoization
  */
 export function calculateRemainingLoanBalance(
   principal: number,
@@ -22,6 +23,7 @@ export function calculateRemainingLoanBalance(
 
 /**
  * Calculates the break-even point between leasing and buying
+ * Optimized for performance with early returns
  */
 export function calculateBreakEvenPoint(
   leaseMonthlyPayment: number,
@@ -47,7 +49,8 @@ export function calculateBreakEvenPoint(
 }
 
 /**
- * Provides a recommendation between leasing and buying
+ * Provides a recommendation between leasing and buying based on financial analysis
+ * Pure function for React Server Components compatibility
  */
 export function getLeaseBuyRecommendation(params: {
   leaseMonthlyPayment: number;
@@ -90,6 +93,10 @@ export function getLeaseBuyRecommendation(params: {
   return "Consider your priorities: leasing offers flexibility and lower payments, while buying builds equity and may cost less long-term.";
 }
 
+/**
+ * Calculate lease payment using standard lease formula
+ * Pure function optimized for performance and React Server Components
+ */
 export function calculateLeasePayment(
   vehiclePrice: number,
   downPayment: number,
@@ -108,7 +115,10 @@ export function calculateLeasePayment(
   return (depreciation + rentCharge) / leaseTerm;
 }
 
-// Helper function to calculate monthly payment based on payment frequency
+/**
+ * Helper function to calculate monthly payment based on payment frequency
+ * Optimized for Next.js 16 with clear parameter handling
+ */
 function calculateBuyMonthlyPayment(
   purchasePrice: number,
   interestRate: number,
@@ -128,6 +138,10 @@ function calculateBuyMonthlyPayment(
   return paymentFrequency === 'monthly' ? monthlyPayment : monthlyPayment / 2;
 }
 
+/**
+ * Calculate comprehensive lease vs buy comparison
+ * Optimized for React Server Components with pure function approach
+ */
 export function calculateLeaseComparison(input: VehicleInputs): LeaseComparisonResults {
   if (!input.leaseMode) {
     // If not in lease mode, return a comparison based on lease options

@@ -6,7 +6,6 @@
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
-import type { CaseStudy } from '@/types/supabase-helpers';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
@@ -44,14 +43,19 @@ export async function GET(request: NextRequest) {
 
     // If slug is provided, return single case study
     if (slug) {
-      const { data: caseStudy, error } = (await supabase
-        .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+      const { data: caseStudy, error } = await supabase
+        .from('case_studies')
         .select('*')
         .eq('slug', slug)
         .eq('published', true)
-        .single()) as unknown as { data: CaseStudy | null; error: unknown };
+        .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
+        logger.error('Failed to fetch case study by slug', error as Error);
+        return NextResponse.json({ error: 'Failed to fetch case study' }, { status: 500 });
+      }
+
+      if (!caseStudy) {
         return NextResponse.json(
           { error: 'Case study not found' },
           { status: 404 }
@@ -63,7 +67,7 @@ export async function GET(request: NextRequest) {
 
     // Build query for list of case studies
     let query = supabase
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+      .from('case_studies')
       .select('*')
       .eq('published', true)
       .order('created_at', { ascending: false });

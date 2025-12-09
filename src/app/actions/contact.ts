@@ -8,7 +8,7 @@ import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type LeadScoring } from "@/lib/schemas/contact"
-import { resendEmailResponseSchema } from "@/lib/schemas"
+import { resendEmailResponseSchema } from "@/lib/schemas/external"
 import { createServerLogger, castError, type Logger } from "@/lib/logger"
 import { notifyHighValueLead } from "@/lib/notifications"
 

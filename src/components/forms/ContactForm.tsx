@@ -1,280 +1,230 @@
 'use client'
 
-import { submitContactForm, type ContactFormState } from '@/app/actions/contact'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useState, useMemo } from 'react'
+import { useAppForm } from '@/hooks/form-hook'
+import { FieldGroup } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import type { ContactFormData } from '@/lib/schemas/contact'
+import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import { getBudgetOptions, getContactTimeOptions, getServiceOptions, getTimelineOptions } from '@/lib/form-utils'
-import { logger } from '@/lib/logger'
-import { CheckCircle2 } from 'lucide-react'
-import { useActionState, useEffect } from 'react'
-import { useFormStatus } from 'react-dom'
-import { toast } from 'sonner'
+import { Check } from 'lucide-react'
 
-// Submit button with built-in pending state
-function SubmitButton() {
-  const { pending } = useFormStatus()
-
+// Success state component
+function SuccessMessage({ onReset }: { onReset: () => void }) {
   return (
-    <Button
-      type="submit"
-      disabled={pending}
-      size="lg"
-      className="px-12"
-      trackConversion
-      conversionLabel="Contact Form Submit"
-      conversionValue="high"
-    >
-      {pending ? (
-        <span className="flex items-center">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current mr-3"></div>
-          Sending...
-        </span>
-      ) : (
-        'Send Message'
-      )}
-    </Button>
-  )
-}
-
-// Success Message Component
-function SuccessMessage({ onReset, className = '' }: { onReset: () => void; className?: string }) {
-  const handleReset = () => {
-    if (typeof window !== 'undefined') {
-      window.location.reload()
-    } else {
-      onReset()
-    }
-  }
-
-  return (
-    <div className={`glass-card border-success-dark/50 text-center ${className}`}>
-      <div className="mb-content-block">
-        <CheckCircle2 className="w-16 h-16 mx-auto text-success-text" />
+    <div className="p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border">
+      <div className="h-full py-6 px-3">
+        <div className="mb-4 flex justify-center border rounded-full w-fit mx-auto p-2">
+          <Check className="size-8" />
+        </div>
+        <h2 className="text-center text-2xl text-pretty font-bold mb-2">
+          Thank you
+        </h2>
+        <p className="text-center text-lg text-pretty text-muted-foreground mb-4">
+          Form submitted successfully, we will get back to you soon
+        </p>
+        <div className="flex justify-center">
+          <Button variant="outline" onClick={onReset}>
+            Send another message
+          </Button>
+        </div>
       </div>
-      <h2 className="text-responsive-md font-bold text-success-foreground mb-heading">Message Sent Successfully!</h2>
-      <p className="text-success-light mb-content-block">
-        Thank you for contacting us. We&apos;ll get back to you within 24 hours.
-      </p>
-      <Button
-        onClick={handleReset}
-        className="bg-success-dark hover:bg-success"
-      >
-        Send Another Message
-      </Button>
-    </div>
-  )
-}
-
-// Form Header Component
-function FormHeader() {
-  return (
-    <div className="mb-comfortable">
-      <h2 className="text-responsive-md text-accent mb-subheading">
-        Let&apos;s Build Something Amazing
-      </h2>
-      <p className="text-muted-foreground">
-        Tell us about your project and we&apos;ll get back to you within 24 hours.
-      </p>
     </div>
   )
 }
 
 export default function ContactForm({ className = '' }: { className?: string }) {
-  const [state, formAction] = useActionState<ContactFormState | null, FormData>(
-    submitContactForm,
-    null
-  )
+  const mutation = useContactFormSubmit()
+  const [showSuccess, setShowSuccess] = useState(false)
 
-  // Show toast notifications when form state changes
-  useEffect(() => {
-    if (!state) {
-      return
-    }
+  const serviceOptions = useMemo(() => getServiceOptions(), [])
+  const budgetOptions = useMemo(() => getBudgetOptions(), [])
+  const timelineOptions = useMemo(() => getTimelineOptions(), [])
+  const contactTimeOptions = useMemo(() => getContactTimeOptions(), [])
 
-    if (state.success) {
-      toast.success("Thank you for contacting us. We'll get back to you within 24 hours.", {
-        duration: 5000
-      })
-    } else if (state.error) {
-      toast.error(state.error, {
-        duration: 7000
-      })
-    }
-  }, [state])
+  const form = useAppForm({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      company: '',
+      service: 'web-development',
+      bestTimeToContact: 'anytime',
+      budget: 'under-5k',
+      timeline: 'flexible',
+      message: ''
+    },
+    onSubmit: async ({ value }) => {
+      await mutation.mutateAsync(value as ContactFormData)
+      setShowSuccess(true)
+    },
+  })
 
-  // Track form state changes for business intelligence
-  if (typeof window !== 'undefined' && state) {
-    logger.info('Contact form state updated', {
-      success: state.success,
-      hasError: !!state.error,
-      hasMessage: !!state.message,
-      component: 'ContactForm',
-      userFlow: 'lead_generation'
-    })
+  const handleReset = () => {
+    form.reset()
+    setShowSuccess(false)
+    mutation.reset()
   }
 
-  // Show success message if form was submitted successfully
-  if (state?.success) {
-    logger.info('Contact form submission successful', {
-      component: 'ContactForm',
-      userFlow: 'lead_generation',
-      conversionEvent: 'contact_form_completed',
-      businessValue: 'high'
-    })
-
-    return (
-      <SuccessMessage
-        onReset={() => {/* Handled in SuccessMessage component */}}
-        className={className}
-      />
-    )
+  if (showSuccess) {
+    return <SuccessMessage onReset={handleReset} />
   }
 
   return (
-    <div className={`glass-card ${className}`}>
-      <FormHeader />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        form.handleSubmit()
+      }}
+      className={`p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border max-w-3xl mx-auto ${className}`}
+    >
+      <FieldGroup className="grid md:grid-cols-6 gap-4 mb-6">
+        {/* First Name */}
+        <div className="md:col-span-3">
+          <form.AppField name="firstName">
+            {(field) => (
+              <field.TextField
+                label="First Name"
+                placeholder="Enter your first name"
+                autoComplete="given-name"
+              />
+            )}
+          </form.AppField>
+        </div>
 
-      <form action={formAction} className="space-y-sections">
-        {/* Name Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
-          <Input
-            type="text"
-            id="firstName"
-            name="firstName"
-            required
-            placeholder="First Name"
-            autoComplete="given-name"
-          />
-
-          <Input
-            type="text"
-            id="lastName"
-            name="lastName"
-            required
-            placeholder="Last Name"
-            autoComplete="family-name"
-          />
+        {/* Last Name */}
+        <div className="md:col-span-3">
+          <form.AppField name="lastName">
+            {(field) => (
+              <field.TextField
+                label="Last Name"
+                placeholder="Enter your last name"
+                autoComplete="family-name"
+              />
+            )}
+          </form.AppField>
         </div>
 
         {/* Email */}
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          required
-          placeholder="Email Address"
-          autoComplete="email"
-        />
-
-        {/* Phone and Company */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
-          <Input
-            type="tel"
-            id="phone"
-            name="phone"
-            placeholder="Phone Number (Optional)"
-            autoComplete="tel"
-          />
-
-          <Input
-            type="text"
-            id="company"
-            name="company"
-            placeholder="Company Name (Optional)"
-            autoComplete="organization"
-          />
+        <div className="md:col-span-6">
+          <form.AppField name="email">
+            {(field) => (
+              <field.EmailField
+                label="Email Address"
+                placeholder="Enter your email address"
+              />
+            )}
+          </form.AppField>
         </div>
 
-        {/* Service and Time - Using native select for Server Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
-          <select
-            id="service"
-            name="service"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {getServiceOptions().map(opt => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-
-          <select
-            id="bestTimeToContact"
-            name="bestTimeToContact"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {getContactTimeOptions().map((opt: {value: string, label: string}) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+        {/* Phone */}
+        <div className="md:col-span-3">
+          <form.AppField name="phone">
+            {(field) => (
+              <field.PhoneField
+                label="Phone (Optional)"
+                placeholder="Enter your phone number"
+              />
+            )}
+          </form.AppField>
         </div>
 
-        {/* Budget and Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-comfortable">
-          <select
-            id="budget"
-            name="budget"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {getBudgetOptions().map((opt: {value: string, label: string}) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+        {/* Company */}
+        <div className="md:col-span-3">
+          <form.AppField name="company">
+            {(field) => (
+              <field.TextField
+                label="Company (Optional)"
+                placeholder="Enter your company name"
+                autoComplete="organization"
+              />
+            )}
+          </form.AppField>
+        </div>
 
-          <select
-            id="timeline"
-            name="timeline"
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {getTimelineOptions().map((opt: {value: string, label: string}) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+        {/* Service */}
+        <div className="md:col-span-3">
+          <form.AppField name="service">
+            {(field) => (
+              <field.SelectField
+                label="Service Interest"
+                options={serviceOptions}
+                placeholder="Select a service"
+              />
+            )}
+          </form.AppField>
+        </div>
+
+        {/* Best Time to Contact */}
+        <div className="md:col-span-3">
+          <form.AppField name="bestTimeToContact">
+            {(field) => (
+              <field.SelectField
+                label="Best Time to Contact"
+                options={contactTimeOptions}
+                placeholder="Select preferred time"
+              />
+            )}
+          </form.AppField>
+        </div>
+
+        {/* Budget */}
+        <div className="md:col-span-3">
+          <form.AppField name="budget">
+            {(field) => (
+              <field.SelectField
+                label="Budget Range"
+                options={budgetOptions}
+                placeholder="Select budget range"
+              />
+            )}
+          </form.AppField>
+        </div>
+
+        {/* Timeline */}
+        <div className="md:col-span-3">
+          <form.AppField name="timeline">
+            {(field) => (
+              <field.SelectField
+                label="Project Timeline"
+                options={timelineOptions}
+                placeholder="Select timeline"
+              />
+            )}
+          </form.AppField>
         </div>
 
         {/* Message */}
-        <Textarea
-          id="message"
-          name="message"
-          required
-          placeholder="Tell us about your project..."
-          rows={6}
-          className="resize-none"
-        />
-
-        {/* Error Display */}
-        {state && state.error && (
-          <Alert variant="destructive" data-testid="error-message">
-            <AlertDescription>
-              Error: {state.error}
-              {state.message && `. ${state.message}`}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Success message for non-success state but with message */}
-        {state && state.message && !state.error && (
-          <Alert data-testid="success-message" className="border-success/30 bg-success/10">
-            <AlertDescription className="text-success-text">
-              {state.message}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Submit Button */}
-        <div className="flex-center pt-4">
-          <SubmitButton />
+        <div className="col-span-full">
+          <form.AppField name="message">
+            {(field) => (
+              <field.TextareaField
+                label="Message"
+                placeholder="Tell us about your project..."
+                rows={6}
+              />
+            )}
+          </form.AppField>
         </div>
-      </form>
-    </div>
+      </FieldGroup>
+
+      {/* Mutation error */}
+      {mutation.isError && (
+        <div className="mb-4 text-sm text-destructive">
+          {mutation.error?.message || 'An error occurred'}
+        </div>
+      )}
+
+      <div className="flex justify-end items-center w-full">
+        <form.AppForm>
+          <form.SubmitButton
+            label="Submit"
+            loadingLabel="Submitting..."
+          />
+        </form.AppForm>
+      </div>
+    </form>
   )
 }

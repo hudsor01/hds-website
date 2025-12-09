@@ -2,20 +2,25 @@ import FloatingTextarea from '@/components/FloatingTextarea'
 import { GlassCard } from '@/components/glass-card'
 import FloatingInput from '@/components/InputPanel/FloatingInput'
 import { Button } from '@/components/ui/button'
-import { render, screen, waitFor } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * Unit tests for core UI components
  * Tests functionality, accessibility, and semantic token usage
  */
 
+afterEach(() => {
+  cleanup();
+  mock.restore();
+});
+
 describe('FloatingInput Component', () => {
-  const mockOnChange = vi.fn()
-  const mockOnBlur = vi.fn()
+  const mockOnChange = mock()
+  const mockOnBlur = mock()
 
   beforeEach(() => {
     mockOnChange.mockClear()
@@ -145,7 +150,7 @@ describe('FloatingInput Component', () => {
 })
 
 describe('FloatingTextarea Component', () => {
-  const mockOnChange = vi.fn()
+  const mockOnChange = mock()
 
   beforeEach(() => {
     mockOnChange.mockClear()
@@ -217,11 +222,11 @@ describe('Button Component', () => {
     expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center')
   })
 
-  it('should apply transition-all class', () => {
+  it('should apply transition-smooth class', () => {
     render(<Button>Click Me</Button>)
 
     const button = screen.getByRole('button', { name: 'Click Me' })
-    expect(button).toHaveClass('transition-all')
+    expect(button).toHaveClass('transition-smooth')
   })
 
   it('should render different variants', () => {
@@ -261,7 +266,7 @@ describe('Button Component', () => {
   })
 
   it('should handle click events', async () => {
-    const handleClick = vi.fn()
+    const handleClick = mock()
     const user = userEvent.setup()
 
     render(<Button onClick={handleClick}>Click Me</Button>)

@@ -7,10 +7,11 @@ import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import type { Database } from '@/types/database';
-import type { NewsletterSubscriber, NewsletterSubscriberInsert, SupabaseQueryResult } from '@/types/supabase-helpers';
 import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
 
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -57,11 +58,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = (await supabase
-      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
+    const { data: existing, error: existingError } = await supabase
+      .from('newsletter_subscribers')
       .select('*')
       .eq('email', email)
-      .single()) as unknown as SupabaseQueryResult<NewsletterSubscriber>;
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to check existing subscriber:', existingError as Error);
+      return NextResponse.json({ error: 'Unable to process subscription' }, { status: 500 });
+    }
 
     if (existing && existing.status === 'active') {
       return NextResponse.json(
@@ -76,14 +82,12 @@ export async function POST(request: NextRequest) {
       status: 'active',
       source: source || 'website',
       subscribed_at: new Date().toISOString(),
-      first_name: null,
       unsubscribed_at: null,
-      tags: [],
     };
 
     const { error: dbError } = await supabase
-      .from('newsletter_subscribers' as 'lead_attribution') // Type assertion for custom table
-      .upsert(subscriberData as unknown as never); // Bypass type checking
+      .from('newsletter_subscribers')
+      .upsert(subscriberData);
 
     if (dbError) {
       logger.error('Failed to save subscriber:', dbError);

@@ -11,10 +11,12 @@ import { createServerLogger, castError } from '@/lib/logger';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import {
   leadMagnetRequestSchema,
+  type LeadMagnetRequest,
+} from '@/lib/schemas/api';
+import {
   resendEmailResponseSchema,
   discordWebhookRequestSchema,
-  type LeadMagnetRequest,
-} from '@/lib/schemas';
+} from '@/lib/schemas/external';
 
 // Lead magnet resources configuration
 const LEAD_MAGNETS = {

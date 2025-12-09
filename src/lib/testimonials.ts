@@ -161,6 +161,7 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
  * Get approved testimonials (for public display)
  */
 export async function getApprovedTestimonials(): Promise<Testimonial[]> {
+  
   const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonials')

@@ -1,4 +1,3 @@
-import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
 import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
@@ -13,6 +12,7 @@ import {
   Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import { NewsletterSignupDynamic as NewsletterSignup } from '@/components/forms/NewsletterSignupDynamic';
 
 export default function HomePage() {
   const solutions = [
@@ -54,7 +54,7 @@ export default function HomePage() {
             <div className="lg:pr-8">
               <div className="space-y-sections">
                 <div>
-                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-comfortable">
+                  <h1 className="text-responsive-3xl font-black text-text-inverted leading-tight mb-comfortable text-balance">
                     <span className="block mb-subheading">Stop Losing Revenue to</span>
                     <span className="block text-accent">
                       Technical Bottlenecks
@@ -155,7 +155,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block text-balance">
               How We Solve Your Biggest Problems
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -167,7 +167,7 @@ export default function HomePage() {
             {solutions.map((solution, index) => (
               <div
                 key={index}
-                className="group relative glass-card-light card-padding-lg card-hover-glow transition-smooth"
+                className="group relative glass-card-light card-padding-lg card-hover-glow transition-smooth transform-gpu"
               >
                 <div className="space-y-comfortable">
                   <div className="flex-center space-x-4">
@@ -209,7 +209,7 @@ export default function HomePage() {
 
         <div className="container-wide relative">
           <div className="text-center mb-24">
-            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block">
+            <h2 className="text-responsive-2xl font-black text-primary-foreground mb-content-block text-balance">
               <span className="text-accent relative inline-block">
                 Proven Impact
                 <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
@@ -278,7 +278,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6 bg-background">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block text-balance">
               <span className="text-accent relative inline-block">
                 Free Business Tools
                 <span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
@@ -294,7 +294,7 @@ export default function HomePage() {
             {/* ROI Calculator */}
             <Link
               href="/roi-calculator"
-              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
             >
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
@@ -336,7 +336,7 @@ export default function HomePage() {
             {/* Cost Estimator */}
             <Link
               href="/cost-estimator"
-              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
             >
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
@@ -378,7 +378,7 @@ export default function HomePage() {
             {/* Performance Calculator */}
             <Link
               href="/performance-calculator"
-              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105"
+              className="group relative glass-card-light card-padding-lg card-hover-glow border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
             >
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
@@ -451,7 +451,7 @@ export default function HomePage() {
               <Rocket className="w-10 h-10 text-accent" />
             </div>
 
-            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block max-w-4xl mx-auto">
+            <h2 className="text-responsive-2xl font-black text-text-inverted mb-content-block max-w-4xl mx-auto text-balance">
               Your competitors ship faster.
               <span className="block text-accent mt-4">
                 Why don&apos;t you?

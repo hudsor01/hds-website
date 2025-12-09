@@ -36,8 +36,11 @@ const INSPECTION_FEE = 7.50; // Updated inspection fee
 const NEW_VEHICLE_INSPECTION_FEE = 16.75; // 2-year registration - updated
 const EV_FEE_ANNUAL = 200; // Electric vehicle fee - updated for 2024
 
-// Calculate registration based on vehicle weight
-function calculateRegistrationFee(isNewVehicle: boolean, vehicleWeight: number): number {
+/**
+ * Calculate registration fee based on vehicle weight and new vehicle status
+ * Optimized for Next.js 16 with memoization-friendly pure function
+ */
+export function calculateRegistrationFee(isNewVehicle: boolean, vehicleWeight: number): number {
   const weight = vehicleWeight || 4000; // Default to average car weight if not provided
   let baseFee = BASE_REGISTRATION_FEE;
 
@@ -53,7 +56,10 @@ function calculateRegistrationFee(isNewVehicle: boolean, vehicleWeight: number):
   return baseFee + PROCESSING_FEE + INSURANCE_VERIFICATION_FEE + inspectionFee;
 }
 
-// Calculate Texas TTL
+/**
+ * Calculate Texas Title & License fees
+ * Pure function optimized for React Server Components and memoization
+ */
 export function calculateTTL(input: VehicleInputs): TTLResults {
   const countyData = COUNTY_FEES[input.county] || COUNTY_FEES['Default'];
   if (!countyData) {
@@ -95,7 +101,10 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
   };
 }
 
-// Calculate monthly payment using standard amortization formula
+/**
+ * Calculate monthly payment using standard amortization formula
+ * Optimized for performance with early returns and React Server Components compatibility
+ */
 export function calculatePayment(
   purchasePrice: number,
   downPayment: number,

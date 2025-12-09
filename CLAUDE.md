@@ -144,8 +144,7 @@ Code must be written for human understanding first, performance second. No cleve
 - ssr: false for client-only components
 - Modular imports enabled for Heroicons
 
-**Bundle Analysis:**
-- Run ANALYZE=true pnpm build before adding dependencies
+**Bundle Size:**
 - Keep first load JS under 180kB per page
 - Monitor bundle size in build output
 
@@ -159,7 +158,6 @@ Code must be written for human understanding first, performance second. No cleve
 - NEVER use console.log/warn/error directly
 
 **Analytics:**
-- PostHog for event tracking
 - Vercel Analytics for performance
 - CTA clicks auto-tracked via CTAButton component
 - Form submissions auto-tracked via Server Actions
@@ -205,11 +203,6 @@ Choose the right client based on your use case:
 - Always check for errors in response
 - Log database errors, return user-friendly messages
 
-**PostHog (Analytics):**
-- Initialized in lib/analytics
-- Dynamic import for client-side only
-- Track events through logger, not directly
-- Environment var: NEXT_PUBLIC_POSTHOG_KEY
 
 **RULES & GUIDELINES:**
 - Search codebase for existing patterns first
@@ -237,7 +230,6 @@ Choose the right client based on your use case:
 - pnpm test:all - Run all checks (lint, typecheck, tests)
 
 **Analysis:**
-- ANALYZE=true pnpm build - Bundle size analysis
 - pnpm test:unit:coverage - Test coverage report
 
 ## GIT WORKFLOW

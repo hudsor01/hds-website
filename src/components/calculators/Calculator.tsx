@@ -7,7 +7,7 @@ import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
-import { useCalculator } from '../../providers/CalculatorProvider';
+import { useCalculatorStore } from '@/stores/calculator-store';
 import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types';
 import { ComparisonView } from '../ComparisonView';
 import { InputPanel } from '../InputPanel/InputPanel';
@@ -20,7 +20,8 @@ export function Calculator() {
     isLoading,
     error,
     updateInput,
-    saveCurrentCalculation  } = useCalculator();
+    saveCurrentCalculation
+  } = useCalculatorStore();
 
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);

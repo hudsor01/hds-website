@@ -7,14 +7,16 @@ import { createServerLogger } from '@/lib/logger';
 import {
     authChangePayloadSchema,
     databaseChangePayloadSchema,
-    eventDataSchema,
-    leadDataSchema,
     storageChangePayloadSchema,
     type AuthChangePayload,
     type DatabaseChangePayload,
     type StorageChangePayload,
-} from '@/lib/schemas';
-import type { Database } from '@/types/database';
+} from '@/lib/schemas/api';
+import {
+    eventDataSchema,
+    leadDataSchema,
+} from '@/lib/schemas/supabase';
+import type { Database, Json } from '@/types/database';
 import { createClient } from '@supabase/supabase-js';
 import { headers } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -35,19 +37,22 @@ function createServiceClient() {
 
 async function triggerWebhook(eventType: string, payload: unknown) {
   // Log webhook trigger and optionally notify external services
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = createServiceClient() as any;
+  const supabase = createServiceClient();
 
   if (!supabase) {
     logger.error('Supabase client not available for webhook logging');
     return;
   }
 
-  await supabase.from('webhook_logs').insert({
-    event_type: eventType,
-    payload: JSON.stringify(payload),
-    triggered_at: new Date().toISOString(),
-  });
+  const payloadData = (payload ?? {}) as Json;
+
+  await supabase
+    .from('webhook_logs')
+    .insert({
+      event_type: eventType,
+      payload: payloadData,
+      triggered_at: new Date().toISOString(),
+    });
 }
 
 const logger = createServerLogger('supabase-webhook')

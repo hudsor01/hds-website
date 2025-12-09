@@ -31,9 +31,9 @@
   }
 
   .bg-gradient-to-r.from-success.to-success-dark.text-primary-foreground {
-    background: #2e7d32 !important;
+    background: oklch(0.47 0.14 145) !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   /* Ensure tables fit on page */
@@ -49,7 +49,7 @@
   /* Keep cards visible but adjust for print */
   .grid.grid-cols-1.md\:grid-cols-3.gap-comfortable.mb-comfortable > div {
     box-shadow: none !important;
-    border: 1px solid #ccc !important;
+    border: 1px solid oklch(0.84 0 0) !important;
     margin-bottom: 10px !important;
   }
 
@@ -99,9 +99,9 @@
   /* Preserve colors for important elements */
   .text-success-dark,
   .font-semibold.text-success-darker {
-    color: #2e7d32 !important;
+    color: oklch(0.47 0.14 145) !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   /* Improve document spacing */

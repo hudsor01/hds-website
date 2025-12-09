@@ -3,7 +3,7 @@ import {
   getEmailQueueStats,
   processEmailsEndpoint,
 } from "@/lib/scheduled-emails";
-import { cronAuthHeaderSchema } from '@/lib/schemas';
+import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import { applySecurityHeaders } from "@/lib/security-headers";
 import { NextResponse, type NextRequest } from "next/server";
 

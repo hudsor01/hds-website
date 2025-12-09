@@ -1,85 +1,51 @@
-/**
- * Newsletter Signup Component
- * Captures email subscriptions for marketing automation
- */
+'use client'
 
-'use client';
-
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FormValidator, newsletterSchema } from '@/lib/validation';
-import { AlertCircle, Check, Mail } from 'lucide-react';
-import { useState } from 'react';
+import { useAppForm } from '@/hooks/form-hook'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Field, FieldError } from '@/components/ui/field'
+import { newsletterSchema } from '@/lib/schemas/contact'
+import { useNewsletterSubscription } from '@/hooks/use-newsletter-subscription'
+import { Check, Mail } from 'lucide-react'
 
 interface NewsletterSignupProps {
-  variant?: 'inline' | 'sidebar' | 'modal';
-  title?: string;
-  description?: string;
+  variant?: 'inline' | 'sidebar' | 'modal'
+  title?: string
+  description?: string
 }
+
+const variantStyles = {
+  inline: 'rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted',
+  sidebar: 'rounded-lg bg-primary/10 card-padding dark:from-card dark:to-background',
+  modal: 'rounded-lg bg-card card-padding-lg shadow-xl dark:bg-muted',
+} as const
 
 export function NewsletterSignup({
   variant = 'inline',
   title = 'Get Expert Insights',
   description = 'Join 500+ tech leaders receiving our weekly newsletter on scaling engineering teams.',
 }: NewsletterSignupProps) {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [message, setMessage] = useState('');
+  const mutation = useNewsletterSubscription()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useAppForm({
+    defaultValues: {
+      email: '',
+    },
+    validators: {
+      onSubmit: newsletterSchema,
+    },
+    onSubmit: async ({ value }) => {
+      await mutation.mutateAsync({
+        email: value.email,
+        source: variant,
+      })
+    },
+  })
 
-    // Validate using the new validation schema
-    const validation = FormValidator.validateForm(
-      { email },
-      newsletterSchema
-    );
-
-    if (!validation.isValid) {
-      setStatus('error');
-      setMessage(validation.errors?.email || 'Please enter a valid email address');
-      return;
-    }
-
-    setStatus('loading');
-
-    try {
-      const response = await fetch('/api/newsletter/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatus('success');
-        setMessage('Thank you! Check your email to confirm your subscription.');
-        setEmail('');
-
-        // Track conversion
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'newsletter_signup', {
-            event_category: 'engagement',
-            event_label: email,
-          });
-        }
-      } else {
-        setStatus('error');
-        setMessage(data.error || 'Something went wrong. Please try again.');
-      }
-    } catch {
-      setStatus('error');
-      setMessage('Network error. Please check your connection and try again.');
-    }
-  };
-
-  const variantStyles = {
-    inline: 'rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted',
-    sidebar: 'rounded-lg bg-primary/10 card-padding dark:from-card dark:to-background',
-    modal: 'rounded-lg bg-card card-padding-lg shadow-xl dark:bg-muted',
-  };
+  const isLoading = mutation.isPending
+  const isSuccess = mutation.isSuccess
+  const isError = mutation.isError
+  const errorMessage = mutation.error?.message
 
   return (
     <div className={variantStyles[variant]}>
@@ -98,23 +64,38 @@ export function NewsletterSignup({
             {description}
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              form.handleSubmit()
+            }}
+            className="mt-4 space-y-3"
+          >
             <div className="flex gap-tight">
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                disabled={status === 'loading' || status === 'success'}
-                className="flex-1"
-              />
+              <form.Field name="email">
+                {(field) => (
+                  <Field data-invalid={field.state.meta.errors.length > 0} className="flex-1 gap-1">
+                    <Input
+                      type="email"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      placeholder="your@email.com"
+                      aria-label="Email address"
+                      aria-invalid={field.state.meta.errors.length > 0}
+                      disabled={isLoading || isSuccess}
+                    />
+                  </Field>
+                )}
+              </form.Field>
               <Button
                 type="submit"
-                disabled={status === 'loading' || status === 'success'}
+                disabled={isLoading || isSuccess}
               >
-                {status === 'loading' ? (
+                {isLoading ? (
                   'Subscribing...'
-                ) : status === 'success' ? (
+                ) : isSuccess ? (
                   <>
                     <Check className="h-4 w-4" />
                     Subscribed
@@ -125,14 +106,31 @@ export function NewsletterSignup({
               </Button>
             </div>
 
-            {message && (
-              <Alert variant={status === 'error' ? 'destructive' : 'default'} className={status === 'success' ? 'border-success/50 bg-success/10' : ''}>
-                <AlertDescription className={`flex items-center gap-tight ${status === 'success' ? 'text-success-dark dark:text-success-text' : ''}`}>
-                  {status === 'error' && <AlertCircle className="h-4 w-4" />}
-                  {status === 'success' && <Check className="h-4 w-4" />}
-                  {message}
-                </AlertDescription>
-              </Alert>
+            {/* Form-level validation errors */}
+            <form.Subscribe selector={(state) => state.errors}>
+              {(errors) => errors.length > 0 && (
+                <FieldError errors={errors} />
+              )}
+            </form.Subscribe>
+
+            {/* Field-level validation errors */}
+            <form.Field name="email">
+              {(field) => field.state.meta.errors.length > 0 && (
+                <FieldError errors={field.state.meta.errors} />
+              )}
+            </form.Field>
+
+            {/* Mutation error */}
+            {isError && (
+              <FieldError errors={[{ message: errorMessage || 'Something went wrong. Please try again.' }]} />
+            )}
+
+            {/* Success message */}
+            {isSuccess && (
+              <p className="text-sm text-success-dark dark:text-success-text flex items-center gap-2">
+                <Check className="h-4 w-4" />
+                Thank you! Check your email to confirm your subscription.
+              </p>
             )}
 
             <p className="text-xs text-muted-foreground">
@@ -142,5 +140,5 @@ export function NewsletterSignup({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -108,13 +108,13 @@ export async function GET(request: NextRequest) {
           converted_at: lead.converted_at,
           conversion_value: lead.conversion_value,
           attribution: attribution ? {
-            source: attribution.source,
-            medium: attribution.medium,
-            campaign: attribution.campaign,
-            device_type: attribution.device_type,
-            browser: attribution.browser,
-            referrer: attribution.referrer,
-            landing_page: attribution.landing_page,
+            source: attribution.source ?? '',
+            medium: attribution.medium ?? '',
+            campaign: attribution.campaign ?? '',
+            device_type: attribution.device_type ?? '',
+            browser: attribution.browser ?? '',
+            referrer: attribution.referrer ?? '',
+            landing_page: attribution.landing_page ?? '',
           } : null,
         };
       })

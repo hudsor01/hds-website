@@ -8,7 +8,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAttribution } from '@/hooks/useAttribution';
+import { useAttribution } from '@/hooks/use-attribution';
 import { trackConversion } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
 import { CheckCircle2 } from 'lucide-react';
@@ -70,7 +70,7 @@ export function CalculatorResults({
       }
 
       // Track conversion
-      trackConversion('calculator_completion', undefined, {
+      trackConversion('calculator_completion', undefined, undefined, {
         calculator_type: calculatorType,
         email,
       });

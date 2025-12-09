@@ -8,10 +8,10 @@ import { createServerLogger } from "@/lib/logger";
 import { getResendClient, isResendConfigured } from "@/lib/resend-client";
 import {
   cancelEmailSequenceParamsSchema,
-  resendEmailResponseSchema,
   scheduleEmailParamsSchema,
   type ScheduleEmailParams,
-} from '@/lib/schemas';
+} from '@/lib/schemas/email';
+import { resendEmailResponseSchema } from '@/lib/schemas/external';
 import type { Database } from '@/types/database';
 import type {
   EmailProcessResult,

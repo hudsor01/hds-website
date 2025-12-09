@@ -3,9 +3,9 @@
  * Handles all case study data fetching with Supabase
  */
 
-import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { logger } from './logger';
+import type { Database } from '@/types/database';
 
 export interface CaseStudy {
   id: string;
@@ -34,14 +34,35 @@ export interface CaseStudy {
   created_at?: string;
 }
 
+type CaseStudyRow = Database['public']['Tables']['case_studies']['Row'];
+
+const mapCaseStudy = (row: CaseStudyRow): CaseStudy => ({
+  ...row,
+  metrics: Array.isArray(row.metrics) ? row.metrics as Array<{ label: string; value: string }> : [],
+  technologies: Array.isArray(row.technologies) ? row.technologies as string[] : [],
+  testimonial_text: row.testimonial_text || '',
+  testimonial_author: row.testimonial_author || '',
+  testimonial_role: row.testimonial_role || '',
+  testimonial_video_url: row.testimonial_video_url,
+  thumbnail_url: row.thumbnail_url || undefined,
+  featured_image_url: row.featured_image_url || undefined,
+  project_url: row.project_url,
+  project_duration: row.project_duration || '',
+  team_size: row.team_size || 0,
+  featured: row.featured ?? false,
+  published: row.published ?? false,
+  created_at: row.created_at || undefined,
+});
+
 /**
  * Get all published case studies
  */
-export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
+export async function getCaseStudies(): Promise<CaseStudy[]> {
+  
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+      .from('case_studies')
       .select('*')
       .eq('published', true)
       .order('created_at', { ascending: false });
@@ -54,7 +75,7 @@ export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
       return [];
     }
 
-    return (data as unknown as CaseStudy[]) || [];
+    return (data || []).map(mapCaseStudy);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
@@ -64,16 +85,17 @@ export const getCaseStudies = cache(async (): Promise<CaseStudy[]> => {
     }
     return [];
   }
-});
+}
 
 /**
  * Get a single case study by slug
  */
-export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy | null> => {
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
+  
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+      .from('case_studies')
       .select('*')
       .eq('slug', slug)
       .eq('published', true)
@@ -87,7 +109,7 @@ export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy 
       return null;
     }
 
-    return data as unknown as CaseStudy;
+    return data ? mapCaseStudy(data as CaseStudyRow) : null;
   } catch (error) {
     // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
@@ -98,16 +120,17 @@ export const getCaseStudyBySlug = cache(async (slug: string): Promise<CaseStudy 
     }
     return null;
   }
-});
+}
 
 /**
  * Get all case study slugs for static generation
  */
-export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
+export async function getAllCaseStudySlugs(): Promise<string[]> {
+  
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('case_studies' as 'lead_attribution')
+      .from('case_studies')
       .select('slug')
       .eq('published', true);
 
@@ -119,7 +142,7 @@ export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
       return [];
     }
 
-    return ((data as unknown as Array<{ slug: string }>) || []).map((c) => c.slug);
+    return (data || []).map((c) => c.slug);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
@@ -129,16 +152,17 @@ export const getAllCaseStudySlugs = cache(async (): Promise<string[]> => {
     }
     return [];
   }
-});
+}
 
 /**
  * Get featured case studies
  */
-export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
+export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
+  
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from('case_studies' as 'lead_attribution')
+      .from('case_studies')
       .select('*')
       .eq('published', true)
       .eq('featured', true)
@@ -152,7 +176,7 @@ export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
       return [];
     }
 
-    return (data as unknown as CaseStudy[]) || [];
+    return (data || []).map(mapCaseStudy);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
@@ -162,4 +186,4 @@ export const getFeaturedCaseStudies = cache(async (): Promise<CaseStudy[]> => {
     }
     return [];
   }
-});
+}

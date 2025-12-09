@@ -1,13 +1,10 @@
 import { Calculator } from '@/components/calculators/Calculator';
-import { CalculatorProvider } from '@/providers/CalculatorProvider';
 import { Suspense } from 'react';
 import './print.css';
 
 function TTLCalculatorContent() {
   return (
-    <CalculatorProvider>
-      <Calculator />
-    </CalculatorProvider>
+    <Calculator />
   );
 }
 

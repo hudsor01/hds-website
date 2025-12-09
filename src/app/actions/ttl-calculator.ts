@@ -1,11 +1,13 @@
 'use server';
 
-import { logger } from '@/lib/logger';
+import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
-import type { Database } from '@/types/database';
+import type { Database, Json } from '@/types/database';
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+
+type TTLCalculationInsert = Database['public']['Tables']['ttl_calculations']['Insert'];
 
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -22,27 +24,6 @@ function createServiceClient() {
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
 }
-
-// Type for TTL calculation record (until Supabase types are regenerated)
-interface TTLCalculationRecord {
-  id: string;
-  share_code: string;
-  inputs: Record<string, unknown>;
-  results: Record<string, unknown>;
-  name: string | null;
-  email: string | null;
-  county: string | null;
-  purchase_price: number | null;
-  view_count: number;
-  created_at: string;
-  last_viewed_at: string | null;
-  expires_at: string | null;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ttlTable = (client: NonNullable<ReturnType<typeof createServiceClient>>) => client.from('ttl_calculations' as any) as any;
-
-
 
 // Validation schemas
 const saveCalculationSchema = z.object({
@@ -81,8 +62,8 @@ const saveCalculationSchema = z.object({
       totalInterest: z.number(),
       totalFinanced: z.number(),
     }),
-    tcoResults: z.any().optional(),
-    leaseComparisonResults: z.any().optional(),
+    tcoResults: z.unknown().optional(),
+    leaseComparisonResults: z.unknown().optional(),
   }),
   name: z.string().optional(),
   email: z.string().email().optional(),
@@ -92,6 +73,8 @@ const emailResultsSchema = z.object({
   shareCode: z.string().min(6),
   email: z.string().email(),
 });
+
+const shareCodeSchema = z.string().min(6).max(24);
 
 /**
  * Generate a unique, URL-safe share code
@@ -135,7 +118,8 @@ export async function saveCalculation(
     const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
-      const { data: existing } = await ttlTable(supabase)
+      const { data: existing } = await supabase
+        .from('ttl_calculations')
         .select('share_code')
         .eq('share_code', shareCode)
         .single();
@@ -151,16 +135,19 @@ export async function saveCalculation(
     }
 
     // Insert into database
-    const { error: insertError } = await ttlTable(supabase)
-      .insert({
-        share_code: shareCode,
-        inputs: inputs as unknown as Record<string, unknown>,
-        results: results as unknown as Record<string, unknown>,
-        name: name || `$${inputs.purchasePrice.toLocaleString()} - ${inputs.county}`,
-        email: email || null,
-        county: inputs.county,
-        purchase_price: Math.round(inputs.purchasePrice),
-      });
+    const insertPayload: TTLCalculationInsert = {
+      share_code: shareCode,
+      inputs: inputs as unknown as Json,
+      results: results as Json,
+      name: name || `$${inputs.purchasePrice.toLocaleString()} - ${inputs.county}`,
+      email: email ?? null,
+      county: inputs.county,
+      purchase_price: Math.round(inputs.purchasePrice),
+    };
+
+    const { error: insertError } = await supabase
+      .from('ttl_calculations')
+      .insert(insertPayload);
 
     if (insertError) {
       logger.error('Failed to save TTL calculation', { error: insertError });
@@ -177,7 +164,7 @@ export async function saveCalculation(
     logger.info('TTL calculation saved', { shareCode, county: inputs.county });
     return { success: true, shareCode };
   } catch (error) {
-    logger.error('Error saving TTL calculation', { error });
+    logger.error('Error saving TTL calculation', castError(error));
     return { success: false, error: 'An unexpected error occurred' };
   }
 }
@@ -189,21 +176,23 @@ export async function loadCalculation(
   shareCode: string
 ): Promise<{ success: boolean; data?: { inputs: VehicleInputs; results: CalculationResults; name?: string }; error?: string }> {
   try {
+    const parsedShareCode = shareCodeSchema.safeParse(shareCode);
+    if (!parsedShareCode.success) {
+      return { success: false, error: 'Invalid share code' };
+    }
+
     const supabase = createServiceClient();
 
     if (!supabase) {
       return { success: false, error: 'Database not configured' };
     }
 
-    if (!shareCode || shareCode.length < 6) {
-      return { success: false, error: 'Invalid share code' };
-    }
-
     // Fetch calculation
-    const { data, error: fetchError } = await ttlTable(supabase)
+    const { data, error: fetchError } = await supabase
+      .from('ttl_calculations')
       .select('inputs, results, name, view_count')
-      .eq('share_code', shareCode)
-      .single() as { data: TTLCalculationRecord | null; error: unknown };
+      .eq('share_code', parsedShareCode.data)
+      .single();
 
     if (fetchError || !data) {
       logger.warn('TTL calculation not found', { shareCode });
@@ -211,12 +200,15 @@ export async function loadCalculation(
     }
 
     // Increment view count (fire-and-forget via service role)
-    ttlTable(supabase)
-      .update({
-        view_count: (data.view_count || 0) + 1,
-        last_viewed_at: new Date().toISOString(),
-      })
-      .eq('share_code', shareCode)
+    void Promise.resolve(
+      supabase
+        .from('ttl_calculations')
+        .update({
+          view_count: (data.view_count ?? 0) + 1,
+          last_viewed_at: new Date().toISOString(),
+        })
+        .eq('share_code', shareCode)
+    )
       .then(() => {/* fire and forget */})
       .catch((err: Error) => logger.error('Failed to update view count', { error: err }));
 
@@ -229,7 +221,7 @@ export async function loadCalculation(
       },
     };
   } catch (error) {
-    logger.error('Error loading TTL calculation', { error });
+    logger.error('Error loading TTL calculation', castError(error));
     return { success: false, error: 'An unexpected error occurred' };
   }
 }
@@ -255,10 +247,11 @@ export async function emailResults(
     }
 
     // Fetch calculation
-    const { data, error: fetchError } = await ttlTable(supabase)
+    const { data, error: fetchError } = await supabase
+      .from('ttl_calculations')
       .select('inputs, results, name')
-      .eq('share_code', shareCode)
-      .single() as { data: TTLCalculationRecord | null; error: unknown };
+      .eq('share_code', validation.data.shareCode)
+      .single();
 
     if (fetchError || !data) {
       return { success: false, error: 'Calculation not found' };
@@ -394,14 +387,14 @@ export async function emailResults(
     });
 
     if (emailError) {
-      logger.error('Failed to send TTL results email', { error: emailError });
+      logger.error('Failed to send TTL results email', castError(emailError));
       return { success: false, error: 'Failed to send email' };
     }
 
     logger.info('TTL results email sent', { shareCode, email });
     return { success: true };
   } catch (error) {
-    logger.error('Error emailing TTL results', { error });
+    logger.error('Error emailing TTL results', castError(error));
     return { success: false, error: 'An unexpected error occurred' };
   }
 }
@@ -428,20 +421,22 @@ export async function getCalculatorAnalytics(): Promise<{
     }
 
     // Total calculations
-    const { count: totalCalculations } = await ttlTable(supabase)
+    const { count: totalCalculations } = await supabase
+      .from('ttl_calculations')
       .select('*', { count: 'exact', head: true });
 
     // Top counties
-    const { data: countyData } = await ttlTable(supabase)
+    const { data: countyData } = await supabase
+      .from('ttl_calculations')
       .select('county')
-      .not('county', 'is', null) as { data: Array<{ county: string }> | null };
+      .not('county', 'is', null);
 
-    const countyCounts = (countyData || []).reduce((acc: Record<string, number>, { county }) => {
+    const countyCounts = (countyData || []).reduce<Record<string, number>>((acc, { county }) => {
       if (county) {
         acc[county] = (acc[county] || 0) + 1;
       }
       return acc;
-    }, {} as Record<string, number>);
+    }, {});
 
     const topCounties = Object.entries(countyCounts)
       .sort(([, a], [, b]) => b - a)
@@ -449,19 +444,21 @@ export async function getCalculatorAnalytics(): Promise<{
       .map(([county, count]) => ({ county, count }));
 
     // Average purchase price
-    const { data: priceData } = await ttlTable(supabase)
+    const { data: priceData } = await supabase
+      .from('ttl_calculations')
       .select('purchase_price')
-      .not('purchase_price', 'is', null) as { data: Array<{ purchase_price: number }> | null };
+      .not('purchase_price', 'is', null);
 
     const avgPurchasePrice = priceData && priceData.length > 0
-      ? priceData.reduce((sum: number, { purchase_price }) => sum + (purchase_price || 0), 0) / priceData.length
+      ? priceData.reduce((sum, { purchase_price }) => sum + (purchase_price || 0), 0) / priceData.length
       : 0;
 
     // Recent calculations (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { count: recentCalculations } = await ttlTable(supabase)
+    const { count: recentCalculations } = await supabase
+      .from('ttl_calculations')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', sevenDaysAgo.toISOString());
 
@@ -472,7 +469,7 @@ export async function getCalculatorAnalytics(): Promise<{
       recentCalculations: recentCalculations || 0,
     };
   } catch (error) {
-    logger.error('Error fetching calculator analytics', { error });
+    logger.error('Error fetching calculator analytics', castError(error));
     return {
       totalCalculations: 0,
       topCounties: [],

@@ -2,8 +2,18 @@
 
 import { Star, User } from "lucide-react";
 import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
-import type { Testimonial } from "@/types/components";
 import { cn } from "@/lib/utils";
+
+interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  avatar?: string;
+  content: string;
+  rating?: number;
+  featured?: boolean;
+}
 
 const testimonials: Testimonial[] = [
   {

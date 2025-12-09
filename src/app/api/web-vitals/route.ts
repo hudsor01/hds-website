@@ -5,15 +5,15 @@
 
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-import type { Database } from '@/types/database';
-import type { WebVitalsInsert } from '@/types/supabase-helpers';
+import type { Database } from '@/types/database-local';
+// import type { WebVitalsInsert } from '@/types/supabase-helpers';
 import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     logger.error('Supabase environment variables are missing');
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const referer = request.headers.get('referer') || request.url;
 
     // Insert web vital
-    const webVitalData: WebVitalsInsert = {
+    const webVitalData = {
       metric_type: validatedData.name,
       value: validatedData.value,
       rating: validatedData.rating || null,
@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
       session_id: null,
     };
 
+    // Store web vitals data
     const { error } = await supabase
       .from('web_vitals')
       .insert(webVitalData);

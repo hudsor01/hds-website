@@ -66,26 +66,23 @@ export const timestampSchema = z.object({
 
 // Service options for contact forms
 export const serviceOptionsSchema = z.enum([
-  'website',
-  'webapp',
-  'ecommerce',
-  'optimization',
-  'consultation',
+  'web-development',
+  'custom-software',
+  'consulting',
   'other',
 ]);
 
 export const budgetOptionsSchema = z.enum([
-  '5-10K',
-  '10-25K',
-  '25-50K',
-  '50K+',
-  'tbd',
+  'under-5k',
+  '5k-15k',
+  '15k-50k',
+  '50k-plus',
 ]);
 
 export const timelineOptionsSchema = z.enum([
-  'ASAP',
-  '1 month',
-  '1-3 months',
-  '3-6 months',
-  '6+ months',
+  'asap',
+  '1-month',
+  '3-months',
+  '6-months',
+  'flexible',
 ]);

@@ -17,23 +17,8 @@ export interface PaystubValidationResult {
   message?: string;
 }
 
-export interface FormErrors {
-  employeeName?: string;
-  hourlyRate?: string;
-  hoursPerPeriod?: string;
-}
-
-// localStorage types
-export interface StoredFormData {
-  employeeName: string;
-  employeeId: string;
-  employerName: string;
-  hourlyRate: number;
-  hoursPerPeriod: number;
-  filingStatus: string;
-  taxYear: number;
-  state?: string;
-}
+// Re-export from common.ts to maintain backwards compatibility
+export type { FormErrors } from './common';
 
 // Paystub core types
 export type FilingStatus =
@@ -42,6 +27,18 @@ export type FilingStatus =
   | "marriedSeparate"
   | "headOfHousehold"
   | "qualifyingSurvivingSpouse";
+
+export type PayFrequency = "weekly" | "biweekly" | "semimonthly" | "monthly";
+
+export const FILING_STATUSES = [
+  "single",
+  "marriedJoint",
+  "marriedSeparate",
+  "headOfHousehold",
+  "qualifyingSurvivingSpouse",
+] as const satisfies FilingStatus[];
+
+export const PAY_FREQUENCIES = ["weekly", "biweekly", "semimonthly", "monthly"] as const satisfies PayFrequency[];
 
 export interface TaxBracket {
   limit: number;
@@ -77,6 +74,7 @@ export interface PayPeriod {
   federalTax: number;
   socialSecurity: number;
   medicare: number;
+  stateTax: number;
   otherDeductions: number;
   netPay: number;
 }
@@ -96,6 +94,7 @@ export interface PaystubData {
     federalTax: number;
     socialSecurity: number;
     medicare: number;
+    stateTax: number;
     otherDeductions: number;
     netPay: number;
   };

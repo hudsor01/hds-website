@@ -1,6 +1,6 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging with PostHog integration
+ * Provides server and client logging
  */
 
 import type {

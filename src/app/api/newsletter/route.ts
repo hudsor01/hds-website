@@ -3,13 +3,13 @@ import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
-import type { Database } from '@/types/database';
+import type { Database } from '@/types/database-local';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse, type NextRequest } from 'next/server';
 
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     logger.error('Supabase environment variables are not configured');

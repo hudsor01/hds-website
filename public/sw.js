@@ -52,7 +52,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') {return;}
 
   // Skip admin, API routes, and development assets
-  if (url.pathname.startsWith('/api/') || 
+  if (url.pathname.startsWith('/api/') ||
       url.pathname.startsWith('/admin') ||
       url.pathname.startsWith('/_next/webpack-hmr') ||
       url.hostname === 'localhost' && url.port !== location.port) {
@@ -135,7 +135,7 @@ self.addEventListener('sync', (event) => {
   if (event.tag === 'contact-form-sync') {
     event.waitUntil(syncContactForms());
   }
-  
+
   // Pre-warm functions when connection is restored
   if (event.tag === 'warm-functions') {
     event.waitUntil(

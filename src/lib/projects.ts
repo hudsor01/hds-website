@@ -10,7 +10,6 @@ import { cache } from 'react';
 import { logger } from './logger';
 
 type Project = Database['public']['Tables']['projects']['Row'];
-type ProjectInsert = Database['public']['Tables']['projects']['Insert'];
 
 // Service role client ONLY for background operations with no user context
 function createServiceClient() {
@@ -131,42 +130,6 @@ export const getProjectBySlug = cache(async (slug: string): Promise<Project | nu
 });
 
 /**
- * Get projects by category
- */
-export const getProjectsByCategory = cache(async (category: string): Promise<Project[]> => {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('published', true)
-      .eq('category', category)
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-        logger.error('Failed to fetch projects by category', {
-          category,
-          error: error.message,
-        });
-      }
-      return [];
-    }
-
-    return data || [];
-  } catch (error) {
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-      logger.error('Exception fetching projects by category', {
-        category,
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-    return [];
-  }
-});
-
-/**
  * Get all project slugs for static generation
  * Used by generateStaticParams
  */
@@ -192,22 +155,6 @@ export const getAllProjectSlugs = cache(async (): Promise<string[]> => {
         error: error instanceof Error ? error.message : String(error),
       });
     }
-    return [];
-  }
-});
-
-/**
- * Get unique categories for filtering
- */
-export const getProjectCategories = cache(async (): Promise<string[]> => {
-  try {
-    const projects = await getProjects();
-    const categories = [...new Set(projects.map((p) => p.category))];
-    return categories.sort();
-  } catch (error) {
-    logger.error('Exception fetching project categories', {
-      error: error instanceof Error ? error.message : String(error),
-    });
     return [];
   }
 });
@@ -245,86 +192,6 @@ async function incrementProjectViews(projectId: string): Promise<void> {
       projectId,
       error: error instanceof Error ? error.message : String(error),
     });
-  }
-}
-
-/**
- * Create a new project (admin only - requires authenticated admin user)
- */
-export async function createProject(project: ProjectInsert): Promise<Project | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('projects')
-      .insert(project)
-      .select()
-      .single();
-
-    if (error) {
-      logger.error('Failed to create project', { error: error.message, project: project.title });
-      return null;
-    }
-
-    logger.info('Project created successfully', { id: data.id, slug: data.slug, title: data.title });
-    return data;
-  } catch (error) {
-    logger.error('Exception creating project', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
-}
-
-/**
- * Update an existing project (admin only - requires authenticated admin user)
- */
-export async function updateProject(id: string, updates: Partial<ProjectInsert>): Promise<Project | null> {
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('projects')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      logger.error('Failed to update project', { id, error: error.message });
-      return null;
-    }
-
-    logger.info('Project updated successfully', { id: data.id, slug: data.slug });
-    return data;
-  } catch (error) {
-    logger.error('Exception updating project', {
-      id,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return null;
-  }
-}
-
-/**
- * Delete a project (admin only - requires authenticated admin user)
- */
-export async function deleteProject(id: string): Promise<boolean> {
-  try {
-    const supabase = await createClient();
-    const { error } = await supabase.from('projects').delete().eq('id', id);
-
-    if (error) {
-      logger.error('Failed to delete project', { id, error: error.message });
-      return false;
-    }
-
-    logger.info('Project deleted successfully', { id });
-    return true;
-  } catch (error) {
-    logger.error('Exception deleting project', {
-      id,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return false;
   }
 }
 

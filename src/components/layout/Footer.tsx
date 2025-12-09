@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 // import { brand } from "@/lib/brand";
-import {
-  Mail,
-  Rocket,
-  Clock,
-  CheckCircle
-} from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  CheckCircle,
+  Clock,
+  Mail,
+  Rocket
+} from "lucide-react";
 
 const footerLinks = {
   solutions: [
@@ -67,10 +67,10 @@ export default function Footer() {
   );
 
   return (
-    <footer className="relative mt-auto" role="contentinfo" aria-label="Site footer">
+    <footer className="relative mt-auto" style={{ backgroundColor: 'hsl(222 47% 11%)' }} role="contentinfo" aria-label="Site footer">
       {/* Dark background matching homepage */}
-      <div className="absolute inset-0 bg-[var(--color-nav-dark)]" />
-      
+      <div className="absolute inset-0 bg-(--color-nav-dark)" />
+
       {/* Top border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
@@ -93,7 +93,7 @@ export default function Footer() {
                   We eliminate technical bottlenecks so you can focus on growth
                 </p>
               </div>
-              
+
               {/* Quick Stats */}
               <div className="space-y-tight">
                 <div className="flex items-center gap-tight text-muted">
@@ -157,7 +157,7 @@ export default function Footer() {
               <p className="small muted mb-heading">
                 Get your free technical roadmap and see how we can help you ship 3x faster.
               </p>
-              
+
               <div className="space-y-3">
                 <Link
                   href="/contact"
@@ -165,7 +165,7 @@ export default function Footer() {
                 >
                   Get Free Roadmap
                 </Link>
-                
+
                 <a
                   href="mailto:hello@hudsondigitalsolutions.com"
                   className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-primary-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
