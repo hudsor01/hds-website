@@ -3,6 +3,25 @@ import { GlobalRegistrator } from '@happy-dom/global-registrator';
 import '@testing-library/jest-dom';
 import { afterAll, afterEach, beforeAll, beforeEach, mock } from 'bun:test';
 
+// CRITICAL: Mock @/env BEFORE any other imports that depend on it
+// This prevents the real env module from validating environment variables
+// which would fail in CI without proper secrets set
+mock.module('@/env', () => ({
+  env: {
+    NODE_ENV: 'test',
+    CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
+    KV_REST_API_URL: undefined,
+    KV_REST_API_TOKEN: undefined,
+    RESEND_API_KEY: 'test-resend-key',
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
+    npm_package_version: '1.0.0',
+    BASE_URL: 'http://localhost:3000',
+    NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'test-anon-key',
+  },
+}));
+
 // CRITICAL: Prevent Playwright globals from interfering with Bun test
 // Playwright's @playwright/test package exports globals that conflict with bun:test
 // We must ensure these are NOT loaded when running Bun tests
