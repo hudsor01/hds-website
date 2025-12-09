@@ -24,8 +24,33 @@ export function createMockRateLimiter() {
   return {
     checkLimit: mock().mockResolvedValue(true),
     getLimitInfo: mock().mockResolvedValue({ remaining: 10, isLimited: false }),
+    destroy: mock(),
   };
 }
+
+/**
+ * Create a mock UnifiedRateLimiter class for testing
+ */
+export function createMockUnifiedRateLimiterClass() {
+  return class MockUnifiedRateLimiter {
+    store = new Map();
+    checkLimit = mock().mockResolvedValue(true);
+    getLimitInfo = mock().mockResolvedValue({ remaining: 10, isLimited: false, resetTime: Date.now() + 60000 });
+    destroy = mock();
+  };
+}
+
+/**
+ * Rate limit configurations matching the real module
+ */
+export const MOCK_RATE_LIMIT_CONFIGS = {
+  default: { windowMs: 60 * 1000, maxRequests: 100 },
+  api: { windowMs: 60 * 1000, maxRequests: 60 },
+  contactForm: { windowMs: 15 * 60 * 1000, maxRequests: 3 },
+  contactFormApi: { windowMs: 60 * 1000, maxRequests: 5 },
+  newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
+  readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
+} as const;
 
 export function createMockResend() {
   return mock().mockImplementation(() => ({
@@ -63,9 +88,14 @@ export function setupApiMocks() {
     castError: (error: unknown) => error instanceof Error ? error : new Error(String(error)),
   }));
 
+  // Complete rate-limiter mock with all exports
+  // This ensures the mock is complete if other tests try to import the module
   mock.module('@/lib/rate-limiter', () => ({
+    UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
     unifiedRateLimiter: mockRateLimiter,
+    getUnifiedRateLimiter: () => mockRateLimiter,
     getClientIp: mock().mockReturnValue('127.0.0.1'),
+    RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS,
   }));
 
   mock.module('@/lib/security-headers', () => ({
@@ -125,8 +155,13 @@ export function setupContactFormMocks() {
     logger: mockLogger,
   }));
 
+  // Complete rate-limiter mock with all exports
   mock.module('@/lib/rate-limiter', () => ({
+    UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
     unifiedRateLimiter: mockRateLimiter,
+    getUnifiedRateLimiter: () => mockRateLimiter,
+    getClientIp: mock().mockReturnValue('127.0.0.1'),
+    RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS,
   }));
 
   mock.module('@/lib/metrics', () => ({
