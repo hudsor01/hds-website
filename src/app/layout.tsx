@@ -1,17 +1,18 @@
+import { Analytics } from "@/components/Analytics";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import Footer from "@/components/layout/Footer";
+import NavbarLight from "@/components/layout/Navbar";
+import ScrollToTop from "@/components/ScrollToTop";
+import { WebVitalsReporting } from "@/components/WebVitalsReporting";
+import { env } from "@/env";
+import { generateLocalBusinessSchema, generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo-utils";
+import ClientProviders from "@/providers/ClientProviders";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
-import NavbarLight from "@/components/layout/NavbarLight";
-import Footer from "@/components/layout/Footer";
-import ScrollToTop from "@/components/ScrollToTop";
-import { Analytics } from "@/components/Analytics";
-import ClientProviders from "@/components/ClientProviders";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { WebVitalsReporting } from "@/components/WebVitalsReporting";
-import { generateWebsiteSchema, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo-utils";
-import { env } from "@/env";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -124,34 +125,29 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Hudson Digital Solutions" />
-        
+
         {/* Preconnect to external domains for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        
-        {/* DNS prefetch for performance */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        
+
         {/* Favicon and app icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
         <link rel="apple-touch-icon" href="/HDS-Logo.webp" />
         <link rel="apple-touch-icon" sizes="180x180" href="/HDS-Logo.webp" />
-        
+
         {/* Splash screens for iOS */}
         <link rel="apple-touch-startup-image" href="/HDS-Logo.webp" />
-        
+
         {/* Manifest for PWA */}
         <link rel="manifest" href="/manifest.json" />
-        
+
         {/* Theme color for mobile browsers */}
         <meta name="theme-color" content="#0891b2" />
         <meta name="msapplication-TileColor" content="#0891b2" />
         <meta name="msapplication-TileImage" content="/HDS-Logo.webp" />
-        
+
         {/* Mobile-specific optimizations */}
         <meta name="format-detection" content="telephone=no" />
         <meta name="HandheldFriendly" content="true" />
@@ -161,20 +157,22 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
         suppressHydrationWarning
       >
-        <ClientProviders>
-          <ErrorBoundary>
-            <NavbarLight />
-            <div id="main-content" className="min-h-screen pt-16">
-              {children}
-            </div>
-            <Footer />
-            <ScrollToTop />
-            <Analytics />
-            <SpeedInsights />
-            <WebVitalsReporting />
-          </ErrorBoundary>
-          <Toaster position="top-right" richColors theme="dark" />
-        </ClientProviders>
+        <NuqsAdapter>
+          <ClientProviders>
+            <ErrorBoundary>
+              <NavbarLight />
+              <div id="main-content" className="min-h-screen pt-16">
+                {children}
+              </div>
+              <Footer />
+              <ScrollToTop />
+              <Analytics />
+              <SpeedInsights />
+              <WebVitalsReporting />
+            </ErrorBoundary>
+            <Toaster position="top-right" richColors theme="dark" />
+          </ClientProviders>
+        </NuqsAdapter>
       </body>
     </html>
   );

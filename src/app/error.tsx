@@ -34,10 +34,10 @@ export default function Error({
   return (
     <div className="min-h-screen flex-center px-6">
       <div className="max-w-md w-full text-center">
-        <div className="mb-8">
-          <div className="inline-flex flex-center w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full mb-4">
+        <div className="mb-comfortable">
+          <div className="inline-flex flex-center w-16 h-16 bg-destructive-muted dark:bg-destructive-bg-dark/20 rounded-full mb-heading">
             <svg
-              className="w-8 h-8 text-red-600 dark:text-red-400"
+              className="w-8 h-8 text-destructive-dark dark:text-destructive-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -50,14 +50,14 @@ export default function Error({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">
+          <h1 className="text-2xl font-bold text-foreground dark:text-primary-foreground mb-subheading">
             Something went wrong
           </h1>
-          <p className="text-muted-foreground dark:text-muted-foreground mb-6">
+          <p className="text-muted-foreground dark:text-muted-foreground mb-content-block">
             We encountered an unexpected error. Our team has been notified.
           </p>
           {error.digest && (
-            <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-6 font-mono">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-content-block font-mono">
               Error ID: {error.digest}
             </p>
           )}
@@ -72,13 +72,13 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="px-6 py-3 bg-gray-200 dark:bg-muted text-foreground dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            className="px-6 py-3 bg-secondary dark:bg-muted text-foreground dark:text-primary-foreground rounded-lg hover:bg-muted dark:hover:bg-muted-foreground transition-colors"
           >
             Go home
           </Link>
         </div>
 
-        <div className="mt-8 p-4 bg-muted dark:bg-muted rounded-lg">
+        <div className="mt-heading card-padding-sm bg-muted dark:bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             Need immediate assistance?{' '}
             <a

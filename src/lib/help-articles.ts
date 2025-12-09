@@ -3,7 +3,7 @@
  * Functions for managing help center content
  */
 
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 
 export interface HelpArticle {
   id: string;
@@ -63,6 +63,8 @@ export const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
  * Get all published articles
  */
 export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
+  
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('help_articles')
     .select('*')
@@ -81,6 +83,8 @@ export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
  * Get articles by category
  */
 export async function getArticlesByCategory(category: string): Promise<HelpArticle[]> {
+  
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('help_articles')
     .select('*')
@@ -99,6 +103,8 @@ export async function getArticlesByCategory(category: string): Promise<HelpArtic
  * Get a single article by slug
  */
 export async function getArticleBySlug(slug: string): Promise<HelpArticle | null> {
+  
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('help_articles')
     .select('*')
@@ -156,6 +162,7 @@ export async function searchArticles(query: string): Promise<HelpArticle[]> {
     return [];
   }
 
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('help_articles')
     .select('*')

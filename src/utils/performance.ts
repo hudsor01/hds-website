@@ -38,8 +38,6 @@ export function addResourceHints() {
 
   // DNS prefetch for external resources
   const dnsPrefetches = [
-    "https://www.google-analytics.com",
-    "https://www.googletagmanager.com",
     "https://fonts.googleapis.com",
     "https://fonts.gstatic.com",
   ];

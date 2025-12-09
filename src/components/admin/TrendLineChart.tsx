@@ -31,8 +31,8 @@ export function TrendLineChart({
 }: TrendLineChartProps) {
   if (datasets.length === 0 || datasets.every(d => d.data.length === 0)) {
     return (
-      <div className="rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted">
-        <h3 className="mb-6 text-lg font-semibold text-foreground dark:text-white">
+      <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
+        <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-primary-foreground">
           {title}
         </h3>
         <div className="py-8 text-center">
@@ -65,8 +65,8 @@ export function TrendLineChart({
   const xLabels = allDates.filter((_, i) => i % labelInterval === 0 || i === allDates.length - 1);
 
   return (
-    <div className="rounded-lg border border-border bg-white p-6 dark:border-border dark:bg-muted">
-      <h3 className="mb-6 text-lg font-semibold text-foreground dark:text-white">
+    <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
+      <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-primary-foreground">
         {title}
       </h3>
 
@@ -176,9 +176,9 @@ export function TrendLineChart({
           })}
         </svg>
       </div>
-      <div className="mt-4 flex items-center justify-center gap-4 border-t border-border pt-4 dark:border-border">
+      <div className="mt-4 flex items-center justify-center gap-content border-t border-border pt-4 dark:border-border">
         {datasets.map(dataset => (
-          <div key={dataset.label} className="flex items-center gap-2 text-sm">
+          <div key={dataset.label} className="flex items-center gap-tight text-sm">
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: dataset.color }} />
             <span className="text-muted-foreground dark:text-muted-foreground">{dataset.label}</span>
           </div>

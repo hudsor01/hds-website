@@ -223,24 +223,24 @@ export default function ContractGeneratorPage() {
     <CalculatorLayout
       title="Contract Generator"
       description="Create professional contracts and download them as PDF"
-      icon={<FileCheck className="h-8 w-8 text-cyan-600" />}
+      icon={<FileCheck className="h-8 w-8 text-primary" />}
     >
-      <div className="space-y-8">
+      <div className="space-y-sections">
         {/* Template Selection */}
-        <section className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Select Contract Type
-          </h3>
+          </h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {TEMPLATES.map((template) => (
               <button
                 key={template.value}
                 type="button"
                 onClick={() => handleTemplateChange(template.value)}
-                className={`p-4 rounded-lg border text-left transition-colors ${
+                className={`card-padding-sm rounded-lg border text-left transition-colors ${
                   contractData.template === template.value
-                    ? 'border-cyan-600 bg-cyan-50 dark:bg-cyan-900/20'
-                    : 'border-border hover:border-cyan-400 hover:bg-muted/50'
+                    ? 'border-primary bg-accent/10 dark:bg-primary-hover/20'
+                    : 'border-border hover:border-accent hover:bg-muted/50'
                 }`}
               >
                 <div className="font-semibold text-foreground">{template.label}</div>
@@ -251,11 +251,11 @@ export default function ContractGeneratorPage() {
         </section>
 
         {/* Provider/Your Info */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             {contractData.template === 'nda' ? 'Party A (Disclosing Party)' : 'Service Provider'}
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Name / Company"
               id="providerName"
@@ -278,7 +278,7 @@ export default function ContractGeneratorPage() {
               value={contractData.providerAddress}
               onChange={(e) => handleInputChange('providerAddress', e.target.value)}
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-tight">
               <CalculatorInput
                 label="City"
                 id="providerCity"
@@ -305,11 +305,11 @@ export default function ContractGeneratorPage() {
         </section>
 
         {/* Client Info */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             {contractData.template === 'nda' ? 'Party B (Receiving Party)' : 'Client'}
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Contact Name"
               id="clientName"
@@ -340,7 +340,7 @@ export default function ContractGeneratorPage() {
               value={contractData.clientEmail}
               onChange={(e) => handleInputChange('clientEmail', e.target.value)}
             />
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-tight">
               <CalculatorInput
                 label="City"
                 id="clientCity"
@@ -367,11 +367,11 @@ export default function ContractGeneratorPage() {
         </section>
 
         {/* Contract Details */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Contract Details
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          </h2>
+          <div className="grid gap-content sm:grid-cols-2">
             <CalculatorInput
               label="Effective Date"
               id="effectiveDate"
@@ -392,11 +392,11 @@ export default function ContractGeneratorPage() {
 
         {/* Terms - Not shown for NDA */}
         {contractData.template !== 'nda' && (
-          <section className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <section className="space-y-content border-t border-border pt-6">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Terms
-            </h3>
-            <div className="space-y-4">
+            </h2>
+            <div className="space-y-content">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
                   Scope of Work
@@ -409,7 +409,7 @@ export default function ContractGeneratorPage() {
                   placeholder="Describe the services to be provided..."
                 />
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-content sm:grid-cols-2">
                 <CalculatorInput
                   label="Payment Amount"
                   id="paymentAmount"
@@ -445,10 +445,10 @@ export default function ContractGeneratorPage() {
 
         {/* Scope for NDA */}
         {contractData.template === 'nda' && (
-          <section className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <section className="space-y-content border-t border-border pt-6">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Purpose of Disclosure
-            </h3>
+            </h2>
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
                 Purpose
@@ -465,10 +465,10 @@ export default function ContractGeneratorPage() {
         )}
 
         {/* Custom Clauses */}
-        <section className="space-y-4 border-t border-border pt-6">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+        <section className="space-y-content border-t border-border pt-6">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Additional Terms (Optional)
-          </h3>
+          </h2>
           <textarea
             value={contractData.customClauses}
             onChange={(e) => handleInputChange('customClauses', e.target.value)}
@@ -483,7 +483,7 @@ export default function ContractGeneratorPage() {
           <button
             type="button"
             onClick={saveDraft}
-            className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+            className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
           >
             <Save className="w-4 h-4" />
             Save Draft
@@ -493,7 +493,7 @@ export default function ContractGeneratorPage() {
             <button
               type="button"
               onClick={clearDraft}
-              className="flex items-center gap-2 rounded-md border border-border bg-white px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600"
+              className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
             >
               <RotateCcw className="w-4 h-4" />
               Clear Draft
@@ -504,7 +504,7 @@ export default function ContractGeneratorPage() {
             <PDFDownloadLink
               document={<ContractDocument data={contractData} />}
               fileName={getFileName()}
-              className="flex items-center gap-2 rounded-md bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-700"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover"
               onClick={() => {
                 trackEvent('contract_downloaded', {
                   template: contractData.template,
@@ -535,51 +535,51 @@ export default function ContractGeneratorPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h2 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           Contract Tips
-        </h3>
+        </h2>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Be Specific
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Clearly define the scope of work, deliverables, and timelines to avoid misunderstandings.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Payment Terms
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Include specific payment amounts, due dates, and any late payment penalties.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Legal Review
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               For significant contracts, have an attorney review the terms before signing.
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h3 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Keep Copies
-            </h4>
+            </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Both parties should sign and keep copies of the executed contract.
             </p>
           </div>
         </div>
 
-        <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
-          <p className="text-sm text-yellow-700 dark:text-yellow-300">
+        <div className="rounded-lg bg-warning-light card-padding-sm dark:bg-warning-bg-dark/20">
+          <p className="text-sm text-warning-darker dark:text-warning-muted">
             <strong>Disclaimer:</strong> These contract templates are provided for informational purposes only and do not constitute legal advice. Consult with a qualified attorney for legal matters specific to your situation.
           </p>
         </div>

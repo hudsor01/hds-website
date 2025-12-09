@@ -138,20 +138,20 @@ export default function JsonFormatterPage() {
       title="JSON Formatter"
       description="Format, validate, and minify your JSON data with syntax highlighting"
       icon={
-        <Braces className="h-8 w-8 text-cyan-600" />
+        <Braces className="h-8 w-8 text-primary" />
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-comfortable">
         {/* Input Section */}
         <div>
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-subheading">
             <label className="block text-sm font-medium text-foreground">
               Input JSON
             </label>
-            <div className="flex gap-2">
+            <div className="flex gap-tight">
               <button
                 onClick={loadSample}
-                className="text-xs text-cyan-600 hover:text-cyan-700"
+                className="text-xs text-primary hover:text-primary-hover"
               >
                 Load Sample
               </button>
@@ -170,8 +170,8 @@ export default function JsonFormatterPage() {
               setIsValid(null);
               setError(null);
             }}
-            className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-cyan-500 ${
-              error ? 'border-red-500' : isValid === true ? 'border-green-500' : 'border-border'
+            className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary ${
+              error ? 'border-destructive' : isValid === true ? 'border-success' : 'border-border'
             }`}
             rows={10}
             placeholder='{"key": "value"}'
@@ -180,13 +180,13 @@ export default function JsonFormatterPage() {
 
           {/* Validation Status */}
           {error && (
-            <div className="mt-2 flex items-start gap-2 text-red-600 dark:text-red-400">
-              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <div className="mt-2 flex items-start gap-tight text-destructive-dark dark:text-destructive-text">
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
           )}
           {isValid === true && !error && (
-            <div className="mt-2 flex items-center gap-2 text-green-600 dark:text-green-400">
+            <div className="mt-2 flex items-center gap-tight text-success-dark dark:text-success-text">
               <CheckCircle2 className="w-4 h-4" />
               <span className="text-sm">Valid JSON</span>
             </div>
@@ -194,8 +194,8 @@ export default function JsonFormatterPage() {
         </div>
 
         {/* Options */}
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-content">
+          <div className="flex items-center gap-tight">
             <label className="text-sm text-muted-foreground">Indent:</label>
             <select
               value={indentSize}
@@ -214,21 +214,21 @@ export default function JsonFormatterPage() {
           <button
             onClick={formatJson}
             disabled={!inputJson.trim()}
-            className="rounded-md bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Format
           </button>
           <button
             onClick={minifyJson}
             disabled={!inputJson.trim()}
-            className="rounded-md border border-border bg-white px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Minify
           </button>
           <button
             onClick={validateJson}
             disabled={!inputJson.trim()}
-            className="rounded-md border border-border bg-white px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted dark:bg-muted dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Validate
           </button>
@@ -237,13 +237,13 @@ export default function JsonFormatterPage() {
         {/* Output Section */}
         {outputJson && (
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-subheading">
               <label className="block text-sm font-medium text-foreground">
                 Output
               </label>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-1 text-xs text-cyan-600 hover:text-cyan-700"
+                className="flex items-center gap-1 text-xs text-primary hover:text-primary-hover"
               >
                 {copied ? (
                   <>
@@ -258,18 +258,18 @@ export default function JsonFormatterPage() {
                 )}
               </button>
             </div>
-            <pre className="w-full rounded-md border border-border bg-gray-900 p-4 overflow-x-auto">
-              <code className="text-sm text-gray-100 whitespace-pre-wrap break-all font-mono">
+            <pre className="w-full rounded-md border border-border bg-background card-padding-sm overflow-x-auto">
+              <code className="text-sm text-foreground whitespace-pre-wrap break-all font-mono">
                 {outputJson}
               </code>
             </pre>
 
             {/* Stats */}
-            <div className="mt-2 flex gap-4 text-xs text-muted-foreground">
+            <div className="mt-2 flex gap-content text-xs text-muted-foreground">
               <span>Input: {inputJson.length} chars</span>
               <span>Output: {outputJson.length} chars</span>
               {inputJson.length !== outputJson.length && (
-                <span className={outputJson.length < inputJson.length ? 'text-green-600' : 'text-yellow-600'}>
+                <span className={outputJson.length < inputJson.length ? 'text-success-dark' : 'text-warning-dark'}>
                   {outputJson.length < inputJson.length
                     ? `Reduced by ${((1 - outputJson.length / inputJson.length) * 100).toFixed(1)}%`
                     : `Increased by ${((outputJson.length / inputJson.length - 1) * 100).toFixed(1)}%`
@@ -282,14 +282,14 @@ export default function JsonFormatterPage() {
       </div>
 
       {/* Educational Content */}
-      <div className="mt-8 space-y-4 border-t pt-8 dark:border-border">
-        <h3 className="text-lg font-semibold text-foreground dark:text-white">
+      <div className="mt-heading space-y-content border-t pt-8 dark:border-border">
+        <h3 className="text-lg font-semibold text-foreground dark:text-primary-foreground">
           JSON Tips
         </h3>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+        <div className="grid gap-content sm:grid-cols-2">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Common Errors
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -297,8 +297,8 @@ export default function JsonFormatterPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Data Types
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -306,8 +306,8 @@ export default function JsonFormatterPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Minification
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -315,8 +315,8 @@ export default function JsonFormatterPage() {
             </p>
           </div>
 
-          <div className="rounded-lg border border-border p-4 dark:border-border">
-            <h4 className="mb-2 font-semibold text-foreground dark:text-white">
+          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+            <h4 className="mb-subheading font-semibold text-foreground dark:text-primary-foreground">
               Formatting
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">

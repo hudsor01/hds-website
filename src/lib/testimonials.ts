@@ -1,56 +1,14 @@
 /**
- * Testimonials library
- * Functions for managing testimonials and testimonial requests
+ * Testimonials Server Functions
+ * Server-side functions for managing testimonials and testimonial requests
+ * Note: Types and constants are in ./testimonials/types.ts for client component compatibility
  */
 
+import { createClient } from '@/lib/supabase/server';
 import { randomBytes } from 'crypto';
-import { supabase } from '@/lib/supabase';
+import type { ServiceType, Testimonial, TestimonialRequest } from '../types/testimonials';
 
-export interface TestimonialRequest {
-  id: string;
-  token: string;
-  client_name: string;
-  client_email: string | null;
-  project_name: string | null;
-  created_at: string;
-  expires_at: string;
-  submitted: boolean;
-  submitted_at: string | null;
-}
-
-export interface Testimonial {
-  id: string;
-  request_id: string | null;
-  client_name: string;
-  company: string | null;
-  role: string | null;
-  rating: number;
-  content: string;
-  photo_url: string | null;
-  video_url: string | null;
-  service_type: string | null;
-  approved: boolean;
-  featured: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export type ServiceType =
-  | 'web-development'
-  | 'saas-consulting'
-  | 'digital-marketing'
-  | 'ui-ux-design'
-  | 'seo'
-  | 'other';
-
-export const SERVICE_TYPES: { value: ServiceType; label: string }[] = [
-  { value: 'web-development', label: 'Web Development' },
-  { value: 'saas-consulting', label: 'SaaS Consulting' },
-  { value: 'digital-marketing', label: 'Digital Marketing' },
-  { value: 'ui-ux-design', label: 'UI/UX Design' },
-  { value: 'seo', label: 'SEO Services' },
-  { value: 'other', label: 'Other' },
-];
+export type { ServiceType, Testimonial, TestimonialRequest };
 
 /**
  * Generate a cryptographically secure unique token for testimonial requests
@@ -64,6 +22,7 @@ export function generateToken(): string {
  * Get a testimonial request by token
  */
 export async function getTestimonialRequestByToken(token: string): Promise<TestimonialRequest | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonial_requests')
     .select('*')
@@ -86,6 +45,7 @@ export async function createTestimonialRequest(
   projectName?: string,
   expiresInDays: number = 30
 ): Promise<TestimonialRequest | null> {
+  const supabase = await createClient();
   const token = generateToken();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + expiresInDays);
@@ -113,6 +73,7 @@ export async function createTestimonialRequest(
  * Get all testimonial requests
  */
 export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonial_requests')
     .select('*')
@@ -129,6 +90,7 @@ export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
  * Mark a testimonial request as submitted
  */
 export async function markRequestSubmitted(token: string): Promise<boolean> {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('testimonial_requests')
     .update({
@@ -154,6 +116,7 @@ export async function submitTestimonial(testimonial: {
   video_url?: string;
   service_type?: string;
 }): Promise<Testimonial | null> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonials')
     .insert({
@@ -181,6 +144,7 @@ export async function submitTestimonial(testimonial: {
  * Get all testimonials (for admin)
  */
 export async function getAllTestimonials(): Promise<Testimonial[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonials')
     .select('*')
@@ -197,6 +161,8 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
  * Get approved testimonials (for public display)
  */
 export async function getApprovedTestimonials(): Promise<Testimonial[]> {
+  
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('testimonials')
     .select('*')
@@ -218,6 +184,7 @@ export async function updateTestimonialStatus(
   id: string,
   updates: { approved?: boolean; featured?: boolean }
 ): Promise<boolean> {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('testimonials')
     .update(updates)
@@ -230,6 +197,7 @@ export async function updateTestimonialStatus(
  * Delete a testimonial
  */
 export async function deleteTestimonial(id: string): Promise<boolean> {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('testimonials')
     .delete()
@@ -242,6 +210,7 @@ export async function deleteTestimonial(id: string): Promise<boolean> {
  * Delete a testimonial request
  */
 export async function deleteTestimonialRequest(id: string): Promise<boolean> {
+  const supabase = await createClient();
   const { error } = await supabase
     .from('testimonial_requests')
     .delete()

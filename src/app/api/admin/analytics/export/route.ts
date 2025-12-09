@@ -5,37 +5,13 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { analyticsExportQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import type { LeadExportData } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-export-api');
-
-interface LeadExportData {
-  id: string;
-  email: string;
-  name: string | null;
-  company: string | null;
-  phone: string | null;
-  calculator_type: string;
-  lead_score: number | null;
-  lead_quality: string | null;
-  contacted: boolean;
-  converted: boolean;
-  created_at: string;
-  contacted_at: string | null;
-  converted_at: string | null;
-  conversion_value: number | null;
-  attribution: {
-    source: string | null;
-    medium: string | null;
-    campaign: string | null;
-    device_type: string | null;
-    browser: string | null;
-    referrer: string | null;
-    landing_page: string | null;
-  } | null;
-}
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
@@ -59,20 +35,23 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const quality = searchParams.get('quality'); // hot, warm, cold
-    const calculatorType = searchParams.get('type');
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
 
-    if (!supabaseAdmin) {
+    // Validate query parameters with Zod
+    const parseResult = safeParseSearchParams(searchParams, analyticsExportQuerySchema);
+    if (!parseResult.success) {
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
       return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
+        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
+        { status: 400 }
       );
     }
 
+    const { quality, type: calculatorType, startDate, endDate } = parseResult.data;
+
+    
+
     // Build query
-    let query = supabaseAdmin
+    let query = (await createClient())
       .from('calculator_leads')
       .select('*')
       .order('created_at', { ascending: false });
@@ -107,7 +86,7 @@ export async function GET(request: NextRequest) {
     // Enrich leads with attribution data
     const enrichedLeads: LeadExportData[] = await Promise.all(
       (leads || []).map(async (lead): Promise<LeadExportData> => {
-        const { data: attribution } = await supabaseAdmin
+        const { data: attribution } = await (await createClient())
           .from('lead_attribution')
           .select('*')
           .eq('email', lead.email)
@@ -129,13 +108,13 @@ export async function GET(request: NextRequest) {
           converted_at: lead.converted_at,
           conversion_value: lead.conversion_value,
           attribution: attribution ? {
-            source: attribution.source,
-            medium: attribution.medium,
-            campaign: attribution.campaign,
-            device_type: attribution.device_type,
-            browser: attribution.browser,
-            referrer: attribution.referrer,
-            landing_page: attribution.landing_page,
+            source: attribution.source ?? '',
+            medium: attribution.medium ?? '',
+            campaign: attribution.campaign ?? '',
+            device_type: attribution.device_type ?? '',
+            browser: attribution.browser ?? '',
+            referrer: attribution.referrer ?? '',
+            landing_page: attribution.landing_page ?? '',
           } : null,
         };
       })

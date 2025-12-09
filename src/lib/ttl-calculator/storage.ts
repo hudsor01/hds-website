@@ -1,12 +1,16 @@
 import { logger } from '@/lib/logger';
-import type { SavedCalculation, VehicleInputs } from '../../types/ttl-types'
-import { calculatePayment, calculateTTL } from './calculator'
-import { calculateLeaseComparison } from './lease'
-import { calculateTCO } from './tco'
+import type { CalculationResults, SavedCalculation, VehicleInputs } from '../../types/ttl-types';
+import { calculatePayment, calculateTTL } from './calculator';
+import { calculateLeaseComparison } from './lease';
+import { calculateTCO } from './tco';
 
 const STORAGE_KEY = 'texas-ttl-saved-calculations';
 const MAX_SAVED = 20;
 
+/**
+ * Get all saved calculations from localStorage
+ * Client-side only with SSR safety checks
+ */
 export function getSavedCalculations(): SavedCalculation[] {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
@@ -22,7 +26,11 @@ export function getSavedCalculations(): SavedCalculation[] {
   }
 }
 
-export function saveCalculation(input: VehicleInputs, name?: string): string {
+/**
+ * Save a calculation with optional pre-computed results
+ * Optimized for Next.js 16 with better error handling and lazy calculation
+ */
+export function saveCalculation(input: VehicleInputs, name?: string, results?: CalculationResults): string {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
     throw new Error('Cannot save calculations on server side');
@@ -31,17 +39,26 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
   try {
     const calculations = getSavedCalculations();
 
-    // Calculate all results
-    const ttlResults = calculateTTL(input);
-    const paymentResults = calculatePayment(
-      input.purchasePrice,
-      input.downPayment,
-      ttlResults.totalTTL,
-      input.interestRate,
-      input.loanTermMonths
-    );
-    const tcoResults = calculateTCO(input);
-    const leaseComparisonResults = calculateLeaseComparison(input);
+    // Calculate all results if not provided (lazy evaluation)
+    const calculationResults = results || (() => {
+      const ttlResults = calculateTTL(input);
+      const paymentResults = calculatePayment(
+        input.purchasePrice,
+        input.downPayment,
+        ttlResults.totalTTL,
+        input.interestRate,
+        input.loanTermMonths
+      );
+      const tcoResults = calculateTCO(input);
+      const leaseComparisonResults = calculateLeaseComparison(input);
+
+      return {
+        ttlResults: ttlResults,
+        paymentResults: paymentResults,
+        tcoResults: tcoResults,
+        leaseComparisonResults: leaseComparisonResults
+      };
+    })();
 
     const id = `calc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     const calculation: SavedCalculation = {
@@ -49,12 +66,7 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
       name: name || `Vehicle - ${new Date().toLocaleDateString()}`,
       timestamp: Date.now(),
       inputs: input,
-      results: {
-        ttlResults: ttlResults,
-        paymentResults: paymentResults,
-        tcoResults: tcoResults,
-        leaseComparisonResults: leaseComparisonResults
-      }
+      results: calculationResults
     };
 
     // Add new calculation at the beginning
@@ -71,11 +83,19 @@ export function saveCalculation(input: VehicleInputs, name?: string): string {
   }
 }
 
+/**
+ * Load a specific calculation by ID
+ * Pure function for React Server Components compatibility where possible
+ */
 export function loadCalculation(id: string): SavedCalculation | null {
   const calculations = getSavedCalculations();
   return calculations.find(calc => calc.id === id) || null;
 }
 
+/**
+ * Delete a calculation by ID
+ * Client-side only with proper error handling
+ */
 export function deleteCalculation(id: string): void {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
@@ -91,6 +111,10 @@ export function deleteCalculation(id: string): void {
   }
 }
 
+/**
+ * Clear all saved calculations
+ * Client-side only with proper cleanup
+ */
 export function clearAllCalculations(): void {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
@@ -104,19 +128,51 @@ export function clearAllCalculations(): void {
   }
 }
 
+/**
+ * Update the name of a saved calculation
+ * Client-side only with validation
+ */
 export function updateCalculationName(id: string, newName: string): void {
   // Check if we're in a browser environment to prevent SSR crashes
   if (typeof window === 'undefined') {
     return;
   }
 
+  if (!newName?.trim()) {
+    logger.warn('Cannot update calculation name: new name is empty');
+    return;
+  }
+
   try {
     const calculations = getSavedCalculations();
     const updated = calculations.map(calc =>
-      calc.id === id ? { ...calc, name: newName } : calc
+      calc.id === id ? { ...calc, name: newName.trim() } : calc
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (error) {
     logger.error('Error updating calculation name:', error as Error);
   }
+}
+
+/**
+ * Get calculation statistics for analytics
+ * Pure function for dashboard components
+ */
+export function getCalculationStats(): {
+  total: number;
+  oldest: number | null;
+  newest: number | null;
+} {
+  const calculations = getSavedCalculations();
+
+  if (calculations.length === 0) {
+    return { total: 0, oldest: null, newest: null };
+  }
+
+  const timestamps = calculations.map(calc => calc.timestamp);
+  return {
+    total: calculations.length,
+    oldest: Math.min(...timestamps),
+    newest: Math.max(...timestamps)
+  };
 }

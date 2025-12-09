@@ -9,8 +9,9 @@ export function ThemeToggle() {
   return (
     <button
       suppressHydrationWarning
+
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="relative w-10 h-10 flex-center rounded-lg bg-muted/50 border border-border/50 hover:bg-muted/50 hover:border-cyan-500/30 transition-all duration-200"
+      className="relative w-10 h-10 flex-center rounded-lg bg-muted/50 border border-border/50 hover:bg-muted/50 hover:border-primary/30 transition-all duration-150"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >

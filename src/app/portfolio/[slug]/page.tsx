@@ -12,9 +12,9 @@ import {
   getProjects,
 } from '@/lib/projects';
 
-// Enable ISR with 1-hour revalidation
-// Next.js 16: Using cacheLife instead
-// export const revalidate = 3600;
+// Enable ISR with 1-hour revalidation for Supabase data
+// React cache() handles request deduplication at data layer
+export const revalidate = 3600;
 
 // Generate static params for all projects
 export async function generateStaticParams() {
@@ -121,13 +121,13 @@ async function ProjectContent({ slug }: { slug: string }) {
           <div className="container-wide sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Project Info */}
-              <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card-light text-sm">
+              <div className="space-y-comfortable">
+                <div className="inline-flex items-center gap-tight px-3 py-1 rounded-full glass-card-light text-sm">
                   <Code2 className="w-4 h-4" />
                   {project.category}
                 </div>
 
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-primary-foreground leading-tight">
                   {project.title}
                 </h1>
 
@@ -140,9 +140,9 @@ async function ProjectContent({ slug }: { slug: string }) {
                 )}
 
                 {/* Meta Info */}
-                <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+                <div className="flex flex-wrap gap-comfortable text-sm text-muted-foreground">
                   {project.published_at && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-tight">
                       <Calendar className="w-4 h-4" />
                       {new Date(project.published_at).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -151,7 +151,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                     </div>
                   )}
                   {project.view_count > 0 && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-tight">
                       <Eye className="w-4 h-4" />
                       {project.view_count.toLocaleString()} views
                     </div>
@@ -159,7 +159,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-content">
                   {project.external_link && (
                     <Link
                       href={project.external_link}
@@ -187,7 +187,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 
               {/* Project Image */}
               <div className={`relative overflow-hidden rounded-2xl ${project.gradient_class} p-1`}>
-                <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-black/20">
+                <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-background/20">
                   <Image
                     src={project.image_url}
                     alt={project.title}
@@ -206,12 +206,12 @@ async function ProjectContent({ slug }: { slug: string }) {
         {Object.keys(stats).length > 0 && (
           <section className="relative py-12">
             <div className="container-wide sm:px-6 lg:px-8">
-              <div className="glass-section p-8">
-                <h2 className="text-2xl font-bold text-white mb-8">Project Impact</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="glass-section card-padding-lg">
+                <h2 className="text-2xl font-bold text-primary-foreground mb-comfortable">Project Impact</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-sections">
                   {Object.entries(stats).map(([key, value]) => (
                     <div key={key} className="text-center">
-                      <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                      <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-subheading">
                         {value}
                       </div>
                       <div className="text-sm text-muted-foreground capitalize">
@@ -228,13 +228,13 @@ async function ProjectContent({ slug }: { slug: string }) {
         {/* Tech Stack */}
         <section className="relative py-12">
           <div className="container-wide sm:px-6 lg:px-8">
-            <div className="glass-section p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">Technologies Used</h2>
+            <div className="glass-section card-padding-lg">
+              <h2 className="text-2xl font-bold text-primary-foreground mb-content-block">Technologies Used</h2>
               <div className="flex flex-wrap gap-3">
                 {project.tech_stack.map((tech) => (
                   <span
                     key={tech}
-                    className="px-4 py-2 glass-card-light rounded-full text-sm text-muted hover:border-cyan-400/50 hover:text-cyan-400 transition-colors"
+                    className="px-4 py-2 glass-card-light rounded-full text-sm text-muted hover:border-accent/50 hover:text-accent transition-colors"
                   >
                     {tech}
                   </span>
@@ -248,8 +248,8 @@ async function ProjectContent({ slug }: { slug: string }) {
         {relatedProjects.length > 0 && (
           <section className="relative py-12">
             <div className="container-wide sm:px-6 lg:px-8">
-              <h2 className="text-3xl font-bold text-white mb-8">Related Projects</h2>
-              <div className="grid md:grid-cols-3 gap-8">
+              <h2 className="text-3xl font-bold text-primary-foreground mb-comfortable">Related Projects</h2>
+              <div className="grid md:grid-cols-3 gap-sections">
                 {relatedProjects.map((relatedProject) => (
                   <Link
                     key={relatedProject.id}
@@ -267,9 +267,9 @@ async function ProjectContent({ slug }: { slug: string }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>
-                    <div className="p-6">
-                      <div className="text-sm text-cyan-400 mb-2">{relatedProject.category}</div>
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                    <div className="card-padding">
+                      <div className="text-sm text-accent mb-subheading">{relatedProject.category}</div>
+                      <h3 className="text-xl font-bold text-primary-foreground mb-subheading group-hover:text-accent transition-colors">
                         {relatedProject.title}
                       </h3>
                       <p className="text-muted-foreground text-sm line-clamp-2">
@@ -284,12 +284,12 @@ async function ProjectContent({ slug }: { slug: string }) {
         )}
 
         {/* CTA Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative py-section px-4">
           <div className="container-wide">
             <div className="glass-section p-12 md:p-16 text-center">
-              <h2 className="text-4xl font-black text-white mb-6">
+              <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
                 Ready to create your
-                <span className="text-cyan-400"> success story?</span>
+                <span className="text-accent"> success story?</span>
               </h2>
               <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
                 Let&apos;s build something amazing together. Get in touch to discuss your project.
@@ -312,14 +312,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-hero text-white">
+    <main className="min-h-screen bg-gradient-hero text-primary-foreground">
       <Analytics />
 
       {/* Back Button - Static, prerendered */}
       <div className="container-wide sm:px-6 lg:px-8 pt-24 pb-8">
         <Link
           href="/portfolio"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-tight text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Portfolio
@@ -328,9 +328,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
       {/* Dynamic content with Suspense */}
       <Suspense fallback={
-        <div className="container-wide sm:px-6 lg:px-8 py-20 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-cyan-500" />
-          <p className="text-gray-400 text-lg mt-4">Loading project...</p>
+        <div className="container-wide sm:px-6 lg:px-8 py-section text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+          <p className="text-muted-foreground text-lg mt-4">Loading project...</p>
         </div>
       }>
         <ProjectContent slug={slug} />

@@ -1,7 +1,7 @@
-import { AlertCircle, Check, CreditCard, DollarSign, FileText, Mail, Plus, Save, Share2 } from 'lucide-react'
-import type { CalculationResults, PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, Check, CreditCard, DollarSign, FileText, Mail, Plus, Save, Share2 } from 'lucide-react';
+import type { CalculationResults, PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types';
 
 interface ResultsPanelProps {
   vehicleInput: VehicleInputs;
@@ -36,9 +36,9 @@ export function ResultsPanel({
 }: ResultsPanelProps) {
   return (
     <Card>
-      <CardContent className="p-6 space-y-6">
+      <CardContent className="card-padding space-y-comfortable">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-tight">
             <FileText className="w-6 h-6 text-primary" />
             <h2 className="text-xl font-bold">Calculation Results</h2>
           </div>
@@ -51,14 +51,14 @@ export function ResultsPanel({
 
         {isLoading && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-heading"></div>
             <p className="text-muted-foreground font-medium">Calculating your results...</p>
           </div>
         )}
 
         {error && (
-          <div className="flex items-start gap-4 rounded-lg border bg-destructive/10 p-4">
-            <AlertCircle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+          <div className="flex items-start gap-content rounded-lg border bg-destructive/10 card-padding-sm">
+            <AlertCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
             <div>
               <p className="text-destructive font-medium">{error}</p>
             </div>
@@ -70,7 +70,7 @@ export function ResultsPanel({
           {/* TTL Breakdown */}
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-tight">
                 <CreditCard className="h-4 w-4 text-primary" />
                 <CardTitle className="text-lg">TTL Breakdown</CardTitle>
               </div>
@@ -112,7 +112,7 @@ export function ResultsPanel({
           {/* Monthly Payment */}
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-tight">
                 <DollarSign className="h-4 w-4 text-primary" />
                 <CardTitle className="text-lg">Monthly Payment</CardTitle>
               </div>
@@ -141,7 +141,7 @@ export function ResultsPanel({
           <div className="grid grid-cols-2 gap-3">
             <Button
               onClick={handleSaveCalculation}
-              className="gap-2"
+              className="gap-tight"
               variant={saveSuccess ? "default" : "default"}
             >
               {saveSuccess ? (
@@ -159,7 +159,7 @@ export function ResultsPanel({
 
             <Button
               onClick={handleEmailResults}
-              className="gap-2"
+              className="gap-tight"
             >
               <Mail className="w-4 h-4" />
               <span>Email</span>
@@ -167,7 +167,7 @@ export function ResultsPanel({
 
             <Button
               onClick={handleShareLink}
-              className="gap-2"
+              className="gap-tight"
             >
               <Share2 className="w-4 h-4" />
               <span>Share</span>
@@ -175,7 +175,7 @@ export function ResultsPanel({
 
             <Button
               onClick={handlePrintPDF}
-              className="gap-2"
+              className="gap-tight"
             >
               <FileText className="w-4 h-4" />
               <span>PDF</span>
@@ -185,7 +185,7 @@ export function ResultsPanel({
           <Button
             onClick={addToComparison}
             disabled={comparisonVehicles.length >= 3}
-            className="w-full gap-2"
+            className="w-full gap-tight"
           >
             <Plus className="w-4 h-4" />
             <span>Add to Comparison {comparisonVehicles.length > 0 ? `(${comparisonVehicles.length}/3)` : ''}</span>

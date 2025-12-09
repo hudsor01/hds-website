@@ -13,11 +13,11 @@ interface VehicleInputsProps {
 
 export function VehicleInputs({ vehicleInput, updateInput }: VehicleInputsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-content">
       {/* Basic Information */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-content">
         {/* Purchase Price */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Purchase Price</Label>
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -32,7 +32,7 @@ export function VehicleInputs({ vehicleInput, updateInput }: VehicleInputsProps)
         </div>
 
         {/* Down Payment */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Down Payment</Label>
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -48,9 +48,9 @@ export function VehicleInputs({ vehicleInput, updateInput }: VehicleInputsProps)
       </div>
 
       {/* Trade-In and County */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-content">
         {/* Trade-In Value */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Trade-In Value</Label>
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -65,7 +65,7 @@ export function VehicleInputs({ vehicleInput, updateInput }: VehicleInputsProps)
         </div>
 
         {/* County */}
-        <div className="space-y-2">
+        <div className="space-y-tight">
           <Label>Texas County</Label>
           <Select value={vehicleInput.county} onValueChange={(value) => updateInput('county', value)}>
             <SelectTrigger>

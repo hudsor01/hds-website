@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export default function PublicTestimonialPage() {
   return (
     <div className="min-h-screen bg-muted/30">
-      <div className="container-narrow py-12 md:py-20">
+      <div className="container-narrow py-12 md:py-section">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-heading">
               Share Your Experience
             </h1>
             <p className="text-lg text-muted-foreground">
@@ -28,12 +28,12 @@ export default function PublicTestimonialPage() {
           </div>
 
           {/* Form */}
-          <div className="bg-white dark:bg-card rounded-xl shadow-lg border border-border p-6 md:p-8">
+          <div className="bg-card dark:bg-card rounded-xl shadow-lg border border-border card-padding md:card-padding-lg">
             <TestimonialForm />
           </div>
 
           {/* Footer Note */}
-          <p className="text-sm text-muted-foreground text-center mt-6">
+          <p className="text-sm text-muted-foreground text-center mt-content-block">
             By submitting, you agree that your testimonial may be used on our website
             and marketing materials.
           </p>

@@ -139,6 +139,35 @@ export type StorageChangePayload = z.infer<typeof storageChangePayloadSchema>;
 export type SupabaseWebhook = z.infer<typeof supabaseWebhookSchema>;
 
 // ============================================================================
+// Lead Attribution API Schemas
+// ============================================================================
+
+// JSON value schema - using z.unknown() since recursive Zod types have inference issues with Json type
+const jsonValueSchema = z.unknown();
+
+export const leadAttributionRequestSchema = z.object({
+  email: emailSchema.optional(),
+  source: z.string().optional(),
+  medium: z.string().optional(),
+  campaign: z.string().optional(),
+  term: z.string().optional(),
+  content: z.string().optional(),
+  utm_params: z.record(z.string(), jsonValueSchema).optional(),
+  referrer: z.string().url().optional(),
+  landing_page: z.string().url().optional(),
+  current_page: z.string().url().optional(),
+  session_id: z.string().min(8).optional(),
+  device_type: z.string().optional(),
+  browser: z.string().optional(),
+  os: z.string().optional(),
+}).refine(
+  (data) => Boolean(data.email || data.session_id),
+  { message: 'Either email or session_id is required', path: ['email'] }
+);
+
+export type LeadAttributionRequest = z.infer<typeof leadAttributionRequestSchema>;
+
+// ============================================================================
 // CSRF Token Schemas
 // ============================================================================
 

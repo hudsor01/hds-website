@@ -121,8 +121,7 @@ export const handlers = [
       uptime: 12345,
       environment: {
         nodeEnv: 'test',
-        resendConfigured: true,
-        posthogConfigured: true
+        resendConfigured: true
       },
       services: {
         email: 'configured',
@@ -183,15 +182,6 @@ export const handlers = [
       to: ['test@example.com'],
       created_at: new Date().toISOString()
     })
-  }),
-
-  // PostHog API (external API)
-  http.post('https://app.posthog.com/e/', () => {
-    return HttpResponse.json({ status: 1 })
-  }),
-
-  http.post('https://us.i.posthog.com/e/', () => {
-    return HttpResponse.json({ status: 1 })
   }),
 
   // Supabase Webhook

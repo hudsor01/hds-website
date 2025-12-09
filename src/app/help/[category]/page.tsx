@@ -77,36 +77,36 @@ export default async function HelpCategoryPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Header */}
-      <div className="bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)]">
-        <div className="container-narrow py-12 md:py-16">
+      <div className="bg-[var(--primary)] text-[var(--primary-foreground)]">
+        <div className="container-narrow py-12 md:py-section-sm">
           {/* Breadcrumb */}
-          <Breadcrumb className="mb-6">
+          <Breadcrumb className="mb-content-block">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/help" className="text-[var(--color-text-inverted)]/70 hover:text-[var(--color-text-inverted)]">
+                  <Link href="/help" className="text-[var(--primary-foreground)]/70 hover:text-[var(--primary-foreground)]">
                     Help Center
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-[var(--color-text-inverted)]/50" />
+              <BreadcrumbSeparator className="text-[var(--primary-foreground)]/50" />
               <BreadcrumbItem>
-                <BreadcrumbPage className="text-[var(--color-text-inverted)]">
+                <BreadcrumbPage className="text-[var(--primary-foreground)]">
                   {categoryInfo.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
 
-          <div className="flex items-center gap-4">
-            <div className="size-16 rounded-xl bg-[var(--color-text-inverted)]/10 flex items-center justify-center">
+          <div className="flex items-center gap-content">
+            <div className="size-16 rounded-xl bg-[var(--primary-foreground)]/10 flex items-center justify-center">
               {ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">
                 {categoryInfo.name}
               </h1>
-              <p className="text-[var(--color-text-inverted)]/80 mt-1">
+              <p className="text-[var(--primary-foreground)]/80 mt-1">
                 {categoryInfo.description}
               </p>
             </div>
@@ -118,7 +118,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
       <div className="container-narrow py-12">
         <Link
           href="/help"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+          className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground mb-content-block transition-colors"
         >
           <ChevronLeft className="size-4" />
           Back to Help Center
@@ -126,9 +126,9 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 
         {articles.length === 0 ? (
           <Card>
-            <CardContent className="p-8 text-center">
-              <HelpCircle className="size-12 mx-auto text-muted-foreground mb-4" />
-              <h2 className="text-xl font-semibold text-foreground mb-2">
+            <CardContent className="card-padding-lg text-center">
+              <HelpCircle className="size-12 mx-auto text-muted-foreground mb-heading" />
+              <h2 className="text-xl font-semibold text-foreground mb-subheading">
                 No articles yet
               </h2>
               <p className="text-muted-foreground">
@@ -137,21 +137,21 @@ export default async function HelpCategoryPage({ params }: PageProps) {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-content">
             {articles.map((article) => (
               <Link
                 key={article.slug}
                 href={`/help/${category}/${article.slug}`}
                 className="block group"
               >
-                <Card className="hover:border-[var(--color-brand-primary)] hover:shadow-md transition-all">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
+                <Card className="hover:border-[var(--primary)] hover:shadow-md transition-all">
+                  <CardContent className="card-padding">
+                    <div className="flex items-start gap-content">
                       <div className="size-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
                         <FileText className="size-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h2 className="font-semibold text-foreground group-hover:text-[var(--color-brand-primary)] transition-colors flex items-center gap-2">
+                        <h2 className="font-semibold text-foreground group-hover:text-[var(--primary)] transition-colors flex items-center gap-tight">
                           {article.title}
                           <ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
                         </h2>
@@ -170,14 +170,14 @@ export default async function HelpCategoryPage({ params }: PageProps) {
         )}
 
         {/* Contact CTA */}
-        <Card className="mt-8">
-          <CardContent className="p-6 text-center">
-            <p className="text-muted-foreground mb-4">
+        <Card className="mt-heading">
+          <CardContent className="card-padding text-center">
+            <p className="text-muted-foreground mb-heading">
               Need more help with {categoryInfo.name.toLowerCase()}?
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-tight px-4 py-2 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
             >
               Contact Support
               <ArrowRight className="size-4" />

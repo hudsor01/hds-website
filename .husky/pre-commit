@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -e
 
-npm run lint && npm run typecheck && npm run test:unit
+export PATH="$HOME/.bun/bin:$PATH"
+bun run lint && bun run typecheck && bun run test:unit

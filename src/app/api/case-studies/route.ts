@@ -5,9 +5,9 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { logger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import type { CaseStudy } from '@/types/supabase-helpers';
+import { createClient } from '@/lib/supabase/server';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
@@ -25,27 +25,37 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const industry = searchParams.get('industry');
-    const featured = searchParams.get('featured');
-    const slug = searchParams.get('slug');
 
-    if (!supabaseAdmin) {
+    // Validate query parameters with Zod
+    const parseResult = safeParseSearchParams(searchParams, caseStudiesQuerySchema);
+    if (!parseResult.success) {
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
       return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
+        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
+        { status: 400 }
       );
     }
 
+    const { industry, featured, slug } = parseResult.data;
+
+    // Use server client - RLS allows public reads of published case studies
+    const supabase = await createClient();
+
     // If slug is provided, return single case study
     if (slug) {
-      const { data: caseStudy, error } = (await supabaseAdmin
-        .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+      const { data: caseStudy, error } = await supabase
+        .from('case_studies')
         .select('*')
         .eq('slug', slug)
         .eq('published', true)
-        .single()) as unknown as { data: CaseStudy | null; error: unknown };
+        .maybeSingle();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
+        logger.error('Failed to fetch case study by slug', error as Error);
+        return NextResponse.json({ error: 'Failed to fetch case study' }, { status: 500 });
+      }
+
+      if (!caseStudy) {
         return NextResponse.json(
           { error: 'Case study not found' },
           { status: 404 }
@@ -56,8 +66,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query for list of case studies
-    let query = supabaseAdmin
-      .from('case_studies' as 'lead_attribution') // Type assertion for custom table
+    let query = supabase
+      .from('case_studies')
       .select('*')
       .eq('published', true)
       .order('created_at', { ascending: false });
@@ -68,7 +78,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter by featured if provided
-    if (featured === 'true') {
+    if (featured) {
       query = query.eq('featured', true);
     }
 

@@ -83,7 +83,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
       <div className="bg-background border-b">
         <div className="container-narrow py-6">
           {/* Breadcrumb */}
-          <Breadcrumb className="mb-4">
+          <Breadcrumb className="mb-heading">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
@@ -105,7 +105,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 
           <Link
             href={`/help/${category}`}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ChevronLeft className="size-4" />
             Back to {categoryInfo.name}
@@ -116,13 +116,13 @@ export default async function HelpArticlePage({ params }: PageProps) {
       {/* Article Content */}
       <div className="container-narrow py-8 md:py-12">
         <Card>
-          <CardContent className="p-6 md:p-10">
+          <CardContent className="card-padding md:p-10">
             {/* Article Header */}
-            <header className="mb-8">
+            <header className="mb-comfortable">
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
                 {article.title}
               </h1>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex items-center gap-tight text-sm text-muted-foreground">
                 <Clock className="size-4" />
                 <span>Last updated: {updatedDate}</span>
               </div>
@@ -137,7 +137,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
                     const isInternal = href?.startsWith('/');
                     if (isInternal && href) {
                       return (
-                        <Link href={href} className="text-[var(--color-brand-primary)] hover:underline">
+                        <Link href={href} className="text-[var(--primary)] hover:underline">
                           {children}
                         </Link>
                       );
@@ -147,7 +147,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
                         href={href ?? '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--color-brand-primary)] hover:underline"
+                        className="text-[var(--primary)] hover:underline"
                       >
                         {children}
                       </a>
@@ -155,29 +155,29 @@ export default async function HelpArticlePage({ params }: PageProps) {
                   },
                   // Custom heading styles
                   h2: ({ children }) => (
-                    <h2 className="text-xl md:text-2xl font-semibold text-foreground mt-8 mb-4 pb-2 border-b">
+                    <h2 className="text-xl md:text-2xl font-semibold text-foreground mt-heading mb-heading pb-2 border-b">
                       {children}
                     </h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground mt-6 mb-3">
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mt-content-block mb-3">
                       {children}
                     </h3>
                   ),
                   // Custom list styles
                   ul: ({ children }) => (
-                    <ul className="list-disc pl-6 space-y-2 my-4">
+                    <ul className="list-disc pl-6 space-y-tight my-4">
                       {children}
                     </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal pl-6 space-y-2 my-4">
+                    <ol className="list-decimal pl-6 space-y-tight my-4">
                       {children}
                     </ol>
                   ),
                   // Paragraph styles
                   p: ({ children }) => (
-                    <p className="text-foreground/90 leading-relaxed mb-4">
+                    <p className="text-foreground/90 leading-relaxed mb-heading">
                       {children}
                     </p>
                   ),
@@ -221,16 +221,16 @@ export default async function HelpArticlePage({ params }: PageProps) {
 
         {/* Navigation */}
         {(prev || next) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-content mt-content-block">
             {prev ? (
               <Link href={`/help/${category}/${prev.slug}`} className="group">
-                <Card className="h-full hover:border-[var(--color-brand-primary)] transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                <Card className="h-full hover:border-[var(--primary)] transition-colors">
+                  <CardContent className="card-padding-sm">
+                    <div className="flex items-center gap-tight text-sm text-muted-foreground mb-1">
                       <ChevronLeft className="size-4" />
                       Previous
                     </div>
-                    <p className="font-medium text-foreground group-hover:text-[var(--color-brand-primary)] transition-colors">
+                    <p className="font-medium text-foreground group-hover:text-[var(--primary)] transition-colors">
                       {prev.title}
                     </p>
                   </CardContent>
@@ -241,13 +241,13 @@ export default async function HelpArticlePage({ params }: PageProps) {
             )}
             {next && (
               <Link href={`/help/${category}/${next.slug}`} className="group">
-                <Card className="h-full hover:border-[var(--color-brand-primary)] transition-colors">
-                  <CardContent className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-2 text-sm text-muted-foreground mb-1">
+                <Card className="h-full hover:border-[var(--primary)] transition-colors">
+                  <CardContent className="card-padding-sm text-right">
+                    <div className="flex items-center justify-end gap-tight text-sm text-muted-foreground mb-1">
                       Next
                       <ChevronRight className="size-4" />
                     </div>
-                    <p className="font-medium text-foreground group-hover:text-[var(--color-brand-primary)] transition-colors">
+                    <p className="font-medium text-foreground group-hover:text-[var(--primary)] transition-colors">
                       {next.title}
                     </p>
                   </CardContent>
@@ -258,14 +258,14 @@ export default async function HelpArticlePage({ params }: PageProps) {
         )}
 
         {/* Help CTA */}
-        <Card className="mt-8">
-          <CardContent className="p-6 text-center">
-            <p className="text-muted-foreground mb-4">
+        <Card className="mt-heading">
+          <CardContent className="card-padding text-center">
+            <p className="text-muted-foreground mb-heading">
               Was this article helpful? Need more assistance?
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-brand-primary)] text-[var(--color-text-inverted)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-tight px-4 py-2 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
             >
               Contact Support
               <ArrowRight className="size-4" />

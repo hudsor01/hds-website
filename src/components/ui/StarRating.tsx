@@ -18,7 +18,7 @@ export function StarRating({
   rating,
   maxRating = 5,
   size = 'md',
-  activeColor = 'text-cyan-400',
+  activeColor = 'text-accent',
   inactiveColor = 'text-muted-foreground',
 }: StarRatingProps) {
   return (

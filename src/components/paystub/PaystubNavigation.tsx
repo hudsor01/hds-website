@@ -1,8 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/Button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { PayPeriod } from '@/types/paystub';
 
 interface PaystubNavigationProps {
   selectedPeriod: number
@@ -11,6 +12,7 @@ interface PaystubNavigationProps {
   setDocumentType: (type: 'form' | 'paystub' | 'annual') => void
   onBackToForm: () => void
   onPrint: () => void
+  payPeriods: PayPeriod[]
 }
 
 export function PaystubNavigation({
@@ -20,10 +22,21 @@ export function PaystubNavigation({
   setDocumentType,
   onBackToForm,
   onPrint
+  , payPeriods
 }: PaystubNavigationProps) {
+  const periodOptions = payPeriods.length
+    ? payPeriods.map((period) => ({
+        value: period.period.toString(),
+        label: `Period ${period.period}`,
+      }))
+    : Array.from({ length: 26 }, (_, i) => ({
+        value: (i + 1).toString(),
+        label: `Period ${i + 1}`,
+      }));
+
   return (
     <div className="p-5 text-center bg-muted">
-      <div className="mb-5 flex flex-wrap justify-center gap-2">
+      <div className="mb-5 flex flex-wrap justify-center gap-tight">
         <Button variant="secondary" onClick={onBackToForm}>
           Back to Form
         </Button>
@@ -44,7 +57,7 @@ export function PaystubNavigation({
       </div>
 
       {documentType === 'paystub' && (
-        <div className="mb-5 flex items-center justify-center gap-2">
+        <div className="mb-5 flex items-center justify-center gap-tight">
           <Label>Select Pay Period:</Label>
           <Select
             value={selectedPeriod.toString()}
@@ -54,9 +67,9 @@ export function PaystubNavigation({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 26 }, (_, i) => (
-                <SelectItem key={i + 1} value={(i + 1).toString()}>
-                  Period {i + 1}
+              {periodOptions.map((period) => (
+                <SelectItem key={period.value} value={period.value}>
+                  {period.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -64,7 +77,7 @@ export function PaystubNavigation({
         </div>
       )}
 
-      <Button onClick={onPrint} className="bg-green-600 hover:bg-green-700">
+      <Button onClick={onPrint} className="bg-success-dark hover:bg-success-darker">
         Print {documentType === 'paystub' ? 'Pay Stub' : 'W-2 Summary'}
       </Button>
     </div>

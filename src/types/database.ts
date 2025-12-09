@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       ab_test_results: {
@@ -150,6 +125,7 @@ export type Database = {
           lead_quality: string | null
           lead_score: number | null
           name: string | null
+          notes: string | null
           phone: string | null
           referrer: string | null
           results: Json
@@ -178,6 +154,7 @@ export type Database = {
           lead_quality?: string | null
           lead_score?: number | null
           name?: string | null
+          notes?: string | null
           phone?: string | null
           referrer?: string | null
           results?: Json
@@ -206,6 +183,7 @@ export type Database = {
           lead_quality?: string | null
           lead_score?: number | null
           name?: string | null
+          notes?: string | null
           phone?: string | null
           referrer?: string | null
           results?: Json
@@ -219,17 +197,103 @@ export type Database = {
         }
         Relationships: []
       }
+      case_studies: {
+        Row: {
+          challenge: string
+          client_name: string
+          created_at: string | null
+          description: string
+          featured: boolean | null
+          featured_image_url: string | null
+          id: string
+          industry: string
+          metrics: Json | null
+          project_duration: string | null
+          project_type: string
+          project_url: string | null
+          published: boolean | null
+          results: string
+          slug: string
+          solution: string
+          team_size: number | null
+          technologies: Json | null
+          testimonial_author: string | null
+          testimonial_role: string | null
+          testimonial_text: string | null
+          testimonial_video_url: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          challenge: string
+          client_name: string
+          created_at?: string | null
+          description: string
+          featured?: boolean | null
+          featured_image_url?: string | null
+          id?: string
+          industry: string
+          metrics?: Json | null
+          project_duration?: string | null
+          project_type: string
+          project_url?: string | null
+          published?: boolean | null
+          results: string
+          slug: string
+          solution: string
+          team_size?: number | null
+          technologies?: Json | null
+          testimonial_author?: string | null
+          testimonial_role?: string | null
+          testimonial_text?: string | null
+          testimonial_video_url?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          challenge?: string
+          client_name?: string
+          created_at?: string | null
+          description?: string
+          featured?: boolean | null
+          featured_image_url?: string | null
+          id?: string
+          industry?: string
+          metrics?: Json | null
+          project_duration?: string | null
+          project_type?: string
+          project_url?: string | null
+          published?: boolean | null
+          results?: string
+          slug?: string
+          solution?: string
+          team_size?: number | null
+          technologies?: Json | null
+          testimonial_author?: string | null
+          testimonial_role?: string | null
+          testimonial_text?: string | null
+          testimonial_video_url?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       conversion_funnel: {
         Row: {
           completed: boolean | null
           completion_time: string | null
           funnel_name: string
           id: string
+          metadata: Json | null
           page_path: string | null
           properties: Json | null
           session_id: string
           step_name: string
           step_order: number
+          time_to_complete: number | null
           timestamp: string | null
           user_id: string | null
         }
@@ -238,11 +302,13 @@ export type Database = {
           completion_time?: string | null
           funnel_name: string
           id?: string
+          metadata?: Json | null
           page_path?: string | null
           properties?: Json | null
           session_id: string
           step_name: string
           step_order: number
+          time_to_complete?: number | null
           timestamp?: string | null
           user_id?: string | null
         }
@@ -251,22 +317,51 @@ export type Database = {
           completion_time?: string | null
           funnel_name?: string
           id?: string
+          metadata?: Json | null
           page_path?: string | null
           properties?: Json | null
           session_id?: string
           step_name?: string
           step_order?: number
+          time_to_complete?: number | null
           timestamp?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      cron_logs: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string
+          job_name: string
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          job_name: string
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          job_name?: string
+          status?: string
         }
         Relationships: []
       }
       custom_events: {
         Row: {
           event_category: string | null
+          event_label: string | null
           event_name: string
+          event_value: number | null
           id: string
           ip_address: unknown
+          metadata: Json | null
           page_path: string | null
           properties: Json | null
           session_id: string | null
@@ -277,9 +372,12 @@ export type Database = {
         }
         Insert: {
           event_category?: string | null
+          event_label?: string | null
           event_name: string
+          event_value?: number | null
           id?: string
           ip_address?: unknown
+          metadata?: Json | null
           page_path?: string | null
           properties?: Json | null
           session_id?: string | null
@@ -290,9 +388,12 @@ export type Database = {
         }
         Update: {
           event_category?: string | null
+          event_label?: string | null
           event_name?: string
+          event_value?: number | null
           id?: string
           ip_address?: unknown
+          metadata?: Json | null
           page_path?: string | null
           properties?: Json | null
           session_id?: string | null
@@ -378,6 +479,45 @@ export type Database = {
           question_text?: string
           search_query?: string | null
           session_id?: string | null
+        }
+        Relationships: []
+      }
+      help_articles: {
+        Row: {
+          category: string
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          order_index: number | null
+          published: boolean | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          order_index?: number | null
+          published?: boolean | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          order_index?: number | null
+          published?: boolean | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -505,6 +645,44 @@ export type Database = {
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_notes: {
+        Row: {
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          lead_id: string
+          metadata: Json | null
+          note_type: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          note_type: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          note_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "calculator_leads"
             referencedColumns: ["id"]
           },
         ]
@@ -665,6 +843,39 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          source: string | null
+          status: string
+          subscribed_at: string | null
+          unsubscribed_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          source?: string | null
+          status?: string
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          source?: string | null
+          status?: string
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       page_analytics: {
         Row: {
           bounce: boolean | null
@@ -672,6 +883,7 @@ export type Database = {
           city: string | null
           country: string | null
           device_type: string | null
+          duration: number | null
           duration_seconds: number | null
           id: string
           ip_address: unknown
@@ -699,6 +911,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           device_type?: string | null
+          duration?: number | null
           duration_seconds?: number | null
           id?: string
           ip_address?: unknown
@@ -726,6 +939,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           device_type?: string | null
+          duration?: number | null
           duration_seconds?: number | null
           id?: string
           ip_address?: unknown
@@ -746,6 +960,24 @@ export type Database = {
           utm_source?: string | null
           utm_term?: string | null
           viewport_size?: string | null
+        }
+        Relationships: []
+      }
+      processing_queue: {
+        Row: {
+          created_at: string | null
+          data: Json
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data: Json
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json
+          id?: string
         }
         Relationships: []
       }
@@ -935,9 +1167,150 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonial_requests: {
+        Row: {
+          client_email: string | null
+          client_name: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          project_name: string | null
+          submitted: boolean | null
+          submitted_at: string | null
+          token: string
+        }
+        Insert: {
+          client_email?: string | null
+          client_name: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          project_name?: string | null
+          submitted?: boolean | null
+          submitted_at?: string | null
+          token: string
+        }
+        Update: {
+          client_email?: string | null
+          client_name?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          project_name?: string | null
+          submitted?: boolean | null
+          submitted_at?: string | null
+          token?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          approved: boolean | null
+          client_name: string
+          company: string | null
+          content: string
+          created_at: string | null
+          featured: boolean | null
+          id: string
+          photo_url: string | null
+          rating: number
+          request_id: string | null
+          role: string | null
+          service_type: string | null
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          approved?: boolean | null
+          client_name: string
+          company?: string | null
+          content: string
+          created_at?: string | null
+          featured?: boolean | null
+          id?: string
+          photo_url?: string | null
+          rating: number
+          request_id?: string | null
+          role?: string | null
+          service_type?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          approved?: boolean | null
+          client_name?: string
+          company?: string | null
+          content?: string
+          created_at?: string | null
+          featured?: boolean | null
+          id?: string
+          photo_url?: string | null
+          rating?: number
+          request_id?: string | null
+          role?: string | null
+          service_type?: string | null
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testimonials_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "testimonial_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ttl_calculations: {
+        Row: {
+          county: string | null
+          created_at: string | null
+          email: string | null
+          expires_at: string | null
+          id: string
+          inputs: Json
+          last_viewed_at: string | null
+          name: string | null
+          purchase_price: number | null
+          results: Json
+          share_code: string
+          view_count: number | null
+        }
+        Insert: {
+          county?: string | null
+          created_at?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          inputs: Json
+          last_viewed_at?: string | null
+          name?: string | null
+          purchase_price?: number | null
+          results: Json
+          share_code: string
+          view_count?: number | null
+        }
+        Update: {
+          county?: string | null
+          created_at?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          inputs?: Json
+          last_viewed_at?: string | null
+          name?: string | null
+          purchase_price?: number | null
+          results?: Json
+          share_code?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       web_vitals: {
         Row: {
           connection_type: string | null
+          created_at: string | null
           device_type: string | null
           id: string
           metric_type: string
@@ -950,6 +1323,7 @@ export type Database = {
         }
         Insert: {
           connection_type?: string | null
+          created_at?: string | null
           device_type?: string | null
           id?: string
           metric_type: string
@@ -962,6 +1336,7 @@ export type Database = {
         }
         Update: {
           connection_type?: string | null
+          created_at?: string | null
           device_type?: string | null
           id?: string
           metric_type?: string
@@ -974,129 +1349,24 @@ export type Database = {
         }
         Relationships: []
       }
-      help_articles: {
+      webhook_logs: {
         Row: {
+          event_type: string
           id: string
-          slug: string
-          category: string
-          title: string
-          content: string
-          excerpt: string | null
-          order_index: number
-          published: boolean
-          created_at: string
-          updated_at: string
+          payload: Json
+          triggered_at: string | null
         }
         Insert: {
+          event_type: string
           id?: string
-          slug: string
-          category: string
-          title: string
-          content: string
-          excerpt?: string | null
-          order_index?: number
-          published?: boolean
-          created_at?: string
-          updated_at?: string
+          payload: Json
+          triggered_at?: string | null
         }
         Update: {
+          event_type?: string
           id?: string
-          slug?: string
-          category?: string
-          title?: string
-          content?: string
-          excerpt?: string | null
-          order_index?: number
-          published?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      testimonials: {
-        Row: {
-          id: string
-          request_id: string | null
-          client_name: string
-          company: string | null
-          role: string | null
-          rating: number
-          content: string
-          photo_url: string | null
-          video_url: string | null
-          service_type: string | null
-          approved: boolean
-          featured: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          request_id?: string | null
-          client_name: string
-          company?: string | null
-          role?: string | null
-          rating: number
-          content: string
-          photo_url?: string | null
-          video_url?: string | null
-          service_type?: string | null
-          approved?: boolean
-          featured?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          request_id?: string | null
-          client_name?: string
-          company?: string | null
-          role?: string | null
-          rating?: number
-          content?: string
-          photo_url?: string | null
-          video_url?: string | null
-          service_type?: string | null
-          approved?: boolean
-          featured?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      testimonial_requests: {
-        Row: {
-          id: string
-          token: string
-          client_name: string
-          client_email: string | null
-          project_name: string | null
-          created_at: string
-          expires_at: string
-          submitted: boolean
-          submitted_at: string | null
-        }
-        Insert: {
-          id?: string
-          token: string
-          client_name: string
-          client_email?: string | null
-          project_name?: string | null
-          created_at?: string
-          expires_at: string
-          submitted?: boolean
-          submitted_at?: string | null
-        }
-        Update: {
-          id?: string
-          token?: string
-          client_name?: string
-          client_email?: string | null
-          project_name?: string | null
-          created_at?: string
-          expires_at?: string
-          submitted?: boolean
-          submitted_at?: string | null
+          payload?: Json
+          triggered_at?: string | null
         }
         Relationships: []
       }
@@ -2245,6 +2515,7 @@ export type Database = {
           }
       autoprewarm_dump_now: { Args: never; Returns: number }
       autoprewarm_start_worker: { Args: never; Returns: undefined }
+      cleanup_expired_ttl_calculations: { Args: never; Returns: number }
       col_is_null:
         | {
             Args: {
@@ -2435,6 +2706,7 @@ export type Database = {
         | { Args: { "": string }; Returns: string }
       findfuncs: { Args: { "": string }; Returns: string[] }
       finish: { Args: { exception_on_failure?: boolean }; Returns: string[] }
+      generate_share_code: { Args: never; Returns: string }
       geometry: { Args: { "": string }; Returns: unknown }
       geometry_above: {
         Args: { geom1: unknown; geom2: unknown }
@@ -2658,6 +2930,10 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      query_analytics: {
+        Args: { query_text: string; vars: Json }
+        Returns: Json
+      }
       range: { Args: never; Returns: string[] }
       runtests:
         | { Args: never; Returns: string[] }
@@ -5941,9 +6217,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },

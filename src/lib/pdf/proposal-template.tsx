@@ -10,6 +10,10 @@ import {
   View,
   StyleSheet,
 } from '@react-pdf/renderer';
+import type { ProposalPricingItem, ProposalMilestone, ProposalData } from '@/types/pdf-templates';
+
+// Re-export types for convenience
+export type { ProposalPricingItem, ProposalMilestone, ProposalData };
 
 const styles = StyleSheet.create({
   page: {
@@ -263,48 +267,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export interface ProposalPricingItem {
-  id: string;
-  description: string;
-  price: number;
-}
-
-export interface ProposalMilestone {
-  id: string;
-  phase: string;
-  description: string;
-  duration: string;
-}
-
-export interface ProposalData {
-  // Company Info
-  companyName: string;
-  companyAddress: string;
-  companyCity: string;
-  companyState: string;
-  companyZip: string;
-  companyEmail: string;
-  companyPhone: string;
-  companyDescription: string;
-  // Client Info
-  clientName: string;
-  clientCompany: string;
-  clientEmail: string;
-  // Project Info
-  projectName: string;
-  projectDate: string;
-  validUntil: string;
-  // Content
-  overview: string;
-  scopeItems: string[];
-  milestones: ProposalMilestone[];
-  pricingItems: ProposalPricingItem[];
-  total: number;
-  paymentTerms: string;
-  // Terms
-  terms: string;
-}
 
 interface ProposalDocumentProps {
   data: ProposalData;

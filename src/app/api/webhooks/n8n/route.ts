@@ -3,12 +3,27 @@
  * Receives automation triggers from n8n workflows
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
-import { scheduleEmail } from '@/lib/scheduled-emails';
 import { notifyHighValueLead } from '@/lib/notifications';
+import { scheduleEmail } from '@/lib/scheduled-emails';
+import type { Database } from '@/types/database';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+function createServiceClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are missing');
+    return null;
+  }
+
+  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 const logger = createServerLogger('n8n-webhook');
 
@@ -127,7 +142,9 @@ async function handleNewLead(body: unknown) {
 
     const { data } = validation.data;
 
-    if (!supabaseAdmin) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
@@ -135,7 +152,7 @@ async function handleNewLead(body: unknown) {
     }
 
     // Store lead in database
-    const { data: lead, error: dbError } = await supabaseAdmin
+    const { data: lead, error: dbError } = await supabase
       .from('calculator_leads')
       .insert({
         email: data.email,
@@ -260,14 +277,16 @@ async function handleUpdateLead(body: unknown) {
 
     const { data } = validation.data;
 
-    if (!supabaseAdmin) {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
       return NextResponse.json(
         { error: 'Database not configured' },
         { status: 500 }
       );
     }
 
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await supabase
       .from('calculator_leads')
       .update(data.updates)
       .eq('id', data.leadId);

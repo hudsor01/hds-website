@@ -4,14 +4,11 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
 ## Features
 
-- **Next.js 15** with App Router
+- **Next.js 16** with App Router
 - **Tailwind CSS** for styling
 - **Dark Mode** with system preference detection
 - **Contact Form** with Resend email integration
-- **Ghost CMS** blog integration
-- **Cal.com** scheduling widget
 - **SEO Optimized** with dynamic sitemaps and schema markup
-- **Google Analytics 4** with conversion tracking
 - **Lead Nurturing** automated email sequences
 - **Performance Optimized** for Core Web Vitals
 
@@ -35,8 +32,6 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
    Then edit `.env.local` with your actual values. At minimum, you need:
    - `RESEND_API_KEY` - for contact form emails
-   - `GHOST_API_URL` and `GHOST_CONTENT_API_KEY` - for blog (optional)
-   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` - for analytics (optional)
 
    See `.env.example` for all available options.
 
@@ -105,7 +100,6 @@ The `vercel.json` file includes:
 - Open Graph meta tags
 - Twitter Cards
 - Dynamic keyword generation
-- Google Analytics integration
 
 ## Development
 
@@ -166,23 +160,13 @@ See `.env.example` for a complete list with detailed instructions.
 - `RESEND_API_KEY` - Email service for contact form
 
 **Optional:**
-- `GHOST_API_URL` - Your Ghost CMS instance URL
-- `GHOST_CONTENT_API_KEY` - Ghost Content API key
-- `NEXT_PUBLIC_GA_MEASUREMENT_ID` - Google Analytics 4
-- `NEXT_PUBLIC_POSTHOG_KEY` - PostHog analytics
-- `GOOGLE_SITE_VERIFICATION` - Google Search Console
 - `CSRF_SECRET` - CSRF protection
 - `CRON_SECRET` - Scheduled task authentication
 
 Run `cp .env.example .env.local` to get started.
 
 ## Analytics & Monitoring
-
-The website includes comprehensive analytics and performance monitoring:
-
-### Analytics Platforms
-- **Google Analytics 4**: Page views, conversions, user behavior
-- **PostHog**: Product analytics, feature flags, session recordings
+The website includes comprehensive analytics and performance monitoring
 - **Vercel Analytics**: Core Web Vitals, speed insights, performance metrics
 
 ### Tracked Events

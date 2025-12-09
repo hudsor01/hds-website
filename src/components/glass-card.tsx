@@ -18,9 +18,9 @@ const variantStyles = {
 
 const paddingStyles = {
   none: "",
-  sm: "p-4",
-  md: "p-6",
-  lg: "p-8",
+  sm: "card-padding-sm",
+  md: "card-padding",
+  lg: "card-padding-lg",
   xl: "p-12 md:p-16"
 } as const
 

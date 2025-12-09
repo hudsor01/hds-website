@@ -3,11 +3,11 @@
  * Tailored for real estate companies and property management
  */
 
-import { Button } from '@/components/ui/Button'
-import Link from 'next/link'
-import { ArrowRight, Home, TrendingUp, Users, MapPin, Smartphone, Search } from 'lucide-react';
-import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Home, MapPin, Search, Smartphone, TrendingUp, Users } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Real Estate Software Development | Lead Management & Property Listings',
@@ -17,23 +17,23 @@ export const metadata: Metadata = {
 
 export default function RealEstatePage() {
   return (
-    <main className="min-h-screen bg-cyan-600/10">
+    <main className="min-h-screen bg-primary/10">
       {/* Hero */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
-          <div className="inline-block mb-4 px-4 py-2 bg-cyan-900/30 border border-cyan-500/30 rounded-full">
-            <span className="text-cyan-400 font-semibold text-sm">Built for Real Estate Professionals</span>
+          <div className="inline-block mb-heading px-4 py-2 bg-primary-hover/30 border border-primary/30 rounded-full">
+            <span className="text-accent font-semibold text-sm">Built for Real Estate Professionals</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Close More Deals With <span className="text-cyan-400">Modern Technology</span>
+          <h1 className="text-4xl md:text-6xl font-black text-primary-foreground mb-content-block">
+            Close More Deals With <span className="text-accent">Modern Technology</span>
           </h1>
 
-          <p className="text-xl text-muted mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted mb-comfortable max-w-3xl mx-auto">
             Your buyers are online. Your listings deserve better than outdated platforms. We build real estate technology that converts leads into closed deals.
           </p>
 
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-content">
             <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         Get Free Platform Audit
@@ -51,13 +51,13 @@ export default function RealEstatePage() {
       </section>
 
       {/* Real Estate Pain Points */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Real Estate Technology Challenges We Solve
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-sections">
             {[
               {
                 icon: Search,
@@ -78,11 +78,11 @@ export default function RealEstatePage() {
                 solution: 'Real-time MLS integration. Automated updates. IDX/RETS compliance. Always current listings.',
               },
             ].map((item, i) => (
-              <div key={i} className="glass-card p-6">
-                <item.icon className="w-12 h-12 text-cyan-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-red-400 mb-2 font-semibold">Problem: {item.problem}</p>
-                <p className="text-green-400">Solution: {item.solution}</p>
+              <div key={i} className="glass-card card-padding">
+                <item.icon className="w-12 h-12 text-accent mb-heading" />
+                <h3 className="text-xl font-bold text-primary-foreground mb-3">{item.title}</h3>
+                <p className="text-destructive-text mb-subheading font-semibold">Problem: {item.problem}</p>
+                <p className="text-success-text">Solution: {item.solution}</p>
               </div>
             ))}
           </div>
@@ -90,22 +90,22 @@ export default function RealEstatePage() {
       </section>
 
       {/* Real Estate Metrics */}
-      <section className="py-16 px-4 bg-muted/50">
+      <section className="py-section-sm px-4 bg-muted/50">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Results That Close More Deals
           </h2>
 
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-comfortable">
             {[
               { metric: '50%', label: 'Faster Deal Closing', icon: TrendingUp },
               { metric: '80%', label: 'Higher Buyer Engagement', icon: Users },
               { metric: '3x', label: 'More Qualified Leads', icon: Home },
               { metric: '65%', label: 'Mobile Traffic Increase', icon: Smartphone },
             ].map((stat, i) => (
-              <div key={i} className="text-center glass-card p-6">
-                <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3" />
-                <div className="text-4xl font-black text-cyan-400 mb-2">{stat.metric}</div>
+              <div key={i} className="text-center glass-card card-padding">
+                <stat.icon className="w-10 h-10 text-accent mx-auto mb-3" />
+                <div className="text-4xl font-black text-accent mb-subheading">{stat.metric}</div>
                 <div className="text-muted">{stat.label}</div>
               </div>
             ))}
@@ -114,13 +114,13 @@ export default function RealEstatePage() {
       </section>
 
       {/* Technical Capabilities */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <h2 className="text-3xl font-bold text-primary-foreground text-center mb-12">
             Real Estate-Specific Technical Expertise
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-sections max-w-4xl mx-auto">
             {[
               'MLS/IDX integration (RETS & Web API)',
               'Advanced property search & filtering',
@@ -132,8 +132,8 @@ export default function RealEstatePage() {
               'Mobile apps for iOS & Android',
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm">✓</span>
+                <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
+                  <span className="text-primary-foreground text-sm">✓</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>
@@ -143,7 +143,7 @@ export default function RealEstatePage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 px-4">
+      <section className="py-section-sm px-4">
         <div className="container-wide max-w-4xl mx-auto">
           <NewsletterSignup
             variant="sidebar"
@@ -154,13 +154,13 @@ export default function RealEstatePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4">
+      <section className="py-section px-4">
         <div className="container-wide text-center">
           <div className="glass-section p-12">
-            <h2 className="text-4xl font-black text-white mb-6">
+            <h2 className="text-4xl font-black text-primary-foreground mb-content-block">
               Ready to Close More Deals?
             </h2>
-            <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
               Get a free platform audit showing exactly how to increase lead conversions and close deals faster.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>

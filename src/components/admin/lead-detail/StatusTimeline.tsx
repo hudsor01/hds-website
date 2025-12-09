@@ -5,11 +5,11 @@ interface StatusTimelineProps {
 }
 
 function TimelineItem({ color, label, date }: { color: 'green' | 'blue'; label: string; date: string }) {
-  const bgColor = color === 'green' ? 'bg-green-100 dark:bg-green-900' : 'bg-blue-100 dark:bg-blue-900';
-  const dotColor = color === 'green' ? 'bg-green-600' : 'bg-blue-600';
+  const bgColor = color === 'green' ? 'bg-success-muted dark:bg-success-bg-dark' : 'bg-info-muted dark:bg-info-bg-dark';
+  const dotColor = color === 'green' ? 'bg-success-dark' : 'bg-info-dark';
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-content">
       <div className={`flex h-8 w-8 items-center justify-center rounded-full ${bgColor}`}>
         <div className={`h-3 w-3 rounded-full ${dotColor}`} />
       </div>
@@ -25,7 +25,7 @@ export function StatusTimeline({ lead }: StatusTimelineProps) {
   if (!lead.contacted && !lead.converted) {return null;}
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-content">
       <h3 className="text-lg font-semibold">Status Timeline</h3>
       <div className="space-y-3">
         <TimelineItem color="green" label="Lead Created" date={lead.created_at} />
