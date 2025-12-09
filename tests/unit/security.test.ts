@@ -1,54 +1,22 @@
 /**
  * Security Utilities Tests
  * Tests for CSRF token handling, rate limiting, and admin authentication
+ *
+ * NOTE: This file relies on the env mock from tests/setup.ts preload.
+ * Do NOT add file-level mock.module() calls here as they can conflict
+ * with the preload mocks and cause import failures in CI.
  */
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test';
 
-// Mock environment variables - must include all env vars used by rate-limiter and logger
-mock.module('@/env', () => ({
-  env: {
-    NODE_ENV: 'test',
-    CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
-    KV_REST_API_URL: undefined,
-    KV_REST_API_TOKEN: undefined,
-    RESEND_API_KEY: 'test-resend-key',
-    NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
-    npm_package_version: '1.0.0',
-    BASE_URL: 'http://localhost:3000',
-    NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
-    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'test-anon-key',
-  },
-}));
-
-// Mock logger to avoid initialization issues
-mock.module('@/lib/logger', () => ({
-  logger: {
-    info: mock(),
-    warn: mock(),
-    error: mock(),
-    debug: mock(),
-    setContext: mock(),
-  },
-  createServerLogger: () => ({
-    info: mock(),
-    warn: mock(),
-    error: mock(),
-    debug: mock(),
-    setContext: mock(),
-  }),
-  castError: (error: unknown) => error instanceof Error ? error : new Error(String(error)),
-}));
+// Import types for use in tests (type-only imports don't load modules)
+import type * as CsrfTypes from '@/lib/csrf';
+import type * as RateLimiterTypes from '@/lib/rate-limiter';
+import type { NextRequest } from 'next/server';
 
 // ================================
 // CSRF Token Tests
 // ================================
-
-// Import types for use in tests
-import type * as CsrfTypes from '@/lib/csrf';
-import type * as RateLimiterTypes from '@/lib/rate-limiter';
-import type { NextRequest } from 'next/server';
 
 describe('CSRF Token Utilities', () => {
   let csrfModule: typeof CsrfTypes;
