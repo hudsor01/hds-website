@@ -6,10 +6,10 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
-import { logger } from '@/lib/logger';
 import {
   MessageSquare,
   Plus,
@@ -136,7 +136,8 @@ export default function TestimonialCollectorPage() {
         body: JSON.stringify({ approved }),
       });
       fetchData();
-    } catch {
+    } catch (error) {
+      logger.error('Failed to update testimonial approval', { error, id, approved });
       setError('Failed to update testimonial');
     }
   };
@@ -149,7 +150,8 @@ export default function TestimonialCollectorPage() {
         body: JSON.stringify({ featured }),
       });
       fetchData();
-    } catch {
+    } catch (error) {
+      logger.error('Failed to update testimonial featured status', { error, id, featured });
       setError('Failed to update testimonial');
     }
   };
@@ -164,7 +166,8 @@ export default function TestimonialCollectorPage() {
 
       await fetch(endpoint, { method: 'DELETE' });
       fetchData();
-    } catch {
+    } catch (error) {
+      logger.error('Failed to delete testimonial', { error, id, type });
       setError('Failed to delete');
     }
   };
