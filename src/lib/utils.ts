@@ -110,10 +110,18 @@ export function formatCurrency(amount: number): string {
 export function formatDate(date: Date | string, format: 'short' | 'long' = 'short'): string {
   const dateObj = new Date(date);
 
-  const options: Intl.DateTimeFormatOptions = {
-    'short': { year: 'numeric', month: 'short', day: 'numeric' },
-    'long': { year: 'numeric', month: 'long', day: 'numeric' }
-  }[format];
+  let options: Intl.DateTimeFormatOptions;
+
+  switch (format) {
+    case 'short':
+      options = { year: 'numeric', month: 'short', day: 'numeric' };
+      break;
+    case 'long':
+      options = { year: 'numeric', month: 'long', day: 'numeric' };
+      break;
+    default:
+      options = { year: 'numeric', month: 'short', day: 'numeric' };
+  }
 
   return dateObj.toLocaleDateString('en-US', options);
 }
