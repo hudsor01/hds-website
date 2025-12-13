@@ -12,7 +12,7 @@ import {
   Zap
 } from 'lucide-react';
 import Link from 'next/link';
-import { NewsletterSignupDynamic as NewsletterSignup } from '@/components/forms/NewsletterSignupDynamic';
+import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
 
 export default function HomePage() {
   const solutions = [
@@ -436,6 +436,7 @@ export default function HomePage() {
       <section className="py-section-sm px-4">
         <div className="container-wide max-w-4xl mx-auto">
           <NewsletterSignup
+            dynamic
             variant="inline"
             title="Join 500+ Tech Leaders"
             description="Get weekly insights on scaling engineering teams, technical leadership, and development efficiency. No spam, unsubscribe anytime."
