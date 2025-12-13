@@ -7,7 +7,7 @@ import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/blog";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
-import { formatDateLong } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
