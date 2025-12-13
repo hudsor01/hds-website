@@ -19,7 +19,7 @@ export const PayStubYearToDate: React.FC<PayStubYearToDateProps> = ({
   return (
     <div className="border-t border-black pt-4">
       <h3 className="m-0 mb-subheading.5 text-sm">YEAR-TO-DATE TOTALS</h3>
-      <div className="grid grid-cols-[1fr_auto] gap-tight.5 text-[11px]">
+      <div className="grid grid-cols-[(1fr_auto)] gap-tight.5 text-(11px)">
         <div>Gross Earnings:</div>
         <div className="text-right">{formatCurrency(grossPay)}</div>
         <div>Federal Income Tax:</div>

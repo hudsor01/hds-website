@@ -119,7 +119,7 @@ export default function WebsiteChecklistPage() {
       {/* Hero Section */}
       <section className="relative bg-background section-spacing overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-(radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%))"></div>
         </div>
 
         <div className="relative max-w-4xl mx-auto text-center px-6 sm:px-8 lg:px-12">

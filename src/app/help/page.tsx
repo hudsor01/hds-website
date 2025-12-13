@@ -37,12 +37,12 @@ export default async function HelpCenterPage() {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Hero Section */}
-      <div className="bg-[var(--primary)] text-[var(--primary-foreground)]">
-        <div className="container-narrow py-section-sm md:py-section text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-heading">
+      <div className="bg-(--primary) text-(--primary-foreground)">
+        <div className="container-narrow py-16 md:py-24 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             How can we help you?
           </h1>
-          <p className="text-lg opacity-90 mb-comfortable max-w-2xl mx-auto">
+          <p className="text-lg opacity-90 mb-6 max-w-2xl mx-auto">
             Find answers to common questions, learn how to use our tools, and get the support you need.
           </p>
 
@@ -59,26 +59,26 @@ export default async function HelpCenterPage() {
       </div>
 
       {/* Categories Grid */}
-      <div className="container-narrow py-12 md:py-section-sm">
-        <h2 className="text-2xl font-bold text-foreground mb-comfortable text-center">
+      <div className="container-narrow py-12 md:py-16">
+        <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
           Browse by Category
         </h2>
 
-        <div className="grid gap-comfortable md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
             <Link
               key={category.slug}
               href={`/help/${category.slug}`}
               className="group"
             >
-              <Card className="h-full hover:border-[var(--primary)] hover:shadow-lg transition-all">
-                <CardContent className="card-padding">
-                  <div className="flex items-start gap-content">
-                    <div className="size-12 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] shrink-0">
+              <Card className="h-full hover:border-(--primary) hover:shadow-lg transition-all">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="size-12 rounded-lg bg-(--primary)/10 flex items-center justify-center text-(--primary) shrink-0">
                       {ICON_MAP[category.icon] || <HelpCircle className="size-6" />}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-foreground group-hover:text-[var(--primary)] transition-colors flex items-center gap-tight">
+                      <h3 className="font-semibold text-foreground group-hover:text-(--primary) transition-colors flex items-center gap-tight">
                         {category.name}
                         <ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                       </h3>
@@ -100,16 +100,16 @@ export default async function HelpCenterPage() {
       {/* Contact Section */}
       <div className="container-narrow pb-16">
         <Card>
-          <CardContent className="card-padding-lg text-center">
-            <h2 className="text-xl font-bold text-foreground mb-subheading">
+          <CardContent className="p-8 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">
               Can&apos;t find what you&apos;re looking for?
             </h2>
-            <p className="text-muted-foreground mb-content-block">
+            <p className="text-muted-foreground mb-12">
               Our team is here to help. Reach out and we&apos;ll get back to you within 24 hours.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-tight px-6 py-3 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-tight px-6 py-3 bg-(--primary) text-(--primary-foreground) rounded-lg font-semibold hover:opacity-90 transition-opacity"
             >
               Contact Support
               <ArrowRight className="size-4" />

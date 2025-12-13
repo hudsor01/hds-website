@@ -11,6 +11,7 @@ export function getFormOptions(type: keyof typeof formOptions) {
 
 /**
  * Get service options for dropdowns
+ * @deprecated Use getFormOptions('services') instead
  */
 export function getServiceOptions() {
   return formOptions.services
@@ -18,6 +19,7 @@ export function getServiceOptions() {
 
 /**
  * Get budget options for dropdowns
+ * @deprecated Use getFormOptions('budget') instead
  */
 export function getBudgetOptions() {
   return formOptions.budget
@@ -25,6 +27,7 @@ export function getBudgetOptions() {
 
 /**
  * Get timeline options for dropdowns
+ * @deprecated Use getFormOptions('timeline') instead
  */
 export function getTimelineOptions() {
   return formOptions.timeline
@@ -32,6 +35,7 @@ export function getTimelineOptions() {
 
 /**
  * Get contact time options for dropdowns
+ * @deprecated Use getFormOptions('contactTime') instead
  */
 export function getContactTimeOptions() {
   return formOptions.contactTime
