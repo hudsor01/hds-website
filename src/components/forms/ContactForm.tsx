@@ -6,7 +6,7 @@ import { FieldGroup } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
-import { getBudgetOptions, getContactTimeOptions, getServiceOptions, getTimelineOptions } from '@/lib/form-utils'
+import { getFormOptions } from '@/lib/form-utils'
 import { Check } from 'lucide-react'
 
 // Success state component
