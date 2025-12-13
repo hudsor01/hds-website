@@ -126,18 +126,4 @@ export function formatDate(date: Date | string, format: 'short' | 'long' = 'shor
   return dateObj.toLocaleDateString('en-US', options);
 }
 
-/**
- * Format date with proper locale (short format)
- * @deprecated Use formatDate(date, 'short') instead
- */
-export function formatDateShort(date: Date | string): string {
-  return formatDate(date, 'short');
-}
 
-/**
- * Format date with long format
- * @deprecated Use formatDate(date, 'long') instead
- */
-export function formatDateLong(date: Date | string): string {
-  return formatDate(date, 'long');
-}
