@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
  * Import this component instead of NewsletterSignup when you need client-only rendering.
  */
 export const NewsletterSignupDynamic = dynamic(
-  () => import('@/components/forms/NewsletterSignup').then(mod => mod.NewsletterSignup),
+  () => import('./NewsletterSignup').then(mod => mod.NewsletterSignup),
   {
     ssr: false,
     loading: () => (

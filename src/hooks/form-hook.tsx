@@ -23,7 +23,104 @@ import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 export { useFieldContext }
 
 // =============================================================================
-// Field Components
+// Generic Field Component
+// =============================================================================
+
+interface GenericFieldProps {
+  label: string
+  type: 'text' | 'email' | 'tel' | 'select' | 'textarea'
+  placeholder?: string
+  autoComplete?: string
+  options?: Array<{ value: string; label: string }>
+  rows?: number
+}
+
+function GenericField({
+  type,
+  label,
+  placeholder,
+  autoComplete,
+  options,
+  rows = 4
+}: GenericFieldProps) {
+  const field = useFieldContext<string>()
+
+  const renderField = () => {
+    switch(type) {
+      case 'email':
+        return (
+          <Input
+            type="email"
+            placeholder={placeholder}
+            autoComplete={autoComplete || "email"}
+            value={field.state.value ?? ''}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(e.target.value)}
+          />
+        );
+      case 'tel':
+        return (
+          <Input
+            type="tel"
+            placeholder={placeholder}
+            autoComplete={autoComplete || "tel"}
+            value={field.state.value ?? ''}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(e.target.value)}
+          />
+        );
+      case 'select':
+        return (
+          <Select
+            value={field.state.value ?? ''}
+            onValueChange={(value) => field.handleChange(value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      case 'textarea':
+        return (
+          <Textarea
+            placeholder={placeholder}
+            rows={rows}
+            value={field.state.value ?? ''}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(e.target.value)}
+          />
+        );
+      default: // text
+        return (
+          <Input
+            placeholder={placeholder}
+            autoComplete={autoComplete}
+            value={field.state.value ?? ''}
+            onBlur={field.handleBlur}
+            onChange={(e) => field.handleChange(e.target.value)}
+          />
+        );
+    }
+  };
+
+  return (
+    <Field>
+      <FieldLabel>{label}</FieldLabel>
+      {renderField()}
+      <FieldError errors={field.state.meta.errors} />
+    </Field>
+  );
+}
+
+// =============================================================================
+// Field Components (for backward compatibility)
 // =============================================================================
 
 interface TextFieldProps {
@@ -33,56 +130,34 @@ interface TextFieldProps {
 }
 
 function TextField({ label, placeholder, autoComplete }: TextFieldProps) {
-  const field = useFieldContext<string>()
   return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <Input
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        value={field.state.value ?? ''}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-      />
-      <FieldError errors={field.state.meta.errors} />
-    </Field>
-  )
+    <GenericField
+      type="text"
+      label={label}
+      placeholder={placeholder}
+      autoComplete={autoComplete}
+    />
+  );
 }
 
 function EmailField({ label, placeholder }: TextFieldProps) {
-  const field = useFieldContext<string>()
   return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <Input
-        type="email"
-        placeholder={placeholder}
-        autoComplete="email"
-        value={field.state.value ?? ''}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-      />
-      <FieldError errors={field.state.meta.errors} />
-    </Field>
-  )
+    <GenericField
+      type="email"
+      label={label}
+      placeholder={placeholder}
+    />
+  );
 }
 
 function PhoneField({ label, placeholder }: TextFieldProps) {
-  const field = useFieldContext<string>()
   return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <Input
-        type="tel"
-        placeholder={placeholder}
-        autoComplete="tel"
-        value={field.state.value ?? ''}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-      />
-      <FieldError errors={field.state.meta.errors} />
-    </Field>
-  )
+    <GenericField
+      type="tel"
+      label={label}
+      placeholder={placeholder}
+    />
+  );
 }
 
 interface SelectFieldProps {
@@ -92,28 +167,14 @@ interface SelectFieldProps {
 }
 
 function SelectField({ label, placeholder, options }: SelectFieldProps) {
-  const field = useFieldContext<string>()
   return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <Select
-        value={field.state.value ?? ''}
-        onValueChange={(value) => field.handleChange(value)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <FieldError errors={field.state.meta.errors} />
-    </Field>
-  )
+    <GenericField
+      type="select"
+      label={label}
+      placeholder={placeholder}
+      options={options}
+    />
+  );
 }
 
 interface TextareaFieldProps {
@@ -123,20 +184,14 @@ interface TextareaFieldProps {
 }
 
 function TextareaField({ label, placeholder, rows = 4 }: TextareaFieldProps) {
-  const field = useFieldContext<string>()
   return (
-    <Field>
-      <FieldLabel>{label}</FieldLabel>
-      <Textarea
-        placeholder={placeholder}
-        rows={rows}
-        value={field.state.value ?? ''}
-        onBlur={field.handleBlur}
-        onChange={(e) => field.handleChange(e.target.value)}
-      />
-      <FieldError errors={field.state.meta.errors} />
-    </Field>
-  )
+    <GenericField
+      type="textarea"
+      label={label}
+      placeholder={placeholder}
+      rows={rows}
+    />
+  );
 }
 
 // =============================================================================
@@ -177,6 +232,7 @@ export const { useAppForm } = createFormHook({
     PhoneField,
     SelectField,
     TextareaField,
+    // We could add GenericField here in the future if needed
   },
   formComponents: {
     SubmitButton,

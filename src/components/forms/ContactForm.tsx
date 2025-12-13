@@ -37,10 +37,10 @@ export default function ContactForm({ className = '' }: { className?: string }) 
   const mutation = useContactFormSubmit()
   const [showSuccess, setShowSuccess] = useState(false)
 
-  const serviceOptions = useMemo(() => getServiceOptions(), [])
-  const budgetOptions = useMemo(() => getBudgetOptions(), [])
-  const timelineOptions = useMemo(() => getTimelineOptions(), [])
-  const contactTimeOptions = useMemo(() => getContactTimeOptions(), [])
+  const serviceOptions = useMemo(() => getFormOptions('services'), [])
+  const budgetOptions = useMemo(() => getFormOptions('budget'), [])
+  const timelineOptions = useMemo(() => getFormOptions('timeline'), [])
+  const contactTimeOptions = useMemo(() => getFormOptions('contactTime'), [])
 
   const form = useAppForm({
     defaultValues: {

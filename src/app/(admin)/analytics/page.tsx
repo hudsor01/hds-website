@@ -196,7 +196,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Time Range Selector and Export */}
-            <div className="flex items-center gap-content">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-tight">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <select
@@ -226,7 +226,7 @@ export default function AnalyticsDashboard() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Search and Filters Bar */}
         <div className="mb-content-block rounded-lg border border-border bg-card card-padding-sm dark:border-border dark:bg-muted">
-          <div className="flex flex-col gap-content sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
@@ -271,7 +271,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* Key Metrics */}
-        <div className="mb-comfortable grid gap-comfortable sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Total Leads"
             value={overview.totalLeads}
@@ -302,7 +302,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* Charts */}
-        <div className="mb-comfortable grid gap-comfortable lg:grid-cols-2">
+        <div className="mb-8 grid gap-6 lg:grid-cols-2">
           <SimpleBarChart
             title="Leads by Calculator Type"
             data={calculatorData}
@@ -323,12 +323,12 @@ export default function AnalyticsDashboard() {
 
         {/* Trend Charts */}
         {trends && (
-          <div className="mb-comfortable space-y-comfortable">
+          <div className="mb-8 space-y-6">
             <h2 className="text-xl font-semibold text-foreground dark:text-foreground">
               Trends Over Time
             </h2>
 
-            <div className="grid gap-comfortable lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
               <TrendLineChart
                 title="Daily Leads"
                 datasets={[{ label: 'Daily Leads', data: trends.dailyData.map(d => ({ date: d.date, value: d.leads })), color: '#06b6d4' }]}
@@ -340,7 +340,7 @@ export default function AnalyticsDashboard() {
               />
             </div>
 
-            <div className="grid gap-comfortable lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
               <TrendLineChart
                 title="Cumulative Leads Growth"
                 datasets={[{ label: 'Cumulative Leads Growth', data: trends.cumulativeLeads, color: '#8b5cf6' }]}

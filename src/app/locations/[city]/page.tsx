@@ -65,33 +65,33 @@ export default async function LocationPage({ params }: PageProps) {
 
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-[var(--primary)] text-[var(--primary-foreground)] py-section md:py-28">
+        <section className="bg-(--primary) text-(--primary-foreground) py-section md:py-28">
           <div className="container-wide text-center">
-            <Badge variant="secondary" className="mb-heading bg-[var(--primary-foreground)]/10 text-[var(--primary-foreground)] border-0">
+            <Badge variant="secondary" className="mb-heading bg-(--primary-foreground)/10 text-(--primary-foreground) border-0">
               <MapPin className="size-4 mr-1" />
               {location.city}, {location.stateCode}
             </Badge>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-content-block">
               Web Development & Digital Solutions in{' '}
-              <span className="text-[var(--accent)]">{location.city}</span>
+              <span className="text-(--accent)">{location.city}</span>
             </h1>
 
-            <p className="text-xl text-[var(--primary-foreground)]/90 mb-comfortable max-w-3xl mx-auto">
+            <p className="text-xl text-(--primary-foreground)/90 mb-comfortable max-w-3xl mx-auto">
               {location.description}
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-content">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-tight px-6 py-3 bg-[var(--primary-foreground)] text-[var(--primary)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+                className="inline-flex items-center justify-center gap-tight px-6 py-3 bg-(--primary-foreground) text-(--primary) rounded-lg font-semibold hover:opacity-90 transition-opacity"
               >
                 Schedule Free Consultation
                 <ArrowRight className="size-4" />
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center gap-tight px-6 py-3 bg-transparent border-2 border-[var(--primary-foreground)]/30 text-[var(--primary-foreground)] rounded-lg font-semibold hover:bg-[var(--primary-foreground)]/10 transition-colors"
+                className="inline-flex items-center justify-center gap-tight px-6 py-3 bg-transparent border-2 border-(--primary-foreground)/30 text-(--primary-foreground) rounded-lg font-semibold hover:bg-(--primary-foreground)/10 transition-colors"
               >
                 View Our Services
               </Link>
@@ -104,7 +104,7 @@ export default async function LocationPage({ params }: PageProps) {
           <div className="container-wide">
             <div className="grid grid-cols-3 gap-sections max-w-2xl mx-auto text-center">
               <div>
-                <p className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                <p className="text-3xl md:text-4xl font-bold text-(--primary)">
                   {location.stats.businesses}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -112,7 +112,7 @@ export default async function LocationPage({ params }: PageProps) {
                 </p>
               </div>
               <div>
-                <p className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                <p className="text-3xl md:text-4xl font-bold text-(--primary)">
                   {location.stats.projects}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -120,7 +120,7 @@ export default async function LocationPage({ params }: PageProps) {
                 </p>
               </div>
               <div>
-                <p className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                <p className="text-3xl md:text-4xl font-bold text-(--primary)">
                   {location.stats.satisfaction}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -145,9 +145,9 @@ export default async function LocationPage({ params }: PageProps) {
 
             <div className="grid md:grid-cols-3 gap-comfortable max-w-5xl mx-auto">
               {location.features.map((feature, index) => (
-                <Card key={index} className="hover:border-[var(--primary)] transition-colors">
+                <Card key={index} className="hover:border-(--primary) transition-colors">
                   <CardHeader>
-                    <div className="size-12 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] mb-heading">
+                    <div className="size-12 rounded-lg bg-(--primary)/10 flex items-center justify-center text-(--primary) mb-heading">
                       <Building2 className="size-6" />
                     </div>
                     <CardTitle className="text-xl">{feature.title}</CardTitle>
@@ -175,9 +175,9 @@ export default async function LocationPage({ params }: PageProps) {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-content max-w-4xl mx-auto">
               {location.neighborhoods.map((area) => (
-                <Card key={area} className="text-center hover:border-[var(--primary)] transition-colors">
+                <Card key={area} className="text-center hover:border-(--primary) transition-colors">
                   <CardContent className="card-padding-sm">
-                    <MapPin className="size-5 text-[var(--primary)] mx-auto mb-subheading" />
+                    <MapPin className="size-5 text-(--primary) mx-auto mb-subheading" />
                     <span className="font-medium text-foreground text-sm">{area}</span>
                   </CardContent>
                 </Card>
@@ -216,8 +216,8 @@ export default async function LocationPage({ params }: PageProps) {
                   },
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-content">
-                    <div className="size-8 rounded-full bg-[var(--primary)]/10 flex items-center justify-center shrink-0">
-                      <CheckCircle className="size-5 text-[var(--primary)]" />
+                    <div className="size-8 rounded-full bg-(--primary)/10 flex items-center justify-center shrink-0">
+                      <CheckCircle className="size-5 text-(--primary)" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>
@@ -231,7 +231,7 @@ export default async function LocationPage({ params }: PageProps) {
         </section>
 
         {/* CTA Section */}
-        <section className="py-section md:py-28 bg-[var(--primary)] text-[var(--primary-foreground)]">
+        <section className="py-section md:py-28 bg-(--primary) text-(--primary-foreground)">
           <div className="container-wide text-center">
             <Users className="size-12 mx-auto mb-content-block opacity-80" />
             <h2 className="text-3xl md:text-4xl font-bold mb-heading">
@@ -242,7 +242,7 @@ export default async function LocationPage({ params }: PageProps) {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-tight px-8 py-4 bg-[var(--primary-foreground)] text-[var(--primary)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-tight px-8 py-4 bg-(--primary-foreground) text-(--primary) rounded-lg font-semibold hover:opacity-90 transition-opacity"
             >
               Get Started Today
               <ArrowRight className="size-5" />
