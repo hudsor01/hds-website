@@ -1,5 +1,6 @@
 'use client'
 
+import { lazy, Suspense } from 'react'
 import { useAppForm } from '@/hooks/form-hook'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +13,7 @@ interface NewsletterSignupProps {
   variant?: 'inline' | 'sidebar' | 'modal'
   title?: string
   description?: string
+  dynamic?: boolean
 }
 
 const variantStyles = {
@@ -20,11 +22,12 @@ const variantStyles = {
   modal: 'rounded-lg bg-card card-padding-lg shadow-xl dark:bg-muted',
 } as const
 
-export function NewsletterSignup({
+// Internal implementation
+function NewsletterSignupContent({
   variant = 'inline',
   title = 'Get Expert Insights',
   description = 'Join 500+ tech leaders receiving our weekly newsletter on scaling engineering teams.',
-}: NewsletterSignupProps) {
+}: Omit<NewsletterSignupProps, 'dynamic'>) {
   const mutation = useNewsletterSubscription()
 
   const form = useAppForm({
@@ -141,4 +144,28 @@ export function NewsletterSignup({
       </div>
     </div>
   )
+}
+
+// Lazy-loaded version for dynamic imports
+const LazyNewsletterSignup = lazy(() =>
+  Promise.resolve({ default: NewsletterSignupContent })
+)
+
+// Public API with optional dynamic loading
+export function NewsletterSignup({ dynamic, ...props }: NewsletterSignupProps) {
+  if (dynamic) {
+    return (
+      <Suspense
+        fallback={
+          <div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
+            Loading newsletter form...
+          </div>
+        }
+      >
+        <LazyNewsletterSignup {...props} />
+      </Suspense>
+    )
+  }
+
+  return <NewsletterSignupContent {...props} />
 }
