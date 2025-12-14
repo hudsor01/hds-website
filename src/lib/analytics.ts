@@ -5,6 +5,7 @@
  */
 
 import { track as vercelTrack } from '@vercel/analytics';
+import { logger } from '@/lib/logger';
 import type {
     EventProperties,
     PageViewProperties,
@@ -37,7 +38,7 @@ class AnalyticsManager {
     try {
       vercelTrack(eventName, properties);
     } catch (error) {
-      console.warn('Failed to track event:', error);
+      logger.warn('Failed to track event:', error);
     }
   }
 
@@ -52,7 +53,7 @@ class AnalyticsManager {
     try {
       vercelTrack('page_view', properties as Record<string, AnalyticsValue>);
     } catch (error) {
-      console.warn('Failed to track page view:', error);
+      logger.warn('Failed to track page view:', error);
     }
   }
 
@@ -69,7 +70,7 @@ class AnalyticsManager {
       // We can track it as an event instead
       vercelTrack('user_identified', { userId, ...properties });
     } catch (error) {
-      console.warn('Failed to identify user:', error);
+      logger.warn('Failed to identify user:', error);
     }
   }
 
@@ -94,7 +95,7 @@ class AnalyticsManager {
         ...properties
       });
     } catch (error) {
-      console.warn('Failed to track conversion:', error);
+      logger.warn('Failed to track conversion:', error);
     }
   }
 
@@ -119,7 +120,7 @@ class AnalyticsManager {
         label
       });
     } catch (error) {
-      console.warn('Failed to track timing:', error);
+      logger.warn('Failed to track timing:', error);
     }
   }
 
@@ -141,7 +142,7 @@ class AnalyticsManager {
         fatal
       });
     } catch (err) {
-      console.warn('Failed to track error:', err);
+      logger.warn('Failed to track error:', err);
     }
   }
 
@@ -164,7 +165,7 @@ class AnalyticsManager {
         fieldName
       });
     } catch (error) {
-      console.warn('Failed to track form interaction:', error);
+      logger.warn('Failed to track form interaction:', error);
     }
   }
 
@@ -187,7 +188,7 @@ class AnalyticsManager {
         destination
       });
     } catch (error) {
-      console.warn('Failed to track CTA click:', error);
+      logger.warn('Failed to track CTA click:', error);
     }
   }
 
@@ -202,7 +203,7 @@ class AnalyticsManager {
     try {
       vercelTrack('scroll_depth', { percentage });
     } catch (error) {
-      console.warn('Failed to track scroll depth:', error);
+      logger.warn('Failed to track scroll depth:', error);
     }
   }
 
@@ -217,7 +218,7 @@ class AnalyticsManager {
     try {
       vercelTrack('time_on_page', { seconds });
     } catch (error) {
-      console.warn('Failed to track time on page:', error);
+      logger.warn('Failed to track time on page:', error);
     }
   }
 

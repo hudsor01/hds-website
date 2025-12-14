@@ -49,7 +49,7 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
       <PayStubSaveButton onSave={handleSaveAsPDF} />
 
       <div className={cn(
-        "max-w-[8.5in] min-h-[11in] mx-auto bg-card p-24",
+        "max-w-(8.5in) min-h-(11in) mx-auto bg-card p-24",
         "font-sans text-black border border-border"
       )}>
         <PayStubHeader

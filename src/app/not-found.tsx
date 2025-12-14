@@ -29,13 +29,13 @@ export default function NotFound() {
           <h2 className="text-responsive-lg font-black text-foreground mb-heading">
             Page Not Found
           </h2>
-          <p className="text-xl text-secondary-foreground mb-comfortable leading-relaxed">
+          <p className="text-xl text-secondary-foreground mb-8 leading-relaxed">
             The page you&apos;re looking for has vanished into the digital void.
             But don&apos;t worry—our navigation system is still operational.
           </p>
         </div>
         {/* Action Buttons */}
-        <div className="flex flex-wrap justify-center gap-comfortable mb-comfortable">
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
           <Link href="/" passHref>
             <button
               type="button"
@@ -60,7 +60,7 @@ export default function NotFound() {
         {/* Quick Links */}
         <div className="mt-16">
           <h3 className="text-lg font-semibold text-muted-foreground mb-content-block">Or explore these sections:</h3>
-          <div className="flex flex-wrap justify-center gap-content">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link href="/services" passHref>
               <button
                 type="button"

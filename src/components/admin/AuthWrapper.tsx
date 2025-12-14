@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createClient } from '@/lib/supabase/client'
+import { logger } from '@/lib/logger'
 
 interface AuthWrapperProps {
   children: ReactNode
@@ -84,7 +85,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         setError(signInError.message)
         setPassword('')
       }
-    } catch {
+    } catch (error) {
+      logger.error('Authentication failed', { error });
       setError('An unexpected error occurred')
     } finally {
       setIsSubmitting(false)

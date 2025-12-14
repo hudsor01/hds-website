@@ -166,9 +166,9 @@ export default function ToolsPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-[var(--primary)] text-[var(--primary-foreground)] py-section-sm md:py-section">
+      <section className="bg-(--primary) text-(--primary-foreground) py-section-sm md:py-section">
         <div className="container-wide text-center">
-          <Badge variant="secondary" className="mb-heading bg-[var(--primary-foreground)]/10 text-[var(--primary-foreground)] border-0">
+          <Badge variant="secondary" className="mb-heading bg-(--primary-foreground)/10 text-(--primary-foreground) border-0">
             <Sparkles className="size-4 mr-1" />
             Free Business Tools
           </Badge>
@@ -177,7 +177,7 @@ export default function ToolsPage() {
             Tools to Grow Your Business
           </h1>
 
-          <p className="text-xl text-[var(--primary-foreground)]/90 max-w-3xl mx-auto">
+          <p className="text-xl text-(--primary-foreground)/90 max-w-3xl mx-auto">
             Free calculators, generators, and utilities to help you make smarter business decisions. No signup required.
           </p>
         </div>
@@ -203,20 +203,20 @@ export default function ToolsPage() {
                   const Icon = tool.icon;
                   return (
                     <Link key={tool.href} href={tool.href} className="group">
-                      <Card className="h-full hover:border-[var(--primary)] hover:shadow-lg transition-all">
+                      <Card className="h-full hover:border-(--primary) hover:shadow-lg transition-all">
                         <CardContent className="card-padding">
                           <div className="flex items-start justify-between mb-heading">
-                            <div className="size-12 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)]">
+                            <div className="size-12 rounded-lg bg-(--primary)/10 flex items-center justify-center text-(--primary)">
                               <Icon className="size-6" />
                             </div>
                             {tool.isNew && (
-                              <Badge className="bg-[var(--primary)] text-[var(--primary-foreground)]">
+                              <Badge className="bg-(--primary) text-(--primary-foreground)">
                                 New
                               </Badge>
                             )}
                           </div>
 
-                          <h3 className="text-lg font-semibold text-foreground mb-subheading group-hover:text-[var(--primary)] transition-colors">
+                          <h3 className="text-lg font-semibold text-foreground mb-subheading group-hover:text-(--primary) transition-colors">
                             {tool.name}
                           </h3>
 
@@ -224,7 +224,7 @@ export default function ToolsPage() {
                             {tool.description}
                           </p>
 
-                          <span className="inline-flex items-center gap-tight text-[var(--primary)] font-medium text-sm">
+                          <span className="inline-flex items-center gap-tight text-(--primary) font-medium text-sm">
                             Use tool
                             <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                           </span>
@@ -250,7 +250,7 @@ export default function ToolsPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-tight px-6 py-3 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-tight px-6 py-3 bg-(--primary) text-(--primary-foreground) rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Get a Custom Quote
             <ArrowRight className="size-5" />

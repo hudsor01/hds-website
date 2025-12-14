@@ -36,7 +36,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
     setMobileMenuOpen(false);
   }, []);
 
-  const spacingClass = variant === 'light' ? 'gap-[0.125rem]' : 'gap-sections';
+  const spacingClass = variant === 'light' ? 'gap-(0.125rem)' : 'gap-sections';
 
   return (
     <nav

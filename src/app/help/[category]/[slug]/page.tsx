@@ -137,7 +137,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
                     const isInternal = href?.startsWith('/');
                     if (isInternal && href) {
                       return (
-                        <Link href={href} className="text-[var(--primary)] hover:underline">
+                        <Link href={href} className="text-(--primary) hover:underline">
                           {children}
                         </Link>
                       );
@@ -147,7 +147,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
                         href={href ?? '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--primary)] hover:underline"
+                        className="text-(--primary) hover:underline"
                       >
                         {children}
                       </a>
@@ -224,13 +224,13 @@ export default async function HelpArticlePage({ params }: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-content mt-content-block">
             {prev ? (
               <Link href={`/help/${category}/${prev.slug}`} className="group">
-                <Card className="h-full hover:border-[var(--primary)] transition-colors">
+                <Card className="h-full hover:border-(--primary) transition-colors">
                   <CardContent className="card-padding-sm">
                     <div className="flex items-center gap-tight text-sm text-muted-foreground mb-1">
                       <ChevronLeft className="size-4" />
                       Previous
                     </div>
-                    <p className="font-medium text-foreground group-hover:text-[var(--primary)] transition-colors">
+                    <p className="font-medium text-foreground group-hover:text-(--primary) transition-colors">
                       {prev.title}
                     </p>
                   </CardContent>
@@ -241,13 +241,13 @@ export default async function HelpArticlePage({ params }: PageProps) {
             )}
             {next && (
               <Link href={`/help/${category}/${next.slug}`} className="group">
-                <Card className="h-full hover:border-[var(--primary)] transition-colors">
+                <Card className="h-full hover:border-(--primary) transition-colors">
                   <CardContent className="card-padding-sm text-right">
                     <div className="flex items-center justify-end gap-tight text-sm text-muted-foreground mb-1">
                       Next
                       <ChevronRight className="size-4" />
                     </div>
-                    <p className="font-medium text-foreground group-hover:text-[var(--primary)] transition-colors">
+                    <p className="font-medium text-foreground group-hover:text-(--primary) transition-colors">
                       {next.title}
                     </p>
                   </CardContent>
