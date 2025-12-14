@@ -44,12 +44,14 @@ function GenericField({
   rows = 4
 }: GenericFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = field.name
 
   const renderField = () => {
     switch(type) {
       case 'email':
         return (
           <Input
+            id={fieldId}
             type="email"
             placeholder={placeholder}
             autoComplete={autoComplete || "email"}
@@ -61,6 +63,7 @@ function GenericField({
       case 'tel':
         return (
           <Input
+            id={fieldId}
             type="tel"
             placeholder={placeholder}
             autoComplete={autoComplete || "tel"}
@@ -75,7 +78,7 @@ function GenericField({
             value={field.state.value ?? ''}
             onValueChange={(value) => field.handleChange(value)}
           >
-            <SelectTrigger>
+            <SelectTrigger id={fieldId}>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
@@ -90,6 +93,7 @@ function GenericField({
       case 'textarea':
         return (
           <Textarea
+            id={fieldId}
             placeholder={placeholder}
             rows={rows}
             value={field.state.value ?? ''}
@@ -100,6 +104,7 @@ function GenericField({
       default: // text
         return (
           <Input
+            id={fieldId}
             placeholder={placeholder}
             autoComplete={autoComplete}
             value={field.state.value ?? ''}
@@ -112,7 +117,7 @@ function GenericField({
 
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       {renderField()}
       <FieldError errors={field.state.meta.errors} />
     </Field>
