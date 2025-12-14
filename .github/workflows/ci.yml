@@ -128,3 +128,5 @@ jobs:
 
       - name: Build project
         run: bun run build
+        env:
+          SKIP_ENV_VALIDATION: true
