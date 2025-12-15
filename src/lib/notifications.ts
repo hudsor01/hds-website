@@ -39,17 +39,17 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
   }
 
   try {
-    const priorityEmoji = lead.leadScore >= 80 ? '🔥' : lead.leadScore >= 70 ? '⚡' : '📋';
+    const priorityPrefix = lead.leadScore >= 80 ? '[URGENT]' : lead.leadScore >= 70 ? '[HIGH PRIORITY]' : '[QUALIFIED]';
     const priorityText = lead.leadScore >= 80 ? 'URGENT' : lead.leadScore >= 70 ? 'HIGH PRIORITY' : 'QUALIFIED';
 
     const message = {
-      text: `${priorityEmoji} New ${priorityText} Lead Alert!`,
+      text: `${priorityPrefix} New ${priorityText} Lead Alert!`,
       blocks: [
         {
           type: 'header',
           text: {
             type: 'plain_text',
-            text: `${priorityEmoji} New ${priorityText} Lead Alert!`,
+            text: `${priorityPrefix} New ${priorityText} Lead Alert!`,
           },
         },
         {
@@ -103,10 +103,10 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
           text: {
             type: 'mrkdwn',
             text: lead.leadScore >= 80
-              ? '⏰ *Action Required:* Contact within 24 hours for best conversion rate!'
+              ? '*Action Required:* Contact within 24 hours for best conversion rate!'
               : lead.leadScore >= 70
-              ? '📞 *Recommended:* Follow up within 48 hours'
-              : '📧 *Follow-up:* Add to nurture sequence',
+              ? '*Recommended:* Follow up within 48 hours'
+              : '*Follow-up:* Add to nurture sequence',
           },
         },
         {
@@ -181,41 +181,41 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
   }
 
   try {
-    const priorityEmoji = lead.leadScore >= 80 ? '🔥' : lead.leadScore >= 70 ? '⚡' : '📋';
+    const priorityPrefix = lead.leadScore >= 80 ? '[URGENT]' : lead.leadScore >= 70 ? '[HIGH PRIORITY]' : '[QUALIFIED]';
     const priorityText = lead.leadScore >= 80 ? 'URGENT' : lead.leadScore >= 70 ? 'HIGH PRIORITY' : 'QUALIFIED';
     const color = lead.leadScore >= 80 ? 0xff0000 : lead.leadScore >= 70 ? 0xff8800 : 0x0891b2;
 
     const embed = {
-      title: `${priorityEmoji} New ${priorityText} Lead Alert!`,
+      title: `${priorityPrefix} New ${priorityText} Lead Alert!`,
       color: color,
       fields: [
         {
-          name: '👤 Name',
+          name: 'Name',
           value: `${lead.firstName} ${lead.lastName}`,
           inline: true,
         },
         {
-          name: '📊 Lead Score',
+          name: 'Lead Score',
           value: `${lead.leadScore}/100 (${lead.leadQuality})`,
           inline: true,
         },
         {
-          name: '📧 Email',
+          name: 'Email',
           value: lead.email,
           inline: true,
         },
         {
-          name: '📱 Phone',
+          name: 'Phone',
           value: lead.phone || 'Not provided',
           inline: true,
         },
         {
-          name: '🏢 Company',
+          name: 'Company',
           value: lead.company || 'Not provided',
           inline: true,
         },
         {
-          name: '📍 Source',
+          name: 'Source',
           value: lead.source,
           inline: true,
         },
@@ -229,17 +229,17 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
     if (lead.service) {
       embed.fields.push(
         {
-          name: '🛠️ Service Interest',
+          name: 'Service Interest',
           value: lead.service,
           inline: true,
         },
         {
-          name: '💰 Budget',
+          name: 'Budget',
           value: lead.budget || 'Not specified',
           inline: true,
         },
         {
-          name: '⏱️ Timeline',
+          name: 'Timeline',
           value: lead.timeline || 'Not specified',
           inline: true,
         }
@@ -249,19 +249,19 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
     // Add action recommendation
     const actionText =
       lead.leadScore >= 80
-        ? '⏰ **Action Required:** Contact within 24 hours for best conversion rate!'
+        ? '**Action Required:** Contact within 24 hours for best conversion rate!'
         : lead.leadScore >= 70
-        ? '📞 **Recommended:** Follow up within 48 hours'
-        : '📧 **Follow-up:** Add to nurture sequence';
+        ? '**Recommended:** Follow up within 48 hours'
+        : '**Follow-up:** Add to nurture sequence';
 
     embed.fields.push({
-      name: '🎯 Recommended Action',
+      name: 'Recommended Action',
       value: actionText,
       inline: false,
     });
 
     const message = {
-      content: `${priorityEmoji} New ${priorityText} Lead Alert!`,
+      content: `${priorityPrefix} New ${priorityText} Lead Alert!`,
       embeds: [embed],
     };
 

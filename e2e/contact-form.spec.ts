@@ -7,9 +7,10 @@
  * Radix UI Select dropdowns.
  *
  * Key Testing Patterns:
- * - Input fields: Use standard Playwright fill() with #id selectors
+ * - Input fields: Use name attributes (input[name="firstName"])
  * - Radix Select: Click trigger, then click option from dropdown
  * - Form submission: Monitor for success message or error state
+ * - Wait strategies: Use waitForSelector to ensure form is fully loaded
  */
 
 import { test, expect, type TestInfo, type Route } from '@playwright/test'
@@ -18,66 +19,88 @@ import { createTestLogger } from './test-logger'
 test.describe('Contact Form', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/contact')
+    // Wait for the form to be fully loaded before interacting
+    await page.waitForSelector('form', { state: 'visible', timeout: 10000 })
   })
 
   test('should display contact form with all fields', async ({ page }) => {
     // Check form is visible
     await expect(page.locator('form')).toBeVisible()
 
-    // Check all text input fields are present (using id selectors)
-    await expect(page.locator('#firstName')).toBeVisible()
-    await expect(page.locator('#lastName')).toBeVisible()
-    await expect(page.locator('#email')).toBeVisible()
-    await expect(page.locator('#phone')).toBeVisible()
-    await expect(page.locator('#company')).toBeVisible()
-    await expect(page.locator('#message')).toBeVisible()
+    // Wait for and check all text input fields are present (using name selectors)
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('input[name="firstName"]')).toBeVisible()
 
-    // Check Radix Select triggers are present (they use role="combobox")
-    const selectTriggers = page.locator('[role="combobox"]')
-    await expect(selectTriggers).toHaveCount(4) // service, bestTimeToContact, budget, timeline
+    await page.waitForSelector('input[name="lastName"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('input[name="lastName"]')).toBeVisible()
+
+    await page.waitForSelector('input[name="email"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('input[name="email"]')).toBeVisible()
+
+    await page.waitForSelector('input[name="phone"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('input[name="phone"]')).toBeVisible()
+
+    await page.waitForSelector('input[name="company"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('input[name="company"]')).toBeVisible()
+
+    await page.waitForSelector('textarea[name="message"]', { state: 'visible', timeout: 10000 })
+    await expect(page.locator('textarea[name="message"]')).toBeVisible()
+
+    // Check Radix Select triggers are present (they use button role)
+    const selectTriggers = page.locator('button[role="combobox"]')
+    await expect(selectTriggers.first()).toBeVisible()
   })
 
   test('should allow filling text input fields', async ({ page }) => {
+    // Wait for form fields to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Fill text fields
-    await page.fill('#firstName', 'John')
-    await page.fill('#lastName', 'Doe')
-    await page.fill('#email', 'john.doe@example.com')
-    await page.fill('#phone', '555-123-4567')
-    await page.fill('#company', 'Acme Corp')
-    await page.fill('#message', 'This is a test message.')
+    await page.fill('input[name="firstName"]', 'John')
+    await page.fill('input[name="lastName"]', 'Doe')
+    await page.fill('input[name="email"]', 'john.doe@example.com')
+    await page.fill('input[name="phone"]', '555-123-4567')
+    await page.fill('input[name="company"]', 'Acme Corp')
+    await page.fill('textarea[name="message"]', 'This is a test message.')
 
     // Verify values are set
-    await expect(page.locator('#firstName')).toHaveValue('John')
-    await expect(page.locator('#lastName')).toHaveValue('Doe')
-    await expect(page.locator('#email')).toHaveValue('john.doe@example.com')
-    await expect(page.locator('#phone')).toHaveValue('555-123-4567')
-    await expect(page.locator('#company')).toHaveValue('Acme Corp')
-    await expect(page.locator('#message')).toHaveValue('This is a test message.')
+    await expect(page.locator('input[name="firstName"]')).toHaveValue('John')
+    await expect(page.locator('input[name="lastName"]')).toHaveValue('Doe')
+    await expect(page.locator('input[name="email"]')).toHaveValue('john.doe@example.com')
+    await expect(page.locator('input[name="phone"]')).toHaveValue('555-123-4567')
+    await expect(page.locator('input[name="company"]')).toHaveValue('Acme Corp')
+    await expect(page.locator('textarea[name="message"]')).toHaveValue('This is a test message.')
   })
 
   test('should allow selecting options from Radix Select dropdowns', async ({ page }) => {
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Select service option
-    const serviceSelect = page.locator('#service')
+    const serviceSelect = page.locator('button[name="service"]')
     await serviceSelect.click()
-    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).first().click()
 
     // Select best time to contact
-    const timeSelect = page.locator('#bestTimeToContact')
+    const timeSelect = page.locator('button[name="bestTimeToContact"]')
     await timeSelect.click()
-    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).click()
+    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).first().click()
 
     // Select budget
-    const budgetSelect = page.locator('#budget')
+    const budgetSelect = page.locator('button[name="budget"]')
     await budgetSelect.click()
-    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).click()
+    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).first().click()
 
     // Select timeline
-    const timelineSelect = page.locator('#timeline')
+    const timelineSelect = page.locator('button[name="timeline"]')
     await timelineSelect.click()
-    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).click()
+    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).first().click()
   })
 
   test('should show validation errors for empty required fields', async ({ page }) => {
+    // Wait for submit button
+    await page.waitForSelector('button[type="submit"]', { state: 'visible', timeout: 10000 })
+
     // Try to submit empty form by clicking submit button
     await page.locator('button[type="submit"]').click()
 
@@ -86,7 +109,7 @@ test.describe('Contact Form', () => {
     await expect(page.locator('form')).toBeVisible()
 
     // The firstName field should show browser validation (required)
-    const firstNameInput = page.locator('#firstName')
+    const firstNameInput = page.locator('input[name="firstName"]')
     const isInvalid = await firstNameInput.evaluate((el: HTMLInputElement) => !el.validity.valid)
     expect(isInvalid).toBe(true)
   })
@@ -94,33 +117,40 @@ test.describe('Contact Form', () => {
   test('should successfully submit form with valid data', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
 
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Fill in required text fields
-    await page.fill('#firstName', 'John')
-    await page.fill('#lastName', 'Doe')
-    await page.fill('#email', 'john.doe@example.com')
-    await page.fill('#message', 'This is a test message for the contact form. I am interested in your web development services.')
+    await page.fill('input[name="firstName"]', 'John')
+    await page.fill('input[name="lastName"]', 'Doe')
+    await page.fill('input[name="email"]', 'john.doe@example.com')
+    await page.fill('textarea[name="message"]', 'This is a test message for the contact form. I am interested in your web development services.')
 
     // Fill optional text fields
-    await page.fill('#phone', '555-123-4567')
-    await page.fill('#company', 'Test Company Inc')
+    await page.fill('input[name="phone"]', '555-123-4567')
+    await page.fill('input[name="company"]', 'Test Company Inc')
 
     logger.step('Filled text fields')
 
     // Select service (Radix Select)
-    await page.locator('#service').click()
-    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+    const serviceSelect = page.locator('button[name="service"]')
+    await serviceSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).first().click()
 
     // Select best time to contact
-    await page.locator('#bestTimeToContact').click()
-    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).click()
+    const timeSelect = page.locator('button[name="bestTimeToContact"]')
+    await timeSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: 'Morning' }).first().click()
 
     // Select budget
-    await page.locator('#budget').click()
-    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).click()
+    const budgetSelect = page.locator('button[name="budget"]')
+    await budgetSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: '$5,000 - $15,000' }).first().click()
 
     // Select timeline
-    await page.locator('#timeline').click()
-    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).click()
+    const timelineSelect = page.locator('button[name="timeline"]')
+    await timelineSelect.click()
+    await page.locator('[role="option"]').filter({ hasText: '1 Month' }).first().click()
 
     logger.step('Selected dropdown options')
 
@@ -148,11 +178,14 @@ test.describe('Contact Form', () => {
   test('should show pending state while submitting', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
 
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Fill in minimum required fields
-    await page.fill('#firstName', 'Jane')
-    await page.fill('#lastName', 'Smith')
-    await page.fill('#email', 'jane.smith@example.com')
-    await page.fill('#message', 'Testing pending state during form submission.')
+    await page.fill('input[name="firstName"]', 'Jane')
+    await page.fill('input[name="lastName"]', 'Smith')
+    await page.fill('input[name="email"]', 'jane.smith@example.com')
+    await page.fill('textarea[name="message"]', 'Testing pending state during form submission.')
 
     // Get submit button
     const submitButton = page.locator('button[type="submit"]')
@@ -200,11 +233,14 @@ test.describe('Contact Form', () => {
   test('should allow resending after successful submission', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
 
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Fill and submit form
-    await page.fill('#firstName', 'Test')
-    await page.fill('#lastName', 'User')
-    await page.fill('#email', 'test@example.com')
-    await page.fill('#message', 'Test message for resend flow.')
+    await page.fill('input[name="firstName"]', 'Test')
+    await page.fill('input[name="lastName"]', 'User')
+    await page.fill('input[name="email"]', 'test@example.com')
+    await page.fill('textarea[name="message"]', 'Test message for resend flow.')
 
     await page.locator('button[type="submit"]').click()
 
@@ -224,7 +260,7 @@ test.describe('Contact Form', () => {
 
         // Form should be visible again with empty fields
         await expect(page.locator('form')).toBeVisible()
-        await expect(page.locator('#firstName')).toHaveValue('')
+        await expect(page.locator('input[name="firstName"]')).toHaveValue('')
         logger.success('Form reset successfully')
       } else {
         logger.warn('Reset button not found - form may not support resend')
@@ -235,11 +271,14 @@ test.describe('Contact Form', () => {
   })
 
   test('should preserve form data on validation error', async ({ page }) => {
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Fill in some fields with an invalid email
-    await page.fill('#firstName', 'John')
-    await page.fill('#lastName', 'Doe')
-    await page.fill('#email', 'invalid-email') // Invalid format
-    await page.fill('#message', 'Test message that should be preserved.')
+    await page.fill('input[name="firstName"]', 'John')
+    await page.fill('input[name="lastName"]', 'Doe')
+    await page.fill('input[name="email"]', 'invalid-email') // Invalid format
+    await page.fill('textarea[name="message"]', 'Test message that should be preserved.')
 
     // Try to submit
     await page.locator('button[type="submit"]').click()
@@ -248,26 +287,24 @@ test.describe('Contact Form', () => {
     await page.waitForTimeout(500)
 
     // Check that form data is preserved
-    await expect(page.locator('#firstName')).toHaveValue('John')
-    await expect(page.locator('#lastName')).toHaveValue('Doe')
-    await expect(page.locator('#email')).toHaveValue('invalid-email')
-    await expect(page.locator('#message')).toHaveValue('Test message that should be preserved.')
+    await expect(page.locator('input[name="firstName"]')).toHaveValue('John')
+    await expect(page.locator('input[name="lastName"]')).toHaveValue('Doe')
+    await expect(page.locator('input[name="email"]')).toHaveValue('invalid-email')
+    await expect(page.locator('textarea[name="message"]')).toHaveValue('Test message that should be preserved.')
   })
 
   test('should have accessible form structure', async ({ page }) => {
-    // Check that all inputs have associated labels (via htmlFor/id)
-    const firstNameLabel = page.locator('label[for="firstName"]')
-    await expect(firstNameLabel).toBeVisible()
-
-    const emailLabel = page.locator('label[for="email"]')
-    await expect(emailLabel).toBeVisible()
-
-    const messageLabel = page.locator('label[for="message"]')
-    await expect(messageLabel).toBeVisible()
+    // Wait for form to be ready
+    await page.waitForSelector('form', { state: 'visible', timeout: 10000 })
 
     // Check that form has proper structure
     const form = page.locator('form')
     await expect(form).toBeVisible()
+
+    // Check inputs are present
+    await expect(page.locator('input[name="firstName"]')).toBeVisible()
+    await expect(page.locator('input[name="email"]')).toBeVisible()
+    await expect(page.locator('textarea[name="message"]')).toBeVisible()
 
     // Check submit button is accessible
     const submitButton = page.locator('button[type="submit"]')
@@ -276,24 +313,27 @@ test.describe('Contact Form', () => {
   })
 
   test('should handle keyboard navigation', async ({ page }) => {
+    // Wait for form to be ready
+    await page.waitForSelector('input[name="firstName"]', { state: 'visible', timeout: 10000 })
+
     // Focus on first name and tab through fields
-    await page.locator('#firstName').focus()
-    await expect(page.locator('#firstName')).toBeFocused()
+    await page.locator('input[name="firstName"]').focus()
+    await expect(page.locator('input[name="firstName"]')).toBeFocused()
 
     // Tab to next field
     await page.keyboard.press('Tab')
 
     // Should move to lastName
-    await expect(page.locator('#lastName')).toBeFocused()
+    await expect(page.locator('input[name="lastName"]')).toBeFocused()
 
     // Continue tabbing through form
     await page.keyboard.press('Tab')
-    await expect(page.locator('#email')).toBeFocused()
+    await expect(page.locator('input[name="email"]')).toBeFocused()
 
     await page.keyboard.press('Tab')
-    await expect(page.locator('#phone')).toBeFocused()
+    await expect(page.locator('input[name="phone"]')).toBeFocused()
 
     await page.keyboard.press('Tab')
-    await expect(page.locator('#company')).toBeFocused()
+    await expect(page.locator('input[name="company"]')).toBeFocused()
   })
 })

@@ -34,10 +34,13 @@ interface TextFieldProps {
 
 function TextField({ label, placeholder, autoComplete }: TextFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = `field-${field.name}`
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Input
+        id={fieldId}
+        name={field.name}
         placeholder={placeholder}
         autoComplete={autoComplete}
         value={field.state.value ?? ''}
@@ -51,10 +54,13 @@ function TextField({ label, placeholder, autoComplete }: TextFieldProps) {
 
 function EmailField({ label, placeholder }: TextFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = `field-${field.name}`
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Input
+        id={fieldId}
+        name={field.name}
         type="email"
         placeholder={placeholder}
         autoComplete="email"
@@ -69,10 +75,13 @@ function EmailField({ label, placeholder }: TextFieldProps) {
 
 function PhoneField({ label, placeholder }: TextFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = `field-${field.name}`
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Input
+        id={fieldId}
+        name={field.name}
         type="tel"
         placeholder={placeholder}
         autoComplete="tel"
@@ -93,14 +102,16 @@ interface SelectFieldProps {
 
 function SelectField({ label, placeholder, options }: SelectFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = `field-${field.name}`
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Select
+        name={field.name}
         value={field.state.value ?? ''}
         onValueChange={(value) => field.handleChange(value)}
       >
-        <SelectTrigger>
+        <SelectTrigger id={fieldId}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -124,10 +135,13 @@ interface TextareaFieldProps {
 
 function TextareaField({ label, placeholder, rows = 4 }: TextareaFieldProps) {
   const field = useFieldContext<string>()
+  const fieldId = `field-${field.name}`
   return (
     <Field>
-      <FieldLabel>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Textarea
+        id={fieldId}
+        name={field.name}
         placeholder={placeholder}
         rows={rows}
         value={field.state.value ?? ''}

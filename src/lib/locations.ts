@@ -40,7 +40,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
     neighborhoods: ['Downtown Dallas', 'Uptown', 'Deep Ellum', 'Oak Lawn', 'Highland Park', 'Plano', 'Irving', 'Richardson'],
     stats: {
       businesses: '25+',
-      projects: '50+',
+      projects: 'Proven track record',
       satisfaction: '100%',
     },
     features: [

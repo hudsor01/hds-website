@@ -70,7 +70,7 @@ export default function AboutPage() {
 
             <div className="typography">
               <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
-                Where $3.7M+ in revenue impact meets obsessive engineering standards. We don&apos;t build websites—we forge revenue machines.
+                Where proven revenue impact meets obsessive engineering standards. We don&apos;t build websites—we forge revenue machines.
               </p>
             </div>
           </div>
@@ -104,11 +104,11 @@ export default function AboutPage() {
                   Most agencies learned web development in bootcamps. We learned it in the trenches of enterprise revenue operations—where every line of code either makes money or loses it.
                 </p>
                 <p>
-                  With <strong className="text-accent">$3.7M+ in revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
+                  With <strong className="text-accent">proven revenue impact</strong> across Fortune 500 companies and high-growth startups, we discovered something agencies miss:
                   <strong className="text-info"> websites don&apos;t fail because of bad code—they fail because they don&apos;t understand revenue</strong>.
                 </p>
                 <p>
-                  That&apos;s why our clients see <strong className="text-accent">250% average ROI</strong> within 6 months. We don&apos;t just ship features. We ship{' '}
+                  That&apos;s why our clients see <strong className="text-accent">proven ROI results</strong> in months, not years. We don&apos;t just ship features. We ship{' '}
                   <Link href="/services" className="link-primary font-semibold">revenue engines</Link> backed by analytics,
                   A/B testing, and ruthless optimization. Every pixel, every animation, every database query is measured against one metric: <strong className="text-success-text">does this make money?</strong>
                 </p>
@@ -250,7 +250,7 @@ export default function AboutPage() {
             <div className="space-y-sections text-muted-foreground leading-relaxed">
               <p className="text-lg group-hover:text-foreground transition-smooth">
                 Before writing a single line of client code, I spent 5+ years as a <strong className="text-accent">revenue operations professional</strong> at enterprise SaaS companies.
-                I didn&apos;t build features—I built systems that generated <strong className="text-accent">$3.7M+ in measurable revenue impact</strong>.
+                I didn&apos;t build features—I built systems that generated <strong className="text-accent">measurable revenue impact</strong>.
               </p>
 
               <p className="text-lg group-hover:text-foreground transition-smooth">
@@ -273,15 +273,15 @@ export default function AboutPage() {
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Years in RevOps</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-info mb-subheading group-hover:text-foreground transition-smooth">$3.7M+</div>
+                  <div className="text-3xl font-black text-info mb-subheading group-hover:text-foreground transition-smooth">Proven</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Revenue Impact</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-accent mb-subheading group-hover:text-foreground transition-smooth">250%</div>
+                  <div className="text-3xl font-black text-accent mb-subheading group-hover:text-foreground transition-smooth">Strong</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Avg Client ROI</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-success-text mb-subheading group-hover:text-foreground transition-smooth">50+</div>
+                  <div className="text-3xl font-black text-success-text mb-subheading group-hover:text-foreground transition-smooth">Growing</div>
                   <div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">Businesses Transformed</div>
                 </div>
               </div>

@@ -23,7 +23,7 @@ const variantStyles = {
 export function NewsletterSignup({
   variant = 'inline',
   title = 'Get Expert Insights',
-  description = 'Join 500+ tech leaders receiving our weekly newsletter on scaling engineering teams.',
+  description = 'Join tech leaders receiving our weekly newsletter on scaling engineering teams.',
 }: NewsletterSignupProps) {
   const mutation = useNewsletterSubscription()
 
