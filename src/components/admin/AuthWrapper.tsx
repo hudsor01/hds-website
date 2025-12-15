@@ -127,6 +127,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                     <Input
                       type="email"
                       id="email"
+                      name="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="admin@example.com"
@@ -142,6 +143,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                   <Input
                     type="password"
                     id="password"
+                    name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
