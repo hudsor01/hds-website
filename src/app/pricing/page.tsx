@@ -72,7 +72,7 @@ const pricingTiers = [
     popular: true,
     cta: 'Build My Revenue Machine',
     href: '/contact',
-    roi: '250% average ROI in 6 months'
+    roi: 'Proven ROI results'
   },
   {
     name: 'Business Automation Suite',
@@ -93,7 +93,7 @@ const pricingTiers = [
     popular: false,
     cta: 'Automate My Business',
     href: '/contact',
-    roi: '340% average ROI in first year'
+    roi: 'Proven ROI in first year'
   }
 ];
 
@@ -291,7 +291,7 @@ export default function PricingPage() {
 
               <Link href="/portfolio">
                 <button className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl will-change-transform">
-                  See $3.7M+ in Proven Results
+                  See Proven Results
                 </button>
               </Link>
             </div>
@@ -301,7 +301,7 @@ export default function PricingPage() {
               <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
                 <div>90-day ROI guarantee</div>
                 <div>Response within 2 hours</div>
-                <div>50+ successful projects</div>
+                <div>Proven track record</div>
               </div>
             </div>
           </div>

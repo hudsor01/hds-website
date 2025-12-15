@@ -73,9 +73,9 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: "50+", label: "Projects Delivered" },
-  { value: "98%", label: "Client Satisfaction" },
-  { value: "250%", label: "Average ROI Increase" },
+  { value: "Fast", label: "Delivery Timeline" },
+  { value: "Expert", label: "Development Team" },
+  { value: "Proven", label: "ROI Results" },
   { value: "24/7", label: "Support Available" },
 ];
 
