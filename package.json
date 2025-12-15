@@ -108,6 +108,7 @@
     "msw": "2.12.4",
     "next": "16.0.10",
     "playwright": "1.57.0",
+    "prettier": "3.7.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "supazod": "4.1.0",
