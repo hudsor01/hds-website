@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Technical Solutions for SaaS Companies | Ship 3x Faster',
-  description: 'Eliminate technical bottlenecks in your SaaS product. Launch features faster, reduce churn, scale confidently. 250% average ROI.',
+  description: 'Eliminate technical bottlenecks in your SaaS product. Launch features faster, reduce churn, scale confidently. Proven ROI results.',
   keywords: 'SaaS development, B2B SaaS engineering, technical consulting SaaS, scale SaaS product',
 };
 
@@ -103,7 +103,7 @@ export default function SaaSIndustryPage() {
               { metric: '65%', label: 'Faster Time-to-Market', icon: Zap },
               { metric: '40%', label: 'Reduction in Churn', icon: Users },
               { metric: '3x', label: 'Feature Velocity', icon: TrendingUp },
-              { metric: '250%', label: 'Average ROI', icon: BarChart3 },
+              { metric: 'Proven', label: 'ROI Results', icon: BarChart3 },
             ].map((stat, i) => (
               <div key={i} className="text-center glass-card card-padding">
                 <stat.icon className="w-10 h-10 text-accent mx-auto mb-3" />
@@ -135,7 +135,7 @@ export default function SaaSIndustryPage() {
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
-                  <span className="text-foreground text-sm">✓</span>
+                  <span className="text-foreground text-sm">•</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>

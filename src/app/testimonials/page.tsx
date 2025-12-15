@@ -4,7 +4,7 @@ import { Star, MessageCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Client Testimonials | Hudson Digital Solutions',
-  description: 'Real client results: 340% ROI, 100% satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from 50+ companies.',
+  description: 'Real client results with proven ROI and high satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from growing companies.',
   keywords: 'client testimonials, customer reviews, success stories, client feedback, case studies, ROI results, business transformation'
 }
 
@@ -128,7 +128,7 @@ export default function TestimonialsPage() {
               <div className="text-caption text-muted-foreground mt-1">Client Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-responsive-lg font-black text-accent">50+</div>
+              <div className="text-responsive-lg font-black text-accent">Growing</div>
               <div className="text-caption text-muted-foreground mt-1">Projects Delivered</div>
             </div>
             <div className="text-center">

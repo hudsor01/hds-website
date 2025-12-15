@@ -216,7 +216,7 @@ export default function WebsiteChecklistPage() {
         <div className="max-w-4xl mx-auto page-padding-x">
           <div className="text-center mb-content-block">
             <h2 className="text-section-title font-black text-foreground mb-subheading">Why This Checklist Works</h2>
-            <p className="text-muted">Based on real results from 150+ client projects</p>
+            <p className="text-muted">Based on real client project results</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-comfortable">
@@ -258,7 +258,7 @@ export default function WebsiteChecklistPage() {
                 <div className="space-y-tight">
                   <div className="flex justify-between">
                     <span className="text-muted">Conversion Rate Increase:</span>
-                    <span className="text-success-text font-bold">340% avg</span>
+                    <span className="text-success-text font-bold">Strong ROI</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">Page Speed Improvement:</span>
@@ -340,7 +340,7 @@ export default function WebsiteChecklistPage() {
             <div className="mt-comfortable pt-8 border-t border-border">
               <h3 className="text-body-lg font-bold text-foreground mb-subheading">Need Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
-                Want us to handle the optimization for you? Our team has implemented these strategies for 150+ businesses with an average 340% ROI.
+                Want us to handle the optimization for you? Our team has implemented these strategies for businesses with proven ROI results.
               </p>
               <Link
                 href="/contact"

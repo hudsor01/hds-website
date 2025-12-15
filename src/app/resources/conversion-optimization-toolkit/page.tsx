@@ -163,7 +163,7 @@ export default function ConversionToolkitPage() {
               <div className="w-16 h-16 bg-success-text/20 rounded-full flex-center mx-auto mb-subheading">
                 <TrendingUp className="w-8 h-8 text-success-text" />
               </div>
-              <div className="text-section-title font-bold text-success-text mb-subheading">340%</div>
+              <div className="text-section-title font-bold text-success-text mb-subheading">Strong</div>
               <div className="text-muted">Average conversion increase</div>
             </div>
 
@@ -229,7 +229,7 @@ export default function ConversionToolkitPage() {
             </h2>
 
             <p className="text-subheading text-muted mb-comfortable max-w-2xl mx-auto">
-              Get instant access to templates, checklists, and calculators that have helped 150+ businesses achieve 340% average ROI improvement.
+              Get instant access to templates, checklists, and calculators that have helped businesses achieve proven ROI improvement.
             </p>
 
             {/* Download Form */}
@@ -280,7 +280,7 @@ export default function ConversionToolkitPage() {
             <div className="mt-comfortable pt-8 border-t border-border">
               <h3 className="text-body-lg font-bold text-foreground mb-subheading">Want Professional Implementation?</h3>
               <p className="text-muted mb-subheading">
-                Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped 150+ businesses achieve an average 340% ROI.
+                Our conversion optimization specialists can implement these strategies for you. We&apos;ve helped businesses achieve proven ROI results.
               </p>
               <Link
                 href="/contact"

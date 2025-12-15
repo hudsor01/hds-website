@@ -60,10 +60,10 @@ describe('Services Page (Server Component)', () => {
     const ServicesPage = (await import('@/app/services/page')).default;
     render(<ServicesPage />);
 
-    // Check for stat values
-    expect(screen.getByText('50+')).toBeInTheDocument();
-    expect(screen.getByText('98%')).toBeInTheDocument();
-    expect(screen.getByText('250%')).toBeInTheDocument();
+    // Check for stat values (updated to match new defensible content)
+    expect(screen.getByText('Fast')).toBeInTheDocument();
+    expect(screen.getByText('Expert')).toBeInTheDocument();
+    expect(screen.getByText('Proven')).toBeInTheDocument();
     expect(screen.getByText('24/7')).toBeInTheDocument();
   });
 

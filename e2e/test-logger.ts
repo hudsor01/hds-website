@@ -11,6 +11,7 @@ export interface TestLogger {
   info: (message: string) => void;
   warn: (message: string) => void;
   error: (message: string, error?: unknown) => void;
+  success: (message: string) => void;
   screenshot: (path: string, description?: string) => void;
   complete: (message: string) => void;
 }
@@ -36,6 +37,9 @@ export function createTestLogger(testName: string): TestLogger {
     },
     error: (message: string, error?: unknown) => {
       logger.error(`${prefix} ERROR: ${message}`, error);
+    },
+    success: (message: string) => {
+      logger.info(`${prefix} SUCCESS: ${message}`);
     },
     screenshot: (path: string, description?: string) => {
       logger.info(`${prefix} SCREENSHOT: ${path}${description ? ` - ${description}` : ''}`);
