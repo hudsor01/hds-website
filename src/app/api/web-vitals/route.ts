@@ -5,28 +5,11 @@
 
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-import type { Database } from '@/types/database-local';
 // import type { WebVitalsInsert } from '@/types/supabase-helpers';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from "@/lib/supabase";
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are missing');
-    return null;
-  }
-
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
 
 const WebVitalSchema = z.object({
   name: z.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB']),
@@ -50,15 +33,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     const body = await request.json();
     const validatedData = WebVitalSchema.parse(body);
 
@@ -79,7 +53,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Store web vitals data
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('web_vitals')
       .insert(webVitalData);
 

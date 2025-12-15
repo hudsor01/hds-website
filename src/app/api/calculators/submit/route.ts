@@ -9,28 +9,9 @@ import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import type { Database, Json } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
 
 // Schema for calculator submission
 const calculatorSubmitSchema = z.object({
@@ -118,8 +99,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = createServiceClient();
-
     const body = await request.json();
 
     // Validate with Zod schema
@@ -148,14 +127,6 @@ export async function POST(request: NextRequest) {
     });
 
     // Store in database
-    if (!supabase) {
-      logger.error('Supabase not configured');
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     const insertData = {
       calculator_type: calculator_type as string,
       email,
@@ -168,7 +139,7 @@ export async function POST(request: NextRequest) {
       lead_quality: leadQuality,
     } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
 
-    const { data: calculatorLead, error: dbError } = await supabase
+    const { data: calculatorLead, error: dbError } = await supabaseAdmin
       .from('calculator_leads')
       .insert(insertData)
       .select()

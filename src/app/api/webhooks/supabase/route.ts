@@ -16,40 +16,16 @@ import {
     eventDataSchema,
     leadDataSchema,
 } from '@/lib/schemas/supabase';
-import type { Database, Json } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import type { Json } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { headers } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are missing');
-    return null;
-  }
-
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
-
 async function triggerWebhook(eventType: string, payload: unknown) {
   // Log webhook trigger and optionally notify external services
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    logger.error('Supabase client not available for webhook logging');
-    return;
-  }
-
   const payloadData = (payload ?? {}) as Json;
 
-  await supabase
+  await supabaseAdmin
     .from('webhook_logs')
     .insert({
       event_type: eventType,
