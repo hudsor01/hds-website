@@ -431,10 +431,12 @@ export default function InvoiceGeneratorPage() {
               onChange={(e) => handleInputChange('dueDate', e.target.value)}
             />
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
+              <label htmlFor="paymentTerms" className="block text-sm font-medium text-foreground mb-1">
                 Payment Terms
               </label>
               <select
+                id="paymentTerms"
+                name="paymentTerms"
                 value={invoiceData.paymentTerms}
                 onChange={(e) => handleInputChange('paymentTerms', e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
@@ -478,8 +480,10 @@ export default function InvoiceGeneratorPage() {
           {invoiceData.lineItems.map((item) => (
             <div key={item.id} className="grid grid-cols-1 sm:grid-cols-12 gap-tight items-start pb-3 border-b border-border last:border-0">
               <div className="sm:col-span-5">
-                <label className="sm:hidden text-xs text-muted-foreground">Description</label>
+                <label htmlFor={`description-${item.id}`} className="sm:hidden text-xs text-muted-foreground">Description</label>
                 <input
+                  id={`description-${item.id}`}
+                  name={`description-${item.id}`}
                   type="text"
                   value={item.description}
                   onChange={(e) => handleLineItemChange(item.id, 'description', e.target.value)}
@@ -488,8 +492,10 @@ export default function InvoiceGeneratorPage() {
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="sm:hidden text-xs text-muted-foreground">Quantity</label>
+                <label htmlFor={`quantity-${item.id}`} className="sm:hidden text-xs text-muted-foreground">Quantity</label>
                 <input
+                  id={`quantity-${item.id}`}
+                  name={`quantity-${item.id}`}
                   type="number"
                   min="1"
                   step="1"
@@ -499,8 +505,10 @@ export default function InvoiceGeneratorPage() {
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="sm:hidden text-xs text-muted-foreground">Rate</label>
+                <label htmlFor={`rate-${item.id}`} className="sm:hidden text-xs text-muted-foreground">Rate</label>
                 <input
+                  id={`rate-${item.id}`}
+                  name={`rate-${item.id}`}
                   type="number"
                   min="0"
                   step="0.01"
@@ -540,9 +548,11 @@ export default function InvoiceGeneratorPage() {
                 <span className="font-medium">{formatCurrency(computedTotals.subtotal)}</span>
               </div>
               <div className="flex items-center justify-between gap-content">
-                <span className="text-sm text-muted-foreground">Tax Rate</span>
+                <label htmlFor="taxRate" className="text-sm text-muted-foreground">Tax Rate</label>
                 <div className="flex items-center gap-tight">
                   <input
+                    id="taxRate"
+                    name="taxRate"
                     type="number"
                     min="0"
                     max="100"
@@ -570,10 +580,12 @@ export default function InvoiceGeneratorPage() {
 
         {/* Notes */}
         <section className="space-y-content border-t border-border pt-6">
-          <label className="block text-sm font-medium text-foreground">
+          <label htmlFor="notes" className="block text-sm font-medium text-foreground">
             Notes / Terms
           </label>
           <textarea
+            id="notes"
+            name="notes"
             value={invoiceData.notes}
             onChange={(e) => handleInputChange('notes', e.target.value)}
             rows={3}

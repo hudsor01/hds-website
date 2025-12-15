@@ -143,10 +143,12 @@ export default function MetaTagGeneratorPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
+              <label htmlFor="pageDescription" className="block text-sm font-medium text-foreground mb-1">
                 Page Description <span className="text-destructive">*</span>
               </label>
               <textarea
+                id="pageDescription"
+                name="pageDescription"
                 value={inputs.pageDescription}
                 onChange={(e) => handleInputChange('pageDescription', e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"

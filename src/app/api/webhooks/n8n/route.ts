@@ -6,24 +6,13 @@
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
-import type { Database } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are missing');
-    return null;
-  }
-
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
+import {
+  LEAD_QUALITY_THRESHOLDS,
+  NOTIFICATION_MINIMUM_THRESHOLD,
+} from '@/lib/constants/lead-scoring';
 
 const logger = createServerLogger('n8n-webhook');
 
@@ -142,17 +131,8 @@ async function handleNewLead(body: unknown) {
 
     const { data } = validation.data;
 
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     // Store lead in database
-    const { data: lead, error: dbError } = await supabase
+    const { data: lead, error: dbError } = await supabaseAdmin
       .from('calculator_leads')
       .insert({
         email: data.email,
@@ -162,7 +142,7 @@ async function handleNewLead(body: unknown) {
         calculator_type: 'n8n-integration',
         inputs: { source: data.source },
         lead_score: data.leadScore,
-        lead_quality: data.leadScore >= 75 ? 'hot' : data.leadScore >= 50 ? 'warm' : 'cold',
+        lead_quality: data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
       })
       .select()
       .single();
@@ -176,7 +156,7 @@ async function handleNewLead(body: unknown) {
     }
 
     // Send notifications for high-value leads
-    if (data.leadScore >= 70) {
+    if (data.leadScore >= NOTIFICATION_MINIMUM_THRESHOLD) {
       await notifyHighValueLead({
         leadId: lead.id,
         firstName: data.name.split(' ')[0] || data.name,
@@ -277,16 +257,7 @@ async function handleUpdateLead(body: unknown) {
 
     const { data } = validation.data;
 
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('calculator_leads')
       .update(data.updates)
       .eq('id', data.leadId);

@@ -15,8 +15,10 @@ export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsPr
 
       <div className="grid grid-cols-2 gap-content">
         <div className="space-y-tight">
-          <Label>Interest Rate (%)</Label>
+          <Label htmlFor="interestRate">Interest Rate (%)</Label>
           <Input
+            id="interestRate"
+            name="interestRate"
             type="number"
             step="0.1"
             value={vehicleInput.interestRate}
@@ -26,12 +28,12 @@ export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsPr
         </div>
 
         <div className="space-y-tight">
-          <Label>Payment Frequency</Label>
+          <Label htmlFor="paymentFrequency">Payment Frequency</Label>
           <Select
             value={vehicleInput.paymentFrequency}
             onValueChange={(value) => updateInput('paymentFrequency', value)}
           >
-            <SelectTrigger>
+            <SelectTrigger id="paymentFrequency">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

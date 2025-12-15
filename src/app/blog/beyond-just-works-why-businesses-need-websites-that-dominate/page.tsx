@@ -5,11 +5,11 @@ import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
-  description: "Discover why 'good enough' websites fail. Learn how to engineer 340% ROI through Hudson Digital's BUILD. DEPLOY. DOMINATE. philosophy for ambitious businesses.",
+  description: "Discover why 'good enough' websites fail. Learn how to engineer proven ROI results through Hudson Digital's BUILD. DEPLOY. DOMINATE. philosophy for ambitious businesses.",
   keywords: "business website strategy, competitive advantage website, website ROI optimization, digital dominance strategy, website conversion optimization, business growth website, high-performance websites, website competitive advantage",
   openGraph: {
     title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate",
-    description: "Discover why 'good enough' websites fail. Learn how to engineer 340% ROI through strategic web development that dominates markets.",
+    description: "Discover why 'good enough' websites fail. Learn how to engineer proven ROI results through strategic web development that dominates markets.",
     url: "https://hudsondigitalsolutions.com/blog/beyond-just-works-why-businesses-need-websites-that-dominate",
     type: "article",
     publishedTime: "2024-01-31T12:00:00.000Z",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     site: "@hudsondigital",
     creator: "@hudsondigital",
     title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate",
-    description: "Discover why 'good enough' websites fail. Learn how to engineer 340% ROI through strategic web development.",
+    description: "Discover why 'good enough' websites fail. Learn how to engineer proven ROI results through strategic web development.",
     images: ["https://hudsondigitalsolutions.com/HDS-Logo.jpeg"],
   },
   alternates: {
@@ -82,7 +82,7 @@ const structuredData = {
   },
   "datePublished": "2024-01-31T12:00:00.000Z",
   "dateModified": new Date().toISOString(),
-  "description": "Discover why 'good enough' websites fail. Learn how to engineer 340% ROI through Hudson Digital's BUILD. DEPLOY. DOMINATE. philosophy for ambitious businesses.",
+  "description": "Discover why 'good enough' websites fail. Learn how to engineer proven ROI results through Hudson Digital's BUILD. DEPLOY. DOMINATE. philosophy for ambitious businesses.",
   "articleBody": "Every day, thousands of businesses launch websites that 'just work.' They load. They display information. They tick all the basic boxes. And they fail spectacularly...",
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -99,7 +99,7 @@ const structuredData = {
     {"@type": "Thing", "name": "Digital Marketing"}
   ],
   "mentions": [
-    {"@type": "Thing", "name": "340% ROI"},
+    {"@type": "Thing", "name": "Proven ROI"},
     {"@type": "Thing", "name": "Google PageSpeed"},
     {"@type": "Thing", "name": "Progressive Web Apps"}
   ]
@@ -232,7 +232,7 @@ export default function BlogPost() {
               <p>While you&apos;re celebrating your &quot;good enough&quot; website, your competition is engineering digital experiences that:</p>
               
               <ul className="space-y-tight ml-6">
-                <li>Convert visitors 340% more effectively</li>
+                <li>Convert visitors significantly more effectively</li>
                 <li>Generate qualified leads while you sleep</li>
                 <li>Build brand authority that commands premium pricing</li>
                 <li>Create competitive moats that are nearly impossible to replicate</li>
@@ -322,7 +322,7 @@ export default function BlogPost() {
                 <p><strong className="text-success-text">The Domination Difference:</strong></p>
                 <p>Our clients typically see:</p>
                 <ul className="space-y-1 ml-6 mt-2">
-                  <li>340% average ROI within the first year</li>
+                  <li>Proven ROI results within the first year</li>
                   <li>73% reduction in customer acquisition costs</li>
                   <li>156% increase in average order value</li>
                   <li>89% improvement in customer lifetime value</li>
@@ -371,7 +371,7 @@ export default function BlogPost() {
               
               <div className="bg-background/40 border border-border rounded-lg card-padding">
                 <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
-                <p className="mt-2">We don&apos;t build websites that &quot;just work&quot;—we engineer digital competitive advantages for ambitious businesses. With an average ROI of 340% and a 98% client success rate, we&apos;ve helped over 150 companies transform their digital presence from a business expense into their most powerful growth engine.</p>
+                <p className="mt-2">We don&apos;t build websites that &quot;just work&quot;—we engineer digital competitive advantages for ambitious businesses. With proven ROI results and high client success rate, we&apos;ve helped companies transform their digital presence from a business expense into their most powerful growth engine.</p>
                 <p className="mt-4">
                   <strong className="text-accent">Ready to dominate your market digitally?</strong>{" "}
                   <Link href="/contact" className="text-accent hover:text-accent/80 underline">
