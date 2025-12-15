@@ -9,40 +9,16 @@ import {
     analyticsVariablesSchema,
     graphqlRequestSchema,
 } from '@/lib/schemas/api';
-import type { Database, Json } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import type { Json } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const logger = createServerLogger('graphql-analytics')
 
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
-
 // Simple analytics query helper
 async function queryAnalytics(query: string, variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
   // This is a simplified implementation - expand based on actual needs
-  const { data, error } = await supabase.rpc('query_analytics', { query_text: query, vars: variables as Json });
+  const { data, error } = await supabaseAdmin.rpc('query_analytics', { query_text: query, vars: variables as Json });
   if (error) {
     throw error;
   }
@@ -155,12 +131,6 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
 }
 
 async function getPageViews(variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
-
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const limit = typeof variables.limit === 'number' ? Math.min(Math.max(variables.limit, 1), 1000) : 100;
 
@@ -175,7 +145,7 @@ async function getPageViews(variables: Record<string, unknown>) {
   const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
   const since = new Date(Date.now() - rangeMs).toISOString();
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('page_analytics')
     .select('path, duration, bounce, session_id, user_id')
     .gte('timestamp', since);
@@ -256,12 +226,6 @@ async function getPageViews(variables: Record<string, unknown>) {
 }
 
 async function getWebVitals(variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
-
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const metricFilter = typeof variables.metric === 'string' ? variables.metric : null;
   const rangeMap: Record<string, number> = {
@@ -275,7 +239,7 @@ async function getWebVitals(variables: Record<string, unknown>) {
   const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
   const since = new Date(Date.now() - rangeMs).toISOString();
 
-  let query = supabase
+  let query = supabaseAdmin
     .from('web_vitals')
     .select('metric_type, value, rating, page_path, created_at')
     .gte('created_at', since);
@@ -386,12 +350,6 @@ async function getWebVitals(variables: Record<string, unknown>) {
 }
 
 async function getLeadStats(variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
-
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '30d';
   const rangeMap: Record<string, number> = {
     '24h': 24 * 60 * 60 * 1000,
@@ -405,7 +363,7 @@ async function getLeadStats(variables: Record<string, unknown>) {
   const since = new Date(Date.now() - rangeMs30d).toISOString();
 
   // Fetch all leads data and aggregate in JS (postgrest doesn't support .group())
-  const { data: leadsData, error: leadsError, count: totalCount } = await supabase
+  const { data: leadsData, error: leadsError, count: totalCount } = await supabaseAdmin
     .from('leads')
     .select('id, lead_score, source, status', { count: 'exact' })
     .gte('created_at', since);
@@ -467,12 +425,6 @@ async function getLeadStats(variables: Record<string, unknown>) {
 }
 
 async function getEventStats(variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
-
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const limit = typeof variables.limit === 'number'
     ? Math.min(Math.max(variables.limit, 1), 1000)
@@ -490,7 +442,7 @@ async function getEventStats(variables: Record<string, unknown>) {
   const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
   const since = new Date(Date.now() - rangeMs).toISOString();
 
-  let query = supabase
+  let query = supabaseAdmin
     .from('custom_events')
     .select('event_name, event_category, event_value, session_id, user_id, timestamp')
     .gte('timestamp', since);
@@ -593,12 +545,6 @@ async function getEventStats(variables: Record<string, unknown>) {
 }
 
 async function getFunnelAnalytics(variables: Record<string, unknown>) {
-  const supabase = createServiceClient();
-
-  if (!supabase) {
-    throw new Error('Database not configured');
-  }
-
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '7d';
   const funnelName = typeof variables.funnelName === 'string' ? variables.funnelName : null;
   const limit = typeof variables.limit === 'number'
@@ -616,7 +562,7 @@ async function getFunnelAnalytics(variables: Record<string, unknown>) {
   const rangeMs = rangeMap[timeRange] ?? defaultRange7d;
   const since = new Date(Date.now() - rangeMs).toISOString();
 
-  let query = supabase
+  let query = supabaseAdmin
     .from('conversion_funnel')
     .select('funnel_name, step_name, step_order, completed_at, session_id, user_id, completed, time_to_complete')
     .gte('completed_at', since);
