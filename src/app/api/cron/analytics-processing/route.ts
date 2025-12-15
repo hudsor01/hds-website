@@ -5,8 +5,8 @@
 
 import { createServerLogger } from '@/lib/logger';
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
-import type { Database, Json } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import type { Json } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const logger = createServerLogger('analytics-cron')
@@ -22,34 +22,9 @@ const isSupabaseErrorRecord = (item: unknown): item is SupabaseErrorRecord => {
   return record.error === true
 }
 
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
-
 async function logCronExecution(jobName: string, status: string, error?: string) {
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return;
-    }
-
-    await supabase
+    await supabaseAdmin
       .from('cron_logs')
       .insert({ job_name: jobName, status, error_message: error });
   } catch {
@@ -59,18 +34,12 @@ async function logCronExecution(jobName: string, status: string, error?: string)
 
 async function enqueueLogProcessing(data: Record<string, unknown>) {
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return;
-    }
-
     const payload = {
       data: data as Json,
       created_at: new Date().toISOString(),
     };
 
-    await supabase
+    await supabaseAdmin
       .from('processing_queue')
       .insert(payload);
   } catch {
@@ -196,13 +165,8 @@ export async function POST(request: NextRequest) {
 
 async function processWebVitals(): Promise<number> {
   try {
-    const supabase = createServiceClient();
-    if (!supabase) {
-      return 0;
-    }
-
     // Aggregate web vitals by metric type and page path
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('web_vitals')
       .select('metric_type, page_path, value, rating')
       .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()); // Last 24 hours
@@ -244,13 +208,8 @@ async function processWebVitals(): Promise<number> {
 
 async function processPageAnalytics(): Promise<number> {
   try {
-    const supabase = createServiceClient();
-    if (!supabase) {
-      return 0;
-    }
-
     // Get page views from the last 24 hours
-    const result = await supabase
+    const result = await supabaseAdmin
       .from('page_analytics')
       .select('page_path, duration, bounce, session_id, user_id')
       .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
@@ -329,13 +288,8 @@ async function processPageAnalytics(): Promise<number> {
 
 async function processCustomEvents(): Promise<number> {
   try {
-    const supabase = createServiceClient();
-    if (!supabase) {
-      return 0;
-    }
-
     // Get custom events from the last 24 hours
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('custom_events')
       .select('event_name, event_category, event_value, session_id, user_id')
       .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
@@ -388,13 +342,8 @@ async function processCustomEvents(): Promise<number> {
 
 async function processLeadScoring(): Promise<number> {
   try {
-    const supabase = createServiceClient();
-    if (!supabase) {
-      return 0;
-    }
-
     // Get leads that need scoring (new leads without scores or updated recently)
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('leads')
       .select('id, email, source, created_at, status')
       .or('lead_score.is.null,and(lead_score.lt.50,updated_at.lt.' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() + ')');
@@ -441,7 +390,7 @@ async function processLeadScoring(): Promise<number> {
       }
 
       // Update the lead score
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('leads')
         .update({ lead_score: Math.min(score, 100) })
         .eq('id', lead.id);
@@ -469,13 +418,8 @@ async function processLeadScoring(): Promise<number> {
 
 async function processConversionFunnels(): Promise<number> {
   try {
-    const supabase = createServiceClient();
-    if (!supabase) {
-      return 0;
-    }
-
     // Get recent funnel steps
-    const result = await supabase
+    const result = await supabaseAdmin
       .from('conversion_funnel')
       .select('funnel_name, step_name, step_order, completed_at, session_id, user_id')
       .gte('completed_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()); // Last 7 days
