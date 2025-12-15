@@ -13,6 +13,9 @@ import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
+// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
+// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

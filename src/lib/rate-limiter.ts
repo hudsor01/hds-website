@@ -312,6 +312,8 @@ export const unifiedRateLimiter = {
   destroy: () => getUnifiedRateLimiter().destroy(),
 };
 
+// TODO: DUPLICATION - Consolidate with getClientIP from actions/contact.ts and api/contact/route.ts
+// Create unified src/lib/utils/request.ts with both getClientIp(request) and getClientIpFromHeaders()
 // Helper function to get client IP from NextRequest
 export function getClientIp(request: NextRequest): string {
   const xff = request.headers.get('x-forwarded-for');

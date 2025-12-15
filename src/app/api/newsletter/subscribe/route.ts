@@ -13,6 +13,11 @@ import { z } from 'zod';
 
 type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
 
+// TODO: CRITICAL - SECURITY BUG - Using WRONG environment variable!
+// TODO: CRITICAL - DUPLICATION - This function is duplicated in 18+ API route files
+// WRONG: SUPABASE_PUBLISHABLE_KEY (this is the anon key, not service role!)
+// CORRECT: Use SUPABASE_SERVICE_ROLE_KEY or better yet, use existing supabaseAdmin
+// FIX: Delete this function and use: import { supabaseAdmin } from '@/lib/supabase'
 function createServiceClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
