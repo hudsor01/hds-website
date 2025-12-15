@@ -179,13 +179,14 @@ export function CostEstimatorClient() {
         <form onSubmit={handleSubmit} className="space-y-comfortable">
           {/* Website Type */}
           <div className="space-y-tight">
-            <Label>Website Type *</Label>
+            <Label htmlFor="websiteType">Website Type *</Label>
             <Select
+              name="websiteType"
               value={websiteType}
               onValueChange={setWebsiteType}
               required
             >
-              <SelectTrigger>
+              <SelectTrigger id="websiteType">
                 <SelectValue placeholder="Select a type..." />
               </SelectTrigger>
               <SelectContent>
@@ -242,12 +243,13 @@ export function CostEstimatorClient() {
 
           {/* Design Complexity */}
           <div className="space-y-tight">
-            <Label>Design Complexity</Label>
+            <Label htmlFor="designComplexity">Design Complexity</Label>
             <Select
+              name="designComplexity"
               value={designComplexity}
               onValueChange={setDesignComplexity}
             >
-              <SelectTrigger>
+              <SelectTrigger id="designComplexity">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -261,12 +263,13 @@ export function CostEstimatorClient() {
 
           {/* Timeline */}
           <div className="space-y-tight">
-            <Label>Project Timeline</Label>
+            <Label htmlFor="timeline">Project Timeline</Label>
             <Select
+              name="timeline"
               value={timeline}
               onValueChange={setTimeline}
             >
-              <SelectTrigger>
+              <SelectTrigger id="timeline">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
