@@ -3,37 +3,8 @@ import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
-import type { Database } from '@/types/database-local';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { NextResponse, type NextRequest } from 'next/server';
-
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
-
-function isSupabaseAdminConfigured(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.SUPABASE_PUBLISHABLE_KEY &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
-    process.env.SUPABASE_PUBLISHABLE_KEY !== 'placeholder'
-  );
-}
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -138,19 +109,8 @@ export async function POST(request: NextRequest) {
       user_agent: userAgent || undefined,
     };
 
-    const supabase = createServiceClient();
-
-    // Check if Supabase admin is configured
-    if (!isSupabaseAdminConfigured() || !supabase) {
-      logger.warn('Supabase admin not configured, skipping newsletter subscription save');
-      return NextResponse.json({
-        message: 'Thank you for subscribing to our newsletter! (development mode)',
-        success: true
-      });
-    }
-
     // Save to leads table with newsletter source
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('leads')
       .insert([{
         email: subscriptionData.email,
@@ -255,15 +215,6 @@ export async function GET(request: NextRequest) {
       userFlow: 'newsletter_admin'
     });
 
-    // Check if Supabase admin is configured
-    if (!isSupabaseAdminConfigured() || !createServiceClient()) {
-      logger.warn('Supabase admin not configured, returning empty subscribers list');
-      return NextResponse.json({
-        subscribers: [],
-        count: 0
-      });
-    }
-
     // Get pagination parameters
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');
@@ -271,16 +222,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const supabaseClient = createServiceClient();
-    if (!supabaseClient) {
-      logger.error('Failed to create Supabase client');
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
-
-    const { data, error, count } = await supabaseClient
+    const { data, error, count } = await supabaseAdmin
       .from('leads')
       .select('email, name, source, created_at', { count: 'exact' })
       .eq('source', 'newsletter-form') // Filter for newsletter signups only

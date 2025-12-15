@@ -7,28 +7,11 @@ import { env } from '@/env';
 import { castError, createServerLogger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import type { Database, Json } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const logger = createServerLogger('analytics-api');
-
-// TODO: CRITICAL - SECURITY BUG + DUPLICATION - Delete this function!
-// WRONG: Uses SUPABASE_PUBLISHABLE_KEY (anon key) instead of SERVICE_ROLE_KEY
-// FIX: import { supabaseAdmin } from '@/lib/supabase' and use that instead
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SECRET_LOCAL_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are missing');
-    return null;
-  }
-
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
 
 // JSON value schema for analytics properties
 // Using z.unknown() and casting since recursive Zod types have inference issues
@@ -80,30 +63,27 @@ export async function POST(request: NextRequest) {
       timestamp: timestamp || Date.now(),
     });
 
-    // Store in Supabase if available
-    const supabase = createServiceClient();
-    if (supabase) {
-      try {
-        const insertPayload: Database['public']['Tables']['custom_events']['Insert'] = {
-          event_name: eventName,
-          event_category: eventCategory,
-          event_label: eventLabel,
-          event_value: eventValue,
-          session_id: sessionId || null,
-          user_id: userId || null,
-          metadata,
-          timestamp: new Date(timestamp || Date.now()).toISOString(),
-        };
+    // Store in Supabase
+    try {
+      const insertPayload: Database['public']['Tables']['custom_events']['Insert'] = {
+        event_name: eventName,
+        event_category: eventCategory,
+        event_label: eventLabel,
+        event_value: eventValue,
+        session_id: sessionId || null,
+        user_id: userId || null,
+        metadata,
+        timestamp: new Date(timestamp || Date.now()).toISOString(),
+      };
 
-        const { error } = await supabase.from('custom_events').insert(insertPayload);
+      const { error } = await supabaseAdmin.from('custom_events').insert(insertPayload);
 
-        if (error) {
-          logger.error('Failed to store analytics event in database', castError(error));
-        }
-      } catch (dbError) {
-        // Don't fail the request if database insert fails
-        logger.error('Failed to store analytics event in database', castError(dbError));
+      if (error) {
+        logger.error('Failed to store analytics event in database', castError(error));
       }
+    } catch (dbError) {
+      // Don't fail the request if database insert fails
+      logger.error('Failed to store analytics event in database', castError(dbError));
     }
 
     // Track critical events
