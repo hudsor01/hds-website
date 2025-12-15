@@ -16,6 +16,9 @@ import { notifyHighValueLead } from "@/lib/notifications"
 // CONFIGURATION
 // ================================
 
+// TODO: CRITICAL - DUPLICATION - Move to src/lib/config/email.ts
+// These constants are duplicated in api/contact/route.ts and other files
+// Recommendation: Create EMAIL_CONFIG constant and use environment variables
 const EMAIL_FROM_ADMIN = "Hudson Digital <noreply@hudsondigitalsolutions.com>"
 const EMAIL_FROM_PERSONAL = "Richard Hudson <hello@hudsondigitalsolutions.com>"
 const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
@@ -24,6 +27,12 @@ const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
 // HELPER FUNCTIONS
 // ================================
 
+// TODO: CRITICAL - DUPLICATION - Extract to src/lib/utils/request.ts
+// This function is duplicated in:
+// - src/app/actions/contact.ts (this file)
+// - src/app/api/contact/route.ts
+// - src/lib/rate-limiter.ts (as getClientIp with different signature)
+// Create unified utility: getClientIpFromHeaders() and getClientIp(request)
 async function getClientIP(): Promise<string> {
   const headersList = await headers()
   const forwardedFor = headersList.get("x-forwarded-for")
@@ -42,6 +51,8 @@ async function getClientIP(): Promise<string> {
   return "unknown"
 }
 
+// TODO: DUPLICATION - Extract to src/lib/services/contact-service.ts
+// This entire function is duplicated in api/contact/route.ts
 /**
  * Check for suspicious content in form fields
  */
@@ -69,6 +80,8 @@ function checkForSecurityThreats(
   return hasSuspiciousContent
 }
 
+// TODO: DUPLICATION - Extract to src/lib/services/contact-service.ts
+// Duplicated in api/contact/route.ts
 /**
  * Prepare email template variables from form data
  */
@@ -82,6 +95,8 @@ function prepareEmailVariables(data: ContactFormData) {
   }
 }
 
+// TODO: DUPLICATION - Extract to src/lib/services/email-service.ts
+// Duplicated in api/contact/route.ts (85+ lines)
 /**
  * Send admin notification email
  */
@@ -114,6 +129,8 @@ async function sendAdminNotification(
   }
 }
 
+// TODO: DUPLICATION - Extract to src/lib/services/email-service.ts
+// Duplicated in api/contact/route.ts
 /**
  * Send welcome email to prospect
  */
@@ -178,6 +195,8 @@ async function sendLeadNotifications(
       budget: data.budget,
       timeline: data.timeline,
       leadScore: leadScore,
+      // TODO: MAGIC NUMBERS - Extract to src/lib/constants/lead-scoring.ts
+      // Thresholds (80, 70) are inconsistent across codebase (also 70, 40 used elsewhere)
       leadQuality: leadScore >= 80 ? 'hot' : leadScore >= 70 ? 'warm' : 'cold',
       source: 'Contact Form',
     })
@@ -211,6 +230,9 @@ async function scheduleFollowUpEmails(
   }
 }
 
+// TODO: ANTI-PATTERN - Move to email template file or use @react-email
+// This 50+ line HTML template is duplicated in api/contact/route.ts
+// Should be in src/lib/templates/emails/ or use existing email-templates.json pattern
 // Generate admin notification email
 function generateAdminNotificationHTML(
   data: ContactFormData,
@@ -249,6 +271,7 @@ function generateAdminNotificationHTML(
       </div>
       ` : ""}
 
+      <!-- TODO: MAGIC NUMBERS in template above - Thresholds 70, 40 inconsistent with scoring function (uses 70, 45, 20) -->
       <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
         <h2>Message</h2>
         <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>
@@ -269,6 +292,10 @@ export type ContactFormState = {
   message?: string
 }
 
+// TODO: ANTI-PATTERN - GOD FUNCTION (95 lines, 11 responsibilities)
+// This function violates Single Responsibility Principle
+// Break into: validateSubmission(), scoreLead(), sendNotifications(), scheduleFollowUps()
+// See BACKEND_CODE_REVIEW.md for detailed refactoring plan
 export async function submitContactForm(
   _prevState: ContactFormState | null,
   formData: FormData

@@ -91,6 +91,11 @@ export const contactFormResponseSchema = apiResponseSchema(
 );
 
 
+// TODO: MAGIC NUMBERS - Extract all scoring constants to src/lib/constants/lead-scoring.ts
+// Weights: 30, 20, 15, 15, 10, 10
+// Thresholds: 70, 45, 20
+// Message length: 100
+// Also inconsistent with usage in actions/contact.ts (uses 80, 70) and api/contact/route.ts (uses 70, 40)
 export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
   const factors = {
     hasHighBudget: !!data.budget && ['15k-50k', '50k-plus'].includes(data.budget),

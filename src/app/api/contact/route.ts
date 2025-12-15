@@ -14,6 +14,8 @@ import type { NextRequest } from 'next/server'
 // CONFIGURATION
 // ================================
 
+// TODO: CRITICAL - DUPLICATION - Move to src/lib/config/email.ts
+// DUPLICATED from actions/contact.ts - Use shared EMAIL_CONFIG instead
 const EMAIL_FROM_ADMIN = "Hudson Digital <noreply@hudsondigitalsolutions.com>"
 const EMAIL_FROM_PERSONAL = "Richard Hudson <hello@hudsondigitalsolutions.com>"
 const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
@@ -22,6 +24,9 @@ const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
 // HELPER FUNCTIONS
 // ================================
 
+// TODO: CRITICAL - DUPLICATION - Extract to src/lib/utils/request.ts
+// DUPLICATED from actions/contact.ts and rate-limiter.ts
+// Use unified getClientIp(request) utility instead
 function getClientIP(request: NextRequest): string {
   const forwardedFor = request.headers.get("x-forwarded-for")
   if (forwardedFor) {
@@ -253,6 +258,9 @@ function generateAdminNotificationHTML(
   `
 }
 
+// TODO: CRITICAL - DUPLICATION - This entire file is 95% identical to actions/contact.ts
+// Consolidate shared logic into src/lib/services/contact-service.ts
+// Keep this route thin - just handle HTTP concerns, delegate business logic to service
 export async function POST(request: NextRequest) {
   const logContext = { component: 'contact-form', timestamp: Date.now() };
 
