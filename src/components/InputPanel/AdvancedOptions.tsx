@@ -32,8 +32,10 @@ export function AdvancedOptions({
       <div className="grid grid-cols-2 gap-content">
         {/* Credit Score */}
         <div className="space-y-tight">
-          <Label>Credit Score</Label>
+          <Label htmlFor="creditScore">Credit Score</Label>
           <Input
+            id="creditScore"
+            name="creditScore"
             type="number"
             min="300"
             max="850"
@@ -45,8 +47,10 @@ export function AdvancedOptions({
 
         {/* Rebate Amount */}
         <div className="space-y-tight">
-          <Label>Rebate Amount</Label>
+          <Label htmlFor="rebateAmount">Rebate Amount</Label>
           <Input
+            id="rebateAmount"
+            name="rebateAmount"
             type="number"
             value={vehicleInput.rebateAmount}
             onChange={(e) => updateInput('rebateAmount', Number(e.target.value))}

@@ -23,7 +23,7 @@ const variantStyles = {
 export function NewsletterSignup({
   variant = 'inline',
   title = 'Get Expert Insights',
-  description = 'Join 500+ tech leaders receiving our weekly newsletter on scaling engineering teams.',
+  description = 'Join tech leaders receiving our weekly newsletter on scaling engineering teams.',
 }: NewsletterSignupProps) {
   const mutation = useNewsletterSubscription()
 
@@ -77,6 +77,8 @@ export function NewsletterSignup({
                 {(field) => (
                   <Field data-invalid={field.state.meta.errors.length > 0} className="flex-1 gap-1">
                     <Input
+                      id="newsletter-email"
+                      name="email"
                       type="email"
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}

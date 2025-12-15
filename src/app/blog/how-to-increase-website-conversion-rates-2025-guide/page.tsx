@@ -455,7 +455,7 @@ export default function ConversionGuidePost() {
 
                 <div className="bg-background/40 border border-border rounded-lg card-padding">
                   <p><strong className="text-foreground">About the Author</strong></p>
-                  <p className="mt-2">Hudson Digital Solutions specializes in conversion rate optimization for ambitious businesses. Our clients achieve an average 340% ROI through strategic CRO implementation and data-driven optimization.</p>
+                  <p className="mt-2">Hudson Digital Solutions specializes in conversion rate optimization for ambitious businesses. Our clients achieve proven ROI results through strategic CRO implementation and data-driven optimization.</p>
                   <p className="mt-4">
                     <strong className="text-accent">Ready to optimize your conversions?</strong>{" "}
                     <Link href="/contact" className="text-accent hover:text-accent/80 underline">

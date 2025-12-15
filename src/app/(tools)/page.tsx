@@ -167,7 +167,7 @@ export default function ToolsPage() {
           <div className="grid gap-sections sm:grid-cols-3">
             <div className="text-center">
               <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
-                500+
+                Growing
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Calculations Performed

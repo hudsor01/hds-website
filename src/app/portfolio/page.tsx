@@ -32,7 +32,7 @@ async function PortfolioProjects() {
             {[
               { value: `${projects.length}+`, label: "Projects Delivered" },
               { value: "100%", label: "Client Satisfaction" },
-              { value: "250%", label: "Average ROI" },
+              { value: "Proven", label: "ROI Results" },
               { value: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <div

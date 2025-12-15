@@ -10,6 +10,11 @@ import {
   timelineOptionsSchema,
   apiResponseSchema,
 } from './common';
+import {
+  LEAD_SCORE_POINTS,
+  MESSAGE_LENGTH_THRESHOLD,
+  LEAD_CATEGORY_THRESHOLDS,
+} from '@/lib/constants/lead-scoring';
 
 // Main contact form schema
 export const contactFormSchema = z.object({
@@ -101,20 +106,20 @@ export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
     hasPhone: !!data.phone,
   };
 
-  // Calculate score
+  // Calculate score using centralized point values
   let score = 0;
-  if (factors.hasHighBudget) {score += 30;}
-  if (factors.hasUrgentTimeline) {score += 20;}
-  if (factors.hasSpecificService) {score += 15;}
-  if (factors.hasCompany) {score += 15;}
-  if (factors.hasPhone) {score += 10;}
-  if (factors.messageLength > 100) {score += 10;}
+  if (factors.hasHighBudget) {score += LEAD_SCORE_POINTS.HIGH_BUDGET;}
+  if (factors.hasUrgentTimeline) {score += LEAD_SCORE_POINTS.URGENT_TIMELINE;}
+  if (factors.hasSpecificService) {score += LEAD_SCORE_POINTS.SPECIFIC_SERVICE;}
+  if (factors.hasCompany) {score += LEAD_SCORE_POINTS.HAS_COMPANY;}
+  if (factors.hasPhone) {score += LEAD_SCORE_POINTS.HAS_PHONE;}
+  if (factors.messageLength > MESSAGE_LENGTH_THRESHOLD) {score += LEAD_SCORE_POINTS.LONG_MESSAGE;}
 
-  // Determine category
+  // Determine category using centralized thresholds
   let category: LeadScoring['category'];
-  if (score >= 70) {category = 'high-value';}
-  else if (score >= 45) {category = 'qualified';}
-  else if (score >= 20) {category = 'standard';}
+  if (score >= LEAD_CATEGORY_THRESHOLDS.HIGH_VALUE) {category = 'high-value';}
+  else if (score >= LEAD_CATEGORY_THRESHOLDS.QUALIFIED) {category = 'qualified';}
+  else if (score >= LEAD_CATEGORY_THRESHOLDS.STANDARD) {category = 'standard';}
   else {category = 'low';}
 
   // Determine sequence type

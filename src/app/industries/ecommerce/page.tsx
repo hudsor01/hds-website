@@ -133,7 +133,7 @@ export default function EcommercePage() {
             ].map((capability, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center shrink-0">
-                  <span className="text-foreground text-sm">✓</span>
+                  <span className="text-foreground text-sm">•</span>
                 </div>
                 <span className="text-muted">{capability}</span>
               </div>
