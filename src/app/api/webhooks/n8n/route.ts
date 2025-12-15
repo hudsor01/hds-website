@@ -9,6 +9,10 @@ import { scheduleEmail } from '@/lib/scheduled-emails';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import {
+  LEAD_QUALITY_THRESHOLDS,
+  NOTIFICATION_MINIMUM_THRESHOLD,
+} from '@/lib/constants/lead-scoring';
 
 const logger = createServerLogger('n8n-webhook');
 
@@ -138,7 +142,7 @@ async function handleNewLead(body: unknown) {
         calculator_type: 'n8n-integration',
         inputs: { source: data.source },
         lead_score: data.leadScore,
-        lead_quality: data.leadScore >= 75 ? 'hot' : data.leadScore >= 50 ? 'warm' : 'cold',
+        lead_quality: data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
       })
       .select()
       .single();
@@ -152,7 +156,7 @@ async function handleNewLead(body: unknown) {
     }
 
     // Send notifications for high-value leads
-    if (data.leadScore >= 70) {
+    if (data.leadScore >= NOTIFICATION_MINIMUM_THRESHOLD) {
       await notifyHighValueLead({
         leadId: lead.id,
         firstName: data.name.split(' ')[0] || data.name,

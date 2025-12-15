@@ -13,6 +13,10 @@ import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type
 import { resendEmailResponseSchema } from "@/lib/schemas/external"
 import { createServerLogger, castError, type Logger } from "@/lib/logger"
 import { notifyHighValueLead } from "@/lib/notifications"
+import {
+  LEAD_QUALITY_THRESHOLDS,
+  DISPLAY_CATEGORY_THRESHOLDS,
+} from "@/lib/constants/lead-scoring"
 
 // ================================
 // HELPER FUNCTIONS
@@ -162,9 +166,7 @@ async function sendLeadNotifications(
       budget: data.budget,
       timeline: data.timeline,
       leadScore: leadScore,
-      // TODO: MAGIC NUMBERS - Extract to src/lib/constants/lead-scoring.ts
-      // Thresholds (80, 70) are inconsistent across codebase (also 70, 40 used elsewhere)
-      leadQuality: leadScore >= 80 ? 'hot' : leadScore >= 70 ? 'warm' : 'cold',
+      leadQuality: leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
       source: 'Contact Form',
     })
   } catch (error) {
@@ -222,23 +224,21 @@ function generateAdminNotificationHTML(
       </div>
 
       ${leadScore ? `
-      <div style="background: ${leadScore >= 70 ? "#dcfce7" : leadScore >= 40 ? "#fef3c7" : "#fef2f2"}; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h2 style="color: ${leadScore >= 70 ? "#15803d" : leadScore >= 40 ? "#d97706" : "#dc2626"};">Lead Intelligence</h2>
+      <div style="background: ${leadScore >= DISPLAY_CATEGORY_THRESHOLDS.HIGH_PRIORITY ? "#dcfce7" : leadScore >= DISPLAY_CATEGORY_THRESHOLDS.QUALIFIED ? "#fef3c7" : "#fef2f2"}; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h2 style="color: ${leadScore >= DISPLAY_CATEGORY_THRESHOLDS.HIGH_PRIORITY ? "#15803d" : leadScore >= DISPLAY_CATEGORY_THRESHOLDS.QUALIFIED ? "#d97706" : "#dc2626"};">Lead Intelligence</h2>
         <p><strong>Lead Score:</strong> ${leadScore}/100 ${
-          leadScore >= 70 ? "(HIGH PRIORITY)" : leadScore >= 40 ? "(QUALIFIED)" : "(NURTURE)"
+          leadScore >= DISPLAY_CATEGORY_THRESHOLDS.HIGH_PRIORITY ? "(HIGH PRIORITY)" : leadScore >= DISPLAY_CATEGORY_THRESHOLDS.QUALIFIED ? "(QUALIFIED)" : "(NURTURE)"
         }</p>
         <p><strong>Email Sequence:</strong> ${sequenceId || "standard-welcome"}</p>
         <p><strong>Recommended Action:</strong> ${
-          leadScore >= 70
+          leadScore >= DISPLAY_CATEGORY_THRESHOLDS.HIGH_PRIORITY
             ? "Schedule call within 24 hours"
-            : leadScore >= 40
+            : leadScore >= DISPLAY_CATEGORY_THRESHOLDS.QUALIFIED
             ? "Follow up within 2-3 days"
             : "Add to nurture sequence"
         }</p>
       </div>
       ` : ""}
-
-      <!-- TODO: MAGIC NUMBERS in template above - Thresholds 70, 40 inconsistent with scoring function (uses 70, 45, 20) -->
       <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
         <h2>Message</h2>
         <p style="white-space: pre-wrap;">${escapeHtml(data.message)}</p>

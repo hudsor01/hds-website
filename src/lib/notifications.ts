@@ -4,6 +4,10 @@
  */
 
 import { createServerLogger } from '@/lib/logger';
+import {
+  NOTIFICATION_PRIORITY_THRESHOLDS,
+  NOTIFICATION_MINIMUM_THRESHOLD,
+} from '@/lib/constants/lead-scoring';
 
 const logger = createServerLogger();
 logger.setContext({ component: 'notifications', service: 'lead-alerts' });
@@ -39,8 +43,8 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
   }
 
   try {
-    const priorityPrefix = lead.leadScore >= 80 ? '[URGENT]' : lead.leadScore >= 70 ? '[HIGH PRIORITY]' : '[QUALIFIED]';
-    const priorityText = lead.leadScore >= 80 ? 'URGENT' : lead.leadScore >= 70 ? 'HIGH PRIORITY' : 'QUALIFIED';
+    const priorityPrefix = lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT ? '[URGENT]' : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY ? '[HIGH PRIORITY]' : '[QUALIFIED]';
+    const priorityText = lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT ? 'URGENT' : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY ? 'HIGH PRIORITY' : 'QUALIFIED';
 
     const message = {
       text: `${priorityPrefix} New ${priorityText} Lead Alert!`,
@@ -102,9 +106,9 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: lead.leadScore >= 80
+            text: lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT
               ? '*Action Required:* Contact within 24 hours for best conversion rate!'
-              : lead.leadScore >= 70
+              : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY
               ? '*Recommended:* Follow up within 48 hours'
               : '*Follow-up:* Add to nurture sequence',
           },
@@ -181,9 +185,9 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
   }
 
   try {
-    const priorityPrefix = lead.leadScore >= 80 ? '[URGENT]' : lead.leadScore >= 70 ? '[HIGH PRIORITY]' : '[QUALIFIED]';
-    const priorityText = lead.leadScore >= 80 ? 'URGENT' : lead.leadScore >= 70 ? 'HIGH PRIORITY' : 'QUALIFIED';
-    const color = lead.leadScore >= 80 ? 0xff0000 : lead.leadScore >= 70 ? 0xff8800 : 0x0891b2;
+    const priorityPrefix = lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT ? '[URGENT]' : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY ? '[HIGH PRIORITY]' : '[QUALIFIED]';
+    const priorityText = lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT ? 'URGENT' : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY ? 'HIGH PRIORITY' : 'QUALIFIED';
+    const color = lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT ? 0xff0000 : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY ? 0xff8800 : 0x0891b2;
 
     const embed = {
       title: `${priorityPrefix} New ${priorityText} Lead Alert!`,
@@ -248,9 +252,9 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
 
     // Add action recommendation
     const actionText =
-      lead.leadScore >= 80
+      lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.URGENT
         ? '**Action Required:** Contact within 24 hours for best conversion rate!'
-        : lead.leadScore >= 70
+        : lead.leadScore >= NOTIFICATION_PRIORITY_THRESHOLDS.HIGH_PRIORITY
         ? '**Recommended:** Follow up within 48 hours'
         : '**Follow-up:** Add to nurture sequence';
 
@@ -299,11 +303,11 @@ async function sendDiscordNotification(lead: LeadNotification): Promise<boolean>
 
 /**
  * Send notifications to all configured channels
- * Only sends for high-value leads (score >= 70)
+ * Only sends for high-value leads (score >= NOTIFICATION_MINIMUM_THRESHOLD)
  */
 export async function notifyHighValueLead(lead: LeadNotification): Promise<void> {
   // Only send notifications for high-value leads
-  if (lead.leadScore < 70) {
+  if (lead.leadScore < NOTIFICATION_MINIMUM_THRESHOLD) {
     logger.debug('Skipping notification for low-score lead', {
       leadId: lead.leadId,
       leadScore: lead.leadScore,
