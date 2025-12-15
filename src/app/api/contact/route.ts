@@ -1,74 +1,18 @@
 import { logger } from '@/lib/logger'
 import { recordContactFormSubmission } from '@/lib/metrics'
-import { notifyHighValueLead } from '@/lib/notifications'
 import { unifiedRateLimiter } from '@/lib/rate-limiter'
 import { isResendConfigured } from '@/lib/resend-client'
-import { scheduleEmailSequence } from '@/lib/scheduled-emails'
-import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from '@/lib/schemas/contact'
+import { contactFormSchema, scoreLeadFromContactData } from '@/lib/schemas/contact'
 import { getClientIp } from '@/lib/utils/request'
 import type { NextRequest } from 'next/server'
-import { LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring'
 import {
   checkForSecurityThreats,
   prepareEmailVariables,
   sendAdminNotification,
   sendWelcomeEmail,
+  sendLeadNotifications,
+  scheduleFollowUpEmails,
 } from '@/lib/services/contact-service'
-
-// ================================
-// HELPER FUNCTIONS
-// ================================
-
-/**
- * Send notifications for high-value leads (Slack/Discord)
- */
-async function sendLeadNotifications(
-  data: ContactFormData,
-  leadScore: number,
-): Promise<void> {
-  try {
-    await notifyHighValueLead({
-      leadId: `contact-${Date.now()}`,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      company: data.company,
-      service: data.service,
-      budget: data.budget,
-      timeline: data.timeline,
-      leadScore: leadScore,
-      leadQuality: leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
-      source: 'Contact Form',
-    })
-  } catch (error) {
-    logger.error("Failed to send lead notifications", error)
-  }
-}
-
-/**
- * Schedule follow-up email sequence
- */
-async function scheduleFollowUpEmails(
-  data: ContactFormData,
-  sequenceId: string,
-  emailVariables: ReturnType<typeof prepareEmailVariables>,
-): Promise<void> {
-  try {
-    await scheduleEmailSequence(
-      data.email,
-      `${data.firstName} ${data.lastName}`,
-      sequenceId,
-      emailVariables
-    )
-  } catch (error) {
-    logger.error("Failed to schedule email sequence", {
-      error,
-      email: data.email,
-      sequenceId
-    })
-  }
-}
 
 export async function POST(request: NextRequest) {
   const logContext = { component: 'contact-form', timestamp: Date.now() };
@@ -115,10 +59,10 @@ export async function POST(request: NextRequest) {
       try {
         await sendAdminNotification(data, leadScore, sequenceId, logger)
         await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
-        await sendLeadNotifications(data, leadScore)
+        await sendLeadNotifications(data, leadScore, logger)
 
         recordContactFormSubmission(true)
-        await scheduleFollowUpEmails(data, sequenceId, emailVariables)
+        await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
 
         logger.info('Contact form submission successful', {
           ...logContext,
@@ -141,7 +85,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Test mode: schedule emails without email service
-      await scheduleFollowUpEmails(data, sequenceId, emailVariables)
+      await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
       recordContactFormSubmission(true)
 
       logger.info('Contact form submission successful (test mode)', {

@@ -5,74 +5,16 @@ import { isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { getClientIpFromHeaders } from "@/lib/utils/request"
-import { scheduleEmailSequence } from "@/lib/scheduled-emails"
-import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type LeadScoring } from "@/lib/schemas/contact"
-import { createServerLogger, castError, type Logger } from "@/lib/logger"
-import { notifyHighValueLead } from "@/lib/notifications"
-import { LEAD_QUALITY_THRESHOLDS } from "@/lib/constants/lead-scoring"
+import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
+import { createServerLogger, castError } from "@/lib/logger"
 import {
   checkForSecurityThreats,
   prepareEmailVariables,
   sendAdminNotification,
   sendWelcomeEmail,
+  sendLeadNotifications,
+  scheduleFollowUpEmails,
 } from "@/lib/services/contact-service"
-
-// ================================
-// HELPER FUNCTIONS
-// ================================
-
-/**
- * Send notifications for high-value leads (Slack/Discord)
- */
-async function sendLeadNotifications(
-  data: ContactFormData,
-  leadScore: number,
-  logger: Logger
-): Promise<void> {
-  try {
-    await notifyHighValueLead({
-      leadId: `contact-${Date.now()}`,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      company: data.company,
-      service: data.service,
-      budget: data.budget,
-      timeline: data.timeline,
-      leadScore: leadScore,
-      leadQuality: leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
-      source: 'Contact Form',
-    })
-  } catch (error) {
-    logger.error("Failed to send lead notifications", castError(error))
-  }
-}
-
-/**
- * Schedule follow-up email sequence
- */
-async function scheduleFollowUpEmails(
-  data: ContactFormData,
-  sequenceId: LeadScoring['sequenceType'],
-  emailVariables: ReturnType<typeof prepareEmailVariables>,
-  logger: Logger
-): Promise<void> {
-  try {
-    await scheduleEmailSequence(
-      data.email,
-      `${data.firstName} ${data.lastName}`,
-      sequenceId,
-      emailVariables
-    )
-  } catch (error) {
-    logger.error("Failed to schedule email sequence", {
-      error: castError(error),
-      email: data.email,
-      sequenceId
-    })
-  }
-}
 
 export type ContactFormState = {
   success?: boolean
