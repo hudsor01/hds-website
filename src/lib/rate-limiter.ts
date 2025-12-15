@@ -1,6 +1,5 @@
 import { env } from '@/env'
 import type { RateLimitEntry } from '@/types/api'
-import type { NextRequest } from 'next/server'
 import { logger } from './logger'
 
 // Configuration for different rate limiting needs
@@ -312,22 +311,5 @@ export const unifiedRateLimiter = {
   destroy: () => getUnifiedRateLimiter().destroy(),
 };
 
-// TODO: DUPLICATION - Consolidate with getClientIP from actions/contact.ts and api/contact/route.ts
-// Create unified src/lib/utils/request.ts with both getClientIp(request) and getClientIpFromHeaders()
-// Helper function to get client IP from NextRequest
-export function getClientIp(request: NextRequest): string {
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) {
-    const ip = xff.split(',')[0]?.trim();
-    if (ip) {
-      return ip;
-    }
-  }
-
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp?.trim()) {
-    return realIp.trim();
-  }
-
-  return '127.0.0.1';
-}
+// Re-export getClientIp from centralized location for backwards compatibility
+export { getClientIp } from './utils/request';

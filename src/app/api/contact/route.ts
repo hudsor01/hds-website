@@ -8,6 +8,7 @@ import { scheduleEmailSequence } from '@/lib/scheduled-emails'
 import { resendEmailResponseSchema } from '@/lib/schemas/external'
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData } from '@/lib/schemas/contact'
 import { detectInjectionAttempt, escapeHtml } from '@/lib/utils'
+import { getClientIp } from '@/lib/utils/request'
 import type { NextRequest } from 'next/server'
 
 // ================================
@@ -23,26 +24,6 @@ const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
 // ================================
 // HELPER FUNCTIONS
 // ================================
-
-// TODO: CRITICAL - DUPLICATION - Extract to src/lib/utils/request.ts
-// DUPLICATED from actions/contact.ts and rate-limiter.ts
-// Use unified getClientIp(request) utility instead
-function getClientIP(request: NextRequest): string {
-  const forwardedFor = request.headers.get("x-forwarded-for")
-  if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim()
-    if (first) {
-      return first
-    }
-  }
-
-  const realIp = request.headers.get("x-real-ip")
-  if (realIp?.trim()) {
-    return realIp.trim()
-  }
-
-  return "unknown"
-}
 
 /**
  * Check for suspicious content in form fields
@@ -268,7 +249,7 @@ export async function POST(request: NextRequest) {
     logger.info(`Contact form submission started - contact-form-${Date.now()}`, logContext)
 
     // Step 1: Rate limiting
-    const clientIP = getClientIP(request)
+    const clientIP = getClientIp(request)
     const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
 
     if (!isAllowed) {

@@ -38,22 +38,6 @@ export async function POST(request: NextRequest) {
       userFlow: 'newsletter_subscription'
     });
 
-    // Get client IP from headers
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    let clientIP = '127.0.0.1';
-
-    if (forwardedFor) {
-      const first = forwardedFor.split(',')[0]?.trim();
-      if (first) {
-        clientIP = first;
-      }
-    }
-
-    const realIp = request.headers.get('x-real-ip');
-    if (realIp) {
-      clientIP = realIp.trim();
-    }
-
     const userAgent = request.headers.get('user-agent');
 
     // Parse request body
@@ -91,7 +75,7 @@ export async function POST(request: NextRequest) {
       logger.warn('Potential injection attempt detected in newsletter signup', {
         email: body.email,
         firstName: body.firstName,
-        ip: clientIP,
+        ip: clientIp,
         component: 'NewsletterAPI',
         userFlow: 'newsletter_subscription',
         action: 'POST_newsletter'
@@ -105,7 +89,7 @@ export async function POST(request: NextRequest) {
       source: validatedData.source || 'newsletter-form',
       consent_marketing: body.consentMarketing ?? false,
       consent_analytics: body.consentAnalytics ?? true,
-      ip_address: clientIP,
+      ip_address: clientIp,
       user_agent: userAgent || undefined,
     };
 

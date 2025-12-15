@@ -5,6 +5,7 @@ import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { escapeHtml, detectInjectionAttempt } from "@/lib/utils"
+import { getClientIpFromHeaders } from "@/lib/utils/request"
 import { getEmailSequences, processEmailTemplate } from "@/lib/email-utils"
 import { scheduleEmailSequence } from "@/lib/scheduled-emails"
 import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type LeadScoring } from "@/lib/schemas/contact"
@@ -26,30 +27,6 @@ const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
 // ================================
 // HELPER FUNCTIONS
 // ================================
-
-// TODO: CRITICAL - DUPLICATION - Extract to src/lib/utils/request.ts
-// This function is duplicated in:
-// - src/app/actions/contact.ts (this file)
-// - src/app/api/contact/route.ts
-// - src/lib/rate-limiter.ts (as getClientIp with different signature)
-// Create unified utility: getClientIpFromHeaders() and getClientIp(request)
-async function getClientIP(): Promise<string> {
-  const headersList = await headers()
-  const forwardedFor = headersList.get("x-forwarded-for")
-  if (forwardedFor) {
-    const first = forwardedFor.split(",")[0]?.trim()
-    if (first) {
-      return first
-    }
-  }
-
-  const realIp = headersList.get("x-real-ip")
-  if (realIp?.trim()) {
-    return realIp.trim()
-  }
-
-  return "unknown"
-}
 
 // TODO: DUPLICATION - Extract to src/lib/services/contact-service.ts
 // This entire function is duplicated in api/contact/route.ts
@@ -306,7 +283,8 @@ export async function submitContactForm(
     logger.info('Contact form submission started');
 
     // Step 1: Rate limiting
-    const clientIP = await getClientIP()
+    const headersList = await headers()
+    const clientIP = getClientIpFromHeaders(headersList)
     const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
 
     if (!isAllowed) {
