@@ -1,6 +1,7 @@
 'use server'
 
 import { headers } from "next/headers"
+import { EMAIL_CONFIG } from "@/lib/config/email"
 import { getResendClient, isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
@@ -12,17 +13,6 @@ import { contactFormSchema, scoreLeadFromContactData, type ContactFormData, type
 import { resendEmailResponseSchema } from "@/lib/schemas/external"
 import { createServerLogger, castError, type Logger } from "@/lib/logger"
 import { notifyHighValueLead } from "@/lib/notifications"
-
-// ================================
-// CONFIGURATION
-// ================================
-
-// TODO: CRITICAL - DUPLICATION - Move to src/lib/config/email.ts
-// These constants are duplicated in api/contact/route.ts and other files
-// Recommendation: Create EMAIL_CONFIG constant and use environment variables
-const EMAIL_FROM_ADMIN = "Hudson Digital <noreply@hudsondigitalsolutions.com>"
-const EMAIL_FROM_PERSONAL = "Richard Hudson <hello@hudsondigitalsolutions.com>"
-const EMAIL_TO_ADMIN = "hello@hudsondigitalsolutions.com"
 
 // ================================
 // HELPER FUNCTIONS
@@ -87,8 +77,8 @@ async function sendAdminNotification(
 
   try {
     const response = await getResendClient().emails.send({
-      from: EMAIL_FROM_ADMIN,
-      to: [EMAIL_TO_ADMIN],
+      from: EMAIL_CONFIG.FROM_ADMIN,
+      to: [EMAIL_CONFIG.TO_ADMIN],
       subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
       html: generateAdminNotificationHTML(data, leadScore, sequenceId),
     })
@@ -128,7 +118,7 @@ async function sendWelcomeEmail(
     const processedSubject = processEmailTemplate(sequence.subject, emailVariables)
 
     const response = await getResendClient().emails.send({
-      from: EMAIL_FROM_PERSONAL,
+      from: EMAIL_CONFIG.FROM_PERSONAL,
       to: [data.email],
       subject: processedSubject,
       html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
