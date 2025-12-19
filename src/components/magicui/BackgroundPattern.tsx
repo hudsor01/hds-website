@@ -25,7 +25,7 @@ export function BackgroundPattern({
           {variant === 'hero' && (
             <>
               <div className="absolute top-1/2 left-1/6 w-32 h-32 bg-muted-20 rounded-full blur-2xl" />
-              <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-gradient-decorative-orange rounded-full blur-3xl" />
+              <div className="absolute bottom-1/4 right-1/3 w-48 h-48 bg-muted/20 rounded-full blur-3xl" />
             </>
           )}
           

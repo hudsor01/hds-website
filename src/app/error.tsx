@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { logger } from '@/lib/logger';
 import { trackError } from '@/lib/analytics';
 
@@ -64,18 +65,22 @@ export default function Error({
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button
+          <Button
+            variant="default"
+            size="default"
             onClick={reset}
-            className="cta-primary"
           >
             Try again
-          </button>
-          <Link
-            href="/"
-            className="px-6 py-3 bg-secondary dark:bg-muted text-foreground dark:text-foreground rounded-lg hover:bg-muted dark:hover:bg-muted-foreground transition-colors"
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="default"
           >
-            Go home
-          </Link>
+            <Link href="/">
+              Go home
+            </Link>
+          </Button>
         </div>
 
         <div className="mt-heading card-padding-sm bg-muted dark:bg-muted rounded-lg">

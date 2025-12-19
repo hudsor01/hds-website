@@ -6,11 +6,17 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Use 1 worker for better test isolation and stability
+  workers: 1,
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
+    // Improve test isolation - clear state between tests
+    storageState: undefined,
+    // Add longer timeout for stability
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
   },
 
   projects: [

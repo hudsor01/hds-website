@@ -294,11 +294,19 @@ describe('Contact Form Submission Flow', () => {
     cleanupMocks();
   });
 
-  it.skip('should handle rate limiting', async () => {
-    // Skip: Rate limiter is mocked globally for tests
-    // This test would need a separate test environment with real rate limiting
+  it('should handle rate limiting', async () => {
+    // Mock the rate limiter to simulate exhausted limit
+    const { mock } = await import('bun:test');
+    mock.module('@/lib/rate-limiter', () => ({
+      unifiedRateLimiter: {
+        checkLimit: () => Promise.resolve(false), // Simulate rate limit exceeded
+      },
+      getClientIp: (_request: Request) => '127.0.0.1',
+    }));
 
-    const { submitContactForm } = await import('@/app/actions/contact');
+    // Re-import the action to use the mocked rate limiter
+    const actionModule = await import('@/app/actions/contact');
+    const { submitContactForm } = actionModule;
 
     const formData = new FormData();
     formData.append('firstName', 'John');
@@ -310,6 +318,9 @@ describe('Contact Form Submission Flow', () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toContain('Too many requests');
+
+    // Restore mocks after test
+    mock.restore();
   });
 
   it('should reject invalid form data - bad email', async () => {

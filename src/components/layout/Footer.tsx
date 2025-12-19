@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 // import { brand } from "@/lib/brand";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   CheckCircle,
@@ -159,12 +160,17 @@ export default function Footer() {
               </p>
 
               <div className="space-y-3">
-                <Link
-                  href="/contact"
-                  className="block w-full text-center cta-primary focus-ring"
+                <Button
+                  asChild
+                  variant="default"
+                  size="default"
+                  trackConversion={true}
+                  className="w-full"
                 >
-                  Get Free Roadmap
-                </Link>
+                  <Link href="/contact">
+                    Get Free Roadmap
+                  </Link>
+                </Button>
 
                 <a
                   href="mailto:hello@hudsondigitalsolutions.com"

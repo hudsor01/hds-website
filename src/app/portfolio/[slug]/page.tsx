@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ExternalLink, ArrowLeft, Code2, Calendar, Eye } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
+import { Button } from '@/components/ui/button';
 import {
   getProjectBySlug,
   getAllProjectSlugs,
@@ -161,26 +162,28 @@ async function ProjectContent({ slug }: { slug: string }) {
                 {/* CTA Buttons */}
                 <div className="flex flex-wrap gap-content">
                   {project.external_link && (
-                    <Link
-                      href={project.external_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="button-base group cta-primary px-8 py-4 text-lg font-bold"
-                    >
-                      View Live Site
-                      <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                    <Button asChild variant="default" size="lg">
+                      <Link
+                        href={project.external_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Live Site
+                        <ExternalLink className="w-5 h-5" />
+                      </Link>
+                    </Button>
                   )}
                   {project.github_link && (
-                    <Link
-                      href={project.github_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="button-base group cta-secondary button-hover-glow px-8 py-4 text-lg font-semibold"
-                    >
-                      View Code
-                      <Code2 className="w-5 h-5" />
-                    </Link>
+                    <Button asChild variant="outline" size="lg">
+                      <Link
+                        href={project.github_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Code
+                        <Code2 className="w-5 h-5" />
+                      </Link>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -294,13 +297,12 @@ async function ProjectContent({ slug }: { slug: string }) {
               <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
                 Let&apos;s build something amazing together. Get in touch to discuss your project.
               </p>
-              <Link
-                href="/contact"
-                className="button-base group cta-primary px-10 py-5 text-lg font-bold"
-              >
-                Start Your Project
-                <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <Button asChild variant="default" size="lg" trackConversion={true}>
+                <Link href="/contact">
+                  Start Your Project
+                  <ExternalLink className="w-5 h-5" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
@@ -312,7 +314,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-hero text-foreground">
+    <main className="min-h-screen bg-background text-foreground">
       <Analytics />
 
       {/* Back Button - Static, prerendered */}
