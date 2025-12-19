@@ -77,7 +77,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
         <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 15px 0;">
           <h4 style="color: #0891b2; margin-bottom: 10px;">Ready to Implement?</h4>
           <p style="color: #64748b; margin-bottom: 15px;">
-            Need help implementing these strategies? Our team has helped 150+ businesses achieve an average 340% ROI.
+            Need help implementing these strategies? Our team has helped businesses achieve proven ROI results.
           </p>
           <a href="https://hudsondigitalsolutions.com/contact" 
              style="color: #0891b2; text-decoration: none; font-weight: bold;">

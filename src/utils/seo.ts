@@ -8,9 +8,9 @@ import type { SEOMetaData } from '@/types/seo'
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
   home: {
     title:
-      'Turn Your Website Into a Revenue Machine | 250% ROI Guaranteed | Hudson Digital Solutions',
+      'Turn Your Website Into a Revenue Machine | Proven ROI Results | Hudson Digital Solutions',
     description:
-      'Stop losing revenue to technical bottlenecks. Custom web development that pays for itself—average 250% ROI within 6 months or we keep working for free. Ship 3x faster, convert 2x better. $3.7M+ in proven revenue impact across 50+ businesses. Get your free ROI roadmap today.',
+      'Stop losing revenue to technical bottlenecks. Custom web development that pays for itself with proven ROI results. Ship 3x faster, convert 2x better. Measurable revenue impact for growing businesses. Get your free ROI roadmap today.',
     keywords:
       'revenue-driven web development, high converting websites 2025, web development ROI, website revenue optimization, conversion rate optimization CRO, Next.js development services, React development agency, business automation software, SaaS development, technical debt solutions, web application development, startup web development',
     ogImage: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
@@ -66,14 +66,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   },
 
   about: {
-    title: 'Revenue Engineers Who Happen to Write Code | $3.7M+ Impact | Hudson Digital Solutions',
+    title: 'Revenue Engineers Who Happen to Write Code | Proven Impact | Hudson Digital Solutions',
     description:
-      'Revenue engineers with $3.7M+ impact. We forge websites that dominate, not just work. Enterprise-grade development for ambitious businesses.',
+      'Revenue engineers with proven impact. We forge websites that dominate, not just work. Enterprise-grade development for ambitious businesses.',
     keywords:
       'revenue operations engineering, RevOps development, enterprise web development, startup development services, ROI-focused development, conversion rate optimization experts, business automation specialists, technical revenue optimization, SaaS development experts, growth engineering team',
-    ogTitle: 'Revenue Engineers Behind the Code - $3.7M+ in Proven Impact | Hudson Digital',
+    ogTitle: 'Revenue Engineers Behind the Code - Proven Impact | Hudson Digital',
     ogDescription:
-      'Former RevOps professionals turned engineers. $3.7M+ in revenue impact, 250% average ROI. We understand revenue, not just code.',
+      'Former RevOps professionals turned engineers. Proven revenue impact with measurable ROI. We understand revenue, not just code.',
     canonical: 'https://hudsondigitalsolutions.com/about',
     structuredData: {
       '@context': 'https://schema.org',
@@ -87,7 +87,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   contact: {
     title: 'Get Your Free ROI Roadmap in 30 Minutes | No Sales Pitch | Hudson Digital Solutions',
     description:
-      'See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join 50+ successful businesses with 250% average ROI. Email: hello@hudsondigitalsolutions.com',
+      'See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join growing businesses with proven ROI results. Email: hello@hudsondigitalsolutions.com',
     keywords:
       'free ROI analysis, revenue leak audit, technical consultation, web development consultation, conversion optimization audit, performance audit services, free strategy session, business technology assessment, revenue operations consulting, growth engineering consultation',
     ogTitle: 'Free ROI Roadmap - Find Revenue Leaks in 30 Minutes | Hudson Digital',

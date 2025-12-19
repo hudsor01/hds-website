@@ -136,8 +136,8 @@ export default function ContactPage() {
                 </div>
 
                 <div className="px-4 py-2 bg-accent/10 border border-accent/30 rounded-lg">
-                  <p className="text-caption text-accent font-semibold mb-subheading">Join 50+ successful businesses</p>
-                  <p className="text-caption text-muted-foreground">Average 250% ROI within 6 months</p>
+                  <p className="text-caption text-accent font-semibold mb-subheading">Join growing businesses</p>
+                  <p className="text-caption text-muted-foreground">Proven ROI results</p>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function ContactPage() {
                       </div>
                       <div className="flex items-center gap-tight">
                         <div className="w-4 h-4 bg-info rounded-full"></div>
-                        <span>50+ success stories</span>
+                        <span>Proven success stories</span>
                       </div>
                     </div>
                   </div>

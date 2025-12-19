@@ -99,11 +99,11 @@ export default function Footer() {
               <div className="space-y-tight">
                 <div className="flex items-center gap-tight text-muted">
                   <CheckCircle className="h-4 w-4 text-accent" />
-                  <span className="small">50+ Projects Delivered</span>
+                  <span className="small">Proven Track Record</span>
                 </div>
                 <div className="flex items-center gap-tight text-muted">
                   <CheckCircle className="h-4 w-4 text-accent" />
-                  <span className="small">250% Average ROI</span>
+                  <span className="small">Proven ROI Results</span>
                 </div>
                 <div className="flex items-center gap-tight text-muted">
                   <Clock className="h-4 w-4 text-accent" />

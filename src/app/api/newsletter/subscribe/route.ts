@@ -7,25 +7,11 @@ import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import type { Database } from '@/types/database';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
-
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are missing');
-    return null;
-  }
-
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
 
 const SubscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -48,17 +34,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, source } = SubscribeSchema.parse(body);
 
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     // Check if already subscribed
-    const { data: existing, error: existingError } = await supabase
+    const { data: existing, error: existingError} = await supabaseAdmin
       .from('newsletter_subscribers')
       .select('*')
       .eq('email', email)
@@ -85,7 +62,7 @@ export async function POST(request: NextRequest) {
       unsubscribed_at: null,
     };
 
-    const { error: dbError } = await supabase
+    const { error: dbError } = await supabaseAdmin
       .from('newsletter_subscribers')
       .upsert(subscriberData);
 

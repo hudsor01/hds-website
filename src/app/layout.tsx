@@ -46,12 +46,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
-  description: "Senior engineering team that eliminates your technical bottlenecks. Launch features in days, not months. 250% average ROI. Get your free roadmap.",
+  description: "Senior engineering team that eliminates your technical bottlenecks. Launch features in days, not months. Proven ROI results. Get your free roadmap.",
   keywords: "technical consulting, B2B SaaS development, React experts, Next.js development, scale engineering team, technical bottlenecks, fractional CTO, ship features faster",
   metadataBase: new URL('https://hudsondigitalsolutions.com'),
   openGraph: {
     title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
-    description: "Senior engineering team that eliminates your technical bottlenecks. 250% average ROI.",
+    description: "Senior engineering team that eliminates your technical bottlenecks. Proven ROI results.",
     url: "https://hudsondigitalsolutions.com",
     siteName: "Hudson Digital Solutions",
     images: [
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper",
-    description: "Senior engineering team that eliminates your technical bottlenecks. 250% average ROI.",
+    description: "Senior engineering team that eliminates your technical bottlenecks. Proven ROI results.",
     images: ["/HDS-Logo.webp"],
   },
   robots: {

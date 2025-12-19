@@ -65,7 +65,7 @@ export function CalculatorLayout({
           <div className="grid gap-comfortable sm:grid-cols-3">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary dark:text-accent">
-                500+
+                Growing
               </div>
               <div className="text-sm text-muted-foreground dark:text-muted-foreground">
                 Calculations Performed
