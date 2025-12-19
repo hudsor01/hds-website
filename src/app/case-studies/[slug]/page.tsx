@@ -4,6 +4,7 @@
  */
 
 import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
 import { getAllCaseStudySlugs, getCaseStudyBySlug } from '@/lib/case-studies';
 import { ArrowLeft, ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -215,8 +216,8 @@ async function CaseStudyContent({ slug }: { slug: string }) {
 
       {/* CTA */}
       <section className="py-section px-4">
-        <div className="container-wide text-center">
-          <div className="glass-section p-12">
+        <div className="container-wide">
+          <GlassCard variant="section" padding="xl" className="text-center">
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Want Results Like This?
             </h2>
@@ -224,12 +225,12 @@ async function CaseStudyContent({ slug }: { slug: string }) {
               Let's discuss how we can help you achieve similar results for your business.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href="/contact">
-        Start Your Project
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
-          </div>
+              <Link href="/contact">
+                Start Your Project
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </GlassCard>
         </div>
       </section>
     </>
@@ -244,7 +245,7 @@ export default async function CaseStudyPage({
   const { slug } = await params;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-card to-background">
+    <main className="min-h-screen bg-background">
       {/* Back Button - Static */}
       <section className="py-8 px-4">
         <div className="container-wide">

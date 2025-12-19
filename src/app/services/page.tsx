@@ -1,5 +1,6 @@
 import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
 import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
 import { ArrowRight, BarChart3, Check, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -184,9 +185,12 @@ export default function ServicesPage() {
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <div
+                <GlassCard
                   key={index}
-                  className="group relative glass-card-light card-padding-lg card-hover-glow transition-all duration-300"
+                  variant="light"
+                  padding="lg"
+                  hover
+                  className="group relative"
                 >
                   <div className="flex-center mb-content-block">
                     <div className={`p-3 rounded-xl ${service.gradient}-20 border border-primary/30`}>
@@ -228,7 +232,7 @@ export default function ServicesPage() {
                     Get Started
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
-                </div>
+                </GlassCard>
               );
             })}
           </div>
@@ -252,13 +256,16 @@ export default function ServicesPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-comfortable mb-16">
             {stats.map((stat, index) => (
-              <div
+              <GlassCard
                 key={index}
-                className="relative glass-card-light card-padding-lg card-hover-glow transition-all duration-300 text-center"
+                variant="light"
+                padding="lg"
+                hover
+                className="relative text-center"
               >
                 <div className="text-4xl font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>
@@ -281,9 +288,12 @@ export default function ServicesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-sections mb-16">
             {process.map((step, index) => (
-              <div
+              <GlassCard
                 key={index}
-                className="group relative glass-card card-padding-lg card-hover-glow transition-all duration-300 text-center"
+                variant="default"
+                padding="lg"
+                hover
+                className="group relative text-center"
               >
                 <div className="mb-heading flex justify-center">
                   <div className="w-16 h-16 bg-accent/20 rounded-full flex-center">
@@ -299,7 +309,7 @@ export default function ServicesPage() {
                     {step.description}
                   </p>
                 </div>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>
@@ -308,7 +318,7 @@ export default function ServicesPage() {
       {/* CTA Section */}
       <section className="relative py-section px-4">
         <div className="container-wide">
-          <div className="relative z-sticky text-center glass-section p-12 md:p-16">
+          <GlassCard variant="section" padding="none" className="relative z-sticky text-center p-12 md:p-16">
             <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               Ready to accelerate
               <span className="text-accent">
@@ -323,24 +333,21 @@ export default function ServicesPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row flex-center gap-content">
-              <Link
-                href="/contact"
-                className="group relative inline-flex items-center gap-3 cta-primary px-10 py-5 text-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
-              >
-                <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative z-sticky">Start Your Project</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <Button asChild variant="default" size="xl" trackConversion={true}>
+                <Link href="/contact">
+                  Start Your Project
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
 
-              <Link
-                href="#services-list"
-                className="group inline-flex items-center gap-3 px-10 py-5 border-2 border-border-primary-dark text-foreground font-semibold text-lg rounded-xl hover:border-accent hover:text-accent transition-all duration-300"
-              >
-                Explore Services
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <Button asChild variant="outline" size="xl">
+                <Link href="#services-list">
+                  Explore Services
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+              </Button>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </section>
     </main>

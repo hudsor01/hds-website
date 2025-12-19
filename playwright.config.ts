@@ -6,14 +6,17 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Use 1 worker for better test isolation and stability
+  workers: 1,
   reporter: 'html',
-  timeout: 60000, // 60 seconds per test
   use: {
     baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
-    actionTimeout: 10000, // 10 seconds for actions (click, fill, etc)
-    navigationTimeout: 15000, // 15 seconds for page navigation
+    // Improve test isolation - clear state between tests
+    storageState: undefined,
+    // Add longer timeout for stability
+    actionTimeout: 10000,
+    navigationTimeout: 30000,
   },
 
   projects: [
@@ -34,7 +37,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev -- -p 3001',
+    command: 'bun run dev -- -p 3001',
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
   },

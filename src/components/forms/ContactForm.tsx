@@ -6,7 +6,7 @@ import { FieldGroup } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
-import { getBudgetOptions, getContactTimeOptions, getServiceOptions, getTimelineOptions } from '@/lib/form-utils'
+import { getFormOptions } from '@/lib/form-utils'
 import { Check } from 'lucide-react'
 
 // Success state component
@@ -37,10 +37,10 @@ export default function ContactForm({ className = '' }: { className?: string }) 
   const mutation = useContactFormSubmit()
   const [showSuccess, setShowSuccess] = useState(false)
 
-  const serviceOptions = useMemo(() => getServiceOptions(), [])
-  const budgetOptions = useMemo(() => getBudgetOptions(), [])
-  const timelineOptions = useMemo(() => getTimelineOptions(), [])
-  const contactTimeOptions = useMemo(() => getContactTimeOptions(), [])
+  const serviceOptions = useMemo(() => getFormOptions('services'), [])
+  const budgetOptions = useMemo(() => getFormOptions('budget'), [])
+  const timelineOptions = useMemo(() => getFormOptions('timeline'), [])
+  const contactTimeOptions = useMemo(() => getFormOptions('contactTime'), [])
 
   const form = useAppForm({
     defaultValues: {
