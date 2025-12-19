@@ -18,6 +18,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1).optional(),
 
     // Database
+    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
     SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
 
     // Webhooks
@@ -78,6 +79,7 @@ export const env = createEnv({
   runtimeEnv: {
     // Server
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     CSRF_SECRET: process.env.CSRF_SECRET,

@@ -38,9 +38,9 @@ export default function HomePage() {
   ];
 
   const results = [
-    { metric: "50+", label: "Projects Delivered", period: "Since 2020" },
-    { metric: "250%", label: "Average ROI Increase", period: "Within 6 months" },
-    { metric: "98%", label: "Client Satisfaction", period: "5-star rated" },
+    { metric: "Fast", label: "Delivery Timeline", period: "2-4 weeks typical" },
+    { metric: "Proven", label: "Track Record", period: "Real client results" },
+    { metric: "Expert", label: "Development Team", period: "10+ years experience" },
     { metric: "24/7", label: "Support Available", period: "When you need us" }
   ];
 
@@ -92,7 +92,7 @@ export default function HomePage() {
                     <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-success-text" />
                     </div>
-                    <span className="text-sm font-medium text-muted">Average 250% ROI</span>
+                    <span className="text-sm font-medium text-muted">Proven ROI Results</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
@@ -277,7 +277,7 @@ export default function HomePage() {
           {/* Bottom accent section */}
           <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
             <p className="text-muted-foreground text-sm font-medium">
-              Join <span className="text-accent font-semibold">50+ successful businesses</span> who transformed with Hudson Digital Solutions
+              Join <span className="text-accent font-semibold">growing businesses</span> who transformed with Hudson Digital Solutions
             </p>
           </div>
         </div>
@@ -459,7 +459,7 @@ export default function HomePage() {
           <NewsletterSignup
             dynamic
             variant="inline"
-            title="Join 500+ Tech Leaders"
+            title="Get Weekly Tech Insights"
             description="Get weekly insights on scaling engineering teams, technical leadership, and development efficiency. No spam, unsubscribe anytime."
           />
         </div>

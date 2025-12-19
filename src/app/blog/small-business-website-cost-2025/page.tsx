@@ -169,7 +169,7 @@ export default function WebsiteCostGuidePost() {
                 
                 <p>The right question is: <strong className="text-foreground">&quot;What&apos;s the return on investment for each website option, and which choice positions my business for growth?&quot;</strong></p>
                 
-                <p>After helping 150+ small businesses navigate this decision, I&apos;ve learned that the cheapest option is rarely the most economical, and the most expensive isn&apos;t always the best value.</p>
+                <p>After helping small businesses navigate this decision, I&apos;ve learned that the cheapest option is rarely the most economical, and the most expensive isn&apos;t always the best value.</p>
 
                 <p>This guide breaks down the true costs, hidden expenses, and ROI potential of each approach so you can make an informed investment decision.</p>
 
@@ -421,7 +421,7 @@ export default function WebsiteCostGuidePost() {
 
                 <div className="bg-background/40 border border-border rounded-lg card-padding">
                   <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
-                  <p className="mt-2">We help small businesses make smart website investments that drive real growth. Our strategic approach has helped 150+ companies achieve an average 340% ROI through professional web development that focuses on business outcomes, not just beautiful design.</p>
+                  <p className="mt-2">We help small businesses make smart website investments that drive real growth. Our strategic approach has helped companies achieve proven ROI results through professional web development that focuses on business outcomes, not just beautiful design.</p>
                   <p className="mt-4">
                     <strong className="text-accent">Ready to discuss your website investment?</strong>{" "}
                     <Link href="/contact" className="text-accent hover:text-accent/80 underline">

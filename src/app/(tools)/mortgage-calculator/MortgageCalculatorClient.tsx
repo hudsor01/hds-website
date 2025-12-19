@@ -338,10 +338,12 @@ export function MortgageCalculatorClient() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
+              <label htmlFor="loanTerm" className="block text-sm font-medium text-foreground mb-1">
                 Loan Term
               </label>
               <select
+                id="loanTerm"
+                name="loanTerm"
                 value={inputs.loanTerm}
                 onChange={(e) => handleInputChange('loanTerm', e.target.value)}
                 className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"

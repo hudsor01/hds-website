@@ -6,28 +6,12 @@
 import { castError, createServerLogger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
-import type { Database, Json } from '@/types/database';
+import type { Json } from '@/types/database';
 import type { LeadAttributionInsert } from '@/types/supabase-helpers';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const logger = createServerLogger('attribution-api');
-
-function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 60 requests per minute per IP
@@ -42,15 +26,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      logger.error('Supabase admin client not available');
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
 
     // Parse and validate request body
     const parseResult = leadAttributionRequestSchema.safeParse(await request.json());
@@ -92,7 +67,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if attribution already exists for this email/session
-    const { data: existing, error: existingError } = await supabase
+    const { data: existing, error: existingError } = await supabaseAdmin
       .from('lead_attribution')
       .select('id, email, first_visit_at, visit_count')
       .eq(email ? 'email' : 'session_id', (email ?? session_id) as string)
@@ -108,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       // Update last visit time and visit count
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('lead_attribution')
         .update({
           last_visit_at: new Date().toISOString(),
@@ -150,7 +125,7 @@ export async function POST(request: NextRequest) {
       last_visit_at: new Date().toISOString(),
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('lead_attribution')
       .insert(insertData)
       .select('id')
@@ -203,15 +178,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Database not configured' },
-        { status: 500 }
-      );
-    }
-
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const session_id = searchParams.get('session_id');
@@ -224,7 +190,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Query attribution data
-    const query = supabase
+    const query = supabaseAdmin
       .from('lead_attribution')
       .select('*');
 
