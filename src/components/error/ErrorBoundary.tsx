@@ -5,6 +5,7 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
 import { logger, castError } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 // Error handling is now managed by React Query for API calls
 
 interface ErrorFallbackProps {
@@ -140,13 +141,14 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           )}
 
           <div className="flex-center">
-            <button
+            <Button
               onClick={resetErrorBoundary}
-              className="button-primary flex items-center gap-tight"
+              variant="default"
+              size="default"
             >
               <RotateCw className="w-5 h-5" />
               Try Again
-            </button>
+            </Button>
           </div>
 
           <p className="text-sm text-muted-foreground mt-content-block">

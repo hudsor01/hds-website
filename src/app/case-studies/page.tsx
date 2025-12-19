@@ -4,6 +4,7 @@
  */
 
 import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
 import { getCaseStudies } from '@/lib/case-studies';
 import { ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -142,7 +143,7 @@ async function CaseStudiesContent() {
 
 export default function CaseStudiesPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-card to-background">
+    <main className="min-h-screen bg-background">
       {/* Hero - Static, prerendered */}
       <section className="py-section px-4">
         <div className="container-wide text-center">
@@ -181,8 +182,8 @@ export default function CaseStudiesPage() {
 
       {/* CTA - Static, prerendered */}
       <section className="py-section px-4">
-        <div className="container-wide text-center">
-          <div className="glass-section p-12">
+        <div className="container-wide">
+          <GlassCard variant="section" padding="xl" className="text-center">
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Get Results Like These?
             </h2>
@@ -190,12 +191,12 @@ export default function CaseStudiesPage() {
               Let's discuss your project and create a custom solution that drives real business results.
             </p>
             <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href="/contact">
-        Start Your Project Today
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
-          </div>
+              <Link href="/contact">
+                Start Your Project Today
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </Button>
+          </GlassCard>
         </div>
       </section>
     </main>

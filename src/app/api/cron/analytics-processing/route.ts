@@ -128,19 +128,17 @@ export async function POST(request: NextRequest) {
 
     // Process analytics data
     const results = await Promise.all([
-      processWebVitals(), // TODO: Create web_vitals table
-      processPageAnalytics(), // TODO: Create page_analytics table
+      // processWebVitals(), // TODO: Create web_vitals table - disabled until table exists
+      // processPageAnalytics(), // TODO: Create page_analytics table - disabled until table exists
       processCustomEvents(),
       processLeadScoring(),
       processConversionFunnels(),
     ])
 
     const summary = {
-      webVitalsProcessed: results[0],
-      pageViewsProcessed: results[1],
-      eventsProcessed: results[2],
-      leadsScored: results[3],
-      funnelsUpdated: results[4],
+      eventsProcessed: results[0],
+      leadsScored: results[1],
+      funnelsUpdated: results[2],
       timestamp: new Date().toISOString(),
     }
 
@@ -160,129 +158,6 @@ export async function POST(request: NextRequest) {
       { error: 'Cron job failed' },
       { status: 500 }
     )
-  }
-}
-
-async function processWebVitals(): Promise<number> {
-  try {
-    // Aggregate web vitals by metric type and page path
-    const { data, error } = await supabaseAdmin
-      .from('web_vitals')
-      .select('metric_type, page_path, value, rating')
-      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()); // Last 24 hours
-
-    if (error) {
-      logger.error('Failed to fetch web vitals', error);
-      return 0;
-    }
-
-    // Process and aggregate the data
-    const aggregated = data?.reduce((acc, curr) => {
-      const key = `${curr.metric_type}-${curr.page_path}`;
-      if (!acc[key]) {
-        acc[key] = { count: 0, total: 0, ratings: { good: 0, 'needs-improvement': 0, poor: 0 } };
-      }
-      acc[key].count++;
-      acc[key].total += curr.value;
-      if (curr.rating) {
-        acc[key].ratings[curr.rating as 'good' | 'needs-improvement' | 'poor']++;
-      }
-      return acc;
-    }, {} as Record<string, { count: number; total: number; ratings: { good: number; 'needs-improvement': number; poor: number } }>);
-
-    // Log aggregated data for monitoring
-    if (aggregated && Object.keys(aggregated).length > 0) {
-      await enqueueLogProcessing({
-        type: 'web_vitals_aggregated',
-        data: aggregated,
-        timestamp: new Date().toISOString(),
-      });
-    }
-
-    return data?.length || 0;
-  } catch (error) {
-    logger.error('Web vitals processing failed', error instanceof Error ? error : new Error(String(error)));
-    return 0;
-  }
-}
-
-async function processPageAnalytics(): Promise<number> {
-  try {
-    // Get page views from the last 24 hours
-    const result = await supabaseAdmin
-      .from('page_analytics')
-      .select('page_path, duration, bounce, session_id, user_id')
-      .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
-
-    if (result.error) {
-      logger.error('Failed to fetch page analytics', result.error);
-      return 0;
-    }
-
-    // If data is null or an error object, return 0
-    if (!result.data) {
-      logger.warn('No page analytics data returned');
-      return 0;
-    }
-
-    // Check if this is an error object disguised as data
-    const firstItem = result.data[0];
-    if (Array.isArray(result.data) && result.data.length > 0 && isSupabaseErrorRecord(firstItem)) {
-      logger.warn('Supabase query returned schema error, skipping page analytics processing');
-      return 0;
-    }
-
-    // Aggregate by page path
-    const aggregated = result.data.reduce((acc, curr) => {
-      if ('page_path' in curr) {
-        const pagePath = curr.page_path as string;
-        if (!acc[pagePath]) {
-          acc[pagePath] = {
-            views: 0,
-            unique_sessions: new Set<string>(),
-            total_duration: 0,
-            bounce_count: 0,
-            avg_duration: 0,
-          };
-        }
-        const pageData = acc[pagePath];
-        pageData.views++;
-        if ('session_id' in curr && curr.session_id) {
-          pageData.unique_sessions.add(curr.session_id as string);
-        }
-        if ('duration' in curr && typeof curr.duration === 'number') {
-          pageData.total_duration += curr.duration;
-        }
-        if ('bounce' in curr && curr.bounce) {
-          pageData.bounce_count++;
-        }
-      }
-      return acc;
-    }, {} as Record<string, { views: number; unique_sessions: Set<string>; total_duration: number; bounce_count: number; avg_duration: number }>);
-
-    // Calculate averages and finalize
-    if (aggregated) {
-      Object.keys(aggregated).forEach(pagePath => {
-        const page = aggregated[pagePath];
-        if (page) {
-          page.avg_duration = page.views > 0 ? page.total_duration / page.views : 0;
-        }
-      });
-    }
-
-    // Log aggregated data
-    if (aggregated && Object.keys(aggregated).length > 0) {
-      await enqueueLogProcessing({
-        type: 'page_analytics_aggregated',
-        data: aggregated,
-        timestamp: new Date().toISOString(),
-      });
-    }
-
-    return result.data?.length || 0;
-  } catch (error) {
-    logger.error('Page analytics processing failed', error instanceof Error ? error : new Error(String(error)));
-    return 0;
   }
 }
 

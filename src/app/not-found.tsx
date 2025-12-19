@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MessageSquare, Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "404 - Page Not Found | Hudson Digital Solutions",
@@ -29,38 +30,38 @@ export default function NotFound() {
           <h2 className="text-responsive-lg font-black text-foreground mb-heading">
             Page Not Found
           </h2>
-          <p className="text-xl text-secondary-foreground mb-comfortable leading-relaxed">
+          <p className="text-xl text-secondary-foreground mb-8 leading-relaxed">
             The page you&apos;re looking for has vanished into the digital void.
             But don&apos;t worry—our navigation system is still operational.
           </p>
         </div>
         {/* Action Buttons */}
-        <div className="flex flex-wrap justify-center gap-comfortable mb-comfortable">
-          <Link href="/" passHref>
-            <button
-              type="button"
-              className="flex items-center gap-tight cta-primary text-lg shadow-lg shadow-cyan-500/25"
-              aria-label="Return to homepage"
-            >
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <Button
+            asChild
+            variant="default"
+            size="lg"
+          >
+            <Link href="/">
               <Home className="w-6 h-6" />
               Return Home
-            </button>
-          </Link>
-          <Link href="/contact" passHref>
-            <button
-              type="button"
-              className="flex items-center gap-tight border-2 border-success-text text-foreground font-bold py-4 px-8 rounded-lg text-lg bg-success-text/10 hover:bg-success-text/20 blur-backdrop transition-all duration-300"
-              aria-label="Contact us for help"
-            >
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+          >
+            <Link href="/contact">
               <MessageSquare className="w-6 h-6" />
               Get Help
-            </button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         {/* Quick Links */}
         <div className="mt-16">
           <h3 className="text-lg font-semibold text-muted-foreground mb-content-block">Or explore these sections:</h3>
-          <div className="flex flex-wrap justify-center gap-content">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link href="/services" passHref>
               <button
                 type="button"
@@ -89,7 +90,7 @@ export default function NotFound() {
         </div>
         {/* Background Elements */}
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-muted opacity-5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-gradient-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-48 h-48 bg-accent opacity-5 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ interface GlassCardProps {
   variant?: GlassVariant
   className?: string
   padding?: "sm" | "md" | "lg" | "xl" | "none"
+  hover?: boolean
 }
 
 const variantStyles = {
@@ -28,12 +29,14 @@ export function GlassCard({
   children,
   variant = "default",
   className,
-  padding = "lg"
+  padding = "lg",
+  hover = false
 }: GlassCardProps) {
   return (
     <div className={cn(
       variantStyles[variant],
       paddingStyles[padding],
+      hover && "card-hover-glow",
       className
     )}>
       {children}

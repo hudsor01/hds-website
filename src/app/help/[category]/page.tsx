@@ -77,21 +77,21 @@ export default async function HelpCategoryPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Header */}
-      <div className="bg-[var(--primary)] text-[var(--primary-foreground)]">
+      <div className="bg-(--primary) text-(--primary-foreground)">
         <div className="container-narrow py-12 md:py-section-sm">
           {/* Breadcrumb */}
           <Breadcrumb className="mb-content-block">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/help" className="text-[var(--primary-foreground)]/70 hover:text-[var(--primary-foreground)]">
+                  <Link href="/help" className="text-(--primary-foreground)/70 hover:text-(--primary-foreground)">
                     Help Center
                   </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-[var(--primary-foreground)]/50" />
+              <BreadcrumbSeparator className="text-(--primary-foreground)/50" />
               <BreadcrumbItem>
-                <BreadcrumbPage className="text-[var(--primary-foreground)]">
+                <BreadcrumbPage className="text-(--primary-foreground)">
                   {categoryInfo.name}
                 </BreadcrumbPage>
               </BreadcrumbItem>
@@ -99,14 +99,14 @@ export default async function HelpCategoryPage({ params }: PageProps) {
           </Breadcrumb>
 
           <div className="flex items-center gap-content">
-            <div className="size-16 rounded-xl bg-[var(--primary-foreground)]/10 flex items-center justify-center">
+            <div className="size-16 rounded-xl bg-(--primary-foreground)/10 flex items-center justify-center">
               {ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">
                 {categoryInfo.name}
               </h1>
-              <p className="text-[var(--primary-foreground)]/80 mt-1">
+              <p className="text-(--primary-foreground)/80 mt-1">
                 {categoryInfo.description}
               </p>
             </div>
@@ -144,14 +144,14 @@ export default async function HelpCategoryPage({ params }: PageProps) {
                 href={`/help/${category}/${article.slug}`}
                 className="block group"
               >
-                <Card className="hover:border-[var(--primary)] hover:shadow-md transition-all">
+                <Card className="hover:border-(--primary) hover:shadow-md transition-all">
                   <CardContent className="card-padding">
                     <div className="flex items-start gap-content">
                       <div className="size-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
                         <FileText className="size-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h2 className="font-semibold text-foreground group-hover:text-[var(--primary)] transition-colors flex items-center gap-tight">
+                        <h2 className="font-semibold text-foreground group-hover:text-(--primary) transition-colors flex items-center gap-tight">
                           {article.title}
                           <ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
                         </h2>
@@ -177,7 +177,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-tight px-4 py-2 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-tight px-4 py-2 bg-(--primary) text-(--primary-foreground) rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
             >
               Contact Support
               <ArrowRight className="size-4" />

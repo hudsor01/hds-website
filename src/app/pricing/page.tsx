@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
+import { PricingCard } from '@/components/pricing-card';
 
 export const metadata: Metadata = {
   title: 'Pricing | Hudson Digital Solutions',
@@ -72,7 +74,7 @@ const pricingTiers = [
     popular: true,
     cta: 'Build My Revenue Machine',
     href: '/contact',
-    roi: 'Proven ROI results'
+    roi: '250% average ROI in 6 months'
   },
   {
     name: 'Business Automation Suite',
@@ -93,7 +95,7 @@ const pricingTiers = [
     popular: false,
     cta: 'Automate My Business',
     href: '/contact',
-    roi: 'Proven ROI in first year'
+    roi: '340% average ROI in first year'
   }
 ];
 
@@ -161,78 +163,18 @@ export default function PricingPage() {
         <div className="container-wide">
           <div className="grid-3">
             {pricingTiers.map((tier) => (
-              <div
+              <PricingCard
                 key={tier.name}
-                className={`group relative glass-card-light card-padding card-hover-glow transition-smooth ${
-                  tier.popular ? 'border-accent/50 shadow-xl shadow-cyan-500/10' : ''
-                }`}
-              >
-                {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-foreground px-4 py-2 rounded-full text-caption font-bold">
-                      MOST POPULAR
-                    </span>
-                  </div>
-                )}
-
-                <div className="text-center mb-comfortable">
-                  <h3 className="text-card-title font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">{tier.name}</h3>
-                  <div className="text-section-title font-black text-accent mb-subheading">{tier.price}</div>
-                  <div className="typography">
-                    <p className="text-muted-foreground leading-relaxed text-pretty">{tier.description}</p>
-                  </div>
-                </div>
-
-                {/* ROI Badge */}
-                {tier.roi && (
-                  <div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
-                    <p className="text-caption font-bold text-success-text text-center">{tier.roi}</p>
-                  </div>
-                )}
-
-                <div className="space-y-content mb-comfortable">
-                  <div>
-                    <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
-                      What&apos;s Included
-                    </h4>
-                    <ul className="space-y-tight">
-                      {tier.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-content">
-                          <div className="w-2 h-2 rounded-full bg-muted mt-2" />
-                          <span className="text-caption text-muted-foreground">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {tier.notIncluded.length > 0 && (
-                    <div>
-                      <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
-                        Not Included
-                      </h4>
-                      <ul className="space-y-tight">
-                        {tier.notIncluded.map((item, idx) => (
-                          <li key={idx} className="flex items-start space-x-3">
-                            <X className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                            <span className="text-sm text-muted-foreground">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-
-                <Link
-                  href={tier.href}
-                  className={`button-base group w-full px-8 py-4 font-bold text-body rounded-lg overflow-hidden ${
-                    tier.popular
-                      ? 'cta-primary hover:shadow-xl hover:shadow-cyan-500/30'
-                      : 'cta-secondary button-hover-glow'
-                  }`}
-                >
-                  <span className="relative">{tier.cta}</span>
-                </Link>
-              </div>
+                name={tier.name}
+                price={tier.price}
+                description={tier.description}
+                features={tier.features}
+                notIncluded={tier.notIncluded}
+                popular={tier.popular}
+                cta={tier.cta}
+                href={tier.href}
+                roi={tier.roi}
+              />
             ))}
           </div>
         </div>
@@ -254,12 +196,17 @@ export default function PricingPage() {
 
           <div className="space-y-content">
             {faqs.map((faq, index) => (
-              <div key={index} className="glass-card-light card-padding hover:border-accent/50 transition-smooth">
+              <GlassCard
+                key={index}
+                variant="light"
+                padding="md"
+                className="hover:border-accent/50"
+              >
                 <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>
@@ -268,7 +215,7 @@ export default function PricingPage() {
       {/* Final CTA */}
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <div className="glass-section card-padding">
+          <GlassCard variant="section" padding="md">
             <h2 className="text-responsive-lg font-black text-foreground mb-heading">
               Ready for Development That Actually Makes Money?
             </h2>
@@ -283,17 +230,17 @@ export default function PricingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-content justify-center">
-              <Link href="/contact">
-                <button className="button-base group cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden will-change-transform">
-                  <span className="relative">Claim Your Free ROI Analysis</span>
-                </button>
-              </Link>
+              <Button asChild variant="default" size="xl" trackConversion={true}>
+                <Link href="/contact">
+                  Claim Your Free ROI Analysis
+                </Link>
+              </Button>
 
-              <Link href="/portfolio">
-                <button className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl will-change-transform">
-                  See Proven Results
-                </button>
-              </Link>
+              <Button asChild variant="outline" size="xl">
+                <Link href="/portfolio">
+                  See $3.7M+ in Proven Results
+                </Link>
+              </Button>
             </div>
 
             {/* Trust signals */}
@@ -301,10 +248,10 @@ export default function PricingPage() {
               <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
                 <div>90-day ROI guarantee</div>
                 <div>Response within 2 hours</div>
-                <div>Proven track record</div>
+                <div>50+ successful projects</div>
               </div>
             </div>
-          </div>
+          </GlassCard>
         </div>
       </section>
     </main>

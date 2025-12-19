@@ -29,7 +29,7 @@ export function ServiceCard({
           <div className={cn(
             "p-3 rounded-xl bg-opacity-20 border border-current border-opacity-30",
             "hover-lift transition-smooth will-change-transform",
-            gradient.startsWith('bg-gradient-') ? gradient : `bg-gradient-to-br ${gradient}`
+            gradient
           )}>
             <Icon icon={icon} size="lg" className="text-foreground" />
           </div>

@@ -107,21 +107,23 @@ export function formatCurrency(amount: number): string {
 /**
  * Format date with proper locale
  */
-export function formatDate(date: Date | string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+export function formatDate(date: Date | string, format: 'short' | 'long' = 'short'): string {
+  const dateObj = new Date(date);
+
+  let options: Intl.DateTimeFormatOptions;
+
+  switch (format) {
+    case 'short':
+      options = { year: 'numeric', month: 'short', day: 'numeric' };
+      break;
+    case 'long':
+      options = { year: 'numeric', month: 'long', day: 'numeric' };
+      break;
+    default:
+      options = { year: 'numeric', month: 'short', day: 'numeric' };
+  }
+
+  return dateObj.toLocaleDateString('en-US', options);
 }
 
-/**
- * Format date with long format
- */
-export function formatDateLong(date: Date | string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
+

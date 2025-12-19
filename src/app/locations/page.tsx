@@ -20,9 +20,9 @@ export default function LocationsPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-[var(--primary)] text-[var(--primary-foreground)] py-section-sm md:py-section">
+      <section className="bg-(--primary) text-(--primary-foreground) py-section-sm md:py-section">
         <div className="container-wide text-center">
-          <Badge variant="secondary" className="mb-heading bg-[var(--primary-foreground)]/10 text-[var(--primary-foreground)] border-0">
+          <Badge variant="secondary" className="mb-heading bg-(--primary-foreground)/10 text-(--primary-foreground) border-0">
             <MapPin className="size-4 mr-1" />
             Serving Texas
           </Badge>
@@ -31,7 +31,7 @@ export default function LocationsPage() {
             Our Texas Service Areas
           </h1>
 
-          <p className="text-xl text-[var(--primary-foreground)]/90 max-w-3xl mx-auto">
+          <p className="text-xl text-(--primary-foreground)/90 max-w-3xl mx-auto">
             Hudson Digital Solutions is a Texas-based digital agency serving businesses across the Lone Star State. From startups to enterprises, we deliver exceptional web solutions.
           </p>
         </div>
@@ -43,15 +43,15 @@ export default function LocationsPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
             {TEXAS_LOCATIONS.map((location) => (
               <Link key={location.slug} href={`/locations/${location.slug}`} className="group">
-                <Card className="h-full hover:border-[var(--primary)] hover:shadow-lg transition-all">
+                <Card className="h-full hover:border-(--primary) hover:shadow-lg transition-all">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-subheading">
-                      <div className="size-10 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)]">
+                      <div className="size-10 rounded-lg bg-(--primary)/10 flex items-center justify-center text-(--primary)">
                         <MapPin className="size-5" />
                       </div>
                       <ArrowRight className="size-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </div>
-                    <CardTitle className="text-xl group-hover:text-[var(--primary)] transition-colors">
+                    <CardTitle className="text-xl group-hover:text-(--primary) transition-colors">
                       {location.city}, {location.stateCode}
                     </CardTitle>
                   </CardHeader>
@@ -83,7 +83,7 @@ export default function LocationsPage() {
       <section className="py-section-sm md:py-section bg-muted/30">
         <div className="container-wide">
           <div className="max-w-4xl mx-auto text-center">
-            <Building2 className="size-12 mx-auto text-[var(--primary)] mb-content-block" />
+            <Building2 className="size-12 mx-auto text-(--primary) mb-content-block" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-heading">
               Why Texas Businesses Trust Us
             </h2>
@@ -132,7 +132,7 @@ export default function LocationsPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-tight px-6 py-3 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-tight px-6 py-3 bg-(--primary) text-(--primary-foreground) rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Contact Us
             <ArrowRight className="size-4" />

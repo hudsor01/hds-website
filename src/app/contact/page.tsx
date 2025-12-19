@@ -2,6 +2,8 @@ import { Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { GlassCard } from '@/components/glass-card';
 
 export const metadata: Metadata = {
   title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
@@ -68,9 +70,9 @@ export default function ContactPage() {
             {/* Left Column - Hero Content */}
             <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/60/30 bg-accent/10 text-accent font-semibold text-caption blur-backdrop">
+                <Badge variant="accent" className="px-4 py-2 text-caption">
                   Let&apos;s Connect
-                </span>
+                </Badge>
               </div>
 
               <div>
@@ -91,7 +93,7 @@ export default function ContactPage() {
 
               {/* Contact Info - Enhanced */}
               <div className="space-y-content">
-                <div className="glass-card-light card-padding-sm space-y-tight">
+                <GlassCard variant="light" padding="sm" className="space-y-tight">
                   <h3 className="text-body-lg font-bold text-foreground mb-subheading">What Happens Next?</h3>
 
                   <div className="flex items-start gap-content text-muted">
@@ -123,7 +125,7 @@ export default function ContactPage() {
                       <p className="text-caption">Detailed plan with ROI projections you can use immediately</p>
                     </div>
                   </div>
-                </div>
+                </GlassCard>
 
                 <div className="flex items-center gap-content text-muted px-4 py-2 bg-success-text/10 border border-success-text/30 rounded-lg">
                   <Clock className="w-6 h-6 text-success-text shrink-0" />
@@ -142,7 +144,7 @@ export default function ContactPage() {
 
             {/* Right Column - Contact Form */}
             <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden glass-card card-padding shadow-2xl">
+              <GlassCard variant="default" padding="lg" className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 bg-background-5" />
                 <div className="relative z-sticky">
                   <div className="text-center mb-comfortable">
@@ -174,7 +176,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                  </div>
-               </div>
+               </GlassCard>
              </div>
            </div>
          </div>
@@ -196,11 +198,11 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="relative rounded-2xl overflow-hidden glass-card-light card-padding-sm">
+          <GlassCard variant="light" padding="sm" className="relative rounded-2xl overflow-hidden">
             <Suspense fallback={<MapSkeleton />}>
               <GoogleMap />
             </Suspense>
-          </div>
+          </GlassCard>
         </div>
       </section>
     </main>
