@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
 
 interface CTAButton {
   text: string;
@@ -23,7 +25,7 @@ export function CTASection({
   return (
     <section className="py-section px-4">
       <div className="container-wide">
-        <div className="glass-section p-12 md:p-16 text-center">
+        <GlassCard variant="section" padding="xl" className="text-center">
           {typeof title === 'string' ? (
             <h2 className="text-clamp-xl font-black text-foreground mb-content-block">
               {title}
@@ -41,23 +43,24 @@ export function CTASection({
           <div className="flex flex-col sm:flex-row gap-content justify-center">
             {buttons.map((button, index) => {
               const isPrimary = button.variant !== 'secondary';
-              const buttonClass = isPrimary
-                ? 'group inline-flex-center px-8 py-4 text-base font-semibold text-black bg-muted-hover rounded-lg'
-                : 'inline-flex-center px-8 py-4 text-base font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-all duration-150';
 
               return (
-                <Link key={index} href={button.href} className={buttonClass}>
-                  {button.text}
-                  {button.icon || (
-                    isPrimary && (
-                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    )
-                  )}
-                </Link>
+                <Button
+                  key={index}
+                  asChild
+                  variant={isPrimary ? 'default' : 'outline'}
+                  size="lg"
+                  trackConversion={isPrimary}
+                >
+                  <Link href={button.href}>
+                    {button.text}
+                    {button.icon || (isPrimary && <ArrowRight className="w-5 h-5" />)}
+                  </Link>
+                </Button>
               );
             })}
           </div>
-        </div>
+        </GlassCard>
       </div>
     </section>
   );

@@ -325,7 +325,7 @@ export default function MetaTagGeneratorPage() {
                       <span className="text-muted-foreground text-sm">Image: {inputs.imageUrl}</span>
                     </div>
                   ) : (
-                    <div className="h-48 bg-gradient-to-br from-primary to-info flex items-center justify-center">
+                    <div className="h-48 bg-muted flex items-center justify-center">
                       <span className="text-foreground text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
                     </div>
                   )}

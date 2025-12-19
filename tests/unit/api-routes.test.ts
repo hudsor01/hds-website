@@ -93,10 +93,19 @@ describe('CSRF Token API', () => {
     expect(data.token.split('.').length).toBe(3); // Token has 3 parts
   });
 
-  it.skip('should return 429 when rate limited', async () => {
-    // Skip: Rate limiter is mocked globally for tests
-    // This test would need a separate test environment with real rate limiting
-    const { GET } = await import('@/app/api/csrf/route');
+  it('should return 429 when rate limited', async () => {
+    // Mock the rate limiter to simulate exhausted limit
+    const { mock } = await import('bun:test');
+    mock.module('@/lib/rate-limiter', () => ({
+      unifiedRateLimiter: {
+        checkLimit: () => Promise.resolve(false), // Simulate rate limit exceeded
+      },
+      getClientIp: (_request: Request) => '127.0.0.1',
+    }));
+
+    // Re-import the route to use the mocked rate limiter
+    const routeModule = await import('@/app/api/csrf/route');
+    const { GET } = routeModule;
 
     const request = new NextRequest('http://localhost:3000/api/csrf', {
       method: 'GET',
@@ -107,6 +116,9 @@ describe('CSRF Token API', () => {
 
     expect(response.status).toBe(429);
     expect(data.error).toContain('Too many requests');
+
+    // Restore mocks after test
+    mock.restore();
   });
 });
 
@@ -294,10 +306,19 @@ describe('Newsletter Subscribe API', () => {
     expect(data.error).toBe('Invalid email address');
   });
 
-  it.skip('should return 429 when rate limited', async () => {
-    // Skip: Rate limiter is mocked globally for tests
-    // This test would need a separate test environment with real rate limiting
-    const { POST } = await import('@/app/api/newsletter/subscribe/route');
+  it('should return 429 when rate limited', async () => {
+    // Mock the rate limiter to simulate exhausted limit
+    const { mock } = await import('bun:test');
+    mock.module('@/lib/rate-limiter', () => ({
+      unifiedRateLimiter: {
+        checkLimit: () => Promise.resolve(false), // Simulate rate limit exceeded
+      },
+      getClientIp: (_request: Request) => '127.0.0.1',
+    }));
+
+    // Re-import the route to use the mocked rate limiter
+    const routeModule = await import('@/app/api/newsletter/subscribe/route');
+    const { POST } = routeModule;
 
     const request = new NextRequest('http://localhost:3000/api/newsletter/subscribe', {
       method: 'POST',
@@ -312,6 +333,9 @@ describe('Newsletter Subscribe API', () => {
 
     expect(response.status).toBe(429);
     expect(data.error).toContain('Too many requests');
+
+    // Restore mocks after test
+    mock.restore();
   });
 });
 
@@ -320,6 +344,14 @@ describe('Newsletter Subscribe API', () => {
 // ================================
 
 describe('API Route Security', () => {
+  beforeEach(() => {
+    setupApiMocks();
+  });
+
+  afterEach(() => {
+    cleanupMocks();
+  });
+
   it('should apply rate limiting to all critical endpoints', async () => {
     const { unifiedRateLimiter, getClientIp } = await import('@/lib/rate-limiter');
 
@@ -350,6 +382,14 @@ describe('API Route Security', () => {
 // ================================
 
 describe('API Response Format', () => {
+  beforeEach(() => {
+    setupApiMocks();
+  });
+
+  afterEach(() => {
+    cleanupMocks();
+  });
+
   it('should return JSON responses with correct content type', async () => {
     const { GET } = await import('@/app/api/health/route');
 

@@ -1,8 +1,18 @@
 {
   "mcpServers": {
-    "supabase": {
-      "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=bholhbfdqbdpfhmrzhbv&features=docs%2Cdatabase%2Cdebugging%2Cdevelopment%2Cfunctions%2Cbranching%2Cstorage"
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--caps",
+        "vision,tracing",
+        "--headless",
+        "false",
+        "--timeout-action",
+        "10000",
+        "--timeout-navigation",
+        "60000"
+      ]
     }
   }
 }

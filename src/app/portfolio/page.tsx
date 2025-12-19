@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { ExternalLink, Sparkles, Code2, Rocket } from 'lucide-react';
+import { ExternalLink, Sparkles, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
+import { Button } from '@/components/ui/button';
+import { GlassCard } from '@/components/glass-card';
+import { ProjectCard } from '@/components/project-card';
 import { getProjects, parseProjectStats } from '@/lib/projects';
 
 // Enable ISR with 1-hour revalidation for Supabase data
@@ -35,13 +38,16 @@ async function PortfolioProjects() {
               { value: "250%", label: "Average ROI" },
               { value: "24/7", label: "Support Available" },
             ].map((stat, index) => (
-              <div
+              <GlassCard
                 key={index}
-                className="relative glass-card card-padding card-hover-glow transition-smooth text-center"
+                variant="default"
+                padding="md"
+                hover
+                className="relative text-center"
               >
                 <div className="text-page-title font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="text-muted-foreground">{stat.label}</div>
-              </div>
+              </GlassCard>
             ))}
           </div>
         </div>
@@ -69,77 +75,17 @@ async function PortfolioProjects() {
               const stats = parseProjectStats(project.stats);
 
               return (
-                <div
+                <ProjectCard
                   key={project.id}
-                  className={`group relative snap-center shrink-0 w-[85vw] md:w-auto ${project.featured ? 'md:col-span-2' : ''}`}
-                >
-                  <Link href={`/portfolio/${project.slug}`}>
-                    <div className="relative h-full overflow-hidden glass-card card-hover-glow transition-all duration-300">
-                      {/* Project Header */}
-                      <div className={`${project.featured ? 'h-80' : 'h-64'} ${project.gradient_class} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-background/20" />
-
-                        {/* Grid pattern overlay */}
-                        <div className="absolute inset-0 grid-pattern-light" />
-
-                        <div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-foreground">
-                          <div className="inline-flex flex-center gap-tight px-3 py-1 rounded-full glass-card-light text-sm mb-heading mx-auto">
-                            <Code2 className="w-4 h-4" />
-                            {project.category}
-                          </div>
-                          <h3 className="text-responsive-lg font-black mb-3">{project.title}</h3>
-                          {project.featured && (
-                            <span className="inline-flex flex-center gap-tight px-3 py-1 rounded-full bg-warning-text/20 text-warning-muted text-sm font-medium mx-auto">
-                              <Sparkles className="w-4 h-4" />
-                              Featured Project
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-fixed">
-                          <div className="button-base group cta-primary px-8 py-4 text-lg font-bold transform hover:scale-105 will-change-transform transform-gpu">
-                            View Project
-                            <ExternalLink className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Project Details */}
-                      <div className="card-padding-lg">
-                        <div className="typography mb-comfortable">
-                          <p className="text-muted-foreground leading-relaxed text-lg">
-                            {project.description}
-                          </p>
-                        </div>
-
-                        {/* Stats Grid */}
-                        {Object.keys(stats).length > 0 && (
-                          <div className="grid grid-cols-3 gap-comfortable mb-comfortable">
-                            {Object.entries(stats).map(([key, value]) => (
-                              <div key={key} className="text-center">
-                                <div className="text-2xl font-bold text-foreground mb-1">{value}</div>
-                                <div className="text-sm text-muted-foreground capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Tech Stack */}
-                        <div className="flex flex-wrap gap-tight">
-                          {project.tech_stack.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-3 py-1 glass-card-light rounded-full text-sm text-muted-foreground hover:border-accent/50 hover:text-accent transition-colors duration-300"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
+                  id={project.id}
+                  slug={project.slug}
+                  title={project.title}
+                  description={project.description}
+                  category={project.category}
+                  featured={project.featured}
+                  stats={stats}
+                  tech_stack={project.tech_stack}
+                />
               );
             })}
           </div>
@@ -193,20 +139,19 @@ export default function PortfolioPage() {
 
               <div>
                 <div className="flex flex-col sm:flex-row flex-center gap-content mt-content-block">
-                  <Link href="/contact">
-                    <button className="button-base group cta-primary px-8 py-4 text-lg font-bold overflow-hidden transform hover:scale-105 will-change-transform transform-gpu focus-ring">
-                      <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      <span className="relative z-sticky">Start Your Project</span>
-                      <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </Link>
+                  <Button asChild variant="default" size="lg" trackConversion={true}>
+                    <Link href="/contact">
+                      Start Your Project
+                      <Rocket className="w-5 h-5" />
+                    </Link>
+                  </Button>
 
-                  <Link href="/services">
-                    <button className="button-base group cta-secondary button-hover-glow px-8 py-4 text-lg font-semibold focus-ring">
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/services">
                       View Services
-                      <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </Link>
+                      <ExternalLink className="w-5 h-5" />
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -226,7 +171,7 @@ export default function PortfolioPage() {
         {/* CTA Section */}
         <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <div className="relative z-sticky text-center glass-section card-padding">
+            <GlassCard variant="section" padding="md" className="relative z-sticky text-center">
               <h2 className="text-clamp-xl font-black text-foreground mb-heading">
                 Ready to create your
                 <span className="text-accent">
@@ -241,24 +186,21 @@ export default function PortfolioPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row flex-center gap-content">
-                <Link
-                  href="/contact"
-                  className="button-base group cta-primary px-10 py-5 text-body-lg font-bold rounded-xl overflow-hidden transform hover:scale-105 will-change-transform transform-gpu"
-                >
-                  <span className="absolute inset-0 shine-effect -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                  <span className="relative z-sticky">Start Your Project</span>
-                  <Rocket className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <Button asChild variant="default" size="xl" trackConversion={true}>
+                  <Link href="/contact">
+                    Start Your Project
+                    <Rocket className="w-5 h-5" />
+                  </Link>
+                </Button>
 
-                <Link
-                  href="/services"
-                  className="button-base group cta-secondary button-hover-glow px-10 py-5 text-body-lg font-semibold rounded-xl"
-                >
-                  View Services
-                  <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <Button asChild variant="outline" size="xl">
+                  <Link href="/services">
+                    View Services
+                    <ExternalLink className="w-5 h-5" />
+                  </Link>
+                </Button>
               </div>
-            </div>
+            </GlassCard>
           </div>
         </section>
       </main>

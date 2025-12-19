@@ -1,5 +1,6 @@
 "use client";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
@@ -105,15 +106,18 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 
             {/* Primary CTA - Get Free Roadmap */}
             <div className="hidden sm:block">
-              <Link
-                href="/contact"
+              <Button
+                asChild
+                variant="default"
+                size="default"
+                trackConversion={true}
                 onClick={() => handleNavClick()}
-                className={cn("button-base group cta-primary overflow-hidden button-hover-glow", spacingClass)}
-                aria-label="Get your free roadmap"
               >
-                <span className="relative">Start Shipping Faster</span>
-                <ArrowRight className="relative w-4 h-4" />
-              </Link>
+                <Link href="/contact">
+                  Start Shipping Faster
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
             </div>
 
             {/* Mobile menu button */}
@@ -174,13 +178,18 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               >
                 Talk to Sales
               </Link>
-              <Link
-                href="/contact"
+              <Button
+                asChild
+                variant="default"
+                size="default"
+                trackConversion={true}
+                className="w-full"
                 onClick={() => handleNavClick()}
-                className="block w-full text-center cta-primary"
               >
-                Get Free Roadmap
-              </Link>
+                <Link href="/contact">
+                  Get Free Roadmap
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

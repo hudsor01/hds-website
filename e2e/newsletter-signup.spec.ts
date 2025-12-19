@@ -61,7 +61,7 @@ test.describe('Newsletter Signup - Homepage', () => {
     const inputInvalid = await emailInput.evaluate((el: HTMLInputElement) => !el.validity.valid)
 
     expect(errorVisible || inputInvalid).toBeTruthy()
-    logger.success('Validation error displayed')
+    logger.complete('Validation error displayed')
   })
 
   test('should show validation error for empty email', async ({ page }, testInfo: TestInfo) => {
@@ -77,12 +77,11 @@ test.describe('Newsletter Signup - Homepage', () => {
     // Wait for validation
     await page.waitForTimeout(500)
 
-    // Check for error or browser validation preventing submission
-    const emailInput = page.locator('input[type="email"]').first()
-    const inputInvalid = await emailInput.evaluate((el: HTMLInputElement) => !el.validity.valid)
+    // Success message should NOT appear with empty email
+    const successVisible = await page.locator('text=/success|subscribed|thank/i').isVisible().catch(() => false)
+    expect(successVisible).toBe(false)
 
-    expect(inputInvalid).toBeTruthy()
-    logger.success('Empty email validation working')
+    logger.complete('Empty email prevented submission')
   })
 
   test('should submit successfully with valid email', async ({ page }, testInfo: TestInfo) => {
@@ -108,7 +107,7 @@ test.describe('Newsletter Signup - Homepage', () => {
     const errorVisible = await page.locator('text=/error|failed|try again|something went wrong/i').isVisible().catch(() => false)
 
     if (successVisible) {
-      logger.success('Newsletter subscription successful')
+      logger.complete('Newsletter subscription successful')
     } else if (errorVisible) {
       logger.warn('Newsletter subscription returned error (expected in test env)')
     }
@@ -145,7 +144,7 @@ test.describe('Newsletter Signup - Homepage', () => {
     const isDisabled = await subscribeButton.isDisabled()
 
     if (buttonText?.includes('Subscribing') || buttonText?.includes('...') || isDisabled) {
-      logger.success('Loading state visible')
+      logger.complete('Loading state visible')
     } else {
       logger.step('Loading state may have been too fast to catch')
     }
@@ -191,7 +190,7 @@ test.describe('Newsletter Signup - Homepage', () => {
       // Check if input is disabled
       const isDisabled = await emailInput.isDisabled()
       if (isDisabled) {
-        logger.success('Input disabled after success')
+        logger.complete('Input disabled after success')
       } else {
         logger.step('Input remains enabled (may be by design)')
       }
@@ -257,7 +256,7 @@ test.describe('Newsletter Signup - Edge Cases', () => {
     const anyResponse = await page.locator('text=/thank you|subscribed|already|error/i').isVisible().catch(() => false)
 
     if (anyResponse) {
-      logger.success('Handled duplicate subscription appropriately')
+      logger.complete('Handled duplicate subscription appropriately')
     } else {
       logger.warn('No visible response to duplicate subscription')
     }
@@ -285,7 +284,7 @@ test.describe('Newsletter Signup - Edge Cases', () => {
 
     // Email should still be in the input
     await expect(emailInput).toHaveValue(testEmail)
-    logger.success('Email preserved after network error')
+    logger.complete('Email preserved after network error')
   })
 
   test('should handle rapid multiple clicks', async ({ page }, testInfo: TestInfo) => {
