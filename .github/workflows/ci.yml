@@ -1,8 +1,10 @@
 name: CI
 
 on:
+  # Only run on push to main/develop, not feature branches
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, develop]
+  # Run on PRs to avoid duplicate runs when pushing to feature branches
   pull_request:
     branches: [main, develop]
 
