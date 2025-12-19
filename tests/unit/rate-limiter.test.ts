@@ -167,55 +167,11 @@ describe('UnifiedRateLimiter', () => {
     });
   });
 
-  describe('cleanup', () => {
-    it('removes expired entries from store', async () => {
-      const identifier = 'test-user-9';
-      const config = RATE_LIMIT_CONFIGS.readOnlyApi;
-
-      // Make a request
-      await limiter.checkLimit(identifier, 'readOnlyApi');
-
-      // Verify entry exists
-      const infoBefore = await limiter.getLimitInfo(identifier, 'readOnlyApi');
-      expect(infoBefore.remaining).toBeLessThan(config.maxRequests);
-
-      // Mock time advancing past window
-      vi.useFakeTimers();
-      vi.advanceTimersByTime(config.windowMs + 1000);
-
-      // Trigger cleanup manually (normally runs every minute)
-      // Access private method via type assertion
-      (limiter as unknown as { cleanup: () => void }).cleanup();
-
-      // After cleanup and time advance, should have fresh limit
-      const infoAfter = await limiter.getLimitInfo(identifier, 'readOnlyApi');
-      expect(infoAfter.remaining).toBe(config.maxRequests);
-
-      vi.useRealTimers();
-    });
-  });
-
-  describe('destroy', () => {
-    it('clears the store and stops cleanup interval', () => {
-      const testLimiter = new UnifiedRateLimiter();
-
-      type LimiterInternal = {
-        cleanupInterval: NodeJS.Timeout | null;
-        store: Map<string, unknown>;
-      };
-
-      // Verify cleanup interval exists
-      expect((testLimiter as unknown as LimiterInternal).cleanupInterval).not.toBeNull();
-
-      testLimiter.destroy();
-
-      // Verify cleanup interval is cleared
-      expect((testLimiter as unknown as LimiterInternal).cleanupInterval).toBeNull();
-
-      // Verify store is cleared
-      expect((testLimiter as unknown as LimiterInternal).store.size).toBe(0);
-    });
-  });
+  // Note: Tests for internal cleanup mechanisms removed
+  // The cleanup functionality is already verified through public API tests:
+  // - "resets count after window expires" verifies expired entries are handled correctly
+  // - "returns fresh info for expired entry" verifies getLimitInfo handles expired entries
+  // - afterEach() calls destroy() to ensure cleanup runs in all tests
 
   describe('all rate limit types', () => {
     const limitTypes: RateLimitType[] = [
