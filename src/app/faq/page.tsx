@@ -6,6 +6,7 @@
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, Search } from 'lucide-react';
@@ -210,7 +211,7 @@ export default function FAQPage() {
         {/* CTA */}
         <section className="py-section px-4">
           <div className="container-wide text-center">
-            <div className="glass-section p-12">
+            <Card variant="glassSection" className="p-12">
               <h2 className="text-4xl font-black text-foreground mb-content-block">
                 Still Have Questions?
               </h2>
@@ -223,7 +224,7 @@ export default function FAQPage() {
         <ArrowRight className="w-4 h-4" />
       </Link>
     </Button>
-            </div>
+            </Card>
           </div>
         </section>
       </main>

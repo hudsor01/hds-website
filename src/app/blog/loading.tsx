@@ -18,10 +18,10 @@ export default function BlogLoading() {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="glass-card rounded-xl overflow-hidden animate-pulse"
+              className="glass-card overflow-hidden animate-pulse"
             >
               <div className="h-48 bg-muted" />
-              <div className="card-padding space-y-content">
+              <div className="space-y-content">
                 <div className="h-4 bg-muted rounded w-24" />
                 <div className="h-6 bg-muted rounded w-full" />
                 <div className="h-4 bg-muted rounded w-3/4" />

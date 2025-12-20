@@ -38,7 +38,7 @@ async function CaseStudiesContent() {
           ) : (
             <div className="grid gap-sections">
               {caseStudies.map((study) => (
-                <div key={study.id} className="glass-card card-padding-lg">
+                <Card key={study.id} variant="glass" size="lg" >
                   <div className="grid md:grid-cols-2 gap-sections">
                     {/* Left Column - Project Details */}
                     <div>
@@ -64,7 +64,7 @@ async function CaseStudiesContent() {
                       {/* Metrics */}
                       <div className="grid grid-cols-2 gap-content mb-content-block">
                         {study.metrics.map((metric, i) => (
-                          <div key={i} className="bg-muted/50 rounded-lg card-padding-sm">
+                          <div key={i} className="bg-muted/50 rounded-lg">
                             <div className="text-2xl font-black text-accent mb-1">
                               {metric.value}
                             </div>
@@ -94,7 +94,7 @@ async function CaseStudiesContent() {
                     </div>
 
                     {/* Right Column - Testimonial */}
-                    <div className="bg-muted/50 rounded-lg card-padding">
+                    <div className="bg-muted/50 rounded-lg">
                       {study.testimonial_video_url ? (
                         <div className="mb-heading">
                           <div className="aspect-video rounded-lg overflow-hidden bg-muted">
@@ -133,7 +133,7 @@ async function CaseStudiesContent() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
           )}

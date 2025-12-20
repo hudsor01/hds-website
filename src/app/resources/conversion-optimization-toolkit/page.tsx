@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { BarChart3, CheckCircle, Clock, DollarSign, Download, Settings, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
@@ -126,7 +127,7 @@ export default function ConversionToolkitPage() {
 
           <div className="grid md:grid-cols-2 gap-comfortable">
             {toolkitItems.map((item, index) => (
-              <div key={index} className="glass-card rounded-xl card-padding hover:border-accent/60/50 transition-smooth">
+              <Card key={index} variant="glass" className="hover:border-accent/60/50 transition-smooth">
                 <div className="flex items-start gap-content">
                   <div className="w-12 h-12 bg-muted-br-20 rounded-lg flex-center shrink-0">
                     <item.icon className="w-6 h-6 text-accent" />
@@ -144,7 +145,7 @@ export default function ConversionToolkitPage() {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -185,7 +186,7 @@ export default function ConversionToolkitPage() {
           </div>
 
           <div className="mt-content-block grid md:grid-cols-2 gap-comfortable">
-            <div className="glass-card-light rounded-lg card-padding-sm">
+            <Card variant="glass" size="sm" className="-light rounded-lg">
               <blockquote className="text-muted italic mb-subheading">
                 &quot;The A/B testing templates saved us months of work. We identified our best-performing headlines in just 2 weeks and saw a 67% increase in sign-ups.&quot;
               </blockquote>
@@ -198,9 +199,9 @@ export default function ConversionToolkitPage() {
                   <div className="text-muted-foreground text-caption">SaaS Founder</div>
                 </div>
               </div>
-            </div>
+            </Card>
 
-            <div className="glass-card-light rounded-lg card-padding-sm">
+            <Card variant="glass" size="sm" className="-light rounded-lg">
               <blockquote className="text-muted italic mb-subheading">
                 &quot;The psychology triggers guide completely changed how we write our copy. Revenue per visitor increased 142% in the first quarter.&quot;
               </blockquote>
@@ -213,7 +214,7 @@ export default function ConversionToolkitPage() {
                   <div className="text-muted-foreground text-caption">E-commerce Director</div>
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -221,7 +222,7 @@ export default function ConversionToolkitPage() {
       {/* Download Section */}
       <section id="download" className="py-section-sm bg-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
+          <Card variant="glass" size="lg" className="rounded-2xl lg:p-12 text-center">
             <Settings className="w-16 h-16 text-success-text mx-auto mb-content-block" />
 
             <h2 className="text-3xl font-black text-foreground mb-heading">
@@ -289,7 +290,7 @@ export default function ConversionToolkitPage() {
                 Get Professional Help
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
     </main>

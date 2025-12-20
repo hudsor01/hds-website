@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Card } from "@/components/ui/card";
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -123,10 +124,10 @@ async function ProjectContent({ slug }: { slug: string }) {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Project Info */}
               <div className="space-y-comfortable">
-                <div className="inline-flex items-center gap-tight px-3 py-1 rounded-full glass-card-light text-sm">
+                <Card variant="glass" className="inline-flex items-center gap-tight px-3 py-1 rounded-full -light text-sm">
                   <Code2 className="w-4 h-4" />
                   {project.category}
-                </div>
+                </Card>
 
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-tight">
                   {project.title}
@@ -190,7 +191,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 
               {/* Project Image */}
               <div className={`relative overflow-hidden rounded-2xl ${project.gradient_class} p-1`}>
-                <div className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden bg-background/20">
+                <div className="relative h-96 lg:h-[500px] overflow-hidden bg-background/20">
                   <Image
                     src={project.image_url}
                     alt={project.title}
@@ -209,7 +210,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         {Object.keys(stats).length > 0 && (
           <section className="relative py-12">
             <div className="container-wide sm:px-6 lg:px-8">
-              <div className="glass-section card-padding-lg">
+              <Card variant="glassSection" size="lg" >
                 <h2 className="text-2xl font-bold text-foreground mb-comfortable">Project Impact</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-sections">
                   {Object.entries(stats).map(([key, value]) => (
@@ -223,7 +224,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
             </div>
           </section>
         )}
@@ -231,7 +232,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         {/* Tech Stack */}
         <section className="relative py-12">
           <div className="container-wide sm:px-6 lg:px-8">
-            <div className="glass-section card-padding-lg">
+            <Card variant="glassSection" size="lg" >
               <h2 className="text-2xl font-bold text-foreground mb-content-block">Technologies Used</h2>
               <div className="flex flex-wrap gap-3">
                 {project.tech_stack.map((tech) => (
@@ -243,7 +244,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   </span>
                 ))}
               </div>
-            </div>
+            </Card>
           </div>
         </section>
 
@@ -270,7 +271,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>
-                    <div className="card-padding">
+                    <div >
                       <div className="text-sm text-accent mb-subheading">{relatedProject.category}</div>
                       <h3 className="text-xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
                         {relatedProject.title}
@@ -289,7 +290,7 @@ async function ProjectContent({ slug }: { slug: string }) {
         {/* CTA Section */}
         <section className="relative py-section px-4">
           <div className="container-wide">
-            <div className="glass-section p-12 md:p-16 text-center">
+            <Card variant="glassSection" className="p-12 md:p-16 text-center">
               <h2 className="text-4xl font-black text-foreground mb-content-block">
                 Ready to create your
                 <span className="text-accent"> success story?</span>
@@ -303,7 +304,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   <ExternalLink className="w-5 h-5" />
                 </Link>
               </Button>
-            </div>
+            </Card>
           </div>
         </section>
     </>

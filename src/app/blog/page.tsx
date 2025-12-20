@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { getPosts, getFeaturedPosts, getTags } from "@/lib/blog";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
@@ -91,9 +92,9 @@ export default async function BlogPage() {
               </div>
 
               {allPosts.length === 0 ? (
-                <div className="glass-card rounded-xl card-padding-lg text-center">
+                <Card variant="glass" size="lg" className="text-center">
                   <p className="text-muted text-lg">No articles found. Check back soon for new content!</p>
-                </div>
+                </Card>
               ) : (
                 <div className="space-y-sections">
                   {allPosts.map((post) => (
@@ -106,7 +107,7 @@ export default async function BlogPage() {
             {/* Sidebar */}
             <aside className="w-full lg:w-80 space-y-sections">
               {/* Newsletter Signup */}
-              <div className="glass-card rounded-xl card-padding">
+              <Card variant="glass" >
                 <h3 className="text-xl font-bold text-foreground mb-heading text-balance">Stay Updated</h3>
                 <p className="text-muted mb-heading text-pretty">Get strategic insights delivered to your inbox.</p>
                 <Link
@@ -116,13 +117,13 @@ export default async function BlogPage() {
                   Contact Us to Subscribe
                 </Link>
                 <p className="text-xs text-muted-foreground mt-2">Strategic insights, no spam.</p>
-              </div>
+              </Card>
 
               {/* Topics */}
               {tags.length > 0 && <TagList tags={tags} />}
 
               {/* CTA */}
-              <div className="glass-card rounded-xl card-padding-sm text-center">
+              <Card variant="glass" size="sm" className="text-center">
                 <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
                 <p className="text-muted mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
@@ -131,7 +132,7 @@ export default async function BlogPage() {
                 >
                   Get Started
                 </Link>
-              </div>
+              </Card>
             </aside>
           </div>
         </div>
