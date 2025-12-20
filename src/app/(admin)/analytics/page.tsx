@@ -10,6 +10,7 @@ import { MetricCard } from '@/components/admin/MetricCard';
 import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
 import {
   CALCULATOR_TYPES,
@@ -226,7 +227,7 @@ export default function AnalyticsDashboard() {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Search and Filters Bar */}
-        <div className="mb-content-block rounded-lg border border-border bg-card card-padding-sm dark:border-border dark:bg-muted">
+        <Card size="sm" className="mb-content-block">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
@@ -269,7 +270,7 @@ export default function AnalyticsDashboard() {
               Showing {leads.length} of {allLeads.length} leads
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Key Metrics */}
         <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -373,8 +374,8 @@ export default function AnalyticsDashboard() {
         )}
 
         {/* Recent Leads Table */}
-        <div className="rounded-lg border border-border bg-card dark:border-border dark:bg-muted">
-          <div className="border-b border-border card-padding dark:border-border">
+        <Card size="none">
+          <div className="border-b border-border card-padding-sm dark:border-border">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
                 Recent Leads
@@ -504,7 +505,7 @@ export default function AnalyticsDashboard() {
               </div>
             )}
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Lead Detail Modal */}
