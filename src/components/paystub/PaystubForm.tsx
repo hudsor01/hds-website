@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -59,7 +60,7 @@ export function PaystubForm({
       </h2>
 
       {/* Employee Information */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Employee Information
         </h2>
@@ -101,10 +102,10 @@ export function PaystubForm({
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Pay Information */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Pay Information
         </h2>
@@ -145,10 +146,10 @@ export function PaystubForm({
             )}
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Tax Information */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Tax Information
         </h2>
@@ -218,10 +219,10 @@ export function PaystubForm({
             </Select>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Pay Frequency */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Pay Frequency
         </h2>
@@ -244,10 +245,10 @@ export function PaystubForm({
             </Select>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Overtime Information */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Overtime
         </h2>
@@ -280,10 +281,10 @@ export function PaystubForm({
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Additional Deductions */}
-      <div className="mb-comfortable card-padding bg-muted rounded-lg border border-border">
+      <Card className="mb-comfortable">
         <h2 className="text-xl font-bold mb-5 text-foreground">
           Additional Deductions
         </h2>
@@ -342,7 +343,7 @@ export function PaystubForm({
             Add Deduction
           </Button>
         </div>
-      </div>
+      </Card>
 
       {/* Action Buttons */}
       <div className="flex-center gap-content">
