@@ -258,8 +258,9 @@ async function ProjectContent({ slug }: { slug: string }) {
                   <Link
                     key={relatedProject.id}
                     href={`/portfolio/${relatedProject.slug}`}
-                    className="group glass-card card-hover-glow transition-all duration-300"
+                    className="group block"
                   >
+                    <Card variant="glass" className="card-hover-glow transition-all duration-300">
                     <div
                       className={`${relatedProject.gradient_class} h-48 relative overflow-hidden`}
                     >
@@ -280,6 +281,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                         {relatedProject.description}
                       </p>
                     </div>
+                    </Card>
                   </Link>
                 ))}
               </div>

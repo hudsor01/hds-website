@@ -3,6 +3,8 @@
  * Displays while blog content is being fetched
  */
 
+import { Card } from '@/components/ui/card';
+
 export default function BlogLoading() {
   return (
     <div className="min-h-screen bg-background">
@@ -16,9 +18,10 @@ export default function BlogLoading() {
         {/* Blog Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sections">
           {[...Array(6)].map((_, i) => (
-            <div
+            <Card
               key={i}
-              className="glass-card overflow-hidden animate-pulse"
+              variant="glass"
+              className="overflow-hidden animate-pulse"
             >
               <div className="h-48 bg-muted" />
               <div className="space-y-content">
@@ -27,7 +30,7 @@ export default function BlogLoading() {
                 <div className="h-4 bg-muted rounded w-3/4" />
                 <div className="h-4 bg-muted rounded w-1/2" />
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>
