@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { BlogAuthor } from "@/lib/blog";
+import { Card } from "@/components/ui/card";
 
 interface AuthorCardProps {
   author: BlogAuthor;
@@ -8,7 +9,7 @@ interface AuthorCardProps {
 
 export function AuthorCard({ author }: AuthorCardProps) {
   return (
-    <div className="glass-card rounded-xl card-padding">
+    <Card variant="glass">
       <div className="flex items-start gap-content">
         {author.profile_image && (
           <Image
@@ -28,6 +29,6 @@ export function AuthorCard({ author }: AuthorCardProps) {
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

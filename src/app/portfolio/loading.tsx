@@ -3,6 +3,8 @@
  * Displays while portfolio content is being fetched
  */
 
+import { Card } from "@/components/ui/card";
+
 export default function PortfolioLoading() {
   return (
     <div className="min-h-screen bg-background">
@@ -16,9 +18,11 @@ export default function PortfolioLoading() {
         {/* Portfolio Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-sections">
           {[...Array(4)].map((_, i) => (
-            <div
+            <Card
               key={i}
-              className="glass-card rounded-xl overflow-hidden animate-pulse"
+              variant="glass"
+              size="none"
+              className="overflow-hidden animate-pulse"
             >
               <div className="h-64 bg-muted" />
               <div className="card-padding space-y-content">
@@ -35,7 +39,7 @@ export default function PortfolioLoading() {
                   <div className="h-6 bg-muted rounded-full w-14" />
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

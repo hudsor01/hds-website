@@ -5,6 +5,8 @@
 
 'use client';
 
+import { Card } from '@/components/ui/card';
+
 interface DataPoint {
   label: string;
   value: number;
@@ -27,7 +29,7 @@ export function SimpleBarChart({
   const maxValue = Math.max(...data.map(d => d.value), 1);
 
   return (
-    <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
+    <Card>
       <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
         {title}
       </h3>
@@ -63,6 +65,6 @@ export function SimpleBarChart({
           </p>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

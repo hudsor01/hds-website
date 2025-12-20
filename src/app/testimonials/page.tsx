@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Card } from "@/components/ui/card";
 import Link from 'next/link'
 import { Star, MessageCircle, ArrowRight } from 'lucide-react'
 
@@ -159,9 +160,10 @@ export default function TestimonialsPage() {
 
           <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-comfortable scrollbar-hide">
             {testimonials.map((testimonial) => (
-              <div
+              <Card
                 key={testimonial.id}
-                className="glass-card-light card-padding card-hover-glow transition-smooth snap-center shrink-0 w-[90vw] md:w-auto"
+                variant="glassLight"
+                className="card-hover-glow transition-smooth snap-center shrink-0 w-[90vw] md:w-auto"
               >
                 {/* Rating */}
                 <div className="mb-subheading">
@@ -195,7 +197,7 @@ export default function TestimonialsPage() {
                     {testimonial.service}
                   </div>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -204,7 +206,7 @@ export default function TestimonialsPage() {
       {/* CTA Section */}
       <section className="section-spacing page-padding-x">
         <div className="container-wide">
-          <div className="glass-section card-padding text-center">
+          <Card variant="glassSection" className="text-center">
             <h2 className="text-clamp-xl font-black text-foreground mb-heading">
               Ready to be our next
               <span className="block text-accent mt-2">
@@ -234,7 +236,7 @@ export default function TestimonialsPage() {
                 View Portfolio
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
     </div>

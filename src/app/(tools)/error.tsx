@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Card } from "@/components/ui/card";
 import Link from 'next/link'
 import { castError, createServerLogger } from '@/lib/logger'
 import { Button } from '@/components/ui/button'
@@ -19,7 +20,7 @@ export default function ToolsError({
 
   return (
     <div className="min-h-screen flex-center px-6 py-section">
-      <div className="max-w-lg w-full text-center glass-card card-padding-lg">
+      <Card variant="glass" size="lg" className="max-w-lg w-full text-center">
         <h1 className="text-2xl font-bold text-foreground mb-subheading">Something went wrong</h1>
         <p className="text-muted-foreground mb-content-block">
           The tools experience hit a snag. Please try again or return to the homepage while we investigate.
@@ -37,7 +38,7 @@ export default function ToolsError({
             <Link href="/">Go home</Link>
           </Button>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

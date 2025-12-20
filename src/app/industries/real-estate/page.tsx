@@ -4,6 +4,7 @@
  */
 
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Home, MapPin, Search, Smartphone, TrendingUp, Users } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -78,12 +79,12 @@ export default function RealEstatePage() {
                 solution: 'Real-time MLS integration. Automated updates. IDX/RETS compliance. Always current listings.',
               },
             ].map((item, i) => (
-              <div key={i} className="glass-card card-padding">
+              <Card key={i} variant="glass" >
                 <item.icon className="w-12 h-12 text-accent mb-heading" />
                 <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
                 <p className="text-destructive-text mb-subheading font-semibold">Problem: {item.problem}</p>
                 <p className="text-success-text">Solution: {item.solution}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -103,11 +104,11 @@ export default function RealEstatePage() {
               { metric: '3x', label: 'More Qualified Leads', icon: Home },
               { metric: '65%', label: 'Mobile Traffic Increase', icon: Smartphone },
             ].map((stat, i) => (
-              <div key={i} className="text-center glass-card card-padding">
+              <Card key={i} variant="glass" className="text-center">
                 <stat.icon className="w-10 h-10 text-accent mx-auto mb-3" />
                 <div className="text-4xl font-black text-accent mb-subheading">{stat.metric}</div>
                 <div className="text-muted">{stat.label}</div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -156,7 +157,7 @@ export default function RealEstatePage() {
       {/* CTA */}
       <section className="py-section px-4">
         <div className="container-wide text-center">
-          <div className="glass-section p-12">
+          <Card variant="glassSection" className="p-12">
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Close More Deals?
             </h2>
@@ -169,7 +170,7 @@ export default function RealEstatePage() {
         <ArrowRight className="w-4 h-4" />
       </Link>
     </Button>
-          </div>
+          </Card>
         </div>
       </section>
     </main>

@@ -1,6 +1,5 @@
-import FloatingTextarea from '@/components/FloatingTextarea'
-import { GlassCard } from '@/components/glass-card'
-import FloatingInput from '@/components/InputPanel/FloatingInput'
+import { FloatingTextarea, FloatingInput } from '@/components/floating-field'
+import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -37,9 +36,9 @@ describe('FloatingInput Component', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test Input')
+    const input = screen.getByRole('textbox', { name: /Test Input/i })
     expect(input).toBeInTheDocument()
-    expect(input).toHaveClass('focus-ring')
+    expect(input).toHaveClass('pt-4', 'pb-2')
   })
 
   it('should float label when focused', async () => {
@@ -54,16 +53,16 @@ describe('FloatingInput Component', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test Input')
+    const input = screen.getByRole('textbox', { name: /Test Input/i })
     const label = screen.getByText('Test Input')
 
     // Label should not be floated initially
-    expect(label).not.toHaveClass('top-2', 'text-xs')
+    expect(label).toHaveClass('top-3', 'text-sm')
 
     // Focus input
     await user.click(input)
     await waitFor(() => {
-      expect(label).toHaveClass('top-2', 'text-xs')
+      expect(label).toHaveClass('-top-2', 'text-xs')
     })
   })
 
@@ -78,7 +77,7 @@ describe('FloatingInput Component', () => {
     )
 
     const label = screen.getByText('Test Input')
-    expect(label).toHaveClass('top-2', 'text-xs')
+    expect(label).toHaveClass('-top-2', 'text-xs')
   })
 
   it('should call onChange when typing', async () => {
@@ -92,7 +91,7 @@ describe('FloatingInput Component', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test Input')
+    const input = screen.getByRole('textbox', { name: /Test Input/i })
     await user.type(input, 'Hello')
 
     expect(mockOnChange).toHaveBeenCalled()
@@ -110,7 +109,7 @@ describe('FloatingInput Component', () => {
     )
 
     expect(screen.getByText('*')).toBeInTheDocument()
-    expect(screen.getByText('*')).toHaveClass('text-danger')
+    expect(screen.getByText('*')).toHaveClass('text-destructive')
   })
 
   it('should be disabled when disabled prop is true', () => {
@@ -124,9 +123,9 @@ describe('FloatingInput Component', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Disabled Input')
+    const input = screen.getByRole('textbox', { name: /Disabled Input/i })
     expect(input).toBeDisabled()
-    expect(input).toHaveClass('cursor-not-allowed', 'opacity-50')
+    expect(input).toHaveClass('disabled:cursor-not-allowed', 'disabled:opacity-50')
   })
 
   it('should call onBlur when focus is lost', async () => {
@@ -141,7 +140,7 @@ describe('FloatingInput Component', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test Input')
+    const input = screen.getByRole('textbox', { name: /Test Input/i })
     await user.click(input)
     await user.tab()
 
@@ -166,36 +165,9 @@ describe('FloatingTextarea Component', () => {
       />
     )
 
-    const textarea = screen.getByPlaceholderText('Your Message')
+    const textarea = screen.getByRole('textbox', { name: /Your Message/i })
     expect(textarea).toBeInTheDocument()
-    expect(textarea).toHaveClass('focus-ring', 'resize-none')
-  })
-
-  it('should show character count when typing', async () => {
-    const { rerender } = render(
-      <FloatingTextarea
-        name="message"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Your Message"
-      />
-    )
-
-    // Initially no character count
-    expect(screen.queryByText(/characters/)).not.toBeInTheDocument()
-
-    // Type some text
-    rerender(
-      <FloatingTextarea
-        name="message"
-        value="Hello world"
-        onChange={mockOnChange}
-        placeholder="Your Message"
-      />
-    )
-
-    // Character count should appear
-    expect(screen.getByText('11 characters')).toBeInTheDocument()
+    expect(textarea).toHaveClass('resize-none')
   })
 
   it('should respect rows prop', () => {
@@ -209,7 +181,7 @@ describe('FloatingTextarea Component', () => {
       />
     )
 
-    const textarea = screen.getByPlaceholderText('Your Message')
+    const textarea = screen.getByRole('textbox', { name: /Your Message/i })
     expect(textarea).toHaveAttribute('rows', '6')
   })
 })
@@ -278,40 +250,33 @@ describe('Button Component', () => {
   })
 })
 
-describe('GlassCard Component', () => {
-  it('should render with glass-card class', () => {
-    const { container } = render(<GlassCard>Content</GlassCard>)
-
-    const card = container.firstChild
-    expect(card).toHaveClass('glass-card')
-  })
-
-  it('should render different variants', () => {
-    const { container, rerender } = render(<GlassCard variant="default">Content</GlassCard>)
+describe('Card Component (Glass Variants)', () => {
+  it('should render different glass variants', () => {
+    const { container, rerender } = render(<Card variant="glass">Content</Card>)
     let card = container.firstChild
     expect(card).toHaveClass('glass-card')
 
-    rerender(<GlassCard variant="light">Content</GlassCard>)
+    rerender(<Card variant="glassLight">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('glass-card-light')
 
-    rerender(<GlassCard variant="section">Content</GlassCard>)
+    rerender(<Card variant="glassSection">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('glass-section')
   })
 
-  it('should apply different padding sizes', () => {
-    const { container, rerender } = render(<GlassCard padding="sm">Content</GlassCard>)
+  it('should apply different size variants', () => {
+    const { container, rerender } = render(<Card size="sm">Content</Card>)
     let card = container.firstChild
     expect(card).toHaveClass('card-padding-sm')
 
-    rerender(<GlassCard padding="lg">Content</GlassCard>)
+    rerender(<Card size="lg">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('card-padding-lg')
   })
 
-  it('should merge custom className', () => {
-    const { container } = render(<GlassCard className="custom-class">Content</GlassCard>)
+  it('should merge custom className with glass variant', () => {
+    const { container } = render(<Card variant="glass" className="custom-class">Content</Card>)
 
     const card = container.firstChild
     expect(card).toHaveClass('glass-card', 'custom-class')

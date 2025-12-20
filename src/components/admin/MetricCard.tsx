@@ -6,6 +6,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { Card } from '@/components/ui/card';
 
 interface MetricCardProps {
   title: string;
@@ -31,7 +32,7 @@ export function MetricCard({
   };
 
   return (
-    <div className="rounded-lg border border-border bg-card card-padding shadow-xs dark:border-border dark:bg-muted">
+    <Card>
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
@@ -57,6 +58,6 @@ export function MetricCard({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

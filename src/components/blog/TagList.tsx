@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Tag } from "lucide-react";
 import type { BlogTag } from "@/lib/blog";
+import { Badge } from "@/components/ui/badge";
 
 interface TagListProps {
   tags: BlogTag[];
@@ -14,14 +15,12 @@ export function TagList({ tags }: TagListProps) {
   return (
     <div className="flex flex-wrap gap-tight">
       {tags.map((tag) => (
-        <Link
-          key={tag.id}
-          href={`/blog/tag/${tag.slug}`}
-          className="flex items-center gap-1 text-sm text-accent bg-accent/10 hover:bg-accent/20 px-3 py-1 rounded-full transition-colors"
-        >
-          <Tag className="w-4 h-4" />
-          {tag.name}
-        </Link>
+        <Badge key={tag.id} variant="accent" asChild>
+          <Link href={`/blog/tag/${tag.slug}`} className="flex items-center gap-1 text-sm px-3 py-1">
+            <Tag className="w-4 h-4" />
+            {tag.name}
+          </Link>
+        </Badge>
       ))}
     </div>
   );

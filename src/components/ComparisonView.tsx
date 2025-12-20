@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
+import { Card } from '@/components/ui/card';
 
 interface ComparisonViewProps {
   comparisonVehicles: Array<{
@@ -20,7 +21,7 @@ export function ComparisonView({
   setComparisonMode
 }: ComparisonViewProps) {
   return (
-    <div className="bg-card rounded-xl shadow-lg card-padding border border-border mb-content-block">
+    <Card className="mb-content-block">
       <div className="flex items-center justify-between mb-heading">
         <h2 className="text-xl font-semibold text-foreground">Compare Vehicles</h2>
         <button
@@ -81,6 +82,6 @@ export function ComparisonView({
           Clear All
         </button>
       </div>
-    </div>
+    </Card>
   );
 }

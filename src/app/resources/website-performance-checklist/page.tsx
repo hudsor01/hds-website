@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { BarChart3, CheckCircle, Download, FileText, Target, Zap } from "lucide-react";
 import type { Metadata } from "next";
@@ -185,7 +186,7 @@ export default function WebsiteChecklistPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
             {checklistItems.map((section, index) => (
-              <div key={section.category} className="glass-card rounded-xl card-padding-sm hover:border-accent/60/50 transition-smooth">
+              <Card key={section.category} variant="glass" size="sm" className="hover:border-accent/60/50 transition-smooth">
                 <h3 className="text-subheading font-bold text-foreground mb-subheading flex flex-center gap-tight">
                   <span className="w-8 h-8 bg-accent text-black rounded-full flex-center text-caption font-bold">
                     {index + 1}
@@ -205,7 +206,7 @@ export default function WebsiteChecklistPage() {
                     </li>
                   )}
                 </ul>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -253,7 +254,7 @@ export default function WebsiteChecklistPage() {
             </div>
 
             <div className="space-y-comfortable">
-              <div className="bg-muted-20 border border-success-text/30 rounded-lg card-padding-sm">
+              <div className="bg-muted-20 border border-success-text/30 rounded-lg">
                 <h3 className="text-subheading font-bold text-foreground mb-subheading">Real Client Results</h3>
                 <div className="space-y-tight">
                   <div className="flex justify-between">
@@ -275,12 +276,12 @@ export default function WebsiteChecklistPage() {
                 </div>
               </div>
 
-              <div className="glass-card-light rounded-lg card-padding-sm">
+              <Card variant="glass" size="sm" className="-light rounded-lg">
                 <blockquote className="text-muted italic mb-subheading">
                   &quot;This checklist helped us identify 12 critical issues we didn&apos;t even know we had. Revenue increased 180% in 8 weeks.&quot;
                 </blockquote>
                 <div className="text-accent font-semibold">— Sarah M., E-commerce Director</div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
@@ -289,7 +290,7 @@ export default function WebsiteChecklistPage() {
       {/* Download Section */}
       <section id="download" className="py-section-sm bg-primary">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="glass-card rounded-2xl card-padding-lg lg:p-12 text-center">
+          <Card variant="glass" size="lg" className="rounded-2xl lg:p-12 text-center">
             <FileText className="w-16 h-16 text-success-text mx-auto mb-content-block" />
 
             <h2 className="text-3xl font-black text-foreground mb-heading">
@@ -349,7 +350,7 @@ export default function WebsiteChecklistPage() {
                 Get Professional Help
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
     </main>

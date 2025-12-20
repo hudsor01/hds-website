@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
@@ -26,7 +27,7 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <div className="glass-card card-padding-lg typography">
+          <Card variant="glass" size="lg" className="typography">
             <section>
               <h2 className="text-2xl font-bold text-foreground mb-heading">Information We Collect</h2>
               <div className="text-muted space-y-content">
@@ -168,13 +169,13 @@ export default function PrivacyPage() {
               <h2 className="text-2xl font-bold text-foreground mb-heading">Contact Us</h2>
               <div className="text-muted space-y-content">
                 <p>If you have any questions about this privacy policy or our privacy practices, please contact us:</p>
-                <div className="bg-background/50 card-padding-sm rounded-lg">
+                <div className="bg-background/50 rounded-lg">
                   <p><strong>Email:</strong> <a href="mailto:hello@hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hello@hudsondigitalsolutions.com</a></p>
                   <p><strong>Website:</strong> <a href="https://hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hudsondigitalsolutions.com</a></p>
                 </div>
               </div>
             </section>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

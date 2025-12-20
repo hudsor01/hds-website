@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
-import { PricingCard } from '@/components/pricing-card';
+import { Card } from '@/components/ui/card';
 
 export const metadata: Metadata = {
   title: 'Pricing | Hudson Digital Solutions',
@@ -163,8 +162,9 @@ export default function PricingPage() {
         <div className="container-wide">
           <div className="grid-3">
             {pricingTiers.map((tier) => (
-              <PricingCard
+              <Card
                 key={tier.name}
+                variant="pricing"
                 name={tier.name}
                 price={tier.price}
                 description={tier.description}
@@ -196,17 +196,17 @@ export default function PricingPage() {
 
           <div className="space-y-content">
             {faqs.map((faq, index) => (
-              <GlassCard
+              <Card
                 key={index}
-                variant="light"
-                padding="md"
+                variant="glassLight"
+                size="md"
                 className="hover:border-accent/50"
               >
                 <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
-              </GlassCard>
+              </Card>
             ))}
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function PricingPage() {
       {/* Final CTA */}
       <section className="section-spacing page-padding-x">
         <div className="container-wide text-center">
-          <GlassCard variant="section" padding="md">
+          <Card variant="glassSection" size="md">
             <h2 className="text-responsive-lg font-black text-foreground mb-heading">
               Ready for Development That Actually Makes Money?
             </h2>
@@ -251,7 +251,7 @@ export default function PricingPage() {
                 <div>50+ successful projects</div>
               </div>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </main>

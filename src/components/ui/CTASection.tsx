@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
+import { Card } from '@/components/ui/card';
 
 interface CTAButton {
   text: string;
@@ -25,7 +25,7 @@ export function CTASection({
   return (
     <section className="py-section px-4">
       <div className="container-wide">
-        <GlassCard variant="section" padding="xl" className="text-center">
+        <Card variant="glassSection" size="xl" className="text-center">
           {typeof title === 'string' ? (
             <h2 className="text-clamp-xl font-black text-foreground mb-content-block">
               {title}
@@ -60,7 +60,7 @@ export function CTASection({
               );
             })}
           </div>
-        </GlassCard>
+        </Card>
       </div>
     </section>
   );

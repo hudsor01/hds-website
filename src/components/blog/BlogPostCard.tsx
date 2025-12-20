@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Calendar, Clock, User } from "lucide-react";
 import type { BlogPost } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -13,7 +14,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
   return (
     <article className={`group ${featured ? "md:col-span-2" : ""}`}>
       <Link href={`/blog/${post.slug}`} className="block">
-        <div className="glass-card rounded-xl overflow-hidden hover:ring-2 hover:ring-accent/50 transition-all">
+        <Card variant="glass" size="none" className="overflow-hidden hover:ring-2 hover:ring-accent/50 transition-all">
           {post.feature_image && (
             <div className={`relative ${featured ? "aspect-[2/1]" : "aspect-video"}`}>
               <Image
@@ -56,7 +57,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
               )}
             </div>
           </div>
-        </div>
+        </Card>
       </Link>
     </article>
   );

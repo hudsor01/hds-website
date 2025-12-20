@@ -1,7 +1,7 @@
 import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
-import { ArrowRight, BarChart3, Check, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { ArrowRight, BarChart3, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -182,59 +182,18 @@ export default function ServicesPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-sections mb-16">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <GlassCard
-                  key={index}
-                  variant="light"
-                  padding="lg"
-                  hover
-                  className="group relative"
-                >
-                  <div className="flex-center mb-content-block">
-                    <div className={`p-3 rounded-xl ${service.gradient}-20 border border-primary/30`}>
-                      <Icon className="h-8 w-8 text-accent" />
-                    </div>
-                  </div>
-
-                  <h3 className="text-2xl font-bold text-foreground mb-heading group-hover:text-accent transition-colors">
-                    {service.title}
-                  </h3>
-
-                  <div className="typography mb-content-block">
-                    <p className="muted leading-relaxed">
-                      {service.description}
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 mb-comfortable">
-                    {service.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-start">
-                        <div className="shrink-0 mr-3 mt-1">
-                          <div className="w-5 h-5 rounded-full bg-muted flex-center">
-                            <Check className="h-3 w-3 text-black" />
-                          </div>
-                        </div>
-                        <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">{feature}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mb-content-block">
-                    <p className="text-2xl font-bold text-foreground">{service.pricing}</p>
-                  </div>
-
-                  <Link
-                    href="/contact"
-                    className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-background-20 border border-accent/30 text-accent font-semibold rounded-lg hover:bg-primary-30 hover:border-accent transition-all duration-300"
-                  >
-                    Get Started
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </Link>
-                </GlassCard>
-              );
-            })}
+            {services.map((service, index) => (
+              <Card
+                key={index}
+                variant="service"
+                title={service.title}
+                description={service.description}
+                features={service.features}
+                icon={service.icon}
+                gradient={service.gradient}
+                pricing={service.pricing}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -256,16 +215,16 @@ export default function ServicesPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-comfortable mb-16">
             {stats.map((stat, index) => (
-              <GlassCard
+              <Card
                 key={index}
-                variant="light"
-                padding="lg"
+                variant="glassLight"
+                size="lg"
                 hover
                 className="relative text-center"
               >
                 <div className="text-4xl font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="small muted">{stat.label}</div>
-              </GlassCard>
+              </Card>
             ))}
           </div>
         </div>
@@ -288,10 +247,10 @@ export default function ServicesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-sections mb-16">
             {process.map((step, index) => (
-              <GlassCard
+              <Card
                 key={index}
-                variant="default"
-                padding="lg"
+                variant="glass"
+                size="lg"
                 hover
                 className="group relative text-center"
               >
@@ -309,7 +268,7 @@ export default function ServicesPage() {
                     {step.description}
                   </p>
                 </div>
-              </GlassCard>
+              </Card>
             ))}
           </div>
         </div>
@@ -318,7 +277,7 @@ export default function ServicesPage() {
       {/* CTA Section */}
       <section className="relative py-section px-4">
         <div className="container-wide">
-          <GlassCard variant="section" padding="none" className="relative z-sticky text-center p-12 md:p-16">
+          <Card variant="glassSection" size="none" className="relative z-sticky text-center p-12 md:p-16">
             <h2 className="text-responsive-md font-black text-foreground mb-content-block">
               Ready to accelerate
               <span className="text-accent">
@@ -347,7 +306,7 @@ export default function ServicesPage() {
                 </Link>
               </Button>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </main>

@@ -3,6 +3,8 @@
  * Displays while case studies content is being fetched
  */
 
+import { Card } from '@/components/ui/card';
+
 export default function CaseStudiesLoading() {
   return (
     <div className="min-h-screen bg-background">
@@ -16,13 +18,14 @@ export default function CaseStudiesLoading() {
         {/* Case Studies Grid Skeleton */}
         <div className="space-y-sections">
           {[...Array(3)].map((_, i) => (
-            <div
+            <Card
               key={i}
-              className="glass-card rounded-xl overflow-hidden animate-pulse"
+              variant="glass"
+              className="overflow-hidden animate-pulse"
             >
               <div className="flex flex-col lg:flex-row">
                 <div className="lg:w-1/2 h-64 lg:h-80 bg-muted" />
-                <div className="lg:w-1/2 card-padding-lg space-y-comfortable">
+                <div className="lg:w-1/2 space-y-comfortable">
                   <div className="flex items-center gap-content">
                     <div className="h-6 bg-muted rounded-full w-24" />
                     <div className="h-6 bg-muted rounded-full w-20" />
@@ -46,7 +49,7 @@ export default function CaseStudiesLoading() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

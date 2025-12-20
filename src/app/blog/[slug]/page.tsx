@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Card } from "@/components/ui/card";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -168,7 +169,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Feature Image */}
         {post.feature_image && (
           <div className="container-wide py-8">
-            <div className="relative aspect-video rounded-xl overflow-hidden">
+            <div className="relative aspect-video overflow-hidden">
               <Image
                 src={post.feature_image}
                 alt={post.title}
@@ -202,7 +203,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* CTA Section */}
       <section className="py-section-sm bg-primary">
         <div className="container-narrow">
-          <div className="glass-card rounded-xl card-padding-lg text-center">
+          <Card variant="glass" size="lg" className="text-center">
             <h2 className="text-3xl font-black text-foreground mb-heading text-balance">
               Ready to Build Your Competitive Advantage?
             </h2>
@@ -215,7 +216,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             >
               Get Started Today
             </Link>
-          </div>
+          </Card>
         </div>
       </section>
     </main>

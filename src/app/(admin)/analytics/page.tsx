@@ -9,6 +9,7 @@ import { LeadDetailModal } from '@/components/admin/LeadDetailModal';
 import { MetricCard } from '@/components/admin/MetricCard';
 import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
+import { Badge } from '@/components/ui/badge';
 import { logger } from '@/lib/logger';
 import {
   CALCULATOR_TYPES,
@@ -451,15 +452,13 @@ export default function AnalyticsDashboard() {
                         <span className="text-sm font-medium text-foreground dark:text-foreground">
                           {lead.lead_score}
                         </span>
-                        <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                          lead.lead_quality === 'hot'
-                            ? 'bg-danger/10 text-danger dark:bg-danger/90 dark:text-danger'
-                            : lead.lead_quality === 'warm'
-                            ? 'bg-warning/10 text-warning dark:bg-warning/90 dark:text-warning'
-                            : 'bg-border-primary/10 text-foreground dark:bg-bg-tertiary-dark dark:text-secondary-foreground'
-                        }`}>
+                        <Badge variant={
+                          lead.lead_quality === 'hot' ? 'danger'
+                            : lead.lead_quality === 'warm' ? 'warning'
+                            : 'secondary'
+                        }>
                           {lead.lead_quality}
-                        </span>
+                        </Badge>
                       </div>
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-secondary-foreground dark:text-secondary-foreground">
@@ -473,19 +472,19 @@ export default function AnalyticsDashboard() {
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex gap-tight">
                         {lead.converted && (
-                          <span className="inline-flex rounded-full bg-success/10 px-2 py-1 text-xs font-semibold text-success dark:bg-success/90 dark:text-success">
+                          <Badge variant="success">
                             Converted
-                          </span>
+                          </Badge>
                         )}
                         {lead.contacted && !lead.converted && (
-                          <span className="inline-flex rounded-full bg-info/10 px-2 py-1 text-xs font-semibold text-info dark:bg-info/90 dark:text-info">
+                          <Badge variant="info">
                             Contacted
-                          </span>
+                          </Badge>
                         )}
                         {!lead.contacted && !lead.converted && (
-                          <span className="inline-flex rounded-full bg-border-primary/10 px-2 py-1 text-xs font-semibold text-foreground dark:bg-bg-tertiary-dark dark:text-secondary-foreground">
+                          <Badge variant="secondary">
                             New
-                          </span>
+                          </Badge>
                         )}
                       </div>
                     </td>

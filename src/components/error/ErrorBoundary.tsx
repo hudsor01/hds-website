@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ComponentType, type ReactNode, type ErrorInfo as ReactErrorInfo } from 'react';
+import { Card } from "@/components/ui/card";
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
@@ -76,9 +77,9 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
   };
 
   return (
-    <div className="min-h-screen bg-background flex-center card-padding">
+    <div className="min-h-screen bg-background flex-center">
       <div className="max-w-md w-full text-center">
-        <div className="glass-card card-padding-lg border border-danger/20">
+        <Card variant="glass" size="lg" className="border border-danger/20">
           <AlertTriangle className="w-16 h-16 text-danger mx-auto mb-content-block" />
 
           <h2 className="text-2xl font-bold text-foreground mb-heading">
@@ -90,7 +91,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           </p>
 
           {error && (
-            <details className="text-left mb-content-block card-padding-sm bg-bg-overlay/30 rounded-lg border border-danger/20">
+            <details className="text-left mb-content-block bg-bg-overlay/30 rounded-lg border border-danger/20">
               <summary className="text-danger cursor-pointer mb-subheading flex-between">
                 <span>Error Details</span>
                 <button
@@ -160,7 +161,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
               hello@hudsondigitalsolutions.com
             </a>
           </p>
-        </div>
+        </Card>
       </div>
     </div>
   );
@@ -231,7 +232,7 @@ export function ComponentErrorBoundary({
   return (
     <ErrorBoundary
       fallback={({ resetErrorBoundary }) => (
-        <div className="card-padding-sm bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/40 rounded-lg">
+        <div className="bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/40 rounded-lg">
           <p className="text-sm text-warning dark:text-warning">
             Failed to load {name}
           </p>
