@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
+import { Card } from "@/components/ui/card";
 import {
   ArrowRight,
   BarChart3,
@@ -112,7 +112,7 @@ export default function HomePage() {
                 <div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
-                <GlassCard variant="light" padding="none" className="relative overflow-hidden">
+                <Card variant="glassLight" size="none" className="relative overflow-hidden">
                   {/* Terminal Header */}
                   <div className="bg-card/80 border-b border-border px-4 py-3 flex-between">
                     <div className="flex-center gap-tight">
@@ -145,7 +145,7 @@ export default function HomePage() {
                       <span className="inline-block w-2 h-4 bg-accent ml-1" />
                     </div>
                   </div>
-                </GlassCard>
+                </Card>
               </div>
             </div>
           </div>
@@ -166,10 +166,10 @@ export default function HomePage() {
 
           <div className="grid lg:grid-cols-3 gap-sections">
             {solutions.map((solution, index) => (
-              <GlassCard
+              <Card
                 key={index}
-                variant="light"
-                padding="lg"
+                variant="glassLight"
+                size="lg"
                 hover
                 className="group relative transform-gpu"
               >
@@ -198,7 +198,7 @@ export default function HomePage() {
                     ))}
                   </div>
                 </div>
-              </GlassCard>
+              </Card>
             ))}
           </div>
         </div>
@@ -233,9 +233,9 @@ export default function HomePage() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Card with enhanced styling */}
-                <GlassCard
-                  variant="light"
-                  padding="lg"
+                <Card
+                  variant="glassLight"
+                  size="lg"
                   hover
                   className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 group-hover:transform group-hover:scale-105 lg:p-10"
                 >
@@ -262,7 +262,7 @@ export default function HomePage() {
 
                   {/* Subtle glow effect */}
                   <div className="absolute inset-0 bg-accent/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                </GlassCard>
+                </Card>
 
                 {/* Connecting dots for visual flow */}
                 {index < results.length - 1 && (
@@ -302,9 +302,9 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-sections">
             {/* ROI Calculator */}
             <Link href="/roi-calculator" className="group block">
-              <GlassCard
-                variant="light"
-                padding="lg"
+              <Card
+                variant="glassLight"
+                size="lg"
                 hover
                 className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
               >
@@ -343,14 +343,14 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-              </GlassCard>
+              </Card>
             </Link>
 
             {/* Cost Estimator */}
             <Link href="/cost-estimator" className="group block">
-              <GlassCard
-                variant="light"
-                padding="lg"
+              <Card
+                variant="glassLight"
+                size="lg"
                 hover
                 className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
               >
@@ -389,14 +389,14 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-              </GlassCard>
+              </Card>
             </Link>
 
             {/* Performance Calculator */}
             <Link href="/performance-calculator" className="group block">
-              <GlassCard
-                variant="light"
-                padding="lg"
+              <Card
+                variant="glassLight"
+                size="lg"
                 hover
                 className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
               >
@@ -435,7 +435,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
-              </GlassCard>
+              </Card>
             </Link>
           </div>
 
@@ -468,7 +468,7 @@ export default function HomePage() {
       {/* Final CTA */}
       <section className="py-section px-4 sm:px-6">
         <div className="container-wide text-center">
-          <GlassCard variant="section" padding="none" className="p-12 md:p-20">
+          <Card variant="glassSection" size="none" className="p-12 md:p-20">
             <div className="w-20 h-20 rounded-2xl bg-primary/80/10 flex items-center justify-center mx-auto mb-comfortable">
               <Rocket className="w-10 h-10 text-accent" />
             </div>
@@ -498,7 +498,7 @@ export default function HomePage() {
       </Link>
     </Button>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </main>

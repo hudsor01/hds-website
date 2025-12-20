@@ -1,5 +1,5 @@
 import FloatingTextarea from '@/components/FloatingTextarea'
-import { GlassCard } from '@/components/glass-card'
+import { Card } from "@/components/ui/card";
 import FloatingInput from '@/components/InputPanel/FloatingInput'
 import { Button } from '@/components/ui/button'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
@@ -278,40 +278,33 @@ describe('Button Component', () => {
   })
 })
 
-describe('GlassCard Component', () => {
-  it('should render with glass-card class', () => {
-    const { container } = render(<GlassCard>Content</GlassCard>)
-
-    const card = container.firstChild
-    expect(card).toHaveClass('glass-card')
-  })
-
-  it('should render different variants', () => {
-    const { container, rerender } = render(<GlassCard variant="default">Content</GlassCard>)
+describe('Card Component (Glass Variants)', () => {
+  it('should render different glass variants', () => {
+    const { container, rerender } = render(<Card variant="glass">Content</Card>)
     let card = container.firstChild
     expect(card).toHaveClass('glass-card')
 
-    rerender(<GlassCard variant="light">Content</GlassCard>)
+    rerender(<Card variant="glassLight">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('glass-card-light')
 
-    rerender(<GlassCard variant="section">Content</GlassCard>)
+    rerender(<Card variant="glassSection">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('glass-section')
   })
 
-  it('should apply different padding sizes', () => {
-    const { container, rerender } = render(<GlassCard padding="sm">Content</GlassCard>)
+  it('should apply different size variants', () => {
+    const { container, rerender } = render(<Card size="sm">Content</Card>)
     let card = container.firstChild
     expect(card).toHaveClass('card-padding-sm')
 
-    rerender(<GlassCard padding="lg">Content</GlassCard>)
+    rerender(<Card size="lg">Content</Card>)
     card = container.firstChild
     expect(card).toHaveClass('card-padding-lg')
   })
 
-  it('should merge custom className', () => {
-    const { container } = render(<GlassCard className="custom-class">Content</GlassCard>)
+  it('should merge custom className with glass variant', () => {
+    const { container } = render(<Card variant="glass" className="custom-class">Content</Card>)
 
     const card = container.firstChild
     expect(card).toHaveClass('glass-card', 'custom-class')

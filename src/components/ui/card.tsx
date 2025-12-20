@@ -1,7 +1,7 @@
 import * as React from "react"
 import type { ComponentType, SVGProps } from 'react'
 import Link from "next/link"
-import { X, ExternalLink, Code2, Sparkles } from "lucide-react"
+import { X, ExternalLink, Code2, Sparkles, Star, MessageCircle } from "lucide-react"
 import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Icon } from "../icon"
@@ -84,8 +84,21 @@ interface ProjectCardProps extends Omit<BaseCardProps, 'variant'> {
   tech_stack: string[]
 }
 
+// Testimonial Card props
+interface TestimonialCardProps extends Omit<BaseCardProps, 'variant' | 'id'> {
+  variant: "testimonial"
+  testimonialId: number | string
+  name: string
+  company: string
+  role: string
+  content: string
+  rating: number
+  service?: string
+  highlight?: string
+}
+
 // Discriminated union of all card types
-export type CardProps = BaseCardProps | ServiceCardProps | PricingCardProps | ProjectCardProps
+export type CardProps = BaseCardProps | ServiceCardProps | PricingCardProps | ProjectCardProps | TestimonialCardProps
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (props, ref) => {
@@ -351,6 +364,71 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               </div>
             </div>
           </Link>
+        </div>
+      )
+    }
+
+    // Testimonial Card
+    if ('variant' in props && props.variant === 'testimonial') {
+      const { testimonialId: _testimonialId, name, company, role, content, rating, service, highlight } = props as TestimonialCardProps
+
+      return (
+        <div
+          ref={ref}
+          className={cn(
+            cardVariants({ variant: 'glassLight', size: 'lg', hover: true }),
+            "snap-center shrink-0 w-[90vw] md:w-auto h-full flex flex-col",
+            className
+          )}
+        >
+          {/* Rating */}
+          <div className="mb-subheading">
+            <div className="flex gap-tight">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={cn(
+                    "w-5 h-5",
+                    i < rating
+                      ? "text-accent fill-accent"
+                      : "text-muted-foreground"
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Highlight Label */}
+          {highlight && (
+            <div className="mb-card-content">
+              <Badge variant="accent" className="px-4 py-2 text-caption font-semibold">
+                {highlight}
+              </Badge>
+            </div>
+          )}
+
+          {/* Quote */}
+          <div className="mb-content-block flex-grow">
+            <MessageCircle className="w-8 h-8 text-accent/30 mb-3" />
+            <p className="text-muted-foreground leading-relaxed">
+              &ldquo;{content}&rdquo;
+            </p>
+          </div>
+
+          {/* Client Info */}
+          <div className="border-t border-border pt-6">
+            <div className="font-semibold text-foreground">
+              {name}
+            </div>
+            <div className="text-caption text-muted-foreground">
+              {role} at {company}
+            </div>
+            {service && (
+              <div className="text-caption text-accent mt-2">
+                {service}
+              </div>
+            )}
+          </div>
         </div>
       )
     }

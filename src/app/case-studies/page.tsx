@@ -4,7 +4,7 @@
  */
 
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
+import { Card } from "@/components/ui/card";
 import { getCaseStudies } from '@/lib/case-studies';
 import { ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -183,7 +183,7 @@ export default function CaseStudiesPage() {
       {/* CTA - Static, prerendered */}
       <section className="py-section px-4">
         <div className="container-wide">
-          <GlassCard variant="section" padding="xl" className="text-center">
+          <Card variant="glassSection" size="xl" className="text-center">
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Ready to Get Results Like These?
             </h2>
@@ -196,7 +196,7 @@ export default function CaseStudiesPage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </main>

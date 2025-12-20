@@ -14,7 +14,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/glass-card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 // Next.js 15: SSR meta for SEO/TTFB
@@ -98,7 +98,7 @@ export default function AboutPage() {
 
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
             {/* Story Content */}
-            <GlassCard variant="light" padding="lg" hover className="group">
+            <Card variant="glassLight" size="lg" hover className="group">
               <h3 className="text-2xl font-bold text-foreground mb-content-block group-hover:text-accent transition-smooth">
                 Forged in Revenue Operations, Refined in Code
               </h3>
@@ -120,11 +120,11 @@ export default function AboutPage() {
                   <Link href="/contact" className="link-primary">Let&apos;s talk about your project</Link>.
                 </p>
               </div>
-            </GlassCard>
+            </Card>
 
             {/* Mission & Vision Cards */}
             <div className="space-y-sections">
-              <GlassCard variant="light" padding="lg" hover className="group">
+              <Card variant="glassLight" size="lg" hover className="group">
                 <div className="flex-center gap-content mb-heading">
                   <div className="p-3 rounded-xl bg-muted-br-20 border border-primary/30">
                     <Rocket className="w-8 h-8 text-accent" />
@@ -136,9 +136,9 @@ export default function AboutPage() {
                 <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
                   Make enterprise-grade development accessible to growing businesses. No more choosing between &quot;affordable but mediocre&quot; or &quot;excellent but unaffordable.&quot; Get both.
                 </p>
-              </GlassCard>
+              </Card>
 
-              <GlassCard variant="light" padding="lg" hover className="group">
+              <Card variant="glassLight" size="lg" hover className="group">
                 <div className="flex-center gap-content mb-heading">
                   <div className="p-3 rounded-xl bg-info/20 border border-info/30">
                     <Eye className="w-8 h-8 text-info" />
@@ -151,7 +151,7 @@ export default function AboutPage() {
                   If your investment doesn&apos;t show measurable ROI within 90 days, we keep working for free until it does. Your success is our only metric.{' '}
                   <Link href="/pricing" className="link-primary font-semibold">View our pricing</Link>.
                 </p>
-              </GlassCard>
+              </Card>
             </div>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid-4">
-            <GlassCard variant="light" padding="sm" hover className="group">
+            <Card variant="glassLight" size="sm" hover className="group">
               <div className="flex-center gap-3 mb-heading">
                 <div className="p-3 rounded-xl bg-muted-br-20 border border-primary/30">
                   <Code2 className="w-6 h-6 text-accent" />
@@ -185,9 +185,9 @@ export default function AboutPage() {
                 <li>• Progressive Web Apps</li>
                 <li>• Performance Optimization</li>
               </ul>
-            </GlassCard>
+            </Card>
 
-            <GlassCard variant="light" padding="sm" hover className="group">
+            <Card variant="glassLight" size="sm" hover className="group">
               <div className="flex-center gap-3 mb-heading">
                 <div className="p-3 rounded-xl bg-muted-br-20 border border-success/30">
                   <BarChart3 className="w-6 h-6 text-success-text" />
@@ -200,9 +200,9 @@ export default function AboutPage() {
                 <li>• A/B Testing</li>
                 <li>• Performance Monitoring</li>
               </ul>
-            </GlassCard>
+            </Card>
 
-            <GlassCard variant="light" padding="sm" hover className="group">
+            <Card variant="glassLight" size="sm" hover className="group">
               <div className="flex-center gap-3 mb-heading">
                 <div className="p-3 rounded-xl bg-muted border border-muted-foreground/30">
                   <Zap className="w-6 h-6 text-orange-text" />
@@ -215,9 +215,9 @@ export default function AboutPage() {
                 <li>• Email Marketing</li>
                 <li>• Lead Nurturing</li>
               </ul>
-            </GlassCard>
+            </Card>
 
-            <GlassCard variant="light" padding="sm" hover className="group">
+            <Card variant="glassLight" size="sm" hover className="group">
               <div className="flex-center gap-3 mb-heading">
                 <div className="p-3 rounded-xl bg-info/20 border border-info/30">
                   <ShieldCheck className="w-6 h-6 text-info" />
@@ -230,7 +230,7 @@ export default function AboutPage() {
                 <li>• Performance Security</li>
                 <li>• Vulnerability Assessment</li>
               </ul>
-            </GlassCard>
+            </Card>
           </div>
         </div>
       </section>
@@ -249,7 +249,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <GlassCard variant="light" padding="lg" hover className="group">
+          <Card variant="glassLight" size="lg" hover className="group">
             <div className="space-y-sections text-muted-foreground leading-relaxed">
               <p className="text-lg group-hover:text-foreground transition-smooth">
                 Before writing a single line of client code, I spent 5+ years as a <strong className="text-accent">revenue operations professional</strong> at enterprise SaaS companies.
@@ -289,7 +289,7 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       </section>
 
@@ -308,7 +308,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid-3">
-            <GlassCard variant="light" padding="lg" hover className="group">
+            <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
                 <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-primary/30">
                   <Lightbulb className="w-8 h-8 text-accent" />
@@ -318,9 +318,9 @@ export default function AboutPage() {
               <p className="text-muted group-hover:text-foreground transition-smooth">
                 Every millisecond matters. We engineer for speed because fast sites convert better, rank higher, and deliver superior user experiences.
               </p>
-            </GlassCard>
+            </Card>
 
-            <GlassCard variant="light" padding="lg" hover className="group">
+            <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
                 <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-success/30">
                   <BarChart3 className="w-8 h-8 text-success-text" />
@@ -330,9 +330,9 @@ export default function AboutPage() {
               <p className="text-muted group-hover:text-foreground transition-smooth">
                 Assumptions kill businesses. Every decision is backed by data, every feature is measured, and every optimization is validated.
               </p>
-            </GlassCard>
+            </Card>
 
-            <GlassCard variant="light" padding="lg" hover className="group">
+            <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
                 <div className="card-padding-sm rounded-2xl bg-muted border border-muted-foreground/30">
                   <Settings className="w-8 h-8 text-orange-text" />
@@ -342,7 +342,7 @@ export default function AboutPage() {
               <p className="text-muted group-hover:text-foreground transition-smooth">
                 We build for tomorrow&apos;s growth, not just today&apos;s needs. Every solution is architected to scale with your business ambitions.
               </p>
-            </GlassCard>
+            </Card>
           </div>
         </div>
       </section>
@@ -350,7 +350,7 @@ export default function AboutPage() {
       {/* Call to Action */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
-          <GlassCard variant="section" padding="md" className="relative z-sticky text-center">
+          <Card variant="glassSection" size="md" className="relative z-sticky text-center">
             <h2 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
               Ready to engineer
               <span className="text-accent">
@@ -377,7 +377,7 @@ export default function AboutPage() {
                 </Link>
               </Button>
             </div>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </main>
