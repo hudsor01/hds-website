@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { ExternalLink, Sparkles, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
-import { ProjectCard } from '@/components/project-card';
+import { Card } from '@/components/ui/card';
 import { getProjects, parseProjectStats } from '@/lib/projects';
 
 // Enable ISR with 1-hour revalidation for Supabase data
@@ -38,16 +37,16 @@ async function PortfolioProjects() {
               { value: "Proven", label: "ROI Results" },
               { value: "24/7", label: "Support Available" },
             ].map((stat, index) => (
-              <GlassCard
+              <Card
                 key={index}
-                variant="default"
-                padding="md"
+                variant="glass"
+                size="md"
                 hover
                 className="relative text-center"
               >
                 <div className="text-page-title font-bold text-foreground mb-subheading">{stat.value}</div>
                 <div className="text-muted-foreground">{stat.label}</div>
-              </GlassCard>
+              </Card>
             ))}
           </div>
         </div>
@@ -75,8 +74,9 @@ async function PortfolioProjects() {
               const stats = parseProjectStats(project.stats);
 
               return (
-                <ProjectCard
+                <Card
                   key={project.id}
+                  variant="project"
                   id={project.id}
                   slug={project.slug}
                   title={project.title}
@@ -171,7 +171,7 @@ export default function PortfolioPage() {
         {/* CTA Section */}
         <section className="relative section-spacing page-padding-x">
           <div className="container-wide">
-            <GlassCard variant="section" padding="md" className="relative z-sticky text-center">
+            <Card variant="glassSection" size="md" className="relative z-sticky text-center">
               <h2 className="text-clamp-xl font-black text-foreground mb-heading">
                 Ready to create your
                 <span className="text-accent">
@@ -200,7 +200,7 @@ export default function PortfolioPage() {
                   </Link>
                 </Button>
               </div>
-            </GlassCard>
+            </Card>
           </div>
         </section>
       </main>
