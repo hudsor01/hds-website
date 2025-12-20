@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { AlertCircle, Check, CreditCard, DollarSign, FileText, Mail, Plus, Save, Share2 } from 'lucide-react';
 import type { CalculationResults, PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types';
 
@@ -43,9 +44,9 @@ export function ResultsPanel({
             <h2 className="text-xl font-bold">Calculation Results</h2>
           </div>
           {calculationResults && (
-            <div className="rounded-full bg-secondary px-3 py-1 text-sm font-medium">
+            <Badge variant="secondary" className="px-3 py-1 text-sm">
               Texas
-            </div>
+            </Badge>
           )}
         </div>
 

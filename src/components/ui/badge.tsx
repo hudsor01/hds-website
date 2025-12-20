@@ -19,6 +19,14 @@ const badgeVariants = cva(
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         accent:
           "border-accent/30 bg-accent/10 text-accent font-semibold [a&]:hover:bg-accent/20",
+        success:
+          "border-transparent bg-success/10 text-success font-semibold [a&]:hover:bg-success/20 dark:bg-success/90 dark:text-success",
+        warning:
+          "border-transparent bg-warning/10 text-warning-text font-semibold [a&]:hover:bg-warning/20 dark:bg-warning/90 dark:text-warning-text",
+        info:
+          "border-transparent bg-info/10 text-info font-semibold [a&]:hover:bg-info/20 dark:bg-info/90 dark:text-info",
+        danger:
+          "border-transparent bg-danger/10 text-danger font-semibold [a&]:hover:bg-danger/20 dark:bg-danger/90 dark:text-danger",
       },
     },
     defaultVariants: {
