@@ -98,16 +98,14 @@ export function CalculatorResults({
 
         <div className="space-y-3">
           {results.map((result, index) => (
-            <div
+            <Card
               key={index}
-              className={`
-                rounded-lg border card-padding-sm
-                ${
-                  result.highlight
-                    ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
-                    : 'border-border bg-muted dark:border-border dark:bg-muted'
-                }
-              `}
+              size="sm"
+              className={
+                result.highlight
+                  ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
+                  : 'bg-muted dark:bg-muted'
+              }
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground dark:text-muted">
@@ -132,7 +130,7 @@ export function CalculatorResults({
                   {result.description}
                 </p>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import type { Lead } from './types';
 
 interface LeadScoreCardProps {
@@ -15,7 +16,7 @@ export function LeadScoreCard({ lead }: LeadScoreCardProps) {
   };
 
   return (
-    <div className="rounded-lg bg-muted card-padding-sm">
+    <Card size="sm" className="bg-muted">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">Lead Score</p>
@@ -25,6 +26,6 @@ export function LeadScoreCard({ lead }: LeadScoreCardProps) {
           {lead.lead_quality.toUpperCase()} LEAD
         </Badge>
       </div>
-    </div>
+    </Card>
   );
 }
