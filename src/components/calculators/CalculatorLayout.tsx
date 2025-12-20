@@ -7,6 +7,7 @@
 
 import { type ReactNode } from 'react';
 import Link from 'next/link';
+import { Card } from '@/components/ui/card';
 
 interface CalculatorLayoutProps {
   title: string;
@@ -44,9 +45,9 @@ export function CalculatorLayout({
         </div>
 
         {/* Calculator Content */}
-        <div className="rounded-lg bg-card card-padding shadow-xl dark:bg-muted sm:card-padding-lg">
+        <Card size="none" className="card-padding sm:card-padding-lg">
           {children}
-        </div>
+        </Card>
 
         {/* Back Link */}
         {showBackLink && (
