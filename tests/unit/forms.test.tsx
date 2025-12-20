@@ -195,7 +195,7 @@ describe('Form Validation Utilities', () => {
 
 describe('Form Field Components', () => {
   it('should render FloatingInput with proper attributes', async () => {
-    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
+    const { FloatingInput } = await import('@/components/floating-field')
     const mockOnChange = mock()
 
     render(
@@ -208,13 +208,13 @@ describe('Form Field Components', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test Field')
+    const input = screen.getByRole('textbox', { name: /Test Field/i })
     expect(input.hasAttribute('required')).toBe(true)
     expect(input.getAttribute('name')).toBe('testField')
   })
 
   it('should render FloatingTextarea with proper attributes', async () => {
-    const { default: FloatingTextarea } = await import('@/components/FloatingTextarea')
+    const { FloatingTextarea } = await import('@/components/floating-field')
     const mockOnChange = mock()
 
     render(
@@ -227,13 +227,13 @@ describe('Form Field Components', () => {
       />
     )
 
-    const textarea = screen.getByPlaceholderText('Your Message')
+    const textarea = screen.getByRole('textbox', { name: /Your Message/i })
     expect(textarea.getAttribute('name')).toBe('message')
     expect(textarea.getAttribute('rows')).toBe('5')
   })
 
   it('should call onChange handlers when typing', async () => {
-    const { default: FloatingInput } = await import('@/components/InputPanel/FloatingInput')
+    const { FloatingInput } = await import('@/components/floating-field')
     const user = userEvent.setup()
     const mockOnChange = mock()
 
@@ -246,7 +246,7 @@ describe('Form Field Components', () => {
       />
     )
 
-    const input = screen.getByPlaceholderText('Test')
+    const input = screen.getByRole('textbox', { name: /^Test$/i })
     await user.type(input, 'Hello')
 
     expect(mockOnChange).toHaveBeenCalled()

@@ -4,7 +4,7 @@
  */
 
 import { Button } from '@/components/ui/button';
-import { GlassCard } from '@/components/glass-card';
+import { Card } from "@/components/ui/card";
 import { getAllCaseStudySlugs, getCaseStudyBySlug } from '@/lib/case-studies';
 import { ArrowLeft, ArrowRight, Clock, ExternalLink, Users } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -92,12 +92,12 @@ async function CaseStudyContent({ slug }: { slug: string }) {
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-comfortable">
             {caseStudy.metrics.map((metric, i) => (
-              <div key={i} className="glass-card card-padding text-center">
+              <Card key={i} variant="glass" className="text-center">
                 <div className="text-5xl font-black text-accent mb-subheading">
                   {metric.value}
                 </div>
                 <div className="text-muted">{metric.label}</div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -110,17 +110,17 @@ async function CaseStudyContent({ slug }: { slug: string }) {
             {/* Challenge */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-content-block">The Challenge</h2>
-              <div className="glass-card card-padding-lg">
+              <Card variant="glass" size="lg" >
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.challenge}
                 </p>
-              </div>
+              </Card>
             </div>
 
             {/* Solution */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-content-block">Our Solution</h2>
-              <div className="glass-card card-padding-lg">
+              <Card variant="glass" size="lg" >
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.solution}
                 </p>
@@ -141,13 +141,13 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                     </div>
                   </div>
                 )}
-              </div>
+              </Card>
             </div>
 
             {/* Results */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-content-block">The Results</h2>
-              <div className="glass-card card-padding-lg">
+              <Card variant="glass" size="lg" >
                 <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
                   {caseStudy.results}
                 </p>
@@ -165,13 +165,13 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                     </a>
                   </div>
                 )}
-              </div>
+              </Card>
             </div>
 
             {/* Testimonial */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-content-block">Client Testimonial</h2>
-              <div className="glass-card card-padding-lg">
+              <Card variant="glass" size="lg" >
                 {caseStudy.testimonial_video_url && (
                   <div className="mb-content-block">
                     <div className="aspect-video rounded-lg overflow-hidden bg-muted">
@@ -208,7 +208,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>
@@ -217,7 +217,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
       {/* CTA */}
       <section className="py-section px-4">
         <div className="container-wide">
-          <GlassCard variant="section" padding="xl" className="text-center">
+          <Card variant="glassSection" size="xl" className="text-center">
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Want Results Like This?
             </h2>
@@ -230,7 +230,7 @@ async function CaseStudyContent({ slug }: { slug: string }) {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>
-          </GlassCard>
+          </Card>
         </div>
       </section>
     </>

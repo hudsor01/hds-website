@@ -4,20 +4,20 @@
 @source "../../components/**/*.{ts,tsx}";
 
 @theme {
-  /* Semantic Color Tokens - Monochromatic Black & White */
+  /* Semantic Color Tokens - Professional Blue & Orange (Muted) */
   --color-background: oklch(0.99 0 0);
   --color-foreground: oklch(0.10 0 0);
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.10 0 0);
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.10 0 0);
-  --color-primary: oklch(0.15 0 0);
+  --color-primary: oklch(0.50 0.14 240);
   --color-primary-foreground: oklch(0.99 0 0);
   --color-secondary: oklch(0.90 0 0);
   --color-secondary-foreground: oklch(0.10 0 0);
   --color-muted: oklch(0.95 0 0);
   --color-muted-foreground: oklch(0.40 0 0);
-  --color-accent: oklch(0.25 0 0);
+  --color-accent: oklch(0.60 0.15 50);
   --color-accent-foreground: oklch(0.99 0 0);
   --color-emerald: oklch(0.60 0.15 160);
   --color-emerald-foreground: oklch(0.98 0 0);
@@ -47,14 +47,14 @@
   --color-destructive-dark: oklch(0.45 0.18 25);
   --color-destructive-darker: oklch(0.4 0.15 25);
   --color-destructive-bg-dark: oklch(0.28 0.12 25);
-  --color-info: oklch(0.55 0.18 210);
+  --color-info: oklch(0.60 0.12 240);
   --color-info-foreground: oklch(0.985 0 0);
-  --color-info-light: oklch(0.97 0.03 210);
-  --color-info-muted: oklch(0.93 0.06 210);
-  --color-info-text: oklch(0.45 0.15 210);
-  --color-info-dark: oklch(0.45 0.15 210);
-  --color-info-darker: oklch(0.38 0.13 210);
-  --color-info-bg-dark: oklch(0.25 0.1 210);
+  --color-info-light: oklch(0.97 0.03 240);
+  --color-info-muted: oklch(0.93 0.06 240);
+  --color-info-text: oklch(0.50 0.12 240);
+  --color-info-dark: oklch(0.50 0.12 240);
+  --color-info-darker: oklch(0.42 0.10 240);
+  --color-info-bg-dark: oklch(0.28 0.08 240);
   --color-orange-hue: oklch(0.70 0.12 60);
   --color-orange-text: oklch(0.55 0.14 60);
   --color-border: oklch(0.90 0 0);
@@ -90,13 +90,13 @@
   --color-card-foreground-dark: oklch(0.98 0 0);
   --color-popover-dark: oklch(0.12 0 0);
   --color-popover-foreground-dark: oklch(0.98 0 0);
-  --color-primary-dark: oklch(0.95 0 0);
+  --color-primary-dark: oklch(0.60 0.14 240);
   --color-primary-foreground-dark: oklch(0.08 0 0);
   --color-secondary-dark: oklch(0.22 0 0);
   --color-secondary-foreground-dark: oklch(0.98 0 0);
   --color-muted-dark: oklch(0.20 0 0);
   --color-muted-foreground-dark: oklch(0.65 0 0);
-  --color-accent-dark: oklch(0.80 0 0);
+  --color-accent-dark: oklch(0.65 0.15 50);
   --color-accent-foreground-dark: oklch(0.08 0 0);
   --color-emerald-dark: oklch(0.65 0.12 160);
   --color-emerald-foreground-dark: oklch(0.96 0.002 90);
@@ -108,7 +108,7 @@
   --color-success-foreground-dark: oklch(0.96 0.002 90);
   --color-warning-dark: oklch(0.75 0.15 85);
   --color-warning-foreground-dark: oklch(0.12 0.005 240);
-  --color-info-dark: oklch(0.60 0.18 210);
+  --color-info-dark: oklch(0.65 0.12 240);
   --color-info-foreground-dark: oklch(0.96 0.002 90);
   --color-border-dark: oklch(0.25 0 0);
   --color-input-dark: oklch(0.18 0 0);
@@ -130,6 +130,20 @@
   --color-bg-tertiary-dark-dark: oklch(0.22 0 0);
   --color-border-primary-dark-2: oklch(0.30 0 0);
   --color-border-primary-dark-dark: oklch(0.30 0 0);
+  --color-success-light-dark: oklch(0.25 0.12 145);
+  --color-success-muted-dark: oklch(0.30 0.10 145);
+  --color-success-text-dark: oklch(0.65 0.14 145);
+  --color-warning-light-dark: oklch(0.30 0.10 85);
+  --color-warning-muted-dark: oklch(0.35 0.08 85);
+  --color-warning-text-dark: oklch(0.75 0.12 85);
+  --color-destructive-light-dark: oklch(0.25 0.10 25);
+  --color-destructive-muted-dark: oklch(0.30 0.08 25);
+  --color-destructive-text-dark: oklch(0.65 0.16 25);
+  --color-info-light-dark: oklch(0.25 0.08 240);
+  --color-info-muted-dark: oklch(0.30 0.06 240);
+  --color-info-text-dark: oklch(0.70 0.10 240);
+  --color-orange-hue-dark: oklch(0.65 0.10 60);
+  --color-orange-text-dark: oklch(0.75 0.12 60);
 
   /* Typography tokens */
   --font-sans: var(--font-spline), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;

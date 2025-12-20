@@ -5,6 +5,8 @@
 
 'use client';
 
+import { Card } from '@/components/ui/card';
+
 interface DataPoint {
   date: string;
   value: number;
@@ -31,7 +33,7 @@ export function TrendLineChart({
 }: TrendLineChartProps) {
   if (datasets.length === 0 || datasets.every(d => d.data.length === 0)) {
     return (
-      <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
+      <Card>
         <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
           {title}
         </h3>
@@ -40,7 +42,7 @@ export function TrendLineChart({
             No data available
           </p>
         </div>
-      </div>
+      </Card>
     );
   }
 
@@ -65,7 +67,7 @@ export function TrendLineChart({
   const xLabels = allDates.filter((_, i) => i % labelInterval === 0 || i === allDates.length - 1);
 
   return (
-    <div className="rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted">
+    <Card>
       <h3 className="mb-content-block text-lg font-semibold text-foreground dark:text-foreground">
         {title}
       </h3>
@@ -184,7 +186,7 @@ export function TrendLineChart({
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
