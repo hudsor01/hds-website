@@ -1,4 +1,5 @@
 import type { VehicleInputs } from '../../types/ttl-types'
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -10,7 +11,7 @@ interface FinancingInputsProps {
 
 export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsProps) {
   return (
-    <div className="rounded-none border bg-card card-padding-sm">
+    <Card size="sm" className="rounded-none">
       <h3 className="text-lg font-medium mb-3">Financing Information</h3>
 
       <div className="grid grid-cols-2 gap-content">
@@ -44,6 +45,6 @@ export function FinancingInputs({ vehicleInput, updateInput }: FinancingInputsPr
           </Select>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

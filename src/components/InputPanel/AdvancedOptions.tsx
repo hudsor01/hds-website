@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Plus, Settings } from 'lucide-react'
@@ -23,7 +24,7 @@ export function AdvancedOptions({
   comparisonVehicles
 }: AdvancedOptionsProps) {
   return (
-    <div className="rounded-none border bg-card card-padding-sm">
+    <Card size="sm" className="rounded-none">
       <div className="flex items-center gap-tight mb-3">
         <Settings className="w-5 h-5 text-foreground" />
         <h3 className="text-lg font-medium">Advanced Options</h3>
@@ -76,6 +77,6 @@ export function AdvancedOptions({
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 }
