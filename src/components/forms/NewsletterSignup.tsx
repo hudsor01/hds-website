@@ -3,6 +3,7 @@
 import { lazy, Suspense } from 'react'
 import { useAppForm } from '@/hooks/form-hook'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Field, FieldError } from '@/components/ui/field'
 import { newsletterSchema } from '@/lib/schemas/contact'
@@ -16,10 +17,10 @@ interface NewsletterSignupProps {
   dynamic?: boolean
 }
 
-const variantStyles = {
-  inline: 'rounded-lg border border-border bg-card card-padding dark:border-border dark:bg-muted',
-  sidebar: 'rounded-lg bg-primary/10 card-padding dark:from-card dark:to-background',
-  modal: 'rounded-lg bg-card card-padding-lg shadow-xl dark:bg-muted',
+const variantConfig = {
+  inline: { size: 'md' as const, className: '' },
+  sidebar: { size: 'md' as const, className: 'bg-primary/10 dark:from-card dark:to-background' },
+  modal: { size: 'lg' as const, className: 'shadow-xl' },
 } as const
 
 // Internal implementation
@@ -51,7 +52,7 @@ function NewsletterSignupContent({
   const errorMessage = mutation.error?.message
 
   return (
-    <div className={variantStyles[variant]}>
+    <Card size={variantConfig[variant].size} className={variantConfig[variant].className}>
       <div className="flex items-start gap-3">
         <div className="shrink-0">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
@@ -144,7 +145,7 @@ function NewsletterSignupContent({
           </form>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 
