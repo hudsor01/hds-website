@@ -78,6 +78,7 @@ playwright-report/
 *.md
 !CLAUDE.md
 !README.md
+!docs/plans/*.md
 
 # Log files
 *.log
