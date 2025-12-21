@@ -25,6 +25,20 @@ export interface AuthResult {
 }
 
 /**
+ * Check if an email is in the admin whitelist (case insensitive)
+ */
+export function isAdminEmail(email: string): boolean {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+
+/**
+ * Check if a user has admin role in metadata
+ */
+export function hasAdminRole(user: { user_metadata?: { role?: string } }): boolean {
+  return user.user_metadata?.role === 'admin';
+}
+
+/**
  * Validate admin authentication using Supabase session
  * Checks if the user is logged in and has admin privileges
  */
@@ -51,8 +65,8 @@ export async function validateAdminAuth(): Promise<AuthResult> {
     // Option 1: Check against email whitelist
     // Option 2: Check user metadata for admin role
     const isAdmin =
-      ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') ||
-      user.user_metadata?.role === 'admin';
+      isAdminEmail(user.email || '') ||
+      hasAdminRole(user);
 
     if (!isAdmin) {
       logger.warn('Admin API request from non-admin user', {

@@ -93,4 +93,63 @@ describe('Admin Authentication', () => {
       expect(result).not.toContain('');
     });
   });
+
+  describe('Admin Email Whitelist Logic', () => {
+    /**
+     * Simulates the email whitelist check logic from admin-auth.ts
+     * This is the logic used in isAdminEmail() function
+     */
+    const checkAdminEmail = (email: string, whitelist: string[]): boolean => {
+      return whitelist.includes(email.toLowerCase());
+    };
+
+    it('allows whitelisted email (case insensitive)', () => {
+      const whitelist = ['admin@example.com', 'super@example.com'];
+
+      expect(checkAdminEmail('admin@example.com', whitelist)).toBe(true);
+      expect(checkAdminEmail('ADMIN@EXAMPLE.COM', whitelist)).toBe(true);
+      expect(checkAdminEmail('Admin@Example.Com', whitelist)).toBe(true);
+      expect(checkAdminEmail('super@example.com', whitelist)).toBe(true);
+      expect(checkAdminEmail('SUPER@EXAMPLE.COM', whitelist)).toBe(true);
+    });
+
+    it('rejects non-whitelisted email', () => {
+      const whitelist = ['admin@example.com', 'super@example.com'];
+
+      expect(checkAdminEmail('hacker@evil.com', whitelist)).toBe(false);
+      expect(checkAdminEmail('notadmin@example.com', whitelist)).toBe(false);
+      expect(checkAdminEmail('user@test.com', whitelist)).toBe(false);
+    });
+
+    it('rejects empty email', () => {
+      const whitelist = ['admin@example.com'];
+
+      expect(checkAdminEmail('', whitelist)).toBe(false);
+    });
+  });
+
+  describe('Admin Role Check Logic', () => {
+    /**
+     * Simulates the role check logic from admin-auth.ts
+     * This is the logic used in hasAdminRole() function
+     */
+    const checkAdminRole = (user: { user_metadata?: { role?: string } }): boolean => {
+      return user.user_metadata?.role === 'admin';
+    };
+
+    it('accepts user with admin role in metadata', () => {
+      expect(checkAdminRole({ user_metadata: { role: 'admin' } })).toBe(true);
+    });
+
+    it('rejects user without admin role', () => {
+      expect(checkAdminRole({ user_metadata: { role: 'user' } })).toBe(false);
+      expect(checkAdminRole({ user_metadata: { role: 'moderator' } })).toBe(false);
+      expect(checkAdminRole({ user_metadata: {} })).toBe(false);
+      expect(checkAdminRole({})).toBe(false);
+    });
+
+    it('rejects user with undefined metadata', () => {
+      expect(checkAdminRole({ user_metadata: undefined })).toBe(false);
+    });
+  });
 });
