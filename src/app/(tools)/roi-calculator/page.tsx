@@ -3,7 +3,8 @@
  * Shows potential revenue increase from improving website conversion rates
  */
 
-import { Suspense } from 'react';
+  import { Suspense } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { ROICalculatorClient } from './ROICalculatorClient';
 
@@ -44,41 +45,41 @@ export default function ROICalculatorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Conversion Optimization
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               A/B testing, UX improvements, and optimized user flows that increase conversions.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Performance Optimization
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Faster load times mean better user experience and higher conversion rates.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Strategic Design
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Data-driven design decisions that guide visitors toward conversion.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Analytics & Testing
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Continuous monitoring and improvement based on real user data.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

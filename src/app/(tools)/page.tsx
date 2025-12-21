@@ -5,6 +5,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Card } from '@/components/ui/card';
 
 export const metadata: Metadata = {
   title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
@@ -87,9 +88,9 @@ export default function ToolsPage() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => (
-              <div
+              <Card
                 key={tool.href}
-                className="group relative flex flex-col rounded-lg border border-border bg-card card-padding shadow-xs transition-all hover:shadow-lg dark:border-border dark:bg-muted"
+                className="group relative flex flex-col shadow-xs transition-all hover:shadow-lg dark:bg-muted"
               >
                 {/* Icon */}
                 <div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-primary-hover dark:text-accent">
@@ -127,7 +128,7 @@ export default function ToolsPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </Link>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -136,7 +137,7 @@ export default function ToolsPage() {
       {/* CTA Section */}
       <section className="px-4 py-section-sm sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl bg-primary/10 card-padding-lg text-center shadow-xl sm:p-12">
+          <Card size="lg" className="bg-primary/10 text-center shadow-xl sm:p-12">
             <h2 className="mb-heading text-3xl font-bold text-foreground">
               Ready to Take Action?
             </h2>
@@ -157,7 +158,7 @@ export default function ToolsPage() {
                 View Services
               </Link>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
 

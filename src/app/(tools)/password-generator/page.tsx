@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+  import { useState, useCallback } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Key, RefreshCw, Shield, ShieldCheck, ShieldAlert } from 'lucide-react';
@@ -337,9 +338,10 @@ export default function PasswordGeneratorPage() {
             {passwords.map((item, index) => {
               const strengthBar = getStrengthBar(item.strength);
               return (
-                <div
+                <Card
                   key={index}
-                  className="rounded-lg border border-border card-padding-sm space-y-3"
+                  size="sm"
+                  className="space-y-3"
                 >
                   <div className="flex items-center gap-3">
                     <code className="flex-1 font-mono text-sm bg-background text-foreground p-3 rounded-md overflow-x-auto">
@@ -373,14 +375,14 @@ export default function PasswordGeneratorPage() {
                       {item.strength.replace('-', ' ')}
                     </span>
                   </div>
-                </div>
+                </Card>
               );
             })}
           </div>
         )}
 
         {/* Security Notice */}
-        <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
+        <Card size="sm" className="bg-info-light dark:bg-info-bg-dark/20">
           <div className="flex">
             <div className="shrink-0">
               <Shield className="h-5 w-5 text-info-text" />
@@ -391,7 +393,7 @@ export default function PasswordGeneratorPage() {
               </p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Educational Content */}
@@ -401,41 +403,41 @@ export default function PasswordGeneratorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Unique Passwords
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Never reuse passwords across multiple accounts. If one gets compromised, others stay safe.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Length Over Complexity
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               A longer password is generally more secure than a shorter complex one. Aim for 16+ characters.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use a Password Manager
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Store passwords in a reputable password manager like 1Password, Bitwarden, or LastPass.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Enable 2FA
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Add two-factor authentication wherever possible for an extra layer of security.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

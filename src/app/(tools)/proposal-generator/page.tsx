@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+  import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
@@ -680,41 +681,41 @@ export default function ProposalGeneratorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Scope
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Define exactly what&apos;s included (and excluded) to prevent scope creep and set clear expectations.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Value-Based Pricing
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Focus on the value and outcomes you&apos;ll deliver rather than just listing hours or tasks.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Realistic Timeline
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Include buffer time for revisions and unexpected delays. Under-promise and over-deliver.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Expiration Date
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Set a proposal validity period (30 days is common) to create urgency and protect your pricing.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

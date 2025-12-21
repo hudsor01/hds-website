@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+  import { useState, useMemo } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
@@ -196,7 +197,7 @@ export default function TipCalculatorPage() {
           <div className="space-y-content border-t border-border pt-6">
             {/* Per Person (if splitting) */}
             {inputs.splitCount > 1 && (
-              <div className="rounded-lg bg-accent/10 dark:bg-primary-hover/20 card-padding">
+              <Card className="bg-accent/10 dark:bg-primary-hover/20">
                 <h4 className="text-sm font-medium text-primary-hover dark:text-accent/80 mb-heading">
                   Per Person ({inputs.splitCount} people)
                 </h4>
@@ -220,11 +221,11 @@ export default function TipCalculatorPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
             )}
 
             {/* Total Summary */}
-            <div className="rounded-lg border border-border card-padding">
+            <Card>
               <h4 className="text-sm font-medium text-muted-foreground mb-heading">
                 Total Summary
               </h4>
@@ -251,10 +252,10 @@ export default function TipCalculatorPage() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Card>
 
             {/* Quick Reference */}
-            <div className="rounded-lg bg-muted/50 card-padding-sm">
+            <Card size="sm" className="bg-muted/50">
               <h4 className="text-sm font-medium text-muted-foreground mb-3">
                 Quick Reference for {formatCurrency(inputs.billAmount)}
               </h4>
@@ -271,7 +272,7 @@ export default function TipCalculatorPage() {
                   );
                 })}
               </div>
-            </div>
+            </Card>
           </div>
         )}
       </div>
@@ -283,41 +284,41 @@ export default function TipCalculatorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Restaurant Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               15-20% is standard. 20%+ for excellent service. Tip on pre-tax amount.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Delivery & Takeout
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               15-20% for delivery. 10-15% for takeout if they prepared it well.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Bar Service
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               $1-2 per drink or 15-20% of tab. More for complex cocktails.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm" dark:border-border>
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Large Parties
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Many places add 18-20% gratuity for groups of 6+. Check your bill!
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
+  import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
@@ -201,7 +202,7 @@ export function ROICalculatorClient() {
             />
           </div>
 
-          <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
+          <Card size="sm" className="bg-info-light dark:bg-info-bg-dark/20">
             <div className="flex">
               <div className="shrink-0">
                 <svg className="h-5 w-5 text-info-text" viewBox="0 0 20 20" fill="currentColor">
@@ -214,7 +215,7 @@ export function ROICalculatorClient() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
           <button
             type="submit"
