@@ -90,6 +90,7 @@ export function generateFingerprint(
  */
 async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
   try {
+    // @ts-expect-error - error_logs table not in generated types yet, needs schema regeneration
     const { error } = await supabaseAdmin.from('error_logs').insert(payload)
     if (error) {
       console.error('[Logger] Failed to push to Supabase:', error.message)

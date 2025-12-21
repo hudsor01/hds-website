@@ -25,7 +25,7 @@ export default function PortfolioLoading() {
               className="overflow-hidden animate-pulse"
             >
               <div className="h-64 bg-muted" />
-              <div className="card-padding space-y-content">
+              <div className="p-6 space-y-content">
                 <div className="flex items-center gap-tight">
                   <div className="h-4 bg-muted rounded w-20" />
                   <div className="h-4 bg-muted rounded w-16" />

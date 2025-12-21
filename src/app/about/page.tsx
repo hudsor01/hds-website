@@ -310,7 +310,7 @@ export default function AboutPage() {
           <div className="grid-3">
             <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
-                <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-primary/30">
+                <div className="p-4 rounded-2xl bg-muted-br-20 border border-primary/30">
                   <Lightbulb className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">Performance First</h3>
@@ -322,7 +322,7 @@ export default function AboutPage() {
 
             <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
-                <div className="card-padding-sm rounded-2xl bg-muted-br-20 border border-success/30">
+                <div className="p-4 rounded-2xl bg-muted-br-20 border border-success/30">
                   <BarChart3 className="w-8 h-8 text-success-text" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-success-text transition-smooth">Data Driven</h3>
@@ -334,7 +334,7 @@ export default function AboutPage() {
 
             <Card variant="glassLight" size="lg" hover className="group">
               <div className="flex items-center gap-content mb-content-block">
-                <div className="card-padding-sm rounded-2xl bg-muted border border-muted-foreground/30">
+                <div className="p-4 rounded-2xl bg-muted border border-muted-foreground/30">
                   <Settings className="w-8 h-8 text-orange-text" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-orange-text transition-smooth">Scalable Architecture</h3>
