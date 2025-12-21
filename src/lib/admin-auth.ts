@@ -14,7 +14,9 @@ if (!process.env.ADMIN_EMAILS?.trim()) {
 
 // Admin email whitelist - users with these emails can access admin features
 // In production, you might use Supabase user roles/metadata instead
-const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase());
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(',')
+  .map(e => e.trim().toLowerCase())
+  .filter(e => e.length > 0);
 
 export interface AuthResult {
   isAuthenticated: boolean;

@@ -50,7 +50,9 @@ describe('Admin Authentication', () => {
      * Simulates the email parsing logic from admin-auth.ts
      */
     const parseAdminEmails = (value: string): string[] => {
-      return value.split(',').map(e => e.trim().toLowerCase());
+      return value.split(',')
+        .map(e => e.trim().toLowerCase())
+        .filter(e => e.length > 0);
     };
 
     it('correctly parses single email', () => {
@@ -71,6 +73,24 @@ describe('Admin Authentication', () => {
     it('normalizes emails to lowercase', () => {
       const result = parseAdminEmails('Admin@EXAMPLE.COM,USER@test.COM');
       expect(result).toEqual(['admin@example.com', 'user@test.com']);
+    });
+
+    it('filters out empty strings from comma-separated values', () => {
+      const result = parseAdminEmails(',admin@example.com,,test@example.com,');
+      expect(result).toEqual(['admin@example.com', 'test@example.com']);
+      expect(result).not.toContain('');
+    });
+
+    it('filters out empty strings from comma-only input', () => {
+      const result = parseAdminEmails(',,,');
+      expect(result).toEqual([]);
+      expect(result).not.toContain('');
+    });
+
+    it('filters out empty strings with whitespace', () => {
+      const result = parseAdminEmails('admin@example.com, , ,test@example.com');
+      expect(result).toEqual(['admin@example.com', 'test@example.com']);
+      expect(result).not.toContain('');
     });
   });
 });

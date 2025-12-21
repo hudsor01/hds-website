@@ -6,6 +6,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Card } from '@/components/ui/card';
 import { getTestimonialRequestByToken } from '@/lib/testimonials';
 import { TestimonialForm } from '@/components/testimonials/TestimonialForm';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -109,13 +110,13 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
           </div>
 
           {/* Form */}
-          <div className="bg-card dark:bg-card rounded-xl shadow-lg border border-border card-padding md:card-padding-lg">
+          <Card size="lg" className="bg-card dark:bg-card rounded-xl shadow-lg">
             <TestimonialForm
               requestId={request.id}
               token={token}
               defaultName={request.client_name}
             />
-          </div>
+          </Card>
 
           {/* Footer Note */}
           <p className="text-sm text-muted-foreground text-center mt-content-block">

@@ -375,7 +375,7 @@ export default function AnalyticsDashboard() {
 
         {/* Recent Leads Table */}
         <Card size="none">
-          <div className="border-b border-border card-padding-sm dark:border-border">
+          <div className="border-b border-border p-4 dark:border-border">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
                 Recent Leads
