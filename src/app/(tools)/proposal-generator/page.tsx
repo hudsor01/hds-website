@@ -681,7 +681,7 @@ export default function ProposalGeneratorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Scope
             </h4>
@@ -690,7 +690,7 @@ export default function ProposalGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Value-Based Pricing
             </h4>
@@ -699,7 +699,7 @@ export default function ProposalGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Realistic Timeline
             </h4>
@@ -708,7 +708,7 @@ export default function ProposalGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Expiration Date
             </h4>

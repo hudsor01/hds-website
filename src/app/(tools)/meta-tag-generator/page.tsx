@@ -306,7 +306,7 @@ export default function MetaTagGeneratorPage() {
               {/* Google Preview */}
               <div>
                 <h3 className="text-sm font-semibold text-muted-foreground mb-3">Google Search Preview</h3>
-                <Card size="sm" bg-card dark:bg-card>
+                <Card size="sm">
                   <div className="text-info-dark text-lg hover:underline cursor-pointer truncate">
                     {inputs.pageTitle || 'Page Title'}
                   </div>
@@ -364,7 +364,7 @@ export default function MetaTagGeneratorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Title Tag
             </h3>
@@ -373,7 +373,7 @@ export default function MetaTagGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Meta Description
             </h3>
@@ -382,7 +382,7 @@ export default function MetaTagGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Open Graph Images
             </h3>
@@ -391,7 +391,7 @@ export default function MetaTagGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Twitter Cards
             </h3>

@@ -45,7 +45,7 @@ export default function ROICalculatorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Conversion Optimization
             </h3>
@@ -54,7 +54,7 @@ export default function ROICalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Performance Optimization
             </h3>
@@ -63,7 +63,7 @@ export default function ROICalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Strategic Design
             </h3>
@@ -72,7 +72,7 @@ export default function ROICalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Analytics & Testing
             </h3>

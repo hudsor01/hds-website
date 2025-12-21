@@ -559,7 +559,7 @@ export default function TestimonialCollectorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Private Links
             </h4>
@@ -568,7 +568,7 @@ export default function TestimonialCollectorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Ask at the Right Time
             </h4>
@@ -577,7 +577,7 @@ export default function TestimonialCollectorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Review Before Publishing
             </h4>
@@ -586,7 +586,7 @@ export default function TestimonialCollectorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Feature Your Best
             </h4>

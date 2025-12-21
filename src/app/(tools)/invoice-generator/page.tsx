@@ -658,7 +658,7 @@ export default function InvoiceGeneratorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Payment Terms
             </h3>
@@ -667,7 +667,7 @@ export default function InvoiceGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Detailed Descriptions
             </h3>
@@ -676,7 +676,7 @@ export default function InvoiceGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Sequential Numbering
             </h3>
@@ -685,7 +685,7 @@ export default function InvoiceGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Keep Records
             </h3>

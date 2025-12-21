@@ -289,7 +289,7 @@ export default function JsonFormatterPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Common Errors
             </h4>
@@ -298,7 +298,7 @@ export default function JsonFormatterPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Data Types
             </h4>
@@ -307,7 +307,7 @@ export default function JsonFormatterPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Minification
             </h4>
@@ -316,7 +316,7 @@ export default function JsonFormatterPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Formatting
             </h4>

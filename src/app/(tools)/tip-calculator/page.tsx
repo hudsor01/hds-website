@@ -284,7 +284,7 @@ export default function TipCalculatorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Restaurant Service
             </h4>
@@ -293,7 +293,7 @@ export default function TipCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Delivery & Takeout
             </h4>
@@ -302,7 +302,7 @@ export default function TipCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Bar Service
             </h4>
@@ -311,7 +311,7 @@ export default function TipCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Large Parties
             </h4>

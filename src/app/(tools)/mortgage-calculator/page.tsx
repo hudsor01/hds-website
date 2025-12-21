@@ -47,7 +47,7 @@ export default function MortgageCalculatorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Principal vs Interest
             </h3>
@@ -56,7 +56,7 @@ export default function MortgageCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               20% Down Payment
             </h3>
@@ -65,7 +65,7 @@ export default function MortgageCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               15 vs 30 Year
             </h3>
@@ -74,7 +74,7 @@ export default function MortgageCalculatorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Total Cost of Ownership
             </h3>

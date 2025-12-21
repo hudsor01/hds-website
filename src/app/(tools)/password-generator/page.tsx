@@ -403,7 +403,7 @@ export default function PasswordGeneratorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Unique Passwords
             </h4>
@@ -412,7 +412,7 @@ export default function PasswordGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Length Over Complexity
             </h4>
@@ -421,7 +421,7 @@ export default function PasswordGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use a Password Manager
             </h4>
@@ -430,7 +430,7 @@ export default function PasswordGeneratorPage() {
             </p>
           </Card>
 
-          <Card size="sm" dark:border-border>
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Enable 2FA
             </h4>
