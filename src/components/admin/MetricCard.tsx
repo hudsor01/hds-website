@@ -26,23 +26,23 @@ export function MetricCard({
   subtitle,
 }: MetricCardProps) {
   const changeColors = {
-    increase: 'text-success-dark dark:text-success-text',
-    decrease: 'text-destructive-dark dark:text-destructive-text',
-    neutral: 'text-muted-foreground dark:text-muted-foreground',
+    increase: 'text-green-600 dark:text-green-400',
+    decrease: 'text-red-600 dark:text-red-400',
+    neutral: 'text-muted-foreground',
   };
 
   return (
-    <Card>
+    <Card className="p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+          <p className="text-sm font-medium text-muted-foreground">
             {title}
           </p>
-          <p className="mt-2 text-3xl font-bold text-foreground dark:text-foreground">
+          <p className="mt-2 text-3xl font-bold text-foreground">
             {value}
           </p>
           {subtitle && (
-            <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               {subtitle}
             </p>
           )}
@@ -53,7 +53,7 @@ export function MetricCard({
           )}
         </div>
         {icon && (
-          <div className="ml-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent/20 dark:bg-primary-hover">
+          <div className="ml-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
             {icon}
           </div>
         )}

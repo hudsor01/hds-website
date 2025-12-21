@@ -21,7 +21,7 @@ export function ErrorStats({ stats, isLoading = false }: ErrorStatsProps) {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="h-32 animate-pulse rounded-xl bg-muted dark:bg-muted"
+            className="h-32 animate-pulse rounded-xl bg-muted"
           />
         ))}
       </div>
@@ -41,21 +41,21 @@ export function ErrorStats({ stats, isLoading = false }: ErrorStatsProps) {
         title="Unique Types"
         value={stats.unique_types}
         subtitle="Error patterns"
-        icon={<AlertTriangle className="h-6 w-6 text-warning-dark" />}
+        icon={<AlertTriangle className="h-6 w-6 text-yellow-500" />}
       />
 
       <MetricCard
         title="Fatal Errors"
         value={stats.fatal_count}
         subtitle="Requires attention"
-        icon={<XCircle className="h-6 w-6 text-destructive-dark" />}
+        icon={<XCircle className="h-6 w-6 text-red-500" />}
       />
 
       <MetricCard
         title="Unresolved"
         value={stats.unresolved_count}
         subtitle={`${stats.resolved_count} resolved`}
-        icon={<CheckCircle className="h-6 w-6 text-success-dark" />}
+        icon={<CheckCircle className="h-6 w-6 text-green-500" />}
       />
     </div>
   );

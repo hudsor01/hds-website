@@ -90,12 +90,12 @@ export function ErrorDetailModal({
           <DialogTitle className="text-2xl">{error.error_type}</DialogTitle>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span>{error.count} occurrences</span>
-            <span>•</span>
+            <span>-</span>
             <span
               className={
                 error.level === 'fatal'
-                  ? 'text-destructive-dark'
-                  : 'text-warning-dark'
+                  ? 'text-red-500 font-medium'
+                  : 'text-yellow-500 font-medium'
               }
             >
               {error.level}
@@ -105,10 +105,10 @@ export function ErrorDetailModal({
 
         {/* Message */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-foreground dark:text-foreground">
+          <h3 className="text-sm font-semibold text-foreground">
             Message
           </h3>
-          <p className="text-sm text-secondary-foreground dark:text-secondary-foreground">
+          <p className="text-sm text-muted-foreground">
             {error.message}
           </p>
         </div>
@@ -116,18 +116,18 @@ export function ErrorDetailModal({
         {/* Timestamps */}
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground dark:text-foreground">
+            <h3 className="text-sm font-semibold text-foreground">
               First Seen
             </h3>
-            <p className="text-sm text-secondary-foreground dark:text-secondary-foreground">
+            <p className="text-sm text-muted-foreground">
               {format(new Date(error.first_seen), 'PPpp')}
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground dark:text-foreground">
+            <h3 className="text-sm font-semibold text-foreground">
               Last Seen
             </h3>
-            <p className="text-sm text-secondary-foreground dark:text-secondary-foreground">
+            <p className="text-sm text-muted-foreground">
               {format(new Date(error.last_seen), 'PPpp')}
             </p>
           </div>
@@ -136,10 +136,10 @@ export function ErrorDetailModal({
         {/* Stack Trace */}
         {occurrences.length > 0 && occurrences[0]?.stack_trace && (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground dark:text-foreground">
+            <h3 className="text-sm font-semibold text-foreground">
               Stack Trace
             </h3>
-            <pre className="overflow-x-auto rounded-md bg-muted dark:bg-background p-4 text-xs">
+            <pre className="overflow-x-auto rounded-md bg-zinc-900 text-zinc-100 p-4 text-xs">
               <code>{occurrences[0]?.stack_trace}</code>
             </pre>
           </div>
@@ -147,7 +147,7 @@ export function ErrorDetailModal({
 
         {/* Recent Occurrences */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-foreground dark:text-foreground">
+          <h3 className="text-sm font-semibold text-foreground">
             Recent Occurrences
           </h3>
           {isLoadingOccurrences ? (
@@ -159,7 +159,7 @@ export function ErrorDetailModal({
               {occurrences.slice(0, 10).map((occurrence) => (
                 <div
                   key={occurrence.id}
-                  className="rounded-md border border-border p-3 dark:border-border"
+                  className="rounded-md border border-border p-3"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
@@ -172,7 +172,7 @@ export function ErrorDetailModal({
                     )}
                   </div>
                   {occurrence.user_email && (
-                    <div className="mt-1 text-xs text-secondary-foreground dark:text-secondary-foreground">
+                    <div className="mt-1 text-xs text-muted-foreground">
                       User: {occurrence.user_email}
                     </div>
                   )}
@@ -183,7 +183,7 @@ export function ErrorDetailModal({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 border-t border-border pt-4 dark:border-border">
+        <div className="flex items-center justify-end gap-3 border-t border-border pt-4">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
