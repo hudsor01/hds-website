@@ -34,10 +34,8 @@ setupEnvMock();
 try {
   // Attempt to delete any Playwright globals if they exist
   if (typeof globalThis !== 'undefined') {
-    // @ts-expect-error - Removing Playwright globals
-    delete globalThis.test;
-    // @ts-expect-error - Removing Playwright globals
-    delete globalThis.expect;
+    delete (globalThis as { test?: unknown }).test;
+    delete (globalThis as { expect?: unknown }).expect;
   }
 } catch {
   // Silently continue if globals don't exist
@@ -47,8 +45,7 @@ try {
 GlobalRegistrator.register();
 
 // Set IS_REACT_ACT_ENVIRONMENT for React 19 Testing Library compatibility
-// @ts-expect-error - React 19 internal flag
-globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 // Mock fetch globally to prevent network requests during tests
 const mockResponse: Response = {
