@@ -7,16 +7,21 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { logger } from '@/lib/logger';
 
-// Fail fast if ADMIN_EMAILS not configured
-if (!process.env.ADMIN_EMAILS?.trim()) {
-  throw new Error('ADMIN_EMAILS environment variable is required');
-}
+// Lazy-loaded admin email whitelist
+// Validation happens on first use (not at import) to allow builds without env vars
+let _adminEmails: string[] | null = null;
 
-// Admin email whitelist - users with these emails can access admin features
-// In production, you might use Supabase user roles/metadata instead
-const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(',')
-  .map(e => e.trim().toLowerCase())
-  .filter(e => e.length > 0);
+function getAdminEmails(): string[] {
+  if (_adminEmails === null) {
+    if (!process.env.ADMIN_EMAILS?.trim()) {
+      throw new Error('ADMIN_EMAILS environment variable is required');
+    }
+    _adminEmails = process.env.ADMIN_EMAILS.split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(e => e.length > 0);
+  }
+  return _adminEmails;
+}
 
 export interface AuthResult {
   isAuthenticated: boolean;
@@ -28,7 +33,7 @@ export interface AuthResult {
  * Check if an email is in the admin whitelist (case insensitive)
  */
 export function isAdminEmail(email: string): boolean {
-  return ADMIN_EMAILS.includes(email.toLowerCase());
+  return getAdminEmails().includes(email.toLowerCase());
 }
 
 /**
