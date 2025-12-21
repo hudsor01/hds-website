@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Small Business Website Cost 2025: Complete Pricing Guide | Hudson Digital",
@@ -151,7 +152,7 @@ export default function WebsiteCostGuidePost() {
             <article className="prose prose-lg prose-invert max-w-none">
               <div className="blog-content text-muted leading-relaxed space-y-comfortable">
                 
-                <div className="bg-accent/10 border border-accent/20 rounded-lg card-padding mb-comfortable">
+                <Card size="md" className="bg-accent/10 border-accent/20 mb-comfortable">
                   <p><strong className="text-accent">2025 Cost Overview:</strong></p>
                   <ul className="space-y-1 ml-6 mt-2">
                     <li>DIY Website Builders: $10-50/month</li>
@@ -159,7 +160,7 @@ export default function WebsiteCostGuidePost() {
                     <li>Professional Agency: $3,000-25,000</li>
                     <li>Enterprise Solutions: $25,000-100,000+</li>
                   </ul>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading">The Real Question Isn&apos;t &quot;How Much?&quot;</h2>
                 
@@ -196,10 +197,10 @@ export default function WebsiteCostGuidePost() {
                   <li>SEO tools: $20-100/month</li>
                 </ul>
 
-                <div className="bg-warning-text/10 border border-warning/20 rounded-lg card-padding my-6">
+                <Card size="md" className="bg-warning-text/10 border-warning/20 my-6">
                   <p><strong className="text-warning-text">Reality Check:</strong> DIY builders promise &quot;professional websites in hours,&quot; but most small business owners spend 40-80 hours learning the platform, creating content, and troubleshooting issues.</p>
                   <p className="mt-2">At $50/hour (conservative business owner value), that&apos;s $2,000-4,000 in opportunity cost.</p>
-                </div>
+                </Card>
 
                 <p><strong className="text-foreground">Best For:</strong></p>
                 <ul className="space-y-tight ml-6">
@@ -242,9 +243,9 @@ export default function WebsiteCostGuidePost() {
                   <li>Abandonment mid-project</li>
                 </ul>
 
-                <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-6">
+                <Card size="md" className="bg-success-text/10 border-success-text/20 my-6">
                   <p><strong className="text-success-text">Success Story:</strong> Local restaurant hired freelancer for $2,500. Site increased online orders by 180% in first 6 months, generating additional $45,000 in revenue. ROI: 1,700%</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Option 3: Professional Web Development Agency</h2>
                 
@@ -273,9 +274,9 @@ export default function WebsiteCostGuidePost() {
                   <li><strong className="text-accent">Support Systems:</strong> Ongoing optimization and maintenance</li>
                 </ul>
 
-                <div className="bg-accent/10 border border-accent/20 rounded-lg card-padding my-6">
+                <Card size="md" className="bg-accent/10 border-accent/20 my-6">
                   <p><strong className="text-accent">ROI Reality:</strong> Professional websites typically generate 3-10x their investment in the first year through improved conversion rates, SEO performance, and brand credibility.</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Hidden Costs Every Small Business Must Consider</h2>
                 
@@ -302,26 +303,26 @@ export default function WebsiteCostGuidePost() {
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">ROI Analysis by Investment Level</h2>
                 
                 <div className="grid md:grid-cols-3 gap-comfortable my-8">
-                  <div className="bg-background/40 border border-border rounded-lg card-padding">
+                  <Card size="md" className="bg-background/40 border-border">
                     <h4 className="text-lg font-bold text-warning-text mb-3">DIY Website</h4>
                     <p className="text-sm mb-subheading"><strong>Investment:</strong> $1,500-3,000/year</p>
                     <p className="text-sm mb-subheading"><strong>Typical ROI:</strong> 50-150%</p>
                     <p className="text-sm"><strong>Best Case:</strong> $5,000-10,000 annual revenue</p>
-                  </div>
+                  </Card>
                   
-                  <div className="bg-background/40 border border-accent rounded-lg card-padding">
+                  <Card size="md" className="bg-background/40 border-accent">
                     <h4 className="text-lg font-bold text-accent mb-3">Freelance Design</h4>
                     <p className="text-sm mb-subheading"><strong>Investment:</strong> $3,000-6,000</p>
                     <p className="text-sm mb-subheading"><strong>Typical ROI:</strong> 200-500%</p>
                     <p className="text-sm"><strong>Best Case:</strong> $15,000-50,000 annual revenue</p>
-                  </div>
+                  </Card>
                   
-                  <div className="bg-background/40 border border-success-text rounded-lg card-padding">
+                  <Card size="md" className="bg-background/40 border-success-text">
                     <h4 className="text-lg font-bold text-success-text mb-3">Professional Agency</h4>
                     <p className="text-sm mb-subheading"><strong>Investment:</strong> $8,000-15,000</p>
                     <p className="text-sm mb-subheading"><strong>Typical ROI:</strong> 300-1,000%</p>
                     <p className="text-sm"><strong>Best Case:</strong> $50,000-500,000 annual revenue</p>
-                  </div>
+                  </Card>
                 </div>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">How to Choose the Right Investment Level</h2>
@@ -351,9 +352,9 @@ export default function WebsiteCostGuidePost() {
                   <li>You want ongoing support</li>
                 </ul>
 
-                <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-8">
+                <Card size="md" className="bg-success-text/10 border-success-text/20 my-8">
                   <p><strong className="text-success-text">Hudson Digital Approach:</strong> We help small businesses invest strategically in websites that grow with them. Our $8,000-15,000 professional sites typically generate $50,000-200,000+ in additional annual revenue within 18 months.</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Red Flags to Avoid</h2>
                 
@@ -405,7 +406,7 @@ export default function WebsiteCostGuidePost() {
 
                 <p>A $10,000 professional website that generates $100,000 in additional revenue is infinitely more valuable than a $1,000 site that generates $5,000.</p>
 
-                <div className="bg-primary/10 border border-accent/30 rounded-lg card-padding-lg my-12 text-center">
+                <Card size="lg" className="bg-primary/10 border-accent/30 my-12 text-center">
                   <h3 className="text-2xl font-bold text-foreground mb-heading">Ready to Make the Right Investment?</h3>
                   <p className="text-muted mb-content-block">Get a custom website cost estimate based on your specific business needs and growth goals.</p>
                   <Link
@@ -415,11 +416,11 @@ export default function WebsiteCostGuidePost() {
                     Get Your Custom Quote
                     <ArrowLeft className="w-5 h-5 rotate-180" />
                   </Link>
-                </div>
+                </Card>
 
                 <hr className="border-border my-8" />
 
-                <div className="bg-background/40 border border-border rounded-lg card-padding">
+                <Card size="md" className="bg-background/40">
                   <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
                   <p className="mt-2">We help small businesses make smart website investments that drive real growth. Our strategic approach has helped companies achieve proven ROI results through professional web development that focuses on business outcomes, not just beautiful design.</p>
                   <p className="mt-4">
@@ -428,7 +429,7 @@ export default function WebsiteCostGuidePost() {
                       Schedule a strategy consultation today
                     </Link>.
                   </p>
-                </div>
+                </Card>
               </div>
             </article>
 
@@ -454,7 +455,7 @@ export default function WebsiteCostGuidePost() {
                 </a>
               </div>
 
-              <div className="glass-morphism bg-background/80 border border-success-muted rounded-xl card-padding-lg text-center">
+              <Card size="lg" className="glass-morphism bg-background/80 border-success-muted text-center">
                 <h3 className="text-2xl font-bold text-foreground mb-heading">
                   Get a Custom Website Cost Analysis
                 </h3>
@@ -475,7 +476,7 @@ export default function WebsiteCostGuidePost() {
                     View Pricing
                   </Link>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </section>

@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
+  import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Braces, AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -258,7 +259,7 @@ export default function JsonFormatterPage() {
                 )}
               </button>
             </div>
-            <pre className="w-full rounded-md border border-border bg-background card-padding-sm overflow-x-auto">
+            <pre className="w-full rounded-md border border-border bg-background p-4 overflow-x-auto">
               <code className="text-sm text-foreground whitespace-pre-wrap break-all font-mono">
                 {outputJson}
               </code>
@@ -288,41 +289,41 @@ export default function JsonFormatterPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Common Errors
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Missing quotes around keys, trailing commas, and single quotes instead of double quotes are common JSON mistakes.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Data Types
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               JSON supports strings, numbers, booleans, null, arrays, and objects. No undefined, functions, or dates.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Minification
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Minifying JSON removes whitespace to reduce file size, useful for API responses and data transfer.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Formatting
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Pretty-printing JSON with indentation makes it human-readable for debugging and configuration files.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

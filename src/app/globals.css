@@ -1212,24 +1212,24 @@ body::after {
 
 @layer components {
   .glass-card {
-    background: oklch(0.99 0 0 / 0.9);
+    background: oklch(from var(--color-card) l c h / 0.9);
     backdrop-filter: blur(24px);
-    border: 1px solid oklch(0.90 0 0 / 0.5);
+    border: 1px solid oklch(from var(--color-border) l c h / 0.5);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-2xl);
   }
 
   .glass-card-light {
-    background: oklch(0.98 0 0 / 0.5);
+    background: oklch(from var(--color-card) l c h / 0.5);
     backdrop-filter: blur(var(--blur-lg));
-    border: 1px solid oklch(0.90 0 0 / 0.5);
+    border: 1px solid oklch(from var(--color-border) l c h / 0.5);
     border-radius: var(--radius-xl);
   }
 
   .glass-section {
-    background: oklch(0.99 0 0 / 0.8);
+    background: oklch(from var(--color-card) l c h / 0.8);
     backdrop-filter: blur(var(--blur-lg));
-    border: 1px solid oklch(0.90 0 0 / 0.5);
+    border: 1px solid oklch(from var(--color-border) l c h / 0.5);
     border-radius: var(--radius-2xl);
   }
 

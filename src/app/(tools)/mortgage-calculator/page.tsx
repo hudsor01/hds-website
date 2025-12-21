@@ -3,7 +3,8 @@
  * Calculate monthly mortgage payments and total costs
  */
 
-import { Suspense } from 'react';
+  import { Suspense } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { MortgageCalculatorClient } from './MortgageCalculatorClient';
 import { Home } from 'lucide-react';
@@ -46,41 +47,41 @@ export default function MortgageCalculatorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Principal vs Interest
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Early payments go mostly toward interest. As you pay down the loan, more goes to principal.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               20% Down Payment
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Putting 20% down typically eliminates PMI and gets you better interest rates.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               15 vs 30 Year
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               15-year loans have higher payments but save significantly on total interest paid.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Total Cost of Ownership
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Don't forget taxes, insurance, maintenance, and HOA fees in your budget.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+  import { useState, useEffect, useCallback } from 'react';
+import { Card } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -224,9 +225,9 @@ export default function TestimonialCollectorPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="card-padding-sm rounded-lg bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm">
+          <Card size="sm" className="rounded-lg bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm">
             {error}
-          </div>
+          </Card>
         )}
 
         {/* Loading State */}
@@ -249,9 +250,10 @@ export default function TestimonialCollectorPage() {
               </div>
             ) : (
               testimonials.map((testimonial) => (
-                <div
+                <Card
                   key={testimonial.id}
-                  className="rounded-lg border border-border card-padding-sm space-y-3"
+                  size="sm"
+                  className="space-y-3"
                 >
                   <div className="flex items-start justify-between gap-content">
                     <div>
@@ -339,7 +341,7 @@ export default function TestimonialCollectorPage() {
                       <Trash2 className="w-3 h-3" /> Delete
                     </button>
                   </div>
-                </div>
+                </Card>
               ))
             )}
           </div>
@@ -348,12 +350,12 @@ export default function TestimonialCollectorPage() {
         {/* Requests Tab */}
         {!isLoading && activeTab === 'requests' && (
           <div className="space-y-content">
-            <div className="rounded-lg bg-accent/10 dark:bg-primary-hover/20 card-padding-sm text-sm text-primary-hover dark:text-accent/80">
+            <Card size="sm" className="bg-accent/10 dark:bg-primary-hover/20 text-sm text-primary-hover dark:text-accent/80">
               <strong>Public Link:</strong>{' '}
               <code className="bg-card/50 dark:bg-background/20 px-2 py-0.5 rounded">
                 {typeof window !== 'undefined' && `${window.location.origin}/testimonials/submit`}
               </code>
-            </div>
+            </Card>
 
             {requests.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
@@ -371,9 +373,10 @@ export default function TestimonialCollectorPage() {
                 {requests.map((req) => {
                   const isExpired = new Date(req.expires_at) < new Date();
                   return (
-                    <div
+                    <Card
                       key={req.id}
-                      className={`rounded-lg border card-padding-sm ${
+                      size="sm"
+                      className={`${
                         req.submitted
                           ? 'border-success-muted bg-success-light/50 dark:bg-success-bg-dark/10'
                           : isExpired
@@ -446,7 +449,7 @@ export default function TestimonialCollectorPage() {
                           <Trash2 className="w-3 h-3" /> Delete
                         </button>
                       </div>
-                    </div>
+                    </Card>
                   );
                 })}
               </div>
@@ -459,7 +462,7 @@ export default function TestimonialCollectorPage() {
           <div className="space-y-comfortable">
             {createdLink ? (
               <div className="space-y-content">
-                <div className="rounded-lg bg-success-light dark:bg-success-bg-dark/20 card-padding-sm">
+                <Card size="sm" className="bg-success-light dark:bg-success-bg-dark/20">
                   <div className="flex items-center gap-tight text-success-darker dark:text-success-muted mb-subheading">
                     <CheckCircle2 className="w-5 h-5" />
                     <span className="font-semibold">Link Created!</span>
@@ -489,7 +492,7 @@ export default function TestimonialCollectorPage() {
                       )}
                     </button>
                   </div>
-                </div>
+                </Card>
                 <button
                   onClick={() => setCreatedLink(null)}
                   className="flex items-center gap-tight text-primary hover:text-primary-hover text-sm font-medium"
@@ -556,41 +559,41 @@ export default function TestimonialCollectorPage() {
         </h3>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Use Private Links
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Private links are personalized and can only be used once, ensuring authentic testimonials from real clients.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Ask at the Right Time
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Request testimonials right after delivering successful results when the positive experience is fresh.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Review Before Publishing
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               All testimonials require approval before appearing on your site. Review for accuracy and appropriateness.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Feature Your Best
             </h4>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Mark your strongest testimonials as featured to highlight them prominently on your website.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

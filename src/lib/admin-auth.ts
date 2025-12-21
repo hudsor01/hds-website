@@ -7,14 +7,40 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { logger } from '@/lib/logger';
 
-// Admin email whitelist - users with these emails can access admin features
-// In production, you might use Supabase user roles/metadata instead
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').filter(Boolean);
+// Lazy-loaded admin email whitelist
+// Validation happens on first use (not at import) to allow builds without env vars
+let _adminEmails: string[] | null = null;
+
+function getAdminEmails(): string[] {
+  if (_adminEmails === null) {
+    if (!process.env.ADMIN_EMAILS?.trim()) {
+      throw new Error('ADMIN_EMAILS environment variable is required');
+    }
+    _adminEmails = process.env.ADMIN_EMAILS.split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(e => e.length > 0);
+  }
+  return _adminEmails;
+}
 
 export interface AuthResult {
   isAuthenticated: boolean;
   user?: { id: string; email: string };
   error?: NextResponse;
+}
+
+/**
+ * Check if an email is in the admin whitelist (case insensitive)
+ */
+export function isAdminEmail(email: string): boolean {
+  return getAdminEmails().includes(email.toLowerCase());
+}
+
+/**
+ * Check if a user has admin role in metadata
+ */
+export function hasAdminRole(user: { user_metadata?: { role?: string } }): boolean {
+  return user.user_metadata?.role === 'admin';
 }
 
 /**
@@ -43,17 +69,9 @@ export async function validateAdminAuth(): Promise<AuthResult> {
     // Check if user has admin privileges
     // Option 1: Check against email whitelist
     // Option 2: Check user metadata for admin role
-    // SECURITY: Removed fail-open logic - empty ADMIN_EMAILS no longer grants access
     const isAdmin =
-      ADMIN_EMAILS.includes(user.email || '') ||
-      user.user_metadata?.role === 'admin';
-
-    // Log warning if ADMIN_EMAILS is not configured in production
-    if (ADMIN_EMAILS.length === 0 && process.env.NODE_ENV === 'production') {
-      logger.warn('ADMIN_EMAILS not configured in production - no users will have admin access', {
-        component: 'AdminAuth',
-      });
-    }
+      isAdminEmail(user.email || '') ||
+      hasAdminRole(user);
 
     if (!isAdmin) {
       logger.warn('Admin API request from non-admin user', {

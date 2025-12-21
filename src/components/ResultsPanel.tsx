@@ -58,12 +58,12 @@ export function ResultsPanel({
         )}
 
         {error && (
-          <div className="flex items-start gap-content rounded-lg border bg-destructive/10 card-padding-sm">
+          <Card size="sm" className="flex items-start gap-content bg-destructive/10">
             <AlertCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
             <div>
               <p className="text-destructive font-medium">{error}</p>
             </div>
-          </div>
+          </Card>
         )}
 
       {calculationResults && (

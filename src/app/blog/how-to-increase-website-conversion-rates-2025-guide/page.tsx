@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "How to Increase Website Conversion Rates: 2025 Complete Guide | Hudson Digital",
@@ -198,7 +199,7 @@ export default function ConversionGuidePost() {
             <article className="prose prose-lg prose-invert max-w-none">
               <div className="blog-content text-muted leading-relaxed space-y-comfortable">
                 
-                <div className="bg-accent/10 border border-accent/20 rounded-lg card-padding mb-comfortable">
+                <Card size="md" className="bg-accent/10 border-accent/20 mb-comfortable">
                   <p><strong className="text-accent">Quick Stats:</strong></p>
                   <ul className="space-y-1 ml-6 mt-2">
                     <li>Average website conversion rate: 2.35%</li>
@@ -206,7 +207,7 @@ export default function ConversionGuidePost() {
                     <li>Small improvements can increase revenue by 30-50%</li>
                     <li>68% of businesses actively work on CRO</li>
                   </ul>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading">The Conversion Rate Reality Check</h2>
                 
@@ -237,9 +238,9 @@ export default function ConversionGuidePost() {
                   <li><strong className="text-foreground">CDN Implementation:</strong> Serve content from global edge locations</li>
                 </ul>
 
-                <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-6">
+                <Card size="md" className="bg-success-text/10 border-success-text/20 my-6">
                   <p><strong className="text-success-text">Case Study:</strong> E-commerce client reduced page load time from 4.2s to 1.8s. Result: 23% increase in conversion rate and 18% boost in average order value.</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Strategy 2: Above-the-Fold Optimization</h2>
                 
@@ -312,9 +313,9 @@ export default function ConversionGuidePost() {
                   <li><strong className="text-foreground">User-Generated Content:</strong> Customer photos and reviews</li>
                 </ul>
 
-                <div className="bg-accent/10 border border-accent/20 rounded-lg card-padding my-6">
+                <Card size="md" className="bg-accent/10 border-accent/20 my-6">
                   <p><strong className="text-accent">Pro Tip:</strong> Position social proof immediately before conversion points. Users need confidence boosters right before making decisions.</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Strategy 6: Urgency and Scarcity Tactics</h2>
                 
@@ -392,9 +393,9 @@ export default function ConversionGuidePost() {
                   <li><strong className="text-foreground">Alternative Options:</strong> Different products or service tiers</li>
                 </ul>
 
-                <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-8">
+                <Card size="md" className="bg-success-text/10 border-success-text/20 my-8">
                   <p><strong className="text-success-text">Real Results:</strong> SaaS client implemented exit-intent popups with 20% discount offers. Recovered 12% of abandoning visitors and increased overall conversion rate by 3.4%.</p>
-                </div>
+                </Card>
 
                 <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Advanced Strategies (11-15)</h2>
 
@@ -439,7 +440,7 @@ export default function ConversionGuidePost() {
                   <li>Recovery optimization</li>
                 </ul>
 
-                <div className="bg-primary/10 border border-accent/30 rounded-lg card-padding-lg my-12 text-center">
+                <Card size="lg" className="bg-primary/10 border-accent/30 my-12 text-center">
                   <h3 className="text-2xl font-bold text-foreground mb-heading">Ready to 3x Your Conversion Rates?</h3>
                   <p className="text-muted mb-content-block">Our CRO specialists have helped 200+ businesses achieve these results. Let&apos;s optimize your site for maximum conversions.</p>
                   <Link
@@ -449,11 +450,11 @@ export default function ConversionGuidePost() {
                     Get Your Free CRO Audit
                     <ArrowLeft className="w-5 h-5 rotate-180" />
                   </Link>
-                </div>
+                </Card>
 
                 <hr className="border-border my-8" />
 
-                <div className="bg-background/40 border border-border rounded-lg card-padding">
+                <Card size="md" className="bg-background/40">
                   <p><strong className="text-foreground">About the Author</strong></p>
                   <p className="mt-2">Hudson Digital Solutions specializes in conversion rate optimization for ambitious businesses. Our clients achieve proven ROI results through strategic CRO implementation and data-driven optimization.</p>
                   <p className="mt-4">
@@ -462,7 +463,7 @@ export default function ConversionGuidePost() {
                       Schedule your strategy call today
                     </Link>.
                   </p>
-                </div>
+                </Card>
               </div>
             </article>
 
@@ -490,7 +491,7 @@ export default function ConversionGuidePost() {
               </div>
 
               {/* CTA */}
-              <div className="glass-morphism bg-background/80 border border-success-muted rounded-xl card-padding-lg text-center">
+              <Card size="lg" className="glass-morphism bg-background/80 border-success-muted text-center">
                 <h3 className="text-2xl font-bold text-foreground mb-heading">
                   Want Professional CRO Implementation?
                 </h3>
@@ -511,7 +512,7 @@ export default function ConversionGuidePost() {
                     View Our Services
                   </Link>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </section>

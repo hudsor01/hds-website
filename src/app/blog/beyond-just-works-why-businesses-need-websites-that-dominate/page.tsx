@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Beyond 'Just Works': Why Businesses Need Websites That Dominate | Hudson Digital",
@@ -263,9 +264,9 @@ export default function BlogPost() {
               
               <p>Every design decision, every technical choice, every line of copy is reverse-engineered from your specific business objectives. This isn&apos;t web development—it&apos;s revenue engineering.</p>
               
-              <div className="bg-accent/10 border border-accent/20 rounded-lg card-padding my-8">
+              <Card size="md" className="bg-accent/10 border-accent/20 my-8">
                 <p><strong className="text-accent">Case Study Snapshot:</strong> A recent client was spending $15K/month on Google Ads with a 2.1% conversion rate. Instead of just &quot;fixing&quot; their website, we rebuilt their entire digital funnel around their specific customer journey. Result: 7.2% conversion rate with the same ad spend. That&apos;s an extra $183K in annual revenue from the same traffic.</p>
-              </div>
+              </Card>
               
               <h3 className="text-2xl font-bold text-accent mb-3 mt-heading">DEPLOY (Performance as a Competitive Weapon)</h3>
               
@@ -318,7 +319,7 @@ export default function BlogPost() {
                 <li><strong className="text-foreground">Opportunity Cost:</strong> While you&apos;re managing a mediocre website, competitors with superior digital experiences are capturing market share</li>
               </ul>
               
-              <div className="bg-success-text/10 border border-success-text/20 rounded-lg card-padding my-8">
+              <Card size="md" className="bg-success-text/10 border-success-text/20 my-8">
                 <p><strong className="text-success-text">The Domination Difference:</strong></p>
                 <p>Our clients typically see:</p>
                 <ul className="space-y-1 ml-6 mt-2">
@@ -328,7 +329,7 @@ export default function BlogPost() {
                   <li>89% improvement in customer lifetime value</li>
                 </ul>
                 <p className="mt-3">These aren&apos;t vanity metrics—they&apos;re business transformation outcomes.</p>
-              </div>
+              </Card>
               
               <h2 className="text-3xl font-bold text-foreground mb-heading mt-12">Ready to Stop Settling?</h2>
               
@@ -351,7 +352,7 @@ export default function BlogPost() {
               
               <p>Your website will either be a competitive advantage or a competitive liability. There&apos;s no middle ground anymore.</p>
               
-              <div className="bg-primary/10 border border-accent/30 rounded-lg card-padding-lg my-12 text-center">
+              <Card size="lg" className="bg-primary/10 border-accent/30 my-12 text-center">
                 <h3 className="text-2xl font-bold text-foreground mb-heading">Ready to Dominate Your Market?</h3>
                 <p className="text-muted mb-content-block">Let&apos;s discuss how to engineer your digital dominance.</p>
                 <Link
@@ -361,7 +362,7 @@ export default function BlogPost() {
                   Start Your Transformation
                   <ArrowLeft className="w-5 h-5 rotate-180" />
                 </Link>
-              </div>
+              </Card>
               
               <hr className="border-border my-8" />
               
@@ -369,7 +370,7 @@ export default function BlogPost() {
               
               <hr className="border-border my-8" />
               
-              <div className="bg-background/40 border border-border rounded-lg card-padding">
+              <Card size="md" className="bg-background/40">
                 <p><strong className="text-foreground">About Hudson Digital Solutions</strong></p>
                 <p className="mt-2">We don&apos;t build websites that &quot;just work&quot;—we engineer digital competitive advantages for ambitious businesses. With proven ROI results and high client success rate, we&apos;ve helped companies transform their digital presence from a business expense into their most powerful growth engine.</p>
                 <p className="mt-4">
@@ -378,7 +379,7 @@ export default function BlogPost() {
                     Start the conversation today
                   </Link>.
                 </p>
-              </div>
+              </Card>
             </div>
           </article>
 
@@ -406,7 +407,7 @@ export default function BlogPost() {
             </div>
 
             {/* CTA */}
-            <div className="glass-morphism bg-background/80 border border-success-muted rounded-xl card-padding-lg text-center">
+            <Card size="lg" className="glass-morphism bg-background/80 border-success-muted text-center">
               <h3 className="text-2xl font-bold text-foreground mb-heading">
                 Ready to Build Something That Dominates?
               </h3>
@@ -427,7 +428,7 @@ export default function BlogPost() {
                   Schedule a Call
                 </Link>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { logger } from '@/lib/logger';
@@ -71,7 +72,7 @@ export function NotesSection({ lead }: NotesSectionProps) {
       <h3 className="text-lg font-semibold">Notes & Activity Timeline</h3>
 
       {/* Add Note Form */}
-      <div className="rounded-lg border bg-muted card-padding-sm space-y-3">
+      <Card size="sm" className="bg-muted space-y-3">
         <Select value={noteType} onValueChange={(value) => setNoteType(value as NoteType)}>
           <SelectTrigger className="w-40">
             <SelectValue />
@@ -95,7 +96,7 @@ export function NotesSection({ lead }: NotesSectionProps) {
           <Plus className="h-4 w-4 mr-2" />
           Add Note
         </Button>
-      </div>
+      </Card>
 
       {/* Activity Timeline */}
       <div className="space-y-3">
@@ -103,7 +104,7 @@ export function NotesSection({ lead }: NotesSectionProps) {
           <p className="py-4 text-center text-sm text-muted-foreground">No activity yet</p>
         ) : (
           notes.map((note) => (
-            <div key={note.id} className="flex gap-3 rounded-lg border bg-background card-padding-sm">
+            <Card key={note.id} size="sm" className="flex gap-3 bg-background">
               <div className="shrink-0">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                   {getNoteIcon(note.note_type)}
@@ -117,7 +118,7 @@ export function NotesSection({ lead }: NotesSectionProps) {
                 <p className="mt-1 text-sm text-muted-foreground">{note.content}</p>
                 <p className="mt-1 text-xs text-muted-foreground">by {note.created_by}</p>
               </div>
-            </div>
+            </Card>
           ))
         )}
       </div>

@@ -12,7 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { trackEvent } from '@/lib/analytics';
-import { useState } from 'react';
+  import { useState } from 'react';
 import { useQueryState, parseAsString, parseAsInteger, parseAsBoolean, parseAsArrayOf } from 'nuqs';
 
 interface CalculatorInputs {
@@ -220,7 +220,7 @@ export function CostEstimatorClient() {
               {availableFeatures.map(feature => (
                 <label
                   key={feature.value}
-                  className="relative flex cursor-pointer items-start rounded-lg border border-border card-padding-sm hover:bg-muted"
+                  className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
                 >
                   <div className="flex h-5 items-center">
                     <Checkbox

@@ -7,6 +7,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useAttribution } from '@/hooks/use-attribution';
 import { trackConversion } from '@/lib/analytics';
@@ -97,16 +98,14 @@ export function CalculatorResults({
 
         <div className="space-y-3">
           {results.map((result, index) => (
-            <div
+            <Card
               key={index}
-              className={`
-                rounded-lg border card-padding-sm
-                ${
-                  result.highlight
-                    ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
-                    : 'border-border bg-muted dark:border-border dark:bg-muted'
-                }
-              `}
+              size="sm"
+              className={
+                result.highlight
+                  ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
+                  : 'bg-muted dark:bg-muted'
+              }
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground dark:text-muted">
@@ -131,14 +130,14 @@ export function CalculatorResults({
                   {result.description}
                 </p>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       </div>
 
       {/* Email Capture */}
       {showEmailCapture && !emailSubmitted && (
-        <div className="rounded-lg border-2 border-dashed border-accent/60 bg-accent/10/50 card-padding dark:border-primary-hover dark:bg-primary-hover/10">
+        <Card size="none" className="border-2 border-dashed border-accent/60 bg-accent/10/50 card-padding dark:border-primary-hover dark:bg-primary-hover/10">
           <h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-foreground">
             Get Your Detailed Report
           </h4>
@@ -174,7 +173,7 @@ export function CalculatorResults({
               We&apos;ll never spam you. Unsubscribe anytime.
             </p>
           </form>
-        </div>
+        </Card>
       )}
 
       {/* Success Message */}
@@ -191,7 +190,7 @@ export function CalculatorResults({
       )}
 
       {/* CTA */}
-      <div className="rounded-lg bg-muted card-padding text-center">
+      <Card className="text-center">
         <h4 className="mb-subheading text-lg font-semibold text-foreground">
           Want to improve these numbers?
         </h4>
@@ -201,7 +200,7 @@ export function CalculatorResults({
         <Button asChild>
           <a href="/contact">Schedule Free Consultation</a>
         </Button>
-      </div>
+      </Card>
     </div>
   );
 }
