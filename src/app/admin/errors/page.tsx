@@ -122,15 +122,15 @@ export default function ErrorsPage() {
   ).sort();
 
   return (
-    <div className="min-h-screen bg-muted dark:bg-background">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b border-border bg-card dark:border-border dark:bg-muted">
+      <div className="border-b border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground dark:text-foreground">
+            <h1 className="text-3xl font-bold text-foreground">
               Error Monitoring
             </h1>
-            <p className="mt-1 text-sm text-secondary-foreground dark:text-secondary-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               Track and resolve application errors
             </p>
           </div>
@@ -150,7 +150,7 @@ export default function ErrorsPage() {
         </div>
 
         {/* Filters */}
-        <Card size="sm" className="mb-content-block">
+        <Card className="mb-6">
           <ErrorFilters
             timeRange={timeRange}
             onTimeRangeChange={setTimeRange}
@@ -163,14 +163,14 @@ export default function ErrorsPage() {
         </Card>
 
         {/* Results Count */}
-        <div className="mb-4 text-sm text-secondary-foreground dark:text-secondary-foreground">
+        <div className="mb-4 text-sm text-muted-foreground">
           Showing {filteredErrors.length} of {errors.length} errors
         </div>
 
         {/* Error List */}
-        <Card size="none">
-          <div className="border-b border-border p-4 dark:border-border">
-            <h3 className="text-lg font-semibold text-foreground dark:text-foreground">
+        <Card>
+          <div className="border-b border-border p-4">
+            <h3 className="text-lg font-semibold text-foreground">
               Error Groups
             </h3>
           </div>
@@ -179,7 +179,7 @@ export default function ErrorsPage() {
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                <p className="mt-4 text-secondary-foreground dark:text-secondary-foreground">
+                <p className="mt-4 text-muted-foreground">
                   Loading errors...
                 </p>
               </div>
