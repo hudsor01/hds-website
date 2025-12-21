@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
+  import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
@@ -294,7 +295,7 @@ export default function MetaTagGeneratorPage() {
                   </>
                 )}
               </button>
-              <pre className="rounded-lg bg-background card-padding-sm pt-12 overflow-x-auto">
+              <pre className="rounded-lg bg-background p-4 pt-12 overflow-x-auto">
                 <code className="text-sm text-foreground whitespace-pre-wrap break-all">
                   {generatedCode}
                 </code>
@@ -305,7 +306,7 @@ export default function MetaTagGeneratorPage() {
               {/* Google Preview */}
               <div>
                 <h3 className="text-sm font-semibold text-muted-foreground mb-3">Google Search Preview</h3>
-                <div className="rounded-lg border border-border card-padding-sm bg-card dark:bg-card">
+                <Card size="sm">
                   <div className="text-info-dark text-lg hover:underline cursor-pointer truncate">
                     {inputs.pageTitle || 'Page Title'}
                   </div>
@@ -315,7 +316,7 @@ export default function MetaTagGeneratorPage() {
                   <div className="text-muted-foreground dark:text-muted-foreground text-sm mt-1 line-clamp-2">
                     {inputs.pageDescription || 'Page description will appear here...'}
                   </div>
-                </div>
+                </Card>
               </div>
 
               {/* Social Preview */}
@@ -331,7 +332,7 @@ export default function MetaTagGeneratorPage() {
                       <span className="text-foreground text-lg font-bold">{inputs.siteName || inputs.pageTitle || 'Your Site'}</span>
                     </div>
                   )}
-                  <div className="card-padding-sm bg-card dark:bg-card">
+                  <Card size="sm" className="bg-card dark:bg-card">
                     <div className="text-xs text-muted-foreground uppercase mb-1">
                       {inputs.siteName || new URL(inputs.pageUrl || 'https://example.com').hostname}
                     </div>
@@ -341,7 +342,7 @@ export default function MetaTagGeneratorPage() {
                     <div className="text-sm text-muted-foreground mt-1 line-clamp-2">
                       {inputs.pageDescription || 'Page description...'}
                     </div>
-                  </div>
+                  </Card>
                 </div>
               </div>
             </div>
@@ -363,41 +364,41 @@ export default function MetaTagGeneratorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Title Tag
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Keep between 50-60 characters. Include your primary keyword near the beginning.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Meta Description
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Aim for 150-160 characters. Include a call-to-action and your target keyword.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Open Graph Images
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Use 1200x630px images for optimal display on Facebook and LinkedIn.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Twitter Cards
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               summary_large_image provides the most visual impact for content sharing.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

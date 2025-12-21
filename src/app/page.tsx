@@ -125,7 +125,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Terminal Content */}
-                  <div className="card-padding font-mono text-sm space-y-tight" role="log">
+                  <div className="p-6 font-mono text-sm space-y-tight" role="log">
                     <div className="text-accent">$ npm run deploy --production</div>
                     <div className="text-muted-foreground">[OK] Build completed in 1.8s</div>
                     <div className="text-muted-foreground">[OK] Tests passed (147/147)</div>

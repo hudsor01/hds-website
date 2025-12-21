@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
 import { trackError } from '@/lib/analytics';
 
@@ -83,7 +84,7 @@ export default function Error({
           </Button>
         </div>
 
-        <div className="mt-heading card-padding-sm bg-muted dark:bg-muted rounded-lg">
+        <Card size="sm" className="mt-heading bg-muted dark:bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             Need immediate assistance?{' '}
             <a
@@ -93,7 +94,7 @@ export default function Error({
               Contact support
             </a>
           </p>
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@
  */
 
 import type { Metadata } from 'next';
+import { Card } from '@/components/ui/card';
 import { TestimonialForm } from '@/components/testimonials/TestimonialForm';
 
 export const metadata: Metadata = {
@@ -28,9 +29,9 @@ export default function PublicTestimonialPage() {
           </div>
 
           {/* Form */}
-          <div className="bg-card dark:bg-card rounded-xl shadow-lg border border-border card-padding md:card-padding-lg">
+          <Card size="lg" className="bg-card dark:bg-card rounded-xl shadow-lg">
             <TestimonialForm />
-          </div>
+          </Card>
 
           {/* Footer Note */}
           <p className="text-sm text-muted-foreground text-center mt-content-block">

@@ -3,7 +3,8 @@
  * Helps prospects understand project costs based on requirements
  */
 
-import { Suspense } from 'react';
+  import { Suspense } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CostEstimatorClient } from './CostEstimatorClient';
 
@@ -47,7 +48,7 @@ export default function CostEstimatorPage() {
       </Suspense>
 
       {/* Disclaimer */}
-      <div className="mt-heading rounded-lg bg-warning-light card-padding-sm dark:bg-warning-bg-dark/20">
+      <Card size="sm" className="mt-heading bg-warning-light dark:bg-warning-bg-dark/20">
         <div className="flex">
           <div className="shrink-0">
             <svg className="h-5 w-5 text-warning-text" viewBox="0 0 20 20" fill="currentColor">
@@ -60,7 +61,7 @@ export default function CostEstimatorPage() {
             </p>
           </div>
         </div>
-      </div>
+      </Card>
     </CalculatorLayout>
   );
 }

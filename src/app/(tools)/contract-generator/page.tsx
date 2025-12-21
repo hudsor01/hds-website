@@ -8,6 +8,7 @@
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
+import { Card } from '@/components/ui/card';
 import { trackEvent } from '@/lib/analytics';
 import { FileCheck, Download, Save, RotateCcw } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -237,7 +238,7 @@ export default function ContractGeneratorPage() {
                 key={template.value}
                 type="button"
                 onClick={() => handleTemplateChange(template.value)}
-                className={`card-padding-sm rounded-lg border text-left transition-colors ${
+                className={`p-4 rounded-lg border text-left transition-colors ${
                   contractData.template === template.value
                     ? 'border-primary bg-accent/10 dark:bg-primary-hover/20'
                     : 'border-border hover:border-accent hover:bg-muted/50'
@@ -541,48 +542,48 @@ export default function ContractGeneratorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Be Specific
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Clearly define the scope of work, deliverables, and timelines to avoid misunderstandings.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Payment Terms
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Include specific payment amounts, due dates, and any late payment penalties.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Legal Review
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               For significant contracts, have an attorney review the terms before signing.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Keep Copies
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Both parties should sign and keep copies of the executed contract.
             </p>
-          </div>
+          </Card>
         </div>
 
-        <div className="rounded-lg bg-warning-light card-padding-sm dark:bg-warning-bg-dark/20">
+        <Card size="sm" className="bg-warning-light dark:bg-warning-bg-dark/20">
           <p className="text-sm text-warning-darker dark:text-warning-muted">
             <strong>Disclaimer:</strong> These contract templates are provided for informational purposes only and do not constitute legal advice. Consult with a qualified attorney for legal matters specific to your situation.
           </p>
-        </div>
+        </Card>
       </div>
     </CalculatorLayout>
   );

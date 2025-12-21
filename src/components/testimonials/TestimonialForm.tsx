@@ -7,6 +7,7 @@
 
 import { trackEvent } from '@/lib/analytics';
 import { SERVICE_TYPES } from '@/types/testimonials';
+import { Card } from '@/components/ui/card';
 import { CheckCircle2, Send, Star } from 'lucide-react';
 import { useState } from 'react';
 
@@ -243,9 +244,9 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
 
       {/* Error Message */}
       {error && (
-        <div className="card-padding-sm rounded-lg bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm">
+        <Card size="sm" className="bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm">
           {error}
-        </div>
+        </Card>
       )}
 
       {/* Submit Button */}

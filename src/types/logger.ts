@@ -3,6 +3,8 @@
  * Unified logging interface for Vercel Analytics integration
  */
 
+import type { ErrorContext } from './error-logging'
+
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export interface LogContext {
@@ -42,7 +44,8 @@ export interface Logger {
   debug(message: string, data?: unknown): void;
   info(message: string, data?: unknown): void;
   warn(message: string, data?: unknown): void;
-  error(message: string, error?: Error | unknown): void;
+  error(message: string, error?: Error | unknown, context?: ErrorContext): void;
+  fatal(message: string, error?: Error | unknown, context?: ErrorContext): void;
 
   // Context management
   setContext(context: LogContext): void;

@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+  import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
@@ -657,41 +658,41 @@ export default function InvoiceGeneratorPage() {
         </h2>
 
         <div className="grid gap-content sm:grid-cols-2">
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Clear Payment Terms
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Always specify payment terms upfront. Net 30 is standard, but consider offering discounts for early payment.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Detailed Descriptions
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Include specific descriptions of services or products. This helps prevent disputes and makes record-keeping easier.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Sequential Numbering
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Use a consistent invoice numbering system. This helps with organization and is often required for tax purposes.
             </p>
-          </div>
+          </Card>
 
-          <div className="rounded-lg border border-border card-padding-sm dark:border-border">
+          <Card size="sm">
             <h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
               Keep Records
             </h3>
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               Save copies of all invoices for at least 7 years for tax and legal purposes.
             </p>
-          </div>
+          </Card>
         </div>
       </div>
     </CalculatorLayout>

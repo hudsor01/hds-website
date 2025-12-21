@@ -5,7 +5,8 @@
 
 'use client';
 
-import { useState } from 'react';
+  import { useState } from 'react';
+import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
@@ -239,9 +240,9 @@ export default function PerformanceCalculatorPage() {
           </div>
 
           {error && (
-            <div className="rounded-lg bg-destructive-light card-padding-sm dark:bg-destructive-bg-dark/20">
+            <Card size="sm" className="bg-destructive-light dark:bg-destructive-bg-dark/20">
               <p className="text-sm text-destructive-dark dark:text-destructive-text">{error}</p>
-            </div>
+            </Card>
           )}
 
           <button
@@ -262,7 +263,7 @@ export default function PerformanceCalculatorPage() {
             )}
           </button>
 
-          <div className="rounded-lg bg-info-light card-padding-sm dark:bg-info-bg-dark/20">
+          <Card size="sm" className="bg-info-light dark:bg-info-bg-dark/20">
             <div className="flex">
               <div className="shrink-0">
                 <svg className="h-5 w-5 text-info-text" viewBox="0 0 20 20" fill="currentColor">
@@ -275,13 +276,13 @@ export default function PerformanceCalculatorPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
         </form>
       ) : (
         <div>
           {/* Core Web Vitals Display */}
           {metrics && (
-            <div className="mb-content-block rounded-lg bg-muted card-padding dark:bg-muted">
+            <Card className="mb-content-block bg-muted dark:bg-muted">
               <h3 className="mb-heading text-lg font-semibold text-foreground dark:text-foreground">
                 Core Web Vitals
               </h3>
@@ -302,7 +303,7 @@ export default function PerformanceCalculatorPage() {
                   <div className="text-xs text-muted-foreground">Cumulative Layout Shift</div>
                 </div>
               </div>
-            </div>
+            </Card>
           )}
 
           <CalculatorResults

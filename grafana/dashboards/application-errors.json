@@ -1,0 +1,534 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "app-errors-hds",
+    "title": "Application Errors - Hudson Digital Solutions",
+    "tags": ["application", "errors", "nextjs", "monitoring"],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "1m",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": ["30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
+    },
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "links": [],
+    "panels": [
+      {
+        "id": 1,
+        "title": "Error Rate Over Time",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  date_trunc('hour', created_at) as time,\n  COUNT(*) as errors\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nGROUP BY 1\nORDER BY 1",
+            "format": "time_series"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "lineWidth": 2,
+              "fillOpacity": 20,
+              "gradientMode": "none",
+              "showPoints": "auto",
+              "spanNulls": false,
+              "drawStyle": "line",
+              "lineInterpolation": "smooth",
+              "barAlignment": 0,
+              "stacking": {
+                "mode": "none",
+                "group": "A"
+              }
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          },
+          "legend": {
+            "showLegend": true,
+            "displayMode": "list",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Errors by Type",
+        "type": "barchart",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  error_type,\n  COUNT(*) as count\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nGROUP BY error_type\nORDER BY count DESC\nLIMIT 10",
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 80,
+              "gradientMode": "none"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "showValue": "always",
+          "groupWidth": 0.7,
+          "barWidth": 0.97,
+          "barRadius": 0,
+          "legend": {
+            "showLegend": false,
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Errors by Route",
+        "type": "barchart",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  COALESCE(route, '(unknown)') as route,\n  COUNT(*) as count\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nGROUP BY route\nORDER BY count DESC\nLIMIT 10",
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 80,
+              "gradientMode": "none"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "options": {
+          "orientation": "horizontal",
+          "showValue": "always",
+          "groupWidth": 0.7,
+          "barWidth": 0.97,
+          "barRadius": 0,
+          "legend": {
+            "showLegend": false,
+            "displayMode": "list",
+            "placement": "bottom"
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Error Level Distribution",
+        "type": "piechart",
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 16
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  level,\n  COUNT(*) as count\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nGROUP BY level\nORDER BY count DESC",
+            "format": "table"
+          }
+        ],
+        "options": {
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"],
+            "fields": ""
+          },
+          "pieType": "pie",
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          },
+          "legend": {
+            "showLegend": true,
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "fatal": {
+                    "color": "red",
+                    "text": "FATAL"
+                  }
+                }
+              },
+              {
+                "type": "value",
+                "options": {
+                  "error": {
+                    "color": "orange",
+                    "text": "ERROR"
+                  }
+                }
+              }
+            ]
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 5,
+        "title": "Top Error Messages",
+        "type": "table",
+        "gridPos": {
+          "h": 8,
+          "w": 16,
+          "x": 8,
+          "y": 16
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  fingerprint,\n  error_type,\n  LEFT(message, 80) as message,\n  COUNT(*) as occurrences,\n  MAX(created_at) as last_seen\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nGROUP BY fingerprint, error_type, message\nORDER BY occurrences DESC\nLIMIT 10",
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "inspect": false
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "occurrences"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 120
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-background"
+                  }
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "green"
+                      },
+                      {
+                        "value": 10,
+                        "color": "yellow"
+                      },
+                      {
+                        "value": 50,
+                        "color": "orange"
+                      },
+                      {
+                        "value": 100,
+                        "color": "red"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "last_seen"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 180
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "fingerprint"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 280
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "auto",
+                    "mode": "basic"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "showHeader": true,
+          "cellHeight": "sm",
+          "footer": {
+            "show": false,
+            "reducer": ["sum"],
+            "countRows": false,
+            "fields": ""
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Recent Errors (Live Tail)",
+        "type": "table",
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 24
+        },
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "supabase"
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "rawSql": "SELECT\n  created_at as \"Time\",\n  level as \"Level\",\n  error_type as \"Type\",\n  LEFT(message, 100) as \"Message\",\n  route as \"Route\",\n  method as \"Method\",\n  environment as \"Env\",\n  COALESCE(user_email, user_id) as \"User\"\nFROM error_logs\nWHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()\nORDER BY created_at DESC\nLIMIT 50",
+            "format": "table"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "inspect": false
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 180
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Level"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                },
+                {
+                  "id": "mappings",
+                  "value": [
+                    {
+                      "type": "value",
+                      "options": {
+                        "fatal": {
+                          "color": "red",
+                          "text": "FATAL"
+                        }
+                      }
+                    },
+                    {
+                      "type": "value",
+                      "options": {
+                        "error": {
+                          "color": "orange",
+                          "text": "ERROR"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-background"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Type"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 150
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Method"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 80
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Env"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 100
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "showHeader": true,
+          "cellHeight": "sm",
+          "footer": {
+            "show": false,
+            "reducer": ["sum"],
+            "countRows": false,
+            "fields": ""
+          }
+        }
+      }
+    ]
+  },
+  "overwrite": false
+}

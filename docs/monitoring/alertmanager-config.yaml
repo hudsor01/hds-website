@@ -1,0 +1,113 @@
+# Alertmanager Configuration for Application Error Alerts
+# Add these sections to your existing Alertmanager config in K3s
+#
+# User's preference: Grouped alerts, NOT per-error notifications
+# This prevents getting "500 emails" during error spikes
+
+# ============================================================
+# ROUTE CONFIGURATION
+# ============================================================
+# Add this to your route section or as a sub-route
+route:
+  # Default receiver for application errors
+  receiver: 'error-email-digest'
+
+  # Group errors by fingerprint (same errors grouped together)
+  group_by: ['alertname', 'fingerprint', 'error_type']
+
+  # Wait 5 minutes to batch similar alerts before sending
+  group_wait: 5m
+
+  # Don't send another alert for same group within 1 hour
+  group_interval: 1h
+
+  # If still firing after 4 hours, send reminder
+  repeat_interval: 4h
+
+  # Special handling for fatal errors - faster alerts
+  routes:
+    - match:
+        severity: fatal
+      receiver: 'fatal-immediate'
+      group_wait: 1m
+      group_interval: 15m
+      repeat_interval: 1h
+
+# ============================================================
+# RECEIVERS
+# ============================================================
+receivers:
+  # Standard error digest - batched notifications
+  - name: 'error-email-digest'
+    email_configs:
+      - to: 'hudsor01@icloud.com'  # Your admin email
+        from: 'alerts@thehudsonfam.com'
+        smarthost: 'smtp.example.com:587'  # Update with your SMTP
+        auth_username: 'alerts@thehudsonfam.com'
+        auth_password_file: '/etc/alertmanager/secrets/smtp_password'
+        send_resolved: true
+        headers:
+          Subject: '[Hudson Digital] {{ .GroupLabels.alertname }}: {{ .Alerts.Firing | len }} errors in {{ .GroupLabels.error_type }}'
+        html: |
+          <h2>Application Error Alert</h2>
+          <p><strong>{{ .Alerts.Firing | len }} error(s)</strong> detected in the last notification window.</p>
+
+          <h3>Error Summary</h3>
+          {{ range .Alerts.Firing }}
+          <div style="margin: 10px 0; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+            <strong style="color: #856404;">{{ .Labels.error_type }}</strong>
+            <span style="float: right; background: #dc3545; color: white; padding: 2px 8px; border-radius: 3px;">
+              {{ .Labels.count }} occurrences
+            </span>
+            <br><br>
+            <code style="background: #f8f9fa; padding: 8px; display: block; border-radius: 4px;">
+              {{ .Annotations.message }}
+            </code>
+            <p style="margin-top: 10px; color: #6c757d; font-size: 12px;">
+              Route: {{ .Labels.route }} | First seen: {{ .StartsAt.Format "Jan 02 15:04 MST" }}
+            </p>
+          </div>
+          {{ end }}
+
+          <p style="margin-top: 20px;">
+            <a href="https://hudsondigitalsolutions.com/admin/errors"
+               style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+              View in Admin Panel
+            </a>
+            <a href="https://grafana.thehudsonfam.com/d/app-errors"
+               style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">
+              View in Grafana
+            </a>
+          </p>
+
+  # Fatal errors - immediate notification with more urgency
+  - name: 'fatal-immediate'
+    email_configs:
+      - to: 'hudsor01@icloud.com'
+        from: 'alerts@thehudsonfam.com'
+        smarthost: 'smtp.example.com:587'
+        auth_username: 'alerts@thehudsonfam.com'
+        auth_password_file: '/etc/alertmanager/secrets/smtp_password'
+        send_resolved: true
+        headers:
+          Subject: '[FATAL] {{ .GroupLabels.error_type }} - Immediate Attention Required'
+        html: |
+          <div style="background: #dc3545; color: white; padding: 20px; text-align: center;">
+            <h1>FATAL ERROR DETECTED</h1>
+          </div>
+
+          {{ range .Alerts.Firing }}
+          <div style="margin: 20px; padding: 20px; background: #f8d7da; border: 2px solid #dc3545; border-radius: 8px;">
+            <h2 style="color: #721c24; margin-top: 0;">{{ .Labels.error_type }}</h2>
+            <pre style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 4px; overflow-x: auto;">{{ .Annotations.message }}</pre>
+            <p><strong>Route:</strong> {{ .Labels.route }}</p>
+            <p><strong>Time:</strong> {{ .StartsAt.Format "2006-01-02 15:04:05 MST" }}</p>
+          </div>
+          {{ end }}
+
+          <p style="text-align: center; margin-top: 20px;">
+            <a href="https://hudsondigitalsolutions.com/admin/errors"
+               style="background: #dc3545; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-size: 18px;">
+              INVESTIGATE NOW
+            </a>
+          </p>
