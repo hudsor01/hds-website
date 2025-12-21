@@ -102,7 +102,7 @@ export type CardProps = BaseCardProps | ServiceCardProps | PricingCardProps | Pr
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (props, ref) => {
-    const { className, ...rest } = props
+    const { className, variant, size, hover, ...rest } = props as BaseCardProps
 
     // Service Card
     if ('variant' in props && props.variant === 'service') {
@@ -434,11 +434,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     }
 
     // Default/Base Card (compositional primitive)
-    const { variant = "default", size = "md", hover = false } = props as BaseCardProps
     return (
       <div
         ref={ref}
-        className={cn(cardVariants({ variant, size, hover }), className)}
+        className={cn(cardVariants({
+          variant: variant ?? "default",
+          size: size ?? "md",
+          hover: hover ?? false
+        }), className)}
         {...rest}
       />
     )
