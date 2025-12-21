@@ -1,15 +1,17 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging
+ * Provides server and client logging with Supabase error tracking
  */
 
+import { supabaseAdmin } from '@/lib/supabase'
 import type {
   ErrorLogData,
   LogContext,
   Logger,
   LogLevel,
   ServerLogger
-} from '@/types/logger';
+} from '@/types/logger'
+import type { ErrorContext, ErrorLogPayload, ErrorLevel } from '@/types/error-logging'
 
 export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
 
@@ -58,6 +60,43 @@ export function castError(error: unknown): ErrorLogData {
       stack: undefined,
       cause: undefined
     };
+  }
+}
+
+/**
+ * Generate a fingerprint for grouping identical errors.
+ * Hash of: error_type + message + first stack frame
+ */
+export function generateFingerprint(
+  errorType: string,
+  message: string,
+  stack?: string
+): string {
+  const firstFrame = stack?.split('\n')[1]?.trim() || 'unknown'
+  const input = `${errorType}:${message}:${firstFrame}`
+
+  // Simple hash
+  let hash = 0
+  for (let i = 0; i < input.length; i++) {
+    const char = input.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return Math.abs(hash).toString(36).padStart(8, '0')
+}
+
+/**
+ * Push error to Supabase (non-blocking, fire-and-forget)
+ */
+async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
+  try {
+    const { error } = await supabaseAdmin.from('error_logs').insert(payload)
+    if (error) {
+      console.error('[Logger] Failed to push to Supabase:', error.message)
+    }
+  } catch (e) {
+    // Never throw - logging should not break the app
+    console.error('[Logger] Failed to push to Supabase:', e)
   }
 }
 
@@ -143,9 +182,59 @@ export class BaseLogger implements Logger {
     this.log('warn', message, data);
   }
 
-  error(message: string, error?: Error | unknown): void {
+  error(message: string, error?: Error | unknown, context?: ErrorContext): void {
     const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
+
+    // Push to Supabase in production (non-blocking, server-side only)
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToSupabase('error', message, errorData, context);
+    }
+  }
+
+  fatal(message: string, error?: Error | unknown, context?: ErrorContext): void {
+    const errorData = error ? castError(error) : undefined;
+    this.log('error', message, errorData);
+
+    // Push to Supabase in production (non-blocking, server-side only)
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToSupabase('fatal', message, errorData, context);
+    }
+  }
+
+  private pushErrorToSupabase(
+    level: ErrorLevel,
+    message: string,
+    errorData?: ErrorLogData,
+    context?: ErrorContext
+  ): void {
+    const errorType = errorData?.name || 'UnknownError'
+    const fingerprint = generateFingerprint(errorType, message, errorData?.stack)
+
+    const payload: ErrorLogPayload = {
+      level,
+      error_type: errorType,
+      fingerprint,
+      message,
+      stack_trace: errorData?.stack,
+      url: context?.url,
+      method: context?.method,
+      route: context?.route,
+      request_id: context?.requestId,
+      user_id: context?.userId,
+      user_email: context?.userEmail,
+      environment: process.env.NODE_ENV || 'development',
+      vercel_region: process.env.VERCEL_REGION,
+      metadata: {
+        ...context?.metadata,
+        cause: errorData?.cause,
+        sessionId: this.sessionId,
+        component: this.context.component,
+      },
+    }
+
+    // Fire and forget - don't await
+    void pushToSupabase(payload)
   }
 
   time(label: string): void {
