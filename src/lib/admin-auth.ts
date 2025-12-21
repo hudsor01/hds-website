@@ -7,9 +7,14 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { logger } from '@/lib/logger';
 
+// Fail fast if ADMIN_EMAILS not configured
+if (!process.env.ADMIN_EMAILS?.trim()) {
+  throw new Error('ADMIN_EMAILS environment variable is required');
+}
+
 // Admin email whitelist - users with these emails can access admin features
 // In production, you might use Supabase user roles/metadata instead
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').filter(Boolean);
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase());
 
 export interface AuthResult {
   isAuthenticated: boolean;
@@ -43,17 +48,9 @@ export async function validateAdminAuth(): Promise<AuthResult> {
     // Check if user has admin privileges
     // Option 1: Check against email whitelist
     // Option 2: Check user metadata for admin role
-    // SECURITY: Removed fail-open logic - empty ADMIN_EMAILS no longer grants access
     const isAdmin =
-      ADMIN_EMAILS.includes(user.email || '') ||
+      ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') ||
       user.user_metadata?.role === 'admin';
-
-    // Log warning if ADMIN_EMAILS is not configured in production
-    if (ADMIN_EMAILS.length === 0 && process.env.NODE_ENV === 'production') {
-      logger.warn('ADMIN_EMAILS not configured in production - no users will have admin access', {
-        component: 'AdminAuth',
-      });
-    }
 
     if (!isAdmin) {
       logger.warn('Admin API request from non-admin user', {
