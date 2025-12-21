@@ -299,8 +299,7 @@ export function setupNextMocks() {
   }));
 
   mock.module('next/dynamic', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    default: <P = {}>(
+    default: <P = Record<string, never>>(
       _loader: (() => Promise<React.ComponentType<P>>) | Promise<React.ComponentType<P>>
     ): React.ComponentType<P> => {
       // For testing, just return a mock component that renders null
