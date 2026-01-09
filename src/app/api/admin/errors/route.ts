@@ -10,34 +10,10 @@ import { requireAdminAuth } from '@/lib/admin-auth'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
-import { sanitizePostgrestSearch } from '@/lib/utils'
+import { getStartDateFromRange, sanitizePostgrestSearch } from '@/lib/utils'
 import type { GroupedError, ErrorStats, ErrorLogRecord } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
-
-/**
- * Calculate the start date based on time range
- */
-function getStartDate(timeRange: string): Date {
-  const now = new Date()
-  switch (timeRange) {
-    case '1h':
-      now.setHours(now.getHours() - 1)
-      break
-    case '24h':
-      now.setHours(now.getHours() - 24)
-      break
-    case '7d':
-      now.setDate(now.getDate() - 7)
-      break
-    case '30d':
-      now.setDate(now.getDate() - 30)
-      break
-    default:
-      now.setHours(now.getHours() - 24)
-  }
-  return now
-}
 
 export async function GET(request: NextRequest) {
   await connection()
@@ -74,7 +50,7 @@ export async function GET(request: NextRequest) {
     const { timeRange, errorType, route, level, search, resolved, limit, offset } =
       parseResult.data
 
-    const startDate = getStartDate(timeRange)
+    const startDate = getStartDateFromRange(timeRange)
 
     let query = supabaseAdmin
       .from('error_logs' as never)

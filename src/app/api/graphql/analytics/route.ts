@@ -3,7 +3,6 @@
  * Provides GraphQL interface for querying Supabase analytics data
  */
 
-import { timingSafeEqual } from 'crypto';
 import { createServerLogger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import {
@@ -11,13 +10,18 @@ import {
     graphqlRequestSchema,
 } from '@/lib/schemas/api';
 import { supabaseAdmin } from '@/lib/supabase';
+import {
+    calculatePercentile,
+    getTimeRangeStart,
+    timingSafeStringCompare,
+    type TimeRange,
+} from '@/lib/utils';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const logger = createServerLogger('graphql-analytics')
 
 /**
  * Validate API token using timing-safe comparison.
- * Returns true if token matches ADMIN_API_TOKEN environment variable.
  */
 function validateApiToken(token: string): boolean {
   const expectedToken = process.env.ADMIN_API_TOKEN;
@@ -25,17 +29,7 @@ function validateApiToken(token: string): boolean {
     logger.error('ADMIN_API_TOKEN not configured');
     return false;
   }
-
-  // Use timing-safe comparison to prevent timing attacks
-  const tokenBuffer = Buffer.from(token);
-  const expectedBuffer = Buffer.from(expectedToken);
-
-  // Ensure buffers are same length before comparison
-  if (tokenBuffer.length !== expectedBuffer.length) {
-    return false;
-  }
-
-  return timingSafeEqual(tokenBuffer, expectedBuffer);
+  return timingSafeStringCompare(token, expectedToken);
 }
 
 // Whitelist of supported query types for security
@@ -168,17 +162,7 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
 async function getPageViews(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const limit = typeof variables.limit === 'number' ? Math.min(Math.max(variables.limit, 1), 1000) : 100;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   const { data, error } = await supabaseAdmin
     .from('page_analytics')
@@ -263,16 +247,7 @@ async function getPageViews(variables: Record<string, unknown>) {
 async function getWebVitals(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const metricFilter = typeof variables.metric === 'string' ? variables.metric : null;
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   let query = supabaseAdmin
     .from('web_vitals')
@@ -329,22 +304,6 @@ async function getWebVitals(variables: Record<string, unknown>) {
     metricMap.set(metric, stats);
   }
 
-  const percentile = (values: number[], p: number) => {
-    if (!values.length) { return 0; }
-    const sorted = [...values].sort((a, b) => a - b);
-    const idx = (p / 100) * (sorted.length - 1);
-    const lower = Math.floor(idx);
-    const upper = Math.ceil(idx);
-    if (lower === upper) {
-      const lowerValue = sorted[lower];
-      return lowerValue !== undefined ? lowerValue : 0;
-    }
-    const weight = idx - lower;
-    const lowerVal = sorted[lower] ?? 0;
-    const upperVal = sorted[upper] ?? 0;
-    return lowerVal * (1 - weight) + upperVal * weight;
-  };
-
   const metrics = Array.from(metricMap.entries()).map(([metric, stats]) => {
     const count = stats.values.length;
     const average = count ? stats.sum / count : 0;
@@ -361,8 +320,8 @@ async function getWebVitals(variables: Record<string, unknown>) {
       metric,
       samples: count,
       average,
-      p75: percentile(stats.values, 75),
-      p95: percentile(stats.values, 95),
+      p75: calculatePercentile(stats.values, 75),
+      p95: calculatePercentile(stats.values, 95),
       ratingDistribution: stats.ratings,
       slowestPages,
     };
@@ -386,16 +345,7 @@ async function getWebVitals(variables: Record<string, unknown>) {
 
 async function getLeadStats(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '30d';
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange30d = 30 * 24 * 60 * 60 * 1000;
-  const rangeMs30d = rangeMap[timeRange] ?? defaultRange30d;
-  const since = new Date(Date.now() - rangeMs30d).toISOString();
+  const since = getTimeRangeStart(timeRange, '30d' as TimeRange);
 
   // Fetch all leads data and aggregate in JS (postgrest doesn't support .group())
   const { data: leadsData, error: leadsError, count: totalCount } = await supabaseAdmin
@@ -465,17 +415,7 @@ async function getEventStats(variables: Record<string, unknown>) {
     ? Math.min(Math.max(variables.limit, 1), 1000)
     : 100;
   const categoryFilter = typeof variables.category === 'string' ? variables.category : null;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   let query = supabaseAdmin
     .from('custom_events')
@@ -585,17 +525,7 @@ async function getFunnelAnalytics(variables: Record<string, unknown>) {
   const limit = typeof variables.limit === 'number'
     ? Math.min(Math.max(variables.limit, 1), 100)
     : 50;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange7d = 7 * 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange7d;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '7d' as TimeRange);
 
   let query = supabaseAdmin
     .from('conversion_funnel')

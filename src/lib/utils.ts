@@ -155,3 +155,113 @@ export function sanitizePostgrestSearch(term: string): string {
 export function isValidHexString(str: string): boolean {
   return /^[0-9a-fA-F]*$/.test(str) && str.length % 2 === 0;
 }
+
+// ============================================================================
+// Time Range Utilities
+// ============================================================================
+
+/**
+ * Supported time range options for analytics queries.
+ */
+export type TimeRange = '1h' | '24h' | '7d' | '30d' | '90d';
+
+/**
+ * Time range durations in milliseconds.
+ * Centralized to avoid duplication across analytics functions.
+ */
+export const TIME_RANGE_MS: Record<TimeRange, number> = {
+  '1h': 60 * 60 * 1000,
+  '24h': 24 * 60 * 60 * 1000,
+  '7d': 7 * 24 * 60 * 60 * 1000,
+  '30d': 30 * 24 * 60 * 60 * 1000,
+  '90d': 90 * 24 * 60 * 60 * 1000,
+} as const;
+
+/**
+ * Get the start date for a time range query.
+ * Returns an ISO string for use in database queries.
+ *
+ * @param timeRange - The time range (e.g., '24h', '7d', '30d')
+ * @param defaultRange - Fallback if timeRange is invalid (default: '24h')
+ */
+export function getTimeRangeStart(
+  timeRange: string,
+  defaultRange: TimeRange = '24h'
+): string {
+  const rangeMs = TIME_RANGE_MS[timeRange as TimeRange] ?? TIME_RANGE_MS[defaultRange];
+  return new Date(Date.now() - rangeMs).toISOString();
+}
+
+/**
+ * Calculate the start date based on time range (returns Date object).
+ * Used when you need a Date object rather than ISO string.
+ *
+ * @param timeRange - The time range (e.g., '1h', '24h', '7d', '30d')
+ */
+export function getStartDateFromRange(timeRange: string): Date {
+  const rangeMs = TIME_RANGE_MS[timeRange as TimeRange] ?? TIME_RANGE_MS['24h'];
+  return new Date(Date.now() - rangeMs);
+}
+
+// ============================================================================
+// Statistical Utilities
+// ============================================================================
+
+/**
+ * Calculate the percentile value from an array of numbers.
+ * Uses linear interpolation for non-integer indices.
+ *
+ * @param values - Array of numeric values
+ * @param p - Percentile (0-100)
+ * @returns The percentile value, or 0 if array is empty
+ */
+export function calculatePercentile(values: number[], p: number): number {
+  if (!values.length) {
+    return 0;
+  }
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const idx = (p / 100) * (sorted.length - 1);
+  const lower = Math.floor(idx);
+  const upper = Math.ceil(idx);
+
+  if (lower === upper) {
+    return sorted[lower] ?? 0;
+  }
+
+  const weight = idx - lower;
+  const lowerVal = sorted[lower] ?? 0;
+  const upperVal = sorted[upper] ?? 0;
+  return lowerVal * (1 - weight) + upperVal * weight;
+}
+
+// ============================================================================
+// Crypto Utilities
+// ============================================================================
+
+/**
+ * Perform a timing-safe string comparison to prevent timing attacks.
+ * Returns true if both strings are equal.
+ *
+ * Note: This function requires the 'crypto' module and should only
+ * be used in server-side code.
+ *
+ * @param a - First string to compare
+ * @param b - Second string to compare
+ * @returns true if strings are equal, false otherwise
+ */
+export function timingSafeStringCompare(a: string, b: string): boolean {
+  // Import dynamically to avoid issues in client-side code
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { timingSafeEqual } = require('crypto');
+
+  const bufferA = Buffer.from(a);
+  const bufferB = Buffer.from(b);
+
+  // Buffers must be same length for timingSafeEqual
+  if (bufferA.length !== bufferB.length) {
+    return false;
+  }
+
+  return timingSafeEqual(bufferA, bufferB);
+}
