@@ -9,21 +9,37 @@ import {
     analyticsVariablesSchema,
     graphqlRequestSchema,
 } from '@/lib/schemas/api';
-import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
+import {
+    calculatePercentile,
+    getTimeRangeStart,
+    timingSafeStringCompare,
+    type TimeRange,
+} from '@/lib/utils';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const logger = createServerLogger('graphql-analytics')
 
-// Simple analytics query helper
-async function queryAnalytics(query: string, variables: Record<string, unknown>) {
-  // This is a simplified implementation - expand based on actual needs
-  const { data, error } = await supabaseAdmin.rpc('query_analytics', { query_text: query, vars: variables as Json });
-  if (error) {
-    throw error;
+/**
+ * Validate API token using timing-safe comparison.
+ */
+function validateApiToken(token: string): boolean {
+  const expectedToken = process.env.ADMIN_API_TOKEN;
+  if (!expectedToken) {
+    logger.error('ADMIN_API_TOKEN not configured');
+    return false;
   }
-  return data;
+  return timingSafeStringCompare(token, expectedToken);
 }
+
+// Whitelist of supported query types for security
+const SUPPORTED_QUERY_TYPES = [
+  'getPageViews',
+  'getWebVitals',
+  'getLeadStats',
+  'getEventStats',
+  'getFunnelAnalytics',
+] as const;
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 60 requests per minute per IP
@@ -38,9 +54,17 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Basic authentication check
+    // Validate Bearer token authentication
     const authHeader = request.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
+      logger.warn('Missing Bearer token in authorization header')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Extract and validate token
+    const token = authHeader.slice(7) // Remove 'Bearer ' prefix
+    if (!validateApiToken(token)) {
+      logger.warn('Invalid API token provided', { ip: clientIp })
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -112,7 +136,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function executeAnalyticsQuery(query: string, variables: Record<string, unknown> = {}) {
-  // Parse and execute common analytics queries
+  // Parse and execute whitelisted analytics queries only
+  // Security: Only allow known query types to prevent arbitrary query injection
 
   if (query.includes('getPageViews')) {
     return await getPageViews(variables)
@@ -125,25 +150,19 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
   } else if (query.includes('getFunnelAnalytics')) {
     return await getFunnelAnalytics(variables)
   } else {
-    // Fallback to direct Supabase GraphQL if available
-    return await queryAnalytics(query, variables)
+    // Security: Reject unsupported query types instead of passing to RPC
+    logger.warn('Unsupported query type requested', {
+      queryPreview: query.substring(0, 100),
+      supportedTypes: SUPPORTED_QUERY_TYPES,
+    })
+    throw new Error(`Unsupported query type. Supported types: ${SUPPORTED_QUERY_TYPES.join(', ')}`)
   }
 }
 
 async function getPageViews(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const limit = typeof variables.limit === 'number' ? Math.min(Math.max(variables.limit, 1), 1000) : 100;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   const { data, error } = await supabaseAdmin
     .from('page_analytics')
@@ -228,16 +247,7 @@ async function getPageViews(variables: Record<string, unknown>) {
 async function getWebVitals(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '24h';
   const metricFilter = typeof variables.metric === 'string' ? variables.metric : null;
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   let query = supabaseAdmin
     .from('web_vitals')
@@ -294,22 +304,6 @@ async function getWebVitals(variables: Record<string, unknown>) {
     metricMap.set(metric, stats);
   }
 
-  const percentile = (values: number[], p: number) => {
-    if (!values.length) { return 0; }
-    const sorted = [...values].sort((a, b) => a - b);
-    const idx = (p / 100) * (sorted.length - 1);
-    const lower = Math.floor(idx);
-    const upper = Math.ceil(idx);
-    if (lower === upper) {
-      const lowerValue = sorted[lower];
-      return lowerValue !== undefined ? lowerValue : 0;
-    }
-    const weight = idx - lower;
-    const lowerVal = sorted[lower] ?? 0;
-    const upperVal = sorted[upper] ?? 0;
-    return lowerVal * (1 - weight) + upperVal * weight;
-  };
-
   const metrics = Array.from(metricMap.entries()).map(([metric, stats]) => {
     const count = stats.values.length;
     const average = count ? stats.sum / count : 0;
@@ -326,8 +320,8 @@ async function getWebVitals(variables: Record<string, unknown>) {
       metric,
       samples: count,
       average,
-      p75: percentile(stats.values, 75),
-      p95: percentile(stats.values, 95),
+      p75: calculatePercentile(stats.values, 75),
+      p95: calculatePercentile(stats.values, 95),
       ratingDistribution: stats.ratings,
       slowestPages,
     };
@@ -351,16 +345,7 @@ async function getWebVitals(variables: Record<string, unknown>) {
 
 async function getLeadStats(variables: Record<string, unknown>) {
   const timeRange = typeof variables.timeRange === 'string' ? variables.timeRange : '30d';
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange30d = 30 * 24 * 60 * 60 * 1000;
-  const rangeMs30d = rangeMap[timeRange] ?? defaultRange30d;
-  const since = new Date(Date.now() - rangeMs30d).toISOString();
+  const since = getTimeRangeStart(timeRange, '30d' as TimeRange);
 
   // Fetch all leads data and aggregate in JS (postgrest doesn't support .group())
   const { data: leadsData, error: leadsError, count: totalCount } = await supabaseAdmin
@@ -430,17 +415,7 @@ async function getEventStats(variables: Record<string, unknown>) {
     ? Math.min(Math.max(variables.limit, 1), 1000)
     : 100;
   const categoryFilter = typeof variables.category === 'string' ? variables.category : null;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange24h = 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange24h;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '24h' as TimeRange);
 
   let query = supabaseAdmin
     .from('custom_events')
@@ -550,17 +525,7 @@ async function getFunnelAnalytics(variables: Record<string, unknown>) {
   const limit = typeof variables.limit === 'number'
     ? Math.min(Math.max(variables.limit, 1), 100)
     : 50;
-
-  const rangeMap: Record<string, number> = {
-    '24h': 24 * 60 * 60 * 1000,
-    '7d': 7 * 24 * 60 * 60 * 1000,
-    '30d': 30 * 24 * 60 * 60 * 1000,
-    '90d': 90 * 24 * 60 * 60 * 1000,
-  };
-
-  const defaultRange7d = 7 * 24 * 60 * 60 * 1000;
-  const rangeMs = rangeMap[timeRange] ?? defaultRange7d;
-  const since = new Date(Date.now() - rangeMs).toISOString();
+  const since = getTimeRangeStart(timeRange, '7d' as TimeRange);
 
   let query = supabaseAdmin
     .from('conversion_funnel')
