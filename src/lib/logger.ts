@@ -4,6 +4,7 @@
  */
 
 import { supabaseAdmin } from '@/lib/supabase'
+import type { Json } from '@/types/database'
 import type {
   ErrorLogData,
   LogContext,
@@ -87,16 +88,28 @@ export function generateFingerprint(
 
 /**
  * Push error to Supabase (non-blocking, fire-and-forget)
+ * Note: Uses console.error as final fallback since we can't use the logger to log logger failures
  */
 async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
   try {
-    const { error } = await supabaseAdmin.from('error_logs' as never).insert(payload as never)
+    // Cast metadata to match database Json type
+    const dbPayload = {
+      ...payload,
+      metadata: payload.metadata as Record<string, Json | undefined>,
+    }
+    const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
     if (error) {
-      console.error('[Logger] Failed to push to Supabase:', error.message)
+      // Final fallback - can't use logger here as it would cause recursion
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Logger] Failed to push to Supabase:', error.message)
+      }
     }
   } catch (e) {
     // Never throw - logging should not break the app
-    console.error('[Logger] Failed to push to Supabase:', e)
+    // Final fallback - can't use logger here as it would cause recursion
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Logger] Failed to push to Supabase:', e)
+    }
   }
 }
 

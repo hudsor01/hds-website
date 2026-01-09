@@ -11,7 +11,7 @@ import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
 import { getStartDateFromRange, sanitizePostgrestSearch } from '@/lib/utils'
-import type { GroupedError, ErrorStats, ErrorLogRecord } from '@/types/error-logging'
+import type { GroupedError, ErrorStats } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
 
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     const startDate = getStartDateFromRange(timeRange)
 
     let query = supabaseAdmin
-      .from('error_logs' as never)
+      .from('error_logs')
       .select('*')
       .gte('created_at', startDate.toISOString())
       .order('created_at', { ascending: false })
@@ -86,8 +86,7 @@ export async function GET(request: NextRequest) {
       query = query.is('resolved_at', null)
     }
 
-    const { data: errorLogsRaw, error: fetchError } = await query
-    const errorLogs = errorLogsRaw as unknown as ErrorLogRecord[] | null
+    const { data: errorLogs, error: fetchError } = await query
 
     if (fetchError) {
       logger.error('Failed to fetch error logs', fetchError)
@@ -123,12 +122,12 @@ export async function GET(request: NextRequest) {
           fingerprint: errorLog.fingerprint,
           error_type: errorLog.error_type,
           message: errorLog.message,
-          level: errorLog.level,
+          level: errorLog.level as GroupedError['level'],
           count: 1,
           first_seen: errorLog.created_at,
           last_seen: errorLog.created_at,
-          route: errorLog.route,
-          resolved_at: errorLog.resolved_at,
+          route: errorLog.route ?? undefined,
+          resolved_at: errorLog.resolved_at ?? undefined,
         })
       }
     }

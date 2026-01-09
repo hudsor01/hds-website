@@ -1,0 +1,27 @@
+# Lefthook configuration
+# Replaces husky for git hooks
+# Documentation: https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: bun run lint
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: bun run typecheck
+    test:
+      run: bun run test:unit
+
+pre-push:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: bun run lint
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: bun run typecheck
+    test:
+      run: bun run test:unit
