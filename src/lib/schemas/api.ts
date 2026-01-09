@@ -35,40 +35,11 @@ export type LeadMagnetResource = z.infer<typeof leadMagnetResourceSchema>;
 export type LeadMagnetResponse = z.infer<typeof leadMagnetResponseSchema>;
 
 // ============================================================================
-// GraphQL Analytics API Schemas
+// Time Range Schema (used by analytics APIs)
 // ============================================================================
 
 export const timeRangeSchema = z.enum(['24h', '7d', '30d', '90d']);
-
-export const analyticsVariablesSchema = z.object({
-  timeRange: timeRangeSchema.optional(),
-  limit: z.number().int().positive().max(1000).optional(),
-  metric: z.string().optional(),
-  category: z.string().optional(),
-  funnelName: z.string().optional(),
-});
-
-export const graphqlRequestSchema = z.object({
-  query: z.string().min(1, 'GraphQL query cannot be empty'),
-  variables: analyticsVariablesSchema.optional(),
-});
-
-export const graphqlResponseSchema = z.object({
-  data: z.unknown().optional(),
-  errors: z.array(z.object({
-    message: z.string(),
-    locations: z.array(z.object({
-      line: z.number(),
-      column: z.number(),
-    })).optional(),
-    path: z.array(z.union([z.string(), z.number()])).optional(),
-  })).optional(),
-});
-
 export type TimeRange = z.infer<typeof timeRangeSchema>;
-export type AnalyticsVariables = z.infer<typeof analyticsVariablesSchema>;
-export type GraphQLRequest = z.infer<typeof graphqlRequestSchema>;
-export type GraphQLResponse = z.infer<typeof graphqlResponseSchema>;
 
 // ============================================================================
 // Cron Job API Schemas

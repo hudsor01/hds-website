@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
+import { createServerLogger } from '@/lib/logger'
 import { calculatePaystubTotals } from '@/lib/paystub-calculator/calculate-paystub-totals'
 import { validatePaystubInputs } from '@/lib/paystub-calculator/validation'
 import { FILING_STATUSES, PAY_FREQUENCIES } from '@/types/paystub'
+
+const logger = createServerLogger('paystub-api')
 
 // Minimal API for server-side validated paystub calculations.
 
@@ -36,7 +39,8 @@ export async function POST(req: Request) {
 
     const result = calculatePaystubTotals(parsed.data)
     return NextResponse.json({ payPeriods: result.payPeriods, totals: result.totals })
-  } catch {
+  } catch (error) {
+    logger.error('Failed to calculate paystub', error instanceof Error ? error : new Error(String(error)))
     return NextResponse.json({ error: 'Unable to calculate paystub' }, { status: 500 })
   }
 }

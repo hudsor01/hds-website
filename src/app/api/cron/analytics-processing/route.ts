@@ -27,8 +27,13 @@ async function logCronExecution(jobName: string, status: string, error?: string)
     await supabaseAdmin
       .from('cron_logs')
       .insert({ job_name: jobName, status, error_message: error });
-  } catch {
-    // Non-critical, don't fail the job
+  } catch (e) {
+    // Non-critical for main job, but log for debugging
+    logger.warn('Failed to log cron execution to database', {
+      jobName,
+      status,
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 }
 
@@ -42,8 +47,12 @@ async function enqueueLogProcessing(data: Record<string, unknown>) {
     await supabaseAdmin
       .from('processing_queue')
       .insert(payload);
-  } catch {
-    // Non-critical, don't fail the job
+  } catch (e) {
+    // Non-critical for main job, but log for debugging
+    logger.warn('Failed to enqueue log processing', {
+      dataType: data.type,
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 }
 
