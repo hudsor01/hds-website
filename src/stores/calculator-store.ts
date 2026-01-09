@@ -139,6 +139,7 @@ export const useCalculatorStore = create<CalculatorState>()(
           set({ savedCalculations: calculations, isLoading: false });
           return id;
         } catch (err) {
+          logger.error('Error saving calculation:', err as Error);
           set({ error: 'Failed to save calculation', isLoading: false });
           throw err;
         }

@@ -337,6 +337,123 @@ export const logger: Logger = new BaseLogger({
   environment: process.env.NODE_ENV ?? 'development',
 });
 
+// ============================================================================
+// Standardized Error Handling Utilities
+// ============================================================================
+
+/**
+ * Error severity levels for standardized handling
+ */
+export type ErrorSeverity = 'critical' | 'warning' | 'info';
+
+/**
+ * Options for handleError utility
+ */
+export interface HandleErrorOptions {
+  /** Context about where the error occurred */
+  context?: string;
+  /** Additional metadata to log */
+  metadata?: Record<string, unknown>;
+  /** Whether to rethrow the error after logging */
+  rethrow?: boolean;
+  /** Severity level - determines log level used */
+  severity?: ErrorSeverity;
+}
+
+/**
+ * Standardized error handler - ensures all errors are logged consistently
+ * Use this in catch blocks to ensure errors are never silently swallowed
+ *
+ * @example
+ * try {
+ *   await riskyOperation();
+ * } catch (error) {
+ *   handleError(error, { context: 'riskyOperation', severity: 'warning' });
+ * }
+ */
+export function handleError(
+  error: unknown,
+  options: HandleErrorOptions = {}
+): ErrorLogData {
+  const { context, metadata, rethrow = false, severity = 'warning' } = options;
+  const errorData = castError(error);
+
+  const message = context
+    ? `[${context}] ${errorData.message}`
+    : errorData.message;
+
+  const logData = metadata ? { ...metadata, errorData } : errorData;
+
+  switch (severity) {
+    case 'critical':
+      logger.error(message, error);
+      break;
+    case 'warning':
+      logger.warn(message, logData);
+      break;
+    case 'info':
+      logger.info(message, logData);
+      break;
+  }
+
+  if (rethrow) {
+    throw error;
+  }
+
+  return errorData;
+}
+
+/**
+ * Result type for safeExecute
+ */
+export type SafeResult<T> =
+  | { success: true; data: T; error: null }
+  | { success: false; data: null; error: ErrorLogData };
+
+/**
+ * Execute a function safely with automatic error logging
+ * Returns a result object instead of throwing
+ *
+ * @example
+ * const result = await safeExecute(
+ *   () => fetchData(),
+ *   { context: 'fetchData', severity: 'warning' }
+ * );
+ * if (result.success) {
+ *   // use result.data
+ * } else {
+ *   // handle result.error
+ * }
+ */
+export async function safeExecute<T>(
+  fn: () => T | Promise<T>,
+  options: HandleErrorOptions = {}
+): Promise<SafeResult<T>> {
+  try {
+    const data = await fn();
+    return { success: true, data, error: null };
+  } catch (error) {
+    const errorData = handleError(error, options);
+    return { success: false, data: null, error: errorData };
+  }
+}
+
+/**
+ * Synchronous version of safeExecute
+ */
+export function safeExecuteSync<T>(
+  fn: () => T,
+  options: HandleErrorOptions = {}
+): SafeResult<T> {
+  try {
+    const data = fn();
+    return { success: true, data, error: null };
+  } catch (error) {
+    const errorData = handleError(error, options);
+    return { success: false, data: null, error: errorData };
+  }
+}
+
 // Add global type for session ID
 declare global {
   interface Window {
