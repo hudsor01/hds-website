@@ -153,12 +153,41 @@ export async function getAdjacentArticles(
 }
 
 /**
+ * Sanitize search term for safe use in PostgREST filter queries.
+ * Escapes special characters that could break out of ilike patterns.
+ */
+function sanitizePostgrestSearch(term: string): string {
+  // Escape PostgREST special characters that could be used to
+  // break out of the filter or inject additional conditions:
+  // - commas separate filter conditions
+  // - dots separate operators
+  // - parens group conditions
+  // - % and _ are SQL wildcards
+  return term
+    .replace(/\\/g, '\\\\')  // Escape backslashes first
+    .replace(/%/g, '\\%')    // Escape wildcard %
+    .replace(/_/g, '\\_')    // Escape wildcard _
+    .replace(/,/g, '')       // Remove commas (PostgREST filter separator)
+    .replace(/\./g, '')      // Remove dots (PostgREST operator separator)
+    .replace(/\(/g, '')      // Remove open parens (PostgREST grouping)
+    .replace(/\)/g, '');     // Remove close parens (PostgREST grouping)
+}
+
+/**
  * Search articles
  */
 export async function searchArticles(query: string): Promise<HelpArticle[]> {
-  const searchTerms = query.toLowerCase().trim();
+  const rawSearch = query.toLowerCase().trim();
 
-  if (!searchTerms) {
+  if (!rawSearch) {
+    return [];
+  }
+
+  // Sanitize search term to prevent PostgREST filter injection
+  const searchTerms = sanitizePostgrestSearch(rawSearch);
+
+  // Reject if sanitization removed too much content (minimum 2 chars)
+  if (searchTerms.length < 2) {
     return [];
   }
 

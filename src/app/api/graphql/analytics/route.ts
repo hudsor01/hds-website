@@ -3,27 +3,49 @@
  * Provides GraphQL interface for querying Supabase analytics data
  */
 
+import { timingSafeEqual } from 'crypto';
 import { createServerLogger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import {
     analyticsVariablesSchema,
     graphqlRequestSchema,
 } from '@/lib/schemas/api';
-import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const logger = createServerLogger('graphql-analytics')
 
-// Simple analytics query helper
-async function queryAnalytics(query: string, variables: Record<string, unknown>) {
-  // This is a simplified implementation - expand based on actual needs
-  const { data, error } = await supabaseAdmin.rpc('query_analytics', { query_text: query, vars: variables as Json });
-  if (error) {
-    throw error;
+/**
+ * Validate API token using timing-safe comparison.
+ * Returns true if token matches ADMIN_API_TOKEN environment variable.
+ */
+function validateApiToken(token: string): boolean {
+  const expectedToken = process.env.ADMIN_API_TOKEN;
+  if (!expectedToken) {
+    logger.error('ADMIN_API_TOKEN not configured');
+    return false;
   }
-  return data;
+
+  // Use timing-safe comparison to prevent timing attacks
+  const tokenBuffer = Buffer.from(token);
+  const expectedBuffer = Buffer.from(expectedToken);
+
+  // Ensure buffers are same length before comparison
+  if (tokenBuffer.length !== expectedBuffer.length) {
+    return false;
+  }
+
+  return timingSafeEqual(tokenBuffer, expectedBuffer);
 }
+
+// Whitelist of supported query types for security
+const SUPPORTED_QUERY_TYPES = [
+  'getPageViews',
+  'getWebVitals',
+  'getLeadStats',
+  'getEventStats',
+  'getFunnelAnalytics',
+] as const;
 
 export async function POST(request: NextRequest) {
   // Rate limiting - 60 requests per minute per IP
@@ -38,9 +60,17 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Basic authentication check
+    // Validate Bearer token authentication
     const authHeader = request.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
+      logger.warn('Missing Bearer token in authorization header')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Extract and validate token
+    const token = authHeader.slice(7) // Remove 'Bearer ' prefix
+    if (!validateApiToken(token)) {
+      logger.warn('Invalid API token provided', { ip: clientIp })
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -112,7 +142,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function executeAnalyticsQuery(query: string, variables: Record<string, unknown> = {}) {
-  // Parse and execute common analytics queries
+  // Parse and execute whitelisted analytics queries only
+  // Security: Only allow known query types to prevent arbitrary query injection
 
   if (query.includes('getPageViews')) {
     return await getPageViews(variables)
@@ -125,8 +156,12 @@ async function executeAnalyticsQuery(query: string, variables: Record<string, un
   } else if (query.includes('getFunnelAnalytics')) {
     return await getFunnelAnalytics(variables)
   } else {
-    // Fallback to direct Supabase GraphQL if available
-    return await queryAnalytics(query, variables)
+    // Security: Reject unsupported query types instead of passing to RPC
+    logger.warn('Unsupported query type requested', {
+      queryPreview: query.substring(0, 100),
+      supportedTypes: SUPPORTED_QUERY_TYPES,
+    })
+    throw new Error(`Unsupported query type. Supported types: ${SUPPORTED_QUERY_TYPES.join(', ')}`)
   }
 }
 

@@ -15,6 +15,21 @@ import type { GroupedError, ErrorStats, ErrorLogRecord } from '@/types/error-log
 const logger = createServerLogger('admin-errors-api')
 
 /**
+ * Sanitize search term for safe use in PostgREST filter queries.
+ * Escapes special characters that could break out of ilike patterns.
+ */
+function sanitizePostgrestSearch(term: string): string {
+  return term
+    .replace(/\\/g, '\\\\')  // Escape backslashes first
+    .replace(/%/g, '\\%')    // Escape wildcard %
+    .replace(/_/g, '\\_')    // Escape wildcard _
+    .replace(/,/g, '')       // Remove commas (PostgREST filter separator)
+    .replace(/\./g, '')      // Remove dots (PostgREST operator separator)
+    .replace(/\(/g, '')      // Remove open parens (PostgREST grouping)
+    .replace(/\)/g, '')      // Remove close parens (PostgREST grouping)
+}
+
+/**
  * Calculate the start date based on time range
  */
 function getStartDate(timeRange: string): Date {
@@ -94,9 +109,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      query = query.or(
-        `message.ilike.%${search}%,error_type.ilike.%${search}%,route.ilike.%${search}%`
-      )
+      // Sanitize search term to prevent PostgREST filter injection
+      const sanitizedSearch = sanitizePostgrestSearch(search)
+      if (sanitizedSearch.length >= 2) {
+        query = query.or(
+          `message.ilike.%${sanitizedSearch}%,error_type.ilike.%${sanitizedSearch}%,route.ilike.%${sanitizedSearch}%`
+        )
+      }
     }
 
     if (resolved === 'true') {
