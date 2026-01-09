@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { sanitizePostgrestSearch } from '@/lib/utils';
 
 export interface HelpArticle {
   id: string;
@@ -146,6 +147,11 @@ export async function getAdjacentArticles(
   const articles = await getArticlesByCategory(category);
   const currentIndex = articles.findIndex((a) => a.slug === currentSlug);
 
+  // If current article not found, return nulls for both
+  if (currentIndex === -1) {
+    return { prev: null, next: null };
+  }
+
   return {
     prev: currentIndex > 0 ? articles[currentIndex - 1] ?? null : null,
     next: currentIndex < articles.length - 1 ? articles[currentIndex + 1] ?? null : null,
@@ -156,9 +162,17 @@ export async function getAdjacentArticles(
  * Search articles
  */
 export async function searchArticles(query: string): Promise<HelpArticle[]> {
-  const searchTerms = query.toLowerCase().trim();
+  const rawSearch = query.toLowerCase().trim();
 
-  if (!searchTerms) {
+  if (!rawSearch) {
+    return [];
+  }
+
+  // Sanitize search term to prevent PostgREST filter injection
+  const searchTerms = sanitizePostgrestSearch(rawSearch);
+
+  // Reject if sanitization removed too much content (minimum 2 chars)
+  if (searchTerms.length < 2) {
     return [];
   }
 

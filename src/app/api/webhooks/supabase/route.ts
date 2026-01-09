@@ -3,6 +3,7 @@
  * Processes database events and triggers for real-time updates
  */
 
+import { createHmac, timingSafeEqual } from 'crypto';
 import { createServerLogger } from '@/lib/logger';
 import {
     authChangePayloadSchema,
@@ -18,8 +19,41 @@ import {
 } from '@/lib/schemas/supabase';
 import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
+import { isValidHexString } from '@/lib/utils';
 import { headers } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
+
+/**
+ * Verify webhook signature using HMAC-SHA256.
+ * Returns true if signature is valid, false otherwise.
+ */
+function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
+  try {
+    // Validate signature is a valid hex string before processing
+    // This prevents silent truncation when Buffer.from encounters non-hex chars
+    if (!isValidHexString(signature)) {
+      return false;
+    }
+
+    // Generate expected signature
+    const expectedSignature = createHmac('sha256', secret)
+      .update(payload)
+      .digest('hex');
+
+    // Use timing-safe comparison to prevent timing attacks
+    const signatureBuffer = Buffer.from(signature, 'hex');
+    const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+
+    // Ensure buffers are same length before comparison
+    if (signatureBuffer.length !== expectedBuffer.length) {
+      return false;
+    }
+
+    return timingSafeEqual(signatureBuffer, expectedBuffer);
+  } catch {
+    return false;
+  }
+}
 
 async function triggerWebhook(eventType: string, payload: unknown) {
   // Log webhook trigger and optionally notify external services
@@ -48,10 +82,26 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
 
-    // Verify webhook signature
+    // Verify webhook signature exists
     if (!signature) {
       logger.warn('Missing webhook signature')
       return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
+    }
+
+    // Get webhook secret from environment
+    const webhookSecret = process.env.SUPABASE_WEBHOOK_SECRET
+    if (!webhookSecret) {
+      logger.error('SUPABASE_WEBHOOK_SECRET not configured')
+      return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
+    }
+
+    // Read raw body for signature verification
+    const rawBody = await request.text()
+
+    // Verify signature cryptographically using HMAC-SHA256
+    if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
+      logger.warn('Invalid webhook signature - possible forgery attempt')
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
     }
 
     // Validate event type
@@ -61,7 +111,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
     }
 
-    const rawPayload = await request.json()
+    // Parse JSON from already-read body
+    const rawPayload = JSON.parse(rawBody)
 
     // Validate payload based on event type
     let validatedPayload
