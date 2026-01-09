@@ -126,4 +126,32 @@ export function formatDate(date: Date | string, format: 'short' | 'long' = 'shor
   return dateObj.toLocaleDateString('en-US', options);
 }
 
+/**
+ * Sanitize search term for safe use in PostgREST filter queries.
+ * Escapes special characters that could break out of ilike patterns
+ * or inject additional filter conditions.
+ *
+ * Security: Prevents PostgREST filter injection by escaping/removing:
+ * - SQL wildcards (%, _) - escaped with backslash
+ * - PostgREST operators (, . ( )) - removed entirely
+ * - Backslashes - escaped first to prevent escape sequence injection
+ */
+export function sanitizePostgrestSearch(term: string): string {
+  return term
+    .replace(/\\/g, '\\\\')  // Escape backslashes first
+    .replace(/%/g, '\\%')    // Escape wildcard %
+    .replace(/_/g, '\\_')    // Escape wildcard _
+    .replace(/,/g, '')       // Remove commas (PostgREST filter separator)
+    .replace(/\./g, '')      // Remove dots (PostgREST operator separator)
+    .replace(/\(/g, '')      // Remove open parens (PostgREST grouping)
+    .replace(/\)/g, '');     // Remove close parens (PostgREST grouping)
+}
 
+/**
+ * Validate that a string is a valid hexadecimal string.
+ * Used for signature verification to prevent silent truncation
+ * when converting non-hex strings to buffers.
+ */
+export function isValidHexString(str: string): boolean {
+  return /^[0-9a-fA-F]*$/.test(str) && str.length % 2 === 0;
+}

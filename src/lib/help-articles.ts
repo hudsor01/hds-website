@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { sanitizePostgrestSearch } from '@/lib/utils';
 
 export interface HelpArticle {
   id: string;
@@ -146,31 +147,15 @@ export async function getAdjacentArticles(
   const articles = await getArticlesByCategory(category);
   const currentIndex = articles.findIndex((a) => a.slug === currentSlug);
 
+  // If current article not found, return nulls for both
+  if (currentIndex === -1) {
+    return { prev: null, next: null };
+  }
+
   return {
     prev: currentIndex > 0 ? articles[currentIndex - 1] ?? null : null,
     next: currentIndex < articles.length - 1 ? articles[currentIndex + 1] ?? null : null,
   };
-}
-
-/**
- * Sanitize search term for safe use in PostgREST filter queries.
- * Escapes special characters that could break out of ilike patterns.
- */
-function sanitizePostgrestSearch(term: string): string {
-  // Escape PostgREST special characters that could be used to
-  // break out of the filter or inject additional conditions:
-  // - commas separate filter conditions
-  // - dots separate operators
-  // - parens group conditions
-  // - % and _ are SQL wildcards
-  return term
-    .replace(/\\/g, '\\\\')  // Escape backslashes first
-    .replace(/%/g, '\\%')    // Escape wildcard %
-    .replace(/_/g, '\\_')    // Escape wildcard _
-    .replace(/,/g, '')       // Remove commas (PostgREST filter separator)
-    .replace(/\./g, '')      // Remove dots (PostgREST operator separator)
-    .replace(/\(/g, '')      // Remove open parens (PostgREST grouping)
-    .replace(/\)/g, '');     // Remove close parens (PostgREST grouping)
 }
 
 /**

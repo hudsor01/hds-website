@@ -19,6 +19,7 @@ import {
 } from '@/lib/schemas/supabase';
 import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
+import { isValidHexString } from '@/lib/utils';
 import { headers } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -28,6 +29,12 @@ import { NextResponse, type NextRequest } from 'next/server';
  */
 function verifyWebhookSignature(payload: string, signature: string, secret: string): boolean {
   try {
+    // Validate signature is a valid hex string before processing
+    // This prevents silent truncation when Buffer.from encounters non-hex chars
+    if (!isValidHexString(signature)) {
+      return false;
+    }
+
     // Generate expected signature
     const expectedSignature = createHmac('sha256', secret)
       .update(payload)

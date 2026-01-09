@@ -10,24 +10,10 @@ import { requireAdminAuth } from '@/lib/admin-auth'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
+import { sanitizePostgrestSearch } from '@/lib/utils'
 import type { GroupedError, ErrorStats, ErrorLogRecord } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
-
-/**
- * Sanitize search term for safe use in PostgREST filter queries.
- * Escapes special characters that could break out of ilike patterns.
- */
-function sanitizePostgrestSearch(term: string): string {
-  return term
-    .replace(/\\/g, '\\\\')  // Escape backslashes first
-    .replace(/%/g, '\\%')    // Escape wildcard %
-    .replace(/_/g, '\\_')    // Escape wildcard _
-    .replace(/,/g, '')       // Remove commas (PostgREST filter separator)
-    .replace(/\./g, '')      // Remove dots (PostgREST operator separator)
-    .replace(/\(/g, '')      // Remove open parens (PostgREST grouping)
-    .replace(/\)/g, '')      // Remove close parens (PostgREST grouping)
-}
 
 /**
  * Calculate the start date based on time range
