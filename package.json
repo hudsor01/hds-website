@@ -85,7 +85,7 @@
     "sharp": "0.34.5",
     "sonner": "2.0.7",
     "tailwind-merge": "3.4.0",
-    "vercel": "50.0.1",
+    "vercel": "50.1.6",
     "zod": "4.1.13",
     "zustand": "5.0.9"
   },
@@ -102,11 +102,11 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.2",
-    "eslint-config-next": "16.0.10",
+    "eslint-config-next": "16.1.1",
     "happy-dom": "20.0.11",
     "lefthook": "2.0.13",
     "msw": "2.12.4",
-    "next": "16.1.0",
+    "next": "16.1.1",
     "playwright": "1.57.0",
     "prettier": "3.7.4",
     "react": "19.2.3",
@@ -117,6 +117,11 @@
     "typescript": "5.9.3"
   },
   "resolutions": {
+    "path-to-regexp": "8.3.0",
+    "esbuild": "0.27.1",
+    "undici": "7.16.0"
+  },
+  "overrides": {
     "path-to-regexp": "8.3.0",
     "esbuild": "0.27.1",
     "undici": "7.16.0"
