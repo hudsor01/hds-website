@@ -9,6 +9,7 @@ import { getResendClient, isResendConfigured } from "@/lib/resend-client";
 import {
   cancelEmailSequenceParamsSchema,
   scheduleEmailParamsSchema,
+  type EmailSequenceId,
   type ScheduleEmailParams,
 } from '@/lib/schemas/email';
 import { resendEmailResponseSchema } from '@/lib/schemas/external';
@@ -127,7 +128,7 @@ export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> 
 export async function scheduleEmailSequence(
   recipientEmail: string,
   recipientName: string,
-  sequenceId: string,
+  sequenceId: EmailSequenceId,
   variables: Record<string, string>
 ): Promise<void> {
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
@@ -149,7 +150,7 @@ export async function scheduleEmailSequence(
     await scheduleEmail({
       recipientEmail,
       recipientName,
-      sequenceId: sequenceId as never,
+      sequenceId,
       stepId: 'followup',
       scheduledFor,
       variables,

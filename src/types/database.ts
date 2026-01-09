@@ -446,6 +446,69 @@ export type Database = {
         }
         Relationships: []
       }
+      error_logs: {
+        Row: {
+          id: string
+          created_at: string
+          level: string
+          error_type: string
+          fingerprint: string
+          message: string
+          stack_trace: string | null
+          url: string | null
+          method: string | null
+          route: string | null
+          request_id: string | null
+          user_id: string | null
+          user_email: string | null
+          environment: string
+          vercel_region: string | null
+          metadata: Json | null
+          resolved_at: string | null
+          resolved_by: string | null
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          level: string
+          error_type: string
+          fingerprint: string
+          message: string
+          stack_trace?: string | null
+          url?: string | null
+          method?: string | null
+          route?: string | null
+          request_id?: string | null
+          user_id?: string | null
+          user_email?: string | null
+          environment?: string
+          vercel_region?: string | null
+          metadata?: Json | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          level?: string
+          error_type?: string
+          fingerprint?: string
+          message?: string
+          stack_trace?: string | null
+          url?: string | null
+          method?: string | null
+          route?: string | null
+          request_id?: string | null
+          user_id?: string | null
+          user_email?: string | null
+          environment?: string
+          vercel_region?: string | null
+          metadata?: Json | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+        }
+        Relationships: []
+      }
       faq_interactions: {
         Row: {
           action: string

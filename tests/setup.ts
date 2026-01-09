@@ -28,6 +28,61 @@ function setupEnvMock() {
 // Apply env mock immediately on setup
 setupEnvMock();
 
+// Setup logger mock to ensure all methods are available
+function setupLoggerMock() {
+  const mockLoggerInstance = {
+    debug: mock(),
+    info: mock(),
+    warn: mock(),
+    error: mock(),
+    setContext: mock(),
+  };
+
+  // Real implementation of generateFingerprint for tests that need it
+  function generateFingerprint(errorType: string, message: string, stack?: string): string {
+    const firstFrame = stack?.split('\n')[1]?.trim() || 'unknown';
+    const input = `${errorType}:${message}:${firstFrame}`;
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+      const char = input.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(36).padStart(8, '0');
+  }
+
+  mock.module('@/lib/logger', () => ({
+    logger: mockLoggerInstance,
+    createServerLogger: () => mockLoggerInstance,
+    generateFingerprint,
+    castError: (error: unknown) => ({
+      name: error instanceof Error ? error.name : 'Error',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      cause: undefined,
+    }),
+    handleError: mock(() => ({ name: 'Error', message: 'Test error' })),
+    safeExecute: mock(async (fn: () => unknown) => {
+      try {
+        const data = await fn();
+        return { success: true, data, error: null };
+      } catch {
+        return { success: false, data: null, error: { name: 'Error', message: 'Test error' } };
+      }
+    }),
+    safeExecuteSync: mock((fn: () => unknown) => {
+      try {
+        const data = fn();
+        return { success: true, data, error: null };
+      } catch {
+        return { success: false, data: null, error: { name: 'Error', message: 'Test error' } };
+      }
+    }),
+  }));
+}
+
+setupLoggerMock();
+
 // CRITICAL: Prevent Playwright globals from interfering with Bun test
 // Playwright's @playwright/test package exports globals that conflict with bun:test
 // We must ensure these are NOT loaded when running Bun tests
@@ -74,8 +129,9 @@ beforeAll(() => {
 beforeEach(() => {
   // Clear all mocks before each test for isolation
   mock.restore();
-  // Re-apply critical env mock that must persist across tests
+  // Re-apply critical mocks that must persist across tests
   setupEnvMock();
+  setupLoggerMock();
 });
 
 afterEach(() => {

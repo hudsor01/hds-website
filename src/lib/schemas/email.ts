@@ -18,6 +18,9 @@ export const emailSequenceIdSchema = z.enum([
   'standard-high-intent',
   'calculator-hot-lead',
   'calculator-follow-up',
+  'high-value-consultation',
+  'targeted-service-consultation',
+  'enterprise-nurture',
 ]);
 
 export type EmailSequenceId = z.infer<typeof emailSequenceIdSchema>;

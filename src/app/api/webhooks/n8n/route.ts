@@ -6,6 +6,7 @@
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
+import { emailSequenceIdSchema } from '@/lib/schemas/email';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -47,7 +48,7 @@ const EmailSequenceSchema = z.object({
   data: z.object({
     email: z.string().email(),
     name: z.string(),
-    sequenceId: z.string(),
+    sequenceId: emailSequenceIdSchema,
     scheduledFor: z.string().datetime().optional(),
   }),
 });
@@ -213,7 +214,7 @@ async function handleEmailSequence(body: unknown) {
     await scheduleEmail({
       recipientEmail: data.email,
       recipientName: data.name,
-      sequenceId: data.sequenceId as never,
+      sequenceId: data.sequenceId,
       stepId: 'n8n-triggered',
       scheduledFor,
       variables: {
