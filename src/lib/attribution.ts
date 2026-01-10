@@ -4,6 +4,7 @@
  */
 
 import { logger } from '@/lib/logger';
+import { STORAGE_KEYS } from './constants';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 /**
@@ -170,11 +171,11 @@ export function getSessionId(): string {
     return '';
   }
 
-  let sessionId = sessionStorage.getItem('session_id');
+  let sessionId = sessionStorage.getItem(STORAGE_KEYS.SESSION_ID);
 
   if (!sessionId) {
     sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-    sessionStorage.setItem('session_id', sessionId);
+    sessionStorage.setItem(STORAGE_KEYS.SESSION_ID, sessionId);
   }
 
   return sessionId;
@@ -289,7 +290,7 @@ export function clearAttribution(): void {
 
   try {
     localStorage.removeItem(ATTRIBUTION_STORAGE_KEY);
-    sessionStorage.removeItem('session_id');
+    sessionStorage.removeItem(STORAGE_KEYS.SESSION_ID);
   } catch (error) {
     logger.error('Failed to clear attribution data:', error as Error);
   }

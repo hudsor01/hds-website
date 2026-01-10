@@ -1,4 +1,5 @@
 import { env } from '@/env';
+import { STORAGE_KEYS } from './constants';
 import type {
   ApiResponse,
   User,
@@ -26,7 +27,7 @@ class ApiClient {
 
     // Add authorization header if available
     const token = typeof window !== 'undefined' 
-      ? localStorage.getItem('auth-token') 
+      ? localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN) 
       : null;
     
     if (token) {
@@ -73,7 +74,7 @@ class ApiClient {
   async logout() {
     // Clear auth token
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth-token');
+      localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     }
     return this.fetcher<ApiResponse>('/api/auth/logout', {
       method: 'POST',

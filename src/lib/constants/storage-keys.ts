@@ -14,6 +14,12 @@ export const STORAGE_KEYS = {
 
   /** Form draft data */
   FORM_DRAFTS: 'formDrafts',
+
+  /** Authentication token */
+  AUTH_TOKEN: 'auth-token',
+
+  /** Analytics session identifier */
+  SESSION_ID: 'session_id',
 } as const;
 
 export type StorageKey = keyof typeof STORAGE_KEYS;
