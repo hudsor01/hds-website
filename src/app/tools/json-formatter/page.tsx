@@ -5,9 +5,10 @@
 
 'use client';
 
-  import { useState } from 'react';
+import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
+import { TIMEOUTS } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Braces, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { logger } from '@/lib/logger';
@@ -90,7 +91,7 @@ export default function JsonFormatterPage() {
     try {
       await navigator.clipboard.writeText(outputJson);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     } catch (error) {
       // Fallback for browsers without clipboard API
       logger.debug('Clipboard API unavailable, using fallback', {
@@ -103,7 +104,7 @@ export default function JsonFormatterPage() {
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     }
   };
 
