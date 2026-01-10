@@ -6,6 +6,7 @@
 'use client';
 
   import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -35,7 +36,7 @@ const DEFAULT_COMPANY = {
   companyCity: 'Dallas',
   companyState: 'TX',
   companyZip: '',
-  companyEmail: 'hello@hudsondigitalsolutions.com',
+  companyEmail: BUSINESS_INFO.email,
   companyPhone: '',
   companyDescription: 'Hudson Digital Solutions is a Texas-based digital agency specializing in web development, SaaS consulting, and digital marketing. We partner with businesses to create exceptional digital experiences that drive growth and deliver measurable results.',
 };

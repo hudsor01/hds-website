@@ -119,7 +119,7 @@ export default function JsonFormatterPage() {
       name: "Hudson Digital Solutions",
       services: ["Web Development", "SaaS Consulting", "Digital Marketing"],
       contact: {
-        email: "hello@hudsondigitalsolutions.com",
+        email: BUSINESS_INFO.email,
         location: "Texas, USA"
       },
       stats: {

@@ -6,6 +6,7 @@
 
 import { createServerLogger } from "@/lib/logger";
 import { getResendClient, isResendConfigured } from "@/lib/resend-client";
+import { BUSINESS_INFO } from './constants';
 import {
   cancelEmailSequenceParamsSchema,
   scheduleEmailParamsSchema,
@@ -333,7 +334,7 @@ async function sendScheduledEmail(
           <p style="margin: 0;">
             Richard Hudson<br>
             Hudson Digital Solutions<br>
-            <a href="mailto:hello@hudsondigitalsolutions.com" style="color: #0891b2;">hello@hudsondigitalsolutions.com</a><br>
+            <a href="mailto:${BUSINESS_INFO.email}" style="color: #0891b2;">${BUSINESS_INFO.email}</a><br>
             <a href="https://hudsondigitalsolutions.com" style="color: #0891b2;">hudsondigitalsolutions.com</a>
           </p>
           <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
@@ -347,7 +348,7 @@ async function sendScheduledEmail(
     `;
 
     const emailResponse = await getResendClient().emails.send({
-      from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
+      from: `Richard Hudson <${BUSINESS_INFO.email}>`,
       to: [scheduledEmail.recipient_email],
       subject: sanitizeEmailHeader(processedSubject),
       html: htmlContent,

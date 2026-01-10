@@ -6,6 +6,7 @@
 'use client';
 
   import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -35,7 +36,7 @@ const DEFAULT_COMPANY = {
   companyCity: 'Dallas',
   companyState: 'TX',
   companyZip: '',
-  companyEmail: 'hello@hudsondigitalsolutions.com',
+  companyEmail: BUSINESS_INFO.email,
   companyPhone: '',
 };
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Card } from "@/components/ui/card";
+import { BUSINESS_INFO } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
@@ -134,7 +135,7 @@ export default function PrivacyPage() {
                   <li>Object to or restrict processing of your information</li>
                   <li>Withdraw consent where processing is based on consent</li>
                 </ul>
-                <p>To exercise these rights, contact us at <a href="mailto:hello@hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hello@hudsondigitalsolutions.com</a>.</p>
+                <p>To exercise these rights, contact us at <a href={`mailto:${BUSINESS_INFO.email}`} className="text-secondary-400 hover:text-secondary-300">{BUSINESS_INFO.email}</a>.</p>
               </div>
             </section>
 
@@ -170,7 +171,7 @@ export default function PrivacyPage() {
               <div className="text-muted space-y-content">
                 <p>If you have any questions about this privacy policy or our privacy practices, please contact us:</p>
                 <div className="bg-background/50 rounded-lg">
-                  <p><strong>Email:</strong> <a href="mailto:hello@hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hello@hudsondigitalsolutions.com</a></p>
+                  <p><strong>Email:</strong> <a href={`mailto:${BUSINESS_INFO.email}`} className="text-secondary-400 hover:text-secondary-300">{BUSINESS_INFO.email}</a></p>
                   <p><strong>Website:</strong> <a href="https://hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hudsondigitalsolutions.com</a></p>
                 </div>
               </div>
