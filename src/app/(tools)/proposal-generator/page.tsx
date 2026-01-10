@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 import { FileSpreadsheet, Plus, Trash2, Download, Save, RotateCcw } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import type { ProposalData, ProposalPricingItem, ProposalMilestone } from '@/lib/pdf/proposal-template';
@@ -285,10 +286,6 @@ export default function ProposalGeneratorPage() {
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
-
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
   const isValid =
     proposalData.projectName.trim() !== '' &&
     (proposalData.clientName.trim() !== '' || proposalData.clientCompany.trim() !== '');
