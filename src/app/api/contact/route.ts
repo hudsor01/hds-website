@@ -1,10 +1,10 @@
 import { logger } from '@/lib/logger'
-import { unifiedRateLimiter } from '@/lib/rate-limiter'
 import { isResendConfigured } from '@/lib/resend-client'
 import { contactFormSchema, scoreLeadFromContactData } from '@/lib/schemas/contact'
 import { getClientIp } from '@/lib/utils/request'
 import type { NextRequest } from 'next/server'
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
   checkForSecurityThreats,
   prepareEmailVariables,
@@ -14,21 +14,14 @@ import {
   scheduleFollowUpEmails,
 } from '@/lib/services/contact-service'
 
-export async function POST(request: NextRequest) {
+async function handleContactPost(request: NextRequest) {
   const logContext = { component: 'contact-form', timestamp: Date.now() };
+  const clientIP = getClientIp(request);
 
   try {
     logger.info(`Contact form submission started - contact-form-${Date.now()}`, logContext)
 
-    // Step 1: Rate limiting
-    const clientIP = getClientIp(request)
-    const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
-
-    if (!isAllowed) {
-      return errorResponse("Too many requests. Please try again in 15 minutes.", 429)
-    }
-
-    // Step 2: Parse and validate form data
+    // Step 1: Parse and validate form data
     const rawData = await request.json()
     const validation = contactFormSchema.safeParse(rawData)
 
@@ -86,3 +79,5 @@ export async function POST(request: NextRequest) {
     return errorResponse("An unexpected error occurred. Please try again later.", 500)
   }
 }
+
+export const POST = withRateLimit(handleContactPost, 'contactForm');

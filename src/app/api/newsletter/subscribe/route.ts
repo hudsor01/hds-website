@@ -4,7 +4,7 @@
  */
 
 import { logger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import type { Database } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
@@ -19,15 +19,7 @@ const SubscribeSchema = z.object({
   source: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
-  if (!isAllowed) {
-    logger.warn('Newsletter rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests. Please try again later.', 429);
-  }
-
+async function handleNewsletterSubscribe(request: NextRequest) {
   try {
     const body = await request.json();
     const validation = SubscribeSchema.safeParse(body);
@@ -111,3 +103,5 @@ export async function POST(request: NextRequest) {
     return errorResponse('Internal server error', 500);
   }
 }
+
+export const POST = withRateLimit(handleNewsletterSubscribe, 'newsletter');

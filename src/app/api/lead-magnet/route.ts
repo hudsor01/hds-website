@@ -8,7 +8,7 @@ import {
   detectInjectionAttempt
 } from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import {
   leadMagnetRequestSchema,
   type LeadMagnetRequest,
@@ -135,16 +135,8 @@ function generateAdminNotificationEmail(data: { email: string; firstName: string
   `;
 }
 
-export async function POST(request: NextRequest) {
+async function handleLeadMagnet(request: NextRequest) {
   const logger = createServerLogger('lead-magnet-api');
-
-  // Rate limiting - 3 downloads per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Lead magnet rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests. Please try again later.', 429);
-  }
 
   try {
     logger.info('Lead magnet request received', {
@@ -320,3 +312,5 @@ export async function POST(request: NextRequest) {
     return applySecurityHeaders(response);
   }
 }
+
+export const POST = withRateLimit(handleLeadMagnet, 'contactForm');
