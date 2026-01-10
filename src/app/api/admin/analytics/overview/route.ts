@@ -8,21 +8,13 @@ import { errorResponse, successResponse, validationErrorResponse } from '@/lib/a
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsOverviewQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
 const logger = createServerLogger('analytics-overview-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsOverview(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics overview rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -139,3 +131,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch analytics overview', 500);
   }
 }
+
+export const GET = withRateLimit(handleAnalyticsOverview, 'api');

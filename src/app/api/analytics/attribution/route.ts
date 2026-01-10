@@ -4,7 +4,7 @@
  */
 
 import { castError, createServerLogger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
 import type { Json } from '@/types/database';
 import type { LeadAttributionInsert } from '@/types/supabase-helpers';
@@ -14,15 +14,7 @@ import { errorResponse, successResponse, validationErrorResponse } from '@/lib/a
 
 const logger = createServerLogger('attribution-api');
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Attribution rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleAttributionPost(request: NextRequest) {
   try {
 
     // Parse and validate request body
@@ -142,18 +134,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export const POST = withRateLimit(handleAttributionPost, 'api');
+
 /**
  * GET endpoint for retrieving attribution data
  */
-export async function GET(request: NextRequest) {
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Attribution GET rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleAttributionGet(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
@@ -192,3 +178,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to retrieve attribution data', 500);
   }
 }
+
+export const GET = withRateLimit(handleAttributionGet, 'readOnlyApi');
