@@ -27,9 +27,13 @@ None
 **Goal**: Remove unused packages from the 130+ npm dependencies, reducing installation size and attack surface
 **Depends on**: Nothing (first phase)
 **Research**: Unlikely (package.json analysis, tooling like depcheck)
-**Plans**: TBD
+**Plans**: 5 plans created
 
-Plans will be determined during phase planning.
+1. PLAN-01-ui-components.md - Audit Radix UI and UI libraries
+2. PLAN-02-state-management.md - Audit React Query, TanStack, Zustand
+3. PLAN-03-build-tools.md - Audit tsx, sharp, vercel CLI
+4. PLAN-04-testing.md - Audit Testing Library, MSW, Playwright
+5. PLAN-05-cleanup-verification.md - Final cleanup and verification
 
 ### Phase 2: Dead Code Elimination
 **Goal**: Remove orphaned components, unused functions, commented code, and exports that aren't imported anywhere
@@ -109,7 +113,7 @@ Plans will be determined during phase planning.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Dependency Audit & Pruning | 0/TBD | Not started | - |
+| 1. Dependency Audit & Pruning | 0/5 | Planning complete | - |
 | 2. Dead Code Elimination | 0/TBD | Not started | - |
 | 3. Integration Cleanup | 0/TBD | Not started | - |
 | 4. Code Deduplication | 0/TBD | Not started | - |
