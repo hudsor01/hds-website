@@ -6,8 +6,9 @@
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { supabaseAdmin } from "@/lib/supabase";
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 
 const WebVitalSchema = z.object({
@@ -25,15 +26,18 @@ export async function POST(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Web vitals rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   try {
     const body = await request.json();
-    const validatedData = WebVitalSchema.parse(body);
+    const validation = WebVitalSchema.safeParse(body);
+
+    if (!validation.success) {
+      return validationErrorResponse(validation.error);
+    }
+
+    const validatedData = validation.data;
 
     // Get user agent and URL
     const userAgent = request.headers.get('user-agent') || 'unknown';
@@ -61,19 +65,9 @@ export async function POST(request: NextRequest) {
       // Don't return error to client - fail silently
     }
 
-    return NextResponse.json({ success: true });
+    return successResponse();
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: error.issues },
-        { status: 400 }
-      );
-    }
-
     logger.error('Web vitals error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }

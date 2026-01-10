@@ -10,8 +10,9 @@ import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import type { Database, Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 // Schema for calculator submission
 const calculatorSubmitSchema = z.object({
@@ -92,10 +93,7 @@ export async function POST(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
   if (!isAllowed) {
     logger.warn('Calculator submission rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many submissions. Please try again later.' },
-      { status: 429 }
-    );
+    return errorResponse('Too many submissions. Please try again later.', 429);
   }
 
   try {
@@ -104,13 +102,8 @@ export async function POST(request: NextRequest) {
     // Validate with Zod schema
     const parseResult = calculatorSubmitSchema.safeParse(body);
     if (!parseResult.success) {
-      const errors = parseResult.error.flatten();
-      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
-      logger.warn('Invalid calculator submission', { errors: errors.fieldErrors });
-      return NextResponse.json(
-        { error: firstError, details: errors.fieldErrors },
-        { status: 400 }
-      );
+      logger.warn('Invalid calculator submission', { errors: parseResult.error.issues });
+      return validationErrorResponse(parseResult.error);
     }
 
     const { calculator_type, email, inputs, results } = parseResult.data;
@@ -147,10 +140,7 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       logger.error('Failed to store calculator lead', dbError);
-      return NextResponse.json(
-        { error: 'Failed to store submission' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to store submission', 500);
     }
 
     // Send immediate email with results
@@ -224,18 +214,14 @@ export async function POST(request: NextRequest) {
       logger.error('Failed to schedule follow-up', scheduleError as Error);
     }
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       lead_id: calculatorLead.id,
       lead_score: leadScore,
       lead_quality: leadQuality,
     });
   } catch (error) {
     logger.error('Calculator API error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to process submission' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process submission', 500);
   }
 }
 

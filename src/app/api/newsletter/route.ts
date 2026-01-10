@@ -4,7 +4,8 @@ import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
 import { supabaseAdmin } from '@/lib/supabase';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -23,10 +24,7 @@ export async function POST(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
   if (!isAllowed) {
     logger.warn('Newsletter signup rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests. Please try again later.', 429);
   }
 
   try {
@@ -53,19 +51,7 @@ export async function POST(request: NextRequest) {
     const validation = newsletterSchema.safeParse(parsedBody);
 
     if (!validation.success) {
-      const errors: Record<string, string[]> = {};
-      validation.error.issues.forEach(issue => {
-        const key = String(issue.path[0]);
-        if (!errors[key]) {
-          errors[key] = [];
-        }
-        errors[key].push(issue.message);
-      });
-
-      return NextResponse.json(
-        { error: 'Validation failed', errors },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const validatedData = validation.data;
@@ -120,16 +106,10 @@ export async function POST(request: NextRequest) {
 
       // Check if it's a duplicate email error
       if (error.code === '23505') { // Unique violation code
-        return NextResponse.json(
-          { message: 'You are already subscribed to our newsletter!' },
-          { status: 200 } // Return 200 since they're already subscribed
-        );
+        return successResponse(undefined, 'You are already subscribed to our newsletter!');
       }
 
-      return NextResponse.json(
-        { error: 'Failed to save subscription' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to save subscription', 500);
     }
 
     logger.info('Newsletter subscription saved successfully', {
@@ -146,10 +126,7 @@ export async function POST(request: NextRequest) {
     // 2. Trigger a marketing automation workflow
     // 3. Add to email service provider (Mailchimp, etc.)
 
-    return NextResponse.json({
-      message: 'Thank you for subscribing to our newsletter!',
-      success: true
-    });
+    return successResponse(undefined, 'Thank you for subscribing to our newsletter!');
   } catch (error) {
     logger.error('Error in newsletter signup API', {
       error: error instanceof Error ? error.message : String(error),
@@ -158,10 +135,7 @@ export async function POST(request: NextRequest) {
       action: 'POST_newsletter'
     });
 
-    return NextResponse.json(
-      { error: 'Failed to process subscription' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process subscription', 500);
   }
 }
 
@@ -172,10 +146,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Newsletter admin rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   try {
@@ -185,11 +156,11 @@ export async function GET(request: NextRequest) {
     // Check for admin token (should match the one configured in env)
     if (!env.ADMIN_API_TOKEN) {
       logger.error('ADMIN_API_TOKEN not configured');
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+      return errorResponse('Server configuration error', 500);
     }
 
     if (authHeader !== `Bearer ${env.ADMIN_API_TOKEN}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     logger.info('Newsletter subscribers list accessed', {
@@ -220,10 +191,7 @@ export async function GET(request: NextRequest) {
         userFlow: 'newsletter_admin',
         action: 'GET_subscribers'
       });
-      return NextResponse.json(
-        { error: 'Failed to retrieve subscribers' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to retrieve subscribers', 500);
     }
 
     logger.info('Newsletter subscribers retrieved successfully', {
@@ -233,7 +201,7 @@ export async function GET(request: NextRequest) {
       action: 'GET_subscribers'
     });
 
-    return NextResponse.json({
+    return successResponse({
       subscribers: data,
       count: count || 0,
       pagination: {
@@ -251,9 +219,6 @@ export async function GET(request: NextRequest) {
       action: 'GET_subscribers'
     });
 
-    return NextResponse.json(
-      { error: 'Failed to retrieve subscribers' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to retrieve subscribers', 500);
   }
 }

@@ -4,6 +4,7 @@ import { isResendConfigured } from '@/lib/resend-client'
 import { contactFormSchema, scoreLeadFromContactData } from '@/lib/schemas/contact'
 import { getClientIp } from '@/lib/utils/request'
 import type { NextRequest } from 'next/server'
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import {
   checkForSecurityThreats,
   prepareEmailVariables,
@@ -24,10 +25,7 @@ export async function POST(request: NextRequest) {
     const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
 
     if (!isAllowed) {
-      return Response.json({
-        success: false,
-        error: "Too many requests. Please try again in 15 minutes."
-      }, { status: 429 })
+      return errorResponse("Too many requests. Please try again in 15 minutes.", 429)
     }
 
     // Step 2: Parse and validate form data
@@ -35,11 +33,7 @@ export async function POST(request: NextRequest) {
     const validation = contactFormSchema.safeParse(rawData)
 
     if (!validation.success) {
-      return Response.json({
-        success: false,
-        error: "Invalid form data",
-        message: validation.error.issues[0]?.message
-      }, { status: 400 })
+      return validationErrorResponse(validation.error)
     }
 
     const data = validation.data
@@ -69,16 +63,10 @@ export async function POST(request: NextRequest) {
           sequenceId
         })
 
-        return Response.json({
-          success: true,
-          message: "Thank you! Your message has been sent successfully."
-        })
+        return successResponse(undefined, "Thank you! Your message has been sent successfully.")
       } catch (emailError) {
         logger.error("Failed to send email", emailError)
-          return Response.json({
-          success: false,
-          error: "Failed to send message. Please try again."
-        }, { status: 500 })
+        return errorResponse("Failed to send message. Please try again.", 500)
       }
     } else {
       // Test mode: schedule emails without email service
@@ -91,16 +79,10 @@ export async function POST(request: NextRequest) {
         sequenceId
       })
 
-      return Response.json({
-        success: true,
-        message: "Form submitted successfully (test mode - email service not configured)"
-      })
+      return successResponse(undefined, "Form submitted successfully (test mode - email service not configured)")
     }
   } catch (error) {
     logger.error("Contact form error", error)
-    return Response.json({
-      success: false,
-      error: "An unexpected error occurred. Please try again later."
-    }, { status: 500 })
+    return errorResponse("An unexpected error occurred. Please try again later.", 500)
   }
 }

@@ -1,8 +1,9 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { generateCsrfToken } from '@/lib/csrf';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { createServerLogger, castError } from '@/lib/logger';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 
 export async function GET(request: NextRequest) {
   const logger = createServerLogger('csrf-token');
@@ -13,10 +14,7 @@ export async function GET(request: NextRequest) {
   if (!isAllowed) {
     logger.warn('CSRF token rate limit exceeded', { ip: clientIp });
     return applySecurityHeaders(
-      NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
-      )
+      errorResponse('Too many requests. Please try again later.', 429)
     );
   }
 
@@ -26,19 +24,13 @@ export async function GET(request: NextRequest) {
     // Must await the promise to get the actual token
     const token = await generateCsrfToken();
 
-    const response = NextResponse.json({
-      token,
-      message: 'CSRF token generated successfully'
-    });
+    const response = successResponse({ token }, 'CSRF token generated successfully');
 
     return applySecurityHeaders(response);
   } catch (error) {
     logger.error('CSRF token generation failed', castError(error));
 
-    const response = NextResponse.json(
-      { error: 'Failed to generate CSRF token' },
-      { status: 500 }
-    );
+    const response = errorResponse('Failed to generate CSRF token', 500);
 
     return applySecurityHeaders(response);
   }

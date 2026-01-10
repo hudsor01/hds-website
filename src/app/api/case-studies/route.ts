@@ -3,11 +3,12 @@
  * Public endpoint for fetching published case studies
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server';
+import { type NextRequest, connection } from 'next/server';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 export async function GET(request: NextRequest) {
   await connection(); // Force dynamic rendering
@@ -17,10 +18,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
   if (!isAllowed) {
     logger.warn('Case studies rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   try {
@@ -29,11 +27,8 @@ export async function GET(request: NextRequest) {
     // Validate query parameters with Zod
     const parseResult = safeParseSearchParams(searchParams, caseStudiesQuerySchema);
     if (!parseResult.success) {
-      logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      logger.warn('Invalid query parameters', { errors: parseResult.errors.issues });
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { industry, featured, slug } = parseResult.data;
@@ -52,17 +47,14 @@ export async function GET(request: NextRequest) {
 
       if (error && error.code !== 'PGRST116') {
         logger.error('Failed to fetch case study by slug', error as Error);
-        return NextResponse.json({ error: 'Failed to fetch case study' }, { status: 500 });
+        return errorResponse('Failed to fetch case study', 500);
       }
 
       if (!caseStudy) {
-        return NextResponse.json(
-          { error: 'Case study not found' },
-          { status: 404 }
-        );
+        return errorResponse('Case study not found', 404);
       }
 
-      return NextResponse.json({ caseStudy });
+      return successResponse({ caseStudy });
     }
 
     // Build query for list of case studies
@@ -86,18 +78,12 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to fetch case studies:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch case studies' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to fetch case studies', 500);
     }
 
-    return NextResponse.json({ caseStudies: caseStudies || [] });
+    return successResponse({ caseStudies: caseStudies || [] });
   } catch (error) {
     logger.error('Case studies API error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
