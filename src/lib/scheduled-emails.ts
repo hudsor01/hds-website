@@ -4,6 +4,7 @@
  * Uses Supabase for persistent storage (no memory leaks)
  */
 
+import { env } from '@/env';
 import { createServerLogger } from "@/lib/logger";
 import { getResendClient, isResendConfigured } from "@/lib/resend-client";
 import { BUSINESS_INFO } from './constants';
@@ -24,8 +25,8 @@ import { getEmailSequences, processEmailTemplate } from "./email-utils";
 import { escapeHtml, sanitizeEmailHeader } from "./utils";
 
 function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const publicKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !publicKey) {
     emailLogger.error('Supabase environment variables are not configured for scheduled emails');
@@ -250,8 +251,8 @@ async function sendScheduledEmail(
     emailLogger.warn('Resend API not configured', {
       emailId: scheduledEmail.id,
       recipientEmail: scheduledEmail.recipient_email,
-      environment: process.env.NODE_ENV,
-      hasApiKey: !!process.env.RESEND_API_KEY
+      environment: env.NODE_ENV,
+      hasApiKey: !!env.RESEND_API_KEY
     });
 
     await supabase
