@@ -6,6 +6,7 @@
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { BUSINESS_INFO } from '@/lib/constants';
 import type { Database } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -78,7 +79,7 @@ export async function POST(request: NextRequest) {
     try {
       if (isResendConfigured()) {
         await getResendClient().emails.send({
-        from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+        from: 'Hudson Digital Solutions <${BUSINESS_INFO.email}>',
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',
         html: `

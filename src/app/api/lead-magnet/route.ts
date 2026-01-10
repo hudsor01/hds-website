@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { type ZodError } from 'zod';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import {
   escapeHtml,
@@ -100,7 +101,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
       <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
         <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">
           Questions? Reply to this email or contact us at 
-          <a href="mailto:hello@hudsondigitalsolutions.com" style="color: #0891b2;">hello@hudsondigitalsolutions.com</a>
+          <a href="mailto:${BUSINESS_INFO.email}" style="color: #0891b2;">${BUSINESS_INFO.email}</a>
         </p>
         <p style="color: #94a3b8; font-size: 12px;">
           Hudson Digital Solutions<br>
@@ -237,7 +238,7 @@ export async function POST(request: NextRequest) {
         // Send notification to admin
         const adminEmailResponse = await getResendClient().emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
-          to: ['hello@hudsondigitalsolutions.com'],
+          to: ['${BUSINESS_INFO.email}'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),
           html: generateAdminNotificationEmail(data)
         });
