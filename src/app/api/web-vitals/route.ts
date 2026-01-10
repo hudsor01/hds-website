@@ -5,7 +5,6 @@
 
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-// import type { WebVitalsInsert } from '@/types/supabase-helpers';
 import { supabaseAdmin } from "@/lib/supabase";
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
