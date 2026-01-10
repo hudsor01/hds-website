@@ -85,9 +85,14 @@ Working tools (paystub/invoice/timesheet generators) and contact form stay funct
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Aggressive dependency pruning | 130+ packages likely includes many unused libraries | — Pending |
+| **Forms: TanStack Query + TanStack Form** | Client-side validation (instant feedback), no server costs for validation, standardized pattern | ✅ Adopted 2026-01-09 |
+| **Data Fetching: TanStack Query only** | Client-side caching reduces expensive server requests, consistent pattern across app | ✅ Adopted 2026-01-09 |
+| **URL State: nuqs standardized** | Type-safe URL state, client-side syncing (no server round-trips), already in 7 tools | ✅ Adopted 2026-01-09 |
+| **Cost Optimization: Client-side > Server** | Vercel charges for Server Component compute, client ops run free on user's browser | ✅ Principle established |
+| Remove Server Actions | Server Actions replaced by TanStack Query mutations (cheaper, client-side) | ✅ contact.ts removed, ttl-calculator.ts migration pending |
+| Aggressive dependency pruning | 130+ packages likely includes many unused libraries, focus on redundancy elimination | 🔄 In Progress (Plan 1: 7 removed) |
 | Remove Supabase auth if unused | User didn't list auth as core feature to preserve | — Pending |
-| Keep deployment config untouched | Only explicit constraint during cleanup discussion | — Pending |
+| Keep deployment config untouched | Only explicit constraint during cleanup discussion | ✅ Preserved |
 | Simplify testing setup | User didn't preserve testing infrastructure in boundaries | — Pending |
 
 ---
