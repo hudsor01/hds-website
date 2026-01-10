@@ -6,6 +6,7 @@
 'use client';
 
   import { useState } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { trackEvent } from '@/lib/analytics';
