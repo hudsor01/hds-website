@@ -1,5 +1,4 @@
 import { logger } from '@/lib/logger'
-import { recordContactFormSubmission } from '@/lib/metrics'
 import { unifiedRateLimiter } from '@/lib/rate-limiter'
 import { isResendConfigured } from '@/lib/resend-client'
 import { contactFormSchema, scoreLeadFromContactData } from '@/lib/schemas/contact'
@@ -61,7 +60,6 @@ export async function POST(request: NextRequest) {
         await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
         await sendLeadNotifications(data, leadScore, logger)
 
-        recordContactFormSubmission(true)
         await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
 
         logger.info('Contact form submission successful', {
@@ -77,8 +75,7 @@ export async function POST(request: NextRequest) {
         })
       } catch (emailError) {
         logger.error("Failed to send email", emailError)
-        recordContactFormSubmission(false)
-        return Response.json({
+          return Response.json({
           success: false,
           error: "Failed to send message. Please try again."
         }, { status: 500 })
@@ -86,7 +83,6 @@ export async function POST(request: NextRequest) {
     } else {
       // Test mode: schedule emails without email service
       await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
-      recordContactFormSubmission(true)
 
       logger.info('Contact form submission successful (test mode)', {
         ...logContext,
@@ -102,7 +98,6 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     logger.error("Contact form error", error)
-    recordContactFormSubmission(false)
     return Response.json({
       success: false,
       error: "An unexpected error occurred. Please try again later."
