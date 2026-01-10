@@ -1,5 +1,6 @@
 'use server';
 
+import { BUSINESS_INFO } from '@/lib/constants';
 import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
 import type { Database, Json } from '@/types/database';
@@ -267,7 +268,7 @@ export async function emailResults(
 
     // Send beautiful HTML email
     const { error: emailError } = await getResendClient().emails.send({
-      from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+      from: `${BUSINESS_INFO.name} <${BUSINESS_INFO.email}>`,
       to: email,
       subject: `Your Texas TTL Calculator Results - $${inputs.purchasePrice.toLocaleString()}`,
       html: `
