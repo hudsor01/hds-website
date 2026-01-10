@@ -110,21 +110,17 @@ export function PaystubForm({
             placeholder="25.00"
           />
 
-          <div className="space-y-tight">
-            <Label htmlFor="hoursPerPeriod">Hours Per Period *</Label>
-            <Input
-              id="hoursPerPeriod"
-              type="number"
-              step="0.5"
-              value={paystubData.hoursPerPeriod || ''}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, hoursPerPeriod: parseFloat(e.target.value) || 0 }))}
-              className={formErrors.hoursPerPeriod ? 'border-destructive border-2' : ''}
-              placeholder="80"
-            />
-            {formErrors.hoursPerPeriod && (
-              <p className="text-destructive text-xs">{formErrors.hoursPerPeriod}</p>
-            )}
-          </div>
+          <FormField
+            label="Hours Per Period"
+            id="hoursPerPeriod"
+            type="number"
+            step="0.5"
+            value={paystubData.hoursPerPeriod}
+            onChange={(value) => setPaystubData(prev => ({ ...prev, hoursPerPeriod: parseFloat(value) || 0 }))}
+            error={formErrors.hoursPerPeriod}
+            required
+            placeholder="80"
+          />
         </div>
       </Card>
 
@@ -233,33 +229,23 @@ export function PaystubForm({
           Overtime
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="space-y-tight">
-            <Label htmlFor="overtimeHours">Overtime Hours</Label>
-            <Input
-              id="overtimeHours"
-              type="number"
-              step="0.5"
-              value={overtimeHours || ''}
-              onChange={(e) => setOvertimeHours(parseFloat(e.target.value) || 0)}
-              placeholder="0"
-            />
-          </div>
+          <FormField
+            label="Overtime Hours"
+            id="overtimeHours"
+            type="number"
+            step="0.5"
+            value={overtimeHours}
+            onChange={(value) => setOvertimeHours(parseFloat(value) || 0)}
+            placeholder="0"
+          />
 
-          <div className="space-y-tight">
-            <Label htmlFor="overtimeRate">Overtime Rate (per hour)</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-              <Input
-                id="overtimeRate"
-                type="number"
-                step="0.01"
-                value={overtimeRate || ''}
-                onChange={(e) => setOvertimeRate(parseFloat(e.target.value) || 0)}
-                variant="currency"
-                placeholder="37.50"
-              />
-            </div>
-          </div>
+          <CurrencyInput
+            label="Overtime Rate (per hour)"
+            id="overtimeRate"
+            value={overtimeRate}
+            onChange={(value) => setOvertimeRate(value)}
+            placeholder="37.50"
+          />
         </div>
       </Card>
 

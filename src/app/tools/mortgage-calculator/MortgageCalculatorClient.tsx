@@ -10,6 +10,7 @@ import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 
 interface MortgageInputs {
   homePrice: number;
@@ -146,9 +147,6 @@ export function MortgageCalculatorClient() {
 
     const totalPayments = monthlyPrincipalInterest * numberOfPayments;
     const totalInterest = totalPayments - loanAmount;
-
-    const formatCurrency = (num: number) =>
-      `$${num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
     const calculatedResults: MortgageResults = {
       monthlyPrincipalInterest: formatCurrency(monthlyPrincipalInterest),
@@ -297,7 +295,7 @@ export function MortgageCalculatorClient() {
                 value={inputs.downPaymentPercent || ''}
                 onChange={(e) => handleInputChange('downPaymentPercent', e.target.value)}
                 suffix="%"
-                helpText={`$${inputs.downPayment.toLocaleString()}`}
+                helpText={formatCurrency(inputs.downPayment)}
                 required
               />
             ) : (
