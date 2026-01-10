@@ -237,9 +237,6 @@ const analytics = new AnalyticsManager();
 export const trackEvent = (eventName: string, properties?: EventProperties) =>
   analytics.trackEvent(eventName, properties);
 
-export const trackPageView = (properties?: PageViewProperties) =>
-  analytics.trackPageView(properties);
-
 export const identify = (userId: string, properties?: UserProperties) =>
   analytics.identify(userId, properties);
 
@@ -250,34 +247,7 @@ export const trackConversion = (
   properties?: Record<string, AnalyticsValue>
 ) => analytics.trackConversion(conversionType, value, currency, properties);
 
-export const trackTiming = (
-  category: string,
-  action: string,
-  time: number,
-  label?: string
-) => analytics.trackTiming(category, action, time, label);
-
 export const trackError = (error: Error | string, fatal?: boolean) =>
   analytics.trackError(error, fatal);
-
-export const trackFormInteraction = (
-  formName: string,
-  action: string,
-  fieldName?: string
-) => analytics.trackFormInteraction(formName, action, fieldName);
-
-export const trackCTAClick = (
-  ctaName: string,
-  location: string,
-  destination?: string
-) => analytics.trackCTAClick(ctaName, location, destination);
-
-export const trackScrollDepth = (percentage: number) =>
-  analytics.trackScrollDepth(percentage);
-
-export const trackTimeOnPage = (seconds: number) =>
-  analytics.trackTimeOnPage(seconds);
-
-export const resetAnalytics = () => analytics.reset();
 
 export default analytics;
