@@ -76,27 +76,21 @@ export function PaystubForm({
             placeholder="John Doe"
           />
 
-          <div className="space-y-tight">
-            <Label htmlFor="employeeId">Employee ID</Label>
-            <Input
-              id="employeeId"
-              type="text"
-              value={paystubData.employeeId}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, employeeId: e.target.value }))}
-              placeholder="EMP001"
-            />
-          </div>
+          <FormField
+            label="Employee ID"
+            id="employeeId"
+            value={paystubData.employeeId}
+            onChange={(value) => setPaystubData(prev => ({ ...prev, employeeId: value }))}
+            placeholder="EMP001"
+          />
 
-          <div className="space-y-tight">
-            <Label htmlFor="employerName">Employer Name</Label>
-            <Input
-              id="employerName"
-              type="text"
-              value={paystubData.employerName}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, employerName: e.target.value }))}
-              placeholder="ABC Company Inc."
-            />
-          </div>
+          <FormField
+            label="Employer Name"
+            id="employerName"
+            value={paystubData.employerName}
+            onChange={(value) => setPaystubData(prev => ({ ...prev, employerName: value }))}
+            placeholder="ABC Company Inc."
+          />
         </div>
       </Card>
 
