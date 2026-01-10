@@ -41,7 +41,7 @@
         "nuqs": "2.8.6",
         "p-ratelimit": "1.0.1",
         "postcss": "8.5.6",
-        "puppeteer": "24.33.0",
+        "puppeteer": "24.34.0",
         "radix-themes-tw": "1.1.0",
         "react-day-picker": "9.12.0",
         "react-error-boundary": "6.0.2",
@@ -981,7 +981,7 @@
 
     "chownr": ["chownr@2.0.0", "", {}, "sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ=="],
 
-    "chromium-bidi": ["chromium-bidi@11.0.0", "", { "dependencies": { "mitt": "^3.0.1", "zod": "^3.24.1" }, "peerDependencies": { "devtools-protocol": "*" } }, "sha512-cM3DI+OOb89T3wO8cpPSro80Q9eKYJ7hGVXoGS3GkDPxnYSqiv+6xwpIf6XERyJ9Tdsl09hmNmY94BkgZdVekw=="],
+    "chromium-bidi": ["chromium-bidi@12.0.1", "", { "dependencies": { "mitt": "^3.0.1", "zod": "^3.24.1" }, "peerDependencies": { "devtools-protocol": "*" } }, "sha512-fGg+6jr0xjQhzpy5N4ErZxQ4wF7KLEvhGZXD6EgvZKDhu7iOhZXnZhcDxPJDcwTcrD48NPzOCo84RP2lv3Z+Cg=="],
 
     "cjs-module-lexer": ["cjs-module-lexer@1.2.3", "", {}, "sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ=="],
 
@@ -1833,9 +1833,9 @@
 
     "punycode": ["punycode@2.3.1", "", {}, "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="],
 
-    "puppeteer": ["puppeteer@24.33.0", "", { "dependencies": { "@puppeteer/browsers": "2.11.0", "chromium-bidi": "11.0.0", "cosmiconfig": "^9.0.0", "devtools-protocol": "0.0.1534754", "puppeteer-core": "24.33.0", "typed-query-selector": "^2.12.0" }, "bin": { "puppeteer": "lib/cjs/puppeteer/node/cli.js" } }, "sha512-nl3wsAztq5F8zybn4Tk41OCnYIzFIzGC6AN0WcF2KCUnWenajvRRPgBmS6LvNUV2HEeIzT2zRZHH0TgVxLDKew=="],
+    "puppeteer": ["puppeteer@24.34.0", "", { "dependencies": { "@puppeteer/browsers": "2.11.0", "chromium-bidi": "12.0.1", "cosmiconfig": "^9.0.0", "devtools-protocol": "0.0.1534754", "puppeteer-core": "24.34.0", "typed-query-selector": "^2.12.0" }, "bin": { "puppeteer": "lib/cjs/puppeteer/node/cli.js" } }, "sha512-Sdpl/zsYOsagZ4ICoZJPGZw8d9gZmK5DcxVal11dXi/1/t2eIXHjCf5NfmhDg5XnG9Nye+yo/LqMzIxie2rHTw=="],
 
-    "puppeteer-core": ["puppeteer-core@24.33.0", "", { "dependencies": { "@puppeteer/browsers": "2.11.0", "chromium-bidi": "11.0.0", "debug": "^4.4.3", "devtools-protocol": "0.0.1534754", "typed-query-selector": "^2.12.0", "webdriver-bidi-protocol": "0.3.9", "ws": "^8.18.3" } }, "sha512-tPTxVg+Qdj/8av4cy6szv3GlhxeOoNhiiMZ955fjxQyvPQE/6DjCa6ZyF/x0WJrlgBZtaLSP8TQgJb7FdLDXXA=="],
+    "puppeteer-core": ["puppeteer-core@24.34.0", "", { "dependencies": { "@puppeteer/browsers": "2.11.0", "chromium-bidi": "12.0.1", "debug": "^4.4.3", "devtools-protocol": "0.0.1534754", "typed-query-selector": "^2.12.0", "webdriver-bidi-protocol": "0.3.10", "ws": "^8.18.3" } }, "sha512-24evawO+mUGW4mvS2a2ivwLdX3gk8zRLZr9HP+7+VT2vBQnm0oh9jJEZmUE3ePJhRkYlZ93i7OMpdcoi2qNCLg=="],
 
     "querystringify": ["querystringify@2.2.0", "", {}, "sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ=="],
 
@@ -2189,7 +2189,7 @@
 
     "web-vitals": ["web-vitals@0.2.4", "", {}, "sha512-6BjspCO9VriYy12z356nL6JBS0GYeEcA457YyRzD+dD6XYCQ75NKhcOHUMHentOE7OcVCIXXDvOm0jKFfQG2Gg=="],
 
-    "webdriver-bidi-protocol": ["webdriver-bidi-protocol@0.3.9", "", {}, "sha512-uIYvlRQ0PwtZR1EzHlTMol1G0lAlmOe6wPykF9a77AK3bkpvZHzIVxRE2ThOx5vjy2zISe0zhwf5rzuUfbo1PQ=="],
+    "webdriver-bidi-protocol": ["webdriver-bidi-protocol@0.3.10", "", {}, "sha512-5LAE43jAVLOhB/QqX4bwSiv0Hg1HBfMmOuwBSXHdvg4GMGu9Y0lIq7p4R/yySu6w74WmaR4GM4H9t2IwLW7hgw=="],
 
     "webidl-conversions": ["webidl-conversions@3.0.1", "", {}, "sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ=="],
 
