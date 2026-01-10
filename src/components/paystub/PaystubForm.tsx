@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { FormField, CurrencyInput } from '@/components/forms'
 import {
   Select,
   SelectContent,
@@ -65,20 +66,15 @@ export function PaystubForm({
           Employee Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="space-y-tight">
-            <Label htmlFor="employeeName">Employee Name *</Label>
-            <Input
-              id="employeeName"
-              type="text"
-              value={paystubData.employeeName}
-              onChange={(e) => setPaystubData(prev => ({ ...prev, employeeName: e.target.value }))}
-              className={formErrors.employeeName ? 'border-destructive border-2' : ''}
-              placeholder="John Doe"
-            />
-            {formErrors.employeeName && (
-              <p className="text-destructive text-xs">{formErrors.employeeName}</p>
-            )}
-          </div>
+          <FormField
+            label="Employee Name"
+            id="employeeName"
+            value={paystubData.employeeName}
+            onChange={(value) => setPaystubData(prev => ({ ...prev, employeeName: value }))}
+            error={formErrors.employeeName}
+            required
+            placeholder="John Doe"
+          />
 
           <div className="space-y-tight">
             <Label htmlFor="employeeId">Employee ID</Label>
@@ -110,25 +106,15 @@ export function PaystubForm({
           Pay Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="space-y-tight">
-            <Label htmlFor="hourlyRate">Hourly Rate *</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-              <Input
-                id="hourlyRate"
-                type="number"
-                step="0.01"
-                value={paystubData.hourlyRate || ''}
-                onChange={(e) => setPaystubData(prev => ({ ...prev, hourlyRate: parseFloat(e.target.value) || 0 }))}
-                variant="currency"
-                className={formErrors.hourlyRate ? 'border-destructive border-2' : ''}
-                placeholder="25.00"
-              />
-            </div>
-            {formErrors.hourlyRate && (
-              <p className="text-destructive text-xs">{formErrors.hourlyRate}</p>
-            )}
-          </div>
+          <CurrencyInput
+            label="Hourly Rate"
+            id="hourlyRate"
+            value={paystubData.hourlyRate}
+            onChange={(value) => setPaystubData(prev => ({ ...prev, hourlyRate: value }))}
+            error={formErrors.hourlyRate}
+            required
+            placeholder="25.00"
+          />
 
           <div className="space-y-tight">
             <Label htmlFor="hoursPerPeriod">Hours Per Period *</Label>
