@@ -3,9 +3,10 @@
  * Fetches performance metrics for a given URL
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server';
+import { type NextRequest, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('pagespeed-api');
 const PAGESPEED_API_URL = 'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed';
@@ -35,10 +36,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('PageSpeed rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests. Please wait before analyzing another URL.' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests. Please wait before analyzing another URL.', 429);
   }
 
   try {
@@ -46,20 +44,14 @@ export async function GET(request: NextRequest) {
     const url = searchParams.get('url');
 
     if (!url) {
-      return NextResponse.json(
-        { error: 'URL parameter is required' },
-        { status: 400 }
-      );
+      return errorResponse('URL parameter is required', 400);
     }
 
     // Validate URL
     try {
       new URL(url);
     } catch {
-      return NextResponse.json(
-        { error: 'Invalid URL format' },
-        { status: 400 }
-      );
+      return errorResponse('Invalid URL format', 400);
     }
 
     logger.info('Fetching PageSpeed data', { url });
@@ -76,10 +68,7 @@ export async function GET(request: NextRequest) {
 
     if (!response.ok) {
       logger.error('PageSpeed API error', new Error(`Status: ${response.status}`));
-      return NextResponse.json(
-        { error: 'Failed to fetch performance data' },
-        { status: response.status }
-      );
+      return errorResponse('Failed to fetch performance data', response.status);
     }
 
     const data = await response.json() as PageSpeedResponse;
@@ -103,12 +92,9 @@ export async function GET(request: NextRequest) {
 
     logger.info('PageSpeed data fetched successfully', { url, performanceScore });
 
-    return NextResponse.json({ success: true, metrics });
+    return successResponse({ metrics });
   } catch (error) {
     logger.error('PageSpeed API error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to analyze website performance' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to analyze website performance', 500);
   }
 }
