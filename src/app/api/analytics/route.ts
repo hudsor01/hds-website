@@ -5,7 +5,7 @@
 
 import { env } from '@/env';
 import { castError, createServerLogger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import type { Database, Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -26,15 +26,7 @@ const analyticsEventSchema = z.object({
   userId: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleAnalyticsPost(request: NextRequest) {
   try {
     // Parse request body with strict schema
     const parseResult = analyticsEventSchema.safeParse(await request.json());
@@ -96,6 +88,8 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to process analytics event', 500);
   }
 }
+
+export const POST = withRateLimit(handleAnalyticsPost, 'api');
 
 // OPTIONS handler for CORS preflight
 export async function OPTIONS() {

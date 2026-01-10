@@ -11,7 +11,7 @@ import { errorResponse, successResponse } from '@/lib/api/responses';
 import { updateTestimonialStatus, deleteTestimonial } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -22,15 +22,7 @@ interface UpdateBody {
   featured?: boolean;
 }
 
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Testimonial PATCH rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handlePatchTestimonial(request: NextRequest, { params }: RouteParams) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -69,15 +61,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Testimonial DELETE rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleDeleteTestimonial(request: NextRequest, { params }: RouteParams) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -110,3 +94,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     return errorResponse('Failed to delete testimonial', 500);
   }
 }
+
+export const PATCH = withRateLimitParams(handlePatchTestimonial, 'contactFormApi');
+export const DELETE = withRateLimitParams(handleDeleteTestimonial, 'contactFormApi');

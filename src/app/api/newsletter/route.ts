@@ -1,6 +1,6 @@
 import { env } from '@/env';
 import { logger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
 import { supabaseAdmin } from '@/lib/supabase';
@@ -18,14 +18,8 @@ interface NewsletterSubscription {
   user_agent?: string;
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 requests per minute for newsletter signups
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
-  if (!isAllowed) {
-    logger.warn('Newsletter signup rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests. Please try again later.', 429);
-  }
+async function handleNewsletterPost(request: NextRequest) {
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
   try {
     const startTime = Date.now();
@@ -139,16 +133,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint for retrieving subscribers (admin only)
-export async function GET(request: NextRequest) {
-  // Rate limiting - 60 requests per minute for admin
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Newsletter admin rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
+export const POST = withRateLimit(handleNewsletterPost, 'newsletter');
 
+// GET endpoint for retrieving subscribers (admin only)
+async function handleNewsletterGet(request: NextRequest) {
   try {
     // Verify this is an admin request
     const authHeader = request.headers.get('authorization');
@@ -222,3 +210,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to retrieve subscribers', 500);
   }
 }
+
+export const GET = withRateLimit(handleNewsletterGet, 'api');

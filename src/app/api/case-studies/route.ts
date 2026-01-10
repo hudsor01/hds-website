@@ -6,20 +6,12 @@
 import { type NextRequest, connection } from 'next/server';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
-export async function GET(request: NextRequest) {
+async function handleCaseStudiesGet(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Case studies rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
 
   try {
     const { searchParams } = new URL(request.url);
@@ -87,3 +79,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Internal server error', 500);
   }
 }
+
+export const GET = withRateLimit(handleCaseStudiesGet, 'readOnlyApi');

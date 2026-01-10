@@ -5,7 +5,7 @@
 
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import type { Database, Json } from '@/types/database';
@@ -87,15 +87,7 @@ function getLeadQuality(score: number): 'hot' | 'warm' | 'cold' {
   return 'cold';
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 submissions per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Calculator submission rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many submissions. Please try again later.', 429);
-  }
-
+async function handleCalculatorSubmit(request: NextRequest) {
   try {
     const body = await request.json();
 
@@ -224,6 +216,8 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to process submission', 500);
   }
 }
+
+export const POST = withRateLimit(handleCalculatorSubmit, 'contactForm');
 
 // Helper functions
 function getCalculatorName(type: string): string {
