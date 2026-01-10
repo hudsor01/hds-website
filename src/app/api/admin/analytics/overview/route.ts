@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
@@ -20,10 +21,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Analytics overview rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -39,10 +37,7 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsOverviewQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { days } = parseResult.data;
@@ -138,12 +133,9 @@ export async function GET(request: NextRequest) {
 
     logger.info('Analytics overview generated', { days, totalLeads });
 
-    return NextResponse.json(response);
+    return successResponse(response);
   } catch (error) {
     logger.error('Analytics overview error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to fetch analytics overview' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch analytics overview', 500);
   }
 }

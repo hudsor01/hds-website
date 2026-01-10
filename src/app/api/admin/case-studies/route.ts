@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
@@ -49,10 +50,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Admin case studies rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -71,19 +69,13 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to fetch case studies:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch case studies' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to fetch case studies', 500);
     }
 
-    return NextResponse.json({ caseStudies: caseStudies || [] });
+    return successResponse({ caseStudies: caseStudies || [] });
   } catch (error) {
     logger.error('Admin case studies API error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
 
@@ -94,10 +86,7 @@ export async function POST(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Admin case studies POST rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -120,14 +109,11 @@ export async function POST(request: NextRequest) {
 
     if (existingError && existingError.code !== 'PGRST116') {
       logger.error('Failed to check case study slug uniqueness', existingError as Error);
-      return NextResponse.json({ error: 'Unable to validate slug' }, { status: 500 });
+      return errorResponse('Unable to validate slug', 500);
     }
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'A case study with this slug already exists' },
-        { status: 400 }
-      );
+      return errorResponse('A case study with this slug already exists', 400);
     }
 
     const insertData: CaseStudyInsert = {
@@ -163,26 +149,17 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to create case study:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to create case study' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to create case study', 500);
     }
 
-    return NextResponse.json({ caseStudy }, { status: 201 });
+    return successResponse({ caseStudy }, undefined, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation error', details: error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(error);
     }
 
     logger.error('Admin case studies POST error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
 
@@ -193,10 +170,7 @@ export async function PUT(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Admin case studies PUT rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -210,10 +184,7 @@ export async function PUT(request: NextRequest) {
     const { id, ...updateData } = body;
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Case study ID is required' },
-        { status: 400 }
-      );
+      return errorResponse('Case study ID is required', 400);
     }
 
     const validatedData = CaseStudySchema.partial().parse(updateData);
@@ -245,26 +216,17 @@ export async function PUT(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to update case study:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to update case study' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to update case study', 500);
     }
 
-    return NextResponse.json({ caseStudy });
+    return successResponse({ caseStudy });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation error', details: error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(error);
     }
 
     logger.error('Admin case studies PUT error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
 
@@ -280,10 +242,7 @@ export async function DELETE(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Admin case studies DELETE rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -299,10 +258,7 @@ export async function DELETE(request: NextRequest) {
     // Validate UUID format
     const parseResult = deleteQuerySchema.safeParse({ id: idParam });
     if (!parseResult.success) {
-      return NextResponse.json(
-        { error: 'Invalid case study ID', details: parseResult.error.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const { id } = parseResult.data;
@@ -315,18 +271,12 @@ export async function DELETE(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to delete case study:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to delete case study' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to delete case study', 500);
     }
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     logger.error('Admin case studies DELETE error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }

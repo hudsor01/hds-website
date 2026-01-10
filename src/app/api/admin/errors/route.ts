@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server'
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
 import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth } from '@/lib/admin-auth'
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
   if (!isAllowed) {
     logger.warn('Errors API rate limit exceeded', { ip: clientIp })
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+    return errorResponse('Too many requests', 429)
   }
 
   const authError = await requireAdminAuth()
@@ -38,13 +39,7 @@ export async function GET(request: NextRequest) {
       logger.warn('Invalid query parameters', {
         errors: parseResult.errors.flatten(),
       })
-      return NextResponse.json(
-        {
-          error: 'Invalid query parameters',
-          details: parseResult.errors.flatten().fieldErrors,
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse(parseResult.errors)
     }
 
     const { timeRange, errorType, route, level, search, resolved, limit, offset } =
@@ -90,10 +85,7 @@ export async function GET(request: NextRequest) {
 
     if (fetchError) {
       logger.error('Failed to fetch error logs', fetchError)
-      return NextResponse.json(
-        { error: 'Failed to fetch error logs' },
-        { status: 500 }
-      )
+      return errorResponse('Failed to fetch error logs', 500)
     }
 
     const groupedErrorsMap = new Map<string, GroupedError>()
@@ -150,7 +142,7 @@ export async function GET(request: NextRequest) {
       groupedCount: groupedErrors.length,
     })
 
-    return NextResponse.json({
+    return successResponse({
       errors: groupedErrors,
       stats,
       pagination: {
@@ -165,6 +157,6 @@ export async function GET(request: NextRequest) {
       'Errors API error',
       error instanceof Error ? error : new Error(String(error))
     )
-    return NextResponse.json({ error: 'Failed to fetch errors' }, { status: 500 })
+    return errorResponse('Failed to fetch errors', 500)
   }
 }

@@ -4,6 +4,7 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
+import { errorResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
@@ -21,10 +22,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Analytics export rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -40,10 +38,7 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsExportQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { quality, type: calculatorType, startDate, endDate } = parseResult.data;
@@ -77,10 +72,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to fetch leads for export', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to fetch leads', 500);
     }
 
     // Enrich leads with attribution data
@@ -132,10 +124,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     logger.error('Analytics export error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to export leads' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to export leads', 500);
   }
 }
 
