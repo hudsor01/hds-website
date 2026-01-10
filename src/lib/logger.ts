@@ -3,6 +3,7 @@
  * Provides server and client logging with Supabase error tracking
  */
 
+import { env } from '@/env';
 import { supabaseAdmin } from '@/lib/supabase'
 import type { Json } from '@/types/database'
 import type {
@@ -100,14 +101,14 @@ async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
     const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
     if (error) {
       // Final fallback - can't use logger here as it would cause recursion
-      if (process.env.NODE_ENV === 'development') {
+      if (env.NODE_ENV === 'development') {
         console.error('[Logger] Failed to push to Supabase:', error.message)
       }
     }
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.error('[Logger] Failed to push to Supabase:', e)
     }
   }
@@ -131,7 +132,7 @@ export class BaseLogger implements Logger {
       this.context.isServer = false;
     } else {
       this.context.isServer = true;
-      this.context.environment = process.env.NODE_ENV ?? 'development';
+      this.context.environment = env.NODE_ENV ?? 'development';
     }
   }
 
@@ -166,7 +167,7 @@ export class BaseLogger implements Logger {
     };
 
     // Only log error and warn levels to console to comply with ESLint rules
-    if (process.env.NODE_ENV === 'development' || this.isBrowser) {
+    if (env.NODE_ENV === 'development' || this.isBrowser) {
       if (level === 'error') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       } else if (level === 'warn') {
@@ -176,7 +177,7 @@ export class BaseLogger implements Logger {
 
     // In production, you might want to send to analytics or external logging service
     // For now, we'll just log error and warn levels to console in production
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       if (level === 'error' || level === 'warn') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       }
@@ -200,7 +201,7 @@ export class BaseLogger implements Logger {
     this.log('error', message, errorData);
 
     // Push to Supabase in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       this.pushErrorToSupabase('error', message, errorData, context);
     }
   }
@@ -210,7 +211,7 @@ export class BaseLogger implements Logger {
     this.log('error', message, errorData);
 
     // Push to Supabase in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       this.pushErrorToSupabase('fatal', message, errorData, context);
     }
   }
@@ -236,8 +237,8 @@ export class BaseLogger implements Logger {
       request_id: context?.requestId,
       user_id: context?.userId,
       user_email: context?.userEmail,
-      environment: process.env.NODE_ENV || 'development',
-      vercel_region: process.env.VERCEL_REGION,
+      environment: env.NODE_ENV || 'development',
+      vercel_region: env.VERCEL_REGION,
       metadata: {
         ...context?.metadata,
         cause: errorData?.cause,
@@ -318,7 +319,7 @@ export function createServerLogger(name?: string): ServerLogger {
   const context: LogContext = {
     component: name || 'server',
     isServer: true,
-    environment: process.env.NODE_ENV ?? 'development',
+    environment: env.NODE_ENV ?? 'development',
   };
 
   if (name) {
@@ -334,7 +335,7 @@ export function createServerLogger(name?: string): ServerLogger {
 export const logger: Logger = new BaseLogger({
   component: 'default',
   isServer: typeof window === 'undefined',
-  environment: process.env.NODE_ENV ?? 'development',
+  environment: env.NODE_ENV ?? 'development',
 });
 
 // ============================================================================
