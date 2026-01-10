@@ -39,9 +39,12 @@ None
 **Goal**: Remove orphaned components, unused functions, commented code, and exports that aren't imported anywhere
 **Depends on**: Phase 1 (cleaner dependency tree makes dead code more obvious)
 **Research**: Unlikely (static analysis with existing tools)
-**Plans**: TBD
+**Plans**: 4 plans created
 
-Plans will be determined during phase planning.
+1. PLAN-01-orphaned-components.md - Find and remove unused components
+2. PLAN-02-unused-exports.md - Remove exports with zero imports
+3. PLAN-03-commented-code.md - Clean commented code and dead imports
+4. PLAN-04-final-verification.md - Comprehensive verification and documentation
 
 ### Phase 3: Integration Cleanup
 **Goal**: Remove or simplify over-engineered integrations (unused Supabase auth, disabled analytics features, unnecessary services)
@@ -114,7 +117,7 @@ Plans will be determined during phase planning.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Dependency Audit & Pruning | 5/5 | ✅ Complete | 2026-01-09 |
-| 2. Dead Code Elimination | 0/TBD | Not started | - |
+| 2. Dead Code Elimination | 0/4 | Planning complete | - |
 | 3. Integration Cleanup | 0/TBD | Not started | - |
 | 4. Code Deduplication | 0/TBD | Not started | - |
 | 5. Configuration Simplification | 0/TBD | Not started | - |
