@@ -1,0 +1,18 @@
+  dependabot/npm_and_yarn/next-16.0.9
+  dependabot/npm_and_yarn/next-16.1.0
+  feature/professional-theme-update
+  fix/admin-route-structure
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/dependabot/github_actions/actions/cache-5
+  remotes/origin/dependabot/npm_and_yarn/dev-dependencies-514161c14d
+  remotes/origin/dependabot/npm_and_yarn/lucide-react-0.561.0
+  remotes/origin/dependabot/npm_and_yarn/next-16.0.10
+  remotes/origin/dependabot/npm_and_yarn/next-16.0.9
+  remotes/origin/dependabot/npm_and_yarn/next-16.1.0
+  remotes/origin/dependabot/npm_and_yarn/production-dependencies-7ee5e667a0
+  remotes/origin/dependabot/npm_and_yarn/puppeteer-24.33.0
+  remotes/origin/feature/professional-theme-update
+  remotes/origin/fix/admin-route-structure
+  remotes/origin/hotfix/navbar-styling-fix
+  remotes/origin/main

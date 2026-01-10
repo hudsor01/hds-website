@@ -1,6 +1,6 @@
 version: 2
 updates:
-  # Enable version updates for npm
+  # Enable version updates for npm (Bun compatible)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -20,7 +20,6 @@ updates:
         dependency-type: "production"
         update-types:
           - "patch"
-    # Auto-merge minor and patch updates for dev dependencies
     labels:
       - "dependencies"
       - "automated"
