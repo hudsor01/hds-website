@@ -8,22 +8,14 @@ import { errorResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsExportQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 import type { LeadExportData } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-export-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsExport(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics export rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -200,3 +192,5 @@ function convertToCSV(leads: LeadExportData[]): string {
 
   return csvContent;
 }
+
+export const GET = withRateLimit(handleAnalyticsExport, 'api');

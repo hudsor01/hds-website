@@ -8,7 +8,7 @@ import { errorResponse, successResponse, validationErrorResponse } from '@/lib/a
 import { createServerLogger } from '@/lib/logger'
 import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth } from '@/lib/admin-auth'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
 import { getStartDateFromRange, sanitizePostgrestSearch } from '@/lib/utils'
@@ -16,15 +16,8 @@ import type { GroupedError, ErrorStats } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
 
-export async function GET(request: NextRequest) {
+async function handleAdminErrors(request: NextRequest) {
   await connection()
-
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors API rate limit exceeded', { ip: clientIp })
-    return errorResponse('Too many requests', 429)
-  }
 
   const authError = await requireAdminAuth()
   if (authError) {
@@ -160,3 +153,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch errors', 500)
   }
 }
+
+export const GET = withRateLimit(handleAdminErrors, 'api')
