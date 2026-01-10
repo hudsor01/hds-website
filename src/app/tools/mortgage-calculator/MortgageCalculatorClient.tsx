@@ -148,6 +148,7 @@ export function MortgageCalculatorClient() {
     const totalPayments = monthlyPrincipalInterest * numberOfPayments;
     const totalInterest = totalPayments - loanAmount;
 
+
     const calculatedResults: MortgageResults = {
       monthlyPrincipalInterest: formatCurrency(monthlyPrincipalInterest),
       monthlyPropertyTax: formatCurrency(monthlyPropertyTax),

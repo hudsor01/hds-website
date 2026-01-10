@@ -286,7 +286,6 @@ export default function ProposalGeneratorPage() {
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
-
   const isValid =
     proposalData.projectName.trim() !== '' &&
     (proposalData.clientName.trim() !== '' || proposalData.clientCompany.trim() !== '');

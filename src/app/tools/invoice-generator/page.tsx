@@ -268,7 +268,6 @@ export default function InvoiceGeneratorPage() {
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
-
   const isValid = invoiceData.clientName.trim() !== '' &&
                   invoiceData.lineItems.some(item => item.description.trim() !== '' && item.amount > 0);
 

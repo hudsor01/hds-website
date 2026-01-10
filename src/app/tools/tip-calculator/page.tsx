@@ -72,7 +72,6 @@ export default function TipCalculatorPage() {
       effectiveTipPercent,
     };
   }, [inputs, useCustomTip]);
-
   // Track when user interacts
   const trackUsage = () => {
     if (inputs.billAmount > 0) {
