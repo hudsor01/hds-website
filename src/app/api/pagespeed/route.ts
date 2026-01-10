@@ -5,7 +5,7 @@
 
 import { type NextRequest, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('pagespeed-api');
@@ -28,16 +28,8 @@ interface PageSpeedResponse {
   };
 }
 
-export async function GET(request: NextRequest) {
+async function handlePageSpeed(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - stricter for external API calls (5 requests per minute)
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('PageSpeed rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests. Please wait before analyzing another URL.', 429);
-  }
 
   try {
     const { searchParams } = new URL(request.url);
@@ -98,3 +90,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to analyze website performance', 500);
   }
 }
+
+export const GET = withRateLimit(handlePageSpeed, 'contactFormApi');

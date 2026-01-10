@@ -14,18 +14,10 @@ import { type NextRequest } from 'next/server';
 import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 
-export async function GET(request: NextRequest) {
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Testimonials rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleGetTestimonials(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const requestAll = url.searchParams.get('all') === 'true';
@@ -64,3 +56,5 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch testimonials', 500);
   }
 }
+
+export const GET = withRateLimit(handleGetTestimonials, 'readOnlyApi');
