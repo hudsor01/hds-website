@@ -7,6 +7,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 import { getTestimonialRequests, createTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
@@ -18,10 +19,7 @@ export async function GET(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Testimonial requests rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -33,7 +31,7 @@ export async function GET(request: NextRequest) {
   try {
     const requests = await getTestimonialRequests();
 
-    return NextResponse.json({ requests });
+    return successResponse({ requests });
   } catch (error) {
     logger.error('Error fetching testimonial requests', {
       error: error instanceof Error ? error.message : String(error),
@@ -41,10 +39,7 @@ export async function GET(request: NextRequest) {
       action: 'list',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to fetch requests' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch requests', 500);
   }
 }
 
@@ -60,10 +55,7 @@ export async function POST(request: NextRequest) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Testimonial requests POST rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -76,10 +68,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json() as CreateRequestBody;
 
     if (!body.clientName?.trim()) {
-      return NextResponse.json(
-        { error: 'Client name is required' },
-        { status: 400 }
-      );
+      return errorResponse('Client name is required', 400);
     }
 
     const newRequest = await createTestimonialRequest(
@@ -99,8 +88,7 @@ export async function POST(request: NextRequest) {
       clientName: body.clientName,
     });
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       token: newRequest.token,
       id: newRequest.id,
     });
@@ -111,9 +99,6 @@ export async function POST(request: NextRequest) {
       action: 'create',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to create request' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to create request', 500);
   }
 }

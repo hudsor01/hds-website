@@ -7,6 +7,7 @@ import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/database';
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
@@ -31,7 +32,7 @@ export async function GET(
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
   if (!isAllowed) {
     logger.warn('Lead notes rate limit exceeded', { ip: clientIp });
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -52,13 +53,13 @@ export async function GET(
 
     if (error) {
       logger.error('Failed to fetch notes:', error as Error);
-      return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
+      return errorResponse('Failed to fetch notes', 500);
     }
 
-    return NextResponse.json({ notes: notes || [] });
+    return successResponse({ notes: notes || [] });
   } catch (error) {
     logger.error('Notes fetch error:', error as Error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return errorResponse('Internal server error', 500);
   }
 }
 
@@ -73,7 +74,7 @@ export async function POST(
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Lead notes POST rate limit exceeded', { ip: clientIp });
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -105,16 +106,16 @@ export async function POST(
 
     if (error) {
       logger.error('Failed to create note:', error as Error);
-      return NextResponse.json({ error: 'Failed to create note' }, { status: 500 });
+      return errorResponse('Failed to create note', 500);
     }
 
-    return NextResponse.json({ success: true, note });
+    return successResponse({ note });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid input', details: error.issues }, { status: 400 });
+      return validationErrorResponse(error);
     }
 
     logger.error('Note creation error:', error as Error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return errorResponse('Internal server error', 500);
   }
 }

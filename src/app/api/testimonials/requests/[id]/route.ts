@@ -6,6 +6,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 import { deleteTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
@@ -21,10 +22,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Testimonial request DELETE rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -39,10 +37,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const success = await deleteTestimonialRequest(id);
 
     if (!success) {
-      return NextResponse.json(
-        { error: 'Failed to delete request' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to delete request', 500);
     }
 
     logger.info('Testimonial request deleted', {
@@ -51,7 +46,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       requestId: id,
     });
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     logger.error('Error deleting testimonial request', {
       error: error instanceof Error ? error.message : String(error),
@@ -59,9 +54,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       action: 'delete',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to delete request' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to delete request', 500);
   }
 }

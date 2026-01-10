@@ -7,6 +7,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 import { updateTestimonialStatus, deleteTestimonial } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
@@ -27,10 +28,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Testimonial PATCH rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -49,10 +47,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     });
 
     if (!success) {
-      return NextResponse.json(
-        { error: 'Failed to update testimonial' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to update testimonial', 500);
     }
 
     logger.info('Testimonial updated', {
@@ -62,7 +57,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       updates: body,
     });
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     logger.error('Error updating testimonial', {
       error: error instanceof Error ? error.message : String(error),
@@ -70,10 +65,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       action: 'update',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to update testimonial' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to update testimonial', 500);
   }
 }
 
@@ -83,10 +75,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
   if (!isAllowed) {
     logger.warn('Testimonial DELETE rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
+    return errorResponse('Too many requests', 429);
   }
 
   // Require admin authentication
@@ -101,10 +90,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const success = await deleteTestimonial(id);
 
     if (!success) {
-      return NextResponse.json(
-        { error: 'Failed to delete testimonial' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to delete testimonial', 500);
     }
 
     logger.info('Testimonial deleted', {
@@ -113,7 +99,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       testimonialId: id,
     });
 
-    return NextResponse.json({ success: true });
+    return successResponse({ success: true });
   } catch (error) {
     logger.error('Error deleting testimonial', {
       error: error instanceof Error ? error.message : String(error),
@@ -121,9 +107,6 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       action: 'delete',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to delete testimonial' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to delete testimonial', 500);
   }
 }
