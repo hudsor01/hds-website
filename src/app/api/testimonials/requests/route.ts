@@ -11,17 +11,9 @@ import { errorResponse, successResponse } from '@/lib/api/responses';
 import { getTestimonialRequests, createTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 
-export async function GET(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Testimonial requests rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
+async function handleTestimonialRequestsGet(request: NextRequest) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -49,15 +41,9 @@ interface CreateRequestBody {
   projectName?: string;
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Testimonial requests POST rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
+export const GET = withRateLimit(handleTestimonialRequestsGet, 'api');
 
+async function handleTestimonialRequestsPost(request: NextRequest) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -102,3 +88,5 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to create request', 500);
   }
 }
+
+export const POST = withRateLimit(handleTestimonialRequestsPost, 'contactFormApi');

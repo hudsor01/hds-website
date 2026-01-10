@@ -8,7 +8,7 @@ import { errorResponse, successResponse, validationErrorResponse } from '@/lib/a
 import { createServerLogger } from '@/lib/logger'
 import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth, validateAdminAuth } from '@/lib/admin-auth'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { resolveErrorSchema } from '@/lib/schemas/error-logs'
 
 const logger = createServerLogger('admin-errors-detail-api')
@@ -19,15 +19,8 @@ interface RouteContext {
   }>
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
+async function handleErrorDetail(request: NextRequest, context: RouteContext) {
   await connection()
-
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors detail API rate limit exceeded', { ip: clientIp })
-    return errorResponse('Too many requests', 429)
-  }
 
   const authError = await requireAdminAuth()
   if (authError) {
@@ -90,15 +83,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
-  await connection()
+export const GET = withRateLimitParams(handleErrorDetail, 'api');
 
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors resolve API rate limit exceeded', { ip: clientIp })
-    return errorResponse('Too many requests', 429)
-  }
+async function handleErrorResolve(request: NextRequest, context: RouteContext) {
+  await connection()
 
   const auth = await validateAdminAuth()
   if (!auth.isAuthenticated || !auth.user) {
@@ -170,3 +158,5 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     return errorResponse('Failed to update error status', 500)
   }
 }
+
+export const PATCH = withRateLimitParams(handleErrorResolve, 'api');

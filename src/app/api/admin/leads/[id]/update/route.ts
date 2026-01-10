@@ -8,7 +8,7 @@ import { errorResponse, successResponse, validationErrorResponse } from '@/lib/a
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
 
 const UpdateLeadSchema = z.object({
@@ -18,18 +18,10 @@ const UpdateLeadSchema = z.object({
   notes: z.string().optional(),
 });
 
-export async function PATCH(
+async function handleLeadUpdate(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Lead update rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
-
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -91,3 +83,5 @@ export async function PATCH(
     return errorResponse('Internal server error', 500);
   }
 }
+
+export const PATCH = withRateLimitParams(handleLeadUpdate, 'contactFormApi');

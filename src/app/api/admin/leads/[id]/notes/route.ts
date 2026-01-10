@@ -9,7 +9,7 @@ import type { Database } from '@/types/database';
 import { type NextRequest, NextResponse } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
 
 type LeadNoteInsert = Database['public']['Tables']['lead_notes']['Insert'];
@@ -21,19 +21,11 @@ const CreateNoteSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
-export async function GET(
+async function handleLeadNotesGet(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-
-  // Rate limiting
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Lead notes rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -63,19 +55,13 @@ export async function GET(
   }
 }
 
-export async function POST(
+export const GET = withRateLimitParams(handleLeadNotesGet, 'api');
+
+async function handleLeadNotesPost(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-
-  // Rate limiting
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Lead notes POST rate limit exceeded', { ip: clientIp });
-    return errorResponse('Too many requests', 429);
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -119,3 +105,5 @@ export async function POST(
     return errorResponse('Internal server error', 500);
   }
 }
+
+export const POST = withRateLimitParams(handleLeadNotesPost, 'contactFormApi');
