@@ -7,7 +7,7 @@
 
 ## Goal
 
-Identify and remove unnecessary state management libraries that duplicate Next.js 16 Server Components and Server Actions patterns, simplifying the architecture while preserving working features.
+Identify truly unused state management libraries while preserving client-side state management that reduces Vercel server costs. **Client-side code runs free on users' browsers, while Server Components incur Vercel compute charges.**
 
 ## Context
 
@@ -19,24 +19,26 @@ Identify and remove unnecessary state management libraries that duplicate Next.j
 - nuqs 2.8.6 (URL state management)
 
 **Preservation Requirements:**
-- Contact form submission (uses Server Actions per ARCHITECTURE.md)
+- Contact form submission (currently uses Server Actions)
 - Tool page forms (paystub, invoice, timesheet inputs)
 - Any tables displaying data
 - URL-based filtering/pagination if present
 
-**Architecture Pattern:**
-- Next.js 16 Server Components (default)
-- Server Actions for mutations (no API routes needed)
-- useActionState for form state (React 19 hook)
-- Minimal client-side state (per CLAUDE.md guidelines)
+**Cost Optimization Insight:**
+- **Server Components**: Vercel charges for compute time (expensive)
+- **Client Components**: Run on user's browser (free)
+- **React Query caching**: Reduces server requests (saves money)
+- **Zustand client state**: Prevents server re-renders (saves money)
 
-**Research:** None required - codebase analysis against documented patterns
+**Architecture Principle:** Use client-side state management to minimize Vercel server costs, not maximize Server Components.
+
+**Research:** None required - codebase analysis against cost optimization
 
 ## Tasks
 
 ### Task 1: Audit React Query usage
 
-**What:** Determine if TanStack React Query is actually used for server state management
+**What:** Determine if TanStack React Query is being used for client-side caching
 
 **How:**
 ```bash
@@ -53,24 +55,25 @@ grep -r "QueryClientProvider" src/
 **Outcome:** Usage report showing:
 - If React Query is initialized (QueryClientProvider)
 - Which components use useQuery or useMutation
-- What data fetching it manages
+- What data it's caching client-side
 
 **Verification:**
 - [ ] All React Query imports documented
 - [ ] Provider location identified (if exists)
-- [ ] Alternative: Server Components + Server Actions already handle all data needs
+- [ ] Client-side caching patterns documented
 
 **Decision Criteria:**
-- **Remove if**: Zero usage OR all data fetching is handled by Server Components
-- **Keep if**: Complex client-side caching is essential to features
+- **KEEP if**: Used for client-side data caching (reduces expensive server requests)
+- **KEEP if**: Even lightly used - caching saves more money than bundle size costs
+- **Remove ONLY if**: Zero usage (no imports anywhere)
 
-**Checkpoint:** React Query is often overkill with Server Components. If data fetching is < 3 locations, Server Components likely sufficient.
+**Checkpoint:** React Query's client-side caching prevents redundant Server Component renders. Even small usage can save significant Vercel costs.
 
 ---
 
 ### Task 2: Audit TanStack Form and Table usage
 
-**What:** Check if TanStack Form and Table are used, or if simpler patterns suffice
+**What:** Check if TanStack Form and Table enable client-side functionality
 
 **How:**
 ```bash
@@ -84,23 +87,29 @@ grep -r "useReactTable\|createColumnHelper" src/
 ```
 
 **Outcome:** Usage report showing:
-- **TanStack Form**: Used or replaced by useActionState + Server Actions
-- **TanStack Table**: Used for any data tables or completely unused
+- **TanStack Form**: Client-side form validation vs Server Actions
+- **TanStack Table**: Client-side sorting/filtering vs server-side
 
 **Verification:**
-- [ ] Form usage documented (vs. Server Actions pattern)
-- [ ] Table usage documented (vs. basic HTML tables)
-- [ ] ARCHITECTURE.md pattern confirms Server Actions for forms
+- [ ] Form usage documented
+- [ ] Table usage documented
+- [ ] Client vs server operation identified
 
 **Decision Criteria:**
-- **TanStack Form**: Remove if Server Actions handle all forms (ARCHITECTURE.md confirms this)
-- **TanStack Table**: Remove if no complex tables exist (sortable, filterable, paginated)
+- **TanStack Form**:
+  - **KEEP if**: Provides client-side validation (instant feedback, no server round-trips)
+  - **Remove if**: Zero usage AND Server Actions handle everything
+- **TanStack Table**:
+  - **KEEP if**: Client-side sorting/filtering (free operations on user's browser)
+  - **Remove if**: Zero usage AND no tables exist
+
+**Cost Note:** Client-side table operations (sort, filter, paginate) are FREE. Server-side table operations cost money on every interaction.
 
 ---
 
 ### Task 3: Audit Zustand and nuqs usage
 
-**What:** Check if client-side state management is actually needed
+**What:** Check if client-side state management is reducing server dependency
 
 **How:**
 ```bash
@@ -115,34 +124,39 @@ grep -r "useQueryState\|parseAsString" src/
 ```
 
 **Outcome:** Usage report showing:
-- **Zustand**: What global state is managed (if any)
-- **nuqs**: URL params being synced to state
+- **Zustand**: What global client state is managed
+- **nuqs**: URL params being synced client-side
 
 **Verification:**
 - [ ] All Zustand stores identified
 - [ ] URL state usage documented
-- [ ] Alternative approaches evaluated (React useState, searchParams)
+- [ ] Client-side state benefits documented
 
 **Decision Criteria:**
-- **Zustand**: Remove if no global client state needed (Server Components minimize this)
-- **nuqs**: Remove if no complex URL state syncing (searchParams may suffice)
+- **Zustand**:
+  - **KEEP if**: Managing client state (avoids server re-renders)
+  - **KEEP if**: Even lightly used - client state is free, server state costs money
+  - **Remove ONLY if**: Zero usage
+- **nuqs**:
+  - **KEEP if**: Client-side URL state syncing (prevents server round-trips)
+  - **Remove if**: Zero usage
 
-**Note:** Per CLAUDE.md: "Server State: React Server Components (no client state)"
+**Cost Note:** Every useState/Zustand update that avoids a Server Component re-render saves Vercel compute time.
 
 ---
 
-### Task 4: Remove unused state management libraries
+### Task 4: Remove ONLY truly unused libraries
 
-**What:** Uninstall libraries identified as unused in Tasks 1-3
+**What:** Uninstall libraries with confirmed ZERO usage (no imports found)
 
 **How:**
 ```bash
-# Remove unused libraries (example - adjust based on findings)
-bun remove @tanstack/react-query
-bun remove @tanstack/react-form
-bun remove @tanstack/react-table
-bun remove zustand
-bun remove nuqs
+# Remove ONLY libraries with zero imports found in Tasks 1-3
+# DO NOT remove libraries that are being used
+
+# Example (only if zero usage confirmed):
+# bun remove @tanstack/react-form  # ONLY if no imports found
+# bun remove @tanstack/react-table  # ONLY if no imports found
 
 # Verify removal
 bun install
@@ -150,16 +164,15 @@ bun run dev
 ```
 
 **Outcome:**
-- Cleaner package.json
-- Reduced bundle size (React Query alone ~40kB)
-- Simpler mental model (one pattern: Server Components + Server Actions)
+- Remove only truly dead code
+- Keep client-side libraries that save server costs
+- Preserve cost-optimized architecture
 
 **Verification:**
-- [ ] Unused libraries removed from package.json
+- [ ] ONLY zero-usage libraries removed
+- [ ] Client-side caching libraries preserved
 - [ ] No import errors in dev build
-- [ ] Contact form submits successfully (Server Action pattern)
-- [ ] Tool pages render and accept input
-- [ ] No runtime errors in browser console
+- [ ] All features continue working
 
 **Rollback Plan:**
 ```bash
@@ -170,61 +183,74 @@ bun add @tanstack/react-query@5.90.16
 ## Success Criteria
 
 - [ ] All 5 state management libraries audited with usage report
-- [ ] Unused libraries removed (expect 3-4 removals)
-- [ ] Server Components + Server Actions confirmed as primary pattern
-- [ ] All forms continue working (contact, tool inputs)
-- [ ] No client-side state management bugs introduced
+- [ ] **ONLY** zero-usage libraries removed (expect 0-2 removals)
+- [ ] Client-side state management preserved (cost optimization)
+- [ ] All forms continue working
+- [ ] No increase in server-side operations
 - [ ] Build succeeds without errors
-- [ ] Contact form submission tested end-to-end
 
 ## Scope Boundaries
 
 **In Scope:**
 - Auditing state management library usage
-- Removing libraries with zero usage
-- Confirming Server Components pattern handles needs
-- Testing form submissions after removal
+- Removing libraries with confirmed zero usage
+- Preserving client-side functionality for cost optimization
+- Testing features after removal
 
 **Out of Scope:**
-- Refactoring forms from TanStack to Server Actions (if in use)
+- Removing libraries that are being used
+- Converting client-side to server-side (would increase costs)
+- Optimizing bundle size at expense of server costs
 - Adding new state management patterns
-- Optimizing data fetching performance
-- Implementing caching strategies
 
 ## Estimated Impact
 
 **Before:**
 - 5 state management packages
-- ~60-80kB in client bundle (React Query, Zustand, etc.)
-- Multiple patterns for state (confusion)
+- Client-side caching and state management
 
 **After:**
-- 0-1 state management packages (keep only if actively used)
-- ~10-20kB in client bundle (minimal useState)
-- One clear pattern: Server Components + Server Actions
+- 3-5 state management packages (remove ONLY if unused)
+- **Preserved** client-side functionality (cost savings)
+- Small bundle reduction (only truly unused libraries)
 
-**Bundle Size:** Expect 40-60kB reduction in first load JS
+**Bundle Size:** Expect 0-20kB reduction (only if libraries truly unused)
+
+**Cost Impact:** **Negative cost impact if we remove used libraries** - would force more expensive server operations
 
 ## Risk Assessment
 
-**Low Risk:**
-- Server Components + Server Actions are the documented architecture
-- CLAUDE.md explicitly says "Server State: React Server Components (no client state)"
-- Static analysis shows clear usage patterns
+**HIGH RISK if we remove used libraries:**
+- Forcing Server Components increases Vercel bills
+- Removing React Query caching increases server requests
+- Removing Zustand increases server re-renders
+- Each server operation costs money
 
-**Medium Risk:**
-- If React Query is used, removing may require alternative caching strategy
+**LOW RISK if we only remove unused:**
+- Static analysis shows clear zero-usage cases
+- Easy to identify libraries with no imports
 
 **Mitigation:**
-- Test all forms after each removal
-- Keep Server Actions intact (they're the replacement)
-- Verify contact form email delivery still works
+- **Only remove if grep shows zero imports**
+- Test all features after removal
+- Keep detailed usage documentation
+- Preserve client-side optimizations
 
 ## Notes
 
-- Next.js 16 Server Components eliminate most client state needs
-- Server Actions replace React Query mutations
-- useActionState (React 19) replaces TanStack Form
-- Simple useState replaces Zustand for local UI state
-- Next.js searchParams replace nuqs for URL state
-- This aligns with CLAUDE.md: "Server-first: Default to Server Components"
+**CRITICAL COST INSIGHTS:**
+- **Server Components cost money** - Vercel charges for compute time
+- **Client Components are free** - Run on user's browser
+- **React Query caching** - Reduces expensive server requests
+- **Zustand client state** - Prevents expensive server re-renders
+- **Client-side table operations** - Free sorting/filtering vs paid server ops
+
+**Decision Framework:**
+1. Does library have ANY imports? → KEEP
+2. Does library enable client-side ops? → KEEP (saves money)
+3. Does library reduce server requests? → KEEP (saves money)
+4. Zero usage confirmed? → Can remove
+
+**Previous assumption was WRONG:** "Server-first" is NOT cost-optimal for Vercel. Client-side state management REDUCES Vercel bills.
+
+**Only remove libraries with confirmed zero usage.** Bias toward keeping client-side functionality.
