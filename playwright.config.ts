@@ -25,11 +25,8 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
+    // Webkit (Safari) - Optional for manual testing
+    // Run with: pnpm test:e2e:cross-browser
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
