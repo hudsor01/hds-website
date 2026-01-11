@@ -1,3 +1,5 @@
+'use client';
+
 import type { ComponentType, SVGProps } from 'react'
 import { cn } from '@/lib/utils'
 

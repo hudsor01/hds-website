@@ -1,3 +1,5 @@
+'use client';
+
 "use client";
 
 import { Star, User } from "lucide-react";

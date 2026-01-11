@@ -1,3 +1,5 @@
+'use client';
+
 import { DollarSign } from 'lucide-react'
 import { COUNTY_FEES } from '../../lib/ttl-calculator/calculator'
 import type { VehicleInputs as VehicleInput } from '../../types/ttl-types'
