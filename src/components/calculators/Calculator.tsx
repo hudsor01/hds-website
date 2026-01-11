@@ -1,7 +1,7 @@
 "use client";
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
-import { JsonLd } from '@/components/JsonLd';
+import { JsonLd } from '@/components/utilities/JsonLd';
 import { logger } from '@/lib/logger';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
@@ -9,9 +9,9 @@ import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { useCalculatorStore } from '@/stores/calculator-store';
 import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types';
-import { ComparisonView } from '../ComparisonView';
+import { ComparisonView } from './ComparisonView';
 import { InputPanel } from '../InputPanel/InputPanel';
-import { ResultsPanel } from '../ResultsPanel';
+import { ResultsPanel } from './ResultsPanel';
 
 export function Calculator() {
   const {

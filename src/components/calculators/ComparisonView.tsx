@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
+import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types'
 import { Card } from '@/components/ui/card';
 
 interface ComparisonViewProps {

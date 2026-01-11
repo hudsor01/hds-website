@@ -4,7 +4,7 @@ import Link from "next/link"
 import { X, ExternalLink, Code2, Sparkles, Star, MessageCircle } from "lucide-react"
 import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { Icon } from "../icon"
+import { Icon } from "../utilities/Icon"
 import { Button } from "./button"
 import { Badge } from "./badge"
 

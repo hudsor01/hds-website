@@ -1,9 +1,9 @@
-import { Analytics } from "@/components/Analytics";
-import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { Analytics } from "@/components/utilities/Analytics";
+import { ErrorBoundary } from "@/components/utilities/ErrorBoundary";
 import Footer from "@/components/layout/Footer";
 import NavbarLight from "@/components/layout/Navbar";
-import ScrollToTop from "@/components/ScrollToTop";
-import { WebVitalsReporting } from "@/components/WebVitalsReporting";
+import ScrollToTop from "@/components/utilities/ScrollToTop";
+import { WebVitalsReporting } from "@/components/utilities/WebVitalsReporting";
 import { env } from "@/env";
 import { generateLocalBusinessSchema, generateOrganizationSchema, generateWebsiteSchema } from "@/lib/seo-utils";
 import ClientProviders from "@/providers/ClientProviders";
