@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Simple Bar Chart Component
  * CSS-based bar chart without external dependencies

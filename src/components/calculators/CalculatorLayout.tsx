@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Calculator Layout Component
  * Provides consistent layout and structure for all calculator tools

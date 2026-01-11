@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Error Stats Component
  * Displays error monitoring metrics using MetricCard

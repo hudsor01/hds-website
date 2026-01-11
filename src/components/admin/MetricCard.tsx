@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Metric Card Component
  * Displays a single KPI metric with trend indicator
