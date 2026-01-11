@@ -6,6 +6,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { Card } from '@/components/ui/card';
@@ -34,7 +35,7 @@ const DEFAULT_PROVIDER = {
   providerCity: 'Dallas',
   providerState: 'TX',
   providerZip: '',
-  providerEmail: 'hello@hudsondigitalsolutions.com',
+  providerEmail: BUSINESS_INFO.email,
 };
 
 const formatDateForInput = (date: Date): string => {

@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
-import { TIMEOUTS } from '@/lib/constants';
+import { TIMEOUTS, BUSINESS_INFO } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Braces, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { logger } from '@/lib/logger';
@@ -120,7 +120,7 @@ export default function JsonFormatterPage() {
       name: "Hudson Digital Solutions",
       services: ["Web Development", "SaaS Consulting", "Digital Marketing"],
       contact: {
-        email: "hello@hudsondigitalsolutions.com",
+        email: BUSINESS_INFO.email,
         location: "Texas, USA"
       },
       stats: {
