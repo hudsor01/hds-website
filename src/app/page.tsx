@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
+import { ROUTES, TOOL_ROUTES } from '@/lib/constants';
 import {
   ArrowRight,
   BarChart3,
@@ -73,13 +74,13 @@ export default function HomePage() {
 
                 <div className="flex flex-col sm:flex-row gap-comfortable">
                   <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href="/contact">
+      <Link href={ROUTES.CONTACT}>
         See Your ROI in 30 Days
         <ArrowRight className="w-4 h-4" />
       </Link>
     </Button>
                   <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href="/portfolio">
+      <Link href={ROUTES.PORTFOLIO}>
         View Case Studies
         <ArrowRight className="w-4 h-4" />
       </Link>
@@ -486,13 +487,13 @@ export default function HomePage() {
 
             <div className="flex flex-col sm:flex-row gap-comfortable justify-center">
               <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href="/contact">
+      <Link href={ROUTES.CONTACT}>
         Get Your Free Roadmap
         <ArrowRight className="w-4 h-4" />
       </Link>
     </Button>
               <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href="/portfolio">
+      <Link href={ROUTES.PORTFOLIO}>
         See Proven Results First
         <ArrowRight className="w-4 h-4" />
       </Link>
