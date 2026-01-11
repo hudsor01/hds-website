@@ -3,7 +3,6 @@
  * CSS-based bar chart without external dependencies
  */
 
-'use client';
 
 import { Card } from '@/components/ui/card';
 

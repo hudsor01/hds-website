@@ -3,7 +3,6 @@
  * Displays error monitoring metrics using MetricCard
  */
 
-'use client';
 
 import { MetricCard } from '@/components/admin/MetricCard';
 import type { ErrorStats } from '@/types/error-logging';

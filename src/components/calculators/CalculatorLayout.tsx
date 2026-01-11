@@ -3,7 +3,6 @@
  * Provides consistent layout and structure for all calculator tools
  */
 
-'use client';
 
 import { type ReactNode } from 'react';
 import Link from 'next/link';
