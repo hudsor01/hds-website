@@ -1,4 +1,4 @@
-import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
+import { BackgroundPattern } from '@/components/ui/BackgroundPattern';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight, BarChart3, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
