@@ -8,6 +8,7 @@
 import { trackEvent } from '@/lib/analytics';
 import { SERVICE_TYPES } from '@/types/testimonials';
 import { Card } from '@/components/ui/card';
+import { API_ENDPOINTS } from '@/lib/constants';
 import { CheckCircle2, Send, Star } from 'lucide-react';
 import { useState } from 'react';
 
@@ -56,7 +57,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
     }
 
     try {
-      const response = await fetch('/api/testimonials/submit', {
+      const response = await fetch(API_ENDPOINTS.TESTIMONIALS_SUBMIT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
