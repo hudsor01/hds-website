@@ -3,6 +3,7 @@
  * Processes and aggregates analytics data from Supabase
  */
 
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import type { Json } from '@/types/database';
@@ -57,8 +58,8 @@ async function enqueueLogProcessing(data: Record<string, unknown>) {
 }
 
 async function createCustomEventsTable() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     logger.error('Supabase environment variables are not configured');
@@ -128,7 +129,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
       logger.warn('Unauthorized cron request')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

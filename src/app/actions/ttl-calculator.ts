@@ -1,5 +1,6 @@
 'use server';
 
+import { env } from '@/env';
 import { BUSINESS_INFO } from '@/lib/constants';
 import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
@@ -11,8 +12,8 @@ import { z } from 'zod';
 type TTLCalculationInsert = Database['public']['Tables']['ttl_calculations']['Insert'];
 
 function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
     logger.error('Supabase environment variables are not configured');
@@ -260,7 +261,7 @@ export async function emailResults(
 
     const inputs = data.inputs as unknown as VehicleInputs;
     const results = data.results as unknown as CalculationResults;
-    const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`;
+    const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`;
 
     // Ensure results have required properties
     const ttl = results.ttlResults || { salesTax: 0, titleFee: 0, registrationFees: 0, totalTTL: 0 };

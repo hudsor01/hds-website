@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { NextResponse, type NextRequest } from 'next/server';
 import { type ZodError } from 'zod';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
@@ -253,7 +254,7 @@ export async function POST(request: NextRequest) {
         }
         
         // Send Discord notification if configured
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
             // Build Discord webhook payload
             const discordPayload = {
@@ -288,7 +289,7 @@ export async function POST(request: NextRequest) {
               });
             } else {
               // Send validated payload
-              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+              const discordResponse = await fetch(env.DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
