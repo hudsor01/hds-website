@@ -14,7 +14,7 @@ import { z } from 'zod';
 type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
 
 const SubscribeSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
   source: z.string().optional(),
 });
 
