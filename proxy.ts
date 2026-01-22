@@ -4,7 +4,7 @@
  * Official docs: https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  *
  * Handles:
- * - Supabase session refresh
+ * - Neon Auth session management
  * - Security headers
  * - Rate limiting
  * - CSRF protection
@@ -13,20 +13,7 @@ import { env } from '@/env'
 import { validateCsrfForMutation } from '@/lib/csrf'
 import { getClientIp, RATE_LIMIT_CONFIGS, unifiedRateLimiter, type RateLimitType } from '@/lib/rate-limiter'
 import { applySecurityHeaders } from '@/lib/security-headers'
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-
-// Validate required environment variables at startup
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY are required')
-}
-
-// Type assertion after validation
-const SUPABASE_URL: string = supabaseUrl
-const SUPABASE_PUBLISHABLE_KEY: string = supabaseAnonKey
 
 // Run on Edge Runtime for minimal overhead
 export const config = {
@@ -43,31 +30,13 @@ export const config = {
 };
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  const response = NextResponse.next({ request });
   const url = request.nextUrl;
   const clientIp = getClientIp(request);
 
-  // Supabase session refresh - must happen early to ensure auth cookies are set
-  const supabase = createServerClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: Array<{ name: string; value: string; options?: CookieOptions }>) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-  // Refresh auth token - this validates and refreshes the session
-  await supabase.auth.getUser();
+  // Note: Neon Auth session management is handled by the SDK automatically
+  // via cookies. The SDK refreshes tokens transparently when needed.
+  // No manual session refresh is required in middleware.
 
   // Generate nonce for CSP
   const nonce = Math.random().toString(36).substring(2, 18);

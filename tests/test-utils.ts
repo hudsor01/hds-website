@@ -153,9 +153,8 @@ export function setupApiMocks() {
   const mockLogger = createMockLogger();
   const mockRateLimiter = createMockRateLimiter();
 
-  // Set environment variables for Supabase
-  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
-  process.env.SUPABASE_PUBLISHABLE_KEY = 'test-service-role-key';
+  // Set environment variables for database
+  process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
 
   mock.module('@/env', () => ({
     env: {
@@ -187,22 +186,32 @@ export function setupApiMocks() {
     applySecurityHeaders: (response: Response) => response,
   }));
 
-  // Mock Supabase client for all API tests
-  mock.module('@supabase/supabase-js', () => ({
-    createClient: mock(() => ({
-      from: mock(() => ({
-        select: mock(() => ({
-          eq: mock(() => ({
-            maybeSingle: mock().mockResolvedValue({ data: null, error: null }),
-            single: mock().mockResolvedValue({ data: null, error: null }),
-          })),
-        })),
-        insert: mock().mockResolvedValue({ error: null }),
-        upsert: mock().mockResolvedValue({ error: null }),
-        update: mock().mockResolvedValue({ error: null }),
-        delete: mock().mockResolvedValue({ error: null }),
-      })),
-    })),
+  // Mock database client for all API tests
+  mock.module('@/lib/db', () => ({
+    db: {
+      select: mock().mockReturnValue({
+        from: mock().mockReturnValue({
+          where: mock().mockReturnValue({
+            limit: mock().mockResolvedValue([]),
+          }),
+          orderBy: mock().mockResolvedValue([]),
+          limit: mock().mockResolvedValue([]),
+        }),
+      }),
+      insert: mock().mockReturnValue({
+        values: mock().mockReturnValue({
+          returning: mock().mockResolvedValue([]),
+        }),
+      }),
+      update: mock().mockReturnValue({
+        set: mock().mockReturnValue({
+          where: mock().mockResolvedValue([]),
+        }),
+      }),
+      delete: mock().mockReturnValue({
+        where: mock().mockResolvedValue([]),
+      }),
+    },
   }));
 
   // Mock Resend client

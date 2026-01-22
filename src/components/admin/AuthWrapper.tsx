@@ -1,11 +1,10 @@
 /**
  * Authentication Wrapper for Admin Dashboard
- * Uses Supabase Auth for session-based access control
+ * Uses Neon Auth for session-based access control
  */
 
 'use client'
 
-import type { User } from '@supabase/supabase-js'
 import { Lock, Mail } from 'lucide-react'
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 
@@ -19,7 +18,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { createClient } from '@/lib/supabase/client'
+import { authClient } from '@/lib/auth/client'
 import { logger } from '@/lib/logger'
 
 interface AuthWrapperProps {
@@ -27,80 +26,53 @@ interface AuthWrapperProps {
 }
 
 export function AuthWrapper({ children }: AuthWrapperProps) {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data, isPending, error } = authClient.useSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [authError, setAuthError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const supabase = createClient()
-
+  // Reset form on auth error
   useEffect(() => {
-    // During SSG/build, supabase client may be null
-    if (!supabase) {
-      setLoading(false)
-      return
+    if (error) {
+      logger.error('Auth session error', { error: error.message })
     }
-
-    let isMounted = true
-
-    const init = async () => {
-      const { data } = await supabase.auth.getUser()
-      if (!isMounted) {return}
-      setUser(data.user)
-      setLoading(false)
-    }
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!isMounted) {return}
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    init()
-
-    return () => {
-      isMounted = false
-      authListener.subscription.unsubscribe()
-    }
-  }, [supabase])
+  }, [error])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!supabase) {
-      setError('Authentication not available')
-      return
-    }
-    setError('')
+    setAuthError('')
     setIsSubmitting(true)
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const result = await authClient.signIn.email({
         email,
         password,
       })
 
-      if (signInError) {
-        setError(signInError.message)
+      if (result.error) {
+        setAuthError(result.error.message || 'Sign in failed')
         setPassword('')
       }
-    } catch (error) {
-      logger.error('Authentication failed', { error });
-      setError('An unexpected error occurred')
+    } catch (err) {
+      logger.error('Authentication failed', { error: err })
+      setAuthError('An unexpected error occurred')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleLogout = async () => {
-    if (!supabase) {return}
-    await supabase.auth.signOut()
-    setEmail('')
-    setPassword('')
+    try {
+      await authClient.signOut()
+      setEmail('')
+      setPassword('')
+    } catch (err) {
+      logger.error('Sign out failed', { error: err })
+    }
   }
 
-  if (loading) {
+  if (isPending) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
         <p className="text-muted-foreground">Checking session…</p>
@@ -108,7 +80,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     )
   }
 
-  if (!user) {
+  if (!data?.session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted dark:bg-background">
         <div className="w-full max-w-md">
@@ -153,8 +125,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
                   />
                 </div>
 
-                {error && (
-                  <p className="text-sm text-destructive-dark dark:text-destructive-text">{error}</p>
+                {authError && (
+                  <p className="text-sm text-destructive-dark dark:text-destructive-text">{authError}</p>
                 )}
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
@@ -163,7 +135,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
               </form>
 
               <p className="mt-content-block text-center text-xs text-muted-foreground">
-                Use your Supabase credentials to sign in
+                Use your credentials to sign in
               </p>
             </CardContent>
           </Card>
@@ -175,7 +147,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   return (
     <div>
       <div className="fixed right-4 top-4 z-modal flex items-center gap-3">
-        <span className="text-sm text-muted-foreground">{user.email}</span>
+        <span className="text-sm text-muted-foreground">{data.user.email}</span>
         <Button variant="secondary" onClick={handleLogout}>
           Logout
         </Button>
