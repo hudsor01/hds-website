@@ -102,6 +102,26 @@ GlobalRegistrator.register();
 // Set IS_REACT_ACT_ENVIRONMENT for React 19 Testing Library compatibility
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
+// Prevent @testing-library/react from trying to use Jest fake timers
+// RTL's jestFakeTimersAreEnabled() checks:
+// 1. setTimeout._isMockFunction === true (legacy timers)
+// 2. Object.prototype.hasOwnProperty.call(setTimeout, 'clock') (modern timers)
+// We ensure these properties don't exist or are false on setTimeout
+function disableJestFakeTimerDetection() {
+  // Remove _isMockFunction property if it exists (legacy timer indicator)
+  if ('_isMockFunction' in setTimeout) {
+    delete (setTimeout as { _isMockFunction?: boolean })._isMockFunction;
+  }
+
+  // Remove 'clock' property if it exists (modern timer indicator)
+  if ('clock' in setTimeout) {
+    delete (setTimeout as { clock?: unknown }).clock;
+  }
+}
+
+// Apply timer detection fix immediately on setup
+disableJestFakeTimerDetection();
+
 // Mock fetch globally to prevent network requests during tests
 const mockResponse: Response = {
   ok: true,
@@ -132,6 +152,8 @@ beforeEach(() => {
   // Re-apply critical mocks that must persist across tests
   setupEnvMock();
   setupLoggerMock();
+  // Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
+  disableJestFakeTimerDetection();
 });
 
 afterEach(() => {
