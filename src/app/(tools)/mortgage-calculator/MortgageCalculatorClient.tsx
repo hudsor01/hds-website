@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
+import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/analytics';
 
 interface MortgageInputs {
@@ -262,28 +263,24 @@ export function MortgageCalculatorClient() {
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-foreground">Down Payment</label>
               <div className="flex items-center gap-tight">
-                <button
+                <Button
                   type="button"
                   onClick={() => setUsePercent(true)}
-                  className={`px-2 py-1 text-xs rounded ${
-                    usePercent
-                      ? 'bg-primary text-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
+                  variant={usePercent ? 'default' : 'muted'}
+                  size="sm"
+                  className="px-2 text-xs"
                 >
                   %
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   onClick={() => setUsePercent(false)}
-                  className={`px-2 py-1 text-xs rounded ${
-                    !usePercent
-                      ? 'bg-primary text-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
+                  variant={!usePercent ? 'default' : 'muted'}
+                  size="sm"
+                  className="px-2 text-xs"
                 >
                   $
-                </button>
+                </Button>
               </div>
             </div>
             {usePercent ? (
@@ -413,12 +410,9 @@ export function MortgageCalculatorClient() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
-          >
+          <Button type="submit" variant="default" className="w-full">
             Calculate Payment
-          </button>
+          </Button>
         </form>
       ) : (
         <div>
@@ -428,7 +422,8 @@ export function MortgageCalculatorClient() {
             inputs={inputs}
           />
 
-          <button
+          <Button
+            type="button"
             onClick={() => {
               setShowResults(false);
               setHomePrice(350000);
@@ -441,10 +436,11 @@ export function MortgageCalculatorClient() {
               setPmi(0);
               setHoaFees(0);
             }}
-            className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-muted-foreground"
+            variant="muted"
+            className="mt-content-block w-full"
           >
             Recalculate
-          </button>
+          </Button>
         </div>
       )}
     </>

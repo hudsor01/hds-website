@@ -121,9 +121,11 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
             </div>
 
             {/* Mobile menu button */}
-            <button
+            <Button
               type="button"
-              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring"
+              variant="ghost"
+              size="icon"
+              className="md:hidden relative text-muted-foreground"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -137,7 +139,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               ) : (
                 <Menu className="block h-6 w-6" />
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

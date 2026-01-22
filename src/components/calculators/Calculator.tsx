@@ -2,6 +2,7 @@
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
 import { JsonLd } from '@/components/JsonLd';
+import { Button } from '@/components/ui/button';
 import { logger } from '@/lib/logger';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
@@ -265,13 +266,15 @@ export function Calculator() {
                   value={shareCode ? `${window.location.origin}${window.location.pathname}?c=${shareCode}` : ''}
                   className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm text-foreground border border-border"
                 />
-                <button
+                <Button
+                  type="button"
                   onClick={copyShareLink}
-                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                  variant="default"
+                  size="icon"
                   aria-label="Copy link"
                 >
                   <Copy className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-1">This link will work for 90 days</p>
             </div>
@@ -289,35 +292,40 @@ export function Calculator() {
                   onChange={(e) => setEmailInput(e.target.value)}
                   className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
-                <button
+                <Button
+                  type="button"
                   onClick={handleEmailResults}
                   disabled={isPending || !emailInput}
-                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  variant="default"
+                  size="icon"
                   aria-label="Send email"
                 >
                   <Mail className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Print Button */}
             <div className="flex gap-3">
-              <button
+              <Button
+                type="button"
                 onClick={() => {
                   setShowShareModal(false);
                   setTimeout(handlePrintPDF, 100);
                 }}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
+                variant="muted"
+                className="flex-1"
               >
                 <Printer className="w-4 h-4" />
                 Print Results
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
                 onClick={() => setShowShareModal(false)}
-                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                variant="ghost"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>

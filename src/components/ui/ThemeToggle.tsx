@@ -2,16 +2,20 @@
 
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <button
+    <Button
+      type="button"
       suppressHydrationWarning
 
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="relative w-10 h-10 flex-center rounded-lg bg-muted/50 border border-border/50 hover:bg-muted/50 hover:border-primary/30 transition-all duration-150"
+      variant="outline"
+      size="icon-lg"
+      className="relative bg-muted/50 border-border/50 hover:bg-muted/50 hover:border-primary/30"
       aria-label={`Switch theme to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       title={`Switch theme to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
@@ -20,6 +24,6 @@ export function ThemeToggle() {
       ) : (
         <Moon suppressHydrationWarning className="w-5 h-5 text-cyan-400" />
       )}
-    </button>
+    </Button>
   );
 }

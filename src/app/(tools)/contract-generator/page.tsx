@@ -8,6 +8,7 @@
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { trackEvent } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
@@ -243,19 +244,20 @@ export default function ContractGeneratorPage() {
           </h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {TEMPLATES.map((template) => (
-              <button
+              <Button
                 key={template.value}
                 type="button"
                 onClick={() => handleTemplateChange(template.value)}
-                className={`p-4 rounded-lg border text-left transition-colors ${
+                variant="outline"
+                className={`h-auto w-full items-start justify-start p-4 text-left ${
                   contractData.template === template.value
                     ? 'border-primary bg-accent/10 dark:bg-primary-hover/20'
-                    : 'border-border hover:border-accent hover:bg-muted/50'
+                    : 'hover:border-accent hover:bg-muted/50'
                 }`}
               >
                 <div className="font-semibold text-foreground">{template.label}</div>
                 <div className="text-xs text-muted-foreground mt-1">{template.description}</div>
-              </button>
+              </Button>
             ))}
           </div>
         </section>
@@ -490,32 +492,33 @@ export default function ContractGeneratorPage() {
 
         {/* Actions */}
         <section className="flex flex-wrap gap-3 pt-4">
-          <button
+          <Button
             type="button"
             onClick={saveDraft}
-            className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+            variant="outline"
+            className="bg-card"
           >
             <Save className="w-4 h-4" />
             Save Draft
-          </button>
+          </Button>
 
           {hasDraft && (
-            <button
+            <Button
               type="button"
               onClick={clearDraft}
-              className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+              variant="muted"
             >
               <RotateCcw className="w-4 h-4" />
               Clear Draft
-            </button>
+            </Button>
           )}
 
           {isHydrated && isValid && (
-            <button
+            <Button
               type="button"
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="default"
             >
               {isDownloading ? (
                 'Generating PDF...'
@@ -525,7 +528,7 @@ export default function ContractGeneratorPage() {
                   Download PDF
                 </>
               )}
-            </button>
+            </Button>
           )}
 
           {!isValid && (
