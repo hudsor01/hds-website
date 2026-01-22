@@ -36,14 +36,16 @@
 - Patterns: Pure functions, immutable data, explicit error handling
 
 **3. Data Access Layer**
-- Location: `src/utils/supabase/`, `src/lib/supabase.ts`
+- Location: `src/lib/db.ts`, `src/lib/schema/`
 - Responsibility: Database queries, authentication, external data
-- Supabase Clients:
-  - Server: `src/utils/supabase/server.ts` (Server Components with cookie handling)
-  - Browser: `src/utils/supabase/client.ts` (Client Components with SSR support)
-  - Admin: `src/lib/supabase.ts` (service role for public data, background jobs)
+- Drizzle ORM:
+  - Database Client: `src/lib/db.ts` (Drizzle client for all queries)
+  - Schema: `src/lib/schema/` (type-safe table definitions)
+- Auth Clients:
+  - Browser: `src/lib/auth/client.ts` (Neon Auth for client components)
+  - Server: `src/lib/auth/server.ts` (Neon Auth for server components)
 - Patterns: Repository pattern for data access, row-level security enforcement
-- Queries: Direct Supabase queries, no ORM
+- Queries: Type-safe Drizzle ORM queries
 
 **4. Integration Layer**
 - Location: `src/lib/email/`, `src/lib/pdf/`, `src/app/api/`
@@ -56,8 +58,8 @@
 **5. Infrastructure Layer**
 - Location: Middleware, configuration files, environment setup
 - Responsibility: Cross-cutting concerns, app initialization
-- Middleware: `src/middleware.ts` (auth refresh, request logging)
-- Auth Middleware: `src/lib/supabase/middleware.ts` (session management)
+- Proxy: `proxy.ts` (security headers, rate limiting, CSRF)
+- Auth: Neon Auth SDK handles session management automatically
 - Environment: `src/env.ts` (type-safe config validation)
 - Logging: `src/lib/logger.ts` (unified logging interface)
 - SEO: `src/lib/seo-utils.ts` (structured data, metadata)
@@ -66,14 +68,14 @@
 
 **Request Lifecycle:**
 
-1. **Incoming Request** → `src/middleware.ts`
-   - Auth session refresh via `src/lib/supabase/middleware.ts`
-   - Request logging preparation
+1. **Incoming Request** → `proxy.ts`
+   - Auth session refresh handled by Neon Auth SDK
+   - Security headers and rate limiting applied
    - Continues to page/route handler
 
 2. **Server Component Render** → `src/app/**/*.tsx`
    - Executes server-side data fetching
-   - Queries Supabase via `src/utils/supabase/server.ts`
+   - Queries Neon via Drizzle ORM (`src/lib/db.ts`)
    - Transforms data with utilities from `src/lib/`
    - Renders to HTML stream
 
@@ -85,7 +87,7 @@
 4. **Form Submission** → Server Actions
    - Client component calls Server Action from `src/app/actions/`
    - Server validates with Zod schema from `src/lib/schemas/`
-   - Server Action mutates data via Supabase
+   - Server Action mutates data via Drizzle ORM
    - Returns typed state object to client
    - Client updates UI based on response
 
@@ -125,11 +127,10 @@
 - All errors logged with context for debugging
 
 **Authentication Pattern:**
-- Middleware: `src/lib/supabase/middleware.ts` refreshes sessions
-- Server: `src/utils/supabase/server.ts` for auth checks in Server Components
-- Client: `src/utils/supabase/client.ts` for client-side auth UI
-- Protection: Middleware redirects unauthenticated users
-- Session: Cookie-based with automatic refresh
+- Server: `src/lib/auth/server.ts` for auth checks in Server Components
+- Client: `src/lib/auth/client.ts` for client-side auth UI
+- Admin: `src/lib/admin-auth.ts` for protected admin routes
+- Session: Cookie-based with automatic Neon Auth SDK refresh
 
 **Layout Composition:**
 - Root: `src/app/layout.tsx` (metadata, providers, global layout)
@@ -141,7 +142,7 @@
 
 **Application Bootstrap:**
 - `src/app/layout.tsx` - Root layout, metadata, providers, analytics
-- `src/middleware.ts` - Request interception for auth and logging
+- `proxy.ts` - Request interception for security and rate limiting
 - `src/env.ts` - Environment validation on startup
 
 **Page Entry Points:**
@@ -150,7 +151,7 @@
 - `src/app/api/**/*.ts` - API route handlers
 
 **Service Initialization:**
-- `src/lib/supabase.ts` - Singleton Supabase client export
+- `src/lib/db.ts` - Singleton Drizzle client export
 - `src/lib/logger.ts` - Logger instance export
 - `src/lib/rate-limiter.ts` - Rate limiter initialization
 
@@ -160,7 +161,7 @@
 - `src/app/` - Next.js routing and pages (framework layer)
 - `src/components/` - Reusable UI components (presentation layer)
 - `src/lib/` - Business logic and utilities (domain layer)
-- `src/utils/` - Framework integrations (Supabase clients)
+- `src/lib/schema/` - Drizzle schema definitions
 - `src/types/` - TypeScript type definitions (shared types)
 
 **Import Rules:**

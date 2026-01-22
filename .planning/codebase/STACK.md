@@ -42,8 +42,9 @@
 ## Key Dependencies
 
 **Critical:**
-- @supabase/supabase-js 2.90.1 - Database and authentication (`package.json`)
-- @supabase/ssr 0.8.0 - Server-side rendering for Supabase auth (`package.json`)
+- drizzle-orm 0.44.2 - Type-safe SQL ORM (`package.json`)
+- @neondatabase/serverless - Neon PostgreSQL driver (`package.json`)
+- Neon Auth - Authentication via `@/lib/auth/client` and `@/lib/auth/server`
 - Zod 4.1.13 - Runtime validation and type inference (`package.json`)
 - Resend 6.6.0 - Email delivery service (`package.json`)
 

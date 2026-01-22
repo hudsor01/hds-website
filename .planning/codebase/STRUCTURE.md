@@ -27,17 +27,15 @@ business-website/
 │   │   ├── email/             # Email integration (Resend)
 │   │   ├── pdf/               # PDF generation (Puppeteer)
 │   │   ├── schemas/           # Zod validation schemas
-│   │   ├── supabase/          # Supabase middleware
+│   │   ├── schema/            # Drizzle ORM schema definitions
+│   │   ├── auth/              # Neon Auth client utilities
 │   │   ├── analytics.ts       # Analytics wrapper
 │   │   ├── logger.ts          # Logging utility
 │   │   ├── rate-limiter.ts    # Rate limiting (Vercel KV)
 │   │   └── seo-utils.ts       # SEO helpers, structured data
 │   ├── types/                 # TypeScript type definitions
 │   ├── utils/                 # Framework-specific utilities
-│   │   ├── errors.ts          # Error handling helpers
-│   │   └── supabase/          # Supabase client creation
-│   │       ├── client.ts      # Browser client (SSR)
-│   │       └── server.ts      # Server client (Server Components)
+│   │   └── errors.ts          # Error handling helpers
 │   └── env.ts                 # Environment variable validation
 ├── public/                    # Static assets (images, fonts, icons)
 ├── tests/                     # Unit tests (Vitest)
@@ -98,7 +96,9 @@ business-website/
 - `lib/schemas/` - Zod validation schemas (domain-specific)
 - `lib/email/` - Email service integration
 - `lib/pdf/` - PDF generation utilities
-- `lib/supabase/` - Supabase middleware
+- `lib/schema/` - Drizzle ORM schema definitions
+- `lib/auth/` - Neon Auth client utilities
+- `lib/db.ts` - Drizzle database client
 - Root `lib/` - General utilities (logger, analytics, SEO)
 
 **Type Organization:**

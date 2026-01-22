@@ -184,8 +184,8 @@ export const handlers = [
     })
   }),
 
-  // Supabase Webhook
-  http.post(`${BASE_URL}/api/webhooks/supabase`, async ({ request }) => {
+  // Database Webhook
+  http.post(`${BASE_URL}/api/webhooks/database`, async ({ request }) => {
     const authHeader = request.headers.get('authorization')
 
     if (!authHeader) {
