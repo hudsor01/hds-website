@@ -192,15 +192,14 @@ Code must be written for human understanding first, performance second. No cleve
 - HTML emails with proper headers
 - Error handling with logger.error
 
-**Supabase (Database):**
-Choose the right client based on your use case:
-- `@/utils/supabase/server` - SSR client for authenticated operations (Server Components needing user context)
-- `@/utils/supabase/client` - SSR client for authenticated client components
-- `@/lib/supabase` exports:
-  - `supabase` - Singleton for public data fetching (testimonials, case studies, etc.)
-  - `supabaseAdmin` - Service role for admin API routes and background jobs
-- Environment vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
-- Always check for errors in response
+**Neon (Database with Drizzle ORM):**
+- `@/lib/db` - Drizzle ORM client for all database operations
+- `@/lib/schema` - Drizzle schema definitions with type exports
+- `@/lib/auth/client` - Neon Auth client for browser authentication
+- `@/lib/auth/server` - Neon Auth server utilities
+- Environment vars: DATABASE_URL, NEON_AUTH_BASE_URL
+- Use Drizzle query syntax: `db.select().from(table).where(eq(column, value))`
+- Schema uses camelCase (maps to snake_case columns automatically)
 - Log database errors, return user-friendly messages
 
 

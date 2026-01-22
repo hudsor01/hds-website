@@ -6,7 +6,7 @@ info:
 
     ## Authentication
     - Public endpoints: No authentication required
-    - Admin endpoints: Require Supabase Auth session
+    - Admin endpoints: Require Neon Auth session
     - All mutating endpoints require CSRF token in `X-CSRF-Token` header
 
     ## Rate Limiting
@@ -403,7 +403,6 @@ paths:
       description: Returns dashboard analytics overview (requires auth)
       operationId: getAnalyticsOverview
       security:
-        - supabaseAuth: []
       responses:
         '200':
           description: Analytics overview data
@@ -420,7 +419,6 @@ paths:
       description: Returns lead analytics data (requires auth)
       operationId: getLeadsAnalytics
       security:
-        - supabaseAuth: []
       responses:
         '200':
           description: Leads analytics data
@@ -428,7 +426,6 @@ paths:
           description: Not authenticated
         '403':
           description: Not authorized
-
   /admin/leads/{id}/notes:
     get:
       tags:
@@ -437,7 +434,6 @@ paths:
       description: Returns notes for a specific lead (requires auth)
       operationId: getLeadNotes
       security:
-        - supabaseAuth: []
       parameters:
         - name: id
           in: path
@@ -458,7 +454,6 @@ paths:
       description: Adds a note to a lead (requires auth)
       operationId: addLeadNote
       security:
-        - supabaseAuth: []
       parameters:
         - name: id
           in: path
@@ -484,11 +479,11 @@ paths:
 
 components:
   securitySchemes:
-    supabaseAuth:
+    neonAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Supabase Auth JWT token
+      description: Neon Auth JWT token
 
   schemas:
     HealthResponse:

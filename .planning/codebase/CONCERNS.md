@@ -52,10 +52,10 @@
 - Recommendations: Apply rate limiting to all public endpoints and form submissions
 
 **Client-side data access patterns:**
-- Risk: Direct Supabase queries from client components bypass RLS if not configured
-- Current mitigation: RLS policies assumed configured in Supabase dashboard
-- Files: Components using `src/utils/supabase/client.ts`
-- Recommendations: Prefer Server Actions for mutations, document RLS policies
+- Risk: Direct database queries from client components bypass RLS if not configured
+- Current mitigation: RLS policies configured in database
+- Files: API routes and Server Actions handle all data mutations
+- Recommendations: Prefer Server Actions for mutations, maintain RLS policies
 
 ## Performance Bottlenecks
 
@@ -81,7 +81,7 @@
 ## Fragile Areas
 
 **Middleware execution order:**
-- File: `src/middleware.ts`, `src/lib/supabase/middleware.ts`
+- File: `proxy.ts` (Next.js 16 proxy)
 - Why fragile: Auth session refresh must happen before route handlers
 - Common failures: Stale sessions if middleware doesn't run, redirect loops
 - Safe modification: Test auth flows after any middleware changes
@@ -95,7 +95,7 @@
 - Test coverage: No unit tests for env validation (relies on Zod runtime checks)
 
 **Third-party API integrations:**
-- Files: `src/lib/email/` (Resend), Supabase clients
+- Files: `src/lib/email/` (Resend), `src/lib/db.ts` (Drizzle/Neon)
 - Why fragile: External service downtime breaks features
 - Common failures: Email sending fails, database queries timeout
 - Safe modification: Always wrap in try/catch, return user-friendly errors
@@ -109,11 +109,11 @@
 - Symptoms at limit: 504 timeouts, 429 rate limits from platform
 - Scaling path: Upgrade to Pro plan ($20/mo), optimize bundle size
 
-**Supabase Free Tier:**
-- Current capacity: Database size, storage, bandwidth limits
-- Limit: 500MB database, 1GB file storage, 2GB bandwidth/month (estimates)
-- Symptoms at limit: Database writes fail, file uploads rejected
-- Scaling path: Upgrade to Supabase Pro ($25/mo)
+**Neon Free Tier:**
+- Current capacity: Database size, compute limits
+- Limit: 0.5GB storage, 10 branches, 191 compute hours/month
+- Symptoms at limit: Database writes fail, compute suspended
+- Scaling path: Upgrade to Neon Pro ($19/mo) or Scale ($69/mo)
 
 **Client-side state management:**
 - Current capacity: Simple useState and useActionState patterns
@@ -173,7 +173,7 @@
 - What's not tested: Error handling in Server Actions
 - Risk: Uncaught errors, poor error messages to users
 - Priority: High
-- Difficulty to test: Medium (need to mock Supabase, Resend failures)
+- Difficulty to test: Medium (need to mock Drizzle, Resend failures)
 
 **Middleware edge cases:**
 - What's not tested: Auth refresh failures, redirect logic, session expiry
