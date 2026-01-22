@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import { createServerLogger } from '@/lib/logger';
 
 export default function GlobalError({
@@ -136,36 +137,16 @@ export default function GlobalError({
               justifyContent: 'center',
               flexWrap: 'wrap',
             }}>
-              <button
-                onClick={reset}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#06b6d4',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                }}
-              >
+              <Button type="button" onClick={reset} variant="default">
                 Try again
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
                 onClick={() => window.location.href = '/'}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#e5e7eb',
-                  color: '#111827',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                }}
+                variant="muted"
               >
                 Go home
-              </button>
+              </Button>
             </div>
 
             <div style={{

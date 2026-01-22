@@ -1,5 +1,7 @@
 import { FileText } from 'lucide-react'
 import React from 'react'
+import { FileText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
@@ -38,26 +40,15 @@ export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({ employeeDa
         right: '0',
         zIndex: 1000
       }}>
-        <button
+        <Button
+          type="button"
           onClick={handleSaveAsPDF}
-          style={{
-            backgroundColor: '#059669',
-            color: 'white',
-            border: 'none',
-            padding: '12px 24px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            transition: 'background-color 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#047857'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#059669'}
+          variant="success"
+          className="shadow-xs"
         >
-          <FileText className="inline-block w-4 h-4 mr-2" />
+          <FileText className="w-4 h-4" />
           Save as PDF
-        </button>
+        </Button>
       </div>
 
       <div style={{

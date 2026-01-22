@@ -1,6 +1,8 @@
 import { X } from 'lucide-react'
+import { X } from 'lucide-react'
 import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
 interface ComparisonViewProps {
   comparisonVehicles: Array<{
@@ -24,12 +26,16 @@ export function ComparisonView({
     <Card className="mb-content-block">
       <div className="flex items-center justify-between mb-heading">
         <h2 className="text-xl font-semibold text-foreground">Compare Vehicles</h2>
-        <button
+        <Button
+          type="button"
           onClick={() => setComparisonMode(false)}
-          className="text-muted-foreground hover:text-muted-foreground transition-colors"
+          variant="ghost"
+          size="icon-sm"
+          className="text-muted-foreground"
+          aria-label="Close comparison"
         >
           <X className="w-5 h-5" />
-        </button>
+        </Button>
       </div>
 
       <div className="overflow-x-auto">
@@ -61,12 +67,16 @@ export function ComparisonView({
                 <td className="py-3 px-3 text-right font-semibold">${vehicle.ttl.totalTTL.toFixed(2)}</td>
                 <td className="py-3 px-3 text-right">${vehicle.payment.monthlyPayment.toFixed(2)}</td>
                 <td className="py-3 px-3 text-right">
-                <button
+                <Button
+                  type="button"
                   onClick={() => removeFromComparison(index)}
-                  className="text-destructive hover:text-destructive-darker transition-colors"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-destructive hover:text-destructive-darker"
+                  aria-label={`Remove ${vehicle.name} from comparison`}
                 >
                   <X className="w-4 h-4" />
-                </button>
+                </Button>
                 </td>
               </tr>
             ))}
@@ -75,12 +85,9 @@ export function ComparisonView({
       </div>
 
       <div className="flex gap-tight mt-4">
-        <button
-          onClick={clearComparison}
-          className="px-4 py-2 bg-destructive text-foreground rounded-lg hover:bg-destructive-dark transition-colors"
-        >
+        <Button type="button" onClick={clearComparison} variant="destructive" size="sm">
           Clear All
-        </button>
+        </Button>
       </div>
     </Card>
   );

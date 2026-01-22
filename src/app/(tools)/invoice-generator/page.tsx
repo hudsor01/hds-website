@@ -6,6 +6,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -505,14 +506,16 @@ export default function InvoiceGeneratorPage() {
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Line Items
             </h2>
-            <button
+            <Button
               type="button"
               onClick={addLineItem}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+              variant="link"
+              size="sm"
+              className="px-0"
             >
               <Plus className="w-4 h-4" />
               Add Item
-            </button>
+            </Button>
           </div>
 
           {/* Table Header */}
@@ -573,15 +576,17 @@ export default function InvoiceGeneratorPage() {
                 </div>
               </div>
               <div className="sm:col-span-1 flex justify-end">
-                <button
+                <Button
                   type="button"
                   onClick={() => removeLineItem(item.id)}
                   disabled={invoiceData.lineItems.length === 1}
-                  className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30 disabled:cursor-not-allowed"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-muted-foreground hover:text-destructive"
                   aria-label="Remove line item"
                 >
                   <Trash2 className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
           ))}
@@ -644,32 +649,33 @@ export default function InvoiceGeneratorPage() {
 
         {/* Actions */}
         <section className="flex flex-wrap gap-3 pt-4">
-          <button
+          <Button
             type="button"
             onClick={saveDraft}
-            className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+            variant="outline"
+            className="bg-card"
           >
             <Save className="w-4 h-4" />
             Save Draft
-          </button>
+          </Button>
 
           {hasDraft && (
-            <button
+            <Button
               type="button"
               onClick={clearDraft}
-              className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+              variant="muted"
             >
               <RotateCcw className="w-4 h-4" />
               Clear Draft
-            </button>
+            </Button>
           )}
 
           {isHydrated && isValid && (
-            <button
+            <Button
               type="button"
               onClick={handleDownloadPDF}
               disabled={isDownloading}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="default"
             >
               {isDownloading ? (
                 'Generating PDF...'
@@ -679,7 +685,7 @@ export default function InvoiceGeneratorPage() {
                   Download PDF
                 </>
               )}
-            </button>
+            </Button>
           )}
 
           {!isValid && (

@@ -62,30 +62,15 @@ export default function NotFound() {
         <div className="mt-16">
           <h3 className="text-lg font-semibold text-muted-foreground mb-content-block">Or explore these sections:</h3>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/services" passHref>
-              <button
-                type="button"
-                className="text-accent font-medium hover:text-secondary-300 transition-colors"
-              >
-                Services
-              </button>
-            </Link>
-            <Link href="/about" passHref>
-              <button
-                type="button"
-                className="text-success-text font-medium hover:text-accent-300 transition-colors"
-              >
-                About
-              </button>
-            </Link>
-            <Link href="/portfolio" passHref>
-              <button
-                type="button"
-                className="text-orange-text font-medium hover:text-warning-muted transition-colors"
-              >
-                Portfolio
-              </button>
-            </Link>
+            <Button asChild variant="link" size="sm" className="px-0">
+              <Link href="/services">Services</Link>
+            </Button>
+            <Button asChild variant="link" size="sm" className="px-0">
+              <Link href="/about">About</Link>
+            </Button>
+            <Button asChild variant="link" size="sm" className="px-0">
+              <Link href="/portfolio">Portfolio</Link>
+            </Button>
           </div>
         </div>
         {/* Background Elements */}

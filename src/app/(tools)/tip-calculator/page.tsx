@@ -6,6 +6,7 @@
 'use client';
 
   import { useState, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -117,30 +118,26 @@ export default function TipCalculatorPage() {
 
           <div className="grid grid-cols-5 gap-tight">
             {TIP_PRESETS.map((preset) => (
-              <button
+              <Button
                 key={preset.value}
                 type="button"
                 onClick={() => selectTipPreset(preset.value)}
-                className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
-                  !useCustomTip && inputs.tipPercent === preset.value
-                    ? 'bg-primary text-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                }`}
+                variant={!useCustomTip && inputs.tipPercent === preset.value ? 'default' : 'muted'}
+                size="sm"
+                className="w-full text-sm font-semibold"
               >
                 {preset.label}
-              </button>
+              </Button>
             ))}
-            <button
+            <Button
               type="button"
               onClick={enableCustomTip}
-              className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
-                useCustomTip
-                  ? 'bg-primary text-foreground'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
-              }`}
+              variant={useCustomTip ? 'default' : 'muted'}
+              size="sm"
+              className="w-full text-sm font-semibold"
             >
               Custom
-            </button>
+            </Button>
           </div>
 
           {useCustomTip && (
@@ -167,28 +164,32 @@ export default function TipCalculatorPage() {
           </label>
 
           <div className="flex items-center gap-content">
-            <button
+            <Button
               type="button"
               onClick={() => setInputs(prev => ({ ...prev, splitCount: Math.max(1, prev.splitCount - 1) }))}
-              className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold"
+              variant="muted"
+              size="icon-lg"
+              className="size-12 text-xl font-bold"
               disabled={inputs.splitCount <= 1}
             >
               -
-            </button>
+            </Button>
             <div className="flex-1 text-center">
               <div className="text-3xl font-bold text-foreground">{inputs.splitCount}</div>
               <div className="text-sm text-muted-foreground">
                 {inputs.splitCount === 1 ? 'person' : 'people'}
               </div>
             </div>
-            <button
+            <Button
               type="button"
               onClick={() => setInputs(prev => ({ ...prev, splitCount: Math.min(20, prev.splitCount + 1) }))}
-              className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold"
+              variant="muted"
+              size="icon-lg"
+              className="size-12 text-xl font-bold"
               disabled={inputs.splitCount >= 20}
             >
               +
-            </button>
+            </Button>
           </div>
         </div>
 

@@ -33,24 +33,31 @@ interface CopyButtonProps {
 function CopyButton({ copied, onClick, variant }: CopyButtonProps) {
   if (variant === 'icon') {
     return (
-      <button
+      <Button
+        type="button"
         onClick={onClick}
-        className="ml-2 p-1 hover:bg-danger/20 rounded transition-colors"
+        variant="ghost"
+        size="icon-sm"
+        className="ml-2"
         title="Copy error details"
+        aria-label="Copy error details"
       >
         {copied ? (
           <Check className="w-4 h-4 text-success" />
         ) : (
           <Clipboard className="w-4 h-4 text-muted-foreground" />
         )}
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
+      type="button"
       onClick={onClick}
-      className="flex items-center gap-tight text-xs link-primary py-1"
+      variant="link"
+      size="sm"
+      className="h-auto px-0 text-xs"
     >
       {copied ? (
         <>
@@ -63,7 +70,7 @@ function CopyButton({ copied, onClick, variant }: CopyButtonProps) {
           Copy Error Details
         </>
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -160,13 +167,16 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
                 </pre>
                 <div className="mt-3 pt-3 border-t border-danger/20 flex flex-col sm:flex-row gap-tight">
                   <CopyButton copied={copied} onClick={copyErrorDetails} variant="text" />
-                  <button
+                  <Button
+                    type="button"
                     onClick={reportError}
-                    className="flex items-center gap-tight text-xs link-primary py-1"
+                    variant="link"
+                    size="sm"
+                    className="h-auto px-0 text-xs"
                   >
                     <AlertTriangle className="w-3 h-3" />
                     Report Error
-                  </button>
+                  </Button>
                 </div>
               </div>
             </details>
@@ -270,12 +280,15 @@ export function ComponentErrorBoundary({
           <p className="text-sm text-warning dark:text-warning">
             Failed to load {name}
           </p>
-          <button
+          <Button
+            type="button"
             onClick={resetErrorBoundary}
-            className="mt-2 text-xs text-warning hover:text-warning dark:text-warning dark:hover:text-warning link-hover"
+            variant="link"
+            size="sm"
+            className="mt-2 h-auto px-0 text-xs text-warning hover:text-warning"
           >
             Retry
-          </button>
+          </Button>
         </div>
       )}
     >
