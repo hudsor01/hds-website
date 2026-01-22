@@ -94,7 +94,7 @@ export const storageChangePayloadSchema = z.object({
   owner: z.string().uuid().optional(),
 });
 
-export const supabaseWebhookSchema = z.object({
+export const databaseWebhookSchema = z.object({
   type: z.enum(['db_change', 'auth_change', 'storage_change']),
   payload: z.union([
     databaseChangePayloadSchema,
@@ -107,7 +107,7 @@ export type WebhookSignature = z.infer<typeof webhookSignatureSchema>;
 export type DatabaseChangePayload = z.infer<typeof databaseChangePayloadSchema>;
 export type AuthChangePayload = z.infer<typeof authChangePayloadSchema>;
 export type StorageChangePayload = z.infer<typeof storageChangePayloadSchema>;
-export type SupabaseWebhook = z.infer<typeof supabaseWebhookSchema>;
+export type DatabaseWebhook = z.infer<typeof databaseWebhookSchema>;
 
 // ============================================================================
 // Lead Attribution API Schemas

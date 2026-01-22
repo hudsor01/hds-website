@@ -119,21 +119,24 @@ describe('Newsletter Subscribe API', () => {
   beforeEach(() => {
     setupApiMocks();
 
-    // Mock the centralized supabaseAdmin from @/lib/supabase
-    const supabaseMock = {
-      from: mock(() => ({
-        select: mock(() => ({
-          eq: mock(() => ({
-            maybeSingle: mock().mockResolvedValue({ data: null, error: null }),
-          })),
-        })),
-        insert: mock().mockResolvedValue({ error: null }),
-        upsert: mock().mockResolvedValue({ error: null }),
-      })),
+    // Mock the Drizzle db module for newsletter operations
+    const mockDb = {
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            limit: mock().mockResolvedValue([]), // No existing subscriber
+          }),
+        }),
+      }),
+      insert: () => ({
+        values: () => ({
+          onConflictDoUpdate: mock().mockResolvedValue([]),
+        }),
+      }),
     };
 
-    mock.module('@/lib/supabase', () => ({
-      supabaseAdmin: supabaseMock,
+    mock.module('@/lib/db', () => ({
+      db: mockDb,
     }));
   });
 
@@ -159,27 +162,30 @@ describe('Newsletter Subscribe API', () => {
     expect(data.error).toContain('Invalid email');
   });
 
-  // NOTE: Database configuration check removed - supabaseAdmin is centralized in @/lib/supabase
+  // NOTE: Database configuration check removed - db is centralized in @/lib/db
   // Environment validation happens at app startup, not in individual route handlers
 
   it('should return 400 when email already subscribed', async () => {
-    // Mock the centralized supabaseAdmin from @/lib/supabase
-    const supabaseMock = {
-      from: mock(() => ({
-        select: mock(() => ({
-          eq: mock(() => ({
-            maybeSingle: mock().mockResolvedValue({
-              data: { email: 'existing@example.com', status: 'active' },
-              error: null,
-            }),
-          })),
-        })),
-        upsert: mock().mockResolvedValue({ error: null }),
-      })),
+    // Mock the Drizzle db module to return existing subscriber
+    const mockDb = {
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            limit: mock().mockResolvedValue([
+              { email: 'existing@example.com', status: 'active' }
+            ]),
+          }),
+        }),
+      }),
+      insert: () => ({
+        values: () => ({
+          onConflictDoUpdate: mock().mockResolvedValue([]),
+        }),
+      }),
     };
 
-    mock.module('@/lib/supabase', () => ({
-      supabaseAdmin: supabaseMock,
+    mock.module('@/lib/db', () => ({
+      db: mockDb,
     }));
 
     const { POST } = await import('@/app/api/newsletter/subscribe/route');
@@ -199,21 +205,25 @@ describe('Newsletter Subscribe API', () => {
     expect(data.error).toBe('Email already subscribed');
   });
 
-  it('should return 500 when database upsert fails', async () => {
-    // Mock the centralized supabaseAdmin from @/lib/supabase
-    const supabaseMock = {
-      from: mock(() => ({
-        select: mock(() => ({
-          eq: mock(() => ({
-            maybeSingle: mock().mockResolvedValue({ data: null, error: null }),
-          })),
-        })),
-        upsert: mock().mockResolvedValue({ error: { message: 'db failure' } }),
-      })),
+  it('should return 500 when database insert fails', async () => {
+    // Mock the Drizzle db module to throw an error
+    const mockDb = {
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            limit: mock().mockResolvedValue([]),
+          }),
+        }),
+      }),
+      insert: () => ({
+        values: () => ({
+          onConflictDoUpdate: mock().mockRejectedValue(new Error('db failure')),
+        }),
+      }),
     };
 
-    mock.module('@/lib/supabase', () => ({
-      supabaseAdmin: supabaseMock,
+    mock.module('@/lib/db', () => ({
+      db: mockDb,
     }));
 
     const { POST } = await import('@/app/api/newsletter/subscribe/route');
@@ -230,7 +240,7 @@ describe('Newsletter Subscribe API', () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data.error).toBe('Failed to subscribe');
+    expect(data.error).toBe('Internal server error');
   });
 
   it('should succeed with valid email and send welcome email', async () => {

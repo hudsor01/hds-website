@@ -17,12 +17,12 @@ export const env = createEnv({
     // Email
     RESEND_API_KEY: z.string().min(1).optional(),
 
-    // Database
-    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
-    SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
+    // Database (Neon)
+    DATABASE_URL: z.string().url().optional(),
 
     // Webhooks
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
+    DATABASE_WEBHOOK_SECRET: z.string().optional(),
 
     // Security - CSRF_SECRET is required in production
     CSRF_SECRET: z
@@ -34,7 +34,6 @@ export const env = createEnv({
         'CSRF_SECRET is required in production'
       ),
     CRON_SECRET: z.string().optional(),
-    SUPABASE_WEBHOOK_SECRET: z.string().optional(),
 
     // Vercel KV for distributed rate limiting
     KV_REST_API_URL: z.string().url().optional(),
@@ -57,6 +56,9 @@ export const env = createEnv({
 
     // Package metadata (available at build time)
     npm_package_version: z.string().optional(),
+
+    // Neon Auth
+    NEON_AUTH_BASE_URL: z.string().url().optional(),
   },
 
   /**
@@ -64,10 +66,6 @@ export const env = createEnv({
    * These are exposed to the browser (must be prefixed with NEXT_PUBLIC_)
    */
   client: {
-    // Supabase
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().optional(),
-
     // Base URL
     NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000"),
   },
@@ -79,12 +77,11 @@ export const env = createEnv({
   runtimeEnv: {
     // Server
     RESEND_API_KEY: process.env.RESEND_API_KEY,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-    SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY,
+    DATABASE_URL: process.env.DATABASE_URL,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
+    DATABASE_WEBHOOK_SECRET: process.env.DATABASE_WEBHOOK_SECRET,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
-    SUPABASE_WEBHOOK_SECRET: process.env.SUPABASE_WEBHOOK_SECRET,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
     KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
@@ -93,10 +90,9 @@ export const env = createEnv({
     JWT_SECRET: process.env.JWT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
     npm_package_version: process.env.npm_package_version,
+    NEON_AUTH_BASE_URL: process.env.NEON_AUTH_BASE_URL,
 
     // Client
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
 

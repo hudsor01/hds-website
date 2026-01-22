@@ -1,7 +1,7 @@
 /**
- * Supabase Database Operation Validation Schemas
+ * Database Webhook Validation Schemas
  *
- * Zod schemas for validating Supabase database operations, logging, and analytics
+ * Zod schemas for validating database operations, logging, and analytics
  */
 
 import { z } from 'zod';

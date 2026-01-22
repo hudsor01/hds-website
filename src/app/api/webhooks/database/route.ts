@@ -1,24 +1,28 @@
 /**
- * Supabase Webhook Handler
+ * Database Webhook Handler (Neon/PostgreSQL)
  * Processes database events and triggers for real-time updates
+ *
+ * NOTE: This route was previously for Supabase webhooks. It has been converted
+ * to a generic database webhook handler compatible with Neon or any PostgreSQL
+ * webhook provider. The HMAC signature verification remains for security.
  */
 
 import { createHmac, timingSafeEqual } from 'crypto';
+import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
 import {
-    authChangePayloadSchema,
-    databaseChangePayloadSchema,
-    storageChangePayloadSchema,
-    type AuthChangePayload,
-    type DatabaseChangePayload,
-    type StorageChangePayload,
+  authChangePayloadSchema,
+  databaseChangePayloadSchema,
+  storageChangePayloadSchema,
+  type AuthChangePayload,
+  type DatabaseChangePayload,
+  type StorageChangePayload,
 } from '@/lib/schemas/api';
 import {
-    eventDataSchema,
-    leadDataSchema,
-} from '@/lib/schemas/supabase';
-import type { Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
+  eventDataSchema,
+  leadDataSchema,
+} from '@/lib/schemas/database-webhooks';
+import { webhookLogs, type NewWebhookLog } from '@/lib/schema';
 import { isValidHexString } from '@/lib/utils';
 import { headers } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -55,112 +59,121 @@ function verifyWebhookSignature(payload: string, signature: string, secret: stri
   }
 }
 
-async function triggerWebhook(eventType: string, payload: unknown) {
-  // Log webhook trigger and optionally notify external services
-  const payloadData = (payload ?? {}) as Json;
+async function logWebhookEvent(eventType: string, payload: unknown, status: 'success' | 'failed', errorMessage?: string) {
+  try {
+    const logEntry: NewWebhookLog = {
+      provider: 'database',
+      eventType,
+      payload: payload as Record<string, unknown>,
+      status,
+      errorMessage,
+      timestamp: new Date(),
+    };
 
-  await supabaseAdmin
-    .from('webhook_logs')
-    .insert({
-      event_type: eventType,
-      payload: payloadData,
-      triggered_at: new Date().toISOString(),
-    });
+    await db.insert(webhookLogs).values(logEntry);
+  } catch (logError) {
+    // Don't fail the webhook if logging fails
+    logger.error('Failed to log webhook event', logError as Error);
+  }
 }
 
-const logger = createServerLogger('supabase-webhook')
+const logger = createServerLogger('database-webhook');
 
 export async function POST(request: NextRequest) {
   try {
-    const headersList = await headers()
-    const signature = headersList.get('x-supabase-signature')
-    const eventType = headersList.get('x-supabase-event-type')
+    const headersList = await headers();
+    // Support both Supabase-style and generic webhook headers
+    const signature = headersList.get('x-webhook-signature') || headersList.get('x-supabase-signature');
+    const eventType = headersList.get('x-webhook-event-type') || headersList.get('x-supabase-event-type');
 
-    logger.info('Supabase webhook received', {
+    logger.info('Database webhook received', {
       eventType,
       hasSignature: !!signature,
       timestamp: new Date().toISOString(),
-    })
+    });
 
     // Verify webhook signature exists
     if (!signature) {
-      logger.warn('Missing webhook signature')
-      return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
+      logger.warn('Missing webhook signature');
+      return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
     }
 
-    // Get webhook secret from environment
-    const webhookSecret = process.env.SUPABASE_WEBHOOK_SECRET
+    // Get webhook secret from environment (support both naming conventions)
+    const webhookSecret = process.env.DATABASE_WEBHOOK_SECRET || process.env.SUPABASE_WEBHOOK_SECRET;
     if (!webhookSecret) {
-      logger.error('SUPABASE_WEBHOOK_SECRET not configured')
-      return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
+      logger.error('DATABASE_WEBHOOK_SECRET not configured');
+      return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
     }
 
     // Read raw body for signature verification
-    const rawBody = await request.text()
+    const rawBody = await request.text();
 
     // Verify signature cryptographically using HMAC-SHA256
     if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
-      logger.warn('Invalid webhook signature - possible forgery attempt')
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+      logger.warn('Invalid webhook signature - possible forgery attempt');
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
     // Validate event type
-    const validEventTypes = ['db_change', 'auth_change', 'storage_change']
+    const validEventTypes = ['db_change', 'auth_change', 'storage_change'];
     if (!eventType || !validEventTypes.includes(eventType)) {
-      logger.warn('Invalid or missing event type', { eventType })
-      return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
+      logger.warn('Invalid or missing event type', { eventType });
+      return NextResponse.json({ error: 'Invalid event type' }, { status: 400 });
     }
 
     // Parse JSON from already-read body
-    const rawPayload = JSON.parse(rawBody)
+    const rawPayload = JSON.parse(rawBody);
 
     // Validate payload based on event type
-    let validatedPayload
+    let validatedPayload;
     switch (eventType) {
       case 'db_change':
-        validatedPayload = databaseChangePayloadSchema.safeParse(rawPayload)
+        validatedPayload = databaseChangePayloadSchema.safeParse(rawPayload);
         if (!validatedPayload.success) {
           logger.error('Invalid database change payload', {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
-          })
+          });
+          await logWebhookEvent(eventType, rawPayload, 'failed', 'Invalid payload');
           return NextResponse.json(
             { error: 'Invalid payload', details: validatedPayload.error.issues },
             { status: 400 }
-          )
+          );
         }
-        await handleDatabaseChange(validatedPayload.data)
-        break
+        await handleDatabaseChange(validatedPayload.data);
+        break;
 
       case 'auth_change':
-        validatedPayload = authChangePayloadSchema.safeParse(rawPayload)
+        validatedPayload = authChangePayloadSchema.safeParse(rawPayload);
         if (!validatedPayload.success) {
           logger.error('Invalid auth change payload', {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
-          })
+          });
+          await logWebhookEvent(eventType, rawPayload, 'failed', 'Invalid payload');
           return NextResponse.json(
             { error: 'Invalid payload', details: validatedPayload.error.issues },
             { status: 400 }
-          )
+          );
         }
-        await handleAuthChange(validatedPayload.data)
-        break
+        await handleAuthChange(validatedPayload.data);
+        break;
 
       case 'storage_change':
-        validatedPayload = storageChangePayloadSchema.safeParse(rawPayload)
+        validatedPayload = storageChangePayloadSchema.safeParse(rawPayload);
         if (!validatedPayload.success) {
           logger.error('Invalid storage change payload', {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
-          })
+          });
+          await logWebhookEvent(eventType, rawPayload, 'failed', 'Invalid payload');
           return NextResponse.json(
             { error: 'Invalid payload', details: validatedPayload.error.issues },
             { status: 400 }
-          )
+          );
         }
-        await handleStorageChange(validatedPayload.data)
-        break
+        await handleStorageChange(validatedPayload.data);
+        break;
     }
 
     logger.info('Processing webhook payload', {
@@ -168,126 +181,126 @@ export async function POST(request: NextRequest) {
       recordId: rawPayload.record?.id,
       table: rawPayload.table,
       type: rawPayload.type,
-    })
+    });
 
-    // Trigger any downstream webhooks
-    await triggerWebhook(eventType, rawPayload)
+    // Log successful webhook processing
+    await logWebhookEvent(eventType, rawPayload, 'success');
 
-    logger.info('Webhook processed successfully', { eventType })
-    return NextResponse.json({ success: true })
+    logger.info('Webhook processed successfully', { eventType });
+    return NextResponse.json({ success: true });
 
   } catch (error) {
-    logger.error('Webhook processing failed', error instanceof Error ? error : new Error(String(error)))
+    logger.error('Webhook processing failed', error instanceof Error ? error : new Error(String(error)));
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
-    )
+    );
   }
 }
 
 async function handleDatabaseChange(payload: DatabaseChangePayload) {
-  const { table, type, record, old_record } = payload
+  const { table, type, record, old_record } = payload;
 
   logger.info('Database change detected', {
     table,
     type,
     recordId: record?.id,
-  })
+  });
 
   // Validate record data if present
   if (!record) {
-    logger.warn('Database change payload missing record data', { table, type })
-    return
+    logger.warn('Database change payload missing record data', { table, type });
+    return;
   }
 
   // Handle specific table changes
   switch (table) {
     case 'leads':
       if (type === 'INSERT') {
-        const leadValidation = leadDataSchema.safeParse(record)
+        const leadValidation = leadDataSchema.safeParse(record);
         if (leadValidation.success) {
-          await handleNewLead(leadValidation.data)
+          await handleNewLead(leadValidation.data);
         } else {
           logger.error('Invalid lead data', {
             errors: leadValidation.error.issues,
             record,
-          })
+          });
         }
       } else if (type === 'UPDATE' && old_record) {
-        const leadValidation = leadDataSchema.safeParse(record)
+        const leadValidation = leadDataSchema.safeParse(record);
         if (leadValidation.success) {
-          await handleLeadUpdate(leadValidation.data, old_record)
+          await handleLeadUpdate(leadValidation.data, old_record);
         }
       }
-      break
+      break;
 
     case 'custom_events':
       if (type === 'INSERT') {
-        const eventValidation = eventDataSchema.safeParse(record)
+        const eventValidation = eventDataSchema.safeParse(record);
         if (eventValidation.success) {
-          await handleNewEvent(eventValidation.data)
+          await handleNewEvent(eventValidation.data);
         } else {
           logger.error('Invalid event data', {
             errors: eventValidation.error.issues,
             record,
-          })
+          });
         }
       }
-      break
+      break;
 
     case 'api_logs':
       if (type === 'INSERT' && record.error_message) {
-        await handleErrorLog(record)
+        await handleErrorLog(record);
       }
-      break
+      break;
   }
 }
 
 async function handleAuthChange(payload: AuthChangePayload) {
-  const { user, type } = payload
+  const { user, type } = payload;
 
   logger.info('Auth change detected', {
     userId: user?.id,
     eventType: type,
-  })
+  });
 
   // Handle user authentication events based on type
   switch (type) {
     case 'SIGNED_IN':
       // Could trigger analytics, session logging
-      break
+      break;
     case 'SIGNED_OUT':
       // Could trigger session cleanup
-      break
+      break;
     case 'USER_UPDATED':
       // Could trigger profile update notifications
-      break
+      break;
     case 'USER_DELETED':
       // Could trigger cleanup, export data
-      break
+      break;
   }
 }
 
 async function handleStorageChange(payload: StorageChangePayload) {
-  const { bucket, object, type } = payload
+  const { bucket, object, type } = payload;
 
   logger.info('Storage change detected', {
     bucket,
     object,
     eventType: type,
-  })
+  });
 
   // Handle file uploads, processing based on type
   switch (type) {
     case 'OBJECT_CREATED':
       // Could trigger file processing, thumbnail generation
-      break
+      break;
     case 'OBJECT_UPDATED':
       // Could trigger reprocessing
-      break
+      break;
     case 'OBJECT_REMOVED':
       // Could trigger cleanup
-      break
+      break;
   }
 }
 
@@ -296,7 +309,7 @@ async function handleNewLead(lead: { email: string; first_name: string; source?:
     email: lead.email,
     name: lead.first_name,
     source: lead.source,
-  })
+  });
 
   // Could trigger email sequences, notifications, etc.
   // Example: scheduleEmailSequence(lead.email, lead.first_name, 'welcome', {})
@@ -306,7 +319,7 @@ async function handleLeadUpdate(lead: { email: string; first_name: string; score
   logger.info('Lead updated', {
     email: lead.email,
     scoreChanged: lead.score !== oldLead.score,
-  })
+  });
 
   // Handle lead status changes, score updates, etc.
   // Example: If score increased significantly, trigger high-intent notification
@@ -317,7 +330,7 @@ async function handleNewEvent(event: { name: string; category?: string | undefin
     eventName: event.name,
     category: event.category,
     sessionId: event.session_id,
-  })
+  });
 
   // Could trigger real-time analytics updates
   // Example: Update real-time dashboards, trigger automations
@@ -329,7 +342,7 @@ async function handleErrorLog(log: Record<string, unknown>) {
     method: log.method,
     statusCode: log.status_code,
     errorMessage: log.error_message,
-  })
+  });
 
   // Could trigger alerts, notifications, etc.
   // Example: Send to error tracking service, create incident if critical
