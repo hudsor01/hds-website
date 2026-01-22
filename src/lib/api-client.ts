@@ -136,12 +136,6 @@ class ApiClient {
     });
   }
 
-  // Lead magnet endpoints
-  async downloadLeadMagnet(resourceId: string) {
-    return this.fetcher<ApiResponse<{ downloadUrl: string }>>(`/api/lead-magnet/${resourceId}`, {
-      method: 'GET',
-    });
-  }
 }
 
 // Create singleton instance
