@@ -518,27 +518,26 @@ Plans:
 - Add `metrics: jsonb('metrics')`
 
 Plans:
-- [ ] 31-01: TBD
+- [ ] 31-01: Schema migration (add showcase fields to projects)
 
 #### Phase 32: Showcase Data Layer
-**Goal**: Create unified showcase.ts data layer, consolidate API routes
+**Goal**: Migrate case_studies data to projects, create unified showcase.ts
 **Depends on**: Phase 31
 **Research**: Unlikely (internal patterns from projects.ts)
-**Plans**: TBD
+**Plans**: Created
 
-**Files to Create:**
-- `src/lib/showcase.ts` - Unified data layer
-- `src/app/api/showcase/route.ts` - Public API
-- `src/app/api/admin/showcase/route.ts` - Admin CRUD
+**Tasks:**
+- Create migration script (case_studies → projects with showcaseType='detailed')
+- Create `src/lib/showcase.ts` - Unified data layer
 
 Plans:
-- [ ] 32-01: TBD
+- [ ] 32-01: Data migration and showcase.ts creation
 
 #### Phase 33: Showcase Routes
-**Goal**: Create /showcase and /showcase/[slug] pages
+**Goal**: Create /showcase and /showcase/[slug] pages with type-aware rendering
 **Depends on**: Phase 32
 **Research**: Unlikely (Next.js routing patterns)
-**Plans**: TBD
+**Plans**: Created
 
 **Files to Create:**
 - `src/app/showcase/page.tsx` - Listing page with filters
@@ -546,67 +545,47 @@ Plans:
 - `src/app/showcase/loading.tsx` - Suspense fallback
 
 Plans:
-- [ ] 33-01: TBD
+- [ ] 33-01: Create showcase routes with type-aware UI
 
 #### Phase 34: Update References
 **Goal**: Update all internal links from /portfolio and /case-studies to /showcase
 **Depends on**: Phase 33
 **Research**: Unlikely (find/replace)
-**Plans**: TBD
+**Plans**: Created
 
 **Files to Update:**
-- `src/components/layout/Navbar.tsx`
-- `src/components/layout/Footer.tsx`
-- `src/app/page.tsx`
-- `src/app/testimonials/page.tsx`
-- `src/app/pricing/page.tsx`
-- `src/app/not-found.tsx`
-- `src/app/global-not-found.tsx`
-- `src/components/ui/card.tsx`
-- `src/app/sitemap.ts`
-- `src/data/email-templates.json`
+- Navigation components
+- Homepage CTAs
+- Sitemap
+- Any other pages with portfolio/case-studies links
 
 Plans:
-- [ ] 34-01: TBD
+- [ ] 34-01: Update all internal links to /showcase
 
-#### Phase 35: Configure Redirects
-**Goal**: Set up 301 redirects for SEO preservation
+#### Phase 35: Configure Redirects - SKIPPED
+**Status**: SKIPPED (user decision - low traffic doesn't warrant redirects)
+**Goal**: ~~Set up 301 redirects for SEO preservation~~
 **Depends on**: Phase 34
-**Research**: Unlikely (Next.js redirects)
-**Plans**: TBD
-
-**Redirects to Add:**
-- /portfolio → /showcase
-- /portfolio/* → /showcase/*
-- /case-studies → /showcase
-- /case-studies/* → /showcase/*
-- /industries/* → /services
-- /locations/* → /contact
-- /resources/* → /contact
-- Removed tool routes → /tools
 
 Plans:
-- [ ] 35-01: TBD
+- [x] 35-01: SKIPPED - No redirects needed per user
 
 #### Phase 36: Final Cleanup & Validation
-**Goal**: Delete old files, drop case_studies table, verify all features
-**Depends on**: Phase 35
+**Goal**: Delete old files, verify all features work with unified showcase
+**Depends on**: Phase 34
 **Research**: Unlikely (cleanup and testing)
-**Plans**: TBD
+**Plans**: Created
 
 **Files to Delete:**
 - `src/app/portfolio/`
 - `src/app/case-studies/`
 - `src/lib/case-studies.ts`
-- `src/app/api/case-studies/`
-- `src/app/api/admin/case-studies/`
 
 **Validation Checklist:**
 - [ ] All 6 tools work (paystub, invoice, contract, ttl, mortgage, tip)
 - [ ] /showcase displays all items
-- [ ] All redirects return 301
-- [ ] No 404s on old URLs
 - [ ] Build succeeds
+- [ ] No orphaned imports
 - [ ] All tests pass
 
 Plans:
