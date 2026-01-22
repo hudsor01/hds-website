@@ -12,7 +12,8 @@ None
 
 - 🚧 **v1.0 Cleanup & Simplification** - Phases 1-10 (in progress)
 - 📋 **v1.1 Technical Debt Remediation** - Phases 11-18 (planned)
-- 📋 **v2.0 Backend Migration** - Phases 19-26 (planned) - Migrate from Supabase to Neon + Bun.SQL + Drizzle ORM
+- ✅ **v2.0 Backend Migration** - Phases 19-26 (completed 2026-01-22) - Migrated from Supabase to Neon + Drizzle ORM
+- 🚧 **v3.0 Website Consolidation** - Phases 27-36 (in progress) - Consolidate routes, tools, and content
 
 ## Phases
 
@@ -416,9 +417,204 @@ Plans:
 Plans:
 - [ ] 26-01: TBD
 
+---
+
+### 🚧 v3.0 Website Consolidation (In Progress)
+
+**Milestone Goal:** Consolidate and simplify the website by removing unused pages (industries, locations, resources), reducing tools from 14 to 6 high-value ones, and merging portfolio/case-studies into a unified /showcase route.
+
+**Tools After Consolidation (6):**
+- Paystub Generator, Invoice Generator, Contract/Proposal Generator (merged), Texas TTL Calculator, Mortgage Calculator, Tip Calculator
+
+- [ ] **Phase 27: Remove Industries & Locations** - Delete /industries/*, /locations/*, lib/locations.ts
+- [ ] **Phase 28: Remove Resources Pages** - Delete /resources/* lead magnet pages
+- [ ] **Phase 29: Tools Cleanup** - Remove 8 low-value tools (ROI, cost estimator, performance, json, password, meta-tag, testimonial-collector)
+- [ ] **Phase 30: Contract-Proposal Consolidation** - Merge contract and proposal generators into unified document generator
+- [ ] **Phase 31: Showcase Schema Migration** - Add showcaseType, clientName fields to projects table
+- [ ] **Phase 32: Showcase Data Layer** - Create unified showcase.ts, consolidate API routes
+- [ ] **Phase 33: Showcase Routes** - Create /showcase and /showcase/[slug] pages
+- [ ] **Phase 34: Update References** - Update all internal links (~12 files)
+- [ ] **Phase 35: Configure Redirects** - Set up 301 redirects in next.config.ts
+- [ ] **Phase 36: Final Cleanup & Validation** - Delete old files, verify all features
+
+#### Phase 27: Remove Industries & Locations
+**Goal**: Delete isolated industry and location pages with no cross-references - zero risk cleanup
+**Depends on**: Phase 26 (v2.0 complete)
+**Research**: Unlikely (file deletion)
+**Plans**: TBD
+
+**Files to Delete:**
+- `src/app/industries/` (5 pages: saas, healthcare, fintech, real-estate, ecommerce)
+- `src/app/locations/` (2 pages: index, [city])
+- `src/lib/locations.ts`
+
+Plans:
+- [ ] 27-01: TBD
+
+#### Phase 28: Remove Resources Pages
+**Goal**: Delete lead magnet resource pages
+**Depends on**: Phase 27
+**Research**: Unlikely (file deletion)
+**Plans**: TBD
+
+**Files to Delete:**
+- `src/app/resources/website-performance-checklist/`
+- `src/app/resources/conversion-optimization-toolkit/`
+
+Plans:
+- [ ] 28-01: TBD
+
+#### Phase 29: Tools Cleanup
+**Goal**: Remove 8 low-value calculator tools, keeping only 6 high-impact ones
+**Depends on**: Phase 28
+**Research**: Unlikely (file deletion)
+**Plans**: TBD
+
+**Tools to Remove:**
+- /roi-calculator
+- /cost-estimator
+- /performance-calculator
+- /json-formatter
+- /password-generator
+- /meta-tag-generator
+- /testimonial-collector
+
+**Tools to Keep (6):**
+- /paystub-generator
+- /invoice-generator
+- /contract-generator (will merge with proposal)
+- /texas-ttl-calculator
+- /mortgage-calculator
+- /tip-calculator
+
+Plans:
+- [ ] 29-01: TBD
+
+#### Phase 30: Contract-Proposal Consolidation
+**Goal**: Merge contract and proposal generators into a unified document generator
+**Depends on**: Phase 29
+**Research**: Unlikely (internal refactoring)
+**Plans**: TBD
+
+**Consolidation Approach:**
+- Keep contract-generator route, enhance with proposal templates
+- Remove proposal-generator route
+- Or create new /document-generator with both capabilities
+
+Plans:
+- [ ] 30-01: TBD
+
+#### Phase 31: Showcase Schema Migration
+**Goal**: Add showcase fields to projects table for unified portfolio/case-studies
+**Depends on**: Phase 30
+**Research**: Unlikely (Drizzle schema - already established patterns)
+**Plans**: TBD
+
+**Schema Changes:**
+- Add `clientName: text('client_name')`
+- Add `projectType: text('project_type')`
+- Add `showcaseType: text('showcase_type')` - 'quick' | 'detailed'
+- Add `results: text('results')`
+- Add `metrics: jsonb('metrics')`
+
+Plans:
+- [ ] 31-01: TBD
+
+#### Phase 32: Showcase Data Layer
+**Goal**: Create unified showcase.ts data layer, consolidate API routes
+**Depends on**: Phase 31
+**Research**: Unlikely (internal patterns from projects.ts)
+**Plans**: TBD
+
+**Files to Create:**
+- `src/lib/showcase.ts` - Unified data layer
+- `src/app/api/showcase/route.ts` - Public API
+- `src/app/api/admin/showcase/route.ts` - Admin CRUD
+
+Plans:
+- [ ] 32-01: TBD
+
+#### Phase 33: Showcase Routes
+**Goal**: Create /showcase and /showcase/[slug] pages
+**Depends on**: Phase 32
+**Research**: Unlikely (Next.js routing patterns)
+**Plans**: TBD
+
+**Files to Create:**
+- `src/app/showcase/page.tsx` - Listing page with filters
+- `src/app/showcase/[slug]/page.tsx` - Detail page (adapts to showcaseType)
+- `src/app/showcase/loading.tsx` - Suspense fallback
+
+Plans:
+- [ ] 33-01: TBD
+
+#### Phase 34: Update References
+**Goal**: Update all internal links from /portfolio and /case-studies to /showcase
+**Depends on**: Phase 33
+**Research**: Unlikely (find/replace)
+**Plans**: TBD
+
+**Files to Update:**
+- `src/components/layout/Navbar.tsx`
+- `src/components/layout/Footer.tsx`
+- `src/app/page.tsx`
+- `src/app/testimonials/page.tsx`
+- `src/app/pricing/page.tsx`
+- `src/app/not-found.tsx`
+- `src/app/global-not-found.tsx`
+- `src/components/ui/card.tsx`
+- `src/app/sitemap.ts`
+- `src/data/email-templates.json`
+
+Plans:
+- [ ] 34-01: TBD
+
+#### Phase 35: Configure Redirects
+**Goal**: Set up 301 redirects for SEO preservation
+**Depends on**: Phase 34
+**Research**: Unlikely (Next.js redirects)
+**Plans**: TBD
+
+**Redirects to Add:**
+- /portfolio → /showcase
+- /portfolio/* → /showcase/*
+- /case-studies → /showcase
+- /case-studies/* → /showcase/*
+- /industries/* → /services
+- /locations/* → /contact
+- /resources/* → /contact
+- Removed tool routes → /tools
+
+Plans:
+- [ ] 35-01: TBD
+
+#### Phase 36: Final Cleanup & Validation
+**Goal**: Delete old files, drop case_studies table, verify all features
+**Depends on**: Phase 35
+**Research**: Unlikely (cleanup and testing)
+**Plans**: TBD
+
+**Files to Delete:**
+- `src/app/portfolio/`
+- `src/app/case-studies/`
+- `src/lib/case-studies.ts`
+- `src/app/api/case-studies/`
+- `src/app/api/admin/case-studies/`
+
+**Validation Checklist:**
+- [ ] All 6 tools work (paystub, invoice, contract, ttl, mortgage, tip)
+- [ ] /showcase displays all items
+- [ ] All redirects return 301
+- [ ] No 404s on old URLs
+- [ ] Build succeeds
+- [ ] All tests pass
+
+Plans:
+- [ ] 36-01: TBD
+
 ## Progress
 
-**Execution Order:** Phases execute in numeric order: 1 → 2 → ... → 10 → 11 → ... → 18 → 19 → ... → 26
+**Execution Order:** Phases execute in numeric order: 1 → 2 → ... → 10 → 11 → ... → 18 → 19 → ... → 26 → 27 → ... → 36
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -440,11 +636,21 @@ Plans:
 | 16. PDF Generation Tests | v1.1 | 0/TBD | Not started | - |
 | 17. Type Definition Optimization | v1.1 | 0/TBD | Not started | - |
 | 18. Quality Gates & Prevention | v1.1 | 0/TBD | Not started | - |
-| 19. Neon Project Setup | v2.0 | 0/TBD | Not started | - |
-| 20. Database Migration | v2.0 | 0/TBD | Not started | - |
-| 21. Drizzle Schema Creation | v2.0 | 0/TBD | Not started | - |
-| 22. Auth Migration | v2.0 | 0/TBD | Not started | - |
-| 23. RLS Policy Migration | v2.0 | 0/TBD | Not started | - |
-| 24. Data Layer Rewrite | v2.0 | 0/TBD | Not started | - |
-| 25. Auth Integration | v2.0 | 0/TBD | Not started | - |
-| 26. Validation & Cleanup | v2.0 | 0/TBD | Not started | - |
+| 19. Neon Project Setup | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 20. Database Migration | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 21. Drizzle Schema Creation | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 22. Auth Migration | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 23. RLS Policy Migration | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 24. Data Layer Rewrite | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 25. Auth Integration | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 26. Validation & Cleanup | v2.0 | 1/1 | Complete | 2026-01-22 |
+| 27. Remove Industries & Locations | v3.0 | 0/TBD | Not started | - |
+| 28. Remove Resources Pages | v3.0 | 0/TBD | Not started | - |
+| 29. Tools Cleanup | v3.0 | 0/TBD | Not started | - |
+| 30. Contract-Proposal Consolidation | v3.0 | 0/TBD | Not started | - |
+| 31. Showcase Schema Migration | v3.0 | 0/TBD | Not started | - |
+| 32. Showcase Data Layer | v3.0 | 0/TBD | Not started | - |
+| 33. Showcase Routes | v3.0 | 0/TBD | Not started | - |
+| 34. Update References | v3.0 | 0/TBD | Not started | - |
+| 35. Configure Redirects | v3.0 | 0/TBD | Not started | - |
+| 36. Final Cleanup & Validation | v3.0 | 0/TBD | Not started | - |

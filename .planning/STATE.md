@@ -4,17 +4,17 @@
 
 See: .planning/PROJECT.md (updated 2026-01-09)
 
-**Core value:** Working tools (paystub/invoice/timesheet generators) and contact form stay functional while everything else becomes dramatically simpler. If it's not essential to these features, it gets removed.
-**Current focus:** Phase 12 — Continue Technical Debt Remediation (v1.1) before Backend Migration (v2.0)
+**Core value:** Working tools (paystub/invoice/contract generators) and contact form stay functional while everything else becomes dramatically simpler. If it's not essential to these features, it gets removed.
+**Current focus:** Phase 27 — Website Consolidation (v3.0) - Remove unused pages, consolidate tools to 6, merge portfolio/case-studies
 
 ## Current Position
 
-Phase: 12 of 26 (God Function Refactor)
+Phase: 27 of 36 (Remove Industries & Locations)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-01-22 — Milestone v2.0 Backend Migration created (8 phases, Phases 19-26)
+Last activity: 2026-01-22 — Milestone v3.0 Website Consolidation created (10 phases, Phases 27-36)
 
-Progress: ████░░░░░░ 42%
+Progress: ██████████████████████████░░░░░░░░░░ 72%
 
 ## Performance Metrics
 
@@ -61,10 +61,18 @@ None yet.
   - Complete backend rewrite: Supabase → Neon + Bun.SQL + Drizzle ORM + Neon Auth
   - Design document: docs/plans/2026-01-22-backend-migration-neon-design.md
   - Benefits: Zero npm DB deps, 50% faster queries, auth-in-database, branch-aware auth
+- 2026-01-22: Milestone v2.0 Backend Migration COMPLETED (Phases 19-26)
+  - All Supabase references removed from codebase
+  - 342 tests passing, build succeeds
+- 2026-01-22: Milestone v3.0 Website Consolidation created (10 phases, Phases 27-36)
+  - Remove unused pages: industries, locations, resources
+  - Consolidate tools from 14 to 6 high-value ones
+  - Merge portfolio + case-studies into unified /showcase route
+  - Contract + proposal generators to be consolidated
 
 ## Session Continuity
 
 Last session: 2026-01-22
-Stopped at: Milestone v2.0 Backend Migration created
+Stopped at: Milestone v3.0 Website Consolidation created
 Resume file: None
-Next action: Continue v1.1 phases (12-18) OR skip to v2.0 with /gsd:plan-phase 19
+Next action: /gsd:plan-phase 27 (Remove Industries & Locations)
