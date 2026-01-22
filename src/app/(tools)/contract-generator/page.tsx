@@ -11,21 +11,11 @@ import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { Card } from '@/components/ui/card';
 import { trackEvent } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors';
 import { FileCheck, Download, Save, RotateCcw } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import type { ContractData, ContractTemplate } from '@/lib/pdf/contract-template';
+import type { ContractData, ContractTemplate } from '@/lib/pdf/contract-html-template';
 import { useHydrated } from '@/hooks/use-hydrated';
-
-// Dynamic import for PDF to avoid SSR issues
-const PDFDownloadLink = dynamic(
-  () => import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
-  { ssr: false, loading: () => <span>Loading PDF...</span> }
-);
-
-const ContractDocument = dynamic(
-  () => import('@/lib/pdf/contract-template').then((mod) => mod.ContractDocument),
-  { ssr: false }
-);
+import { useLocalStorageDraft } from '@/hooks/use-local-storage-draft';
 
 const STORAGE_KEY = 'hds-contract-draft';
 
@@ -38,9 +28,9 @@ const DEFAULT_PROVIDER = {
   providerEmail: 'hello@hudsondigitalsolutions.com',
 };
 
-const formatDateForInput = (date: Date): string => {
+function formatDateForInput(date: Date): string {
   return date.toISOString().split('T')[0] ?? '';
-};
+}
 
 const TEMPLATES: { value: ContractTemplate; label: string; description: string }[] = [
   {
@@ -60,32 +50,7 @@ const TEMPLATES: { value: ContractTemplate; label: string; description: string }
   },
 ];
 
-// Subscribe to localStorage changes
-const subscribeToStorage = (callback: () => void) => {
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-};
-
-// Read draft from localStorage
-const getDraftSnapshot = (): ContractData | null => {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      return JSON.parse(saved) as ContractData;
-    }
-  } catch (error) {
-    // Log invalid JSON for debugging, but don't break the app
-    logger.debug('Failed to parse contract draft from localStorage', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-  }
-  return null;
-};
-
-// Server snapshot always returns null
-const getServerDraftSnapshot = (): ContractData | null => null;
-
-// Empty subscribe for useSyncExternalStore
+// Empty subscribe for useSyncExternalStore (for generated defaults)
 const emptySubscribe = () => () => {};
 
 // Module-level cache for generated defaults
@@ -115,18 +80,15 @@ export default function ContractGeneratorPage() {
     getServerDefaultsSnapshot
   );
 
-  // Load draft from localStorage using useSyncExternalStore
-  const savedDraft = useSyncExternalStore(
-    subscribeToStorage,
-    getDraftSnapshot,
-    getServerDraftSnapshot
-  );
-
-  // Track if we have a draft (derived)
-  const hasDraft = savedDraft !== null;
+  // Load draft from localStorage using shared hook
+  const { savedDraft, hasDraft, saveDraft: saveDraftToStorage, clearDraft: clearDraftFromStorage } =
+    useLocalStorageDraft<ContractData>(STORAGE_KEY);
 
   // User-entered state
   const [userModifiedData, setUserModifiedData] = useState<Partial<ContractData>>({});
+
+  // PDF download state
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Compute effective contract data by merging: defaults < savedDraft < userModified
   const contractData = useMemo((): ContractData => {
@@ -197,24 +159,67 @@ export default function ContractGeneratorPage() {
   };
 
   const saveDraft = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contractData));
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+    saveDraftToStorage(contractData);
     trackEvent('contract_draft_saved', {
       template: contractData.template,
     });
   };
 
   const clearDraft = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+    clearDraftFromStorage();
     setUserModifiedData({});
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
 
+  const handleDownloadPDF = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch('/api/generate-pdf/contract', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contractData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate PDF');
+      }
+
+      // Get the PDF blob from response
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = getFileName();
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      // Track analytics
+      trackEvent('contract_downloaded', {
+        template: contractData.template,
+      });
+    } catch (error) {
+      const err = castError(error);
+      logger.error('Failed to download contract PDF', {
+        error: err.message,
+        template: contractData.template,
+      });
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const isValid =
     contractData.providerName.trim() !== '' &&
-    (contractData.clientName.trim() !== '' || contractData.clientCompany.trim() !== '');
+    ((contractData.clientName?.trim() ?? '') !== '' || (contractData.clientCompany?.trim() ?? '') !== '');
 
   const getFileName = () => {
     const templateName = contractData.template.replace('-', '_');
@@ -506,29 +511,21 @@ export default function ContractGeneratorPage() {
           )}
 
           {isHydrated && isValid && (
-            <PDFDownloadLink
-              document={<ContractDocument data={contractData} />}
-              fileName={getFileName()}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
-              onClick={() => {
-                trackEvent('contract_downloaded', {
-                  template: contractData.template,
-                  has_scope: !!contractData.scopeOfWork,
-                  has_payment: !!contractData.paymentAmount,
-                });
-              }}
+            <button
+              type="button"
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {({ loading }) =>
-                loading ? (
-                  'Generating PDF...'
-                ) : (
-                  <>
-                    <Download className="w-4 h-4" />
-                    Download PDF
-                  </>
-                )
-              }
-            </PDFDownloadLink>
+              {isDownloading ? (
+                'Generating PDF...'
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </>
+              )}
+            </button>
           )}
 
           {!isValid && (

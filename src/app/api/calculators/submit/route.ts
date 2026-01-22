@@ -3,13 +3,13 @@
  * Stores calculator results and triggers email sequences
  */
 
+import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
-import type { Database, Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
+import { calculatorLeads, type NewCalculatorLead } from '@/lib/schema';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -126,27 +126,23 @@ export async function POST(request: NextRequest) {
       leadQuality,
     });
 
-    // Store in database
-    const insertData = {
-      calculator_type: calculator_type as string,
+    // Store in database using Drizzle
+    const insertData: NewCalculatorLead = {
+      calculatorType: calculator_type,
       email,
       name: typeof inputs.name === 'string' ? inputs.name : null,
       company: typeof inputs.company === 'string' ? inputs.company : null,
       phone: typeof inputs.phone === 'string' ? inputs.phone : null,
-      inputs: inputs as Json,
-      results: (results || {}) as Json,
-      lead_score: leadScore,
-      lead_quality: leadQuality,
-    } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
+      inputs: inputs,
+      results: results || {},
+      leadScore,
+      leadQuality,
+    };
 
-    const { data: calculatorLead, error: dbError } = await supabaseAdmin
-      .from('calculator_leads')
-      .insert(insertData)
-      .select()
-      .single();
+    const [calculatorLead] = await db.insert(calculatorLeads).values(insertData).returning();
 
-    if (dbError) {
-      logger.error('Failed to store calculator lead', dbError);
+    if (!calculatorLead) {
+      logger.error('Failed to store calculator lead - no result returned');
       return NextResponse.json(
         { error: 'Failed to store submission' },
         { status: 500 }
@@ -300,7 +296,7 @@ function generateResultsEmail(
         </div>
 
         <div style="text-align: center; margin-top: 30px; padding: 20px; color: #6b7280; font-size: 12px;">
-          <p>© ${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
+          <p>${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
           <p>
             <a href="https://hudsondigitalsolutions.com/privacy" style="color: #06b6d4; text-decoration: none;">Privacy Policy</a>
           </p>

@@ -3,13 +3,12 @@
  * Stores Core Web Vitals metrics for performance monitoring
  */
 
+import { db } from '@/lib/db';
+import { webVitals, type NewWebVital } from '@/lib/schema';
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-// import type { WebVitalsInsert } from '@/types/supabase-helpers';
-import { supabaseAdmin } from "@/lib/supabase";
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
 
 const WebVitalSchema = z.object({
   name: z.enum(['CLS', 'FCP', 'FID', 'INP', 'LCP', 'TTFB']),
@@ -40,25 +39,35 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown';
     const referer = request.headers.get('referer') || request.url;
 
-    // Insert web vital
-    const webVitalData = {
-      metric_type: validatedData.name,
-      value: validatedData.value,
+    // Parse pathname from referer URL
+    let pathname = '/';
+    try {
+      const url = new URL(referer);
+      pathname = url.pathname;
+    } catch {
+      // If URL parsing fails, use the full referer as pathname
+      pathname = referer;
+    }
+
+    // Insert web vital using Drizzle
+    const webVitalData: NewWebVital = {
+      name: validatedData.name,
+      value: String(validatedData.value),
       rating: validatedData.rating || null,
-      page_path: referer,
-      user_agent: userAgent || null,
-      device_type: null,
-      connection_type: null,
-      session_id: null,
+      delta: validatedData.delta !== undefined ? String(validatedData.delta) : null,
+      navigationType: validatedData.navigation_type || null,
+      url: referer,
+      pathname,
+      userAgent: userAgent || null,
+      sessionId: null,
+      timestamp: new Date(),
     };
 
     // Store web vitals data
-    const { error } = await supabaseAdmin
-      .from('web_vitals')
-      .insert(webVitalData);
-
-    if (error) {
-      logger.error('Failed to store web vital:', error as Error);
+    try {
+      await db.insert(webVitals).values(webVitalData);
+    } catch (dbError) {
+      logger.error('Failed to store web vital:', dbError as Error);
       // Don't return error to client - fail silently
     }
 

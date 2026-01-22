@@ -18,9 +18,7 @@ function setupEnvMock() {
       NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
       npm_package_version: '1.0.0',
       BASE_URL: 'http://localhost:3000',
-      NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
-      NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'test-anon-key',
+      NEXT_PUBLIC_BASE_URL: 'http://localhost:3000'
     },
   }));
 }

@@ -5,7 +5,9 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin } from '@/lib/supabase'
+import { db } from '@/lib/db'
+import { errorLogs } from '@/lib/schema'
+import { eq, desc } from 'drizzle-orm'
 import { requireAdminAuth, validateAdminAuth } from '@/lib/admin-auth'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 import { resolveErrorSchema } from '@/lib/schemas/error-logs'
@@ -40,19 +42,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Invalid fingerprint' }, { status: 400 })
     }
 
-    const { data: errorOccurrences, error: fetchError } = await supabaseAdmin
-      .from('error_logs')
-      .select('*')
-      .eq('fingerprint', fingerprint)
-      .order('created_at', { ascending: false })
-
-    if (fetchError) {
-      logger.error('Failed to fetch error occurrences', fetchError)
-      return NextResponse.json(
-        { error: 'Failed to fetch error occurrences' },
-        { status: 500 }
-      )
-    }
+    const errorOccurrences = await db
+      .select()
+      .from(errorLogs)
+      .where(eq(errorLogs.fingerprint, fingerprint))
+      .orderBy(desc(errorLogs.createdAt))
 
     if (!errorOccurrences || errorOccurrences.length === 0) {
       return NextResponse.json({ error: 'Error not found' }, { status: 404 })
@@ -64,7 +58,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     const totalCount = errorOccurrences.length
-    const resolvedCount = errorOccurrences.filter((e) => e.resolved_at !== null).length
+    const resolvedCount = errorOccurrences.filter((e) => e.resolvedAt !== null).length
 
     logger.info('Error details fetched', {
       fingerprint,
@@ -73,14 +67,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({
       fingerprint,
-      error_type: firstOccurrence.error_type,
+      error_type: firstOccurrence.errorType,
       message: firstOccurrence.message,
       level: firstOccurrence.level,
       route: firstOccurrence.route,
       total_count: totalCount,
       resolved_count: resolvedCount,
-      first_seen: errorOccurrences[errorOccurrences.length - 1]?.created_at,
-      last_seen: firstOccurrence.created_at,
+      first_seen: errorOccurrences[errorOccurrences.length - 1]?.createdAt?.toISOString(),
+      last_seen: firstOccurrence.createdAt?.toISOString(),
       occurrences: errorOccurrences.slice(0, 50),
     })
   } catch (error) {
@@ -134,27 +128,19 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     const updateData = resolved
       ? {
-          resolved_at: new Date().toISOString(),
-          resolved_by: auth.user.id,
+          resolvedAt: new Date(),
+          resolvedBy: auth.user.id,
         }
       : {
-          resolved_at: null,
-          resolved_by: null,
+          resolvedAt: null,
+          resolvedBy: null,
         }
 
-    const { data, error: updateError } = await supabaseAdmin
-      .from('error_logs')
-      .update(updateData)
-      .eq('fingerprint', fingerprint)
-      .select()
-
-    if (updateError) {
-      logger.error('Failed to update error resolution status', updateError)
-      return NextResponse.json(
-        { error: 'Failed to update error resolution status' },
-        { status: 500 }
-      )
-    }
+    const data = await db
+      .update(errorLogs)
+      .set(updateData)
+      .where(eq(errorLogs.fingerprint, fingerprint))
+      .returning()
 
     if (!data || data.length === 0) {
       return NextResponse.json({ error: 'Error not found' }, { status: 404 })
@@ -172,7 +158,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       fingerprint,
       resolved,
       updated_count: data.length,
-      resolved_at: updateData.resolved_at,
+      resolved_at: updateData.resolvedAt?.toISOString() ?? null,
     })
   } catch (error) {
     logger.error(

@@ -7,7 +7,8 @@ import {
   sanitizeEmailHeader,
   detectInjectionAttempt
 } from '@/lib/utils';
-import { createServerLogger, castError } from '@/lib/logger';
+import { createServerLogger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import {
   leadMagnetRequestSchema,

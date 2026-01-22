@@ -5,10 +5,12 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schema';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { analyticsTrendsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import { gte, lte, and, asc } from 'drizzle-orm';
 import type { TrendsLead, DailyDataPoint } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-trends-api');
@@ -48,31 +50,40 @@ export async function GET(request: NextRequest) {
 
     const { days } = parseResult.data;
 
-    
-
     // Calculate date range
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
     // Fetch all leads within date range
-    const { data: leads, error } = await (await createClient())
-      .from('calculator_leads')
-      .select('created_at, contacted, converted, lead_quality, calculator_type')
-      .gte('created_at', startDate.toISOString())
-      .lte('created_at', endDate.toISOString())
-      .order('created_at', { ascending: true });
+    const leads = await db
+      .select({
+        createdAt: calculatorLeads.createdAt,
+        contacted: calculatorLeads.contacted,
+        converted: calculatorLeads.converted,
+        leadQuality: calculatorLeads.leadQuality,
+        calculatorType: calculatorLeads.calculatorType,
+      })
+      .from(calculatorLeads)
+      .where(
+        and(
+          gte(calculatorLeads.createdAt, startDate),
+          lte(calculatorLeads.createdAt, endDate)
+        )
+      )
+      .orderBy(asc(calculatorLeads.createdAt));
 
-    if (error) {
-      logger.error('Failed to fetch leads for trends', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch trends' },
-        { status: 500 }
-      );
-    }
+    // Transform to TrendsLead format (snake_case for compatibility)
+    const trendsLeads: TrendsLead[] = leads.map(lead => ({
+      created_at: lead.createdAt.toISOString(),
+      contacted: lead.contacted,
+      converted: lead.converted,
+      lead_quality: lead.leadQuality,
+      calculator_type: lead.calculatorType,
+    }));
 
     // Group leads by date
-    const dailyData = groupLeadsByDate(leads || [], days);
+    const dailyData = groupLeadsByDate(trendsLeads, days);
 
     // Calculate cumulative data
     const cumulativeLeads = calculateCumulative(dailyData, 'leads');

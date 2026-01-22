@@ -16,7 +16,8 @@ import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils';
 import { resendEmailResponseSchema } from '@/lib/schemas/external';
 import type { ContactFormData, LeadScoring } from '@/lib/schemas/contact';
 import { detectInjectionAttempt, escapeHtml } from '@/lib/utils';
-import { castError, type Logger } from '@/lib/logger';
+import { type Logger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors'
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmailSequence } from '@/lib/scheduled-emails';
 

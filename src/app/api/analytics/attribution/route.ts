@@ -3,12 +3,13 @@
  * Stores lead attribution data for marketing analytics
  */
 
-import { castError, createServerLogger } from '@/lib/logger';
+import { db } from '@/lib/db';
+import { leadAttribution, type NewLeadAttribution } from '@/lib/schema';
+import { eq, or } from 'drizzle-orm';
+import { createServerLogger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
-import type { Json } from '@/types/database';
-import type { LeadAttributionInsert } from '@/types/supabase-helpers';
-import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const logger = createServerLogger('attribution-api');
@@ -26,7 +27,6 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-
     // Parse and validate request body
     const parseResult = leadAttributionRequestSchema.safeParse(await request.json());
 
@@ -48,14 +48,9 @@ export async function POST(request: NextRequest) {
       campaign,
       term,
       content,
-      utm_params,
       referrer,
       landing_page,
-      current_page,
       session_id,
-      device_type,
-      browser,
-      os,
     } = body;
 
     logger.info('Attribution data received', {
@@ -67,14 +62,40 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if attribution already exists for this email/session
-    const { data: existing, error: existingError } = await supabaseAdmin
-      .from('lead_attribution')
-      .select('id, email, first_visit_at, visit_count')
-      .eq(email ? 'email' : 'session_id', (email ?? session_id) as string)
-      .maybeSingle();
+    // Build the where condition based on what we have
+    const whereCondition = email
+      ? eq(leadAttribution.sessionId, email)
+      : session_id
+        ? eq(leadAttribution.sessionId, session_id)
+        : null;
 
-    if (existingError && existingError.code !== 'PGRST116') {
-      logger.error('Failed to read existing attribution', castError(existingError));
+    if (!whereCondition) {
+      return NextResponse.json(
+        { error: 'Either email or session_id is required' },
+        { status: 400 }
+      );
+    }
+
+    let existing: typeof leadAttribution.$inferSelect | undefined;
+    try {
+      const results = await db
+        .select({
+          id: leadAttribution.id,
+          sessionId: leadAttribution.sessionId,
+          timestamp: leadAttribution.timestamp,
+        })
+        .from(leadAttribution)
+        .where(
+          or(
+            email ? eq(leadAttribution.sessionId, email) : undefined,
+            session_id ? eq(leadAttribution.sessionId, session_id) : undefined
+          )
+        )
+        .limit(1);
+
+      existing = results[0] as typeof leadAttribution.$inferSelect | undefined;
+    } catch (readError) {
+      logger.error('Failed to read existing attribution', castError(readError));
       return NextResponse.json(
         { error: 'Unable to read existing attribution' },
         { status: 500 }
@@ -82,17 +103,15 @@ export async function POST(request: NextRequest) {
     }
 
     if (existing) {
-      // Update last visit time and visit count
-      const { error: updateError } = await supabaseAdmin
-        .from('lead_attribution')
-        .update({
-          last_visit_at: new Date().toISOString(),
-          visit_count: (existing.visit_count || 0) + 1,
-          current_page,
-        })
-        .eq('id', existing.id);
-
-      if (updateError) {
+      // Update last visit time - in the new schema we update the timestamp
+      try {
+        await db
+          .update(leadAttribution)
+          .set({
+            timestamp: new Date(),
+          })
+          .where(eq(leadAttribution.id, existing.id));
+      } catch (updateError) {
         logger.error('Failed to update attribution', castError(updateError));
       }
 
@@ -106,51 +125,39 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new attribution record
-    const insertData: LeadAttributionInsert = {
-      email: email || 'anonymous@unknown.local',
+    const insertData: NewLeadAttribution = {
+      sessionId: session_id || null,
+      touchpoint: landing_page || 'direct',
+      channel: medium || 'direct',
       source: source || 'direct',
       medium: medium || 'none',
       campaign: campaign || null,
       term: term || null,
       content: content || null,
-      utm_params: (utm_params ?? null) as Json | null,
       referrer: referrer || null,
-      landing_page: landing_page || '',
-      current_page: current_page || null,
-      session_id: session_id || null,
-      device_type: device_type || null,
-      browser: browser || null,
-      os: os || null,
-      first_visit_at: new Date().toISOString(),
-      last_visit_at: new Date().toISOString(),
+      landingPage: landing_page || '',
+      isFirstTouch: true,
+      isLastTouch: true,
+      timestamp: new Date(),
     };
 
-    const { data, error } = await supabaseAdmin
-      .from('lead_attribution')
-      .insert(insertData)
-      .select('id')
-      .single();
+    const result = await db
+      .insert(leadAttribution)
+      .values(insertData)
+      .returning({ id: leadAttribution.id });
 
-    if (error) {
-      logger.error('Failed to store attribution', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to store attribution data' },
-        { status: 500 }
-      );
-    }
-
-    if (!data) {
+    if (!result[0]) {
       return NextResponse.json(
         { error: 'Failed to create attribution record' },
         { status: 500 }
       );
     }
 
-    logger.info('Stored new attribution', { id: data.id });
+    logger.info('Stored new attribution', { id: result[0].id });
 
     return NextResponse.json({
       success: true,
-      attribution_id: data.id,
+      attribution_id: result[0].id,
       first_visit: true,
     });
   } catch (error) {
@@ -190,37 +197,26 @@ export async function GET(request: NextRequest) {
     }
 
     // Query attribution data
-    const query = supabaseAdmin
-      .from('lead_attribution')
-      .select('*');
+    const whereCondition = email
+      ? eq(leadAttribution.sessionId, email)
+      : eq(leadAttribution.sessionId, session_id!);
 
-    if (email) {
-      query.eq('email', email);
-    } else if (session_id) {
-      query.eq('session_id', session_id);
-    }
+    const results = await db
+      .select()
+      .from(leadAttribution)
+      .where(whereCondition)
+      .limit(1);
 
-    const { data, error } = await query.single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // No rows found
-        return NextResponse.json(
-          { error: 'Attribution not found' },
-          { status: 404 }
-        );
-      }
-
-      logger.error('Failed to retrieve attribution', error as Error);
+    if (results.length === 0) {
       return NextResponse.json(
-        { error: 'Failed to retrieve attribution data' },
-        { status: 500 }
+        { error: 'Attribution not found' },
+        { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true, data: results[0] });
   } catch (error) {
-    logger.error('Attribution GET error', error instanceof Error ? error : new Error(String(error)));
+    logger.error('Attribution GET error', castError(error));
     return NextResponse.json(
       { error: 'Failed to retrieve attribution data' },
       { status: 500 }

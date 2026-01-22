@@ -5,27 +5,52 @@
 
 'use client';
 
-  import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
 import { FileText, Plus, Trash2, Download, Save, RotateCcw } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template';
+import type { InvoiceLineItem } from '@/lib/pdf/invoice-html-template';
 import { useHydrated } from '@/hooks/use-hydrated';
+import { useLocalStorageDraft } from '@/hooks/use-local-storage-draft';
 import { logger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors';
 
-// Dynamic import for PDF to avoid SSR issues
-const PDFDownloadLink = dynamic(
-  () => import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
-  { ssr: false, loading: () => <span>Loading PDF...</span> }
-);
-
-const InvoiceDocument = dynamic(
-  () => import('@/lib/pdf/invoice-template').then((mod) => mod.InvoiceDocument),
-  { ssr: false }
-);
+// Invoice data type for the page component (extends API type with UI-specific fields)
+interface InvoiceData {
+  // Company details
+  companyName: string;
+  companyAddress: string;
+  companyCity: string;
+  companyState: string;
+  companyZip: string;
+  companyEmail: string;
+  companyPhone: string;
+  // Client details
+  clientName: string;
+  clientCompany: string;
+  clientAddress: string;
+  clientCity: string;
+  clientState: string;
+  clientZip: string;
+  clientEmail: string;
+  // Invoice metadata
+  invoiceNumber: string;
+  invoiceDate: string;
+  dueDate: string;
+  paymentTerms: string;
+  // Line items
+  lineItems: InvoiceLineItem[];
+  // Totals (UI state - computed values sent to API)
+  subtotal: number;
+  taxRate: number;
+  taxAmount: number;
+  total: number;
+  // Optional
+  notes?: string;
+  terms?: string;
+}
 
 const STORAGE_KEY = 'hds-invoice-draft';
 
@@ -47,45 +72,22 @@ const generateInvoiceNumber = (): string => {
   return `INV-${year}${month}-${random}`;
 };
 
-const formatDateForInput = (date: Date): string => {
+function formatDateForInput(date: Date): string {
   return date.toISOString().split('T')[0] ?? '';
-};
+}
 
 // Only call crypto.randomUUID() on the client
-const createEmptyLineItem = (): InvoiceLineItem => ({
-  id: typeof crypto !== 'undefined' ? crypto.randomUUID() : `line-${Date.now()}`,
-  description: '',
-  quantity: 1,
-  rate: 0,
-  amount: 0,
-});
+function createEmptyLineItem(): InvoiceLineItem {
+  return {
+    id: typeof crypto !== 'undefined' ? crypto.randomUUID() : `line-${Date.now()}`,
+    description: '',
+    quantity: 1,
+    rate: 0,
+    amount: 0,
+  };
+}
 
-// Subscribe to localStorage changes (for cross-tab sync if needed)
-const subscribeToStorage = (callback: () => void) => {
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-};
-
-// Read draft from localStorage
-const getDraftSnapshot = (): InvoiceData | null => {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      return JSON.parse(saved) as InvoiceData;
-    }
-  } catch (error) {
-    // Log invalid localStorage data for debugging
-    logger.warn('Failed to parse invoice draft from localStorage', {
-      error: error instanceof Error ? error.message : String(error),
-    });
-  }
-  return null;
-};
-
-// Server snapshot always returns null
-const getServerDraftSnapshot = (): InvoiceData | null => null;
-
-// Empty subscribe for useSyncExternalStore (no-op)
+// Empty subscribe for useSyncExternalStore (for generated defaults)
 const emptySubscribe = () => () => {};
 
 // Module-level cache for generated defaults (persists across renders)
@@ -126,18 +128,15 @@ export default function InvoiceGeneratorPage() {
     getServerDefaultsSnapshot
   );
 
-  // Load draft from localStorage using useSyncExternalStore
-  const savedDraft = useSyncExternalStore(
-    subscribeToStorage,
-    getDraftSnapshot,
-    getServerDraftSnapshot
-  );
-
-  // Track if we have a draft (derived from savedDraft)
-  const hasDraft = savedDraft !== null;
+  // Load draft from localStorage using shared hook
+  const { savedDraft, hasDraft, saveDraft: saveDraftToStorage, clearDraft: clearDraftFromStorage } =
+    useLocalStorageDraft<InvoiceData>(STORAGE_KEY);
 
   // User-entered state (starts empty, user modifications go here)
   const [userModifiedData, setUserModifiedData] = useState<Partial<InvoiceData>>({});
+
+  // PDF download state
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Compute effective invoice data by merging: defaults < savedDraft < userModified
   const invoiceData = useMemo((): InvoiceData => {
@@ -249,9 +248,7 @@ export default function InvoiceGeneratorPage() {
   };
 
   const saveDraft = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(invoiceData));
-    // Dispatch storage event to trigger useSyncExternalStore update
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+    saveDraftToStorage(invoiceData);
     trackEvent('invoice_draft_saved', {
       invoice_number: invoiceData.invoiceNumber,
       line_items: invoiceData.lineItems.length,
@@ -259,13 +256,63 @@ export default function InvoiceGeneratorPage() {
   };
 
   const clearDraft = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    // Dispatch storage event to trigger useSyncExternalStore update
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
-    // Reset user modifications and regenerate defaults
+    clearDraftFromStorage();
     setUserModifiedData({});
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
+  };
+
+  const handleDownloadPDF = async () => {
+    setIsDownloading(true);
+    try {
+      const pdfData = {
+        ...invoiceData,
+        ...computedTotals,
+      };
+
+      const response = await fetch('/api/generate-pdf/invoice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pdfData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate PDF');
+      }
+
+      // Get the PDF blob from response
+      const blob = await response.blob();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${invoiceData.invoiceNumber}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      // Track analytics
+      trackEvent('invoice_downloaded', {
+        invoice_number: invoiceData.invoiceNumber,
+        total: computedTotals.total,
+        line_items: invoiceData.lineItems.length,
+      });
+    } catch (error) {
+      const err = castError(error);
+      logger.error('Failed to download invoice PDF', {
+        error: err.message,
+        invoice_number: invoiceData.invoiceNumber,
+      });
+      // Could show a toast notification here if you have one implemented
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const formatCurrency = (amount: number) =>
@@ -618,29 +665,21 @@ export default function InvoiceGeneratorPage() {
           )}
 
           {isHydrated && isValid && (
-            <PDFDownloadLink
-              document={<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />}
-              fileName={`${invoiceData.invoiceNumber}.pdf`}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
-              onClick={() => {
-                trackEvent('invoice_downloaded', {
-                  invoice_number: invoiceData.invoiceNumber,
-                  total: computedTotals.total,
-                  line_items: invoiceData.lineItems.length,
-                });
-              }}
+            <button
+              type="button"
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {({ loading }) =>
-                loading ? (
-                  'Generating PDF...'
-                ) : (
-                  <>
-                    <Download className="w-4 h-4" />
-                    Download PDF
-                  </>
-                )
-              }
-            </PDFDownloadLink>
+              {isDownloading ? (
+                'Generating PDF...'
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </>
+              )}
+            </button>
           )}
 
           {!isValid && (

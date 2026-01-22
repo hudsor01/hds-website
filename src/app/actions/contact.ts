@@ -6,7 +6,8 @@ import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { recordContactFormSubmission } from "@/lib/metrics"
 import { getClientIpFromHeaders } from "@/lib/utils/request"
 import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
-import { createServerLogger, castError } from "@/lib/logger"
+import { createServerLogger } from "@/lib/logger"
+import { castError } from '@/lib/utils/errors'
 import {
   checkForSecurityThreats,
   prepareEmailVariables,

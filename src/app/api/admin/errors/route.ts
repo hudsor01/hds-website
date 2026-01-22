@@ -5,7 +5,9 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin } from '@/lib/supabase'
+import { db } from '@/lib/db'
+import { errorLogs } from '@/lib/schema'
+import { desc, eq, gte, isNull, isNotNull, or, ilike, and } from 'drizzle-orm'
 import { requireAdminAuth } from '@/lib/admin-auth'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
@@ -52,82 +54,79 @@ export async function GET(request: NextRequest) {
 
     const startDate = getStartDateFromRange(timeRange)
 
-    let query = supabaseAdmin
-      .from('error_logs')
-      .select('*')
-      .gte('created_at', startDate.toISOString())
-      .order('created_at', { ascending: false })
+    // Build conditions array
+    const conditions = [gte(errorLogs.createdAt, startDate)]
 
     if (errorType) {
-      query = query.eq('error_type', errorType)
+      conditions.push(eq(errorLogs.errorType, errorType))
     }
 
     if (route) {
-      query = query.eq('route', route)
+      conditions.push(eq(errorLogs.route, route))
     }
 
     if (level) {
-      query = query.eq('level', level)
+      conditions.push(eq(errorLogs.level, level))
     }
 
     if (search) {
-      // Sanitize search term to prevent PostgREST filter injection
+      // Sanitize search term to prevent injection
       const sanitizedSearch = sanitizePostgrestSearch(search)
       if (sanitizedSearch.length >= 2) {
-        query = query.or(
-          `message.ilike.%${sanitizedSearch}%,error_type.ilike.%${sanitizedSearch}%,route.ilike.%${sanitizedSearch}%`
+        conditions.push(
+          or(
+            ilike(errorLogs.message, `%${sanitizedSearch}%`),
+            ilike(errorLogs.errorType, `%${sanitizedSearch}%`),
+            ilike(errorLogs.route, `%${sanitizedSearch}%`)
+          )!
         )
       }
     }
 
     if (resolved === 'true') {
-      query = query.not('resolved_at', 'is', null)
+      conditions.push(isNotNull(errorLogs.resolvedAt))
     } else if (resolved === 'false') {
-      query = query.is('resolved_at', null)
+      conditions.push(isNull(errorLogs.resolvedAt))
     }
 
-    const { data: errorLogs, error: fetchError } = await query
-
-    if (fetchError) {
-      logger.error('Failed to fetch error logs', fetchError)
-      return NextResponse.json(
-        { error: 'Failed to fetch error logs' },
-        { status: 500 }
-      )
-    }
+    const errorLogsData = await db
+      .select()
+      .from(errorLogs)
+      .where(and(...conditions))
+      .orderBy(desc(errorLogs.createdAt))
 
     const groupedErrorsMap = new Map<string, GroupedError>()
 
-    for (const errorLog of errorLogs || []) {
+    for (const errorLog of errorLogsData || []) {
       const existing = groupedErrorsMap.get(errorLog.fingerprint)
 
       if (existing) {
         existing.count += 1
-        const logDate = new Date(errorLog.created_at)
+        const logDate = new Date(errorLog.createdAt)
         const firstSeenDate = new Date(existing.first_seen)
         const lastSeenDate = new Date(existing.last_seen)
 
         if (logDate < firstSeenDate) {
-          existing.first_seen = errorLog.created_at
+          existing.first_seen = errorLog.createdAt.toISOString()
         }
         if (logDate > lastSeenDate) {
-          existing.last_seen = errorLog.created_at
+          existing.last_seen = errorLog.createdAt.toISOString()
         }
 
-        if (errorLog.resolved_at && !existing.resolved_at) {
-          existing.resolved_at = errorLog.resolved_at
+        if (errorLog.resolvedAt && !existing.resolved_at) {
+          existing.resolved_at = errorLog.resolvedAt.toISOString()
         }
       } else {
         groupedErrorsMap.set(errorLog.fingerprint, {
           fingerprint: errorLog.fingerprint,
-          error_type: errorLog.error_type,
+          error_type: errorLog.errorType,
           message: errorLog.message,
           level: errorLog.level as GroupedError['level'],
           count: 1,
-          first_seen: errorLog.created_at,
-          last_seen: errorLog.created_at,
+          first_seen: errorLog.createdAt.toISOString(),
+          last_seen: errorLog.createdAt.toISOString(),
           route: errorLog.route ?? undefined,
-          resolved_at: errorLog.resolved_at ?? undefined,
+          resolved_at: errorLog.resolvedAt?.toISOString() ?? undefined,
         })
       }
     }
@@ -137,11 +136,11 @@ export async function GET(request: NextRequest) {
       .slice(offset, offset + limit)
 
     const stats: ErrorStats = {
-      total_errors: errorLogs?.length || 0,
-      unique_types: new Set(errorLogs?.map((e) => e.error_type) || []).size,
-      fatal_count: errorLogs?.filter((e) => e.level === 'fatal').length || 0,
-      resolved_count: errorLogs?.filter((e) => e.resolved_at !== null).length || 0,
-      unresolved_count: errorLogs?.filter((e) => e.resolved_at === null).length || 0,
+      total_errors: errorLogsData?.length || 0,
+      unique_types: new Set(errorLogsData?.map((e) => e.errorType) || []).size,
+      fatal_count: errorLogsData?.filter((e) => e.level === 'fatal').length || 0,
+      resolved_count: errorLogsData?.filter((e) => e.resolvedAt !== null).length || 0,
+      unresolved_count: errorLogsData?.filter((e) => e.resolvedAt === null).length || 0,
     }
 
     logger.info('Error logs fetched', {

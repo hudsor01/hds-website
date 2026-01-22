@@ -3,15 +3,14 @@
  * Handles email list subscriptions and welcome email
  */
 
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { newsletterSubscribers, type NewNewsletterSubscriber } from '@/lib/schema';
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
-import type { Database } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
 
 const SubscribeSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -35,18 +34,14 @@ export async function POST(request: NextRequest) {
     const { email, source } = SubscribeSchema.parse(body);
 
     // Check if already subscribed
-    const { data: existing, error: existingError} = await supabaseAdmin
-      .from('newsletter_subscribers')
-      .select('*')
-      .eq('email', email)
-      .maybeSingle();
+    const existing = await db
+      .select()
+      .from(newsletterSubscribers)
+      .where(eq(newsletterSubscribers.email, email))
+      .limit(1);
 
-    if (existingError && existingError.code !== 'PGRST116') {
-      logger.error('Failed to check existing subscriber:', existingError as Error);
-      return NextResponse.json({ error: 'Unable to process subscription' }, { status: 500 });
-    }
-
-    if (existing && existing.status === 'active') {
+    const existingSubscriber = existing[0];
+    if (existingSubscriber && existingSubscriber.status === 'active') {
       return NextResponse.json(
         { error: 'Email already subscribed' },
         { status: 400 }
@@ -54,25 +49,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert or update subscriber
-    const subscriberData: NewsletterSubscriberInsert = {
+    const subscriberData: NewNewsletterSubscriber = {
       email,
       status: 'active',
       source: source || 'website',
-      subscribed_at: new Date().toISOString(),
-      unsubscribed_at: null,
+      subscribedAt: new Date(),
+      unsubscribedAt: null,
     };
 
-    const { error: dbError } = await supabaseAdmin
-      .from('newsletter_subscribers')
-      .upsert(subscriberData);
-
-    if (dbError) {
-      logger.error('Failed to save subscriber:', dbError);
-      return NextResponse.json(
-        { error: 'Failed to subscribe' },
-        { status: 500 }
-      );
-    }
+    await db
+      .insert(newsletterSubscribers)
+      .values(subscriberData)
+      .onConflictDoUpdate({
+        target: newsletterSubscribers.email,
+        set: {
+          status: 'active',
+          source: subscriberData.source,
+          subscribedAt: subscriberData.subscribedAt,
+          unsubscribedAt: null,
+          updatedAt: new Date(),
+        },
+      });
 
     // Send welcome email
     try {

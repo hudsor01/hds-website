@@ -76,14 +76,10 @@ export const helpArticles = pgTable('help_articles', {
   title: text('title').notNull(),
   content: text('content').notNull(),
   excerpt: text('excerpt'),
-  category: text('category'),
-  tags: jsonb('tags'),
+  category: text('category').notNull(),
   published: boolean('published').default(false),
-  viewCount: integer('view_count').default(0),
-  helpfulCount: integer('helpful_count').default(0),
-  notHelpfulCount: integer('not_helpful_count').default(0),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }),
+  updatedAt: timestamp('updated_at', { withTimezone: true }),
 });
 
 // Type exports

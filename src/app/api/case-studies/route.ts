@@ -5,7 +5,9 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { caseStudies } from '@/lib/schema';
+import { eq, desc, and } from 'drizzle-orm';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
@@ -38,22 +40,20 @@ export async function GET(request: NextRequest) {
 
     const { industry, featured, slug } = parseResult.data;
 
-    // Use server client - RLS allows public reads of published case studies
-    const supabase = await createClient();
-
     // If slug is provided, return single case study
     if (slug) {
-      const { data: caseStudy, error } = await supabase
-        .from('case_studies')
-        .select('*')
-        .eq('slug', slug)
-        .eq('published', true)
-        .maybeSingle();
+      const caseStudyResults = await db
+        .select()
+        .from(caseStudies)
+        .where(
+          and(
+            eq(caseStudies.slug, slug),
+            eq(caseStudies.published, true)
+          )
+        )
+        .limit(1);
 
-      if (error && error.code !== 'PGRST116') {
-        logger.error('Failed to fetch case study by slug', error as Error);
-        return NextResponse.json({ error: 'Failed to fetch case study' }, { status: 500 });
-      }
+      const caseStudy = caseStudyResults[0] ?? null;
 
       if (!caseStudy) {
         return NextResponse.json(
@@ -65,34 +65,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ caseStudy });
     }
 
-    // Build query for list of case studies
-    let query = supabase
-      .from('case_studies')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
+    // Build query conditions for list of case studies
+    const conditions = [eq(caseStudies.published, true)];
 
     // Filter by industry if provided
     if (industry) {
-      query = query.eq('industry', industry);
+      conditions.push(eq(caseStudies.industry, industry));
     }
 
     // Filter by featured if provided
     if (featured) {
-      query = query.eq('featured', true);
+      conditions.push(eq(caseStudies.featured, true));
     }
 
-    const { data: caseStudies, error } = await query;
+    const caseStudyList = await db
+      .select()
+      .from(caseStudies)
+      .where(and(...conditions))
+      .orderBy(desc(caseStudies.createdAt));
 
-    if (error) {
-      logger.error('Failed to fetch case studies:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch case studies' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ caseStudies: caseStudies || [] });
+    return NextResponse.json({ caseStudies: caseStudyList });
   } catch (error) {
     logger.error('Case studies API error:', error as Error);
     return NextResponse.json(
