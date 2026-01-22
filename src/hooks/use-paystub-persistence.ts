@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 import { clearFormData, loadFormData, saveFormData } from "@/lib/paystub-calculator/storage";
-import type { PaystubData, FilingStatus } from "@/types/paystub";
+import type { FilingStatus, PaystubData } from "@/types/paystub";
 
 interface UsePaystubPersistenceProps {
   paystubData: PaystubData;
@@ -17,28 +17,70 @@ export function usePaystubPersistence({
   setPaystubData,
   setSelectedState,
 }: UsePaystubPersistenceProps) {
-  // TEMPORARY FIX: Disabled localStorage restoration due to infinite loop bug
-  // TODO: Re-enable after fixing the React re-render cycle issue
-  // The restoration triggers infinite re-renders when combined with the Select components
+  // Track if initial load has completed to avoid save-on-load cycle
+  const hasLoadedRef = useRef(false);
+  const isInitialMountRef = useRef(true);
+
+  // Load saved data on mount (runs once)
   useEffect(() => {
-    // Temporarily disabled to prevent infinite loop bug
-    // const savedData = loadFormData();
-    // if (!savedData) {
-    //   return;
-    // }
-    
-    logger.info("Paystub persistence temporarily disabled", {
+    // Skip if already loaded
+    if (hasLoadedRef.current) {
+      return;
+    }
+
+    const savedData = loadFormData();
+    if (!savedData) {
+      hasLoadedRef.current = true;
+      return;
+    }
+
+    logger.info("Restoring paystub form data from localStorage", {
       component: "usePaystubPersistence",
       userFlow: "paystub_tool_usage",
-      action: "persistence_disabled",
-      businessValue: "low",
-      reason: "infinite_loop_bug_fix",
+      action: "data_restored",
+      businessValue: "medium",
     });
+
+    // Restore form data (cast filingStatus to proper type)
+    setPaystubData((prev) => ({
+      ...prev,
+      employeeName: savedData.employeeName || prev.employeeName,
+      employeeId: savedData.employeeId || prev.employeeId,
+      employerName: savedData.employerName || prev.employerName,
+      hourlyRate: savedData.hourlyRate || prev.hourlyRate,
+      hoursPerPeriod: savedData.hoursPerPeriod || prev.hoursPerPeriod,
+      filingStatus: (savedData.filingStatus as FilingStatus) || prev.filingStatus,
+      taxYear: savedData.taxYear || prev.taxYear,
+    }));
+
+    // Restore selected state if saved
+    if (savedData.state) {
+      setSelectedState(savedData.state);
+    }
+
+    hasLoadedRef.current = true;
   }, [setPaystubData, setSelectedState]);
 
-  // Auto-save form data
-  const saveCurrentFormData = useCallback(() => {
-    const dataToSave = {
+  // Auto-save form data when it changes (after initial load)
+  useEffect(() => {
+    // Skip initial mount and wait for load to complete
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false;
+      return;
+    }
+
+    // Don't save until initial load is complete
+    if (!hasLoadedRef.current) {
+      return;
+    }
+
+    // Only save if there's meaningful data
+    const hasData = paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod;
+    if (!hasData) {
+      return;
+    }
+
+    saveFormData({
       employeeName: paystubData.employeeName,
       employeeId: paystubData.employeeId,
       employerName: paystubData.employerName,
@@ -47,21 +89,19 @@ export function usePaystubPersistence({
       filingStatus: paystubData.filingStatus,
       taxYear: paystubData.taxYear,
       state: selectedState,
-    };
-    saveFormData(dataToSave);
-  }, [paystubData, selectedState]);
+    });
+  }, [
+    paystubData.employeeName,
+    paystubData.employeeId,
+    paystubData.employerName,
+    paystubData.hourlyRate,
+    paystubData.hoursPerPeriod,
+    paystubData.filingStatus,
+    paystubData.taxYear,
+    selectedState,
+  ]);
 
-  // TEMPORARY FIX: Disabled auto-save due to infinite loop bug
-  // Save form data whenever it changes
-  useEffect(() => {
-    // Temporarily disabled to prevent infinite loop bug
-    // if (paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod) {
-    //   saveCurrentFormData();
-    // }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paystubData, selectedState]);
-
-  const clearForm = () => {
+  const clearForm = useCallback(() => {
     logger.info("Paystub form cleared by user", {
       component: "usePaystubPersistence",
       userFlow: "paystub_tool_usage",
@@ -78,7 +118,7 @@ export function usePaystubPersistence({
       const firstInput = document.querySelector("input[type=\"text\"]") as HTMLInputElement | null;
       firstInput?.focus();
     }, 100);
-  };
+  }, [paystubData.employeeName, paystubData.hourlyRate, paystubData.hoursPerPeriod]);
 
   return {
     clearForm,
