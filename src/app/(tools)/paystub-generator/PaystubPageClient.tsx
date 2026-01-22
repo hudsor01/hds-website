@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
+import { Share2 } from 'lucide-react'
 
 import { AnnualWageSummary } from '@/components/paystub/AnnualWageSummary'
 import { PayStub } from '@/components/paystub/PayStub'
@@ -52,7 +54,21 @@ export function PaystubPageClient() {
     generatePaystubs,
     handlePrint,
     backToForm,
+    generateShareableUrl,
   } = usePaystubGenerator()
+
+  const handleShare = async () => {
+    const url = generateShareableUrl()
+    try {
+      await navigator.clipboard.writeText(url)
+      toast.success('Link copied to clipboard!')
+    } catch {
+      // Fallback for browsers without clipboard API
+      toast.info('Copy this URL to share:', { description: url })
+    }
+  }
+
+  const hasFormData = paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod
 
   const [showTable, setShowTable] = useState(false)
 
@@ -100,6 +116,17 @@ export function PaystubPageClient() {
         <p className="text-base text-muted-foreground max-w-2xl mx-auto">
           Enter your payroll details, validate inputs, and generate professional pay stubs with printable pay period and W-2 style annual summaries.
         </p>
+        {hasFormData && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleShare}
+            className="mt-2"
+          >
+            <Share2 className="w-4 h-4 mr-2" />
+            Share Calculator
+          </Button>
+        )}
       </header>
 
       {documentType === 'form' && (
