@@ -2,7 +2,7 @@
  * API Route: Individual Testimonial Request
  * DELETE /api/testimonials/requests/[id] - Delete testimonial request
  *
- * SECURITY: This endpoint requires admin authentication via Supabase session
+ * SECURITY: This endpoint requires admin authentication via Neon Auth session
  */
 
 import { type NextRequest, NextResponse } from 'next/server';

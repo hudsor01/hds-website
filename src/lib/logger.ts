@@ -1,10 +1,11 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging with Supabase error tracking
+ * Provides server and client logging with Drizzle ORM error tracking
  */
 
-import { supabaseAdmin } from '@/lib/supabase'
-import type { Json } from '@/types/database'
+import { db } from '@/lib/db'
+import { errorLogs } from '@/lib/schema'
+import { castError } from '@/lib/utils/errors'
 import type {
   ErrorLogData,
   LogContext,
@@ -15,54 +16,6 @@ import type {
 import type { ErrorContext, ErrorLogPayload, ErrorLevel } from '@/types/error-logging'
 
 export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
-
-/**
- * Cast unknown error to Error object
- */
-export function castError(error: unknown): ErrorLogData {
-  if (error instanceof Error) {
-    return {
-      name: error.name,
-      message: error.message,
-      stack: error.stack ?? undefined,
-      cause: (error as Error & { cause?: unknown }).cause ?? undefined
-    };
-  }
-
-  if (typeof error === 'string') {
-    return {
-      name: 'StringError',
-      message: error,
-      stack: undefined,
-      cause: undefined
-    };
-  }
-
-  if (error === null || error === undefined) {
-    return {
-      name: 'NullError',
-      message: String(error),
-      stack: undefined,
-      cause: undefined
-    };
-  }
-
-  try {
-    return {
-      name: 'UnknownError',
-      message: typeof error === 'object' ? JSON.stringify(error) : String(error),
-      stack: undefined,
-      cause: undefined
-    };
-  } catch {
-    return {
-      name: 'UnknownError',
-      message: String(error),
-      stack: undefined,
-      cause: undefined
-    };
-  }
-}
 
 /**
  * Generate a fingerprint for grouping identical errors.
@@ -87,28 +40,32 @@ export function generateFingerprint(
 }
 
 /**
- * Push error to Supabase (non-blocking, fire-and-forget)
+ * Push error to database (non-blocking, fire-and-forget)
  * Note: Uses console.error as final fallback since we can't use the logger to log logger failures
  */
-async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
+async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
   try {
-    // Cast metadata to match database Json type
-    const dbPayload = {
-      ...payload,
-      metadata: payload.metadata as Record<string, Json | undefined>,
-    }
-    const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
-    if (error) {
-      // Final fallback - can't use logger here as it would cause recursion
-      if (process.env.NODE_ENV === 'development') {
-        console.error('[Logger] Failed to push to Supabase:', error.message)
-      }
-    }
+    await db.insert(errorLogs).values({
+      level: payload.level,
+      errorType: payload.error_type,
+      fingerprint: payload.fingerprint,
+      message: payload.message,
+      stackTrace: payload.stack_trace,
+      url: payload.url,
+      method: payload.method,
+      route: payload.route,
+      requestId: payload.request_id,
+      userId: payload.user_id,
+      userEmail: payload.user_email,
+      environment: payload.environment ?? 'development',
+      vercelRegion: payload.vercel_region,
+      metadata: payload.metadata,
+    })
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
     if (process.env.NODE_ENV === 'development') {
-      console.error('[Logger] Failed to push to Supabase:', e)
+      console.error('[Logger] Failed to push to database:', e)
     }
   }
 }
@@ -196,26 +153,43 @@ export class BaseLogger implements Logger {
   }
 
   error(message: string, error?: Error | unknown, context?: ErrorContext): void {
-    const errorData = error ? castError(error) : undefined;
+    const errorData = this.extractErrorData(error);
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
+    // Push to database in production (non-blocking, server-side only)
     if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('error', message, errorData, context);
+      this.pushErrorToDatabase('error', message, errorData, context);
     }
   }
 
   fatal(message: string, error?: Error | unknown, context?: ErrorContext): void {
-    const errorData = error ? castError(error) : undefined;
+    const errorData = this.extractErrorData(error);
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
+    // Push to database in production (non-blocking, server-side only)
     if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('fatal', message, errorData, context);
+      this.pushErrorToDatabase('fatal', message, errorData, context);
     }
   }
 
-  private pushErrorToSupabase(
+  /**
+   * Extracts structured error data from an unknown error value
+   */
+  private extractErrorData(error: unknown): ErrorLogData | undefined {
+    if (!error) {
+      return undefined;
+    }
+
+    const err = castError(error);
+    return {
+      name: err.name,
+      message: err.message,
+      stack: err.stack ?? undefined,
+      cause: (err as Error & { cause?: unknown }).cause ?? undefined,
+    };
+  }
+
+  private pushErrorToDatabase(
     level: ErrorLevel,
     message: string,
     errorData?: ErrorLogData,
@@ -247,7 +221,7 @@ export class BaseLogger implements Logger {
     }
 
     // Fire and forget - don't await
-    void pushToSupabase(payload)
+    void pushToDatabase(payload)
   }
 
   time(label: string): void {
@@ -376,14 +350,18 @@ export function handleError(
   options: HandleErrorOptions = {}
 ): ErrorLogData {
   const { context, metadata, rethrow = false, severity = 'warning' } = options;
-  const errorData = castError(error);
+  const err = castError(error);
+  const errorData: ErrorLogData = {
+    name: err.name,
+    message: err.message,
+    stack: err.stack ?? undefined,
+    cause: (err as Error & { cause?: unknown }).cause ?? undefined,
+  };
 
-  const message = context
-    ? `[${context}] ${errorData.message}`
-    : errorData.message;
-
+  const message = context ? `[${context}] ${errorData.message}` : errorData.message;
   const logData = metadata ? { ...metadata, errorData } : errorData;
 
+  // Log based on severity level
   switch (severity) {
     case 'critical':
       logger.error(message, error);
@@ -391,9 +369,8 @@ export function handleError(
     case 'warning':
       logger.warn(message, logData);
       break;
-    case 'info':
+    default:
       logger.info(message, logData);
-      break;
   }
 
   if (rethrow) {

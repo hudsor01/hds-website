@@ -68,7 +68,7 @@ export const webhookSignatureSchema = z.object({
   'x-webhook-timestamp': z.string().min(1),
 });
 
-// Supabase webhook payload types
+// Database webhook payload types
 export const databaseChangePayloadSchema = z.object({
   type: z.enum(['INSERT', 'UPDATE', 'DELETE']),
   table: z.string(),

@@ -3,7 +3,7 @@
  * GET /api/testimonials/requests - List all testimonial requests (admin only)
  * POST /api/testimonials/requests - Create a new testimonial request (admin only)
  *
- * SECURITY: These endpoints require admin authentication via Supabase session
+ * SECURITY: These endpoints require admin authentication via Neon Auth session
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
