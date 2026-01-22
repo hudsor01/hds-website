@@ -5,10 +5,12 @@
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads, leadAttribution } from '@/lib/schema';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { analyticsLeadsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import { eq, desc, asc, and, inArray, type SQL } from 'drizzle-orm';
 
 const logger = createServerLogger('analytics-leads-api');
 
@@ -47,61 +49,68 @@ export async function GET(request: NextRequest) {
 
     const { limit, quality, type: calculatorType, sortBy, sortOrder } = parseResult.data;
 
-    
-
-    // Build query with JOIN to avoid N+1 problem
-    // Previously: 1 query for leads + N queries for attribution = N+1 queries
-    // Now: 1 query with left join = 1 query total
-    let query = (await createClient())
-      .from('calculator_leads')
-      .select(`
-        *,
-        attribution:lead_attribution(
-          first_touch_utm_source,
-          first_touch_utm_medium,
-          first_touch_utm_campaign,
-          last_touch_utm_source,
-          last_touch_utm_medium,
-          last_touch_utm_campaign,
-          referrer,
-          landing_page,
-          created_at
-        )
-      `);
-
-    // Apply filters
+    // Build conditions array with proper typing
+    const conditions: SQL[] = [];
     if (quality) {
-      query = query.eq('lead_quality', quality);
+      conditions.push(eq(calculatorLeads.leadQuality, quality));
     }
-
     if (calculatorType) {
-      query = query.eq('calculator_type', calculatorType);
+      conditions.push(eq(calculatorLeads.calculatorType, calculatorType));
     }
 
-    // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    // Map sortBy to schema field
+    const sortByFieldMap = {
+      created_at: calculatorLeads.createdAt,
+      lead_score: calculatorLeads.leadScore,
+      lead_quality: calculatorLeads.leadQuality,
+    } as const;
+    const sortField = sortByFieldMap[sortBy as keyof typeof sortByFieldMap] ?? calculatorLeads.createdAt;
+    const orderFn = sortOrder === 'asc' ? asc : desc;
 
-    // Apply limit
-    query = query.limit(limit);
+    // Query leads with filters using standard select
+    const leads = await db
+      .select()
+      .from(calculatorLeads)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(orderFn(sortField))
+      .limit(limit);
 
-    const { data: leads, error } = await query;
+    // Fetch attribution data for leads by lead_id
+    const leadIds = leads.map(l => l.id);
+    const attributionByLeadId = new Map<string, typeof leadAttribution.$inferSelect>();
 
-    if (error) {
-      logger.error('Failed to fetch leads', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
+    if (leadIds.length > 0) {
+      // Use inArray for efficient batch lookup
+      const attributions = await db
+        .select()
+        .from(leadAttribution)
+        .where(inArray(leadAttribution.leadId, leadIds));
+
+      for (const attr of attributions) {
+        if (attr.leadId) {
+          attributionByLeadId.set(attr.leadId, attr);
+        }
+      }
     }
 
-    // Transform the joined data to match expected format
-    // Supabase returns attribution as an array, we want single object or null
-    const enrichedLeads = (leads || []).map((lead) => ({
-      ...lead,
-      attribution: Array.isArray(lead.attribution) && lead.attribution.length > 0
-        ? lead.attribution[0]
-        : lead.attribution || null,
-    }));
+    // Transform leads to include attribution data
+    const enrichedLeads = leads.map((lead) => {
+      const attribution = attributionByLeadId.get(lead.id);
+      return {
+        ...lead,
+        attribution: attribution ? {
+          first_touch_utm_source: attribution.source,
+          first_touch_utm_medium: attribution.medium,
+          first_touch_utm_campaign: attribution.campaign,
+          last_touch_utm_source: attribution.source,
+          last_touch_utm_medium: attribution.medium,
+          last_touch_utm_campaign: attribution.campaign,
+          referrer: attribution.referrer,
+          landing_page: attribution.landingPage,
+          created_at: attribution.timestamp,
+        } : null,
+      };
+    });
 
     logger.info('Leads fetched', { count: enrichedLeads.length, quality, calculatorType });
 

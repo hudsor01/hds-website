@@ -2,7 +2,6 @@
  * API Route: Testimonials
  * GET /api/testimonials - List testimonials
  *   - Public: Returns only approved testimonials (no auth required)
- *   - Admin: Returns all testimonials including unapproved (requires Supabase session)
  *
  * Query params:
  *   - all=true: Request all testimonials (requires admin auth)
@@ -10,11 +9,11 @@
  * SECURITY: Accessing unapproved testimonials requires admin authentication
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
-import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   // Rate limiting - 100 requests per minute per IP

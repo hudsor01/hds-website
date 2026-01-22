@@ -38,7 +38,6 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-.mcp.json
 
 # direnv
 .envrc
@@ -73,13 +72,6 @@ e2e/dark-design-visual-test.spec.ts-snapshots/
 # Test results directory
 test-results/
 playwright-report/
-
-# Manual guides
-*.md
-!CLAUDE.md
-!README.md
-!master_todo.md
-!docs/plans/*.md
 
 # Log files
 *.log

@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { generateCsrfToken } from '@/lib/csrf';
 import { applySecurityHeaders } from '@/lib/security-headers';
-import { createServerLogger, castError } from '@/lib/logger';
+import { createServerLogger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors'
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 
 export async function GET(request: NextRequest) {

@@ -13,18 +13,18 @@ import {
 
 export const scheduledEmails = pgTable('scheduled_emails', {
   id: uuid('id').primaryKey().defaultRandom(),
-  templateId: text('template_id').notNull(),
   recipientEmail: text('recipient_email').notNull(),
-  recipientName: text('recipient_name'),
-  subject: text('subject').notNull(),
+  recipientName: text('recipient_name').notNull(),
+  sequenceId: text('sequence_id').notNull(),
+  stepId: text('step_id').notNull(),
   scheduledFor: timestamp('scheduled_for', { withTimezone: true }).notNull(),
   sentAt: timestamp('sent_at', { withTimezone: true }),
-  status: text('status').default('pending'),
-  metadata: jsonb('metadata'),
-  errorMessage: text('error_message'),
-  retryCount: integer('retry_count').default(0),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+  status: text('status').notNull().default('pending'),
+  variables: jsonb('variables').$type<Record<string, string>>().notNull().default({}),
+  retryCount: integer('retry_count').notNull().default(0),
+  maxRetries: integer('max_retries').notNull().default(3),
+  error: text('error'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const newsletterSubscribers = pgTable('newsletter_subscribers', {

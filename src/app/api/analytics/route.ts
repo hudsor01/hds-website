@@ -3,11 +3,12 @@
  * Receives and processes analytics events from the client
  */
 
+import { db } from '@/lib/db';
+import { customEvents, type NewCustomEvent } from '@/lib/schema';
 import { env } from '@/env';
-import { castError, createServerLogger } from '@/lib/logger';
+import { createServerLogger } from '@/lib/logger';
+import { castError } from '@/lib/utils/errors';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-import type { Database, Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -51,8 +52,7 @@ export async function POST(request: NextRequest) {
     const { eventName, properties, timestamp, sessionId, userId } = parseResult.data;
     const eventCategory = typeof properties.category === 'string' ? properties.category : 'general';
     const eventLabel = typeof properties.label === 'string' ? properties.label : null;
-    const eventValue = typeof properties.value === 'number' ? properties.value : null;
-    const metadata = (properties ?? {}) as Json;
+    const eventValue = typeof properties.value === 'number' ? String(properties.value) : null;
 
     // Log the event
     logger.info('Analytics event received', {
@@ -63,24 +63,20 @@ export async function POST(request: NextRequest) {
       timestamp: timestamp || Date.now(),
     });
 
-    // Store in Supabase
+    // Store in database using Drizzle
     try {
-      const insertPayload: Database['public']['Tables']['custom_events']['Insert'] = {
-        event_name: eventName,
-        event_category: eventCategory,
-        event_label: eventLabel,
-        event_value: eventValue,
-        session_id: sessionId || null,
-        user_id: userId || null,
-        metadata,
-        timestamp: new Date(timestamp || Date.now()).toISOString(),
+      const insertPayload: NewCustomEvent = {
+        eventName,
+        category: eventCategory,
+        label: eventLabel,
+        value: eventValue,
+        sessionId: sessionId || null,
+        userId: userId || null,
+        properties: properties ?? {},
+        timestamp: new Date(timestamp || Date.now()),
       };
 
-      const { error } = await supabaseAdmin.from('custom_events').insert(insertPayload);
-
-      if (error) {
-        logger.error('Failed to store analytics event in database', castError(error));
-      }
+      await db.insert(customEvents).values(insertPayload);
     } catch (dbError) {
       // Don't fail the request if database insert fails
       logger.error('Failed to store analytics event in database', castError(dbError));

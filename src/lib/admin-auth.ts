@@ -1,10 +1,10 @@
 /**
  * Admin API Authentication
- * Server-side authentication for admin API routes using Supabase Auth
+ * Server-side authentication for admin API routes using Neon Auth
  */
 
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getAuthUser } from '@/lib/auth/server';
 import { logger } from '@/lib/logger';
 
 // Lazy-loaded admin email whitelist
@@ -39,23 +39,21 @@ export function isAdminEmail(email: string): boolean {
 /**
  * Check if a user has admin role in metadata
  */
-export function hasAdminRole(user: { user_metadata?: { role?: string } }): boolean {
-  return user.user_metadata?.role === 'admin';
+export function hasAdminRole(user: { metadata?: { role?: string } }): boolean {
+  return user.metadata?.role === 'admin';
 }
 
 /**
- * Validate admin authentication using Supabase session
+ * Validate admin authentication using Neon Auth session
  * Checks if the user is logged in and has admin privileges
  */
 export async function validateAdminAuth(): Promise<AuthResult> {
   try {
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { user, session } = await getAuthUser();
 
-    if (error || !user) {
+    if (!user || !session) {
       logger.warn('Admin API request without authentication', {
         component: 'AdminAuth',
-        error: error?.message,
       });
       return {
         isAuthenticated: false,
@@ -71,7 +69,7 @@ export async function validateAdminAuth(): Promise<AuthResult> {
     // Option 2: Check user metadata for admin role
     const isAdmin =
       isAdminEmail(user.email || '') ||
-      hasAdminRole(user);
+      hasAdminRole(user as { metadata?: { role?: string } });
 
     if (!isAdmin) {
       logger.warn('Admin API request from non-admin user', {

@@ -4,14 +4,13 @@
  */
 
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
-import type { Database } from '@/types/database';
+import { db } from '@/lib/db';
+import { leadNotes, type NewLeadNote } from '@/lib/schema';
+import { eq, asc } from 'drizzle-orm';
 import { type NextRequest, NextResponse } from 'next/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
-
-type LeadNoteInsert = Database['public']['Tables']['lead_notes']['Insert'];
 
 const CreateNoteSchema = z.object({
   note_type: z.enum(['note', 'status_change', 'email_sent', 'call', 'meeting']),
@@ -41,19 +40,12 @@ export async function GET(
   }
 
   try {
-    const supabase = await createClient();
-
-    // Fetch all notes for this lead (RLS enforces admin access)
-    const { data: notes, error } = await supabase
-      .from('lead_notes')
-      .select('*')
-      .eq('lead_id', id)
-      .order('created_at', { ascending: true });
-
-    if (error) {
-      logger.error('Failed to fetch notes:', error as Error);
-      return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
-    }
+    // Fetch all notes for this lead
+    const notes = await db
+      .select()
+      .from(leadNotes)
+      .where(eq(leadNotes.leadId, id))
+      .orderBy(asc(leadNotes.createdAt));
 
     return NextResponse.json({ notes: notes || [] });
   } catch (error) {
@@ -83,30 +75,23 @@ export async function POST(
   }
 
   try {
-    const supabase = await createClient();
     const body = await request.json();
 
     // Validate input
     const validatedData = CreateNoteSchema.parse(body);
 
-    // Insert note (RLS enforces admin access)
-    const noteData: LeadNoteInsert = {
-      lead_id: id,
+    // Insert note
+    const noteData: NewLeadNote = {
+      leadId: id,
       content: validatedData.content,
-      note_type: validatedData.note_type,
-      created_by: validatedData.created_by || 'admin',
+      noteType: validatedData.note_type,
+      createdBy: validatedData.created_by || 'admin',
     };
 
-    const { data: note, error } = await supabase
-      .from('lead_notes')
-      .insert(noteData)
-      .select('*')
-      .maybeSingle();
-
-    if (error) {
-      logger.error('Failed to create note:', error as Error);
-      return NextResponse.json({ error: 'Failed to create note' }, { status: 500 });
-    }
+    const [note] = await db
+      .insert(leadNotes)
+      .values(noteData)
+      .returning();
 
     return NextResponse.json({ success: true, note });
   } catch (error) {

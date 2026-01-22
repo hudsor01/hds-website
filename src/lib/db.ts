@@ -1,34 +1,23 @@
 /**
  * Database Client
- * Drizzle ORM with Bun.SQL for PostgreSQL
+ * Drizzle ORM with Neon serverless driver for PostgreSQL
+ * Works in both Bun and Node.js runtimes (Next.js build compatibility)
  */
-import { drizzle } from 'drizzle-orm/bun-sql';
-import { SQL } from 'bun';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { neon } from '@neondatabase/serverless';
 import * as schema from './schema';
 
 // Lazy initialization to avoid connection during build time
-let _client: SQL | null = null;
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
-function getClient(): SQL {
-  if (!_client) {
+function getDb(): ReturnType<typeof drizzle<typeof schema>> {
+  if (!_db) {
     const url = process.env.POSTGRES_URL;
     if (!url) {
       throw new Error('POSTGRES_URL environment variable is not set');
     }
-    _client = new SQL({
-      url,
-      max: 20,
-      idleTimeout: 30,
-      connectionTimeout: 10,
-    });
-  }
-  return _client;
-}
-
-function getDb(): ReturnType<typeof drizzle<typeof schema>> {
-  if (!_db) {
-    _db = drizzle({ client: getClient(), schema });
+    const sql = neon(url);
+    _db = drizzle({ client: sql, schema });
   }
   return _db;
 }
@@ -37,13 +26,6 @@ function getDb(): ReturnType<typeof drizzle<typeof schema>> {
 export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
   get(_, prop) {
     return Reflect.get(getDb(), prop);
-  },
-});
-
-// Export raw SQL client for direct queries
-export const sql = new Proxy({} as SQL, {
-  get(_, prop) {
-    return Reflect.get(getClient(), prop);
   },
 });
 

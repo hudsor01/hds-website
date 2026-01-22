@@ -3,7 +3,8 @@
 import { useEffect } from 'react'
 import { Card } from "@/components/ui/card";
 import Link from 'next/link'
-import { castError, createServerLogger } from '@/lib/logger'
+import { createServerLogger } from '@/lib/logger'
+import { castError } from '@/lib/utils/errors'
 import { Button } from '@/components/ui/button'
 
 export default function ToolsError({

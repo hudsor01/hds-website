@@ -1,11 +1,12 @@
 /**
  * Case Studies Data Layer
- * Handles all case study data fetching with Supabase
+ * Handles all case study data fetching with Drizzle ORM
  */
 
-import { createClient } from '@/lib/supabase/server';
+import { eq, desc, and } from 'drizzle-orm';
+import { db } from './db';
+import { caseStudies, type CaseStudy as CaseStudyRow } from './schema';
 import { logger } from './logger';
-import type { Database } from '@/types/database';
 
 export interface CaseStudy {
   id: string;
@@ -34,52 +35,48 @@ export interface CaseStudy {
   created_at?: string;
 }
 
-type CaseStudyRow = Database['public']['Tables']['case_studies']['Row'];
-
 const mapCaseStudy = (row: CaseStudyRow): CaseStudy => ({
-  ...row,
-  metrics: Array.isArray(row.metrics) ? row.metrics as Array<{ label: string; value: string }> : [],
+  id: row.id,
+  title: row.title,
+  slug: row.slug,
+  client_name: row.clientName ?? '',
+  industry: row.industry ?? '',
+  project_type: row.projectType ?? '',
+  description: row.description ?? '',
+  challenge: row.challenge ?? undefined,
+  solution: row.solution ?? undefined,
+  results: row.results ?? undefined,
   technologies: Array.isArray(row.technologies) ? row.technologies as string[] : [],
-  testimonial_text: row.testimonial_text || '',
-  testimonial_author: row.testimonial_author || '',
-  testimonial_role: row.testimonial_role || '',
-  testimonial_video_url: row.testimonial_video_url,
-  thumbnail_url: row.thumbnail_url || undefined,
-  featured_image_url: row.featured_image_url || undefined,
-  project_url: row.project_url,
-  project_duration: row.project_duration || '',
-  team_size: row.team_size || 0,
+  metrics: Array.isArray(row.metrics) ? row.metrics as Array<{ label: string; value: string }> : [],
+  testimonial_text: row.testimonialText ?? '',
+  testimonial_author: row.testimonialAuthor ?? '',
+  testimonial_role: row.testimonialRole ?? '',
+  testimonial_video_url: row.testimonialVideoUrl,
+  thumbnail_url: row.thumbnailUrl ?? undefined,
+  featured_image_url: row.featuredImageUrl ?? undefined,
+  project_url: row.projectUrl,
+  project_duration: row.projectDuration ?? '',
+  team_size: row.teamSize ?? 0,
   featured: row.featured ?? false,
   published: row.published ?? false,
-  created_at: row.created_at || undefined,
+  created_at: row.createdAt?.toISOString() ?? undefined,
 });
 
 /**
  * Get all published case studies
  */
 export async function getCaseStudies(): Promise<CaseStudy[]> {
-  
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('case_studies')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
+    const data = await db
+      .select()
+      .from(caseStudies)
+      .where(eq(caseStudies.published, true))
+      .orderBy(desc(caseStudies.createdAt));
 
-    if (error) {
-      // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-        logger.error('Failed to fetch case studies', { error: error.message });
-      }
-      return [];
-    }
-
-    return (data || []).map(mapCaseStudy);
+    return data.map(mapCaseStudy);
   } catch (error) {
-    // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-      logger.error('Exception fetching case studies', {
+      logger.error('Failed to fetch case studies', {
         error: error instanceof Error ? error.message : String(error),
       });
     }
@@ -91,29 +88,17 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
  * Get a single case study by slug
  */
 export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null> {
-  
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('case_studies')
-      .select('*')
-      .eq('slug', slug)
-      .eq('published', true)
-      .single();
+    const [data] = await db
+      .select()
+      .from(caseStudies)
+      .where(and(eq(caseStudies.slug, slug), eq(caseStudies.published, true)))
+      .limit(1);
 
-    if (error) {
-      // Don't log "not found" errors or build-time errors
-      if (error.code !== 'PGRST116' && (process.env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
-        logger.error('Failed to fetch case study', { slug, error: error.message });
-      }
-      return null;
-    }
-
-    return data ? mapCaseStudy(data as CaseStudyRow) : null;
+    return data ? mapCaseStudy(data) : null;
   } catch (error) {
-    // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-      logger.error('Exception fetching case study', {
+      logger.error('Failed to fetch case study', {
         slug,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -126,27 +111,16 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
  * Get all case study slugs for static generation
  */
 export async function getAllCaseStudySlugs(): Promise<string[]> {
-  
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('case_studies')
-      .select('slug')
-      .eq('published', true);
+    const data = await db
+      .select({ slug: caseStudies.slug })
+      .from(caseStudies)
+      .where(eq(caseStudies.published, true));
 
-    if (error) {
-      // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-        logger.error('Failed to fetch case study slugs', { error: error.message });
-      }
-      return [];
-    }
-
-    return (data || []).map((c) => c.slug);
+    return data.map((c) => c.slug);
   } catch (error) {
-    // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-      logger.error('Exception fetching case study slugs', {
+      logger.error('Failed to fetch case study slugs', {
         error: error instanceof Error ? error.message : String(error),
       });
     }
@@ -158,29 +132,17 @@ export async function getAllCaseStudySlugs(): Promise<string[]> {
  * Get featured case studies
  */
 export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
-  
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from('case_studies')
-      .select('*')
-      .eq('published', true)
-      .eq('featured', true)
-      .order('created_at', { ascending: false });
+    const data = await db
+      .select()
+      .from(caseStudies)
+      .where(and(eq(caseStudies.published, true), eq(caseStudies.featured, true)))
+      .orderBy(desc(caseStudies.createdAt));
 
-    if (error) {
-      // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-        logger.error('Failed to fetch featured case studies', { error: error.message });
-      }
-      return [];
-    }
-
-    return (data || []).map(mapCaseStudy);
+    return data.map(mapCaseStudy);
   } catch (error) {
-    // Only log errors in development or runtime (not during build)
     if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
-      logger.error('Exception fetching featured case studies', {
+      logger.error('Failed to fetch featured case studies', {
         error: error instanceof Error ? error.message : String(error),
       });
     }

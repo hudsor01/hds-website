@@ -3,11 +3,13 @@
  * Receives automation triggers from n8n workflows
  */
 
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { emailSequenceIdSchema } from '@/lib/schemas/email';
-import { supabaseAdmin } from '@/lib/supabase';
+import { calculatorLeads, type NewCalculatorLead } from '@/lib/schema';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
@@ -132,24 +134,29 @@ async function handleNewLead(body: unknown) {
 
     const { data } = validation.data;
 
-    // Store lead in database
-    const { data: lead, error: dbError } = await supabaseAdmin
-      .from('calculator_leads')
-      .insert({
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        company: data.company,
-        calculator_type: 'n8n-integration',
-        inputs: { source: data.source },
-        lead_score: data.leadScore,
-        lead_quality: data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
-      })
-      .select()
-      .single();
+    // Determine lead quality based on score
+    const leadQuality = data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT
+      ? 'hot'
+      : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM
+        ? 'warm'
+        : 'cold';
 
-    if (dbError) {
-      logger.error('Failed to store lead from n8n', dbError);
+    // Store lead in database using Drizzle
+    const insertData: NewCalculatorLead = {
+      email: data.email,
+      name: data.name,
+      phone: data.phone ?? null,
+      company: data.company ?? null,
+      calculatorType: 'n8n-integration',
+      inputs: { source: data.source },
+      leadScore: data.leadScore,
+      leadQuality,
+    };
+
+    const [lead] = await db.insert(calculatorLeads).values(insertData).returning();
+
+    if (!lead) {
+      logger.error('Failed to store lead from n8n - no result returned');
       return NextResponse.json(
         { error: 'Failed to store lead' },
         { status: 500 }
@@ -166,7 +173,7 @@ async function handleNewLead(body: unknown) {
         phone: data.phone,
         company: data.company,
         leadScore: data.leadScore,
-        leadQuality: lead.lead_quality || 'warm',
+        leadQuality: lead.leadQuality || 'warm',
         source: `n8n Integration - ${data.source}`,
       });
     }
@@ -258,16 +265,42 @@ async function handleUpdateLead(body: unknown) {
 
     const { data } = validation.data;
 
-    const { error: updateError } = await supabaseAdmin
-      .from('calculator_leads')
-      .update(data.updates)
-      .eq('id', data.leadId);
+    // Build update object with camelCase keys matching Drizzle schema
+    const updateValues: Partial<{
+      contacted: boolean;
+      converted: boolean;
+      notes: string;
+      contactedAt: Date;
+      convertedAt: Date;
+    }> = {};
 
-    if (updateError) {
-      logger.error('Failed to update lead from n8n', updateError);
+    if (data.updates.contacted !== undefined) {
+      updateValues.contacted = data.updates.contacted;
+      if (data.updates.contacted) {
+        updateValues.contactedAt = new Date();
+      }
+    }
+    if (data.updates.converted !== undefined) {
+      updateValues.converted = data.updates.converted;
+      if (data.updates.converted) {
+        updateValues.convertedAt = new Date();
+      }
+    }
+    if (data.updates.notes !== undefined) {
+      updateValues.notes = data.updates.notes;
+    }
+
+    const result = await db
+      .update(calculatorLeads)
+      .set(updateValues)
+      .where(eq(calculatorLeads.id, data.leadId))
+      .returning({ id: calculatorLeads.id });
+
+    if (result.length === 0) {
+      logger.warn('Lead not found for update from n8n', { leadId: data.leadId });
       return NextResponse.json(
-        { error: 'Failed to update lead' },
-        { status: 500 }
+        { error: 'Lead not found' },
+        { status: 404 }
       );
     }
 

@@ -1,4 +1,5 @@
-import { castError, createServerLogger } from "@/lib/logger";
+import { createServerLogger } from "@/lib/logger";
+import { castError } from '@/lib/utils/errors'
 import {
   getEmailQueueStats,
   processEmailsEndpoint,

@@ -5,7 +5,9 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schema';
+import { eq } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { z } from 'zod';
@@ -19,8 +21,10 @@ const UpdateLeadSchema = z.object({
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
   // Rate limiting - 5 requests per minute per IP for write operations
   const clientIp = getClientIp(request);
   const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
@@ -39,29 +43,34 @@ export async function PATCH(
   }
 
   try {
-    
-
     const body = await request.json();
 
     // Validate input
     const validatedData = UpdateLeadSchema.parse(body);
 
     // Build update object
-    const updates: Record<string, unknown> = {};
+    const updates: Partial<{
+      contacted: boolean;
+      contactedAt: Date;
+      converted: boolean;
+      convertedAt: Date;
+      conversionValue: string;
+      notes: string;
+    }> = {};
 
     if (validatedData.contacted !== undefined) {
       updates.contacted = validatedData.contacted;
       if (validatedData.contacted) {
-        updates.contacted_at = new Date().toISOString();
+        updates.contactedAt = new Date();
       }
     }
 
     if (validatedData.converted !== undefined) {
       updates.converted = validatedData.converted;
       if (validatedData.converted) {
-        updates.converted_at = new Date().toISOString();
+        updates.convertedAt = new Date();
         if (validatedData.conversion_value) {
-          updates.conversion_value = validatedData.conversion_value;
+          updates.conversionValue = String(validatedData.conversion_value);
         }
       }
     }
@@ -71,18 +80,16 @@ export async function PATCH(
     }
 
     // Update lead in database
-    const { data, error } = await (await createClient())
-      .from('calculator_leads')
-      .update(updates)
-      .eq('id', params.id)
-      .select()
-      .single();
+    const [data] = await db
+      .update(calculatorLeads)
+      .set(updates)
+      .where(eq(calculatorLeads.id, id))
+      .returning();
 
-    if (error) {
-      logger.error('Failed to update lead:', error as Error);
+    if (!data) {
       return NextResponse.json(
-        { error: 'Failed to update lead' },
-        { status: 500 }
+        { error: 'Lead not found' },
+        { status: 404 }
       );
     }
 
