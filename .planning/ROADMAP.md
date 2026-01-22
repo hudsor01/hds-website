@@ -12,6 +12,7 @@ None
 
 - 🚧 **v1.0 Cleanup & Simplification** - Phases 1-10 (in progress)
 - 📋 **v1.1 Technical Debt Remediation** - Phases 11-18 (planned)
+- 📋 **v2.0 Backend Migration** - Phases 19-26 (planned) - Migrate from Supabase to Neon + Bun.SQL + Drizzle ORM
 
 ## Phases
 
@@ -265,9 +266,159 @@ Plans:
 Plans:
 - [ ] 18-01: TBD
 
+---
+
+### 📋 v2.0 Backend Migration (Planned)
+
+**Milestone Goal:** Complete backend rewrite - migrate from Supabase SDK to Neon PostgreSQL + Bun.SQL + Drizzle ORM + Neon Auth for zero npm database dependencies, 50% faster queries, and unified auth-in-database architecture.
+
+**Design Document:** docs/plans/2026-01-22-backend-migration-neon-design.md
+
+- [ ] **Phase 19: Neon Project Setup** - Create Neon project, configure connection pooling, set up environment
+- [ ] **Phase 20: Database Migration** - Export Supabase data with pg_dump, import to Neon with pg_restore
+- [ ] **Phase 21: Drizzle Schema Creation** - Convert Supabase types to Drizzle schema, configure drizzle-kit
+- [ ] **Phase 22: Auth Migration** - Export Supabase users, enable Neon Auth, import users with password hashes
+- [ ] **Phase 23: RLS Policy Migration** - Update RLS policies for Neon (auth.uid() → auth.user_id(), anon → anonymous)
+- [ ] **Phase 24: Data Layer Rewrite** - Convert all Supabase queries to Drizzle ORM (~25 files)
+- [ ] **Phase 25: Auth Integration** - Replace @supabase/ssr with Neon Auth SDK, update middleware
+- [ ] **Phase 26: Validation & Cleanup** - Run all tests, verify all features, remove Supabase dependencies
+
+#### Phase 19: Neon Project Setup
+**Goal**: Create Neon project with matching PostgreSQL version, configure connection pooling, set up environment variables
+**Depends on**: Phase 18 (v1.1 complete)
+**Research**: Likely (Neon console setup, connection string formats)
+**Research topics**: Neon project creation, pooler vs direct connection, SSL configuration
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: TBD
+
+#### Phase 20: Database Migration
+**Goal**: Export all data from Supabase PostgreSQL and import to Neon using pg_dump/pg_restore
+**Depends on**: Phase 19
+**Research**: Unlikely (standard PostgreSQL tooling)
+**Plans**: TBD
+
+**Migration Context:**
+- Use `pg_dump -Fc` for compressed custom format
+- Use `--no-owner --no-acl` flags (Supabase-specific ownership)
+- Verify row counts match after migration
+- Keep backup until fully validated
+
+Plans:
+- [ ] 20-01: TBD
+
+#### Phase 21: Drizzle Schema Creation
+**Goal**: Convert `src/types/database.ts` (6,286 lines) to Drizzle schema files, configure drizzle-kit for migrations
+**Depends on**: Phase 20
+**Research**: Likely (Drizzle schema patterns, Bun.SQL integration)
+**Research topics**: Drizzle schema definition, drizzle-kit introspection, Bun.SQL driver setup
+**Plans**: TBD
+
+**Schema Context:**
+- 17+ tables to define in Drizzle
+- Generate types from schema (replaces Supabase generated types)
+- Set up `src/lib/schema/` directory structure
+- Configure `drizzle.config.ts`
+
+Plans:
+- [ ] 21-01: TBD
+
+#### Phase 22: Auth Migration
+**Goal**: Export Supabase auth users, enable Neon Auth (Better Auth), import users preserving password hashes
+**Depends on**: Phase 21
+**Research**: Likely (Neon Auth setup, user migration scripts)
+**Research topics**: Neon Auth SDK, Stack Auth API, bcrypt password hash preservation
+**Plans**: TBD
+
+**Auth Migration Context:**
+- Export users with `auth.users` + `auth.identities` join
+- Neon Auth assigns new user IDs (need remapping)
+- Password hashes preserved in Modular Crypt Format
+- OAuth users continue working (Google, GitHub, etc.)
+
+Plans:
+- [ ] 22-01: TBD
+
+#### Phase 23: RLS Policy Migration
+**Goal**: Update all Row-Level Security policies for Neon Auth compatibility
+**Depends on**: Phase 22
+**Research**: Unlikely (SQL policy updates)
+**Plans**: TBD
+
+**RLS Context:**
+- Replace `auth.uid()` with `auth.user_id()` in all policies
+- Replace `anon` role with `anonymous` role
+- Update GRANT statements for new role names
+- Test each policy with authenticated/anonymous requests
+
+Plans:
+- [ ] 23-01: TBD
+
+#### Phase 24: Data Layer Rewrite
+**Goal**: Convert all Supabase query builder calls to Drizzle ORM queries (~25 files, ~88 queries)
+**Depends on**: Phase 23
+**Research**: Unlikely (Drizzle query patterns)
+**Plans**: TBD
+
+**Files to Update:**
+- `src/lib/case-studies.ts` - Case study queries
+- `src/lib/testimonials.ts` - Testimonial queries
+- `src/lib/help-articles.ts` - Help article queries
+- `src/lib/projects.ts` - Project queries
+- `src/lib/scheduled-emails.ts` - Email scheduling queries
+- `src/app/api/**/route.ts` - All API routes
+- `src/app/actions/*.ts` - All Server Actions
+- `src/lib/logger.ts` - Error logging inserts
+
+Plans:
+- [ ] 24-01: TBD
+
+#### Phase 25: Auth Integration
+**Goal**: Replace `@supabase/ssr` with Neon Auth SDK, update middleware, auth wrapper, and admin auth
+**Depends on**: Phase 24
+**Research**: Likely (Neon Auth SDK, Stack provider setup)
+**Research topics**: NeonAuthUIProvider, stackServerApp, access token context
+**Plans**: TBD
+
+**Files to Update:**
+- `src/lib/supabase/server.ts` → Delete, replace with Neon Auth
+- `src/lib/supabase/client.ts` → Delete, replace with Neon Auth
+- `src/lib/supabase/middleware.ts` → Delete, replace with Neon Auth
+- `src/lib/admin-auth.ts` → Update to use Neon Auth
+- `src/components/admin/AuthWrapper.tsx` → Update to use Neon Auth
+- `middleware.ts` → Update session handling
+- `src/app/layout.tsx` → Add auth providers
+
+Plans:
+- [ ] 25-01: TBD
+
+#### Phase 26: Validation & Cleanup
+**Goal**: Run all tests, manually verify all features, remove Supabase dependencies, update environment variables
+**Depends on**: Phase 25
+**Research**: Unlikely (testing and cleanup)
+**Plans**: TBD
+
+**Validation Checklist:**
+- [ ] All unit tests pass
+- [ ] All E2E tests pass
+- [ ] Contact form works (submit, email, notifications)
+- [ ] Paystub generator works (generate, PDF download)
+- [ ] Invoice generator works (generate, PDF download)
+- [ ] Contract generator works (generate, PDF download)
+- [ ] Admin login works
+- [ ] Admin dashboard loads data
+- [ ] No Supabase imports remain in codebase
+- [ ] `@supabase/supabase-js` removed from package.json
+- [ ] `@supabase/ssr` removed from package.json
+- [ ] Build succeeds with no TypeScript errors
+
+Plans:
+- [ ] 26-01: TBD
+
 ## Progress
 
-**Execution Order:** Phases execute in numeric order: 1 → 2 → ... → 10 → 11 → ... → 18
+**Execution Order:** Phases execute in numeric order: 1 → 2 → ... → 10 → 11 → ... → 18 → 19 → ... → 26
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -281,7 +432,7 @@ Plans:
 | 8. Testing Infrastructure Review | v1.0 | 0/TBD | Not started | - |
 | 9. Documentation & Environment | v1.0 | 0/TBD | Not started | - |
 | 10. Final Validation & Verification | v1.0 | 0/TBD | Not started | - |
-| 11. Route Consolidation | v1.1 | 0/1 | Planning complete | - |
+| 11. Route Consolidation | v1.1 | 1/1 | Complete | 2026-01-21 |
 | 12. God Function Refactor | v1.1 | 0/TBD | Not started | - |
 | 13. Shared Utilities Extraction | v1.1 | 0/TBD | Not started | - |
 | 14. PDF Template Consolidation | v1.1 | 0/TBD | Not started | - |
@@ -289,3 +440,11 @@ Plans:
 | 16. PDF Generation Tests | v1.1 | 0/TBD | Not started | - |
 | 17. Type Definition Optimization | v1.1 | 0/TBD | Not started | - |
 | 18. Quality Gates & Prevention | v1.1 | 0/TBD | Not started | - |
+| 19. Neon Project Setup | v2.0 | 0/TBD | Not started | - |
+| 20. Database Migration | v2.0 | 0/TBD | Not started | - |
+| 21. Drizzle Schema Creation | v2.0 | 0/TBD | Not started | - |
+| 22. Auth Migration | v2.0 | 0/TBD | Not started | - |
+| 23. RLS Policy Migration | v2.0 | 0/TBD | Not started | - |
+| 24. Data Layer Rewrite | v2.0 | 0/TBD | Not started | - |
+| 25. Auth Integration | v2.0 | 0/TBD | Not started | - |
+| 26. Validation & Cleanup | v2.0 | 0/TBD | Not started | - |
