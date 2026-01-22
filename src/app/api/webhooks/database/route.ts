@@ -2,9 +2,8 @@
  * Database Webhook Handler (Neon/PostgreSQL)
  * Processes database events and triggers for real-time updates
  *
- * NOTE: This route was previously for Supabase webhooks. It has been converted
- * to a generic database webhook handler compatible with Neon or any PostgreSQL
- * webhook provider. The HMAC signature verification remains for security.
+ * Supports database webhooks from Neon or any PostgreSQL webhook provider.
+ * Uses HMAC signature verification for security.
  */
 
 import { createHmac, timingSafeEqual } from 'crypto';
@@ -82,9 +81,9 @@ const logger = createServerLogger('database-webhook');
 export async function POST(request: NextRequest) {
   try {
     const headersList = await headers();
-    // Support both Supabase-style and generic webhook headers
-    const signature = headersList.get('x-webhook-signature') || headersList.get('x-supabase-signature');
-    const eventType = headersList.get('x-webhook-event-type') || headersList.get('x-supabase-event-type');
+    // Support multiple webhook header naming conventions for compatibility
+    const signature = headersList.get('x-webhook-signature') || headersList.get('x-database-signature');
+    const eventType = headersList.get('x-webhook-event-type') || headersList.get('x-database-event-type');
 
     logger.info('Database webhook received', {
       eventType,
@@ -98,8 +97,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
     }
 
-    // Get webhook secret from environment (support both naming conventions)
-    const webhookSecret = process.env.DATABASE_WEBHOOK_SECRET || process.env.SUPABASE_WEBHOOK_SECRET;
+    // Get webhook secret from environment
+    const webhookSecret = process.env.DATABASE_WEBHOOK_SECRET;
     if (!webhookSecret) {
       logger.error('DATABASE_WEBHOOK_SECRET not configured');
       return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });

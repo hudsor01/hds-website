@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getProjects, parseProjectStats } from '@/lib/projects';
 
-// Enable ISR with 1-hour revalidation for Supabase data
+// Enable ISR with 1-hour revalidation for database data
 // React cache() handles request deduplication at data layer
 export const revalidate = 3600;
 
