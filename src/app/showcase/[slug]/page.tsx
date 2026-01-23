@@ -314,7 +314,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
             <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
               Let&apos;s discuss how we can help you achieve similar results for your business.
             </p>
-            <Button asChild variant="default" size="lg" trackConversion={true}>
+            <Button asChild variant="accent" size="lg" trackConversion={true}>
               <Link href="/contact">
                 Start Your Project
                 <ArrowRight className="w-4 h-4" />

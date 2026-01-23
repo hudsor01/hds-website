@@ -108,7 +108,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
             <div className="hidden sm:block">
               <Button
                 asChild
-                variant="default"
+                variant="accent"
                 size="default"
                 trackConversion={true}
                 onClick={() => handleNavClick()}
@@ -182,7 +182,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               </Link>
               <Button
                 asChild
-                variant="default"
+                variant="accent"
                 size="default"
                 trackConversion={true}
                 className="w-full"
