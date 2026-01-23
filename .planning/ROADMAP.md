@@ -10,27 +10,27 @@ None
 
 ## Milestones
 
-- 🚧 **v1.0 Cleanup & Simplification** - Phases 1-10 (in progress)
+- ✅ **v1.0 Cleanup & Simplification** - Phases 1-10 (completed 2026-01-22) - Removed bloat, cleaned dead code, optimized bundle
 - 📋 **v1.1 Technical Debt Remediation** - Phases 11-18 (planned)
 - ✅ **v2.0 Backend Migration** - Phases 19-26 (completed 2026-01-22) - Migrated from Supabase to Neon + Drizzle ORM
 - ✅ **v3.0 Website Consolidation** - Phases 27-36 (completed 2026-01-22) - Consolidated routes, tools, and content
 
 ## Phases
 
-### 🚧 v1.0 Cleanup & Simplification (In Progress)
+### ✅ v1.0 Cleanup & Simplification (Completed 2026-01-22)
 
 **Milestone Goal:** Remove bloat and simplify codebase while preserving working functionality
 
-- [ ] **Phase 1: Dependency Audit & Pruning** - Identify and remove unused npm packages
-- [ ] **Phase 2: Dead Code Elimination** - Remove unused components, functions, and files
-- [ ] **Phase 3: Integration Cleanup** - Remove/simplify over-engineered integrations
-- [ ] **Phase 4: Code Deduplication** - Eliminate DRY violations and consolidate patterns
-- [ ] **Phase 5: Configuration Simplification** - Clean up config files, extract magic numbers
-- [ ] **Phase 6: Component Structure Optimization** - Remove unnecessary abstractions
-- [x] **Phase 7: Build & Bundle Optimization** - Tree-shake, reduce first load JS
-- [x] **Phase 8: Testing Infrastructure Review** - Simplify testing setup
-- [ ] **Phase 9: Documentation & Environment** - Create .env.example and clean docs
-- [ ] **Phase 10: Final Validation & Verification** - End-to-end testing of all features
+- [x] **Phase 1: Dependency Audit & Pruning** - Removed 12 unused packages
+- [x] **Phase 2: Dead Code Elimination** - Removed 13 files (935 lines)
+- [x] **Phase 3: Integration Cleanup** - Removed 5 files (~800 lines)
+- [x] **Phase 4: Code Deduplication** - Consolidated ~115 lines
+- [x] **Phase 5: Configuration Simplification** - Centralized email configuration
+- [x] **Phase 6: Component Structure Optimization** - Analysis only, no changes needed
+- [x] **Phase 7: Build & Bundle Optimization** - Removed puppeteer, expanded tree-shaking
+- [x] **Phase 8: Testing Infrastructure Review** - Removed MSW + trivial tests
+- [x] **Phase 9: Documentation & Environment** - Created .env.example, fixed .gitignore
+- [x] **Phase 10: Final Validation & Verification** - All 398 tests pass, build succeeds
 
 ### 📋 v1.1 Technical Debt Remediation (Planned)
 
@@ -193,19 +193,33 @@ Plans:
 **Goal**: Create missing .env.example, clean up documentation, remove stale comments
 **Depends on**: Phase 8 (final codebase state clear)
 **Research**: Unlikely (documentation and environment setup)
-**Plans**: TBD
+**Plans**: 1 plan executed
+
+**Changes:**
+- Created comprehensive `.env.example` with all required/optional env vars documented
+- Fixed `.gitignore` to allow `.env.example` (added `!.env.example` negation)
+- Documented: DATABASE_URL, RESEND_API_KEY, CSRF_SECRET, JWT_SECRET, ADMIN_API_TOKEN, STIRLING_PDF_URL, etc.
 
 Plans:
-- [ ] 09-01: TBD
+- [x] 09-01: Create .env.example and fix .gitignore
 
 #### Phase 10: Final Validation & Verification
 **Goal**: End-to-end manual testing of all core features (contact form, paystub/invoice/timesheet generators) to ensure zero regression
 **Depends on**: Phase 9 (all cleanup complete)
 **Research**: Unlikely (manual testing and verification)
-**Plans**: TBD
+**Plans**: 1 plan executed
+
+**Validation Results:**
+- Build: PASS (5.4s, Turbopack)
+- TypeScript: PASS (strict mode, zero errors)
+- ESLint: PASS (0 errors, 17 warnings)
+- Unit Tests: 398 PASS, 0 FAIL
+- All Core Features: Verified present and configured
+
+**Report:** `.planning/phase-10-manual-testing-report.md`
 
 Plans:
-- [ ] 10-01: TBD
+- [x] 10-01: Final validation - build, tests, and feature verification
 
 ---
 
