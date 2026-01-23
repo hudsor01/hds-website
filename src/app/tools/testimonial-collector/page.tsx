@@ -5,8 +5,9 @@
 
 'use client';
 
-  import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
+import { TIMEOUTS } from '@/lib/constants';
 import { logger } from '@/lib/logger';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
@@ -126,7 +127,7 @@ export default function TestimonialCollectorPage() {
     if (!createdLink) {return;}
     await navigator.clipboard.writeText(createdLink);
     setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    setTimeout(() => setCopiedLink(false), TIMEOUTS.COPY_FEEDBACK);
   };
 
   const handleApprove = async (id: string, approved: boolean) => {

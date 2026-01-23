@@ -3,6 +3,8 @@
  * Dynamic location pages for SEO and local marketing
  */
 
+import { BUSINESS_INFO } from './constants';
+
 // Location type definition
 export interface LocationFeature {
   title: string;
@@ -199,7 +201,7 @@ export function generateLocalBusinessSchema(location: LocationData) {
     '@type': 'LocalBusiness',
     name: 'Hudson Digital Solutions',
     url: `https://hudsondigitalsolutions.com/locations/${location.slug}`,
-    email: 'hello@hudsondigitalsolutions.com',
+    email: BUSINESS_INFO.email,
     address: {
       '@type': 'PostalAddress',
       addressLocality: location.city,

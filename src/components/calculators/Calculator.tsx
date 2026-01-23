@@ -2,6 +2,7 @@
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
 import { JsonLd } from '@/components/JsonLd';
+import { TIMEOUTS } from '@/lib/constants';
 import { logger } from '@/lib/logger';
 import { formatCurrency } from '@/lib/utils';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
@@ -43,7 +44,7 @@ export function Calculator() {
     try {
       await saveCurrentCalculation();
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
+      setTimeout(() => setSaveSuccess(false), TIMEOUTS.SAVE_SUCCESS);
     } catch (error) {
       logger.error('Failed to save calculation', error as Error);
     }
@@ -306,7 +307,7 @@ export function Calculator() {
               <button
                 onClick={() => {
                   setShowShareModal(false);
-                  setTimeout(handlePrintPDF, 100);
+                  setTimeout(handlePrintPDF, TIMEOUTS.PRINT_DELAY);
                 }}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
               >

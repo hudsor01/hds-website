@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { createServerLogger } from '@/lib/logger';
 
 export default function GlobalError({
@@ -180,7 +181,7 @@ export default function GlobalError({
               }}>
                 If this issue persists, please contact{' '}
                 <a
-                  href="mailto:hello@hudsondigitalsolutions.com"
+                  href={`mailto:${BUSINESS_INFO.email}`}
                   style={{
                     color: '#06b6d4',
                     textDecoration: 'underline',

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
+import { BUSINESS_INFO, ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import {
   CheckCircle,
@@ -13,16 +14,16 @@ import {
 
 const footerLinks = {
   solutions: [
-    { name: "Ship Features Faster", href: "/services" },
-    { name: "Fix Revenue Leaks", href: "/services" },
-    { name: "Scale Without Breaking", href: "/services" },
-    { name: "View Case Studies", href: "/portfolio" },
+    { name: "Ship Features Faster", href: ROUTES.SERVICES },
+    { name: "Fix Revenue Leaks", href: ROUTES.SERVICES },
+    { name: "Scale Without Breaking", href: ROUTES.SERVICES },
+    { name: "View Case Studies", href: ROUTES.PORTFOLIO },
   ],
   company: [
-    { name: "About Us", href: "/about" },
-    { name: "Our Process", href: "/services" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Contact", href: "/contact" },
+    { name: "About Us", href: ROUTES.ABOUT },
+    { name: "Our Process", href: ROUTES.SERVICES },
+    { name: "Pricing", href: "/pricing" }, // Note: /pricing not in ROUTES yet
+    { name: "Contact", href: ROUTES.CONTACT },
   ],
 };
 
@@ -166,17 +167,17 @@ export default function Footer() {
                   trackConversion={true}
                   className="w-full"
                 >
-                  <Link href="/contact">
+                  <Link href={ROUTES.CONTACT}>
                     Get Free Roadmap
                   </Link>
                 </Button>
 
                 <a
-                  href="mailto:hello@hudsondigitalsolutions.com"
+                  href="mailto:{BUSINESS_INFO.email}"
                   className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
                 >
                   <Mail className="h-4 w-4" />
-                  <span className="small">hello@hudsondigitalsolutions.com</span>
+                  <span className="small">{BUSINESS_INFO.email}</span>
                 </a>
               </div>
             </div>
@@ -219,14 +220,14 @@ export default function Footer() {
               {/* Legal Links */}
               <div className="flex items-center gap-content small">
                 <Link
-                  href="/privacy"
+                  href={ROUTES.PRIVACY}
                   className="link-hover focus-ring rounded px-1"
                 >
                   Privacy Policy
                 </Link>
                 <span className="text-muted-foreground">·</span>
                 <Link
-                  href="/terms"
+                  href={ROUTES.TERMS}
                   className="link-hover focus-ring rounded px-1"
                 >
                   Terms of Service

@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -10,8 +11,8 @@ import type { Database } from '@/types/database'
 export async function createClient(): Promise<SupabaseClient<Database>> {
   const cookieStore = await cookies()
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL
+  const publicKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
   if (!supabaseUrl || !publicKey) {
     throw new Error('Supabase environment variables are not configured')

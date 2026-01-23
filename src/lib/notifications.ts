@@ -3,6 +3,7 @@
  * Sends real-time alerts to Slack and Discord for high-value leads
  */
 
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import {
   NOTIFICATION_PRIORITY_THRESHOLDS,
@@ -32,12 +33,12 @@ interface LeadNotification {
  * Send notification to Slack
  */
 async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
-  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+  const webhookUrl = env.SLACK_WEBHOOK_URL;
 
   if (!webhookUrl) {
     logger.warn('Slack webhook URL not configured', {
       leadId: lead.leadId,
-      environment: process.env.NODE_ENV
+      environment: env.NODE_ENV
     });
     return false;
   }
@@ -122,7 +123,7 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
                 type: 'plain_text',
                 text: 'View in Dashboard',
               },
-              url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://hudsondigitalsolutions.com'}/analytics?leadId=${lead.leadId}`,
+              url: `${env.NEXT_PUBLIC_BASE_URL || 'https://hudsondigitalsolutions.com'}/analytics?leadId=${lead.leadId}`,
               style: 'primary',
             },
             {
@@ -174,12 +175,12 @@ async function sendSlackNotification(lead: LeadNotification): Promise<boolean> {
  * Send notification to Discord
  */
 async function sendDiscordNotification(lead: LeadNotification): Promise<boolean> {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  const webhookUrl = env.DISCORD_WEBHOOK_URL;
 
   if (!webhookUrl) {
     logger.warn('Discord webhook URL not configured', {
       leadId: lead.leadId,
-      environment: process.env.NODE_ENV
+      environment: env.NODE_ENV
     });
     return false;
   }
@@ -320,8 +321,8 @@ export async function notifyHighValueLead(lead: LeadNotification): Promise<void>
     leadScore: lead.leadScore,
     email: lead.email,
     channels: {
-      slack: !!process.env.SLACK_WEBHOOK_URL,
-      discord: !!process.env.DISCORD_WEBHOOK_URL,
+      slack: !!env.SLACK_WEBHOOK_URL,
+      discord: !!env.DISCORD_WEBHOOK_URL,
     },
   });
 

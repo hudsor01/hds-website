@@ -3,6 +3,7 @@
  * Receives automation triggers from n8n workflows
  */
 
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
@@ -21,7 +22,7 @@ const logger = createServerLogger('n8n-webhook');
 // Webhook authentication
 function verifyWebhookAuth(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
-  const webhookSecret = process.env.N8N_WEBHOOK_SECRET;
+  const webhookSecret = env.N8N_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
     logger.warn('N8N webhook secret not configured');

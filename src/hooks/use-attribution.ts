@@ -9,6 +9,7 @@ import {
   getAttributionForSubmission,
 } from '@/lib/attribution';
 import { logger } from '@/lib/logger';
+import { API_ENDPOINTS } from '@/lib/constants';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 export interface UseAttributionReturn {
@@ -36,7 +37,7 @@ export function useAttribution(): UseAttributionReturn {
     }
 
     try {
-      const response = await fetch('/api/analytics/attribution', {
+      const response = await fetch(API_ENDPOINTS.ANALYTICS_PROCESSING, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

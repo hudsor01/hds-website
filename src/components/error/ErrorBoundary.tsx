@@ -3,6 +3,7 @@
 import { useState, type ComponentType, type ReactNode, type ErrorInfo as ReactErrorInfo } from 'react';
 import { Card } from "@/components/ui/card";
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
+import { TIMEOUTS, BUSINESS_INFO } from '@/lib/constants';
 import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
 import { logger, castError } from '@/lib/logger';
@@ -33,7 +34,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
     try {
       await navigator.clipboard.writeText(errorDetails);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     } catch (err) {
       logger.error('Failed to copy error details to clipboard', castError(err));
       // Fallback to a textarea method if clipboard API fails
@@ -44,7 +45,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     }
   };
 
@@ -155,10 +156,10 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           <p className="text-sm text-muted-foreground mt-content-block">
             Need help? Contact us at{' '}
             <a
-              href="mailto:hello@hudsondigitalsolutions.com"
+              href={`mailto:${BUSINESS_INFO.email}`}
               className="link-primary"
             >
-              hello@hudsondigitalsolutions.com
+              {BUSINESS_INFO.email}
             </a>
           </p>
         </Card>

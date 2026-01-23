@@ -4,6 +4,7 @@
  */
 
 import { createHmac, timingSafeEqual } from 'crypto';
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import {
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get webhook secret from environment
-    const webhookSecret = process.env.SUPABASE_WEBHOOK_SECRET
+    const webhookSecret = env.SUPABASE_WEBHOOK_SECRET
     if (!webhookSecret) {
       logger.error('SUPABASE_WEBHOOK_SECRET not configured')
       return errorResponse('Webhook not configured', 500)
