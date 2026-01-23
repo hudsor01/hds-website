@@ -80,6 +80,7 @@ playwright-report/
 !README.md
 !master_todo.md
 !docs/plans/*.md
+!.planning/**/*.md
 
 # Log files
 *.log

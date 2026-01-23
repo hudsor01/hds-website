@@ -3,6 +3,7 @@
  * Handles all project-related data fetching with Supabase
  */
 
+import { env } from '@/env';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/database';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
@@ -13,8 +14,8 @@ type Project = Database['public']['Tables']['projects']['Row'];
 
 // Service role client ONLY for background operations with no user context
 function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const publicKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl || !publicKey) {
     logger.error('Supabase environment variables are not configured for projects service client');
@@ -43,7 +44,7 @@ export const getProjects = cache(async (): Promise<Project[]> => {
       .order('created_at', { ascending: false });
 
     if (error) {
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch projects', { error: error.message });
       }
       return [];
@@ -51,7 +52,7 @@ export const getProjects = cache(async (): Promise<Project[]> => {
 
     return data || [];
   } catch (error) {
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching projects', {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -76,7 +77,7 @@ export const getFeaturedProjects = cache(async (): Promise<Project[]> => {
       .order('created_at', { ascending: false });
 
     if (error) {
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch featured projects', { error: error.message });
       }
       return [];
@@ -84,7 +85,7 @@ export const getFeaturedProjects = cache(async (): Promise<Project[]> => {
 
     return data || [];
   } catch (error) {
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching featured projects', {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -108,7 +109,7 @@ export const getProjectBySlug = cache(async (slug: string): Promise<Project | nu
       .single();
 
     if (error) {
-      if (error.code !== 'PGRST116' && (process.env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
+      if (error.code !== 'PGRST116' && (env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
         logger.error('Failed to fetch project', { slug, error: error.message });
       }
       return null;
@@ -119,7 +120,7 @@ export const getProjectBySlug = cache(async (slug: string): Promise<Project | nu
 
     return data;
   } catch (error) {
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching project', {
         slug,
         error: error instanceof Error ? error.message : String(error),
@@ -142,7 +143,7 @@ export const getAllProjectSlugs = cache(async (): Promise<string[]> => {
       .eq('published', true);
 
     if (error) {
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch project slugs', { error: error.message });
       }
       return [];
@@ -150,7 +151,7 @@ export const getAllProjectSlugs = cache(async (): Promise<string[]> => {
 
     return (data || []).map((p) => p.slug);
   } catch (error) {
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching project slugs', {
         error: error instanceof Error ? error.message : String(error),
       });

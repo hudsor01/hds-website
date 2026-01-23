@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import { apiClient } from '@/lib/api-client'
 import { logger } from '@/lib/logger'
 import type { ContactFormData } from '@/lib/schemas/contact'
 
@@ -17,7 +16,7 @@ export function useContactFormSubmit() {
   return useMutation<ContactFormResponse, Error, ContactFormData>({
     mutationFn: async (formData) => {
       // Validation handled by TanStack Form + Zod
-      // Convert to FormData for the API client
+      // Convert to FormData for the API
       const form = new FormData()
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
@@ -25,8 +24,18 @@ export function useContactFormSubmit() {
         }
       })
 
-      const response = await apiClient.submitContactForm(form)
-      return { success: true, message: response.message }
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: form,
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Submission failed')
+      }
+
+      return { success: true, message: data.message }
     },
     onSuccess: (data) => {
       if (data.success) {

@@ -1,3 +1,5 @@
+'use client';
+
 import type { Lead } from './types';
 
 interface StatusTimelineProps {
