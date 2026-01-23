@@ -14,9 +14,9 @@ import {
 
 export const errorLogs = pgTable('error_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
-  level: text('level').notNull(),
-  errorType: text('error_type').notNull(),
   fingerprint: text('fingerprint').notNull(),
+  errorType: text('error_type').notNull(),
+  level: text('level').notNull(),
   message: text('message').notNull(),
   stackTrace: text('stack_trace'),
   url: text('url'),
@@ -25,7 +25,7 @@ export const errorLogs = pgTable('error_logs', {
   requestId: text('request_id'),
   userId: text('user_id'),
   userEmail: text('user_email'),
-  environment: text('environment').notNull().default('development'),
+  environment: text('environment'),
   vercelRegion: text('vercel_region'),
   metadata: jsonb('metadata'),
   resolvedAt: timestamp('resolved_at', { withTimezone: true }),

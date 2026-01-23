@@ -17,7 +17,7 @@ const footerLinks = {
     { name: "Ship Features Faster", href: "/services" },
     { name: "Fix Revenue Leaks", href: "/services" },
     { name: "Scale Without Breaking", href: "/services" },
-    { name: "View Case Studies", href: "/portfolio" },
+    { name: "View Our Work", href: "/showcase" },
   ],
   company: [
     { name: "About Us", href: "/about" },

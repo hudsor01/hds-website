@@ -5,25 +5,25 @@ import { ExternalLink, Sparkles, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getProjects, parseProjectStats } from '@/lib/projects';
+import { getShowcaseItems, type ShowcaseItem } from '@/lib/showcase';
 
-// Enable ISR with 1-hour revalidation for database data
-// React cache() handles request deduplication at data layer
+// Enable ISR with 1-hour revalidation
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Portfolio - Our Work | Hudson Digital Solutions',
+  title: 'Showcase - Our Work | Hudson Digital Solutions',
   description: 'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
   openGraph: {
-    title: 'Portfolio - Our Work | Hudson Digital Solutions',
+    title: 'Showcase - Our Work | Hudson Digital Solutions',
     description: 'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
     type: 'website',
   },
 };
 
-// Async component for dynamic project data
-async function PortfolioProjects() {
-  const projects = await getProjects();
+
+// Async component for dynamic showcase data
+async function ShowcaseProjects() {
+  const items = await getShowcaseItems();
 
   return (
     <>
@@ -32,7 +32,7 @@ async function PortfolioProjects() {
         <div className="container-wide">
           <div className="grid-4 mb-content-block">
             {[
-              { value: `${projects.length}+`, label: "Projects Delivered" },
+              { value: `${items.length}+`, label: "Projects Delivered" },
               { value: "100%", label: "Client Satisfaction" },
               { value: "Proven", label: "ROI Results" },
               { value: "24/7", label: "Support Available" },
@@ -52,7 +52,7 @@ async function PortfolioProjects() {
         </div>
       </section>
 
-      {/* Portfolio Projects */}
+      {/* Showcase Projects */}
       <section className="relative section-spacing page-padding-x">
         <div className="container-wide">
           <div className="text-center mb-content-block">
@@ -70,24 +70,20 @@ async function PortfolioProjects() {
 
           {/* Desktop Grid / Mobile Horizontal Scroll */}
           <div className="md:grid md:grid-cols-2 md:gap-sections mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
-            {projects.map((project) => {
-              const stats = parseProjectStats(project.stats);
-
-              return (
-                <Card
-                  key={project.id}
-                  variant="project"
-                  id={project.id}
-                  slug={project.slug}
-                  title={project.title}
-                  description={project.description}
-                  category={project.category}
-                  featured={project.featured}
-                  stats={stats}
-                  tech_stack={project.tech_stack}
-                />
-              );
-            })}
+            {items.map((item) => (
+              <Card
+                key={item.id}
+                variant="project"
+                id={item.id}
+                slug={item.slug}
+                title={item.title}
+                description={item.description}
+                category={item.category ?? item.industry ?? 'Project'}
+                featured={item.featured}
+                stats={item.metrics}
+                tech_stack={item.technologies}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -95,7 +91,7 @@ async function PortfolioProjects() {
   );
 }
 
-export default function PortfolioPage() {
+export default function ShowcasePage() {
   return (
     <>
       <Analytics />
@@ -106,7 +102,7 @@ export default function PortfolioPage() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         </div>
 
-        {/* Hero Section - Static */}
+        {/* Hero Section */}
         <section className="relative min-h-screen flex-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
@@ -127,7 +123,7 @@ export default function PortfolioPage() {
               <div>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-none tracking-tight text-balance">
                   <span className="inline-block mr-4">Our</span>
-                  <span className="inline-block mr-4 text-accent">Portfolio</span>
+                  <span className="inline-block mr-4 text-accent">Showcase</span>
                 </h1>
               </div>
 
@@ -165,7 +161,7 @@ export default function PortfolioPage() {
             <p className="text-muted-foreground text-lg mt-4">Loading projects...</p>
           </div>
         }>
-          <PortfolioProjects />
+          <ShowcaseProjects />
         </Suspense>
 
         {/* CTA Section */}

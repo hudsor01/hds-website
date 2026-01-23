@@ -15,8 +15,8 @@ export * from './analytics';
 // Emails
 export * from './emails';
 
-// Projects
-export * from './projects';
+// Showcase (unified portfolio + case studies)
+export * from './showcase';
 
 // System
 export * from './system';
