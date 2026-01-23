@@ -6,8 +6,8 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
-import { useButtonAnalytics } from "@/hooks/use-button-analytics"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-tight whitespace-nowrap rounded-md text-sm font-medium transition-smooth disabled:pointer-events-none disabled:opacity-50 will-change-transform [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-hidden focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -67,18 +67,22 @@ function Button({
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot : "button"
- const { trackConversion: trackButtonConversion } = useButtonAnalytics()
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       // Track conversion if enabled
       if (trackConversion) {
-        trackButtonConversion(
-          { trackConversion, conversionLabel, conversionValue },
-          children,
-          variant ?? undefined,
-          size ?? undefined
-        )
+        const label = conversionLabel || (typeof children === 'string' ? children : 'Button Click')
+        const value = conversionValue || (variant === 'default' ? 'high' : 'medium')
+
+        logger.info('Conversion button clicked', {
+          label,
+          variant: variant || 'default',
+          size: size || 'default',
+          businessValue: value,
+          component: 'Button',
+          conversionEvent: 'button_click'
+        })
       }
 
       // Call original onClick handler
@@ -92,7 +96,6 @@ function Button({
       variant,
       size,
       onClick,
-      trackButtonConversion,
     ]
   )
 

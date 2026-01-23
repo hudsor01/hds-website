@@ -11,7 +11,7 @@
   - Server: `src/utils/supabase/server.ts` (Server Components with cookies)
   - Admin: `src/lib/supabase.ts` (service role for public data)
 - Authentication: Built-in auth with SSR support, middleware refresh
-- Middleware: `src/lib/supabase/middleware.ts` (session refresh)
+- Middleware: None (auth checked in admin-auth.ts, session refresh via getUser() calls)
 - Row Level Security: Enabled for multi-tenant data isolation
 - Environment: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 

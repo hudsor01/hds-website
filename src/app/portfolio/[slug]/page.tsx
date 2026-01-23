@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { ExternalLink, ArrowLeft, Code2, Calendar, Eye } from 'lucide-react';
 import { Analytics } from '@/components/utilities/Analytics';
 import { Button } from '@/components/ui/button';
+import { formatDate } from '@/lib/utils';
 import {
   getProjectBySlug,
   getAllProjectSlugs,
@@ -146,10 +147,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   {project.published_at && (
                     <div className="flex items-center gap-tight">
                       <Calendar className="w-4 h-4" />
-                      {new Date(project.published_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                      })}
+                      {formatDate(project.published_at, 'long')}
                     </div>
                   )}
                   {project.view_count > 0 && (

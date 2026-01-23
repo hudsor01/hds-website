@@ -4,28 +4,18 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
+import { errorResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsExportQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 import type { LeadExportData } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-export-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsExport(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics export rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -40,10 +30,7 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsExportQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { quality, type: calculatorType, startDate, endDate } = parseResult.data;
@@ -77,10 +64,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to fetch leads for export', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to fetch leads', 500);
     }
 
     // Enrich leads with attribution data
@@ -132,10 +116,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     logger.error('Analytics export error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to export leads' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to export leads', 500);
   }
 }
 
@@ -211,3 +192,5 @@ function convertToCSV(leads: LeadExportData[]): string {
 
   return csvContent;
 }
+
+export const GET = withRateLimit(handleAnalyticsExport, 'api');

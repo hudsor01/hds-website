@@ -4,7 +4,6 @@
 
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
-// import { brand } from "@/lib/brand";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {

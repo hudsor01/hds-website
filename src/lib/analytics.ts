@@ -1,283 +1,106 @@
 /**
- * Unified Analytics Module
- * Migrated to Vercel Analytics for better performance and reliability
- * Lightweight, non-blocking analytics with Vercel Analytics
+ * Lightweight Analytics Module
+ * Direct wrapper for Vercel Analytics with minimal abstraction
  */
 
 import { track as vercelTrack } from '@vercel/analytics';
 import { logger } from '@/lib/logger';
 import type {
-    EventProperties,
-    PageViewProperties,
-    UserProperties,
+  EventProperties,
+  UserProperties,
 } from "@/types/analytics";
 
 type AnalyticsValue = string | number | boolean | null | undefined;
 
 /**
- * Analytics Manager - Lightweight, non-blocking analytics
- * Uses Vercel Analytics for reliable event tracking
+ * Track custom event
+ * Used for general event tracking (page views, user actions, etc.)
  */
-class AnalyticsManager {
-  private initialized = false;
-
-  constructor() {
-    if (typeof window !== "undefined") {
-      this.initialized = true;
-    }
+export function trackEvent(eventName: string, properties?: EventProperties): void {
+  if (typeof window === 'undefined') {
+    return;
   }
 
-  /**
-   * Track custom event
-   */
-  trackEvent(eventName: string, properties?: EventProperties): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack(eventName, properties);
-    } catch (error) {
-      logger.warn('Failed to track event:', error);
-    }
-  }
-
-  /**
-   * Track page view
-   */
-  trackPageView(properties?: PageViewProperties): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('page_view', properties as Record<string, AnalyticsValue>);
-    } catch (error) {
-      logger.warn('Failed to track page view:', error);
-    }
-  }
-
-  /**
-   * Identify user (Vercel Analytics doesn't support user identification)
-   */
-  identify(userId: string, properties?: UserProperties): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      // Vercel Analytics doesn't support user identification
-      // We can track it as an event instead
-      vercelTrack('user_identified', { userId, ...properties });
-    } catch (error) {
-      logger.warn('Failed to identify user:', error);
-    }
-  }
-
-  /**
-   * Track conversion
-   */
-  trackConversion(
-    conversionType: string,
-    value?: number,
-    currency = 'USD',
-    properties?: Record<string, AnalyticsValue>
-  ): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('conversion', {
-        conversionType,
-        value,
-        currency,
-        ...properties
-      });
-    } catch (error) {
-      logger.warn('Failed to track conversion:', error);
-    }
-  }
-
-  /**
-   * Track timing/performance metrics
-   */
-  trackTiming(
-    category: string,
-    action: string,
-    time: number,
-    label?: string
-  ): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('timing', {
-        category,
-        action,
-        time,
-        label
-      });
-    } catch (error) {
-      logger.warn('Failed to track timing:', error);
-    }
-  }
-
-  /**
-   * Track error
-   */
-  trackError(error: Error | string, fatal = false): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      const errorMessage = error instanceof Error ? error.message : error;
-      const errorStack = error instanceof Error ? error.stack : undefined;
-
-      vercelTrack('error', {
-        message: errorMessage,
-        stack: errorStack,
-        fatal
-      });
-    } catch (err) {
-      logger.warn('Failed to track error:', err);
-    }
-  }
-
-  /**
-   * Track form interaction
-   */
-  trackFormInteraction(
-    formName: string,
-    action: string,
-    fieldName?: string
-  ): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('form_interaction', {
-        formName,
-        action,
-        fieldName
-      });
-    } catch (error) {
-      logger.warn('Failed to track form interaction:', error);
-    }
-  }
-
-  /**
-   * Track CTA click
-   */
-  trackCTAClick(
-    ctaName: string,
-    location: string,
-    destination?: string
-  ): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('cta_click', {
-        ctaName,
-        location,
-        destination
-      });
-    } catch (error) {
-      logger.warn('Failed to track CTA click:', error);
-    }
-  }
-
-  /**
-   * Track scroll depth
-   */
-  trackScrollDepth(percentage: number): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('scroll_depth', { percentage });
-    } catch (error) {
-      logger.warn('Failed to track scroll depth:', error);
-    }
-  }
-
-  /**
-   * Track time on page
-   */
-  trackTimeOnPage(seconds: number): void {
-    if (!this.initialized) {
-      return;
-    }
-
-    try {
-      vercelTrack('time_on_page', { seconds });
-    } catch (error) {
-      logger.warn('Failed to track time on page:', error);
-    }
-  }
-
-  /**
-   * Reset analytics (no-op for Vercel Analytics)
-   */
-  reset(): void {
-    // Vercel Analytics doesn't support resetting
+  try {
+    vercelTrack(eventName, properties);
+  } catch (error) {
+    logger.warn('Failed to track event:', error);
   }
 }
 
-// Create singleton instance
-const analytics = new AnalyticsManager();
+/**
+ * Identify user (tracked as event since Vercel Analytics doesn't support user identification)
+ */
+export function identify(userId: string, properties?: UserProperties): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
 
-// Export convenience functions
-export const trackEvent = (eventName: string, properties?: EventProperties) =>
-  analytics.trackEvent(eventName, properties);
+  try {
+    vercelTrack('user_identified', { userId, ...properties });
+  } catch (error) {
+    logger.warn('Failed to identify user:', error);
+  }
+}
 
-export const trackPageView = (properties?: PageViewProperties) =>
-  analytics.trackPageView(properties);
-
-export const identify = (userId: string, properties?: UserProperties) =>
-  analytics.identify(userId, properties);
-
-export const trackConversion = (
+/**
+ * Track conversion event
+ * For tracking business-critical conversion events
+ */
+export function trackConversion(
   conversionType: string,
   value?: number,
-  currency?: string,
+  currency = 'USD',
   properties?: Record<string, AnalyticsValue>
-) => analytics.trackConversion(conversionType, value, currency, properties);
+): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
 
-export const trackTiming = (
-  category: string,
-  action: string,
-  time: number,
-  label?: string
-) => analytics.trackTiming(category, action, time, label);
+  try {
+    vercelTrack('conversion', {
+      conversionType,
+      value,
+      currency,
+      ...properties
+    });
+  } catch (error) {
+    logger.warn('Failed to track conversion:', error);
+  }
+}
 
-export const trackError = (error: Error | string, fatal?: boolean) =>
-  analytics.trackError(error, fatal);
+/**
+ * Track error event
+ * For logging application errors to analytics
+ */
+export function trackError(error: Error | string, fatal = false): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
 
-export const trackFormInteraction = (
-  formName: string,
-  action: string,
-  fieldName?: string
-) => analytics.trackFormInteraction(formName, action, fieldName);
+  try {
+    const errorMessage = error instanceof Error ? error.message : error;
+    const errorStack = error instanceof Error ? error.stack : undefined;
 
-export const trackCTAClick = (
-  ctaName: string,
-  location: string,
-  destination?: string
-) => analytics.trackCTAClick(ctaName, location, destination);
+    vercelTrack('error', {
+      message: errorMessage,
+      stack: errorStack,
+      fatal
+    });
+  } catch (err) {
+    logger.warn('Failed to track error:', err);
+  }
+}
 
-export const trackScrollDepth = (percentage: number) =>
-  analytics.trackScrollDepth(percentage);
-
-export const trackTimeOnPage = (seconds: number) =>
-  analytics.trackTimeOnPage(seconds);
-
-export const resetAnalytics = () => analytics.reset();
+/**
+ * Analytics object for backwards compatibility
+ * Provides both direct exports and default object with methods
+ */
+const analytics = {
+  trackEvent,
+  identify,
+  trackConversion,
+  trackError,
+};
 
 export default analytics;
