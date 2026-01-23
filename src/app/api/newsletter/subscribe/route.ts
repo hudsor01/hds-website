@@ -9,6 +9,7 @@ import { newsletterSubscribers, type NewNewsletterSubscriber } from '@/lib/schem
 import { logger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { EMAIL_CONFIG } from '@/lib/config/email';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -75,7 +76,7 @@ export async function POST(request: NextRequest) {
     try {
       if (isResendConfigured()) {
         await getResendClient().emails.send({
-        from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+        from: EMAIL_CONFIG.FROM_PERSONAL,
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',
         html: `

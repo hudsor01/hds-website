@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
 import { trackError } from '@/lib/analytics';
+import { EMAIL_CONFIG } from '@/lib/config/email';
 
 export default function Error({
   error,
@@ -88,7 +89,7 @@ export default function Error({
           <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             Need immediate assistance?{' '}
             <a
-              href="mailto:hello@hudsondigitalsolutions.com"
+              href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`}
               className="link-primary"
             >
               Contact support

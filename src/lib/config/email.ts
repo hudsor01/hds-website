@@ -24,6 +24,11 @@ export const EMAIL_CONFIG = {
    * Admin inbox - Receives all contact form submissions and notifications
    */
   TO_ADMIN: 'hello@hudsondigitalsolutions.com',
+
+  /**
+   * Support email - Plain address for display in UI and mailto links
+   */
+  SUPPORT_EMAIL: 'hello@hudsondigitalsolutions.com',
 } as const;
 
 /**

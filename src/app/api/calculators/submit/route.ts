@@ -8,6 +8,7 @@ import { createServerLogger } from '@/lib/logger';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
+import { EMAIL_CONFIG } from '@/lib/config/email';
 import { calculatorLeads, type NewCalculatorLead } from '@/lib/schema';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -158,7 +159,7 @@ export async function POST(request: NextRequest) {
         );
 
         await getResendClient().emails.send({
-          from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+          from: EMAIL_CONFIG.FROM_PERSONAL,
           to: email,
           subject: `Your ${getCalculatorName(calculator_type)} Results`,
           html: emailContent,
