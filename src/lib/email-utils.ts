@@ -38,15 +38,6 @@ export function generateEmail(templateType: keyof typeof emailTemplates, data: E
 }
 
 /**
- * Determine email sequence based on lead data
- */
-export function getEmailSequence(leadScore: number, urgency: string): string {
-  if (leadScore > 80 && urgency === 'urgent') {return 'consultation'}
-  if (leadScore > 50) {return 'welcome'}
-  return 'follow-up'
-}
-
-/**
  * Get all email sequences (legacy compatibility)
  */
 export function getEmailSequences() {

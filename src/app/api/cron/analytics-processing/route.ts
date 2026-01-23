@@ -7,7 +7,8 @@ import { createServerLogger } from '@/lib/logger';
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('analytics-cron')
 
@@ -125,12 +126,12 @@ export async function POST(request: NextRequest) {
         errors: authValidation.error.issues,
         providedAuth: authHeader ? 'Bearer ***' : 'none',
       });
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       logger.warn('Unauthorized cron request')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return errorResponse('Unauthorized', 401)
     }
 
     await createCustomEventsTable()
@@ -154,19 +155,13 @@ export async function POST(request: NextRequest) {
     logger.info('Analytics processing completed', summary)
     await logCronExecution(jobName, 'completed')
 
-    return NextResponse.json({
-      success: true,
-      summary,
-    })
+    return successResponse({ summary })
 
   } catch (error) {
     logger.error('Analytics processing cron failed', error instanceof Error ? error : new Error(String(error)))
     await logCronExecution(jobName, 'failed', error instanceof Error ? error.message : String(error))
 
-    return NextResponse.json(
-      { error: 'Cron job failed' },
-      { status: 500 }
-    )
+    return errorResponse('Cron job failed', 500)
   }
 }
 

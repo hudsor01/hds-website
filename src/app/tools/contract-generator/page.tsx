@@ -10,6 +10,7 @@ import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { Card } from '@/components/ui/card';
 import { trackEvent } from '@/lib/analytics';
+import { logger } from '@/lib/logger';
 import { FileCheck, Download, Save, RotateCcw } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import type { ContractData, ContractTemplate } from '@/lib/pdf/contract-template';
@@ -72,8 +73,11 @@ const getDraftSnapshot = (): ContractData | null => {
     if (saved) {
       return JSON.parse(saved) as ContractData;
     }
-  } catch {
-    // Invalid JSON, ignore
+  } catch (error) {
+    // Log invalid JSON for debugging, but don't break the app
+    logger.debug('Failed to parse contract draft from localStorage', {
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
   return null;
 };
