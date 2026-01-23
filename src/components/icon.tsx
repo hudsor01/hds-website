@@ -1,5 +1,4 @@
 import type { ComponentType, SVGProps } from 'react'
-import type { ComponentType, SVGProps } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 

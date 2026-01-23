@@ -35,10 +35,6 @@ export const env = createEnv({
       ),
     CRON_SECRET: z.string().optional(),
 
-    // Vercel KV for distributed rate limiting
-    KV_REST_API_URL: z.string().url().optional(),
-    KV_REST_API_TOKEN: z.string().optional(),
-
     // SEO
     GOOGLE_SITE_VERIFICATION: z.string().optional(),
 
@@ -82,8 +78,6 @@ export const env = createEnv({
     DATABASE_WEBHOOK_SECRET: process.env.DATABASE_WEBHOOK_SECRET,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
-    KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     BASE_URL: process.env.BASE_URL,
     ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,

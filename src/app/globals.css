@@ -4,20 +4,20 @@
 @source "../../components/**/*.{ts,tsx}";
 
 @theme {
-  /* Semantic Color Tokens - Professional Blue & Orange (Muted) */
+  /* Semantic Color Tokens - Monochromatic Palette */
   --color-background: oklch(0.99 0 0);
   --color-foreground: oklch(0.10 0 0);
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.10 0 0);
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.10 0 0);
-  --color-primary: oklch(0.50 0.14 240);
+  --color-primary: oklch(0.15 0 0);
   --color-primary-foreground: oklch(0.99 0 0);
   --color-secondary: oklch(0.90 0 0);
   --color-secondary-foreground: oklch(0.10 0 0);
   --color-muted: oklch(0.95 0 0);
   --color-muted-foreground: oklch(0.40 0 0);
-  --color-accent: oklch(0.60 0.15 50);
+  --color-accent: oklch(0.25 0 0);
   --color-accent-foreground: oklch(0.99 0 0);
   --color-emerald: oklch(0.60 0.15 160);
   --color-emerald-foreground: oklch(0.98 0 0);
@@ -90,13 +90,13 @@
   --color-card-foreground-dark: oklch(0.98 0 0);
   --color-popover-dark: oklch(0.12 0 0);
   --color-popover-foreground-dark: oklch(0.98 0 0);
-  --color-primary-dark: oklch(0.60 0.14 240);
+  --color-primary-dark: oklch(0.95 0 0);
   --color-primary-foreground-dark: oklch(0.08 0 0);
   --color-secondary-dark: oklch(0.22 0 0);
   --color-secondary-foreground-dark: oklch(0.98 0 0);
   --color-muted-dark: oklch(0.20 0 0);
   --color-muted-foreground-dark: oklch(0.65 0 0);
-  --color-accent-dark: oklch(0.65 0.15 50);
+  --color-accent-dark: oklch(0.80 0 0);
   --color-accent-foreground-dark: oklch(0.08 0 0);
   --color-emerald-dark: oklch(0.65 0.12 160);
   --color-emerald-foreground-dark: oklch(0.96 0.002 90);
@@ -1212,18 +1212,23 @@ body::after {
 
 @layer components {
   .glass-card {
-    background: oklch(from var(--color-card) l c h / 0.9);
+    background: oklch(0.99 0 0 / 0.9);
     backdrop-filter: blur(24px);
-    border: 1px solid oklch(from var(--color-border) l c h / 0.5);
+    border: 1px solid oklch(0.90 0 0 / 0.5);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-2xl);
   }
 
   .glass-card-light {
-    background: oklch(from var(--color-card) l c h / 0.5);
+    background: oklch(0.98 0 0 / 0.5);
     backdrop-filter: blur(var(--blur-lg));
-    border: 1px solid oklch(from var(--color-border) l c h / 0.5);
+    border: 1px solid oklch(0.90 0 0 / 0.5);
     border-radius: var(--radius-xl);
+  }
+
+  .dark .glass-card {
+    background: oklch(0.12 0 0 / 0.9);
+    border: 1px solid oklch(0.25 0 0 / 0.5);
   }
 
   .glass-section {
@@ -1506,6 +1511,10 @@ body::after {
   .bg-blur-overlay {
     backdrop-filter: blur(var(--blur-lg));
     background-color: oklch(0 0 0 / 0.1);
+  }
+
+  .surface-overlay {
+    background-color: oklch(from var(--foreground) l c h / 0.06);
   }
 
   .accent-border {

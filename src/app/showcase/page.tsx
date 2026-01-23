@@ -5,7 +5,7 @@ import { ExternalLink, Sparkles, Rocket } from 'lucide-react';
 import { Analytics } from '@/components/Analytics';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getShowcaseItems, type ShowcaseItem } from '@/lib/showcase';
+import { getShowcaseItems } from '@/lib/showcase';
 
 // Enable ISR with 1-hour revalidation
 export const revalidate = 3600;

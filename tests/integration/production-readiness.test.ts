@@ -3,7 +3,7 @@
  * Validates that the codebase is ready for production deployment
  * Tests critical paths: routes, schemas, tools, and core functionality
  */
-import { describe, test, expect, mock } from 'bun:test';
+import { describe, test, expect } from 'bun:test';
 import { existsSync } from 'fs';
 import { join } from 'path';
 

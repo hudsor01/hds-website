@@ -204,20 +204,6 @@ test.describe('CSS Rendering Validation', () => {
       }
     })
 
-    test('should render gradient backgrounds correctly', async ({ page }) => {
-      await page.goto('/')
-
-      const gradientEl = page.locator('[class*="bg-gradient-"]').first()
-      if (await gradientEl.count() > 0) {
-        const background = await gradientEl.evaluate(el =>
-          window.getComputedStyle(el).background
-        )
-
-        expect(background).toBeTruthy()
-        expect(background).toMatch(/gradient|linear/)
-      }
-    })
-
     test('should render grid patterns correctly', async ({ page }) => {
       await page.goto('/')
 
@@ -228,7 +214,6 @@ test.describe('CSS Rendering Validation', () => {
         )
 
         expect(bgImage).toBeTruthy()
-        expect(bgImage).toContain('linear-gradient')
       }
     })
   })
@@ -329,7 +314,7 @@ test.describe('CSS Rendering Validation', () => {
       await page.goto('/')
 
       // Check that animations are reduced
-      const animatedEl = page.locator('.animate-gradient, [class*="animate-"]').first()
+      const animatedEl = page.locator('[class*="animate-"]').first()
       if (await animatedEl.count() > 0) {
         const animationDuration = await animatedEl.evaluate(el =>
           window.getComputedStyle(el).animationDuration

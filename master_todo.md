@@ -1,7 +1,7 @@
 # Master TODO - Business Website
 
 **Status**: Active
-**Last Updated**: 2025-12-21
+**Last Updated**: 2026-01-22
 **Priority**: High
 
 ---
@@ -37,7 +37,7 @@ Comprehensive UI/UX enhancement plan to create a professional, monochromatic des
 
 ### Tasks
 
-- [ ] **Update Light Mode Colors** (lines 6-85)
+- [x] **Update Light Mode Colors** (lines 6-85)
   ```css
   --color-background: oklch(0.99 0 0);      /* Pure white */
   --color-foreground: oklch(0.10 0 0);      /* Pure black */
@@ -53,7 +53,7 @@ Comprehensive UI/UX enhancement plan to create a professional, monochromatic des
   --color-input: oklch(0.96 0 0);           /* Very light gray */
   ```
 
-- [ ] **Update Dark Mode Colors** (lines 86-133)
+- [x] **Update Dark Mode Colors** (lines 86-133)
   ```css
   --color-background: oklch(0.08 0 0);      /* Pure black */
   --color-foreground: oklch(0.98 0 0);      /* White */
@@ -69,7 +69,7 @@ Comprehensive UI/UX enhancement plan to create a professional, monochromatic des
   --color-input: oklch(0.18 0 0);           /* Very dark gray */
   ```
 
-- [ ] **Update Glass Morphism Colors** (lines 1196-1216)
+- [x] **Update Glass Morphism Colors** (lines 1196-1216)
   ```css
   .glass-card {
     background: oklch(0.99 0 0 / 0.9);    /* Light glass */
@@ -87,7 +87,7 @@ Comprehensive UI/UX enhancement plan to create a professional, monochromatic des
   }
   ```
 
-- [ ] **Remove All Gradient References**
+- [x] **Remove All Gradient References**
   - Search: `grep -r "gradient" src/app/globals.css`
   - Delete: `.gradient-text`, `.bg-gradient-*`, `mask-gradient-*`
 
@@ -107,30 +107,30 @@ bun run dev        # Visual check - colors updated
 
 ### Button Component (`src/components/ui/button.tsx`)
 
-- [ ] Add `size="xl"` variant for hero CTAs
-- [ ] Remove gradient hover effects
-- [ ] Update to monochromatic palette
-- [ ] Ensure all variants work with new colors
+- [x] Add `size="xl"` variant for hero CTAs
+- [x] Remove gradient hover effects
+- [x] Update to monochromatic palette
+- [x] Ensure all variants work with new colors
 
 ### GlassCard Component (`src/components/glass-card.tsx`)
 
-- [ ] Add `hover` prop for hover effects
-- [ ] Add `padding` prop: "sm" | "md" | "lg"
-- [ ] Remove gradient overlays
-- [ ] Update to monochromatic colors
+- [x] Add `hover` prop for hover effects
+- [x] Add `padding` prop: "sm" | "md" | "lg"
+- [x] Remove gradient overlays
+- [x] Update to monochromatic colors
 
 ### Badge Component (`src/components/ui/badge.tsx`)
 
-- [ ] Add `rounded-full` variant support
-- [ ] Remove any gradient variants
-- [ ] Update to new color palette
-- [ ] Ensure semantic variants (success/warning/danger) work
+- [x] Add `rounded-full` variant support
+- [x] Remove any gradient variants
+- [x] Update to new color palette
+- [x] Ensure semantic variants (success/warning/danger) work
 
 ### Card Component (`src/components/ui/card.tsx`)
 
-- [ ] Update border colors to gray scale
-- [ ] Ensure compatibility with new palette
-- [ ] Test all card variants
+- [x] Update border colors to gray scale
+- [x] Ensure compatibility with new palette
+- [x] Test all card variants
 
 **Verification:**
 ```bash
@@ -148,24 +148,24 @@ bun run lint
 
 ### PricingCard Component (`src/components/pricing-card.tsx`)
 
-- [ ] Extract pattern from pricing page
-- [ ] Use GlassCard internally
-- [ ] Props: `title, price, features, highlighted, buttonText`
-- [ ] Support monochromatic highlighting
+- [x] Extract pattern from pricing page
+- [x] Use GlassCard internally
+- [x] Props: `title, price, features, highlighted, buttonText`
+- [x] Support monochromatic highlighting
 
 ### ProjectCard Component (`src/components/project-card.tsx`)
 
-- [ ] Extract pattern from portfolio page
-- [ ] Use GlassCard internally
-- [ ] Props: `title, description, image, tags, href`
-- [ ] Monochromatic tag badges
+- [x] Extract pattern from showcase page
+- [x] Use GlassCard internally
+- [x] Props: `title, description, image, tags, href`
+- [x] Monochromatic tag badges
 
 ### TestimonialCard Component (`src/components/testimonial-card.tsx`)
 
-- [ ] Extract pattern from testimonials
-- [ ] Use GlassCard internally
-- [ ] Props: `author, role, company, content, rating`
-- [ ] Gray-scale rating stars
+- [x] Extract pattern from testimonials
+- [x] Use GlassCard internally
+- [x] Props: `author, role, company, content, rating`
+- [x] Gray-scale rating stars
 
 **Verification:**
 ```bash
@@ -182,41 +182,41 @@ bun run typecheck
 
 ### Home Page (`src/app/page.tsx`)
 
-- [ ] Replace all button instances with Button component
+- [x] Replace all button instances with Button component
 - [ ] Replace glass-card divs with GlassCard component
-- [ ] Remove gradients from hero section
+- [x] Remove gradients from hero section
 - [ ] Update stats section with new palette
 - [ ] Ensure TestimonialCard usage
 
 ### Services Page (`src/app/services/page.tsx`)
 
 - [ ] Replace glass-card-light with GlassCard
-- [ ] Replace CTA buttons with Button component
+- [x] Replace CTA buttons with Button component
 - [ ] Update to monochromatic scheme
 - [ ] Implement ServiceCard if needed
 
-### Portfolio Page (`src/app/portfolio/page.tsx`)
+### Showcase Page (`src/app/showcase/page.tsx`)
 
 - [ ] Implement ProjectCard component
-- [ ] Replace filter buttons with Button component
-- [ ] Remove gradient hover effects
+- [x] Replace filter buttons with Button component
+- [x] Remove gradient hover effects
 
 ### Pricing Page (`src/app/pricing/page.tsx`)
 
 - [ ] Implement PricingCard component
-- [ ] Replace CTA buttons with Button component
+- [x] Replace CTA buttons with Button component
 - [ ] Update highlights to gray tones
 
 ### About Page (`src/app/about/page.tsx`)
 
 - [ ] Replace badge pills with Badge component
 - [ ] Replace glass cards with GlassCard
-- [ ] Replace CTA buttons
+- [x] Replace CTA buttons
 
 ### Contact Page (`src/app/contact/page.tsx`)
 
 - [ ] Update form styling
-- [ ] Replace submit button with Button component
+- [x] Replace submit button with Button component
 - [ ] Update info cards to GlassCard
 
 **Verification:**
@@ -237,7 +237,7 @@ bun run dev  # Visual check each page
 ### Navbar (`src/components/layout/Navbar.tsx`)
 
 - [ ] Update background to gray scale
-- [ ] Remove gradient overlays
+- [x] Remove gradient overlays
 - [ ] Update active link colors to dark gray
 - [ ] Update hover states
 
@@ -263,28 +263,22 @@ bun run typecheck
 
 ### Pages to Update
 
-- `/roi-calculator`
-- `/cost-estimator`
+
 - `/mortgage-calculator`
 - `/paystub-generator`
 - `/invoice-generator`
 - `/proposal-generator`
 - `/contract-generator`
-- `/password-generator`
-- `/json-formatter`
-- `/meta-tag-generator`
 - `/tip-calculator`
-- `/performance-calculator`
 - `/texas-ttl-calculator`
-- `/testimonial-collector`
 - Plus 2 more tool pages
 
 ### For Each Tool Page
 
-- [ ] Replace buttons with Button component
+- [x] Replace buttons with Button component
 - [ ] Update card styling to GlassCard
 - [ ] Ensure consistent monochromatic colors
-- [ ] Remove any gradient effects
+- [x] Remove any gradient effects
 
 **Verification:**
 ```bash
@@ -299,10 +293,10 @@ bun run build  # Ensure all pages build
 **Estimated Time**: 4-5 hours
 **Files Modified**: ~15
 
-### Blog & Case Studies
+### Blog & Showcase Pages
 
 - [ ] `src/app/blog/page.tsx`
-- [ ] `src/app/case-studies/page.tsx`
+- [ ] `src/app/showcase/page.tsx`
 - [ ] Update card components
 - [ ] Replace CTAs with Button
 - [ ] Update tag/badge styling
@@ -346,9 +340,9 @@ bun run lint
 
 ### Remove Gradient Utilities
 
-- [ ] Delete `.gradient-text` if exists
-- [ ] Remove `.bg-gradient-*` patterns
-- [ ] Remove `mask-gradient-*` classes
+- [x] Delete `.gradient-text` if exists
+- [x] Remove `.bg-gradient-*` patterns
+- [x] Remove `mask-gradient-*` classes
 
 ### Keep (Update Colors Only)
 
@@ -375,7 +369,7 @@ grep -r "cta-primary\|button-primary\|gradient-text" src/
 
 - [ ] `src/components/CTASection.tsx` - Remove gradients, update buttons
 - [ ] `src/components/StatsBar.tsx` - Update to monochromatic
-- [ ] `src/components/ScrollToTop.tsx` - Update button color
+- [x] `src/components/ScrollToTop.tsx` - Update button color
 - [ ] `src/components/ui/alert.tsx` - Update colors
 - [ ] `src/components/ui/input.tsx` - Gray borders, black text
 
@@ -422,7 +416,7 @@ bun run typecheck
 **Manual Checklist:**
 - [ ] Home page - No scroll, centered content
 - [ ] Services - Cards render correctly
-- [ ] Portfolio - Projects display properly
+- [ ] showcase - Projects display properly
 - [ ] Pricing - Cards highlighted correctly
 - [ ] About - Team section looks good
 - [ ] Contact - Form styles updated

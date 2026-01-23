@@ -163,13 +163,15 @@ export async function processPendingEmails(): Promise<void> {
           error: error instanceof Error ? error.message : String(error)
         });
 
+        const retryCount = scheduledEmail.retryCount ?? 0;
+
         // Increment retry count
         await db
           .update(scheduledEmails)
           .set({
-            retryCount: scheduledEmail.retryCount + 1,
+            retryCount: retryCount + 1,
             error: error instanceof Error ? error.message : String(error),
-            status: scheduledEmail.retryCount >= 2 ? 'failed' : 'pending',
+            status: retryCount >= 2 ? 'failed' : 'pending',
           })
           .where(eq(scheduledEmails.id, scheduledEmail.id));
       }
@@ -323,14 +325,15 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
     });
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    const retryCount = scheduledEmail.retryCount ?? 0;
 
     // Update status in database
     await db
       .update(scheduledEmails)
       .set({
-        status: scheduledEmail.retryCount >= 2 ? 'failed' : 'pending',
+        status: retryCount >= 2 ? 'failed' : 'pending',
         error: errorMsg,
-        retryCount: scheduledEmail.retryCount + 1,
+        retryCount: retryCount + 1,
       })
       .where(eq(scheduledEmails.id, scheduledEmail.id));
 
@@ -341,7 +344,7 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
       sequenceId: scheduledEmail.sequenceId,
       errorMessage: errorMsg,
       errorStack: error instanceof Error ? error.stack : undefined,
-      retryCount: scheduledEmail.retryCount + 1,
+      retryCount: retryCount + 1,
     });
   }
 }
