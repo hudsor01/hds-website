@@ -14,7 +14,12 @@ import { DISPLAY_CATEGORY_THRESHOLDS } from '@/lib/constants/lead-scoring';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils';
 import { resendEmailResponseSchema } from '@/lib/schemas/external';
-import type { ContactFormData, LeadScoring } from '@/lib/schemas/contact';
+import {
+  contactFormSchema,
+  scoreLeadFromContactData,
+  type ContactFormData,
+  type LeadScoring
+} from '@/lib/schemas/contact';
 import { detectInjectionAttempt, escapeHtml } from '@/lib/utils';
 import { type Logger } from '@/lib/logger';
 import { castError } from '@/lib/utils/errors'
@@ -316,4 +321,86 @@ export async function scheduleFollowUpEmails(
       sequenceId
     });
   }
+}
+
+/**
+ * Contact submission result type
+ */
+export type ContactSubmissionResult = {
+  success: boolean;
+  error?: string;
+  message?: string;
+};
+
+/**
+ * Process a validated contact form submission
+ * Consolidates shared business logic for Server Action and API route
+ *
+ * Handles: security check, lead scoring, email sending, follow-up scheduling
+ */
+export async function processContactSubmission(
+  rawData: Record<string, unknown>,
+  clientIP: string,
+  logger: Logger
+): Promise<ContactSubmissionResult> {
+  // Validate form data
+  const validation = contactFormSchema.safeParse(rawData);
+  if (!validation.success) {
+    return {
+      success: false,
+      error: "Invalid form data",
+      message: validation.error.issues[0]?.message
+    };
+  }
+
+  const data = validation.data;
+
+  // Security check (monitoring only)
+  checkForSecurityThreats(data, clientIP, logger);
+
+  // Calculate lead score and prepare email data
+  const leadScoring = scoreLeadFromContactData(data);
+  const leadScore = leadScoring.score;
+  const sequenceId = leadScoring.sequenceType;
+  const emailVariables = prepareEmailVariables(data);
+
+  // Send emails and notifications
+  if (isResendConfigured()) {
+    try {
+      await sendAdminNotification(data, leadScore, sequenceId, logger);
+      await sendWelcomeEmail(data, sequenceId, emailVariables, logger);
+      await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger);
+
+      logger.info('Contact form submission successful', {
+        email: data.email,
+        leadScore,
+        sequenceId
+      });
+
+      return {
+        success: true,
+        message: "Thank you! Your message has been sent successfully."
+      };
+    } catch (emailError) {
+      logger.error("Failed to send email", castError(emailError));
+      return {
+        success: false,
+        error: "Failed to send message. Please try again."
+      };
+    }
+  }
+
+  // Test mode: schedule emails without email service
+  await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger);
+
+  logger.info('Contact form submission successful (test mode)', {
+    email: data.email,
+    leadScore,
+    sequenceId
+  });
+
+  return {
+    success: true,
+    message: "Form submitted successfully (test mode - email service not configured)"
+  };
 }

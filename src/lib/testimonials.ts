@@ -12,6 +12,53 @@ import type { ServiceType, Testimonial, TestimonialRequest } from '../types/test
 
 export type { ServiceType, Testimonial, TestimonialRequest };
 
+// Import schema types for mapping functions
+import type {
+  Testimonial as DbTestimonial,
+  TestimonialRequest as DbTestimonialRequest
+} from './schema/content';
+
+/**
+ * Map database row to TestimonialRequest type
+ * Consolidates repeated transformation logic
+ */
+function mapTestimonialRequest(row: DbTestimonialRequest): TestimonialRequest {
+  return {
+    id: row.id,
+    token: row.token,
+    client_name: row.clientName,
+    client_email: row.clientEmail,
+    project_name: row.projectName ?? undefined,
+    message: row.message ?? undefined,
+    status: row.status ?? 'pending',
+    submitted: row.status === 'submitted',
+    submitted_at: row.submittedAt?.toISOString(),
+    expires_at: row.expiresAt?.toISOString() ?? new Date().toISOString(),
+    testimonial_id: row.testimonialId ?? undefined,
+    created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
+  };
+}
+
+/**
+ * Map database row to Testimonial type
+ * Consolidates repeated transformation logic
+ */
+function mapTestimonial(row: DbTestimonial): Testimonial {
+  return {
+    id: row.id,
+    client_name: row.name,
+    company: row.company ?? undefined,
+    role: row.role ?? undefined,
+    rating: row.rating ?? 5,
+    content: row.content,
+    photo_url: row.imageUrl ?? undefined,
+    video_url: row.videoUrl ?? undefined,
+    approved: row.published ?? false,
+    featured: row.featured ?? false,
+    created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
+  };
+}
+
 /**
  * Generate a cryptographically secure unique token for testimonial requests
  * Uses Node.js crypto.randomBytes for secure random generation
@@ -30,24 +77,7 @@ export async function getTestimonialRequestByToken(token: string): Promise<Testi
     .where(eq(testimonialRequests.token, token))
     .limit(1);
 
-  if (!data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    token: data.token,
-    client_name: data.clientName,
-    client_email: data.clientEmail,
-    project_name: data.projectName ?? undefined,
-    message: data.message ?? undefined,
-    status: data.status ?? 'pending',
-    submitted: data.status === 'submitted',
-    submitted_at: data.submittedAt?.toISOString(),
-    expires_at: data.expiresAt?.toISOString() ?? new Date().toISOString(),
-    testimonial_id: data.testimonialId ?? undefined,
-    created_at: data.createdAt?.toISOString() ?? new Date().toISOString(),
-  };
+  return data ? mapTestimonialRequest(data) : null;
 }
 
 /**
@@ -74,20 +104,7 @@ export async function createTestimonialRequest(
     })
     .returning();
 
-  if (!data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    token: data.token,
-    client_name: data.clientName,
-    client_email: data.clientEmail,
-    project_name: data.projectName ?? undefined,
-    submitted: false,
-    expires_at: data.expiresAt?.toISOString() ?? new Date().toISOString(),
-    created_at: data.createdAt?.toISOString() ?? new Date().toISOString(),
-  };
+  return data ? mapTestimonialRequest(data) : null;
 }
 
 /**
@@ -99,20 +116,7 @@ export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
     .from(testimonialRequests)
     .orderBy(desc(testimonialRequests.createdAt));
 
-  return data.map((row) => ({
-    id: row.id,
-    token: row.token,
-    client_name: row.clientName,
-    client_email: row.clientEmail,
-    project_name: row.projectName ?? undefined,
-    message: row.message ?? undefined,
-    status: row.status ?? 'pending',
-    submitted: row.status === 'submitted',
-    submitted_at: row.submittedAt?.toISOString(),
-    expires_at: row.expiresAt?.toISOString() ?? new Date().toISOString(),
-    testimonial_id: row.testimonialId ?? undefined,
-    created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
-  }));
+  return data.map(mapTestimonialRequest);
 }
 
 /**
@@ -161,23 +165,7 @@ export async function submitTestimonial(testimonial: {
     })
     .returning();
 
-  if (!data) {
-    return null;
-  }
-
-  return {
-    id: data.id,
-    client_name: data.name,
-    company: data.company ?? undefined,
-    role: data.role ?? undefined,
-    rating: data.rating ?? 5,
-    content: data.content,
-    photo_url: data.imageUrl ?? undefined,
-    video_url: data.videoUrl ?? undefined,
-    approved: data.published ?? false,
-    featured: data.featured ?? false,
-    created_at: data.createdAt?.toISOString() ?? new Date().toISOString(),
-  };
+  return data ? mapTestimonial(data) : null;
 }
 
 /**
@@ -189,19 +177,7 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
     .from(testimonials)
     .orderBy(desc(testimonials.createdAt));
 
-  return data.map((row) => ({
-    id: row.id,
-    client_name: row.name,
-    company: row.company ?? undefined,
-    role: row.role ?? undefined,
-    rating: row.rating ?? 5,
-    content: row.content,
-    photo_url: row.imageUrl ?? undefined,
-    video_url: row.videoUrl ?? undefined,
-    approved: row.published ?? false,
-    featured: row.featured ?? false,
-    created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
-  }));
+  return data.map(mapTestimonial);
 }
 
 /**
@@ -214,19 +190,7 @@ export async function getApprovedTestimonials(): Promise<Testimonial[]> {
     .where(eq(testimonials.published, true))
     .orderBy(desc(testimonials.featured), desc(testimonials.createdAt));
 
-  return data.map((row) => ({
-    id: row.id,
-    client_name: row.name,
-    company: row.company ?? undefined,
-    role: row.role ?? undefined,
-    rating: row.rating ?? 5,
-    content: row.content,
-    photo_url: row.imageUrl ?? undefined,
-    video_url: row.videoUrl ?? undefined,
-    approved: row.published ?? false,
-    featured: row.featured ?? false,
-    created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
-  }));
+  return data.map(mapTestimonial);
 }
 
 /**

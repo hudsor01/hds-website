@@ -1,40 +1,28 @@
 'use server'
 
 import { headers } from "next/headers"
-import { isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
 import { getClientIpFromHeaders } from "@/lib/utils/request"
-import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
 import { createServerLogger } from "@/lib/logger"
 import { castError } from '@/lib/utils/errors'
-import {
-  checkForSecurityThreats,
-  prepareEmailVariables,
-  sendAdminNotification,
-  sendWelcomeEmail,
-  scheduleFollowUpEmails,
-} from "@/lib/services/contact-service"
+import { processContactSubmission, type ContactSubmissionResult } from "@/lib/services/contact-service"
 
-export type ContactFormState = {
-  success?: boolean
-  error?: string
-  message?: string
-}
+export type ContactFormState = ContactSubmissionResult | null
 
-// TODO: ANTI-PATTERN - GOD FUNCTION (95 lines, 11 responsibilities)
-// This function violates Single Responsibility Principle
-// Break into: validateSubmission(), scoreLead(), sendNotifications(), scheduleFollowUps()
-// See BACKEND_CODE_REVIEW.md for detailed refactoring plan
+/**
+ * Server Action for contact form submission
+ * Delegates business logic to processContactSubmission for consistency with API route
+ */
 export async function submitContactForm(
-  _prevState: ContactFormState | null,
+  _prevState: ContactFormState,
   formData: FormData
-): Promise<ContactFormState> {
+): Promise<ContactSubmissionResult> {
   const logger = createServerLogger(`contact-form-${Date.now()}`);
 
   try {
     logger.info('Contact form submission started');
 
-    // Step 1: Rate limiting
+    // Rate limiting
     const headersList = await headers()
     const clientIP = getClientIpFromHeaders(headersList)
     const isAllowed = await unifiedRateLimiter.checkLimit(clientIP, 'contactForm')
@@ -46,68 +34,10 @@ export async function submitContactForm(
       }
     }
 
-    // Step 2: Parse and validate form data
+    // Convert FormData to object and delegate to shared processing
     const rawData = Object.fromEntries(formData.entries())
-    const validation = contactFormSchema.safeParse(rawData)
+    return await processContactSubmission(rawData, clientIP, logger)
 
-    if (!validation.success) {
-      return {
-        success: false,
-        error: "Invalid form data",
-        message: validation.error.issues[0]?.message
-      }
-    }
-
-    const data = validation.data
-
-    // Step 3: Security check (monitoring only)
-    checkForSecurityThreats(data, clientIP, logger)
-
-    // Step 4: Calculate lead score and prepare email data
-    const leadScoring = scoreLeadFromContactData(data)
-    const leadScore = leadScoring.score
-    const sequenceId = leadScoring.sequenceType
-    const emailVariables = prepareEmailVariables(data)
-
-    // Step 5: Send emails and notifications
-    if (isResendConfigured()) {
-      try {
-        await sendAdminNotification(data, leadScore, sequenceId, logger)
-        await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
-        await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
-
-        logger.info('Contact form submission successful', {
-          email: data.email,
-          leadScore,
-          sequenceId
-        });
-
-        return {
-          success: true,
-          message: "Thank you! Your message has been sent successfully."
-        }
-      } catch (emailError) {
-        logger.error("Failed to send email", castError(emailError))
-        return {
-          success: false,
-          error: "Failed to send message. Please try again."
-        }
-      }
-    } else {
-      // Test mode: schedule emails without email service
-      await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
-
-      logger.info('Contact form submission successful (test mode)', {
-        email: data.email,
-        leadScore,
-        sequenceId
-      });
-
-      return {
-        success: true,
-        message: "Form submitted successfully (test mode - email service not configured)"
-      }
-    }
   } catch (error) {
     logger.error("Contact form error", castError(error))
     return {
