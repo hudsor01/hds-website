@@ -3,7 +3,7 @@
  * Handles updating lead status (contacted, converted)
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';

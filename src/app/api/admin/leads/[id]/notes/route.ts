@@ -6,7 +6,7 @@
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/types/database';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';

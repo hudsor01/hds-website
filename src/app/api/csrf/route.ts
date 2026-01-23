@@ -5,7 +5,7 @@ import { createServerLogger, castError } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 
-async function handleCsrfToken(request: NextRequest) {
+async function handleCsrfToken(_request: NextRequest) {
   const logger = createServerLogger('csrf-token');
 
   try {

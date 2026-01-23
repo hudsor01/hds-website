@@ -3,7 +3,7 @@
  * CRUD operations for case studies
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
@@ -44,7 +44,7 @@ const CaseStudySchema = z.object({
 });
 
 // GET - Fetch all case studies (including unpublished for admin)
-async function handleAdminCaseStudiesGet(request: NextRequest) {
+async function handleAdminCaseStudiesGet(_request: NextRequest) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {

@@ -5,7 +5,7 @@
  * SECURITY: This endpoint requires admin authentication via Supabase session
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { deleteTestimonialRequest } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
@@ -16,7 +16,7 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-async function handleTestimonialRequestDelete(request: NextRequest, { params }: RouteParams) {
+async function handleTestimonialRequestDelete(_request: NextRequest, { params }: RouteParams) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {

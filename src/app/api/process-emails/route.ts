@@ -6,7 +6,7 @@ import {
 } from "@/lib/scheduled-emails";
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 function authenticateCronRequest(request: NextRequest, logger: ReturnType<typeof createServerLogger>) {
   const authHeader = request.headers.get("authorization");

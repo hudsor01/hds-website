@@ -22,7 +22,7 @@ import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { isValidHexString } from '@/lib/utils';
 import { headers } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 /**
  * Verify webhook signature using HMAC-SHA256.

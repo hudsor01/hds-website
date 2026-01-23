@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';

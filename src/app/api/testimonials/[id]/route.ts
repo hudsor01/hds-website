@@ -6,7 +6,7 @@
  * SECURITY: These endpoints require admin authentication via Supabase session
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { updateTestimonialStatus, deleteTestimonial } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';

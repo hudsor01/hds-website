@@ -9,7 +9,7 @@ import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib
 import type { Json } from '@/types/database';
 import type { LeadAttributionInsert } from '@/types/supabase-helpers';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('attribution-api');

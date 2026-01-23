@@ -3,7 +3,7 @@
  * Returns high-level metrics and KPIs
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server';
+import { type NextRequest, connection } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';

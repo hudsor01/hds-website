@@ -7,7 +7,7 @@ import { createServerLogger } from '@/lib/logger';
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('analytics-cron')
