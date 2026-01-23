@@ -6,16 +6,12 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
-import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { emailSequenceIdSchema } from '@/lib/schemas/email';
 import { calculatorLeads, type NewCalculatorLead } from '@/lib/schema';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import {
-  LEAD_QUALITY_THRESHOLDS,
-  NOTIFICATION_MINIMUM_THRESHOLD,
-} from '@/lib/constants/lead-scoring';
+import { LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring';
 
 const logger = createServerLogger('n8n-webhook');
 
@@ -161,21 +157,6 @@ async function handleNewLead(body: unknown) {
         { error: 'Failed to store lead' },
         { status: 500 }
       );
-    }
-
-    // Send notifications for high-value leads
-    if (data.leadScore >= NOTIFICATION_MINIMUM_THRESHOLD) {
-      await notifyHighValueLead({
-        leadId: lead.id,
-        firstName: data.name.split(' ')[0] || data.name,
-        lastName: data.name.split(' ').slice(1).join(' ') || '',
-        email: data.email,
-        phone: data.phone,
-        company: data.company,
-        leadScore: data.leadScore,
-        leadQuality: lead.leadQuality || 'warm',
-        source: `n8n Integration - ${data.source}`,
-      });
     }
 
     logger.info('N8N lead created successfully', {

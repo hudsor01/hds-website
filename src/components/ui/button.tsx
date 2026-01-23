@@ -4,7 +4,6 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
-import { useButtonAnalytics } from "@/hooks/use-button-analytics"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -48,12 +47,8 @@ export interface ButtonProps
  extends React.ComponentProps<"button">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
- /** Track this button click as a conversion event for analytics */
+  /** Track this button click as a conversion event (handled by Vercel Analytics) */
   trackConversion?: boolean
-  /** Custom conversion label for analytics (defaults to button text content) */
-  conversionLabel?: string
-  /** Business value tier for analytics (defaults based on variant) */
-  conversionValue?: "high" | "medium" | "low"
 }
 
 function Button({
@@ -61,51 +56,19 @@ function Button({
   variant,
   size,
   asChild = false,
-  trackConversion = false,
- conversionLabel,
-  conversionValue,
-  onClick,
-  children,
+  // trackConversion prop kept for API compatibility, tracking handled by Vercel Analytics
+  trackConversion: _trackConversion,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot : "button"
- const { trackConversion: trackButtonConversion } = useButtonAnalytics()
-
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      // Track conversion if enabled
-      if (trackConversion) {
-        trackButtonConversion(
-          { trackConversion, conversionLabel, conversionValue },
-          children,
-          variant ?? undefined,
-          size ?? undefined
-        )
-      }
-
-      // Call original onClick handler
-      onClick?.(event)
-    },
-    [
-      trackConversion,
-      conversionLabel,
-      conversionValue,
-      children,
-      variant,
-      size,
-      onClick,
-      trackButtonConversion,
-    ]
-  )
 
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      onClick={handleClick}
       {...props}
     >
-      {children}
+      {props.children}
     </Comp>
   )
 }
