@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { logger } from '@/lib/logger';
 import { trackError } from '@/lib/analytics';
 
@@ -88,7 +89,7 @@ export default function Error({
           <p className="text-sm text-muted-foreground dark:text-muted-foreground">
             Need immediate assistance?{' '}
             <a
-              href="mailto:hello@hudsondigitalsolutions.com"
+              href={`mailto:${BUSINESS_INFO.email}`}
               className="link-primary"
             >
               Contact support

@@ -3,12 +3,14 @@
  * Receives automation triggers from n8n workflows
  */
 
+import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { emailSequenceIdSchema } from '@/lib/schemas/email';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { z } from 'zod';
 import {
   LEAD_QUALITY_THRESHOLDS,
@@ -20,7 +22,7 @@ const logger = createServerLogger('n8n-webhook');
 // Webhook authentication
 function verifyWebhookAuth(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
-  const webhookSecret = process.env.N8N_WEBHOOK_SECRET;
+  const webhookSecret = env.N8N_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
     logger.warn('N8N webhook secret not configured');
@@ -76,10 +78,7 @@ export async function POST(request: NextRequest) {
       logger.warn('Unauthorized n8n webhook attempt', {
         ip: request.headers.get('x-forwarded-for'),
       });
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return errorResponse('Unauthorized', 401);
     }
 
     const body = await request.json();
@@ -100,19 +99,13 @@ export async function POST(request: NextRequest) {
 
       default:
         logger.warn('Unknown n8n webhook action', { action });
-        return NextResponse.json(
-          { error: 'Unknown action' },
-          { status: 400 }
-        );
+        return errorResponse('Unknown action', 400);
     }
   } catch (error) {
     logger.error('N8N webhook error', {
       error: error instanceof Error ? error.message : String(error),
     });
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
 
@@ -124,10 +117,7 @@ async function handleNewLead(body: unknown) {
     const validation = NewLeadSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid payload', details: validation.error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const { data } = validation.data;
@@ -150,10 +140,7 @@ async function handleNewLead(body: unknown) {
 
     if (dbError) {
       logger.error('Failed to store lead from n8n', dbError);
-      return NextResponse.json(
-        { error: 'Failed to store lead' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to store lead', 500);
     }
 
     // Send notifications for high-value leads
@@ -177,17 +164,12 @@ async function handleNewLead(body: unknown) {
       leadScore: data.leadScore,
     });
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       lead_id: lead.id,
-      message: 'Lead created successfully',
-    });
+    }, 'Lead created successfully');
   } catch (error) {
     logger.error('Error handling new lead from n8n', error as Error);
-    return NextResponse.json(
-      { error: 'Failed to process lead' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process lead', 500);
   }
 }
 
@@ -199,10 +181,7 @@ async function handleEmailSequence(body: unknown) {
     const validation = EmailSequenceSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid payload', details: validation.error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const { data } = validation.data;
@@ -228,17 +207,12 @@ async function handleEmailSequence(body: unknown) {
       scheduledFor: scheduledFor.toISOString(),
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Email sequence scheduled',
+    return successResponse({
       scheduled_for: scheduledFor.toISOString(),
-    });
+    }, 'Email sequence scheduled');
   } catch (error) {
     logger.error('Error scheduling email from n8n', error as Error);
-    return NextResponse.json(
-      { error: 'Failed to schedule email' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to schedule email', 500);
   }
 }
 
@@ -250,10 +224,7 @@ async function handleUpdateLead(body: unknown) {
     const validation = UpdateLeadSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid payload', details: validation.error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const { data } = validation.data;
@@ -265,10 +236,7 @@ async function handleUpdateLead(body: unknown) {
 
     if (updateError) {
       logger.error('Failed to update lead from n8n', updateError);
-      return NextResponse.json(
-        { error: 'Failed to update lead' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to update lead', 500);
     }
 
     logger.info('N8N lead updated successfully', {
@@ -276,16 +244,10 @@ async function handleUpdateLead(body: unknown) {
       updates: Object.keys(data.updates),
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Lead updated successfully',
-    });
+    return successResponse(undefined, 'Lead updated successfully');
   } catch (error) {
     logger.error('Error updating lead from n8n', error as Error);
-    return NextResponse.json(
-      { error: 'Failed to update lead' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to update lead', 500);
   }
 }
 

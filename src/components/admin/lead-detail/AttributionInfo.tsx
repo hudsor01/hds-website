@@ -1,3 +1,5 @@
+'use client';
+
 import { Download, Globe, TrendingUp } from 'lucide-react';
 import type { Lead } from './types';
 

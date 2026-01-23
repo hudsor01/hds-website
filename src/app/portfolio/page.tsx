@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { ExternalLink, Sparkles, Rocket } from 'lucide-react';
-import { Analytics } from '@/components/Analytics';
+import { Analytics } from '@/components/utilities/Analytics';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getProjects, parseProjectStats } from '@/lib/projects';
