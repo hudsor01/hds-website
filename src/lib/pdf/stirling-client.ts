@@ -6,10 +6,19 @@
 import { logger } from '@/lib/logger';
 import { castError } from '@/lib/utils/errors';
 
-const STIRLING_PDF_URL = process.env.STIRLING_PDF_URL;
-
-if (!STIRLING_PDF_URL) {
-  throw new Error('STIRLING_PDF_URL environment variable is not set');
+/**
+ * Get the Stirling PDF URL, throwing a clear error if not configured
+ * Lazy evaluation allows build to succeed without the env var
+ */
+function getStirlingPDFUrl(): string {
+  const url = process.env.STIRLING_PDF_URL;
+  if (!url) {
+    throw new Error(
+      'STIRLING_PDF_URL environment variable is not set. ' +
+        'PDF generation requires a Stirling PDF instance.'
+    );
+  }
+  return url;
 }
 
 export interface GeneratePDFOptions {
@@ -33,16 +42,14 @@ export async function generatePDFFromHTML(
     const htmlBlob = new Blob([html], { type: 'text/html' });
     formData.append('fileInput', htmlBlob, `${filename}.html`);
 
-    const response = await fetch(
-      `${STIRLING_PDF_URL}/api/v1/convert/html/pdf`,
-      {
-        method: 'POST',
-        body: formData,
-        headers: {
-          // Let browser set Content-Type with boundary for multipart/form-data
-        },
-      }
-    );
+    const stirlingUrl = getStirlingPDFUrl();
+    const response = await fetch(`${stirlingUrl}/api/v1/convert/html/pdf`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        // Let browser set Content-Type with boundary for multipart/form-data
+      },
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -58,7 +65,6 @@ export async function generatePDFFromHTML(
     logger.error('Failed to generate PDF from HTML', {
       filename,
       error: err.message,
-      stirlingUrl: STIRLING_PDF_URL,
     });
     throw err;
   }
@@ -69,7 +75,8 @@ export async function generatePDFFromHTML(
  */
 export async function checkStirlingPDFHealth(): Promise<boolean> {
   try {
-    const response = await fetch(`${STIRLING_PDF_URL}/api/v1/info/status`, {
+    const stirlingUrl = getStirlingPDFUrl();
+    const response = await fetch(`${stirlingUrl}/api/v1/info/status`, {
       method: 'GET',
     });
     return response.ok;
