@@ -5,6 +5,7 @@
 
 'use client';
 
+import { env } from '@/env';
 import { logger } from '@/lib/logger';
 import { useReportWebVitals } from 'next/web-vitals';
 
@@ -14,7 +15,7 @@ export function WebVitalsReporting() {
     storeWebVital(metric);
 
     // Log performance issues in development
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       const rating = metric.rating === 'poor' ? '[POOR]' : metric.rating === 'needs-improvement' ? '[WARN]' : '[GOOD]';
       logger.info(`${rating} ${metric.name}: ${metric.value} (${metric.rating})`);
     }
@@ -35,7 +36,7 @@ interface WebVitalMetric {
 async function storeWebVital(metric: WebVitalMetric) {
   try {
     // Only store in production
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production') {
       return;
     }
 

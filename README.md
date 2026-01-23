@@ -30,10 +30,24 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
    cp .env.example .env.local
    ```
 
-   Then edit `.env.local` with your actual values. At minimum, you need:
-   - `RESEND_API_KEY` - for contact form emails
+   Then edit `.env.local` with your actual values.
 
-   See `.env.example` for all available options.
+   **Required Variables** (app won't start without these):
+   - `RESEND_API_KEY` - Email service for contact forms
+   - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` - Supabase public key
+   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (server-only)
+   - `SUPABASE_PUBLISHABLE_KEY` - Supabase publishable key
+
+   **Optional Variables**:
+   - `CSRF_SECRET` - CSRF protection (required in production, 32+ characters)
+   - `DISCORD_WEBHOOK_URL` - Discord notifications for leads
+   - `SLACK_WEBHOOK_URL` - Slack notifications for leads
+   - `ADMIN_EMAILS` - Comma-separated admin email addresses
+
+   See `.env.example` for all available options and detailed documentation.
+
+   **Note**: Environment variables are validated at runtime using [@t3-oss/env-nextjs](https://env.t3.gg). The app will fail to start if required variables are missing or invalid.
 
 4. **Run the development server**
    ```bash

@@ -6,6 +6,7 @@
 import { logger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { BUSINESS_INFO } from '@/lib/constants';
 import type { Database } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest } from 'next/server';
@@ -68,7 +69,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
     try {
       if (isResendConfigured()) {
         await getResendClient().emails.send({
-        from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+        from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',
         html: `

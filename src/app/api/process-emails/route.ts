@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { castError, createServerLogger } from "@/lib/logger";
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import {
@@ -10,7 +11,7 @@ import { type NextRequest } from "next/server";
 
 function authenticateCronRequest(request: NextRequest, logger: ReturnType<typeof createServerLogger>) {
   const authHeader = request.headers.get("authorization");
-  const expectedToken = process.env.CRON_SECRET;
+  const expectedToken = env.CRON_SECRET;
 
   if (!expectedToken) {
     logger.error("CRON_SECRET environment variable is not set");

@@ -7,6 +7,7 @@ import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import type { Database, Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
@@ -145,7 +146,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
         );
 
         await getResendClient().emails.send({
-          from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+          from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
           to: email,
           subject: `Your ${getCalculatorName(calculator_type)} Results`,
           html: emailContent,
