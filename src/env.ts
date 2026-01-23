@@ -14,12 +14,12 @@ export const env = createEnv({
    * These are only available on the server and never sent to the client
    */
   server: {
-    // Email - REQUIRED for core functionality
-    RESEND_API_KEY: z.string().min(1),
+    // Email - Optional (features degrade gracefully without it)
+    RESEND_API_KEY: z.string().min(1).optional(),
 
-    // Database - REQUIRED for most features
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
-    SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
+    // Database - Optional at build time (required at runtime for DB features)
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    SUPABASE_PUBLISHABLE_KEY: z.string().min(1).optional(),
 
     // Webhooks - Optional
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
@@ -70,9 +70,9 @@ export const env = createEnv({
    * These are exposed to the browser (must be prefixed with NEXT_PUBLIC_)
    */
   client: {
-    // Supabase - REQUIRED for app to function
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
+    // Supabase - Optional at build time (required at runtime for DB features)
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1).optional(),
 
     // Base URL
     NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000"),
