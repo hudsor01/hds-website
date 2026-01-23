@@ -1,9 +1,10 @@
+'use client';
+
 /**
  * Metric Card Component
  * Displays a single KPI metric with trend indicator
  */
 
-'use client';
 
 import type { ReactNode } from 'react';
 import { Card } from '@/components/ui/card';

@@ -1,4 +1,4 @@
-import { FloatingTextarea, FloatingInput } from '@/components/floating-field'
+import { FloatingTextarea, FloatingInput } from '@/components/forms/floating-field'
 import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button'
 import { cleanup, render, screen, waitFor } from '@testing-library/react'

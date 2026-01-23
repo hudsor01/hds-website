@@ -195,7 +195,7 @@ describe('Form Validation Utilities', () => {
 
 describe('Form Field Components', () => {
   it('should render FloatingInput with proper attributes', async () => {
-    const { FloatingInput } = await import('@/components/floating-field')
+    const { FloatingInput } = await import('@/components/forms/floating-field')
     const mockOnChange = mock()
 
     render(
@@ -214,7 +214,7 @@ describe('Form Field Components', () => {
   })
 
   it('should render FloatingTextarea with proper attributes', async () => {
-    const { FloatingTextarea } = await import('@/components/floating-field')
+    const { FloatingTextarea } = await import('@/components/forms/floating-field')
     const mockOnChange = mock()
 
     render(
@@ -233,7 +233,7 @@ describe('Form Field Components', () => {
   })
 
   it('should call onChange handlers when typing', async () => {
-    const { FloatingInput } = await import('@/components/floating-field')
+    const { FloatingInput } = await import('@/components/forms/floating-field')
     const user = userEvent.setup()
     const mockOnChange = mock()
 
