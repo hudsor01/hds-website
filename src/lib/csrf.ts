@@ -13,7 +13,7 @@ import { logger } from '@/lib/logger'
 // T3 env handles validation - CSRF_SECRET is required in production
 // In development, use a fallback secret for convenience
 const CSRF_SECRET = env.CSRF_SECRET || (() => {
-  if (process.env.NODE_ENV === 'production') {
+  if (env.NODE_ENV === 'production') {
     throw new Error('CSRF_SECRET environment variable is required in production');
   }
   return 'dev-csrf-secret-for-local-development-only';
