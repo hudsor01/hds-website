@@ -363,7 +363,7 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row flex-center gap-content">
-              <Button asChild variant="default" size="xl" trackConversion={true}>
+              <Button asChild variant="accent" size="xl" trackConversion={true}>
                 <Link href="/contact">
                   Start Your Project
                   <ArrowRight className="w-5 h-5" />

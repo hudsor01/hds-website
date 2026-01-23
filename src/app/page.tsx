@@ -72,7 +72,7 @@ export default function HomePage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-comfortable">
-                  <Button asChild variant="default" size="lg" trackConversion={true}>
+                  <Button asChild variant="accent" size="lg" trackConversion={true}>
       <Link href="/contact">
         See Your ROI in 30 Days
         <ArrowRight className="w-4 h-4" />
@@ -485,7 +485,7 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-comfortable justify-center">
-              <Button asChild variant="default" size="lg" trackConversion={true}>
+              <Button asChild variant="accent" size="lg" trackConversion={true}>
       <Link href="/contact">
         Get Your Free Roadmap
         <ArrowRight className="w-4 h-4" />

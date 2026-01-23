@@ -147,7 +147,7 @@ export default function ServicesPage() {
 
             <div>
               <div className="flex-center flex-col sm:flex-row gap-content mt-12">
-                <Button asChild variant="default" size="lg" trackConversion={true}>
+                <Button asChild variant="accent" size="lg" trackConversion={true}>
       <Link href="/contact">
         Start Your Project
         <ArrowRight className="w-4 h-4" />
@@ -292,7 +292,7 @@ export default function ServicesPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row flex-center gap-content">
-              <Button asChild variant="default" size="xl" trackConversion={true}>
+              <Button asChild variant="accent" size="xl" trackConversion={true}>
                 <Link href="/contact">
                   Start Your Project
                   <ArrowRight className="w-5 h-5" />
