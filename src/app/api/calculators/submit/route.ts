@@ -146,7 +146,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
         );
 
         await getResendClient().emails.send({
-          from: 'Hudson Digital Solutions <${BUSINESS_INFO.email}>',
+          from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
           to: email,
           subject: `Your ${getCalculatorName(calculator_type)} Results`,
           html: emailContent,

@@ -4,7 +4,6 @@
  */
 
 import { logger } from '@/lib/logger';
-import { STORAGE_KEYS } from './constants';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 /**
@@ -171,11 +170,11 @@ function getSessionId(): string {
     return '';
   }
 
-  let sessionId = sessionStorage.getItem(STORAGE_KEYS.SESSION_ID);
+  let sessionId = sessionStorage.getItem('session_id');
 
   if (!sessionId) {
     sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-    sessionStorage.setItem(STORAGE_KEYS.SESSION_ID, sessionId);
+    sessionStorage.setItem('session_id', sessionId);
   }
 
   return sessionId;
@@ -279,65 +278,3 @@ export function getAttributionForSubmission(): LeadAttributionData {
   // Use first-touch attribution if available, otherwise capture current
   return getStoredAttribution() || captureAttribution();
 }
-<<<<<<< HEAD
-
-/**
- * Clear stored attribution data
- */
-export function clearAttribution(): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  try {
-    localStorage.removeItem(ATTRIBUTION_STORAGE_KEY);
-    sessionStorage.removeItem(STORAGE_KEYS.SESSION_ID);
-  } catch (error) {
-    logger.error('Failed to clear attribution data:', error as Error);
-  }
-}
-
-/**
- * Track attribution on page load
- * Call this in your root layout or _app
- */
-export function initializeAttribution(): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  // Capture attribution on initial page load
-  captureAttribution();
-}
-||||||| 5406b87
-
-/**
- * Clear stored attribution data
- */
-export function clearAttribution(): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  try {
-    localStorage.removeItem(ATTRIBUTION_STORAGE_KEY);
-    sessionStorage.removeItem('session_id');
-  } catch (error) {
-    logger.error('Failed to clear attribution data:', error as Error);
-  }
-}
-
-/**
- * Track attribution on page load
- * Call this in your root layout or _app
- */
-export function initializeAttribution(): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  // Capture attribution on initial page load
-  captureAttribution();
-}
-=======
->>>>>>> origin/main

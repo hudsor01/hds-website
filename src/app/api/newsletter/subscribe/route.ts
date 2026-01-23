@@ -69,7 +69,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
     try {
       if (isResendConfigured()) {
         await getResendClient().emails.send({
-        from: 'Hudson Digital Solutions <${BUSINESS_INFO.email}>',
+        from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',
         html: `

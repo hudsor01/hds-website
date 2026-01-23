@@ -8,15 +8,8 @@
 import { trackEvent } from '@/lib/analytics';
 import { SERVICE_TYPES } from '@/types/testimonials';
 import { Card } from '@/components/ui/card';
-<<<<<<< HEAD
-import { API_ENDPOINTS } from '@/lib/constants';
-import { CheckCircle2, Send, Star } from 'lucide-react';
-||||||| 5406b87
-import { CheckCircle2, Send, Star } from 'lucide-react';
-=======
 import { Send, Star } from 'lucide-react'
 import { FormSuccessMessage } from '@/components/forms';
->>>>>>> origin/main
 import { useState } from 'react';
 
 interface TestimonialFormProps {
@@ -64,7 +57,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
     }
 
     try {
-      const response = await fetch(API_ENDPOINTS.TESTIMONIALS_SUBMIT, {
+      const response = await fetch('/api/testimonials/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

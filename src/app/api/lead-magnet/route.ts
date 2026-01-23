@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-import { env } from '@/env';
-import { NextResponse, type NextRequest } from 'next/server';
-import { type ZodError } from 'zod';
-||||||| 5406b87
-import { NextResponse, type NextRequest } from 'next/server';
-import { type ZodError } from 'zod';
-=======
 import { type NextRequest } from 'next/server';
->>>>>>> origin/main
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
-import { BUSINESS_INFO } from '@/lib/constants';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import {
@@ -100,7 +90,7 @@ function generateLeadMagnetEmail(data: { email: string; firstName: string; resou
       <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
         <p style="color: #64748b; font-size: 14px; margin-bottom: 10px;">
           Questions? Reply to this email or contact us at 
-          <a href="mailto:${BUSINESS_INFO.email}" style="color: #0891b2;">${BUSINESS_INFO.email}</a>
+          <a href="mailto:hello@hudsondigitalsolutions.com" style="color: #0891b2;">hello@hudsondigitalsolutions.com</a>
         </p>
         <p style="color: #94a3b8; font-size: 12px;">
           Hudson Digital Solutions<br>
@@ -216,7 +206,7 @@ async function handleLeadMagnet(request: NextRequest) {
         // Send notification to admin
         const adminEmailResponse = await getResendClient().emails.send({
           from: 'Hudson Digital <noreply@hudsondigitalsolutions.com>',
-          to: ['${BUSINESS_INFO.email}'],
+          to: ['hello@hudsondigitalsolutions.com'],
           subject: sanitizeEmailHeader(`New Lead Magnet Download: ${resource.title}`),
           html: generateAdminNotificationEmail(data)
         });
@@ -231,7 +221,7 @@ async function handleLeadMagnet(request: NextRequest) {
         }
         
         // Send Discord notification if configured
-        if (env.DISCORD_WEBHOOK_URL) {
+        if (process.env.DISCORD_WEBHOOK_URL) {
           try {
             // Build Discord webhook payload
             const discordPayload = {
@@ -266,7 +256,7 @@ async function handleLeadMagnet(request: NextRequest) {
               });
             } else {
               // Send validated payload
-              const discordResponse = await fetch(env.DISCORD_WEBHOOK_URL, {
+              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
