@@ -27,7 +27,7 @@ None
 - [ ] **Phase 4: Code Deduplication** - Eliminate DRY violations and consolidate patterns
 - [ ] **Phase 5: Configuration Simplification** - Clean up config files, extract magic numbers
 - [ ] **Phase 6: Component Structure Optimization** - Remove unnecessary abstractions
-- [ ] **Phase 7: Build & Bundle Optimization** - Tree-shake, reduce first load JS
+- [x] **Phase 7: Build & Bundle Optimization** - Tree-shake, reduce first load JS
 - [ ] **Phase 8: Testing Infrastructure Review** - Simplify testing setup
 - [ ] **Phase 9: Documentation & Environment** - Create .env.example and clean docs
 - [ ] **Phase 10: Final Validation & Verification** - End-to-end testing of all features
@@ -155,10 +155,21 @@ Plans:
 **Depends on**: Phase 6 (optimized components reduce bundle size)
 **Research**: Likely (Next.js bundle analyzer, tree-shaking techniques)
 **Research topics**: Next.js 16 bundle optimization, dynamic imports strategy, Tailwind purge configuration
-**Plans**: TBD
+**Plans**: 1 plan executed
+
+**Optimizations:**
+- Removed unused `puppeteer` dependency (was leftover from previous implementation)
+  - PDF generation uses Stirling PDF API + @react-pdf/renderer, not puppeteer
+- Expanded `optimizePackageImports` in next.config.ts:
+  - Added lucide-react for icon tree-shaking
+  - Added all 14 @radix-ui packages for better chunking
+  - Added @tanstack packages (react-table, react-form, react-query)
+  - Added react-markdown
+- Build passes (5.2s), all 400 tests pass
+- Note: 1.5MB chunk is @react-pdf/renderer, legitimately needed for client-side paystub generation
 
 Plans:
-- [ ] 07-01: TBD
+- [x] 07-01: Remove unused dependencies and expand tree-shaking configuration
 
 #### Phase 8: Testing Infrastructure Review
 **Goal**: Simplify testing setup while maintaining coverage for critical paths (contact form, tool generators)
