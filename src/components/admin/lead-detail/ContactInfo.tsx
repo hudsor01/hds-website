@@ -1,3 +1,5 @@
+'use client';
+
 import { Building2, Calendar, Mail, Phone } from 'lucide-react';
 import type { Lead } from './types';
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { FileText } from 'lucide-react'
 import React from 'react'
 import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'

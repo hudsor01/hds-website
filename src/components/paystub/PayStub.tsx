@@ -1,13 +1,14 @@
+'use client';
+
 import React from 'react'
-import { cn } from '@/lib/utils'
+import { cn, formatCurrency } from '@/lib/utils'
 import type { PayPeriod, PaystubData } from '@/types/paystub'
+import { Card } from '@/components/ui/card'
 import { PayStubHeader } from './PayStubHeader'
 import { PayStubEmployeeInfo } from './PayStubEmployeeInfo'
 import { PayStubEarnings } from './PayStubEarnings'
 import { PayStubDeductions } from './PayStubDeductions'
-import { PayStubNetPay } from './PayStubNetPay'
 import { PayStubYearToDate } from './PayStubYearToDate'
-import { PayStubFooter } from './PayStubFooter'
 import { PayStubSaveButton } from './PayStubSaveButton'
 import { PaystubPDF } from '@/lib/pdf/paystub-template'
 import { downloadPDF } from '@/lib/pdf/client-pdf'
@@ -86,7 +87,13 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
           />
         </section>
 
-        <PayStubNetPay netPay={payPeriod.netPay} />
+        {/* Net Pay - inlined from PayStubNetPay.tsx */}
+        <Card size="sm" className="border-2 border-black bg-muted mb-5">
+          <div className="flex-between items-center text-base font-bold">
+            <span>NET PAY:</span>
+            <span>{formatCurrency(payPeriod.netPay)}</span>
+          </div>
+        </Card>
 
         <PayStubYearToDate
           grossPay={ytdTotals.grossPay}
@@ -96,7 +103,14 @@ export const PayStub: React.FC<PayStubProps> = ({ payPeriod, employeeData, ytdTo
           netPay={ytdTotals.netPay}
         />
 
-        <PayStubFooter />
+        {/* Footer - inlined from PayStubFooter.tsx */}
+        <div className="mt-heading text-muted-foreground border-t border-border pt-2.5">
+          <div className="text-center">
+            This statement is for informational purposes only and does not constitute an official document.
+            <br/>
+            Please retain this statement for your records.
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Safe JSON-LD Component
  * Renders structured data safely without dangerouslySetInnerHTML concerns

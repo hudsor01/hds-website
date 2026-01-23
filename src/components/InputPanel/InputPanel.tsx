@@ -1,3 +1,5 @@
+'use client';
+
 import { Calculator } from 'lucide-react'
 import type { PaymentResults, TTLResults, VehicleInputs as VehicleInputType } from '../../types/ttl-types'
 import { AdvancedOptions } from './AdvancedOptions'

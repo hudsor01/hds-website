@@ -1,3 +1,5 @@
+'use client';
+
 import type { VehicleInputs } from '../../types/ttl-types'
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input'

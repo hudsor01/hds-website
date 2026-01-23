@@ -1,3 +1,5 @@
+'use client';
+
 "use client";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Button } from "@/components/ui/button";

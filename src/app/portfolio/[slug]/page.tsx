@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ExternalLink, ArrowLeft, Code2, Calendar, Eye } from 'lucide-react';
-import { Analytics } from '@/components/Analytics';
+import { Analytics } from '@/components/utilities/Analytics';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
 import {
