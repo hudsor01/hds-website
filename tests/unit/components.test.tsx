@@ -1,8 +1,7 @@
 import { FloatingTextarea, FloatingInput } from '@/components/forms/floating-field'
 import { Card } from "@/components/ui/card";
 import { Button } from '@/components/ui/button'
-import { cleanup, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -41,8 +40,7 @@ describe('FloatingInput Component', () => {
     expect(input).toHaveClass('pt-4', 'pb-2')
   })
 
-  it('should float label when focused', async () => {
-    const user = userEvent.setup()
+  it('should float label when focused', () => {
     render(
       <FloatingInput
         name="test"
@@ -59,11 +57,9 @@ describe('FloatingInput Component', () => {
     // Label should not be floated initially
     expect(label).toHaveClass('top-3', 'text-sm')
 
-    // Focus input
-    await user.click(input)
-    await waitFor(() => {
-      expect(label).toHaveClass('-top-2', 'text-xs')
-    })
+    // Focus input using fireEvent (avoids fake timer issues)
+    fireEvent.focus(input)
+    expect(label).toHaveClass('-top-2', 'text-xs')
   })
 
   it('should keep label floated when input has value', () => {
@@ -80,8 +76,7 @@ describe('FloatingInput Component', () => {
     expect(label).toHaveClass('-top-2', 'text-xs')
   })
 
-  it('should call onChange when typing', async () => {
-    const user = userEvent.setup()
+  it('should call onChange when typing', () => {
     render(
       <FloatingInput
         name="test"
@@ -92,7 +87,7 @@ describe('FloatingInput Component', () => {
     )
 
     const input = screen.getByRole('textbox', { name: /Test Input/i })
-    await user.type(input, 'Hello')
+    fireEvent.change(input, { target: { value: 'Hello' } })
 
     expect(mockOnChange).toHaveBeenCalled()
   })
@@ -128,8 +123,7 @@ describe('FloatingInput Component', () => {
     expect(input).toHaveClass('disabled:cursor-not-allowed', 'disabled:opacity-50')
   })
 
-  it('should call onBlur when focus is lost', async () => {
-    const user = userEvent.setup()
+  it('should call onBlur when focus is lost', () => {
     render(
       <FloatingInput
         name="test"
@@ -141,8 +135,8 @@ describe('FloatingInput Component', () => {
     )
 
     const input = screen.getByRole('textbox', { name: /Test Input/i })
-    await user.click(input)
-    await user.tab()
+    fireEvent.focus(input)
+    fireEvent.blur(input)
 
     expect(mockOnBlur).toHaveBeenCalled()
   })
@@ -237,14 +231,13 @@ describe('Button Component', () => {
     expect(button).toHaveClass('disabled:opacity-50')
   })
 
-  it('should handle click events', async () => {
+  it('should handle click events', () => {
     const handleClick = mock()
-    const user = userEvent.setup()
 
     render(<Button onClick={handleClick}>Click Me</Button>)
 
     const button = screen.getByRole('button')
-    await user.click(button)
+    fireEvent.click(button)
 
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
