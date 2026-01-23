@@ -8,8 +8,15 @@
 import { trackEvent } from '@/lib/analytics';
 import { SERVICE_TYPES } from '@/types/testimonials';
 import { Card } from '@/components/ui/card';
+<<<<<<< HEAD
 import { API_ENDPOINTS } from '@/lib/constants';
 import { CheckCircle2, Send, Star } from 'lucide-react';
+||||||| 5406b87
+import { CheckCircle2, Send, Star } from 'lucide-react';
+=======
+import { Send, Star } from 'lucide-react'
+import { FormSuccessMessage } from '@/components/forms';
+>>>>>>> origin/main
 import { useState } from 'react';
 
 interface TestimonialFormProps {
@@ -87,17 +94,11 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
 
   if (isSubmitted) {
     return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted dark:bg-success-bg-dark/30 flex items-center justify-center">
-          <CheckCircle2 className="w-8 h-8 text-success-dark" />
-        </div>
-        <h2 className="text-2xl font-bold text-foreground mb-heading">
-          Thank You!
-        </h2>
-        <p className="text-muted-foreground">
-          Your testimonial has been submitted successfully. We appreciate you taking
-          the time to share your feedback!
-        </p>
+      <div className="py-12">
+        <FormSuccessMessage
+          title="Thank You!"
+          message="Your testimonial has been submitted successfully. We appreciate you taking the time to share your feedback!"
+        />
       </div>
     );
   }

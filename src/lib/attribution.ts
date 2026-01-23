@@ -16,7 +16,7 @@ const ATTRIBUTION_EXPIRY_DAYS = 30;
 /**
  * Extract UTM parameters from URL
  */
-export function getUTMParameters(): UTMParameters {
+function getUTMParameters(): UTMParameters {
   if (typeof window === 'undefined') {
     return {};
   }
@@ -35,7 +35,7 @@ export function getUTMParameters(): UTMParameters {
 /**
  * Determine traffic source from UTM parameters and referrer
  */
-export function determineTrafficSource(
+function determineTrafficSource(
   utmParams: UTMParameters,
   referrer: string
 ): { source: string; medium: string } {
@@ -106,7 +106,7 @@ export function determineTrafficSource(
 /**
  * Detect device type
  */
-export function getDeviceType(): string {
+function getDeviceType(): string {
   if (typeof window === 'undefined') {
     return 'unknown';
   }
@@ -127,7 +127,7 @@ export function getDeviceType(): string {
 /**
  * Detect browser
  */
-export function getBrowser(): string {
+function getBrowser(): string {
   if (typeof window === 'undefined') {
     return 'unknown';
   }
@@ -147,7 +147,7 @@ export function getBrowser(): string {
 /**
  * Detect operating system
  */
-export function getOS(): string {
+function getOS(): string {
   if (typeof window === 'undefined') {
     return 'unknown';
   }
@@ -166,7 +166,7 @@ export function getOS(): string {
 /**
  * Generate session ID (simple implementation)
  */
-export function getSessionId(): string {
+function getSessionId(): string {
   if (typeof window === 'undefined') {
     return '';
   }
@@ -218,7 +218,7 @@ export function captureAttribution(): LeadAttributionData {
 /**
  * Store attribution data in localStorage with expiry
  */
-export function storeAttribution(attribution: LeadAttributionData): void {
+function storeAttribution(attribution: LeadAttributionData): void {
   if (typeof window === 'undefined') {
     return;
   }
@@ -279,6 +279,7 @@ export function getAttributionForSubmission(): LeadAttributionData {
   // Use first-touch attribution if available, otherwise capture current
   return getStoredAttribution() || captureAttribution();
 }
+<<<<<<< HEAD
 
 /**
  * Clear stored attribution data
@@ -308,3 +309,35 @@ export function initializeAttribution(): void {
   // Capture attribution on initial page load
   captureAttribution();
 }
+||||||| 5406b87
+
+/**
+ * Clear stored attribution data
+ */
+export function clearAttribution(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    localStorage.removeItem(ATTRIBUTION_STORAGE_KEY);
+    sessionStorage.removeItem('session_id');
+  } catch (error) {
+    logger.error('Failed to clear attribution data:', error as Error);
+  }
+}
+
+/**
+ * Track attribution on page load
+ * Call this in your root layout or _app
+ */
+export function initializeAttribution(): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  // Capture attribution on initial page load
+  captureAttribution();
+}
+=======
+>>>>>>> origin/main

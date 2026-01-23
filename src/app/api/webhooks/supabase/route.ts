@@ -6,6 +6,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import {
     authChangePayloadSchema,
     databaseChangePayloadSchema,
@@ -22,7 +23,7 @@ import type { Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { isValidHexString } from '@/lib/utils';
 import { headers } from 'next/headers';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 /**
  * Verify webhook signature using HMAC-SHA256.
@@ -86,14 +87,14 @@ export async function POST(request: NextRequest) {
     // Verify webhook signature exists
     if (!signature) {
       logger.warn('Missing webhook signature')
-      return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
+      return errorResponse('Missing signature', 401)
     }
 
     // Get webhook secret from environment
     const webhookSecret = env.SUPABASE_WEBHOOK_SECRET
     if (!webhookSecret) {
       logger.error('SUPABASE_WEBHOOK_SECRET not configured')
-      return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
+      return errorResponse('Webhook not configured', 500)
     }
 
     // Read raw body for signature verification
@@ -102,14 +103,14 @@ export async function POST(request: NextRequest) {
     // Verify signature cryptographically using HMAC-SHA256
     if (!verifyWebhookSignature(rawBody, signature, webhookSecret)) {
       logger.warn('Invalid webhook signature - possible forgery attempt')
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+      return errorResponse('Invalid signature', 401)
     }
 
     // Validate event type
     const validEventTypes = ['db_change', 'auth_change', 'storage_change']
     if (!eventType || !validEventTypes.includes(eventType)) {
       logger.warn('Invalid or missing event type', { eventType })
-      return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
+      return errorResponse('Invalid event type', 400)
     }
 
     // Parse JSON from already-read body
@@ -125,10 +126,7 @@ export async function POST(request: NextRequest) {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
           })
-          return NextResponse.json(
-            { error: 'Invalid payload', details: validatedPayload.error.issues },
-            { status: 400 }
-          )
+          return validationErrorResponse(validatedPayload.error)
         }
         await handleDatabaseChange(validatedPayload.data)
         break
@@ -140,10 +138,7 @@ export async function POST(request: NextRequest) {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
           })
-          return NextResponse.json(
-            { error: 'Invalid payload', details: validatedPayload.error.issues },
-            { status: 400 }
-          )
+          return validationErrorResponse(validatedPayload.error)
         }
         await handleAuthChange(validatedPayload.data)
         break
@@ -155,10 +150,7 @@ export async function POST(request: NextRequest) {
             errors: validatedPayload.error.issues,
             payload: rawPayload,
           })
-          return NextResponse.json(
-            { error: 'Invalid payload', details: validatedPayload.error.issues },
-            { status: 400 }
-          )
+          return validationErrorResponse(validatedPayload.error)
         }
         await handleStorageChange(validatedPayload.data)
         break
@@ -175,14 +167,11 @@ export async function POST(request: NextRequest) {
     await triggerWebhook(eventType, rawPayload)
 
     logger.info('Webhook processed successfully', { eventType })
-    return NextResponse.json({ success: true })
+    return successResponse()
 
   } catch (error) {
     logger.error('Webhook processing failed', error instanceof Error ? error : new Error(String(error)))
-    return NextResponse.json(
-      { error: 'Webhook processing failed' },
-      { status: 500 }
-    )
+    return errorResponse('Webhook processing failed', 500)
   }
 }
 

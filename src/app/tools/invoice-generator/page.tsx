@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 import { FileText, Plus, Trash2, Download, Save, RotateCcw } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template';
@@ -268,10 +269,6 @@ export default function InvoiceGeneratorPage() {
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
-
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
   const isValid = invoiceData.clientName.trim() !== '' &&
                   invoiceData.lineItems.some(item => item.description.trim() !== '' && item.amount > 0);
 

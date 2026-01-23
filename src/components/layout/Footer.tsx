@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
-// import { brand } from "@/lib/brand";
 import { Button } from "@/components/ui/button";
 import { BUSINESS_INFO, ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";

@@ -4,6 +4,7 @@ import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
 import { JsonLd } from '@/components/JsonLd';
 import { TIMEOUTS } from '@/lib/constants';
 import { logger } from '@/lib/logger';
+import { formatCurrency } from '@/lib/utils';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
 import { useState, useTransition } from 'react';
@@ -120,7 +121,7 @@ export function Calculator() {
     if (comparisonVehicles.length >= 3) {return;} // Limit to 3 vehicles
 
     // Create a name for the vehicle based on price and county
-    const vehicleName = `$${vehicleInput.purchasePrice.toLocaleString()} - ${vehicleInput.county}`;
+    const vehicleName = `${formatCurrency(vehicleInput.purchasePrice)} - ${vehicleInput.county}`;
 
     setComparisonVehicles(prev => [
       ...prev,

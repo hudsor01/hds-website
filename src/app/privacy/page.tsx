@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
 import { Card } from "@/components/ui/card";
+<<<<<<< HEAD
 import { BUSINESS_INFO } from '@/lib/constants';
+||||||| 5406b87
+=======
+import { formatDate } from '@/lib/utils';
+>>>>>>> origin/main
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
@@ -9,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 // Pre-compute date at module load time (safe for RSC)
-const lastUpdated = new Date().toLocaleDateString();
+const lastUpdated = formatDate(new Date());
 
 export default function PrivacyPage() {
   return (

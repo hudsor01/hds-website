@@ -4,6 +4,7 @@ import { env } from '@/env';
 import { BUSINESS_INFO } from '@/lib/constants';
 import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
+import { formatCurrency } from '@/lib/utils';
 import type { Database, Json } from '@/types/database';
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
@@ -141,7 +142,7 @@ export async function saveCalculation(
       share_code: shareCode,
       inputs: inputs as unknown as Json,
       results: results as Json,
-      name: name || `$${inputs.purchasePrice.toLocaleString()} - ${inputs.county}`,
+      name: name || `${formatCurrency(inputs.purchasePrice)} - ${inputs.county}`,
       email: email ?? null,
       county: inputs.county,
       purchase_price: Math.round(inputs.purchasePrice),
@@ -271,7 +272,7 @@ export async function emailResults(
     const { error: emailError } = await getResendClient().emails.send({
       from: `${BUSINESS_INFO.name} <${BUSINESS_INFO.email}>`,
       to: email,
-      subject: `Your Texas TTL Calculator Results - $${inputs.purchasePrice.toLocaleString()}`,
+      subject: `Your Texas TTL Calculator Results - ${formatCurrency(inputs.purchasePrice)}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -297,10 +298,10 @@ export async function emailResults(
                   <tr>
                     <td>
                       <h2 style="margin: 0 0 12px; color: #1e293b; font-size: 18px;">Vehicle Details</h2>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Purchase Price:</strong> $${inputs.purchasePrice.toLocaleString()}</p>
+                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Purchase Price:</strong> ${formatCurrency(inputs.purchasePrice)}</p>
                       <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>County:</strong> ${inputs.county}</p>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Down Payment:</strong> $${(inputs.downPayment || 0).toLocaleString()}</p>
-                      ${inputs.tradeInValue ? `<p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Trade-In:</strong> $${inputs.tradeInValue.toLocaleString()}</p>` : ''}
+                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Down Payment:</strong> ${formatCurrency(inputs.downPayment || 0)}</p>
+                      ${inputs.tradeInValue ? `<p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Trade-In:</strong> ${formatCurrency(inputs.tradeInValue)}</p>` : ''}
                     </td>
                   </tr>
                 </table>
@@ -317,7 +318,7 @@ export async function emailResults(
                       <span style="color: #64748b;">Sales Tax (6.25%)</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.salesTax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.salesTax)}</span>
                     </td>
                   </tr>
                   <tr>
@@ -325,7 +326,7 @@ export async function emailResults(
                       <span style="color: #64748b;">Title & Fees</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.titleFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.titleFee)}</span>
                     </td>
                   </tr>
                   <tr>
@@ -333,7 +334,7 @@ export async function emailResults(
                       <span style="color: #64748b;">Registration</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.registrationFees.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.registrationFees)}</span>
                     </td>
                   </tr>
                   <tr>
@@ -341,7 +342,7 @@ export async function emailResults(
                       <span style="color: #0891b2; font-weight: 600; font-size: 16px;">Total TTL</span>
                     </td>
                     <td style="padding: 12px 0; text-align: right;">
-                      <span style="color: #0891b2; font-weight: 700; font-size: 20px;">$${ttl.totalTTL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #0891b2; font-weight: 700; font-size: 20px;">${formatCurrency(ttl.totalTTL)}</span>
                     </td>
                   </tr>
                 </table>
@@ -355,7 +356,7 @@ export async function emailResults(
                   <tr>
                     <td style="text-align: center;">
                       <p style="margin: 0 0 4px; color: rgba(255,255,255,0.8); font-size: 14px;">Estimated Monthly Payment</p>
-                      <p style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">$${payment.monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                      <p style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">${formatCurrency(payment.monthlyPayment)}</p>
                       <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">${inputs.loanTermMonths || 60} months @ ${inputs.interestRate || 6.5}% APR</p>
                     </td>
                   </tr>

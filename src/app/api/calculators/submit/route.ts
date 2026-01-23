@@ -5,14 +5,15 @@
 
 import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { BUSINESS_INFO } from '@/lib/constants';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import type { Database, Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 // Schema for calculator submission
 const calculatorSubmitSchema = z.object({
@@ -87,31 +88,15 @@ function getLeadQuality(score: number): 'hot' | 'warm' | 'cold' {
   return 'cold';
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 submissions per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Calculator submission rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many submissions. Please try again later.' },
-      { status: 429 }
-    );
-  }
-
+async function handleCalculatorSubmit(request: NextRequest) {
   try {
     const body = await request.json();
 
     // Validate with Zod schema
     const parseResult = calculatorSubmitSchema.safeParse(body);
     if (!parseResult.success) {
-      const errors = parseResult.error.flatten();
-      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
-      logger.warn('Invalid calculator submission', { errors: errors.fieldErrors });
-      return NextResponse.json(
-        { error: firstError, details: errors.fieldErrors },
-        { status: 400 }
-      );
+      logger.warn('Invalid calculator submission', { errors: parseResult.error.issues });
+      return validationErrorResponse(parseResult.error);
     }
 
     const { calculator_type, email, inputs, results } = parseResult.data;
@@ -148,10 +133,7 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       logger.error('Failed to store calculator lead', dbError);
-      return NextResponse.json(
-        { error: 'Failed to store submission' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to store submission', 500);
     }
 
     // Send immediate email with results
@@ -225,20 +207,18 @@ export async function POST(request: NextRequest) {
       logger.error('Failed to schedule follow-up', scheduleError as Error);
     }
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       lead_id: calculatorLead.id,
       lead_score: leadScore,
       lead_quality: leadQuality,
     });
   } catch (error) {
     logger.error('Calculator API error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to process submission' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process submission', 500);
   }
 }
+
+export const POST = withRateLimit(handleCalculatorSubmit, 'contactForm');
 
 // Helper functions
 function getCalculatorName(type: string): string {
