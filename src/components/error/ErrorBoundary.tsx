@@ -6,6 +6,7 @@ import { ErrorBoundary as ReactErrorBoundary, type FallbackProps } from 'react-e
 import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
+import { EMAIL_CONFIG } from '@/lib/config/email';
 import { castError } from '@/lib/utils/errors';
 import { Button } from '@/components/ui/button';
 
@@ -196,10 +197,10 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
           <p className="text-sm text-muted-foreground mt-content-block">
             Need help? Contact us at{' '}
             <a
-              href="mailto:hello@hudsondigitalsolutions.com"
+              href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`}
               className="link-primary"
             >
-              hello@hudsondigitalsolutions.com
+              {EMAIL_CONFIG.SUPPORT_EMAIL}
             </a>
           </p>
         </Card>

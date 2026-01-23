@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { createServerLogger } from '@/lib/logger';
+import { EMAIL_CONFIG } from '@/lib/config/email';
 
 export default function GlobalError({
   error,
@@ -161,7 +162,7 @@ export default function GlobalError({
               }}>
                 If this issue persists, please contact{' '}
                 <a
-                  href="mailto:hello@hudsondigitalsolutions.com"
+                  href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`}
                   style={{
                     color: '#06b6d4',
                     textDecoration: 'underline',

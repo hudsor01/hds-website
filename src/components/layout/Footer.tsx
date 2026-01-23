@@ -5,6 +5,7 @@ import { useSyncExternalStore } from "react";
 // import { brand } from "@/lib/brand";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { EMAIL_CONFIG } from "@/lib/config/email";
 import {
   CheckCircle,
   Clock,
@@ -173,11 +174,11 @@ export default function Footer() {
                 </Button>
 
                 <a
-                  href="mailto:hello@hudsondigitalsolutions.com"
+                  href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`}
                   className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
                 >
                   <Mail className="h-4 w-4" />
-                  <span className="small">hello@hudsondigitalsolutions.com</span>
+                  <span className="small">{EMAIL_CONFIG.SUPPORT_EMAIL}</span>
                 </a>
               </div>
             </div>

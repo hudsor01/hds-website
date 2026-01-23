@@ -106,10 +106,17 @@ Plans:
 **Goal**: Consolidate duplicated logic identified in concerns (contact form duplication, repeated patterns)
 **Depends on**: Phase 3 (cleaner integration layer before consolidating patterns)
 **Research**: Unlikely (internal refactoring using established patterns)
-**Plans**: TBD
+**Plans**: 1 plan executed
+
+**Consolidations:**
+- Testimonials: Added mapTestimonialRequest() and mapTestimonial() helpers (~50 lines reduced)
+- Contact Form: Added processContactSubmission() to contact-service.ts
+  - Server Action: 118 → 48 lines
+  - API route: 104 → 47 lines
+  - Total: ~115 lines of duplicated code eliminated
 
 Plans:
-- [ ] 04-01: TBD
+- [x] 04-01: Consolidate testimonials mappings and contact form processing
 
 #### Phase 5: Configuration Simplification
 **Goal**: Extract hardcoded configuration values to constants, clean up unnecessary config files
@@ -621,7 +628,7 @@ Plans:
 | 1. Dependency Audit & Pruning | v1.0 | 5/5 | Complete | 2026-01-22 |
 | 2. Dead Code Elimination | v1.0 | 1/1 | Complete | 2026-01-22 |
 | 3. Integration Cleanup | v1.0 | 1/1 | Complete | 2026-01-22 |
-| 4. Code Deduplication | v1.0 | 0/TBD | Not started | - |
+| 4. Code Deduplication | v1.0 | 1/1 | Complete | 2026-01-22 |
 | 5. Configuration Simplification | v1.0 | 0/TBD | Not started | - |
 | 6. Component Structure Optimization | v1.0 | 0/TBD | Not started | - |
 | 7. Build & Bundle Optimization | v1.0 | 0/TBD | Not started | - |
