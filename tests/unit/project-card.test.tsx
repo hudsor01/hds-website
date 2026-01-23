@@ -98,7 +98,7 @@ describe('ProjectCard', () => {
     const { container } = render(<Card {...defaultProps} slug="my-project" />);
 
     const link = within(container).getByRole('link');
-    expect(link.getAttribute('href')).toBe('/portfolio/my-project');
+    expect(link.getAttribute('href')).toBe('/showcase/my-project');
   });
 
   test('applies glass card styling', () => {
