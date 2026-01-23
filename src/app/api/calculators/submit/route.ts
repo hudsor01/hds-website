@@ -5,7 +5,6 @@
 
 import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
-import { notifyHighValueLead } from '@/lib/notifications';
 import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { scheduleEmail } from '@/lib/scheduled-emails';
@@ -172,30 +171,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Extract name for notifications
+    // Extract name for email personalization
     const inputName = typeof inputs.name === 'string' ? inputs.name : '';
-    const nameParts = inputName.split(' ');
-    const firstName = nameParts[0] || email.split('@')[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
-
-    // Send high-value lead notifications to Slack/Discord
-    try {
-      await notifyHighValueLead({
-        leadId: calculatorLead.id,
-        firstName,
-        lastName,
-        email,
-        phone: typeof inputs.phone === 'string' ? inputs.phone : undefined,
-        company: typeof inputs.company === 'string' ? inputs.company : undefined,
-        leadScore: leadScore,
-        leadQuality: leadQuality,
-        source: `Calculator - ${getCalculatorName(calculator_type)}`,
-        calculatorType: calculator_type,
-      });
-    } catch (notificationError) {
-      // Log but don't fail the submission if notifications fail
-      logger.error('Failed to send lead notifications', notificationError as Error);
-    }
 
     // Schedule follow-up emails based on lead quality
     const sequenceId = leadQuality === 'hot'

@@ -3,7 +3,6 @@
 import { headers } from "next/headers"
 import { isResendConfigured } from "@/lib/resend-client"
 import { unifiedRateLimiter } from "@/lib/rate-limiter"
-import { recordContactFormSubmission } from "@/lib/metrics"
 import { getClientIpFromHeaders } from "@/lib/utils/request"
 import { contactFormSchema, scoreLeadFromContactData } from "@/lib/schemas/contact"
 import { createServerLogger } from "@/lib/logger"
@@ -13,7 +12,6 @@ import {
   prepareEmailVariables,
   sendAdminNotification,
   sendWelcomeEmail,
-  sendLeadNotifications,
   scheduleFollowUpEmails,
 } from "@/lib/services/contact-service"
 
@@ -76,9 +74,6 @@ export async function submitContactForm(
       try {
         await sendAdminNotification(data, leadScore, sequenceId, logger)
         await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
-        await sendLeadNotifications(data, leadScore, logger)
-
-        recordContactFormSubmission(true)
         await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
 
         logger.info('Contact form submission successful', {
@@ -93,7 +88,6 @@ export async function submitContactForm(
         }
       } catch (emailError) {
         logger.error("Failed to send email", castError(emailError))
-        recordContactFormSubmission(false)
         return {
           success: false,
           error: "Failed to send message. Please try again."
@@ -102,7 +96,6 @@ export async function submitContactForm(
     } else {
       // Test mode: schedule emails without email service
       await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
-      recordContactFormSubmission(true)
 
       logger.info('Contact form submission successful (test mode)', {
         email: data.email,
@@ -117,7 +110,6 @@ export async function submitContactForm(
     }
   } catch (error) {
     logger.error("Contact form error", castError(error))
-    recordContactFormSubmission(false)
     return {
       success: false,
       error: "An unexpected error occurred. Please try again later."

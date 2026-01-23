@@ -10,7 +10,7 @@
  */
 
 import { EMAIL_CONFIG } from '@/lib/config/email';
-import { DISPLAY_CATEGORY_THRESHOLDS, LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring';
+import { DISPLAY_CATEGORY_THRESHOLDS } from '@/lib/constants/lead-scoring';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils';
 import { resendEmailResponseSchema } from '@/lib/schemas/external';
@@ -18,7 +18,6 @@ import type { ContactFormData, LeadScoring } from '@/lib/schemas/contact';
 import { detectInjectionAttempt, escapeHtml } from '@/lib/utils';
 import { type Logger } from '@/lib/logger';
 import { castError } from '@/lib/utils/errors'
-import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmailSequence } from '@/lib/scheduled-emails';
 
 /**
@@ -290,35 +289,6 @@ export async function sendWelcomeEmail(
   } catch (error) {
     logger.error('Failed to send welcome email', castError(error));
     return false;
-  }
-}
-
-/**
- * Send notifications for high-value leads (Slack/Discord)
- * Returns void, logs errors internally
- */
-export async function sendLeadNotifications(
-  data: ContactFormData,
-  leadScore: number,
-  logger: Logger
-): Promise<void> {
-  try {
-    await notifyHighValueLead({
-      leadId: `contact-${Date.now()}`,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      company: data.company,
-      service: data.service,
-      budget: data.budget,
-      timeline: data.timeline,
-      leadScore: leadScore,
-      leadQuality: leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
-      source: 'Contact Form',
-    });
-  } catch (error) {
-    logger.error('Failed to send lead notifications', castError(error));
   }
 }
 
