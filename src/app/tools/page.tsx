@@ -1,260 +1,198 @@
+/**
+ * Tools Landing Page
+ * Showcases all free calculator tools
+ */
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  Calculator,
-  FileText,
-  TrendingUp,
-  Car,
-  Gauge,
-  ArrowRight,
-  Sparkles,
-  Code,
-  Key,
-  Home,
-  Receipt,
-  FileSignature,
-  Briefcase,
-  Star,
-  Tags,
-  Percent,
-} from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Free Business Tools | Hudson Digital Solutions',
-  description: 'Free calculators and tools for business owners. Invoice generator, contract generator, ROI calculator, paystub generator, and more. No signup required.',
-  keywords: 'business calculator, roi calculator, paystub generator, invoice generator, contract generator, free business tools',
+  title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
+  description: 'Free interactive calculators to help you understand your website&apos;s potential. Calculate ROI, estimate project costs, and analyze performance.',
   openGraph: {
-    title: 'Free Business Tools | Hudson Digital Solutions',
-    description: 'Free calculators and tools for business owners. Invoice generator, contract generator, ROI calculator, paystub generator, and more.',
-    type: 'website',
+    title: 'Free Business Tools & Calculators',
+    description: 'Interactive tools to help you make data-driven decisions about your website.',
   },
 };
 
-interface Tool {
-  name: string;
-  description: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  category: 'document' | 'financial' | 'developer' | 'business';
-  isNew?: boolean;
-}
-
-const tools: Tool[] = [
-  // Document Generators
+const tools = [
   {
-    name: 'Invoice Generator',
-    description: 'Create professional invoices with automatic calculations. Download as PDF with your branding.',
-    href: '/invoice-generator',
-    icon: Receipt,
-    category: 'document',
-    isNew: true,
-  },
-  {
-    name: 'Contract Generator',
-    description: 'Generate service agreements, NDAs, and freelance contracts. Professional templates ready to use.',
-    href: '/contract-generator',
-    icon: FileSignature,
-    category: 'document',
-    isNew: true,
-  },
-  {
-    name: 'Proposal Generator',
-    description: 'Build professional project proposals with scope, timeline, and pricing. Perfect for client pitches.',
-    href: '/proposal-generator',
-    icon: Briefcase,
-    category: 'document',
-    isNew: true,
-  },
-  {
-    name: 'Paystub Generator',
-    description: 'Create professional paystubs for your employees in seconds. Calculate taxes, deductions, and net pay.',
-    href: '/paystub-generator',
-    icon: FileText,
-    category: 'document',
-  },
-  // Financial Calculators
-  {
-    name: 'ROI Calculator',
-    description: 'Calculate the return on investment for your projects. Make data-driven decisions about investments.',
+    title: 'ROI Calculator',
+    description: 'Calculate how much additional revenue you could generate by improving your website&amp;apos;s conversion rate.',
     href: '/roi-calculator',
-    icon: TrendingUp,
-    category: 'financial',
+    icon: (
+      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    benefits: [
+      'See potential revenue increase',
+      'Understand conversion impact',
+      'Data-driven decision making',
+    ],
+    cta: 'Calculate ROI',
   },
   {
-    name: 'Mortgage Calculator',
-    description: 'Estimate monthly mortgage payments. See principal, interest, and amortization schedules.',
-    href: '/mortgage-calculator',
-    icon: Home,
-    category: 'financial',
-    isNew: true,
-  },
-  {
-    name: 'Tip Calculator',
-    description: 'Calculate tips and split bills easily. Perfect for dining out or service payments.',
-    href: '/tip-calculator',
-    icon: Percent,
-    category: 'financial',
-    isNew: true,
-  },
-  {
-    name: 'Cost Estimator',
-    description: 'Get accurate project cost estimates. Plan your budget effectively with our cost breakdown tool.',
+    title: 'Website Cost Estimator',
+    description: 'Get an instant estimate for your website project based on your specific requirements and features.',
     href: '/cost-estimator',
-    icon: Calculator,
-    category: 'financial',
+    icon: (
+      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+      </svg>
+    ),
+    benefits: [
+      'Transparent pricing breakdown',
+      'Timeline estimates',
+      'Feature-based pricing',
+    ],
+    cta: 'Estimate Cost',
   },
   {
-    name: 'Texas TTL Calculator',
-    description: 'Calculate Texas vehicle tax, title, and license fees. Essential for car buyers in Texas.',
-    href: '/texas-ttl-calculator',
-    icon: Car,
-    category: 'financial',
-  },
-  // Developer Tools
-  {
-    name: 'Meta Tag Generator',
-    description: 'Generate SEO meta tags for your website. Includes Open Graph and Twitter Card tags.',
-    href: '/meta-tag-generator',
-    icon: Tags,
-    category: 'developer',
-    isNew: true,
-  },
-  {
-    name: 'JSON Formatter',
-    description: 'Format, validate, and beautify JSON data. Minify or expand JSON with syntax highlighting.',
-    href: '/json-formatter',
-    icon: Code,
-    category: 'developer',
-    isNew: true,
-  },
-  {
-    name: 'Password Generator',
-    description: 'Generate secure random passwords. Customize length and character types for your needs.',
-    href: '/password-generator',
-    icon: Key,
-    category: 'developer',
-    isNew: true,
-  },
-  // Business Tools
-  {
-    name: 'Performance Calculator',
-    description: 'Measure and optimize your business performance metrics. Track KPIs and identify improvements.',
+    title: 'Performance Savings Calculator',
+    description: 'Discover how much revenue you&apos;re losing due to slow website performance with real PageSpeed analysis.',
     href: '/performance-calculator',
-    icon: Gauge,
-    category: 'business',
-  },
-  {
-    name: 'Testimonial Collector',
-    description: 'Collect and manage customer testimonials. Generate private links for easy submission.',
-    href: '/testimonial-collector',
-    icon: Star,
-    category: 'business',
-    isNew: true,
+    icon: (
+      <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+    benefits: [
+      'Real performance analysis',
+      'Revenue impact calculation',
+      'Core Web Vitals insights',
+    ],
+    cta: 'Analyze Performance',
   },
 ];
 
-const categories = [
-  { key: 'document', name: 'Document Generators', description: 'Create professional business documents' },
-  { key: 'financial', name: 'Financial Calculators', description: 'Calculate costs, ROI, and payments' },
-  { key: 'developer', name: 'Developer Tools', description: 'Utilities for web development' },
-  { key: 'business', name: 'Business Tools', description: 'Grow and manage your business' },
-] as const;
-
 export default function ToolsPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
       {/* Hero Section */}
-      <section className="bg-(--primary) text-(--primary-foreground) py-section-sm md:py-section">
-        <div className="container-wide text-center">
-          <Badge variant="secondary" className="mb-heading bg-(--primary-foreground)/10 text-(--primary-foreground) border-0">
-            <Sparkles className="size-4 mr-1" />
+      <section className="relative overflow-hidden px-4 py-section sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h1 className="mb-heading text-4xl font-bold tracking-tight text-foreground dark:text-foreground sm:text-5xl">
             Free Business Tools
-          </Badge>
-
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-content-block">
-            Tools to Grow Your Business
           </h1>
-
-          <p className="text-xl text-(--primary-foreground)/90 max-w-3xl mx-auto">
-            Free calculators, generators, and utilities to help you make smarter business decisions. No signup required.
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
+            Make data-driven decisions about your website with our free interactive calculators.
+            No credit card required, no signup needed.
           </p>
         </div>
       </section>
 
-      {/* Tools by Category */}
-      {categories.map((category) => {
-        const categoryTools = tools.filter((t) => t.category === category.key);
-        if (categoryTools.length === 0) {return null;}
+      {/* Tools Grid */}
+      <section className="px-4 py-section-sm sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
+            {tools.map((tool) => (
+              <Card
+                key={tool.href}
+                className="group relative flex flex-col shadow-xs transition-all hover:shadow-lg dark:bg-muted"
+              >
+                {/* Icon */}
+                <div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-primary-hover dark:text-accent">
+                  {tool.icon}
+                </div>
 
-        return (
-          <section key={category.key} className="py-12 md:py-section-sm border-b">
-            <div className="container-wide">
-              <div className="mb-comfortable">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-subheading">
-                  {category.name}
-                </h2>
-                <p className="text-muted-foreground">{category.description}</p>
-              </div>
+                {/* Content */}
+                <h3 className="mb-subheading text-xl font-semibold text-foreground dark:text-foreground">
+                  {tool.title}
+                </h3>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-comfortable">
-                {categoryTools.map((tool) => {
-                  const Icon = tool.icon;
-                  return (
-                    <Link key={tool.href} href={tool.href} className="group">
-                      <Card className="h-full hover:border-(--primary) hover:shadow-lg transition-all">
-                        <CardContent className="card-padding">
-                          <div className="flex items-start justify-between mb-heading">
-                            <div className="size-12 rounded-lg bg-(--primary)/10 flex items-center justify-center text-(--primary)">
-                              <Icon className="size-6" />
-                            </div>
-                            {tool.isNew && (
-                              <Badge className="bg-(--primary) text-(--primary-foreground)">
-                                New
-                              </Badge>
-                            )}
-                          </div>
+                <p className="mb-heading flex-1 text-sm text-muted-foreground dark:text-muted-foreground">
+                  {tool.description}
+                </p>
 
-                          <h3 className="text-lg font-semibold text-foreground mb-subheading group-hover:text-(--primary) transition-colors">
-                            {tool.name}
-                          </h3>
+                {/* Benefits */}
+                <ul className="mb-content-block space-y-tight">
+                  {tool.benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-start gap-tight text-sm text-muted-foreground dark:text-muted-foreground">
+                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-primary dark:text-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
 
-                          <p className="text-sm text-muted-foreground mb-heading">
-                            {tool.description}
-                          </p>
-
-                          <span className="inline-flex items-center gap-tight text-(--primary) font-medium text-sm">
-                            Use tool
-                            <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-                          </span>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        );
-      })}
+                {/* CTA */}
+                <Link
+                  href={tool.href}
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+                >
+                  {tool.cta}
+                  <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
-      <section className="py-section-sm md:py-section bg-muted/30">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-heading">
-            Need a Custom Tool?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-comfortable max-w-2xl mx-auto">
-            We build custom calculators, dashboards, and business tools tailored to your specific needs.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-tight px-6 py-3 bg-(--primary) text-(--primary-foreground) rounded-lg font-semibold hover:opacity-90 transition-opacity"
-          >
-            Get a Custom Quote
-            <ArrowRight className="size-5" />
-          </Link>
+      <section className="px-4 py-section-sm sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <Card size="lg" className="bg-primary/10 text-center shadow-xl sm:p-12">
+            <h2 className="mb-heading text-3xl font-bold text-foreground">
+              Ready to Take Action?
+            </h2>
+              <p className="mb-comfortable text-lg text-accent/30">
+              These calculators show the potential. Let&apos;s make it reality. Schedule a free consultation to discuss your project.
+            </p>
+            <div className="flex flex-col gap-content sm:flex-row sm:justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-md bg-card px-6 py-3 text-base font-semibold text-primary shadow-xs hover:bg-muted"
+              >
+                Schedule Consultation
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-foreground hover:bg-card/10"
+              >
+                View Services
+              </Link>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Trust Signals */}
+      <section className="border-t border-border px-4 py-12 dark:border-border">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-sections sm:grid-cols-3">
+            <div className="text-center">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+                Growing
+              </div>
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
+                Calculations Performed
+              </div>
+            </div>
+
+            <div className="text-center">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+                98%
+              </div>
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
+                Accuracy Rate
+              </div>
+            </div>
+
+            <div className="text-center">
+              <div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+                100%
+              </div>
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
+                Free Forever
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>

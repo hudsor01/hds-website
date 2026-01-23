@@ -5,11 +5,12 @@
 
 import { env } from '@/env';
 import { castError, createServerLogger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import type { Database, Json } from '@/types/database';
 import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('analytics-api');
 
@@ -25,27 +26,13 @@ const analyticsEventSchema = z.object({
   userId: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAnalyticsPost(request: NextRequest) {
   try {
     // Parse request body with strict schema
     const parseResult = analyticsEventSchema.safeParse(await request.json());
 
     if (!parseResult.success) {
-      return NextResponse.json(
-        { error: 'Invalid analytics payload', details: parseResult.error.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const { eventName, properties, timestamp, sessionId, userId } = parseResult.data;
@@ -95,15 +82,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    return successResponse();
   } catch (error) {
     logger.error('Analytics API error', castError(error));
-    return NextResponse.json(
-      { error: 'Failed to process analytics event' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process analytics event', 500);
   }
 }
+
+export const POST = withRateLimit(handleAnalyticsPost, 'api');
 
 // OPTIONS handler for CORS preflight
 export async function OPTIONS() {

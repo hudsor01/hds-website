@@ -4,38 +4,24 @@
  */
 
 import { castError, createServerLogger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
 import type { Json } from '@/types/database';
 import type { LeadAttributionInsert } from '@/types/supabase-helpers';
 import { supabaseAdmin } from '@/lib/supabase';
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('attribution-api');
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Attribution rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAttributionPost(request: NextRequest) {
   try {
 
     // Parse and validate request body
     const parseResult = leadAttributionRequestSchema.safeParse(await request.json());
 
     if (!parseResult.success) {
-      const issues = parseResult.error.flatten();
-      return NextResponse.json(
-        { error: 'Invalid attribution payload', details: issues.fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const body: LeadAttributionRequest = parseResult.data;
@@ -75,10 +61,7 @@ export async function POST(request: NextRequest) {
 
     if (existingError && existingError.code !== 'PGRST116') {
       logger.error('Failed to read existing attribution', castError(existingError));
-      return NextResponse.json(
-        { error: 'Unable to read existing attribution' },
-        { status: 500 }
-      );
+      return errorResponse('Unable to read existing attribution', 500);
     }
 
     if (existing) {
@@ -98,8 +81,7 @@ export async function POST(request: NextRequest) {
 
       logger.info('Updated existing attribution', { id: existing.id });
 
-      return NextResponse.json({
-        success: true,
+      return successResponse({
         attribution_id: existing.id,
         first_visit: false,
       });
@@ -133,60 +115,38 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to store attribution', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to store attribution data' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to store attribution data', 500);
     }
 
     if (!data) {
-      return NextResponse.json(
-        { error: 'Failed to create attribution record' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to create attribution record', 500);
     }
 
     logger.info('Stored new attribution', { id: data.id });
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       attribution_id: data.id,
       first_visit: true,
     });
   } catch (error) {
     logger.error('Attribution API error', castError(error));
-    return NextResponse.json(
-      { error: 'Failed to process attribution data' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process attribution data', 500);
   }
 }
+
+export const POST = withRateLimit(handleAttributionPost, 'api');
 
 /**
  * GET endpoint for retrieving attribution data
  */
-export async function GET(request: NextRequest) {
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Attribution GET rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAttributionGet(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const session_id = searchParams.get('session_id');
 
     if (!email && !session_id) {
-      return NextResponse.json(
-        { error: 'Either email or session_id parameter is required' },
-        { status: 400 }
-      );
+      return errorResponse('Either email or session_id parameter is required', 400);
     }
 
     // Query attribution data
@@ -205,25 +165,18 @@ export async function GET(request: NextRequest) {
     if (error) {
       if (error.code === 'PGRST116') {
         // No rows found
-        return NextResponse.json(
-          { error: 'Attribution not found' },
-          { status: 404 }
-        );
+        return errorResponse('Attribution not found', 404);
       }
 
       logger.error('Failed to retrieve attribution', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to retrieve attribution data' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to retrieve attribution data', 500);
     }
 
-    return NextResponse.json({ success: true, data });
+    return successResponse({ data });
   } catch (error) {
     logger.error('Attribution GET error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to retrieve attribution data' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to retrieve attribution data', 500);
   }
 }
+
+export const GET = withRateLimit(handleAttributionGet, 'readOnlyApi');

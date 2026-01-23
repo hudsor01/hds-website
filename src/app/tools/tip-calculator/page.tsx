@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 import { Receipt, Users, Percent } from 'lucide-react';
 
 interface TipInputs {
@@ -71,10 +72,6 @@ export default function TipCalculatorPage() {
       effectiveTipPercent,
     };
   }, [inputs, useCustomTip]);
-
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
   // Track when user interacts
   const trackUsage = () => {
     if (inputs.billAmount > 0) {

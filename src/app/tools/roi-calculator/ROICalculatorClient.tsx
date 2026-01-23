@@ -11,6 +11,7 @@ import { useQueryState, parseAsFloat, parseAsInteger } from 'nuqs';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 
 interface CalculatorInputs {
   monthlyTraffic: number;
@@ -86,12 +87,12 @@ export function ROICalculatorClient() {
     const roiPercentage = ((monthlyIncrease / currentMonthlyRevenue) * 100) || 0;
 
     const calculatedResults: CalculatorResultsType = {
-      currentMonthlyRevenue: `$${currentMonthlyRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      currentAnnualRevenue: `$${currentAnnualRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      projectedMonthlyRevenue: `$${improvedMonthlyRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      projectedAnnualRevenue: `$${improvedAnnualRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      monthlyIncrease: `$${monthlyIncrease.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      annualIncrease: `$${annualIncrease.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+      currentMonthlyRevenue: formatCurrency(currentMonthlyRevenue),
+      currentAnnualRevenue: formatCurrency(currentAnnualRevenue),
+      projectedMonthlyRevenue: formatCurrency(improvedMonthlyRevenue),
+      projectedAnnualRevenue: formatCurrency(improvedAnnualRevenue),
+      monthlyIncrease: formatCurrency(monthlyIncrease),
+      annualIncrease: formatCurrency(annualIncrease),
       roiPercentage: `${roiPercentage.toFixed(1)}%`,
     };
 

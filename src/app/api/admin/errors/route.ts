@@ -3,11 +3,12 @@
  * Returns grouped error logs with filtering and pagination
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server'
+import { type NextRequest, connection } from 'next/server'
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
 import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth } from '@/lib/admin-auth'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
 import { getStartDateFromRange, sanitizePostgrestSearch } from '@/lib/utils'
@@ -15,15 +16,8 @@ import type { GroupedError, ErrorStats } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
 
-export async function GET(request: NextRequest) {
+async function handleAdminErrors(request: NextRequest) {
   await connection()
-
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors API rate limit exceeded', { ip: clientIp })
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
 
   const authError = await requireAdminAuth()
   if (authError) {
@@ -38,13 +32,7 @@ export async function GET(request: NextRequest) {
       logger.warn('Invalid query parameters', {
         errors: parseResult.errors.flatten(),
       })
-      return NextResponse.json(
-        {
-          error: 'Invalid query parameters',
-          details: parseResult.errors.flatten().fieldErrors,
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse(parseResult.errors)
     }
 
     const { timeRange, errorType, route, level, search, resolved, limit, offset } =
@@ -90,10 +78,7 @@ export async function GET(request: NextRequest) {
 
     if (fetchError) {
       logger.error('Failed to fetch error logs', fetchError)
-      return NextResponse.json(
-        { error: 'Failed to fetch error logs' },
-        { status: 500 }
-      )
+      return errorResponse('Failed to fetch error logs', 500)
     }
 
     const groupedErrorsMap = new Map<string, GroupedError>()
@@ -150,7 +135,7 @@ export async function GET(request: NextRequest) {
       groupedCount: groupedErrors.length,
     })
 
-    return NextResponse.json({
+    return successResponse({
       errors: groupedErrors,
       stats,
       pagination: {
@@ -165,6 +150,8 @@ export async function GET(request: NextRequest) {
       'Errors API error',
       error instanceof Error ? error : new Error(String(error))
     )
-    return NextResponse.json({ error: 'Failed to fetch errors' }, { status: 500 })
+    return errorResponse('Failed to fetch errors', 500)
   }
 }
+
+export const GET = withRateLimit(handleAdminErrors, 'api')

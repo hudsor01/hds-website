@@ -12,9 +12,9 @@ export type { ServiceType, Testimonial, TestimonialRequest };
 
 /**
  * Generate a cryptographically secure unique token for testimonial requests
- * Uses Node.js crypto.randomBytes for secure random generation
+ * Internal use only - not exported
  */
-export function generateToken(): string {
+function generateToken(): string {
   return randomBytes(24).toString('hex');
 }
 

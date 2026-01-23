@@ -88,9 +88,10 @@ describe('CSRF Token API', () => {
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data.token).toBeDefined();
-    expect(typeof data.token).toBe('string');
-    expect(data.token.split('.').length).toBe(3); // Token has 3 parts
+    expect(data.success).toBe(true);
+    expect(data.data.token).toBeDefined();
+    expect(typeof data.data.token).toBe('string');
+    expect(data.data.token.split('.').length).toBe(3); // Token has 3 parts
   });
 
   it('should allow requests when rate limiter is mocked', async () => {
@@ -107,7 +108,8 @@ describe('CSRF Token API', () => {
 
     // Should return 200 because rate limiter is mocked to allow requests
     expect(response.status).toBe(200);
-    expect(data.token).toBeDefined();
+    expect(data.success).toBe(true);
+    expect(data.data.token).toBeDefined();
   });
 });
 
@@ -267,7 +269,8 @@ describe('Newsletter Subscribe API', () => {
     const data = await response.json();
 
     expect(response.status).toBe(400);
-    expect(data.error).toBe('Invalid email address');
+    expect(data.success).toBe(false);
+    expect(data.error).toContain('Invalid');
   });
 
   it('should allow requests when rate limiter is mocked', async () => {

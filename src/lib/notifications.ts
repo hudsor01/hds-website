@@ -356,32 +356,3 @@ export async function notifyHighValueLead(lead: LeadNotification): Promise<void>
 /**
  * Test notification endpoints
  */
-export async function testNotifications(): Promise<{
-  slack: boolean;
-  discord: boolean;
-}> {
-  const testLead: LeadNotification = {
-    leadId: 'test-' + Date.now(),
-    firstName: 'Test',
-    lastName: 'User',
-    email: 'test@example.com',
-    phone: '555-123-4567',
-    company: 'Test Company',
-    service: 'Web Development',
-    budget: '$10,000 - $25,000',
-    timeline: 'Within 3 months',
-    leadScore: 85,
-    leadQuality: 'hot',
-    source: 'Test Notification System',
-  };
-
-  const [slackResult, discordResult] = await Promise.allSettled([
-    sendSlackNotification(testLead),
-    sendDiscordNotification(testLead),
-  ]);
-
-  return {
-    slack: slackResult.status === 'fulfilled' && slackResult.value,
-    discord: discordResult.status === 'fulfilled' && discordResult.value,
-  };
-}

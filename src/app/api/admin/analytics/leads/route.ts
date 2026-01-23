@@ -3,28 +3,18 @@
  * Returns detailed lead information with filtering
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server';
+import { type NextRequest, connection } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsLeadsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 
 const logger = createServerLogger('analytics-leads-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsLeads(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics leads rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -39,10 +29,7 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsLeadsQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { limit, quality, type: calculatorType, sortBy, sortOrder } = parseResult.data;
@@ -88,10 +75,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       logger.error('Failed to fetch leads', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to fetch leads' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to fetch leads', 500);
     }
 
     // Transform the joined data to match expected format
@@ -105,16 +89,15 @@ export async function GET(request: NextRequest) {
 
     logger.info('Leads fetched', { count: enrichedLeads.length, quality, calculatorType });
 
-    return NextResponse.json({
+    return successResponse({
       leads: enrichedLeads,
       count: enrichedLeads.length,
       filters: { quality, calculatorType, sortBy, sortOrder },
     });
   } catch (error) {
     logger.error('Analytics leads error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to fetch leads' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch leads', 500);
   }
 }
+
+export const GET = withRateLimit(handleAnalyticsLeads, 'api');

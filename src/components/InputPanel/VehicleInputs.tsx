@@ -1,10 +1,9 @@
-import { DollarSign } from 'lucide-react'
 import { COUNTY_FEES } from '../../lib/ttl-calculator/calculator'
 import type { VehicleInputs as VehicleInput } from '../../types/ttl-types'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CurrencyInput } from '@/components/forms'
 
 interface VehicleInputsProps {
   vehicleInput: VehicleInput;
@@ -17,58 +16,34 @@ export function VehicleInputs({ vehicleInput, updateInput }: VehicleInputsProps)
       {/* Basic Information */}
       <div className="grid grid-cols-2 gap-content">
         {/* Purchase Price */}
-        <div className="space-y-tight">
-          <Label htmlFor="purchasePrice">Purchase Price</Label>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="purchasePrice"
-              name="purchasePrice"
-              type="number"
-              value={vehicleInput.purchasePrice}
-              onChange={(e) => updateInput('purchasePrice', Number(e.target.value))}
-              className="pl-10"
-              placeholder="0"
-            />
-          </div>
-        </div>
+        <CurrencyInput
+          label="Purchase Price"
+          id="purchasePrice"
+          value={vehicleInput.purchasePrice}
+          onChange={(value) => updateInput('purchasePrice', value)}
+          placeholder="0"
+        />
 
         {/* Down Payment */}
-        <div className="space-y-tight">
-          <Label htmlFor="downPayment">Down Payment</Label>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="downPayment"
-              name="downPayment"
-              type="number"
-              value={vehicleInput.downPayment}
-              onChange={(e) => updateInput('downPayment', Number(e.target.value))}
-              className="pl-10"
-              placeholder="0"
-            />
-          </div>
-        </div>
+        <CurrencyInput
+          label="Down Payment"
+          id="downPayment"
+          value={vehicleInput.downPayment}
+          onChange={(value) => updateInput('downPayment', value)}
+          placeholder="0"
+        />
       </div>
 
       {/* Trade-In and County */}
       <div className="grid grid-cols-2 gap-content">
         {/* Trade-In Value */}
-        <div className="space-y-tight">
-          <Label htmlFor="tradeInValue">Trade-In Value</Label>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="tradeInValue"
-              name="tradeInValue"
-              type="number"
-              value={vehicleInput.tradeInValue}
-              onChange={(e) => updateInput('tradeInValue', Number(e.target.value))}
-              className="pl-10"
-              placeholder="0"
-            />
-          </div>
-        </div>
+        <CurrencyInput
+          label="Trade-In Value"
+          id="tradeInValue"
+          value={vehicleInput.tradeInValue}
+          onChange={(value) => updateInput('tradeInValue', value)}
+          placeholder="0"
+        />
 
         {/* County */}
         <div className="space-y-tight">
