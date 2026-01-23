@@ -66,10 +66,16 @@ Plans:
 **Goal**: Remove orphaned components, unused functions, commented code, and exports that aren't imported anywhere
 **Depends on**: Phase 1 (cleaner dependency tree makes dead code more obvious)
 **Research**: Unlikely (static analysis with existing tools)
-**Plans**: TBD
+**Plans**: 1 plan executed
+
+**Deleted Files (13 total):**
+- Orphaned UI components (7): CTASection.tsx, pagination.tsx, StarRating.tsx, StatsBar.tsx, Typography.tsx, skeleton.tsx, radio-group.tsx
+- Orphaned lib files (4): api/utils.ts, pdf/generator.ts, ttl-calculator/search-params.ts, schemas/analytics.ts
+- Orphaned type files (1): types/forms.ts
+- Orphaned test files (1): tests/unit/pdf-generator.test.ts
 
 Plans:
-- [ ] 02-01: TBD (run /gsd:plan-phase 2 to break down)
+- [x] 02-01: Delete orphaned components, lib files, and type files
 
 #### Phase 3: Integration Cleanup
 **Goal**: Remove or simplify over-engineered integrations (unused Supabase auth, disabled analytics features, unnecessary services)
@@ -598,7 +604,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Dependency Audit & Pruning | v1.0 | 5/5 | Complete | 2026-01-22 |
-| 2. Dead Code Elimination | v1.0 | 0/TBD | Not started | - |
+| 2. Dead Code Elimination | v1.0 | 1/1 | Complete | 2026-01-22 |
 | 3. Integration Cleanup | v1.0 | 0/TBD | Not started | - |
 | 4. Code Deduplication | v1.0 | 0/TBD | Not started | - |
 | 5. Configuration Simplification | v1.0 | 0/TBD | Not started | - |
