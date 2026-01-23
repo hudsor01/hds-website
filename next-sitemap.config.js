@@ -1,8 +1,6 @@
-const { env } = require('./src/env');
-
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   changefreq: 'weekly',
