@@ -597,7 +597,7 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Dependency Audit & Pruning | v1.0 | 0/5 | Planning complete | - |
+| 1. Dependency Audit & Pruning | v1.0 | 5/5 | Complete | 2026-01-22 |
 | 2. Dead Code Elimination | v1.0 | 0/TBD | Not started | - |
 | 3. Integration Cleanup | v1.0 | 0/TBD | Not started | - |
 | 4. Code Deduplication | v1.0 | 0/TBD | Not started | - |
