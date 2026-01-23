@@ -230,7 +230,7 @@ export default function TestimonialsPage() {
               </Link>
 
               <Link
-                href="/portfolio"
+                href="/showcase"
                 className="inline-flex-center px-8 py-4 text-body font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio

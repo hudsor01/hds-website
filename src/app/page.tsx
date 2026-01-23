@@ -79,7 +79,7 @@ export default function HomePage() {
       </Link>
     </Button>
                   <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href="/portfolio">
+      <Link href="/showcase">
         View Case Studies
         <ArrowRight className="w-4 h-4" />
       </Link>
@@ -492,7 +492,7 @@ export default function HomePage() {
       </Link>
     </Button>
               <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href="/portfolio">
+      <Link href="/showcase">
         See Proven Results First
         <ArrowRight className="w-4 h-4" />
       </Link>

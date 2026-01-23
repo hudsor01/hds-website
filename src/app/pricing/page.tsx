@@ -237,7 +237,7 @@ export default function PricingPage() {
               </Button>
 
               <Button asChild variant="outline" size="xl">
-                <Link href="/portfolio">
+                <Link href="/showcase">
                   See $3.7M+ in Proven Results
                 </Link>
               </Button>

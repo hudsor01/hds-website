@@ -1,6 +1,6 @@
 /**
  * Content-related schemas
- * Tables: case_studies, testimonials, testimonial_requests, help_articles
+ * Tables: testimonials, testimonial_requests, help_articles
  */
 import {
   pgTable,
@@ -8,37 +8,8 @@ import {
   text,
   boolean,
   timestamp,
-  jsonb,
   integer,
 } from 'drizzle-orm/pg-core';
-
-export const caseStudies = pgTable('case_studies', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  slug: text('slug').notNull().unique(),
-  title: text('title').notNull(),
-  clientName: text('client_name').notNull(),
-  industry: text('industry').notNull(),
-  projectType: text('project_type').notNull(),
-  description: text('description').notNull(),
-  challenge: text('challenge').notNull(),
-  solution: text('solution').notNull(),
-  results: text('results').notNull(),
-  technologies: jsonb('technologies'),
-  metrics: jsonb('metrics'),
-  testimonialText: text('testimonial_text'),
-  testimonialAuthor: text('testimonial_author'),
-  testimonialRole: text('testimonial_role'),
-  testimonialVideoUrl: text('testimonial_video_url'),
-  thumbnailUrl: text('thumbnail_url'),
-  featuredImageUrl: text('featured_image_url'),
-  projectUrl: text('project_url'),
-  projectDuration: text('project_duration'),
-  teamSize: integer('team_size'),
-  featured: boolean('featured').default(false),
-  published: boolean('published').default(false),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-});
 
 export const testimonials = pgTable('testimonials', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -83,8 +54,6 @@ export const helpArticles = pgTable('help_articles', {
 });
 
 // Type exports
-export type CaseStudy = typeof caseStudies.$inferSelect;
-export type NewCaseStudy = typeof caseStudies.$inferInsert;
 export type Testimonial = typeof testimonials.$inferSelect;
 export type NewTestimonial = typeof testimonials.$inferInsert;
 export type TestimonialRequest = typeof testimonialRequests.$inferSelect;

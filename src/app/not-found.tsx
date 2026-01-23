@@ -69,7 +69,7 @@ export default function NotFound() {
               <Link href="/about">About</Link>
             </Button>
             <Button asChild variant="link" size="sm" className="px-0">
-              <Link href="/portfolio">Portfolio</Link>
+              <Link href="/showcase">Portfolio</Link>
             </Button>
           </div>
         </div>
