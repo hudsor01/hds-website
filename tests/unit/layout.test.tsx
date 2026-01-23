@@ -195,16 +195,16 @@ describe('ErrorBoundary Component', () => {
 })
 
 describe('BackgroundPattern Component', () => {
-  it('should render gradient orbs', () => {
+  it('should render ambient shapes', () => {
     const { container } = render(
       <div className="relative">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-primary rounded-full blur-3xl opacity-20 animate-blob" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-decorative-purple rounded-full blur-3xl opacity-20 animate-blob animation-delay-2000" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-20 rounded-full blur-3xl opacity-20 animate-blob" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-muted/20 rounded-full blur-3xl opacity-20 animate-blob animation-delay-2000" />
       </div>
     )
 
-    const orbs = container.querySelectorAll('.animate-blob')
-    expect(orbs.length).toBe(2)
+    const shapes = container.querySelectorAll('.animate-blob')
+    expect(shapes.length).toBe(2)
   })
 
   it('should apply proper animation delays', () => {
@@ -216,13 +216,13 @@ describe('BackgroundPattern Component', () => {
     expect(element).toHaveClass('animation-delay-2000')
   })
 
-  it('should use OKLCH gradient backgrounds', () => {
+  it('should apply surface overlay backgrounds', () => {
     const { container } = render(
-      <div className="bg-gradient-primary" />
+      <div className="surface-overlay" />
     )
 
     const element = container.firstChild
-    expect(element).toHaveClass('bg-gradient-primary')
+    expect(element).toHaveClass('surface-overlay')
   })
 
   it('should render grid pattern overlay', () => {
@@ -397,22 +397,22 @@ describe('Typography Utilities', () => {
     expect(text).toHaveClass('text-responsive-md')
   })
 
-  it('should apply gradient-text effect', () => {
+  it('should apply accent text styling', () => {
     const { container } = render(
-      <span className="gradient-text">Gradient</span>
+      <span className="text-accent">Accent</span>
     )
 
     const span = container.firstChild
-    expect(span).toHaveClass('gradient-text')
+    expect(span).toHaveClass('text-accent')
   })
 
-  it('should apply gradient-text-animated effect', () => {
+  it('should apply muted text styling', () => {
     const { container } = render(
-      <span className="gradient-text-animated">Animated</span>
+      <span className="text-muted-foreground">Muted</span>
     )
 
     const span = container.firstChild
-    expect(span).toHaveClass('gradient-text-animated')
+    expect(span).toHaveClass('text-muted-foreground')
   })
 })
 

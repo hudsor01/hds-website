@@ -46,20 +46,20 @@ describe('ServiceCard', () => {
     expect(pricingText).toBeFalsy();
   });
 
-  test('applies gradient class', () => {
+  test('applies surface class', () => {
     const { container } = render(
-      <Card {...defaultProps} gradient="bg-info/20" />
+      <Card {...defaultProps} surface="surface-overlay" />
     );
 
-    const gradientElement = container.querySelector('.bg-info\\/20');
-    expect(gradientElement).toBeTruthy();
+    const surfaceElement = container.querySelector('.surface-overlay');
+    expect(surfaceElement).toBeTruthy();
   });
 
-  test('applies default gradient when not provided', () => {
+  test('applies default surface when not provided', () => {
     const { container } = render(<Card {...defaultProps} />);
 
-    const defaultGradient = container.querySelector('.bg-muted');
-    expect(defaultGradient).toBeTruthy();
+    const defaultSurface = container.querySelector('.surface-overlay');
+    expect(defaultSurface).toBeTruthy();
   });
 
   test('applies custom className', () => {
