@@ -32,7 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-.env.*
+!.env.example
 .env
 .env.local
 .env.development.local
@@ -122,5 +122,3 @@ src/app/test/
 /playwright/.cache/
 /e2e/screenshots/
 /e2e/videos/
-
-.env.example
