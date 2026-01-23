@@ -13,7 +13,7 @@ import { useEffect, useState, useRef } from 'react'
  * - Lightweight and performant (uses requestAnimationFrame)
  * - Optimized to only update on significant progress changes (>1%)
  * - Accessible (doesn't interfere with screen readers)
- * - Gradient styling matching brand colors
+ * - Neutral styling that matches the design system
  *
  * @example
  * ```tsx

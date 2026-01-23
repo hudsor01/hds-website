@@ -24,8 +24,8 @@ export default function GoogleMap() {
           className="w-full border-0"
         />
         
-        {/* Overlay gradient for better integration */}
-        <div className="absolute inset-0 pointer-events-none overlay-gradient-light"></div>
+        {/* Subtle overlay for better integration */}
+        <div className="absolute inset-0 pointer-events-none surface-overlay"></div>
       </div>
       
       <div className="mt-content-block text-center">

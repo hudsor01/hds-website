@@ -260,7 +260,7 @@ function generateResultsEmail(
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background: linear-gradient(to right, #06b6d4, #0891b2); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+        <div style="background: #111827; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
           <h1 style="color: white; margin: 0; font-size: 24px;">Your ${calculatorName} Results</h1>
         </div>
 
@@ -275,21 +275,21 @@ function generateResultsEmail(
                 ([key, value]) => `
               <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 5px;">${key}</div>
-                <div style="font-size: 20px; font-weight: bold; color: #06b6d4;">${value}</div>
+                <div style="font-size: 20px; font-weight: bold; color: #111827;">${value}</div>
               </div>
             `
               )
               .join('')}
           </div>
 
-          <div style="background: #ecfeff; border-left: 4px solid #06b6d4; padding: 15px; margin-bottom: 20px;">
+          <div style="background: #f3f4f6; border-left: 4px solid #d1d5db; padding: 15px; margin-bottom: 20px;">
             <p style="margin: 0; font-size: 14px;">
               <strong>Next Steps:</strong> Our team will review your results and send you personalized recommendations within 24 hours.
             </p>
           </div>
 
           <div style="text-align: center; margin-top: 30px;">
-            <a href="https://hudsondigitalsolutions.com/contact" style="display: inline-block; background: #06b6d4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            <a href="https://hudsondigitalsolutions.com/contact" style="display: inline-block; background: #111827; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
               Schedule Free Consultation
             </a>
           </div>
@@ -298,7 +298,7 @@ function generateResultsEmail(
         <div style="text-align: center; margin-top: 30px; padding: 20px; color: #6b7280; font-size: 12px;">
           <p>${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
           <p>
-            <a href="https://hudsondigitalsolutions.com/privacy" style="color: #06b6d4; text-decoration: none;">Privacy Policy</a>
+            <a href="https://hudsondigitalsolutions.com/privacy" style="color: #111827; text-decoration: none;">Privacy Policy</a>
           </p>
         </div>
       </body>

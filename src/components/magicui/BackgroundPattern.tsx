@@ -6,22 +6,22 @@ export function BackgroundPattern({
   variant = 'default',
   className,
   showGrid = true,
-  showGradients = true
+  showBackgroundShapes = true
 }: {
   variant?: 'default' | 'hero' | 'minimal';
   className?: string;
   showGrid?: boolean;
-  showGradients?: boolean;
+  showBackgroundShapes?: boolean;
 }) {
   return (
     <div className={cn("absolute inset-0 pointer-events-none", className)}>
-      {/* Floating gradient orbs */}
-      {showGradients && (
+      {/* Floating ambient shapes */}
+      {showBackgroundShapes && (
         <>
           <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
           
-          {/* Additional orbs for hero variant */}
+          {/* Additional shapes for hero variant */}
           {variant === 'hero' && (
             <>
               <div className="absolute top-1/2 left-1/6 w-32 h-32 bg-muted-20 rounded-full blur-2xl" />

@@ -30,12 +30,6 @@
     padding: 10px !important;
   }
 
-  .bg-gradient-to-r.from-success.to-success-dark.text-primary-foreground {
-    background: oklch(0.47 0.14 145) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
   /* Ensure tables fit on page */
   table {
     font-size: 12px;

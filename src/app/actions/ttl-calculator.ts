@@ -248,7 +248,7 @@ export async function emailResults(
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
             <!-- Header -->
             <tr>
-              <td style="padding: 32px 24px; background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); text-align: center;">
+              <td style="padding: 32px 24px; background: #111827; text-align: center;">
                 <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Texas TTL Calculator</h1>
                 <p style="margin: 8px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Your calculation results</p>
               </td>
@@ -302,10 +302,10 @@ export async function emailResults(
                   </tr>
                   <tr>
                     <td style="padding: 12px 0;">
-                      <span style="color: #0891b2; font-weight: 600; font-size: 16px;">Total TTL</span>
+                      <span style="color: #111827; font-weight: 600; font-size: 16px;">Total TTL</span>
                     </td>
                     <td style="padding: 12px 0; text-align: right;">
-                      <span style="color: #0891b2; font-weight: 700; font-size: 20px;">$${ttl.totalTTL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #111827; font-weight: 700; font-size: 20px;">$${ttl.totalTTL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     </td>
                   </tr>
                 </table>
@@ -315,7 +315,7 @@ export async function emailResults(
             <!-- Monthly Payment -->
             <tr>
               <td style="padding: 0 24px 24px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0891b2; border-radius: 8px; padding: 20px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #111827; border-radius: 8px; padding: 20px;">
                   <tr>
                     <td style="text-align: center;">
                       <p style="margin: 0 0 4px; color: rgba(255,255,255,0.8); font-size: 14px;">Estimated Monthly Payment</p>
@@ -330,7 +330,7 @@ export async function emailResults(
             <!-- CTA Button -->
             <tr>
               <td style="padding: 0 24px 32px; text-align: center;">
-                <a href="${shareUrl}" style="display: inline-block; padding: 12px 32px; background-color: #0891b2; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">View Full Results</a>
+                <a href="${shareUrl}" style="display: inline-block; padding: 12px 32px; background-color: #111827; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">View Full Results</a>
                 <p style="margin: 12px 0 0; color: #94a3b8; font-size: 12px;">This link will work for 90 days</p>
               </td>
             </tr>
@@ -342,7 +342,7 @@ export async function emailResults(
                   <strong>Disclaimer:</strong> This calculator provides estimates only. Actual fees may vary by county.
                 </p>
                 <p style="margin: 0; color: #94a3b8; font-size: 12px;">
-                  Powered by <a href="https://hudsondigitalsolutions.com" style="color: #0891b2; text-decoration: none;">Hudson Digital Solutions</a>
+                  Powered by <a href="https://hudsondigitalsolutions.com" style="color: #111827; text-decoration: none;">Hudson Digital Solutions</a>
                 </p>
               </td>
             </tr>

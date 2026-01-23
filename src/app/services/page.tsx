@@ -20,7 +20,7 @@ interface Service {
   features: string[];
   pricing: string;
   icon: React.ComponentType<{ className?: string }>;
-  gradient: string;
+  surface: string;
 }
 
 const services: Service[] = [
@@ -36,7 +36,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $5,000",
     icon: Code2,
-    gradient: "bg-muted",
+    surface: "surface-overlay",
   },
   {
     title: "Custom Solutions",
@@ -50,7 +50,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $8,000",
     icon: Settings,
-    gradient: "bg-info/20",
+    surface: "surface-overlay",
   },
   {
     title: "Strategic Consulting",
@@ -64,7 +64,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $2,000",
     icon: BarChart3,
-    gradient: "bg-muted",
+    surface: "surface-overlay",
   },
 ];
 
@@ -190,7 +190,7 @@ export default function ServicesPage() {
                 description={service.description}
                 features={service.features}
                 icon={service.icon}
-                gradient={service.gradient}
+                surface={service.surface}
                 pricing={service.pricing}
               />
             ))}

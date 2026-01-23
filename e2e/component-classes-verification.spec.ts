@@ -20,25 +20,6 @@ test.describe('Component Classes Visual Verification', () => {
     });
     logger.screenshot(screenshotPath, 'Hero section visual verification');
 
-    // Verify gradient text elements are visible (should not be transparent)
-    const gradientTextElements = page.locator('.gradient-text');
-    const count = await gradientTextElements.count();
-
-    if (count > 0) {
-      // Check that gradient text elements are visible and have content
-      for (let i = 0; i < count; i++) {
-        const element = gradientTextElements.nth(i);
-        await expect(element).toBeVisible();
-
-        // Check that the text is not empty
-        const textContent = await element.textContent();
-        expect(textContent?.trim()).toBeTruthy();
-      }
-
-      logger.verify('gradient text elements', count);
-      logger.step(`Verified ${count} gradient text elements have content and visibility`);
-    }
-
     // Verify flex-center elements are properly centered
     const flexCenterElements = page.locator('.flex-center');
     const flexCenterCount = await flexCenterElements.count();

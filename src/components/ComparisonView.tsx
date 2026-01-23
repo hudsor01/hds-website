@@ -1,5 +1,4 @@
 import { X } from 'lucide-react'
-import { X } from 'lucide-react'
 import type { PaymentResults, TTLResults, VehicleInputs } from '../types/ttl-types'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
