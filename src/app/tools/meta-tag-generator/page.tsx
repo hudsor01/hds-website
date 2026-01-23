@@ -5,10 +5,11 @@
 
 'use client';
 
-  import { useState } from 'react';
+import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
+import { TIMEOUTS } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Eye, Code } from 'lucide-react';
 import { logger } from '@/lib/logger';
@@ -86,7 +87,7 @@ export default function MetaTagGeneratorPage() {
     try {
       await navigator.clipboard.writeText(generatedCode);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     } catch (error) {
       // Fallback for browsers without clipboard API
       logger.debug('Clipboard API unavailable, using fallback', {
@@ -99,7 +100,7 @@ export default function MetaTagGeneratorPage() {
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK);
     }
   };
 

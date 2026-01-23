@@ -32,8 +32,9 @@ describe('API /api/paystub', () => {
     const res = await POST(req)
     expect(res.status).toBe(200)
     const json = await res.json()
-    expect(json?.totals?.grossPay).toBeGreaterThan(0)
-    expect(Array.isArray(json?.payPeriods)).toBe(true)
+    expect(json.success).toBe(true)
+    expect(json.data?.totals?.grossPay).toBeGreaterThan(0)
+    expect(Array.isArray(json.data?.payPeriods)).toBe(true)
   })
 })
 

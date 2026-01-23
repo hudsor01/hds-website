@@ -1,14 +1,14 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { type ZodError } from 'zod';
+import { type NextRequest } from 'next/server';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { applySecurityHeaders } from '@/lib/security-headers';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import {
   escapeHtml,
   sanitizeEmailHeader,
   detectInjectionAttempt
 } from '@/lib/utils';
 import { createServerLogger, castError } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import {
   leadMagnetRequestSchema,
   type LeadMagnetRequest,
@@ -39,16 +39,6 @@ const LEAD_MAGNETS = {
     description: 'Complete guide to increasing website conversion rates'
   }
 };
-
-// Helper function to convert Zod errors to user-friendly format
-function formatZodErrors(error: ZodError): Record<string, string> {
-  const formatted: Record<string, string> = {};
-  for (const issue of error.issues) {
-    const path = issue.path.join('.');
-    formatted[path] = issue.message;
-  }
-  return formatted;
-}
 
 // Generate welcome email with download link
 function generateLeadMagnetEmail(data: { email: string; firstName: string; resource: string }): string {
@@ -145,19 +135,8 @@ function generateAdminNotificationEmail(data: { email: string; firstName: string
   `;
 }
 
-export async function POST(request: NextRequest) {
+async function handleLeadMagnet(request: NextRequest) {
   const logger = createServerLogger('lead-magnet-api');
-
-  // Rate limiting - 3 downloads per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Lead magnet rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.', success: false },
-      { status: 429 }
-    );
-  }
 
   try {
     logger.info('Lead magnet request received', {
@@ -174,10 +153,7 @@ export async function POST(request: NextRequest) {
         error: error instanceof Error ? error.message : String(error),
         url: request.url,
       });
-      return NextResponse.json(
-        { error: 'Invalid request format', success: false },
-        { status: 400 }
-      );
+      return errorResponse('Invalid request format', 400);
     }
 
     // Validate form data with Zod
@@ -189,14 +165,7 @@ export async function POST(request: NextRequest) {
         body: rawBody,
       });
 
-      return NextResponse.json(
-        {
-          error: 'Validation failed',
-          errors: formatZodErrors(validation.error),
-          success: false,
-        },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const data: LeadMagnetRequest = validation.data;
@@ -307,45 +276,41 @@ export async function POST(request: NextRequest) {
           }
         }
         
-        const response = NextResponse.json({
-          message: 'Success! Check your email for the download link.',
-          success: true,
-          downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl
-        });
-        
+        const response = successResponse(
+          { downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl },
+          'Success! Check your email for the download link.'
+        );
+
         return applySecurityHeaders(response);
         
       } catch (emailError) {
         logger.error('Failed to send lead magnet emails', castError(emailError));
         
         // Still return success with download URL even if email fails
-        const response = NextResponse.json({
-          message: 'Download ready! Check your email for additional resources.',
-          success: true,
-          downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl
-        });
-        
+        const response = successResponse(
+          { downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl },
+          'Download ready! Check your email for additional resources.'
+        );
+
         return applySecurityHeaders(response);
       }
     } else {
       // No email service configured, just return download URL
-      const response = NextResponse.json({
-        message: 'Download ready!',
-        success: true,
-        downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl
-      });
-      
+      const response = successResponse(
+        { downloadUrl: LEAD_MAGNETS[data.resource as keyof typeof LEAD_MAGNETS].downloadUrl },
+        'Download ready!'
+      );
+
       return applySecurityHeaders(response);
     }
     
   } catch (error) {
     logger.error('Lead magnet API error', castError(error));
     
-    const response = NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again later.' },
-      { status: 500 }
-    );
-    
+    const response = errorResponse('An unexpected error occurred. Please try again later.', 500);
+
     return applySecurityHeaders(response);
   }
 }
+
+export const POST = withRateLimit(handleLeadMagnet, 'contactForm');

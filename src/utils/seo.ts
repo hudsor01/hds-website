@@ -1,5 +1,6 @@
 // Centralized SEO configuration for Next.js App Router
-import type { SEOMetaData } from '@/types/seo'
+import type { SEOMetaData } from '@/types/seo';
+import { BUSINESS_INFO } from '@/lib/constants';
 
 /**
  * SEO_CONFIG provides static metadata and structured data for each route.
@@ -87,7 +88,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
   contact: {
     title: 'Get Your Free ROI Roadmap in 30 Minutes | No Sales Pitch | Hudson Digital Solutions',
     description:
-      'See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join growing businesses with proven ROI results. Email: hello@hudsondigitalsolutions.com',
+      `See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join growing businesses with proven ROI results. Email: ${BUSINESS_INFO.email}`,
     keywords:
       'free ROI analysis, revenue leak audit, technical consultation, web development consultation, conversion optimization audit, performance audit services, free strategy session, business technology assessment, revenue operations consulting, growth engineering consultation',
     ogTitle: 'Free ROI Roadmap - Find Revenue Leaks in 30 Minutes | Hudson Digital',
