@@ -3,37 +3,21 @@
  * POST /api/testimonials/submit
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { submitTestimonial, markRequestSubmitted, getTestimonialRequestByToken } from '@/lib/testimonials';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
 import { testimonialSubmitSchema } from '@/lib/schemas/query-params';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 submissions per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Testimonial submission rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many submissions. Please try again later.' },
-      { status: 429 }
-    );
-  }
-
+async function handleTestimonialSubmit(request: NextRequest) {
   try {
     const rawBody = await request.json();
 
     // Validate request body with Zod
     const parseResult = testimonialSubmitSchema.safeParse(rawBody);
     if (!parseResult.success) {
-      const errors = parseResult.error.flatten();
-      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
-      logger.warn('Invalid testimonial submission', { errors: errors.fieldErrors });
-      return NextResponse.json(
-        { error: firstError, details: errors.fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const body = parseResult.data;
@@ -44,24 +28,15 @@ export async function POST(request: NextRequest) {
       const testimonialRequest = await getTestimonialRequestByToken(body.token);
 
       if (!testimonialRequest) {
-        return NextResponse.json(
-          { error: 'Invalid testimonial link' },
-          { status: 400 }
-        );
+        return errorResponse('Invalid testimonial link', 400);
       }
 
       if (testimonialRequest.submitted) {
-        return NextResponse.json(
-          { error: 'This link has already been used' },
-          { status: 400 }
-        );
+        return errorResponse('This link has already been used', 400);
       }
 
       if (new Date(testimonialRequest.expires_at) < new Date()) {
-        return NextResponse.json(
-          { error: 'This link has expired' },
-          { status: 400 }
-        );
+        return errorResponse('This link has expired', 400);
       }
 
       // Set request_id from the validated request
@@ -98,10 +73,7 @@ export async function POST(request: NextRequest) {
       isPrivateLink: !!body.token,
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Testimonial submitted successfully',
-    });
+    return successResponse(undefined, 'Testimonial submitted successfully');
   } catch (error) {
     logger.error('Failed to submit testimonial', {
       component: 'TestimonialAPI',
@@ -109,9 +81,8 @@ export async function POST(request: NextRequest) {
       error,
     });
 
-    return NextResponse.json(
-      { error: 'Failed to submit testimonial. Please try again.' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to submit testimonial. Please try again.', 500);
   }
 }
+
+export const POST = withRateLimit(handleTestimonialSubmit, 'contactForm');

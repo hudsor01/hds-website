@@ -12,7 +12,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { trackEvent } from '@/lib/analytics';
-  import { useState } from 'react';
+import { formatCurrency } from '@/lib/utils';
+import { useState } from 'react';
 import { useQueryState, parseAsString, parseAsInteger, parseAsBoolean, parseAsArrayOf } from 'nuqs';
 
 interface CalculatorInputs {
@@ -121,14 +122,14 @@ export function CostEstimatorClient() {
     if (inputs.timeline === 'urgent') {timelineWeeks = Math.ceil(timelineWeeks * 0.7);}
 
     const calculatedResults = {
-      estimatedCost: `$${lowEstimate.toLocaleString()} - $${highEstimate.toLocaleString()}`,
-      averageCost: `$${avgEstimate.toLocaleString()}`,
+      estimatedCost: `${formatCurrency(lowEstimate)} - ${formatCurrency(highEstimate)}`,
+      averageCost: formatCurrency(avgEstimate),
       timeline: `${timelineWeeks} weeks`,
       monthlyMaintenance: inputs.maintenanceNeeded
-        ? `$${Math.round(maintenanceCost / 12).toLocaleString()}/mo`
+        ? `${formatCurrency(Math.round(maintenanceCost / 12))}/mo`
         : 'Not included',
       annualMaintenance: inputs.maintenanceNeeded
-        ? `$${Math.round(maintenanceCost).toLocaleString()}/year`
+        ? `${formatCurrency(Math.round(maintenanceCost))}/year`
         : 'Not included',
     };
 
@@ -192,7 +193,7 @@ export function CostEstimatorClient() {
               <SelectContent>
                 {websiteTypes.map(type => (
                   <SelectItem key={type.value} value={type.value}>
-                    {type.label} (from ${type.basePrice.toLocaleString()})
+                    {type.label} (from {formatCurrency(type.basePrice)})
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -233,7 +234,7 @@ export function CostEstimatorClient() {
                       {feature.label}
                     </div>
                     <div className="text-muted-foreground">
-                      +${feature.price.toLocaleString()}
+                      +{formatCurrency(feature.price)}
                     </div>
                   </div>
                 </label>
