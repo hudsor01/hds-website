@@ -19,7 +19,7 @@ const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
   loading: () => <ContactFormSkeleton />
 });
 
-const GoogleMap = dynamic(() => import('@/components/GoogleMap'), {
+const GoogleMap = dynamic(() => import('@/components/utilities/GoogleMap'), {
   loading: () => <MapSkeleton />
 });
 

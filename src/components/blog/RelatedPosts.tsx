@@ -1,3 +1,5 @@
+'use client';
+
 import type { BlogPost } from "@/lib/blog";
 import { BlogPostCard } from "./BlogPostCard";
 

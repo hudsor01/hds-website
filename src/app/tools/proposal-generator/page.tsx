@@ -6,10 +6,12 @@
 'use client';
 
   import { useState, useMemo, useCallback, useSyncExternalStore } from 'react';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 import { FileSpreadsheet, Plus, Trash2, Download, Save, RotateCcw } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import type { ProposalData, ProposalPricingItem, ProposalMilestone } from '@/lib/pdf/proposal-template';
@@ -35,7 +37,7 @@ const DEFAULT_COMPANY = {
   companyCity: 'Dallas',
   companyState: 'TX',
   companyZip: '',
-  companyEmail: 'hello@hudsondigitalsolutions.com',
+  companyEmail: BUSINESS_INFO.email,
   companyPhone: '',
   companyDescription: 'Hudson Digital Solutions is a Texas-based digital agency specializing in web development, SaaS consulting, and digital marketing. We partner with businesses to create exceptional digital experiences that drive growth and deliver measurable results.',
 };
@@ -285,10 +287,6 @@ export default function ProposalGeneratorPage() {
     // Reset cached defaults so new ones are generated
     cachedDefaults = null;
   };
-
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
   const isValid =
     proposalData.projectName.trim() !== '' &&
     (proposalData.clientName.trim() !== '' || proposalData.clientCompany.trim() !== '');

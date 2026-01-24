@@ -10,24 +10,14 @@
  * SECURITY: Accessing unapproved testimonials requires admin authentication
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
+import { errorResponse, successResponse } from '@/lib/api/responses';
 
-export async function GET(request: NextRequest) {
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Testimonials rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleGetTestimonials(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const requestAll = url.searchParams.get('all') === 'true';
@@ -45,7 +35,7 @@ export async function GET(request: NextRequest) {
       });
 
       const testimonials = await getAllTestimonials();
-      return NextResponse.json({ testimonials });
+      return successResponse({ testimonials });
     }
 
     // Public access: only approved testimonials
@@ -55,7 +45,7 @@ export async function GET(request: NextRequest) {
     });
 
     const testimonials = await getApprovedTestimonials();
-    return NextResponse.json({ testimonials });
+    return successResponse({ testimonials });
   } catch (error) {
     logger.error('Error fetching testimonials', {
       error: error instanceof Error ? error.message : String(error),
@@ -63,9 +53,8 @@ export async function GET(request: NextRequest) {
       action: 'list',
     });
 
-    return NextResponse.json(
-      { error: 'Failed to fetch testimonials' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch testimonials', 500);
   }
 }
+
+export const GET = withRateLimit(handleGetTestimonials, 'readOnlyApi');

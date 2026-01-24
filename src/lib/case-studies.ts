@@ -3,6 +3,7 @@
  * Handles all case study data fetching with Supabase
  */
 
+import { env } from '@/env';
 import { createClient } from '@/lib/supabase/server';
 import { logger } from './logger';
 import type { Database } from '@/types/database';
@@ -69,7 +70,7 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
 
     if (error) {
       // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch case studies', { error: error.message });
       }
       return [];
@@ -78,7 +79,7 @@ export async function getCaseStudies(): Promise<CaseStudy[]> {
     return (data || []).map(mapCaseStudy);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching case studies', {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -103,7 +104,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
 
     if (error) {
       // Don't log "not found" errors or build-time errors
-      if (error.code !== 'PGRST116' && (process.env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
+      if (error.code !== 'PGRST116' && (env.NODE_ENV === 'development' || typeof window !== 'undefined')) {
         logger.error('Failed to fetch case study', { slug, error: error.message });
       }
       return null;
@@ -112,7 +113,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
     return data ? mapCaseStudy(data as CaseStudyRow) : null;
   } catch (error) {
     // Only log errors in development or runtime (not during build)
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching case study', {
         slug,
         error: error instanceof Error ? error.message : String(error),
@@ -136,7 +137,7 @@ export async function getAllCaseStudySlugs(): Promise<string[]> {
 
     if (error) {
       // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch case study slugs', { error: error.message });
       }
       return [];
@@ -145,7 +146,7 @@ export async function getAllCaseStudySlugs(): Promise<string[]> {
     return (data || []).map((c) => c.slug);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching case study slugs', {
         error: error instanceof Error ? error.message : String(error),
       });
@@ -170,7 +171,7 @@ export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
 
     if (error) {
       // Only log errors in development or runtime (not during build)
-      if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+      if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
         logger.error('Failed to fetch featured case studies', { error: error.message });
       }
       return [];
@@ -179,7 +180,7 @@ export async function getFeaturedCaseStudies(): Promise<CaseStudy[]> {
     return (data || []).map(mapCaseStudy);
   } catch (error) {
     // Only log errors in development or runtime (not during build)
-    if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+    if (env.NODE_ENV === 'development' || typeof window !== 'undefined') {
       logger.error('Exception fetching featured case studies', {
         error: error instanceof Error ? error.message : String(error),
       });

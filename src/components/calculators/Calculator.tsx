@@ -1,17 +1,19 @@
-"use client";
+'use client';
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
-import { JsonLd } from '@/components/JsonLd';
+import { JsonLd } from '@/components/utilities/JsonLd';
+import { TIMEOUTS } from '@/lib/constants';
 import { logger } from '@/lib/logger';
+import { formatCurrency } from '@/lib/utils';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { useCalculatorStore } from '@/stores/calculator-store';
 import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types';
-import { ComparisonView } from '../ComparisonView';
+import { ComparisonView } from './ComparisonView';
 import { InputPanel } from '../InputPanel/InputPanel';
-import { ResultsPanel } from '../ResultsPanel';
+import { ResultsPanel } from './ResultsPanel';
 
 export function Calculator() {
   const {
@@ -42,7 +44,7 @@ export function Calculator() {
     try {
       await saveCurrentCalculation();
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
+      setTimeout(() => setSaveSuccess(false), TIMEOUTS.SAVE_SUCCESS);
     } catch (error) {
       logger.error('Failed to save calculation', error as Error);
     }
@@ -119,7 +121,7 @@ export function Calculator() {
     if (comparisonVehicles.length >= 3) {return;} // Limit to 3 vehicles
 
     // Create a name for the vehicle based on price and county
-    const vehicleName = `$${vehicleInput.purchasePrice.toLocaleString()} - ${vehicleInput.county}`;
+    const vehicleName = `${formatCurrency(vehicleInput.purchasePrice)} - ${vehicleInput.county}`;
 
     setComparisonVehicles(prev => [
       ...prev,
@@ -305,7 +307,7 @@ export function Calculator() {
               <button
                 onClick={() => {
                   setShowShareModal(false);
-                  setTimeout(handlePrintPDF, 100);
+                  setTimeout(handlePrintPDF, TIMEOUTS.PRINT_DELAY);
                 }}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
               >
