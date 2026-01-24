@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { Tag } from "lucide-react";
 import type { BlogTag } from "@/lib/blog";

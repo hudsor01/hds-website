@@ -3,6 +3,7 @@
  * Provides server and client logging with Supabase error tracking
  */
 
+import { env } from '@/env';
 import { supabaseAdmin } from '@/lib/supabase'
 import type { Json } from '@/types/database'
 import type {
@@ -68,7 +69,7 @@ export function castError(error: unknown): ErrorLogData {
  * Generate a fingerprint for grouping identical errors.
  * Hash of: error_type + message + first stack frame
  */
-export function generateFingerprint(
+function generateFingerprint(
   errorType: string,
   message: string,
   stack?: string
@@ -100,14 +101,14 @@ async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
     const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
     if (error) {
       // Final fallback - can't use logger here as it would cause recursion
-      if (process.env.NODE_ENV === 'development') {
+      if (env.NODE_ENV === 'development') {
         console.error('[Logger] Failed to push to Supabase:', error.message)
       }
     }
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
-    if (process.env.NODE_ENV === 'development') {
+    if (env.NODE_ENV === 'development') {
       console.error('[Logger] Failed to push to Supabase:', e)
     }
   }
@@ -116,7 +117,7 @@ async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
 /**
  * Base logger implementation
  */
-export class BaseLogger implements Logger {
+class BaseLogger implements Logger {
   private context: LogContext;
   private sessionId: string;
   private isBrowser: boolean;
@@ -131,7 +132,7 @@ export class BaseLogger implements Logger {
       this.context.isServer = false;
     } else {
       this.context.isServer = true;
-      this.context.environment = process.env.NODE_ENV ?? 'development';
+      this.context.environment = env.NODE_ENV ?? 'development';
     }
   }
 
@@ -166,7 +167,7 @@ export class BaseLogger implements Logger {
     };
 
     // Only log error and warn levels to console to comply with ESLint rules
-    if (process.env.NODE_ENV === 'development' || this.isBrowser) {
+    if (env.NODE_ENV === 'development' || this.isBrowser) {
       if (level === 'error') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       } else if (level === 'warn') {
@@ -176,7 +177,7 @@ export class BaseLogger implements Logger {
 
     // In production, you might want to send to analytics or external logging service
     // For now, we'll just log error and warn levels to console in production
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       if (level === 'error' || level === 'warn') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       }
@@ -200,7 +201,7 @@ export class BaseLogger implements Logger {
     this.log('error', message, errorData);
 
     // Push to Supabase in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       this.pushErrorToSupabase('error', message, errorData, context);
     }
   }
@@ -210,7 +211,7 @@ export class BaseLogger implements Logger {
     this.log('error', message, errorData);
 
     // Push to Supabase in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       this.pushErrorToSupabase('fatal', message, errorData, context);
     }
   }
@@ -236,8 +237,8 @@ export class BaseLogger implements Logger {
       request_id: context?.requestId,
       user_id: context?.userId,
       user_email: context?.userEmail,
-      environment: process.env.NODE_ENV || 'development',
-      vercel_region: process.env.VERCEL_REGION,
+      environment: env.NODE_ENV || 'development',
+      vercel_region: env.VERCEL_REGION,
       metadata: {
         ...context?.metadata,
         cause: errorData?.cause,
@@ -290,7 +291,7 @@ export class BaseLogger implements Logger {
 /**
  * Server logger implementation with additional server-specific methods
  */
-export class ServerLoggerImpl extends BaseLogger implements ServerLogger {
+class ServerLoggerImpl extends BaseLogger implements ServerLogger {
   request(method: string, url: string, headers?: Record<string, string>): void {
     this.debug(`HTTP ${method} ${url}`, { headers });
   }
@@ -318,7 +319,7 @@ export function createServerLogger(name?: string): ServerLogger {
   const context: LogContext = {
     component: name || 'server',
     isServer: true,
-    environment: process.env.NODE_ENV ?? 'development',
+    environment: env.NODE_ENV ?? 'development',
   };
 
   if (name) {
@@ -334,125 +335,8 @@ export function createServerLogger(name?: string): ServerLogger {
 export const logger: Logger = new BaseLogger({
   component: 'default',
   isServer: typeof window === 'undefined',
-  environment: process.env.NODE_ENV ?? 'development',
+  environment: env.NODE_ENV ?? 'development',
 });
-
-// ============================================================================
-// Standardized Error Handling Utilities
-// ============================================================================
-
-/**
- * Error severity levels for standardized handling
- */
-export type ErrorSeverity = 'critical' | 'warning' | 'info';
-
-/**
- * Options for handleError utility
- */
-export interface HandleErrorOptions {
-  /** Context about where the error occurred */
-  context?: string;
-  /** Additional metadata to log */
-  metadata?: Record<string, unknown>;
-  /** Whether to rethrow the error after logging */
-  rethrow?: boolean;
-  /** Severity level - determines log level used */
-  severity?: ErrorSeverity;
-}
-
-/**
- * Standardized error handler - ensures all errors are logged consistently
- * Use this in catch blocks to ensure errors are never silently swallowed
- *
- * @example
- * try {
- *   await riskyOperation();
- * } catch (error) {
- *   handleError(error, { context: 'riskyOperation', severity: 'warning' });
- * }
- */
-export function handleError(
-  error: unknown,
-  options: HandleErrorOptions = {}
-): ErrorLogData {
-  const { context, metadata, rethrow = false, severity = 'warning' } = options;
-  const errorData = castError(error);
-
-  const message = context
-    ? `[${context}] ${errorData.message}`
-    : errorData.message;
-
-  const logData = metadata ? { ...metadata, errorData } : errorData;
-
-  switch (severity) {
-    case 'critical':
-      logger.error(message, error);
-      break;
-    case 'warning':
-      logger.warn(message, logData);
-      break;
-    case 'info':
-      logger.info(message, logData);
-      break;
-  }
-
-  if (rethrow) {
-    throw error;
-  }
-
-  return errorData;
-}
-
-/**
- * Result type for safeExecute
- */
-export type SafeResult<T> =
-  | { success: true; data: T; error: null }
-  | { success: false; data: null; error: ErrorLogData };
-
-/**
- * Execute a function safely with automatic error logging
- * Returns a result object instead of throwing
- *
- * @example
- * const result = await safeExecute(
- *   () => fetchData(),
- *   { context: 'fetchData', severity: 'warning' }
- * );
- * if (result.success) {
- *   // use result.data
- * } else {
- *   // handle result.error
- * }
- */
-export async function safeExecute<T>(
-  fn: () => T | Promise<T>,
-  options: HandleErrorOptions = {}
-): Promise<SafeResult<T>> {
-  try {
-    const data = await fn();
-    return { success: true, data, error: null };
-  } catch (error) {
-    const errorData = handleError(error, options);
-    return { success: false, data: null, error: errorData };
-  }
-}
-
-/**
- * Synchronous version of safeExecute
- */
-export function safeExecuteSync<T>(
-  fn: () => T,
-  options: HandleErrorOptions = {}
-): SafeResult<T> {
-  try {
-    const data = fn();
-    return { success: true, data, error: null };
-  } catch (error) {
-    const errorData = handleError(error, options);
-    return { success: false, data: null, error: errorData };
-  }
-}
 
 // Add global type for session ID
 declare global {
