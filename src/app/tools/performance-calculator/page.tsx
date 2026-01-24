@@ -12,6 +12,7 @@ import { CalculatorInput } from '@/components/calculators/CalculatorInput';
 import { CalculatorResults } from '@/components/calculators/CalculatorResults';
 import { logger } from '@/lib/logger';
 import { trackEvent } from '@/lib/analytics';
+import { formatCurrency } from '@/lib/utils';
 
 interface PerformanceMetrics {
   performanceScore: number;
@@ -106,10 +107,10 @@ export default function PerformanceCalculatorPage() {
 
     const calculatedResults = {
       performanceScore: `${score}/100`,
-      currentRevenue: `$${monthlyRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/mo`,
-      potentialRevenue: `$${potentialMonthlyRevenue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/mo`,
-      monthlyLoss: `$${monthlyLoss.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-      annualLoss: `$${annualLoss.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+      currentRevenue: `${formatCurrency(monthlyRevenue)}/mo`,
+      potentialRevenue: `${formatCurrency(potentialMonthlyRevenue)}/mo`,
+      monthlyLoss: formatCurrency(monthlyLoss),
+      annualLoss: formatCurrency(annualLoss),
       conversionImpact: `${(conversionImpact * 100).toFixed(1)}%`,
       loadTimeReduction: `${estimatedLoadTimeReduction}ms`,
       recommendation: getRecommendation(score),
