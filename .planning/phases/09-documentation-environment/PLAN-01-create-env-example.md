@@ -1,3 +1,43 @@
+# Plan 1: Create .env.example
+
+## Objective
+
+Create comprehensive .env.example file to guide new developers in setting up their local environment.
+
+---
+
+## Current Situation
+
+**Problem**:
+- README.md instructs: `cp .env.example .env.local`
+- .env.example file does NOT exist
+- New developers have no guidance on required environment variables
+- Risk of committing secrets if using .env.local as template
+
+**Environment Schema** (from src/env.ts):
+- 15 server-side variables
+- 3 client-side variables (NEXT_PUBLIC_*)
+- Mix of required and optional variables
+- CSRF_SECRET required in production
+
+---
+
+## Solution
+
+Create `.env.example` file with:
+1. **All environment variables** from src/env.ts
+2. **Clear comments** indicating required vs optional
+3. **Example placeholder values** (not real secrets)
+4. **Grouped by category** for organization
+5. **Instructions** on where to obtain API keys
+
+---
+
+## File Content
+
+### .env.example
+
+```bash
 # ========================================
 # Environment Configuration Template
 # ========================================
@@ -133,3 +173,77 @@ NODE_ENV=development
 # 5. NEVER commit .env.local to git!
 #
 # ========================================
+```
+
+---
+
+## Execution Steps
+
+```bash
+# 1. Create .env.example file with content above
+cat > .env.example << 'EOF'
+[content from above]
+EOF
+
+# 2. Verify file was created
+ls -la .env.example
+
+# 3. Test that copying works as documented
+cp .env.example .env.test
+rm .env.test
+
+# 4. Verify README.md setup instructions will work
+# (already references: cp .env.example .env.local)
+```
+
+---
+
+## Verification Checklist
+
+- [ ] .env.example file exists
+- [ ] All 18 environment variables from src/env.ts are documented
+- [ ] Comments explain required vs optional
+- [ ] Example values are placeholders (not real secrets)
+- [ ] Variables grouped by category
+- [ ] Setup instructions included
+- [ ] Links to obtain API keys provided
+- [ ] README.md `cp .env.example .env.local` command will work
+
+---
+
+## Commit Message
+
+```
+docs(phase-9): create comprehensive .env.example file (Plan 1)
+
+Create missing .env.example template for new developer onboarding.
+
+Created:
+- .env.example with all 18 environment variables from src/env.ts
+
+Features:
+- Clear comments indicating required vs optional variables
+- Grouped by category (Database, Email, Security, etc.)
+- Example placeholder values (no real secrets)
+- Instructions on where to obtain API keys
+- Setup instructions for new developers
+- Security warnings for sensitive keys
+
+Impact:
+- New developers can now set up the project following README.md
+- Reduced risk of committing secrets
+- Clear guidance on which env vars are needed
+- Better developer onboarding experience
+
+Fixes README.md instruction: `cp .env.example .env.local` now works.
+```
+
+---
+
+## Notes
+
+- Use placeholder values only (e.g., "your_api_key_here")
+- Never include real secrets or API keys
+- Group related variables together for clarity
+- Include links to documentation/dashboards where applicable
+- Make it clear which variables are required vs optional
