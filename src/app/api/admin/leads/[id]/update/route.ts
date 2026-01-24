@@ -3,11 +3,12 @@
  * Handles updating lead status (contacted, converted)
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
 
 const UpdateLeadSchema = z.object({
@@ -17,21 +18,10 @@ const UpdateLeadSchema = z.object({
   notes: z.string().optional(),
 });
 
-export async function PATCH(
+async function handleLeadUpdate(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Lead update rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -80,25 +70,18 @@ export async function PATCH(
 
     if (error) {
       logger.error('Failed to update lead:', error as Error);
-      return NextResponse.json(
-        { error: 'Failed to update lead' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to update lead', 500);
     }
 
-    return NextResponse.json({ success: true, lead: data });
+    return successResponse({ lead: data });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(error);
     }
 
     logger.error('Lead update error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
+
+export const PATCH = withRateLimitParams(handleLeadUpdate, 'contactFormApi');
