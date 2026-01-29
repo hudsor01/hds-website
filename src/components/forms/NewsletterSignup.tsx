@@ -39,6 +39,11 @@ function NewsletterSignupContent({
       onSubmit: newsletterSchema,
     },
     onSubmit: async ({ value }) => {
+      // Guard against empty email (should be caught by validation, but double-check)
+      if (!value.email || value.email.trim() === '') {
+        return
+      }
+
       await mutation.mutateAsync({
         email: value.email,
         source: variant,

@@ -78,15 +78,6 @@ export function TrendLineChart({
           className="w-full"
           style={{ minWidth: '600px' }}
         >
-          {datasets.map(dataset => (
-            <defs key={dataset.label}>
-              <linearGradient id={`gradient-${dataset.label}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={dataset.color} stopOpacity="0.3" />
-                <stop offset="100%" stopColor={dataset.color} stopOpacity="0.05" />
-              </linearGradient>
-            </defs>
-          ))}
-
           {[0, 0.25, 0.5, 0.75, 1].map((percent, i) => {
             const y = padding.top + chartHeight - percent * chartHeight;
             const value = Math.round(minValue + valueRange * percent);
@@ -149,7 +140,7 @@ export function TrendLineChart({
 
             return (
               <g key={dataset.label}>
-                <path d={areaPath} fill={`url(#gradient-${dataset.label})`} />
+                <path d={areaPath} fill={dataset.color} fillOpacity="0.08" />
                 <path
                   d={linePath}
                   fill="none"
@@ -189,4 +180,3 @@ export function TrendLineChart({
     </Card>
   );
 }
-

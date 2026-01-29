@@ -2,6 +2,15 @@
 
 import statesData from '@/data/states.json'
 
+// Cache these to prevent creating new arrays on every call
+const NO_INCOME_TAX_CODES = ['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY']
+const NO_INCOME_TAX_STATES_CACHE = statesData.states.filter(state =>
+  NO_INCOME_TAX_CODES.includes(state.value)
+)
+const INCOME_TAX_STATES_CACHE = statesData.states.filter(state =>
+  !NO_INCOME_TAX_CODES.includes(state.value)
+)
+
 /**
  * Get all states options
  */
@@ -20,19 +29,14 @@ export function getAllStates() {
  * Get states with no income tax
  */
 export function getNoIncomeTaxStates() {
-  // This would need to be expanded with actual tax data
-  return statesData.states.filter(state =>
-    ['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(state.value)
-  )
+  return NO_INCOME_TAX_STATES_CACHE
 }
 
 /**
  * Get states with income tax
  */
 export function getIncomeTaxStates() {
-  return statesData.states.filter(state =>
-    !['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(state.value)
-  )
+  return INCOME_TAX_STATES_CACHE
 }
 
 /**
@@ -46,5 +50,5 @@ export function getStateInfo(code: string) {
  * Check if state has income tax
  */
 export function stateHasIncomeTax(code: string): boolean {
-  return !['AK', 'FL', 'NV', 'SD', 'TN', 'TX', 'WA', 'WY'].includes(code)
+  return !NO_INCOME_TAX_CODES.includes(code)
 }

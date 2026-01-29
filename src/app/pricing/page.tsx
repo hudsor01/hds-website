@@ -230,14 +230,14 @@ export default function PricingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-content justify-center">
-              <Button asChild variant="default" size="xl" trackConversion={true}>
+              <Button asChild variant="accent" size="xl" trackConversion={true}>
                 <Link href="/contact">
                   Claim Your Free ROI Analysis
                 </Link>
               </Button>
 
               <Button asChild variant="outline" size="xl">
-                <Link href="/portfolio">
+                <Link href="/showcase">
                   See $3.7M+ in Proven Results
                 </Link>
               </Button>

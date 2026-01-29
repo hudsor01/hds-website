@@ -7,29 +7,32 @@ export interface TestimonialRequest {
   id: string;
   token: string;
   client_name: string;
-  client_email: string | null;
-  project_name: string | null;
-  created_at: string;
-  expires_at: string;
+  client_email: string;
+  project_name?: string;
+  message?: string;
+  status?: string;
   submitted: boolean;
-  submitted_at: string | null;
+  submitted_at?: string;
+  expires_at: string;
+  testimonial_id?: string;
+  created_at: string;
 }
 
 export interface Testimonial {
   id: string;
-  request_id: string | null;
+  request_id?: string;
   client_name: string;
-  company: string | null;
-  role: string | null;
+  company?: string;
+  role?: string;
   rating: number;
   content: string;
-  photo_url: string | null;
-  video_url: string | null;
-  service_type: string | null;
+  photo_url?: string;
+  video_url?: string;
+  service_type?: string;
   approved: boolean;
   featured: boolean;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 export type ServiceType =
