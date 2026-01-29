@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Card } from "@/components/ui/card";
-import { EMAIL_CONFIG } from '@/lib/config/email';
+import { formatDate } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Hudson Digital Solutions',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 // Pre-compute date at module load time (safe for RSC)
-const lastUpdated = new Date().toLocaleDateString();
+const lastUpdated = formatDate(new Date());
 
 export default function PrivacyPage() {
   return (
@@ -135,7 +135,7 @@ export default function PrivacyPage() {
                   <li>Object to or restrict processing of your information</li>
                   <li>Withdraw consent where processing is based on consent</li>
                 </ul>
-                <p>To exercise these rights, contact us at <a href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`} className="text-secondary-400 hover:text-secondary-300">{EMAIL_CONFIG.SUPPORT_EMAIL}</a>.</p>
+                <p>To exercise these rights, contact us at <a href="mailto:hello@hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hello@hudsondigitalsolutions.com</a>.</p>
               </div>
             </section>
 
@@ -171,7 +171,7 @@ export default function PrivacyPage() {
               <div className="text-muted space-y-content">
                 <p>If you have any questions about this privacy policy or our privacy practices, please contact us:</p>
                 <div className="bg-background/50 rounded-lg">
-                  <p><strong>Email:</strong> <a href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`} className="text-secondary-400 hover:text-secondary-300">{EMAIL_CONFIG.SUPPORT_EMAIL}</a></p>
+                  <p><strong>Email:</strong> <a href="mailto:hello@hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hello@hudsondigitalsolutions.com</a></p>
                   <p><strong>Website:</strong> <a href="https://hudsondigitalsolutions.com" className="text-secondary-400 hover:text-secondary-300">hudsondigitalsolutions.com</a></p>
                 </div>
               </div>

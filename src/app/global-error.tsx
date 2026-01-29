@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { createServerLogger } from '@/lib/logger';
-import { EMAIL_CONFIG } from '@/lib/config/email';
 
 export default function GlobalError({
   error,
@@ -138,16 +137,36 @@ export default function GlobalError({
               justifyContent: 'center',
               flexWrap: 'wrap',
             }}>
-              <Button type="button" onClick={reset} variant="default">
+              <button
+                onClick={reset}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#06b6d4',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                }}
+              >
                 Try again
-              </Button>
-              <Button
-                type="button"
+              </button>
+              <button
                 onClick={() => window.location.href = '/'}
-                variant="muted"
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#e5e7eb',
+                  color: '#111827',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                }}
               >
                 Go home
-              </Button>
+              </button>
             </div>
 
             <div style={{
@@ -162,7 +181,7 @@ export default function GlobalError({
               }}>
                 If this issue persists, please contact{' '}
                 <a
-                  href={`mailto:${EMAIL_CONFIG.SUPPORT_EMAIL}`}
+                  href={`mailto:${BUSINESS_INFO.email}`}
                   style={{
                     color: '#06b6d4',
                     textDecoration: 'underline',

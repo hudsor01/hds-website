@@ -77,7 +77,7 @@ export function PaystubNavigation({
         </div>
       )}
 
-      <Button onClick={onPrint} variant="success">
+      <Button onClick={onPrint} variant="default">
         Print {documentType === 'paystub' ? 'Pay Stub' : 'W-2 Summary'}
       </Button>
     </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag, ArrowLeft, Check } from "lucide-react";
-import ScrollProgress from "@/components/ScrollProgress";
+import ScrollProgress from "@/components/utilities/ScrollProgress";
 import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {

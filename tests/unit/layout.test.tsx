@@ -19,7 +19,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should render children when there is no error', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     render(
       <ErrorBoundary>
@@ -31,7 +31,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should catch and display errors', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Test error')
@@ -53,7 +53,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should have a reset mechanism', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
       if (shouldThrow) {
@@ -80,7 +80,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should log errors to console or analytics', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
     // Note: Bun doesn't have built-in spy support, just verify error UI renders
     const originalError = console.error
     let errorLogged = false
@@ -106,7 +106,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should handle copy error details functionality', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Test copy error')
@@ -128,7 +128,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should handle report error functionality', async () => {
-    const { default: ErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { default: ErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Test report error')
@@ -146,7 +146,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should render ComponentErrorBoundary with minimal UI', async () => {
-    const { ComponentErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { ComponentErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowError = () => {
       throw new Error('Component error')
@@ -166,7 +166,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should handle withErrorBoundary HOC', async () => {
-    const { withErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { withErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const TestComponent = ({ title }: { title: string }) => <h1>{title}</h1>
     const WrappedComponent = withErrorBoundary(TestComponent)
@@ -177,7 +177,7 @@ describe('ErrorBoundary Component', () => {
   })
 
   it('should handle AsyncErrorBoundary for chunk load errors', async () => {
-    const { AsyncErrorBoundary } = await import('@/components/error/ErrorBoundary')
+    const { AsyncErrorBoundary } = await import('@/components/utilities/ErrorBoundary')
 
     const ThrowChunkError = () => {
       throw new Error('Loading chunk 123 failed')

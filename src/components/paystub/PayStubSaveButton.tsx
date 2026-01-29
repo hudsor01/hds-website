@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react'
 import { FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -13,7 +15,7 @@ export const PayStubSaveButton: React.FC<PayStubSaveButtonProps> = ({ onSave }) 
       <Button
         type="button"
         onClick={onSave}
-        variant="accent"
+        variant="default"
         className={cn("px-6")}
       >
         <FileText className="w-4 h-4" />

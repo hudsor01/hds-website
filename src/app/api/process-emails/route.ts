@@ -1,20 +1,21 @@
-import { createServerLogger } from "@/lib/logger";
-import { castError } from '@/lib/utils/errors'
+import { env } from '@/env';
+import { castError, createServerLogger } from "@/lib/logger";
+import { errorResponse, successResponse } from '@/lib/api/responses';
 import {
   getEmailQueueStats,
   processEmailsEndpoint,
 } from "@/lib/scheduled-emails";
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
 import { applySecurityHeaders } from "@/lib/security-headers";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 function authenticateCronRequest(request: NextRequest, logger: ReturnType<typeof createServerLogger>) {
   const authHeader = request.headers.get("authorization");
-  const expectedToken = process.env.CRON_SECRET;
+  const expectedToken = env.CRON_SECRET;
 
   if (!expectedToken) {
     logger.error("CRON_SECRET environment variable is not set");
-    return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    return errorResponse("Server configuration error", 500);
   }
 
   const authValidation = cronAuthHeaderSchema.safeParse(authHeader);
@@ -23,12 +24,12 @@ function authenticateCronRequest(request: NextRequest, logger: ReturnType<typeof
       errors: authValidation.error.issues,
       providedAuth: authHeader ? 'Bearer ***' : 'none',
     });
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return errorResponse("Unauthorized", 401);
   }
 
   if (authHeader !== `Bearer ${expectedToken}`) {
     logger.warn('Unauthorized cron request');
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return errorResponse("Unauthorized", 401);
   }
 
   return null;
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     const result = await processEmailsEndpoint();
 
-    const response = NextResponse.json({
+    const response = successResponse({
       success: result.success,
       message: `Processed ${result.processed} emails, ${result.errors} errors`,
       stats: getEmailQueueStats(),
@@ -59,14 +60,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     logger.error("Email processing API error", castError(error));
 
-    const response = NextResponse.json(
-      {
-        error: "Failed to process emails",
-        success: false,
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
+    const response = errorResponse("Failed to process emails", 500);
 
     return applySecurityHeaders(response);
   }
@@ -84,7 +78,7 @@ export async function GET(request: NextRequest) {
 
     const stats = getEmailQueueStats();
 
-    const response = NextResponse.json({
+    const response = successResponse({
       stats,
       timestamp: new Date().toISOString(),
     });
@@ -93,10 +87,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     logger.error("Email stats API error", castError(error));
 
-    const response = NextResponse.json(
-      { error: "Failed to get email stats" },
-      { status: 500 }
-    );
+    const response = errorResponse("Failed to get email stats", 500);
 
     return applySecurityHeaders(response);
   }

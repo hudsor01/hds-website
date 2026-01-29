@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
-import { JsonLd } from '@/components/JsonLd';
-import { Button } from '@/components/ui/button';
+import { JsonLd } from '@/components/utilities/JsonLd';
+import { TIMEOUTS } from '@/lib/constants';
 import { logger } from '@/lib/logger';
+import { formatCurrency } from '@/lib/utils';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';
 import Head from 'next/head';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 import { useCalculatorStore } from '@/stores/calculator-store';
 import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types';
-import { ComparisonView } from '../ComparisonView';
+import { ComparisonView } from './ComparisonView';
 import { InputPanel } from '../InputPanel/InputPanel';
-import { ResultsPanel } from '../ResultsPanel';
+import { ResultsPanel } from './ResultsPanel';
 
 export function Calculator() {
   const {
@@ -43,7 +44,7 @@ export function Calculator() {
     try {
       await saveCurrentCalculation();
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
+      setTimeout(() => setSaveSuccess(false), TIMEOUTS.SAVE_SUCCESS);
     } catch (error) {
       logger.error('Failed to save calculation', error as Error);
     }
@@ -120,7 +121,7 @@ export function Calculator() {
     if (comparisonVehicles.length >= 3) {return;} // Limit to 3 vehicles
 
     // Create a name for the vehicle based on price and county
-    const vehicleName = `$${vehicleInput.purchasePrice.toLocaleString()} - ${vehicleInput.county}`;
+    const vehicleName = `${formatCurrency(vehicleInput.purchasePrice)} - ${vehicleInput.county}`;
 
     setComparisonVehicles(prev => [
       ...prev,
@@ -266,15 +267,13 @@ export function Calculator() {
                   value={shareCode ? `${window.location.origin}${window.location.pathname}?c=${shareCode}` : ''}
                   className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm text-foreground border border-border"
                 />
-                <Button
-                  type="button"
+                <button
                   onClick={copyShareLink}
-                  variant="default"
-                  size="icon"
+                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                   aria-label="Copy link"
                 >
                   <Copy className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
               <p className="text-xs text-muted-foreground mt-1">This link will work for 90 days</p>
             </div>
@@ -292,40 +291,35 @@ export function Calculator() {
                   onChange={(e) => setEmailInput(e.target.value)}
                   className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
-                <Button
-                  type="button"
+                <button
                   onClick={handleEmailResults}
                   disabled={isPending || !emailInput}
-                  variant="default"
-                  size="icon"
+                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Send email"
                 >
                   <Mail className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
             </div>
 
             {/* Print Button */}
             <div className="flex gap-3">
-              <Button
-                type="button"
+              <button
                 onClick={() => {
                   setShowShareModal(false);
-                  setTimeout(handlePrintPDF, 100);
+                  setTimeout(handlePrintPDF, TIMEOUTS.PRINT_DELAY);
                 }}
-                variant="muted"
-                className="flex-1"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
               >
                 <Printer className="w-4 h-4" />
                 Print Results
-              </Button>
-              <Button
-                type="button"
+              </button>
+              <button
                 onClick={() => setShowShareModal(false)}
-                variant="ghost"
+                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 Close
-              </Button>
+              </button>
             </div>
           </div>
         </div>

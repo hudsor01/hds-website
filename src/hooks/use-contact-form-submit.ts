@@ -15,19 +15,27 @@ export interface ContactFormResponse {
 export function useContactFormSubmit() {
   return useMutation<ContactFormResponse, Error, ContactFormData>({
     mutationFn: async (formData) => {
+      // Validation handled by TanStack Form + Zod
+      // Convert to FormData for the API
+      const form = new FormData()
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          form.append(key, String(value))
+        }
+      })
+
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: form,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || 'Failed to submit form')
+        throw new Error(data.error || 'Submission failed')
       }
 
-      return data
+      return { success: true, message: data.message }
     },
     onSuccess: (data) => {
       if (data.success) {

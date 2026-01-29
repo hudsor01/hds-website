@@ -1,18 +1,10 @@
-import { BackgroundPattern } from '@/components/magicui/BackgroundPattern';
+'use client';
+
+import { BackgroundPattern } from '@/components/ui/BackgroundPattern';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight, BarChart3, ClipboardList, Code2, Rocket, Search, Settings, Zap } from 'lucide-react';
-import type { Metadata } from 'next';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Web Development Services | Hudson Digital Solutions',
-  description: 'Expert web development, custom solutions, and strategic consulting. React, Next.js, Node.js specialists delivering scalable technical solutions starting at $5,000.',
-  openGraph: {
-    title: 'Web Development Services | Hudson Digital Solutions',
-    description: 'Expert web development, custom solutions, and strategic consulting for growing businesses.',
-  },
-};
 
 interface Service {
   title: string;
@@ -20,7 +12,7 @@ interface Service {
   features: string[];
   pricing: string;
   icon: React.ComponentType<{ className?: string }>;
-  surface: string;
+  gradient: string;
 }
 
 const services: Service[] = [
@@ -36,7 +28,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $5,000",
     icon: Code2,
-    surface: "surface-overlay",
+    gradient: "bg-muted",
   },
   {
     title: "Custom Solutions",
@@ -50,7 +42,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $8,000",
     icon: Settings,
-    surface: "surface-overlay",
+    gradient: "bg-info/20",
   },
   {
     title: "Strategic Consulting",
@@ -64,7 +56,7 @@ const services: Service[] = [
     ],
     pricing: "Starting at $2,000",
     icon: BarChart3,
-    surface: "surface-overlay",
+    gradient: "bg-muted",
   },
 ];
 
@@ -147,7 +139,7 @@ export default function ServicesPage() {
 
             <div>
               <div className="flex-center flex-col sm:flex-row gap-content mt-12">
-                <Button asChild variant="accent" size="lg" trackConversion={true}>
+                <Button asChild variant="default" size="lg" trackConversion={true}>
       <Link href="/contact">
         Start Your Project
         <ArrowRight className="w-4 h-4" />
@@ -190,7 +182,7 @@ export default function ServicesPage() {
                 description={service.description}
                 features={service.features}
                 icon={service.icon}
-                surface={service.surface}
+                gradient={service.gradient}
                 pricing={service.pricing}
               />
             ))}
@@ -292,7 +284,7 @@ export default function ServicesPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row flex-center gap-content">
-              <Button asChild variant="accent" size="xl" trackConversion={true}>
+              <Button asChild variant="default" size="xl" trackConversion={true}>
                 <Link href="/contact">
                   Start Your Project
                   <ArrowRight className="w-5 h-5" />

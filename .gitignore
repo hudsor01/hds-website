@@ -9,7 +9,6 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-package-lock.json
 
 # testing
 /coverage
@@ -34,11 +33,13 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+.env.*
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.mcp.json
 
 # direnv
 .envrc
@@ -73,6 +74,14 @@ e2e/dark-design-visual-test.spec.ts-snapshots/
 # Test results directory
 test-results/
 playwright-report/
+
+# Manual guides
+*.md
+!CLAUDE.md
+!README.md
+!master_todo.md
+!docs/plans/*.md
+!.planning/**/*.md
 
 # Log files
 *.log
@@ -123,3 +132,4 @@ src/app/test/
 /playwright/.cache/
 /e2e/screenshots/
 /e2e/videos/
+

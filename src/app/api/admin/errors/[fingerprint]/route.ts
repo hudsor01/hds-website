@@ -3,13 +3,12 @@
  * Returns all occurrences for a fingerprint and allows resolving errors
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server'
+import { type NextRequest, connection } from 'next/server'
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
-import { db } from '@/lib/db'
-import { errorLogs } from '@/lib/schema'
-import { eq, desc } from 'drizzle-orm'
+import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth, validateAdminAuth } from '@/lib/admin-auth'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { resolveErrorSchema } from '@/lib/schemas/error-logs'
 
 const logger = createServerLogger('admin-errors-detail-api')
@@ -20,15 +19,8 @@ interface RouteContext {
   }>
 }
 
-export async function GET(request: NextRequest, context: RouteContext) {
+async function handleErrorDetail(request: NextRequest, context: RouteContext) {
   await connection()
-
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors detail API rate limit exceeded', { ip: clientIp })
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
 
   const authError = await requireAdminAuth()
   if (authError) {
@@ -39,42 +31,47 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const { fingerprint } = await context.params
 
     if (!fingerprint || typeof fingerprint !== 'string') {
-      return NextResponse.json({ error: 'Invalid fingerprint' }, { status: 400 })
+      return errorResponse('Invalid fingerprint', 400)
     }
 
-    const errorOccurrences = await db
-      .select()
-      .from(errorLogs)
-      .where(eq(errorLogs.fingerprint, fingerprint))
-      .orderBy(desc(errorLogs.createdAt))
+    const { data: errorOccurrences, error: fetchError } = await supabaseAdmin
+      .from('error_logs')
+      .select('*')
+      .eq('fingerprint', fingerprint)
+      .order('created_at', { ascending: false })
+
+    if (fetchError) {
+      logger.error('Failed to fetch error occurrences', fetchError)
+      return errorResponse('Failed to fetch error occurrences', 500)
+    }
 
     if (!errorOccurrences || errorOccurrences.length === 0) {
-      return NextResponse.json({ error: 'Error not found' }, { status: 404 })
+      return errorResponse('Error not found', 404)
     }
 
     const firstOccurrence = errorOccurrences[0]
     if (!firstOccurrence) {
-      return NextResponse.json({ error: 'Error not found' }, { status: 404 })
+      return errorResponse('Error not found', 404)
     }
 
     const totalCount = errorOccurrences.length
-    const resolvedCount = errorOccurrences.filter((e) => e.resolvedAt !== null).length
+    const resolvedCount = errorOccurrences.filter((e) => e.resolved_at !== null).length
 
     logger.info('Error details fetched', {
       fingerprint,
       totalOccurrences: totalCount,
     })
 
-    return NextResponse.json({
+    return successResponse({
       fingerprint,
-      error_type: firstOccurrence.errorType,
+      error_type: firstOccurrence.error_type,
       message: firstOccurrence.message,
       level: firstOccurrence.level,
       route: firstOccurrence.route,
       total_count: totalCount,
       resolved_count: resolvedCount,
-      first_seen: errorOccurrences[errorOccurrences.length - 1]?.createdAt?.toISOString(),
-      last_seen: firstOccurrence.createdAt?.toISOString(),
+      first_seen: errorOccurrences[errorOccurrences.length - 1]?.created_at,
+      last_seen: firstOccurrence.created_at,
       occurrences: errorOccurrences.slice(0, 50),
     })
   } catch (error) {
@@ -82,30 +79,25 @@ export async function GET(request: NextRequest, context: RouteContext) {
       'Errors detail API error',
       error instanceof Error ? error : new Error(String(error))
     )
-    return NextResponse.json({ error: 'Failed to fetch error details' }, { status: 500 })
+    return errorResponse('Failed to fetch error details', 500)
   }
 }
 
-export async function PATCH(request: NextRequest, context: RouteContext) {
-  await connection()
+export const GET = withRateLimitParams(handleErrorDetail, 'api');
 
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors resolve API rate limit exceeded', { ip: clientIp })
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
+async function handleErrorResolve(request: NextRequest, context: RouteContext) {
+  await connection()
 
   const auth = await validateAdminAuth()
   if (!auth.isAuthenticated || !auth.user) {
-    return auth.error ?? NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return auth.error ?? errorResponse('Unauthorized', 401)
   }
 
   try {
     const { fingerprint } = await context.params
 
     if (!fingerprint || typeof fingerprint !== 'string') {
-      return NextResponse.json({ error: 'Invalid fingerprint' }, { status: 400 })
+      return errorResponse('Invalid fingerprint', 400)
     }
 
     const body = await request.json()
@@ -115,35 +107,34 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       logger.warn('Invalid resolve error request', {
         errors: parseResult.error.flatten(),
       })
-      return NextResponse.json(
-        {
-          error: 'Invalid request body',
-          details: parseResult.error.flatten().fieldErrors,
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse(parseResult.error)
     }
 
     const { resolved } = parseResult.data
 
     const updateData = resolved
       ? {
-          resolvedAt: new Date(),
-          resolvedBy: auth.user.id,
+          resolved_at: new Date().toISOString(),
+          resolved_by: auth.user.id,
         }
       : {
-          resolvedAt: null,
-          resolvedBy: null,
+          resolved_at: null,
+          resolved_by: null,
         }
 
-    const data = await db
-      .update(errorLogs)
-      .set(updateData)
-      .where(eq(errorLogs.fingerprint, fingerprint))
-      .returning()
+    const { data, error: updateError } = await supabaseAdmin
+      .from('error_logs')
+      .update(updateData)
+      .eq('fingerprint', fingerprint)
+      .select()
+
+    if (updateError) {
+      logger.error('Failed to update error resolution status', updateError)
+      return errorResponse('Failed to update error resolution status', 500)
+    }
 
     if (!data || data.length === 0) {
-      return NextResponse.json({ error: 'Error not found' }, { status: 404 })
+      return errorResponse('Error not found', 404)
     }
 
     logger.info('Error resolution status updated', {
@@ -153,18 +144,19 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       resolvedBy: auth.user.email,
     })
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       fingerprint,
       resolved,
       updated_count: data.length,
-      resolved_at: updateData.resolvedAt?.toISOString() ?? null,
+      resolved_at: updateData.resolved_at,
     })
   } catch (error) {
     logger.error(
       'Errors resolve API error',
       error instanceof Error ? error : new Error(String(error))
     )
-    return NextResponse.json({ error: 'Failed to update error status' }, { status: 500 })
+    return errorResponse('Failed to update error status', 500)
   }
 }
+
+export const PATCH = withRateLimitParams(handleErrorResolve, 'api');

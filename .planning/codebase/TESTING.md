@@ -121,7 +121,7 @@ test.describe('Feature Flow', () => {
   - Input validation
   - Success cases
   - Error cases
-  - Mocked external dependencies (Drizzle/Neon, Resend)
+  - Mocked external dependencies (Supabase, Resend)
 
 **Integration Tests:**
 - Not currently implemented
@@ -183,7 +183,7 @@ test.describe('Feature Flow', () => {
 ## Mocking & Fixtures
 
 **Mocking Strategy:**
-- Mock external services (Drizzle/Neon, Resend)
+- Mock external services (Supabase, Resend)
 - Mock browser APIs in unit tests
 - Use Playwright's built-in network mocking for E2E
 - Avoid mocking internal modules

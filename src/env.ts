@@ -14,15 +14,17 @@ export const env = createEnv({
    * These are only available on the server and never sent to the client
    */
   server: {
-    // Email
+    // Email - Optional (features degrade gracefully without it)
     RESEND_API_KEY: z.string().min(1).optional(),
 
-    // Database (Neon)
-    DATABASE_URL: z.string().url().optional(),
+    // Database - Optional at build time (required at runtime for DB features)
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    SUPABASE_PUBLISHABLE_KEY: z.string().min(1).optional(),
 
-    // Webhooks
+    // Webhooks - Optional
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
-    DATABASE_WEBHOOK_SECRET: z.string().optional(),
+    SLACK_WEBHOOK_URL: z.string().url().optional(),
+    N8N_WEBHOOK_SECRET: z.string().optional(),
 
     // Security - CSRF_SECRET is required in production
     CSRF_SECRET: z
@@ -34,6 +36,11 @@ export const env = createEnv({
         'CSRF_SECRET is required in production'
       ),
     CRON_SECRET: z.string().optional(),
+    SUPABASE_WEBHOOK_SECRET: z.string().optional(),
+
+    // Vercel KV for distributed rate limiting
+    KV_REST_API_URL: z.string().url().optional(),
+    KV_REST_API_TOKEN: z.string().optional(),
 
     // SEO
     GOOGLE_SITE_VERIFICATION: z.string().optional(),
@@ -43,6 +50,7 @@ export const env = createEnv({
 
     // Admin API token
     ADMIN_API_TOKEN: z.string().min(16).optional(),
+    ADMIN_EMAILS: z.string().optional(),
 
     // JWT Secret for authentication
     JWT_SECRET: z.string().min(16).optional(),
@@ -50,11 +58,11 @@ export const env = createEnv({
     // Node environment
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 
+    // Vercel deployment info
+    VERCEL_REGION: z.string().optional(),
+
     // Package metadata (available at build time)
     npm_package_version: z.string().optional(),
-
-    // Neon Auth
-    NEON_AUTH_BASE_URL: z.string().url().optional(),
   },
 
   /**
@@ -62,8 +70,13 @@ export const env = createEnv({
    * These are exposed to the browser (must be prefixed with NEXT_PUBLIC_)
    */
   client: {
+    // Supabase - Optional at build time (required at runtime for DB features)
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1).optional(),
+
     // Base URL
     NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000"),
+    NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
   },
 
   /**
@@ -73,21 +86,30 @@ export const env = createEnv({
   runtimeEnv: {
     // Server
     RESEND_API_KEY: process.env.RESEND_API_KEY,
-    DATABASE_URL: process.env.DATABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
-    DATABASE_WEBHOOK_SECRET: process.env.DATABASE_WEBHOOK_SECRET,
+    SLACK_WEBHOOK_URL: process.env.SLACK_WEBHOOK_URL,
+    N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
+    SUPABASE_WEBHOOK_SECRET: process.env.SUPABASE_WEBHOOK_SECRET,
+    KV_REST_API_URL: process.env.KV_REST_API_URL,
+    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     BASE_URL: process.env.BASE_URL,
     ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,
+    ADMIN_EMAILS: process.env.ADMIN_EMAILS,
     JWT_SECRET: process.env.JWT_SECRET,
     NODE_ENV: process.env.NODE_ENV,
+    VERCEL_REGION: process.env.VERCEL_REGION,
     npm_package_version: process.env.npm_package_version,
-    NEON_AUTH_BASE_URL: process.env.NEON_AUTH_BASE_URL,
 
     // Client
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },
 
   /**

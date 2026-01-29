@@ -3,13 +3,12 @@
  * Handles updating lead status (contacted, converted)
  */
 
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
-import { db } from '@/lib/db';
-import { calculatorLeads } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
 
 const UpdateLeadSchema = z.object({
@@ -19,23 +18,10 @@ const UpdateLeadSchema = z.object({
   notes: z.string().optional(),
 });
 
-export async function PATCH(
+async function handleLeadUpdate(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
-
-  // Rate limiting - 5 requests per minute per IP for write operations
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactFormApi');
-  if (!isAllowed) {
-    logger.warn('Lead update rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {
@@ -43,34 +29,29 @@ export async function PATCH(
   }
 
   try {
+    
+
     const body = await request.json();
 
     // Validate input
     const validatedData = UpdateLeadSchema.parse(body);
 
     // Build update object
-    const updates: Partial<{
-      contacted: boolean;
-      contactedAt: Date;
-      converted: boolean;
-      convertedAt: Date;
-      conversionValue: string;
-      notes: string;
-    }> = {};
+    const updates: Record<string, unknown> = {};
 
     if (validatedData.contacted !== undefined) {
       updates.contacted = validatedData.contacted;
       if (validatedData.contacted) {
-        updates.contactedAt = new Date();
+        updates.contacted_at = new Date().toISOString();
       }
     }
 
     if (validatedData.converted !== undefined) {
       updates.converted = validatedData.converted;
       if (validatedData.converted) {
-        updates.convertedAt = new Date();
+        updates.converted_at = new Date().toISOString();
         if (validatedData.conversion_value) {
-          updates.conversionValue = String(validatedData.conversion_value);
+          updates.conversion_value = validatedData.conversion_value;
         }
       }
     }
@@ -80,32 +61,27 @@ export async function PATCH(
     }
 
     // Update lead in database
-    const [data] = await db
-      .update(calculatorLeads)
-      .set(updates)
-      .where(eq(calculatorLeads.id, id))
-      .returning();
+    const { data, error } = await (await createClient())
+      .from('calculator_leads')
+      .update(updates)
+      .eq('id', params.id)
+      .select()
+      .single();
 
-    if (!data) {
-      return NextResponse.json(
-        { error: 'Lead not found' },
-        { status: 404 }
-      );
+    if (error) {
+      logger.error('Failed to update lead:', error as Error);
+      return errorResponse('Failed to update lead', 500);
     }
 
-    return NextResponse.json({ success: true, lead: data });
+    return successResponse({ lead: data });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: error.issues },
-        { status: 400 }
-      );
+      return validationErrorResponse(error);
     }
 
     logger.error('Lead update error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
+
+export const PATCH = withRateLimitParams(handleLeadUpdate, 'contactFormApi');

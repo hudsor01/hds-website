@@ -1,7 +1,10 @@
+'use client';
+
 "use client";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ROUTES, TOOL_ROUTES } from "@/lib/constants";
 import {
   ArrowRight,
   Menu,
@@ -18,11 +21,11 @@ interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
-  { name: "Services", href: "/services" },
-  { name: "Showcase", href: "/showcase" },
-  { name: "Tools", href: "/tools" },
-  { name: "About", href: "/about" },
-  { name: "Pricing", href: "/pricing" },
+  { name: "Services", href: ROUTES.SERVICES },
+  { name: "Portfolio", href: ROUTES.PORTFOLIO },
+  { name: "Tools", href: TOOL_ROUTES.INDEX },
+  { name: "About", href: ROUTES.ABOUT },
+  { name: "Pricing", href: "/pricing" }, // Note: /pricing not in ROUTES yet
 ];
 
 interface NavbarProps {
@@ -50,7 +53,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
           {/* Logo Section */}
           <div className={cn("flex items-center", spacingClass)}>
             <Link
-              href="/"
+              href={ROUTES.HOME}
               className={cn("group flex items-center focus-ring rounded-lg", spacingClass)}
               aria-label="Hudson Digital Solutions - Home"
             >
@@ -97,7 +100,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 
             {/* Secondary CTA - Talk to Sales */}
             <Link
-              href="/contact"
+              href={ROUTES.CONTACT}
               className="hidden lg:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth"
             >
               Talk to Sales
@@ -108,12 +111,12 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
             <div className="hidden sm:block">
               <Button
                 asChild
-                variant="accent"
+                variant="default"
                 size="default"
                 trackConversion={true}
                 onClick={() => handleNavClick()}
               >
-                <Link href="/contact">
+                <Link href={ROUTES.CONTACT}>
                   Start Shipping Faster
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -121,11 +124,9 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
             </div>
 
             {/* Mobile menu button */}
-            <Button
+            <button
               type="button"
-              variant="ghost"
-              size="icon"
-              className="md:hidden relative text-muted-foreground"
+              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -139,7 +140,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               ) : (
                 <Menu className="block h-6 w-6" />
               )}
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -174,7 +175,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 
             <div className="pt-4 space-y-tight">
               <Link
-                href="/contact"
+                href={ROUTES.CONTACT}
                 onClick={() => handleNavClick()}
                 className="block w-full text-center px-4 py-3 text-muted-foreground font-medium rounded-lg hover:bg-accent hover:text-foreground transition-smooth"
               >
@@ -182,13 +183,13 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               </Link>
               <Button
                 asChild
-                variant="accent"
+                variant="default"
                 size="default"
                 trackConversion={true}
                 className="w-full"
                 onClick={() => handleNavClick()}
               >
-                <Link href="/contact">
+                <Link href={ROUTES.CONTACT}>
                   Get Free Roadmap
                 </Link>
               </Button>
