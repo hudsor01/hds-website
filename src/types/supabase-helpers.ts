@@ -1,123 +1,64 @@
 /**
- * Supabase Type Helpers
- * Helper types for Supabase queries to eliminate 'any' usage
+ * Supabase Helper Types
+ *
+ * Derived types for working with Supabase database operations.
  */
 
-import type { Database } from './database';
+import type { Database, Tables, TablesInsert, TablesUpdate } from './database';
 
-// Table row types
-export type LeadAttributionRow = Database['public']['Tables']['lead_attribution']['Row'];
-export type LeadAttributionInsert = Database['public']['Tables']['lead_attribution']['Insert'];
-export type LeadAttributionUpdate = Database['public']['Tables']['lead_attribution']['Update'];
+// Re-export database types
+export type { Database, Tables, TablesInsert, TablesUpdate };
 
-// Case Studies types
-export interface CaseStudy {
-  id: string;
-  slug: string;
-  title: string;
-  client_name: string;
-  client_industry: string;
-  client_logo_url: string | null;
-  challenge: string;
-  solution: string;
-  results: string;
-  metrics: {
-    label: string;
-    value: string;
-    change?: string;
-  }[];
-  testimonial: {
-    quote: string;
-    author: string;
-    role: string;
-    company: string;
-    avatar_url?: string;
-  } | null;
-  video_testimonial_url: string | null;
-  featured: boolean;
-  technologies: string[];
-  project_duration: string | null;
-  project_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// Specific table row types
+export type LeadAttributionRow = Tables<'lead_attribution'>;
+export type LeadAttributionInsert = TablesInsert<'lead_attribution'>;
+export type LeadAttributionUpdate = TablesUpdate<'lead_attribution'>;
 
-export interface CaseStudyInsert extends Omit<CaseStudy, 'id' | 'created_at' | 'updated_at'> {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type CalculatorLeadRow = Tables<'calculator_leads'>;
+export type CalculatorLeadInsert = TablesInsert<'calculator_leads'>;
+export type CalculatorLeadUpdate = TablesUpdate<'calculator_leads'>;
 
-export type CaseStudyUpdate = Partial<CaseStudyInsert>;
+export type LeadNoteRow = Tables<'lead_notes'>;
+export type LeadNoteInsert = TablesInsert<'lead_notes'>;
+export type LeadNoteUpdate = TablesUpdate<'lead_notes'>;
 
-// Newsletter Subscribers types
-export interface NewsletterSubscriber {
-  id: string;
-  email: string;
-  first_name: string | null;
-  subscribed_at: string;
-  unsubscribed_at: string | null;
-  status: 'active' | 'unsubscribed';
-  source: string | null;
-  tags: string[];
-  created_at: string;
-  updated_at: string;
-}
+export type ErrorLogRow = Tables<'error_logs'>;
+export type ErrorLogInsert = TablesInsert<'error_logs'>;
+export type ErrorLogUpdate = TablesUpdate<'error_logs'>;
 
-export interface NewsletterSubscriberInsert extends Omit<NewsletterSubscriber, 'id' | 'created_at' | 'updated_at'> {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type CaseStudyRow = Tables<'case_studies'>;
+export type CaseStudyInsert = TablesInsert<'case_studies'>;
+export type CaseStudyUpdate = TablesUpdate<'case_studies'>;
 
-// Lead Notes types
-export interface LeadNote {
-  id: string;
-  lead_id: string;
-  note: string;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export type ScheduledEmailRow = Tables<'scheduled_emails'>;
+export type ScheduledEmailInsert = TablesInsert<'scheduled_emails'>;
+export type ScheduledEmailUpdate = TablesUpdate<'scheduled_emails'>;
 
-export interface LeadNoteInsert extends Omit<LeadNote, 'id' | 'created_at' | 'updated_at'> {
-  id?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type ProjectRow = Tables<'projects'>;
+export type ProjectInsert = TablesInsert<'projects'>;
+export type ProjectUpdate = TablesUpdate<'projects'>;
 
-// Supabase query result types
-export interface SupabaseQueryResult<T> {
-  data: T | null;
-  error: {
-    message: string;
-    details?: string;
-    hint?: string;
-    code?: string;
-  } | null;
-}
+export type CustomEventRow = Tables<'custom_events'>;
+export type CustomEventInsert = TablesInsert<'custom_events'>;
+export type CustomEventUpdate = TablesUpdate<'custom_events'>;
 
-export interface SupabaseQueryArrayResult<T> {
-  data: T[] | null;
-  error: {
-    message: string;
-    details?: string;
-    hint?: string;
-    code?: string;
-  } | null;
-}
+export type TtlCalculationRow = Tables<'ttl_calculations'>;
+export type TtlCalculationInsert = TablesInsert<'ttl_calculations'>;
+export type TtlCalculationUpdate = TablesUpdate<'ttl_calculations'>;
 
-// Performance entry types for performance-monitoring.ts
-export interface LargestContentfulPaintEntry extends PerformanceEntry {
-  size?: number;
-  element?: Element;
-}
+export type WebVitalRow = Tables<'web_vitals'>;
+export type WebVitalInsert = TablesInsert<'web_vitals'>;
+export type WebVitalUpdate = TablesUpdate<'web_vitals'>;
 
-export interface LayoutShiftEntry extends PerformanceEntry {
-  value?: number;
-  hadRecentInput?: boolean;
-}
+export type LeadRow = Tables<'leads'>;
+export type LeadInsert = TablesInsert<'leads'>;
+export type LeadUpdate = TablesUpdate<'leads'>;
 
-export interface FirstInputEntry extends PerformanceEntry {
-  processingStart?: number;
-}
+export type NewsletterSubscriberRow = Tables<'newsletter_subscribers'>;
+export type NewsletterSubscriberInsert = TablesInsert<'newsletter_subscribers'>;
+export type NewsletterSubscriberUpdate = TablesUpdate<'newsletter_subscribers'>;
+
+export type TestimonialRow = Tables<'testimonials'>;
+export type TestimonialInsert = TablesInsert<'testimonials'>;
+export type TestimonialUpdate = TablesUpdate<'testimonials'>;
+

@@ -206,7 +206,7 @@ describe('Button Component', () => {
 
     rerender(<Button variant="ghost">Ghost</Button>)
     button = screen.getByRole('button')
-    expect(button).toHaveClass('hover:bg-accent')
+    expect(button).toHaveClass('hover:bg-muted/50')
   })
 
   it('should render different sizes', () => {

@@ -1,10 +1,11 @@
 /**
  * Help Articles Library
- * Functions for managing help center content
+ * Functions for managing help center content with Drizzle ORM
  */
 
-import { createClient } from '@/lib/supabase/server';
-import { sanitizePostgrestSearch } from '@/lib/utils';
+import { eq, and, asc, or, ilike } from 'drizzle-orm';
+import { db } from './db';
+import { helpArticles, type HelpArticle as HelpArticleRow } from './schema';
 
 export interface HelpArticle {
   id: string;
@@ -60,64 +61,56 @@ export const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
   },
 ];
 
+const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
+  id: row.id,
+  slug: row.slug,
+  category: row.category,
+  title: row.title,
+  content: row.content,
+  excerpt: row.excerpt,
+  order_index: 0,
+  published: row.published ?? false,
+  created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
+  updated_at: row.updatedAt?.toISOString() ?? new Date().toISOString(),
+});
+
 /**
  * Get all published articles
  */
 export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
-  
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('help_articles')
-    .select('*')
-    .eq('published', true)
-    .order('category')
-    .order('order_index');
+  const data = await db
+    .select()
+    .from(helpArticles)
+    .where(eq(helpArticles.published, true))
+    .orderBy(asc(helpArticles.category), asc(helpArticles.createdAt));
 
-  if (error || !data) {
-    return [];
-  }
-
-  return data as HelpArticle[];
+  return data.map(mapHelpArticle);
 }
 
 /**
  * Get articles by category
  */
 export async function getArticlesByCategory(category: string): Promise<HelpArticle[]> {
-  
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('help_articles')
-    .select('*')
-    .eq('category', category)
-    .eq('published', true)
-    .order('order_index');
+  const data = await db
+    .select()
+    .from(helpArticles)
+    .where(and(eq(helpArticles.category, category), eq(helpArticles.published, true)))
+    .orderBy(asc(helpArticles.createdAt));
 
-  if (error || !data) {
-    return [];
-  }
-
-  return data as HelpArticle[];
+  return data.map(mapHelpArticle);
 }
 
 /**
  * Get a single article by slug
  */
 export async function getArticleBySlug(slug: string): Promise<HelpArticle | null> {
-  
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('help_articles')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .single();
+  const [data] = await db
+    .select()
+    .from(helpArticles)
+    .where(and(eq(helpArticles.slug, slug), eq(helpArticles.published, true)))
+    .limit(1);
 
-  if (error || !data) {
-    return null;
-  }
-
-  return data as HelpArticle;
+  return data ? mapHelpArticle(data) : null;
 }
 
 /**
@@ -164,32 +157,36 @@ export async function getAdjacentArticles(
 export async function searchArticles(query: string): Promise<HelpArticle[]> {
   const rawSearch = query.toLowerCase().trim();
 
-  if (!rawSearch) {
+  if (!rawSearch || rawSearch.length < 2) {
     return [];
   }
 
-  // Sanitize search term to prevent PostgREST filter injection
-  const searchTerms = sanitizePostgrestSearch(rawSearch);
+  // Sanitize search term - remove special characters that could affect queries
+  const searchTerms = rawSearch.replace(/[%_\\]/g, '');
 
-  // Reject if sanitization removed too much content (minimum 2 chars)
   if (searchTerms.length < 2) {
     return [];
   }
 
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('help_articles')
-    .select('*')
-    .eq('published', true)
-    .or(`title.ilike.%${searchTerms}%,content.ilike.%${searchTerms}%,excerpt.ilike.%${searchTerms}%`)
-    .order('order_index')
+  const searchPattern = `%${searchTerms}%`;
+
+  const data = await db
+    .select()
+    .from(helpArticles)
+    .where(
+      and(
+        eq(helpArticles.published, true),
+        or(
+          ilike(helpArticles.title, searchPattern),
+          ilike(helpArticles.content, searchPattern),
+          ilike(helpArticles.excerpt, searchPattern)
+        )
+      )
+    )
+    .orderBy(asc(helpArticles.createdAt))
     .limit(20);
 
-  if (error || !data) {
-    return [];
-  }
-
-  return data as HelpArticle[];
+  return data.map(mapHelpArticle);
 }
 
 /**

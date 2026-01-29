@@ -349,7 +349,7 @@ describe('Rate Limiter', () => {
 // Admin Auth Tests
 // ================================
 
-// Note: Admin auth tests require complex mocking of Supabase client which
+// Note: Admin auth tests require complex mocking of Neon Auth client which
 // creates hoisting issues with Vitest. These tests document the expected
 // behavior. For full testing, use integration tests or manual testing.
 

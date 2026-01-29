@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentType, SVGProps } from 'react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 /**
@@ -66,20 +67,20 @@ interface IconButtonProps {
   type?: 'button' | 'submit' | 'reset'
 }
 
-const buttonVariants = {
-  default: 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
-  ghost: 'text-muted-foreground hover:text-foreground hover:bg-transparent',
-  primary: 'text-accent hover:text-accent/80 hover:bg-accent/10',
-  danger: 'text-destructive-text hover:text-destructive-muted hover:bg-destructive/10'
-}
+const iconButtonVariants = {
+  default: 'text-muted-foreground hover:text-foreground',
+  ghost: 'text-muted-foreground hover:text-foreground',
+  primary: 'text-accent hover:text-accent/80',
+  danger: 'text-destructive hover:text-destructive-darker'
+} as const
 
-const buttonSizes = {
-  xs: 'p-1',
-  sm: 'p-1.5',
-  md: 'p-2',
-  lg: 'p-3',
-  xl: 'card-padding-sm'
-}
+const iconButtonSizes = {
+  xs: 'icon-sm',
+  sm: 'icon-sm',
+  md: 'icon',
+  lg: 'icon-lg',
+  xl: 'icon-lg'
+} as const
 
 export function IconButton({
   icon: IconComponent,
@@ -94,19 +95,19 @@ export function IconButton({
   const iconSize = size === 'xs' ? 'w-3 h-3' : size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-5 h-5' : size === 'lg' ? 'w-6 h-6' : 'w-8 h-8'
 
   return (
-    <button
+    <Button
       type={type}
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
+      variant="ghost"
+      size={iconButtonSizes[size]}
       className={cn(
-        'rounded-lg transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed',
-        buttonSizes[size],
-        buttonVariants[variant],
+        iconButtonVariants[variant],
         className
       )}
     >
       <IconComponent className={iconSize} aria-hidden="true" />
-    </button>
+    </Button>
   )
 }
