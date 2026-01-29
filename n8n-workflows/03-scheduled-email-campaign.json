@@ -32,7 +32,7 @@
       "credentials": {
         "postgres": {
           "id": "2",
-          "name": "Supabase Database"
+          "name": "Neon Database"
         }
       }
     },

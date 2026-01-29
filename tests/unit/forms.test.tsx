@@ -24,10 +24,8 @@ const renderWithQueryClient = (ui: ReactElement) => {
  * Tests ContactForm validation, submission, and error handling
  */
 
-// Set Supabase environment variables for testing
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
-process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key'
-process.env.SUPABASE_PUBLISHABLE_KEY = 'test-service-role-key'
+// Set database environment variables for testing
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 
 describe('ContactForm Component', () => {
   beforeEach(() => {
@@ -39,17 +37,22 @@ describe('ContactForm Component', () => {
       }),
     }));
 
-    // Mock Supabase client
-    mock.module('@supabase/supabase-js', () => ({
-      createClient: mock(() => ({
-        from: mock(() => ({
-          insert: mock(() => ({ select: mock(() => ({ single: mock() })) })),
-          select: mock(() => ({ eq: mock(() => ({ single: mock() })) })),
-        })),
-        auth: {
-          getUser: mock(() => Promise.resolve({ data: { user: null }, error: null })),
-        },
-      })),
+    // Mock database client
+    mock.module('@/lib/db', () => ({
+      db: {
+        select: mock().mockReturnValue({
+          from: mock().mockReturnValue({
+            where: mock().mockReturnValue({
+              limit: mock().mockResolvedValue([]),
+            }),
+          }),
+        }),
+        insert: mock().mockReturnValue({
+          values: mock().mockReturnValue({
+            returning: mock().mockResolvedValue([]),
+          }),
+        }),
+      },
     }));
   });
 
