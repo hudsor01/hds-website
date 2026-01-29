@@ -7,7 +7,7 @@ This directory contains Grafana dashboard JSON files for monitoring the Hudson D
 ### Application Errors Dashboard
 **File:** `dashboards/application-errors.json`
 
-Monitors and visualizes application errors from the Supabase `error_logs` table.
+Monitors and visualizes application errors from the Neon PostgreSQL `error_logs` table.
 
 **Panels:**
 1. **Error Rate Over Time** - Timeseries chart showing errors per hour
@@ -38,17 +38,17 @@ curl -X POST \
 ## Configuration
 
 ### Datasource UID
-The dashboard is configured to use a PostgreSQL datasource with UID `supabase`.
+The dashboard is configured to use a PostgreSQL datasource with UID `neon`.
 
 **If your datasource UID is different:**
 1. After importing, edit the dashboard
 2. For each panel, click the panel title → **Edit**
-3. Change the datasource to your Supabase PostgreSQL datasource
+3. Change the datasource to your Neon PostgreSQL datasource
 4. Save the dashboard
 
 **To check your datasource UID:**
 1. Go to **Connections** → **Data sources**
-2. Click on your Supabase datasource
+2. Click on your Neon datasource
 3. The UID is in the URL: `/datasources/edit/YOUR_UID`
 
 ### Time Range
@@ -57,7 +57,7 @@ The dashboard is configured to use a PostgreSQL datasource with UID `supabase`.
 - Customizable via dashboard time picker
 
 ### Required Permissions
-The Supabase user/role needs `SELECT` permission on the `error_logs` table:
+The Neon database user/role needs `SELECT` permission on the `error_logs` table:
 
 ```sql
 GRANT SELECT ON error_logs TO grafana_user;
@@ -98,7 +98,7 @@ WHERE table_name = 'error_logs';
 ```
 
 ### Wrong datasource UID
-Edit each panel and select the correct Supabase datasource from the dropdown.
+Edit each panel and select the correct Neon PostgreSQL datasource from the dropdown.
 
 ## Customization
 
@@ -110,6 +110,6 @@ Feel free to customize the dashboard:
 
 ## Related Files
 
-- Error logging implementation: `src/lib/error-logger.ts`
-- Database schema: `supabase/migrations/20250120000000_create_error_logs.sql`
-- API endpoint: `src/app/api/log-error/route.ts`
+- Error logging implementation: `src/lib/logger.ts`
+- Database schema: `src/lib/schema/system.ts` (errorLogs table)
+- Logger pushes errors to database in production

@@ -84,7 +84,7 @@ export function LeadDetailModal({ lead, isOpen, onClose, onUpdate }: LeadDetailM
             </Button>
           )}
           {!lead.converted && (
-            <Button onClick={handleMarkConverted} disabled={isUpdating} className="bg-success-dark hover:bg-success-darker">
+            <Button onClick={handleMarkConverted} disabled={isUpdating} variant="default">
               Mark as Converted
             </Button>
           )}

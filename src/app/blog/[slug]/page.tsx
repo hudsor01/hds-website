@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <article className="pb-16">
         <header className="relative bg-background py-section-sm overflow-hidden">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute inset-0 bg-(radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15)_0%,transparent_50%))"></div>
+            <div className="absolute inset-0 surface-overlay"></div>
           </div>
 
           <div className="relative container-narrow">

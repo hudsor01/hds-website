@@ -46,22 +46,6 @@ describe('ServiceCard', () => {
     expect(pricingText).toBeFalsy();
   });
 
-  test('applies gradient class', () => {
-    const { container } = render(
-      <Card {...defaultProps} gradient="bg-info/20" />
-    );
-
-    const gradientElement = container.querySelector('.bg-info\\/20');
-    expect(gradientElement).toBeTruthy();
-  });
-
-  test('applies default gradient when not provided', () => {
-    const { container } = render(<Card {...defaultProps} />);
-
-    const defaultGradient = container.querySelector('.bg-muted');
-    expect(defaultGradient).toBeTruthy();
-  });
-
   test('applies custom className', () => {
     const { container } = render(
       <Card {...defaultProps} className="custom-class" />

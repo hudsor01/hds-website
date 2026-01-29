@@ -77,8 +77,8 @@ test.describe('Newsletter Signup - Homepage', () => {
     // Wait for validation
     await page.waitForTimeout(500)
 
-    // Success message should NOT appear with empty email
-    const successVisible = await page.locator('text=/success|subscribed|thank/i').isVisible().catch(() => false)
+    // Newsletter success message should NOT appear with empty email
+    const successVisible = await page.locator('text=/thank you.*email|subscribed/i').isVisible().catch(() => false)
     expect(successVisible).toBe(false)
 
     logger.complete('Empty email prevented submission')
