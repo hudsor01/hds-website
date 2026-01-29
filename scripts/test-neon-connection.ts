@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Test script to verify Neon database connection
  * Run: bun run scripts/test-neon-connection.ts
