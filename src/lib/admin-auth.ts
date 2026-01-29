@@ -3,6 +3,7 @@
  * Server-side authentication for admin API routes using Neon Auth
  */
 
+import { env } from '@/env';
 import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth/server';
 import { logger } from '@/lib/logger';
@@ -13,10 +14,10 @@ let _adminEmails: string[] | null = null;
 
 function getAdminEmails(): string[] {
   if (_adminEmails === null) {
-    if (!process.env.ADMIN_EMAILS?.trim()) {
+    if (!env.ADMIN_EMAILS?.trim()) {
       throw new Error('ADMIN_EMAILS environment variable is required');
     }
-    _adminEmails = process.env.ADMIN_EMAILS.split(',')
+    _adminEmails = env.ADMIN_EMAILS.split(',')
       .map(e => e.trim().toLowerCase())
       .filter(e => e.length > 0);
   }

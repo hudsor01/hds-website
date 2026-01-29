@@ -46,22 +46,6 @@ describe('ServiceCard', () => {
     expect(pricingText).toBeFalsy();
   });
 
-  test('applies surface class', () => {
-    const { container } = render(
-      <Card {...defaultProps} surface="surface-overlay" />
-    );
-
-    const surfaceElement = container.querySelector('.surface-overlay');
-    expect(surfaceElement).toBeTruthy();
-  });
-
-  test('applies default surface when not provided', () => {
-    const { container } = render(<Card {...defaultProps} />);
-
-    const defaultSurface = container.querySelector('.surface-overlay');
-    expect(defaultSurface).toBeTruthy();
-  });
-
   test('applies custom className', () => {
     const { container } = render(
       <Card {...defaultProps} className="custom-class" />

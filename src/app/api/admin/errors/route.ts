@@ -3,13 +3,12 @@
  * Returns grouped error logs with filtering and pagination
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server'
+import { type NextRequest, connection } from 'next/server'
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
-import { db } from '@/lib/db'
-import { errorLogs } from '@/lib/schema'
-import { desc, eq, gte, isNull, isNotNull, or, ilike, and } from 'drizzle-orm'
+import { supabaseAdmin } from '@/lib/supabase'
 import { requireAdminAuth } from '@/lib/admin-auth'
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter'
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { errorLogsQuerySchema } from '@/lib/schemas/error-logs'
 import { safeParseSearchParams } from '@/lib/schemas/query-params'
 import { getStartDateFromRange, sanitizePostgrestSearch } from '@/lib/utils'
@@ -17,15 +16,8 @@ import type { GroupedError, ErrorStats } from '@/types/error-logging'
 
 const logger = createServerLogger('admin-errors-api')
 
-export async function GET(request: NextRequest) {
+async function handleAdminErrors(request: NextRequest) {
   await connection()
-
-  const clientIp = getClientIp(request)
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api')
-  if (!isAllowed) {
-    logger.warn('Errors API rate limit exceeded', { ip: clientIp })
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
-  }
 
   const authError = await requireAdminAuth()
   if (authError) {
@@ -40,13 +32,7 @@ export async function GET(request: NextRequest) {
       logger.warn('Invalid query parameters', {
         errors: parseResult.errors.flatten(),
       })
-      return NextResponse.json(
-        {
-          error: 'Invalid query parameters',
-          details: parseResult.errors.flatten().fieldErrors,
-        },
-        { status: 400 }
-      )
+      return validationErrorResponse(parseResult.errors)
     }
 
     const { timeRange, errorType, route, level, search, resolved, limit, offset } =
@@ -54,79 +40,79 @@ export async function GET(request: NextRequest) {
 
     const startDate = getStartDateFromRange(timeRange)
 
-    // Build conditions array
-    const conditions = [gte(errorLogs.createdAt, startDate)]
+    let query = supabaseAdmin
+      .from('error_logs')
+      .select('*')
+      .gte('created_at', startDate.toISOString())
+      .order('created_at', { ascending: false })
 
     if (errorType) {
-      conditions.push(eq(errorLogs.errorType, errorType))
+      query = query.eq('error_type', errorType)
     }
 
     if (route) {
-      conditions.push(eq(errorLogs.route, route))
+      query = query.eq('route', route)
     }
 
     if (level) {
-      conditions.push(eq(errorLogs.level, level))
+      query = query.eq('level', level)
     }
 
     if (search) {
-      // Sanitize search term to prevent injection
+      // Sanitize search term to prevent PostgREST filter injection
       const sanitizedSearch = sanitizePostgrestSearch(search)
       if (sanitizedSearch.length >= 2) {
-        conditions.push(
-          or(
-            ilike(errorLogs.message, `%${sanitizedSearch}%`),
-            ilike(errorLogs.errorType, `%${sanitizedSearch}%`),
-            ilike(errorLogs.route, `%${sanitizedSearch}%`)
-          )!
+        query = query.or(
+          `message.ilike.%${sanitizedSearch}%,error_type.ilike.%${sanitizedSearch}%,route.ilike.%${sanitizedSearch}%`
         )
       }
     }
 
     if (resolved === 'true') {
-      conditions.push(isNotNull(errorLogs.resolvedAt))
+      query = query.not('resolved_at', 'is', null)
     } else if (resolved === 'false') {
-      conditions.push(isNull(errorLogs.resolvedAt))
+      query = query.is('resolved_at', null)
     }
 
-    const errorLogsData = await db
-      .select()
-      .from(errorLogs)
-      .where(and(...conditions))
-      .orderBy(desc(errorLogs.createdAt))
+    const { data: errorLogs, error: fetchError } = await query
+
+    if (fetchError) {
+      logger.error('Failed to fetch error logs', fetchError)
+      return errorResponse('Failed to fetch error logs', 500)
+    }
 
     const groupedErrorsMap = new Map<string, GroupedError>()
 
-    for (const errorLog of errorLogsData || []) {
+    for (const errorLog of errorLogs || []) {
       const existing = groupedErrorsMap.get(errorLog.fingerprint)
 
       if (existing) {
         existing.count += 1
-        const logDate = new Date(errorLog.createdAt)
+        const logDate = new Date(errorLog.created_at)
         const firstSeenDate = new Date(existing.first_seen)
         const lastSeenDate = new Date(existing.last_seen)
 
         if (logDate < firstSeenDate) {
-          existing.first_seen = errorLog.createdAt.toISOString()
+          existing.first_seen = errorLog.created_at
         }
         if (logDate > lastSeenDate) {
-          existing.last_seen = errorLog.createdAt.toISOString()
+          existing.last_seen = errorLog.created_at
         }
 
-        if (errorLog.resolvedAt && !existing.resolved_at) {
-          existing.resolved_at = errorLog.resolvedAt.toISOString()
+        if (errorLog.resolved_at && !existing.resolved_at) {
+          existing.resolved_at = errorLog.resolved_at
         }
       } else {
         groupedErrorsMap.set(errorLog.fingerprint, {
           fingerprint: errorLog.fingerprint,
-          error_type: errorLog.errorType,
+          error_type: errorLog.error_type,
           message: errorLog.message,
           level: errorLog.level as GroupedError['level'],
           count: 1,
-          first_seen: errorLog.createdAt.toISOString(),
-          last_seen: errorLog.createdAt.toISOString(),
+          first_seen: errorLog.created_at,
+          last_seen: errorLog.created_at,
           route: errorLog.route ?? undefined,
-          resolved_at: errorLog.resolvedAt?.toISOString() ?? undefined,
+          resolved_at: errorLog.resolved_at ?? undefined,
         })
       }
     }
@@ -136,11 +122,11 @@ export async function GET(request: NextRequest) {
       .slice(offset, offset + limit)
 
     const stats: ErrorStats = {
-      total_errors: errorLogsData?.length || 0,
-      unique_types: new Set(errorLogsData?.map((e) => e.errorType) || []).size,
-      fatal_count: errorLogsData?.filter((e) => e.level === 'fatal').length || 0,
-      resolved_count: errorLogsData?.filter((e) => e.resolvedAt !== null).length || 0,
-      unresolved_count: errorLogsData?.filter((e) => e.resolvedAt === null).length || 0,
+      total_errors: errorLogs?.length || 0,
+      unique_types: new Set(errorLogs?.map((e) => e.error_type) || []).size,
+      fatal_count: errorLogs?.filter((e) => e.level === 'fatal').length || 0,
+      resolved_count: errorLogs?.filter((e) => e.resolved_at !== null).length || 0,
+      unresolved_count: errorLogs?.filter((e) => e.resolved_at === null).length || 0,
     }
 
     logger.info('Error logs fetched', {
@@ -149,7 +135,7 @@ export async function GET(request: NextRequest) {
       groupedCount: groupedErrors.length,
     })
 
-    return NextResponse.json({
+    return successResponse({
       errors: groupedErrors,
       stats,
       pagination: {
@@ -164,6 +150,8 @@ export async function GET(request: NextRequest) {
       'Errors API error',
       error instanceof Error ? error : new Error(String(error))
     )
-    return NextResponse.json({ error: 'Failed to fetch errors' }, { status: 500 })
+    return errorResponse('Failed to fetch errors', 500)
   }
 }
+
+export const GET = withRateLimit(handleAdminErrors, 'api')

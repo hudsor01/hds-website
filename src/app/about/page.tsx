@@ -1,4 +1,4 @@
-import { BackgroundPattern } from "@/components/magicui/BackgroundPattern";
+import { BackgroundPattern } from "@/components/ui/BackgroundPattern";
 import { SEO_CONFIG } from "@/utils/seo";
 import {
     ArrowRight,

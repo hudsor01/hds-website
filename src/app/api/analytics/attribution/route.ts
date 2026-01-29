@@ -3,39 +3,25 @@
  * Stores lead attribution data for marketing analytics
  */
 
-import { db } from '@/lib/db';
-import { leadAttribution, type NewLeadAttribution } from '@/lib/schema';
-import { eq, or } from 'drizzle-orm';
-import { createServerLogger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { castError, createServerLogger } from '@/lib/logger';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { leadAttributionRequestSchema, type LeadAttributionRequest } from '@/lib/schemas/api';
-import { type NextRequest, NextResponse } from 'next/server';
+import type { Json } from '@/types/database';
+import type { LeadAttributionInsert } from '@/types/supabase-helpers';
+import { supabaseAdmin } from '@/lib/supabase';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('attribution-api');
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Attribution rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAttributionPost(request: NextRequest) {
   try {
+
     // Parse and validate request body
     const parseResult = leadAttributionRequestSchema.safeParse(await request.json());
 
     if (!parseResult.success) {
-      const issues = parseResult.error.flatten();
-      return NextResponse.json(
-        { error: 'Invalid attribution payload', details: issues.fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const body: LeadAttributionRequest = parseResult.data;
@@ -48,9 +34,14 @@ export async function POST(request: NextRequest) {
       campaign,
       term,
       content,
+      utm_params,
       referrer,
       landing_page,
+      current_page,
       session_id,
+      device_type,
+      browser,
+      os,
     } = body;
 
     logger.info('Attribution data received', {
@@ -62,164 +53,130 @@ export async function POST(request: NextRequest) {
     });
 
     // Check if attribution already exists for this email/session
-    // Build the where condition based on what we have
-    const whereCondition = email
-      ? eq(leadAttribution.sessionId, email)
-      : session_id
-        ? eq(leadAttribution.sessionId, session_id)
-        : null;
+    const { data: existing, error: existingError } = await supabaseAdmin
+      .from('lead_attribution')
+      .select('id, email, first_visit_at, visit_count')
+      .eq(email ? 'email' : 'session_id', (email ?? session_id) as string)
+      .maybeSingle();
 
-    if (!whereCondition) {
-      return NextResponse.json(
-        { error: 'Either email or session_id is required' },
-        { status: 400 }
-      );
-    }
-
-    let existing: typeof leadAttribution.$inferSelect | undefined;
-    try {
-      const results = await db
-        .select({
-          id: leadAttribution.id,
-          sessionId: leadAttribution.sessionId,
-          timestamp: leadAttribution.timestamp,
-        })
-        .from(leadAttribution)
-        .where(
-          or(
-            email ? eq(leadAttribution.sessionId, email) : undefined,
-            session_id ? eq(leadAttribution.sessionId, session_id) : undefined
-          )
-        )
-        .limit(1);
-
-      existing = results[0] as typeof leadAttribution.$inferSelect | undefined;
-    } catch (readError) {
-      logger.error('Failed to read existing attribution', castError(readError));
-      return NextResponse.json(
-        { error: 'Unable to read existing attribution' },
-        { status: 500 }
-      );
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to read existing attribution', castError(existingError));
+      return errorResponse('Unable to read existing attribution', 500);
     }
 
     if (existing) {
-      // Update last visit time - in the new schema we update the timestamp
-      try {
-        await db
-          .update(leadAttribution)
-          .set({
-            timestamp: new Date(),
-          })
-          .where(eq(leadAttribution.id, existing.id));
-      } catch (updateError) {
+      // Update last visit time and visit count
+      const { error: updateError } = await supabaseAdmin
+        .from('lead_attribution')
+        .update({
+          last_visit_at: new Date().toISOString(),
+          visit_count: (existing.visit_count || 0) + 1,
+          current_page,
+        })
+        .eq('id', existing.id);
+
+      if (updateError) {
         logger.error('Failed to update attribution', castError(updateError));
       }
 
       logger.info('Updated existing attribution', { id: existing.id });
 
-      return NextResponse.json({
-        success: true,
+      return successResponse({
         attribution_id: existing.id,
         first_visit: false,
       });
     }
 
     // Create new attribution record
-    const insertData: NewLeadAttribution = {
-      sessionId: session_id || null,
-      touchpoint: landing_page || 'direct',
-      channel: medium || 'direct',
+    const insertData: LeadAttributionInsert = {
+      email: email || 'anonymous@unknown.local',
       source: source || 'direct',
       medium: medium || 'none',
       campaign: campaign || null,
       term: term || null,
       content: content || null,
+      utm_params: (utm_params ?? null) as Json | null,
       referrer: referrer || null,
-      landingPage: landing_page || '',
-      isFirstTouch: true,
-      isLastTouch: true,
-      timestamp: new Date(),
+      landing_page: landing_page || '',
+      current_page: current_page || null,
+      session_id: session_id || null,
+      device_type: device_type || null,
+      browser: browser || null,
+      os: os || null,
+      first_visit_at: new Date().toISOString(),
+      last_visit_at: new Date().toISOString(),
     };
 
-    const result = await db
-      .insert(leadAttribution)
-      .values(insertData)
-      .returning({ id: leadAttribution.id });
+    const { data, error } = await supabaseAdmin
+      .from('lead_attribution')
+      .insert(insertData)
+      .select('id')
+      .single();
 
-    if (!result[0]) {
-      return NextResponse.json(
-        { error: 'Failed to create attribution record' },
-        { status: 500 }
-      );
+    if (error) {
+      logger.error('Failed to store attribution', error as Error);
+      return errorResponse('Failed to store attribution data', 500);
     }
 
-    logger.info('Stored new attribution', { id: result[0].id });
+    if (!data) {
+      return errorResponse('Failed to create attribution record', 500);
+    }
 
-    return NextResponse.json({
-      success: true,
-      attribution_id: result[0].id,
+    logger.info('Stored new attribution', { id: data.id });
+
+    return successResponse({
+      attribution_id: data.id,
       first_visit: true,
     });
   } catch (error) {
     logger.error('Attribution API error', castError(error));
-    return NextResponse.json(
-      { error: 'Failed to process attribution data' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process attribution data', 500);
   }
 }
+
+export const POST = withRateLimit(handleAttributionPost, 'api');
 
 /**
  * GET endpoint for retrieving attribution data
  */
-export async function GET(request: NextRequest) {
-  // Rate limiting - 100 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'readOnlyApi');
-  if (!isAllowed) {
-    logger.warn('Attribution GET rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAttributionGet(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const session_id = searchParams.get('session_id');
 
     if (!email && !session_id) {
-      return NextResponse.json(
-        { error: 'Either email or session_id parameter is required' },
-        { status: 400 }
-      );
+      return errorResponse('Either email or session_id parameter is required', 400);
     }
 
     // Query attribution data
-    const whereCondition = email
-      ? eq(leadAttribution.sessionId, email)
-      : eq(leadAttribution.sessionId, session_id!);
+    const query = supabaseAdmin
+      .from('lead_attribution')
+      .select('*');
 
-    const results = await db
-      .select()
-      .from(leadAttribution)
-      .where(whereCondition)
-      .limit(1);
-
-    if (results.length === 0) {
-      return NextResponse.json(
-        { error: 'Attribution not found' },
-        { status: 404 }
-      );
+    if (email) {
+      query.eq('email', email);
+    } else if (session_id) {
+      query.eq('session_id', session_id);
     }
 
-    return NextResponse.json({ success: true, data: results[0] });
+    const { data, error } = await query.single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // No rows found
+        return errorResponse('Attribution not found', 404);
+      }
+
+      logger.error('Failed to retrieve attribution', error as Error);
+      return errorResponse('Failed to retrieve attribution data', 500);
+    }
+
+    return successResponse({ data });
   } catch (error) {
-    logger.error('Attribution GET error', castError(error));
-    return NextResponse.json(
-      { error: 'Failed to retrieve attribution data' },
-      { status: 500 }
-    );
+    logger.error('Attribution GET error', error instanceof Error ? error : new Error(String(error)));
+    return errorResponse('Failed to retrieve attribution data', 500);
   }
 }
+
+export const GET = withRateLimit(handleAttributionGet, 'readOnlyApi');

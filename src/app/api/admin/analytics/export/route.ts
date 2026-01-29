@@ -4,30 +4,18 @@
  */
 
 import { type NextRequest, NextResponse, connection } from 'next/server';
+import { errorResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
-import { db } from '@/lib/db';
-import { calculatorLeads, leadAttribution } from '@/lib/schema';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsExportQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
-import { eq, gte, lte, and, desc } from 'drizzle-orm';
 import type { LeadExportData } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-export-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsExport(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics export rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -42,92 +30,79 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsExportQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { quality, type: calculatorType, startDate, endDate } = parseResult.data;
 
-    // Build conditions
-    const conditions = [];
+    
 
+    // Build query
+    let query = (await createClient())
+      .from('calculator_leads')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    // Apply filters
     if (quality) {
-      conditions.push(eq(calculatorLeads.leadQuality, quality));
+      query = query.eq('lead_quality', quality);
     }
 
     if (calculatorType) {
-      conditions.push(eq(calculatorLeads.calculatorType, calculatorType));
+      query = query.eq('calculator_type', calculatorType);
     }
 
     if (startDate) {
-      conditions.push(gte(calculatorLeads.createdAt, new Date(startDate)));
+      query = query.gte('created_at', startDate);
     }
 
     if (endDate) {
-      conditions.push(lte(calculatorLeads.createdAt, new Date(endDate)));
+      query = query.lte('created_at', endDate);
     }
 
-    // Query leads
-    const leads = await db
-      .select()
-      .from(calculatorLeads)
-      .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(calculatorLeads.createdAt));
+    const { data: leads, error } = await query;
 
-    // Fetch all attribution data for the leads' emails in one query to avoid N+1
-    const emails = leads.map(l => l.email);
-    const attributionMap = new Map<string, typeof leadAttribution.$inferSelect>();
-
-    if (emails.length > 0) {
-      // Query all attributions and filter by email in memory
-      // This is more efficient than N individual queries
-      const allAttributions = await db.select().from(leadAttribution);
-      for (const attr of allAttributions) {
-        // Match by session or lead association - use referrer/landing page as key
-        // Since the original code matched by email, we'll need to check if there's an email field
-        // The leadAttribution schema doesn't have email, so we'll match by leadId
-        if (attr.leadId) {
-          // Find the lead that matches this attribution
-          const matchingLead = leads.find(l => l.id === attr.leadId);
-          if (matchingLead) {
-            attributionMap.set(matchingLead.email, attr);
-          }
-        }
-      }
+    if (error) {
+      logger.error('Failed to fetch leads for export', error as Error);
+      return errorResponse('Failed to fetch leads', 500);
     }
 
     // Enrich leads with attribution data
-    const enrichedLeads: LeadExportData[] = leads.map((lead): LeadExportData => {
-      const attribution = attributionMap.get(lead.email);
+    const enrichedLeads: LeadExportData[] = await Promise.all(
+      (leads || []).map(async (lead): Promise<LeadExportData> => {
+        const { data: attribution } = await (await createClient())
+          .from('lead_attribution')
+          .select('*')
+          .eq('email', lead.email)
+          .single();
 
-      return {
-        id: lead.id,
-        email: lead.email,
-        name: lead.name,
-        company: lead.company,
-        phone: lead.phone,
-        calculator_type: lead.calculatorType,
-        lead_score: lead.leadScore,
-        lead_quality: lead.leadQuality,
-        contacted: lead.contacted,
-        converted: lead.converted,
-        created_at: lead.createdAt.toISOString(),
-        contacted_at: lead.contactedAt?.toISOString() ?? null,
-        converted_at: lead.convertedAt?.toISOString() ?? null,
-        conversion_value: lead.conversionValue ? Number(lead.conversionValue) : null,
-        attribution: attribution ? {
-          source: attribution.source ?? '',
-          medium: attribution.medium ?? '',
-          campaign: attribution.campaign ?? '',
-          device_type: '', // Not in current schema
-          browser: '', // Not in current schema
-          referrer: attribution.referrer ?? '',
-          landing_page: attribution.landingPage ?? '',
-        } : null,
-      };
-    });
+        return {
+          id: lead.id,
+          email: lead.email,
+          name: lead.name,
+          company: lead.company,
+          phone: lead.phone,
+          calculator_type: lead.calculator_type,
+          lead_score: lead.lead_score,
+          lead_quality: lead.lead_quality,
+          contacted: lead.contacted,
+          converted: lead.converted,
+          created_at: lead.created_at,
+          contacted_at: lead.contacted_at,
+          converted_at: lead.converted_at,
+          conversion_value: lead.conversion_value,
+          attribution: attribution ? {
+            source: attribution.source ?? '',
+            medium: attribution.medium ?? '',
+            campaign: attribution.campaign ?? '',
+            device_type: attribution.device_type ?? '',
+            browser: attribution.browser ?? '',
+            referrer: attribution.referrer ?? '',
+            landing_page: attribution.landing_page ?? '',
+          } : null,
+        };
+      })
+    );
 
     // Convert to CSV
     const csv = convertToCSV(enrichedLeads);
@@ -141,10 +116,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     logger.error('Analytics export error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to export leads' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to export leads', 500);
   }
 }
 
@@ -220,3 +192,5 @@ function convertToCSV(leads: LeadExportData[]): string {
 
   return csvContent;
 }
+
+export const GET = withRateLimit(handleAnalyticsExport, 'api');

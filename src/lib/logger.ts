@@ -1,11 +1,11 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging with Drizzle ORM error tracking
+ * Provides server and client logging with Supabase error tracking
  */
 
-import { db } from '@/lib/db'
-import { errorLogs } from '@/lib/schema'
-import { castError } from '@/lib/utils/errors'
+import { env } from '@/env';
+import { supabaseAdmin } from '@/lib/supabase'
+import type { Json } from '@/types/database'
 import type {
   ErrorLogData,
   LogContext,
@@ -18,10 +18,58 @@ import type { ErrorContext, ErrorLogPayload, ErrorLevel } from '@/types/error-lo
 export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
 
 /**
+ * Cast unknown error to Error object
+ */
+export function castError(error: unknown): ErrorLogData {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack ?? undefined,
+      cause: (error as Error & { cause?: unknown }).cause ?? undefined
+    };
+  }
+
+  if (typeof error === 'string') {
+    return {
+      name: 'StringError',
+      message: error,
+      stack: undefined,
+      cause: undefined
+    };
+  }
+
+  if (error === null || error === undefined) {
+    return {
+      name: 'NullError',
+      message: String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  }
+
+  try {
+    return {
+      name: 'UnknownError',
+      message: typeof error === 'object' ? JSON.stringify(error) : String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  } catch {
+    return {
+      name: 'UnknownError',
+      message: String(error),
+      stack: undefined,
+      cause: undefined
+    };
+  }
+}
+
+/**
  * Generate a fingerprint for grouping identical errors.
  * Hash of: error_type + message + first stack frame
  */
-export function generateFingerprint(
+function generateFingerprint(
   errorType: string,
   message: string,
   stack?: string
@@ -40,32 +88,28 @@ export function generateFingerprint(
 }
 
 /**
- * Push error to database (non-blocking, fire-and-forget)
+ * Push error to Supabase (non-blocking, fire-and-forget)
  * Note: Uses console.error as final fallback since we can't use the logger to log logger failures
  */
-async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
+async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
   try {
-    await db.insert(errorLogs).values({
-      level: payload.level,
-      errorType: payload.error_type,
-      fingerprint: payload.fingerprint,
-      message: payload.message,
-      stackTrace: payload.stack_trace,
-      url: payload.url,
-      method: payload.method,
-      route: payload.route,
-      requestId: payload.request_id,
-      userId: payload.user_id,
-      userEmail: payload.user_email,
-      environment: payload.environment ?? 'development',
-      vercelRegion: payload.vercel_region,
-      metadata: payload.metadata,
-    })
+    // Cast metadata to match database Json type
+    const dbPayload = {
+      ...payload,
+      metadata: payload.metadata as Record<string, Json | undefined>,
+    }
+    const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
+    if (error) {
+      // Final fallback - can't use logger here as it would cause recursion
+      if (env.NODE_ENV === 'development') {
+        console.error('[Logger] Failed to push to Supabase:', error.message)
+      }
+    }
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
-    if (process.env.NODE_ENV === 'development') {
-      console.error('[Logger] Failed to push to database:', e)
+    if (env.NODE_ENV === 'development') {
+      console.error('[Logger] Failed to push to Supabase:', e)
     }
   }
 }
@@ -73,7 +117,7 @@ async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
 /**
  * Base logger implementation
  */
-export class BaseLogger implements Logger {
+class BaseLogger implements Logger {
   private context: LogContext;
   private sessionId: string;
   private isBrowser: boolean;
@@ -88,7 +132,7 @@ export class BaseLogger implements Logger {
       this.context.isServer = false;
     } else {
       this.context.isServer = true;
-      this.context.environment = process.env.NODE_ENV ?? 'development';
+      this.context.environment = env.NODE_ENV ?? 'development';
     }
   }
 
@@ -123,7 +167,7 @@ export class BaseLogger implements Logger {
     };
 
     // Only log error and warn levels to console to comply with ESLint rules
-    if (process.env.NODE_ENV === 'development' || this.isBrowser) {
+    if (env.NODE_ENV === 'development' || this.isBrowser) {
       if (level === 'error') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       } else if (level === 'warn') {
@@ -133,7 +177,7 @@ export class BaseLogger implements Logger {
 
     // In production, you might want to send to analytics or external logging service
     // For now, we'll just log error and warn levels to console in production
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
       if (level === 'error' || level === 'warn') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       }
@@ -153,43 +197,26 @@ export class BaseLogger implements Logger {
   }
 
   error(message: string, error?: Error | unknown, context?: ErrorContext): void {
-    const errorData = this.extractErrorData(error);
+    const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to database in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToDatabase('error', message, errorData, context);
+    // Push to Supabase in production (non-blocking, server-side only)
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToSupabase('error', message, errorData, context);
     }
   }
 
   fatal(message: string, error?: Error | unknown, context?: ErrorContext): void {
-    const errorData = this.extractErrorData(error);
+    const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to database in production (non-blocking, server-side only)
-    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToDatabase('fatal', message, errorData, context);
+    // Push to Supabase in production (non-blocking, server-side only)
+    if (env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToSupabase('fatal', message, errorData, context);
     }
   }
 
-  /**
-   * Extracts structured error data from an unknown error value
-   */
-  private extractErrorData(error: unknown): ErrorLogData | undefined {
-    if (!error) {
-      return undefined;
-    }
-
-    const err = castError(error);
-    return {
-      name: err.name,
-      message: err.message,
-      stack: err.stack ?? undefined,
-      cause: (err as Error & { cause?: unknown }).cause ?? undefined,
-    };
-  }
-
-  private pushErrorToDatabase(
+  private pushErrorToSupabase(
     level: ErrorLevel,
     message: string,
     errorData?: ErrorLogData,
@@ -210,8 +237,8 @@ export class BaseLogger implements Logger {
       request_id: context?.requestId,
       user_id: context?.userId,
       user_email: context?.userEmail,
-      environment: process.env.NODE_ENV || 'development',
-      vercel_region: process.env.VERCEL_REGION,
+      environment: env.NODE_ENV || 'development',
+      vercel_region: env.VERCEL_REGION,
       metadata: {
         ...context?.metadata,
         cause: errorData?.cause,
@@ -221,7 +248,7 @@ export class BaseLogger implements Logger {
     }
 
     // Fire and forget - don't await
-    void pushToDatabase(payload)
+    void pushToSupabase(payload)
   }
 
   time(label: string): void {
@@ -264,7 +291,7 @@ export class BaseLogger implements Logger {
 /**
  * Server logger implementation with additional server-specific methods
  */
-export class ServerLoggerImpl extends BaseLogger implements ServerLogger {
+class ServerLoggerImpl extends BaseLogger implements ServerLogger {
   request(method: string, url: string, headers?: Record<string, string>): void {
     this.debug(`HTTP ${method} ${url}`, { headers });
   }
@@ -292,7 +319,7 @@ export function createServerLogger(name?: string): ServerLogger {
   const context: LogContext = {
     component: name || 'server',
     isServer: true,
-    environment: process.env.NODE_ENV ?? 'development',
+    environment: env.NODE_ENV ?? 'development',
   };
 
   if (name) {
@@ -308,128 +335,8 @@ export function createServerLogger(name?: string): ServerLogger {
 export const logger: Logger = new BaseLogger({
   component: 'default',
   isServer: typeof window === 'undefined',
-  environment: process.env.NODE_ENV ?? 'development',
+  environment: env.NODE_ENV ?? 'development',
 });
-
-// ============================================================================
-// Standardized Error Handling Utilities
-// ============================================================================
-
-/**
- * Error severity levels for standardized handling
- */
-export type ErrorSeverity = 'critical' | 'warning' | 'info';
-
-/**
- * Options for handleError utility
- */
-export interface HandleErrorOptions {
-  /** Context about where the error occurred */
-  context?: string;
-  /** Additional metadata to log */
-  metadata?: Record<string, unknown>;
-  /** Whether to rethrow the error after logging */
-  rethrow?: boolean;
-  /** Severity level - determines log level used */
-  severity?: ErrorSeverity;
-}
-
-/**
- * Standardized error handler - ensures all errors are logged consistently
- * Use this in catch blocks to ensure errors are never silently swallowed
- *
- * @example
- * try {
- *   await riskyOperation();
- * } catch (error) {
- *   handleError(error, { context: 'riskyOperation', severity: 'warning' });
- * }
- */
-export function handleError(
-  error: unknown,
-  options: HandleErrorOptions = {}
-): ErrorLogData {
-  const { context, metadata, rethrow = false, severity = 'warning' } = options;
-  const err = castError(error);
-  const errorData: ErrorLogData = {
-    name: err.name,
-    message: err.message,
-    stack: err.stack ?? undefined,
-    cause: (err as Error & { cause?: unknown }).cause ?? undefined,
-  };
-
-  const message = context ? `[${context}] ${errorData.message}` : errorData.message;
-  const logData = metadata ? { ...metadata, errorData } : errorData;
-
-  // Log based on severity level
-  switch (severity) {
-    case 'critical':
-      logger.error(message, error);
-      break;
-    case 'warning':
-      logger.warn(message, logData);
-      break;
-    default:
-      logger.info(message, logData);
-  }
-
-  if (rethrow) {
-    throw error;
-  }
-
-  return errorData;
-}
-
-/**
- * Result type for safeExecute
- */
-export type SafeResult<T> =
-  | { success: true; data: T; error: null }
-  | { success: false; data: null; error: ErrorLogData };
-
-/**
- * Execute a function safely with automatic error logging
- * Returns a result object instead of throwing
- *
- * @example
- * const result = await safeExecute(
- *   () => fetchData(),
- *   { context: 'fetchData', severity: 'warning' }
- * );
- * if (result.success) {
- *   // use result.data
- * } else {
- *   // handle result.error
- * }
- */
-export async function safeExecute<T>(
-  fn: () => T | Promise<T>,
-  options: HandleErrorOptions = {}
-): Promise<SafeResult<T>> {
-  try {
-    const data = await fn();
-    return { success: true, data, error: null };
-  } catch (error) {
-    const errorData = handleError(error, options);
-    return { success: false, data: null, error: errorData };
-  }
-}
-
-/**
- * Synchronous version of safeExecute
- */
-export function safeExecuteSync<T>(
-  fn: () => T,
-  options: HandleErrorOptions = {}
-): SafeResult<T> {
-  try {
-    const data = fn();
-    return { success: true, data, error: null };
-  } catch (error) {
-    const errorData = handleError(error, options);
-    return { success: false, data: null, error: errorData };
-  }
-}
 
 // Add global type for session ID
 declare global {

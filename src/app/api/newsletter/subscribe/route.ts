@@ -3,80 +3,73 @@
  * Handles email list subscriptions and welcome email
  */
 
-import { eq } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { newsletterSubscribers, type NewNewsletterSubscriber } from '@/lib/schema';
 import { logger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
-import { EMAIL_CONFIG } from '@/lib/config/email';
-import { type NextRequest, NextResponse } from 'next/server';
+import { BUSINESS_INFO } from '@/lib/constants';
+import type { Database } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
+import { type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
+
+type NewsletterSubscriberInsert = Database['public']['Tables']['newsletter_subscribers']['Insert'];
 
 const SubscribeSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  email: z.string().email('Invalid email address'),
   source: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
-  if (!isAllowed) {
-    logger.warn('Newsletter rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    );
-  }
-
+async function handleNewsletterSubscribe(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, source } = SubscribeSchema.parse(body);
+    const validation = SubscribeSchema.safeParse(body);
+
+    if (!validation.success) {
+      return validationErrorResponse(validation.error);
+    }
+
+    const { email, source } = validation.data;
 
     // Check if already subscribed
-    const existing = await db
-      .select()
-      .from(newsletterSubscribers)
-      .where(eq(newsletterSubscribers.email, email))
-      .limit(1);
+    const { data: existing, error: existingError} = await supabaseAdmin
+      .from('newsletter_subscribers')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
 
-    const existingSubscriber = existing[0];
-    if (existingSubscriber && existingSubscriber.status === 'active') {
-      return NextResponse.json(
-        { error: 'Email already subscribed' },
-        { status: 400 }
-      );
+    if (existingError && existingError.code !== 'PGRST116') {
+      logger.error('Failed to check existing subscriber:', existingError as Error);
+      return errorResponse('Unable to process subscription', 500);
+    }
+
+    if (existing && existing.status === 'active') {
+      return errorResponse('Email already subscribed', 400);
     }
 
     // Insert or update subscriber
-    const subscriberData: NewNewsletterSubscriber = {
+    const subscriberData: NewsletterSubscriberInsert = {
       email,
       status: 'active',
       source: source || 'website',
-      subscribedAt: new Date(),
-      unsubscribedAt: null,
+      subscribed_at: new Date().toISOString(),
+      unsubscribed_at: null,
     };
 
-    await db
-      .insert(newsletterSubscribers)
-      .values(subscriberData)
-      .onConflictDoUpdate({
-        target: newsletterSubscribers.email,
-        set: {
-          status: 'active',
-          source: subscriberData.source,
-          subscribedAt: subscriberData.subscribedAt,
-          unsubscribedAt: null,
-          updatedAt: new Date(),
-        },
-      });
+    const { error: dbError } = await supabaseAdmin
+      .from('newsletter_subscribers')
+      .upsert(subscriberData);
+
+    if (dbError) {
+      logger.error('Failed to save subscriber:', dbError);
+      return errorResponse('Failed to subscribe', 500);
+    }
 
     // Send welcome email
     try {
       if (isResendConfigured()) {
         await getResendClient().emails.send({
-        from: EMAIL_CONFIG.FROM_PERSONAL,
+        from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
         to: email,
         subject: 'Welcome to Hudson Digital Solutions Newsletter',
         html: `
@@ -105,19 +98,11 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if email fails
     }
 
-    return NextResponse.json({ success: true, message: 'Successfully subscribed!' });
+    return successResponse(undefined, 'Successfully subscribed!');
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid email address' },
-        { status: 400 }
-      );
-    }
-
     logger.error('Newsletter subscription error:', error as Error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }
+
+export const POST = withRateLimit(handleNewsletterSubscribe, 'newsletter');

@@ -21,6 +21,13 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
    ```
 
 2. **Install dependencies**
+
+   This project uses Bun as the package manager:
+   ```bash
+   bun install
+   ```
+
+   Or with npm:
    ```bash
    npm install
    ```
@@ -30,12 +37,33 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
    cp .env.example .env.local
    ```
 
-   Then edit `.env.local` with your actual values. At minimum, you need:
-   - `RESEND_API_KEY` - for contact form emails
+   Then edit `.env.local` with your actual values.
 
-   See `.env.example` for all available options.
+   **Required Variables** (app won't start without these):
+   - `RESEND_API_KEY` - Email service for contact forms
+   - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` - Supabase public key
+   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (server-only)
+   - `SUPABASE_PUBLISHABLE_KEY` - Supabase publishable key
+
+   **Optional Variables**:
+   - `CSRF_SECRET` - CSRF protection (required in production, 32+ characters)
+   - `DISCORD_WEBHOOK_URL` - Discord notifications for leads
+   - `SLACK_WEBHOOK_URL` - Slack notifications for leads
+   - `ADMIN_EMAILS` - Comma-separated admin email addresses
+
+   See `.env.example` for all available options and detailed documentation.
+
+   **Note**: Environment variables are validated at runtime using [@t3-oss/env-nextjs](https://env.t3.gg). The app will fail to start if required variables are missing or invalid.
 
 4. **Run the development server**
+
+   With Bun (recommended):
+   ```bash
+   bun run dev
+   ```
+
+   Or with npm:
    ```bash
    npm run dev
    ```
@@ -58,7 +86,7 @@ npx tsx test-contact-form.ts
 ```
 
 ### Method 3: Using Local Development
-1. Start the development server: `npm run dev`
+1. Start the development server: `bun run dev` (or `npm run dev`)
 2. Open `http://localhost:3000/contact` in your browser
 3. Fill out and submit the form
 
@@ -103,6 +131,25 @@ The `vercel.json` file includes:
 
 ## Development
 
+With Bun (recommended):
+```bash
+# Run development server
+bun run dev
+
+# Build for production
+bun run build
+
+# Run production build
+bun start
+
+# Type checking
+bun run typecheck
+
+# Linting
+bun run lint
+```
+
+Or with npm:
 ```bash
 # Run development server
 npm run dev
@@ -114,7 +161,7 @@ npm run build
 npm start
 
 # Type checking
-npm run type-check
+npm run typecheck
 
 # Linting
 npm run lint

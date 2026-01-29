@@ -3,14 +3,14 @@
  * Receives and processes analytics events from the client
  */
 
-import { db } from '@/lib/db';
-import { customEvents, type NewCustomEvent } from '@/lib/schema';
 import { env } from '@/env';
-import { createServerLogger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { castError, createServerLogger } from '@/lib/logger';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
+import type { Database, Json } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('analytics-api');
 
@@ -26,33 +26,20 @@ const analyticsEventSchema = z.object({
   userId: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
-
+async function handleAnalyticsPost(request: NextRequest) {
   try {
     // Parse request body with strict schema
     const parseResult = analyticsEventSchema.safeParse(await request.json());
 
     if (!parseResult.success) {
-      return NextResponse.json(
-        { error: 'Invalid analytics payload', details: parseResult.error.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.error);
     }
 
     const { eventName, properties, timestamp, sessionId, userId } = parseResult.data;
     const eventCategory = typeof properties.category === 'string' ? properties.category : 'general';
     const eventLabel = typeof properties.label === 'string' ? properties.label : null;
-    const eventValue = typeof properties.value === 'number' ? String(properties.value) : null;
+    const eventValue = typeof properties.value === 'number' ? properties.value : null;
+    const metadata = (properties ?? {}) as Json;
 
     // Log the event
     logger.info('Analytics event received', {
@@ -63,20 +50,24 @@ export async function POST(request: NextRequest) {
       timestamp: timestamp || Date.now(),
     });
 
-    // Store in database using Drizzle
+    // Store in Supabase
     try {
-      const insertPayload: NewCustomEvent = {
-        eventName,
-        category: eventCategory,
-        label: eventLabel,
-        value: eventValue,
-        sessionId: sessionId || null,
-        userId: userId || null,
-        properties: properties ?? {},
-        timestamp: new Date(timestamp || Date.now()),
+      const insertPayload: Database['public']['Tables']['custom_events']['Insert'] = {
+        event_name: eventName,
+        event_category: eventCategory,
+        event_label: eventLabel,
+        event_value: eventValue,
+        session_id: sessionId || null,
+        user_id: userId || null,
+        metadata,
+        timestamp: new Date(timestamp || Date.now()).toISOString(),
       };
 
-      await db.insert(customEvents).values(insertPayload);
+      const { error } = await supabaseAdmin.from('custom_events').insert(insertPayload);
+
+      if (error) {
+        logger.error('Failed to store analytics event in database', castError(error));
+      }
     } catch (dbError) {
       // Don't fail the request if database insert fails
       logger.error('Failed to store analytics event in database', castError(dbError));
@@ -91,15 +82,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    return successResponse();
   } catch (error) {
     logger.error('Analytics API error', castError(error));
-    return NextResponse.json(
-      { error: 'Failed to process analytics event' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process analytics event', 500);
   }
 }
+
+export const POST = withRateLimit(handleAnalyticsPost, 'api');
 
 // OPTIONS handler for CORS preflight
 export async function OPTIONS() {

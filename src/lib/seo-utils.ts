@@ -1,6 +1,7 @@
 // Native SEO utilities - logic only, no data bloat
 
-import seoKeywords from '@/data/seo-keywords.json'
+import seoKeywords from '@/data/seo-keywords.json';
+import { BUSINESS_INFO } from '@/lib/constants';
 
 /**
  * Generate meta title with company branding
@@ -86,7 +87,7 @@ export function generateOrganizationSchema() {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "Customer Service",
-      "email": "hello@hudsondigitalsolutions.com",
+      "email": BUSINESS_INFO.email,
       "url": "https://hudsondigitalsolutions.com/contact"
     },
     "sameAs": [
@@ -117,6 +118,6 @@ export function generateLocalBusinessSchema() {
     },
     "openingHours": "Mo-Fr 09:00-17:00",
     "telephone": "Contact via website",
-    "email": "hello@hudsondigitalsolutions.com"
+    "email": BUSINESS_INFO.email
   }
 }

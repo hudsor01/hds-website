@@ -3,31 +3,19 @@
  * Returns time-series data for trend visualizations
  */
 
-import { type NextRequest, NextResponse, connection } from 'next/server';
+import { type NextRequest, connection } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
-import { db } from '@/lib/db';
-import { calculatorLeads } from '@/lib/schema';
+import { createClient } from '@/lib/supabase/server';
 import { requireAdminAuth } from '@/lib/admin-auth';
-import { unifiedRateLimiter, getClientIp } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsTrendsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
-import { gte, lte, and, asc } from 'drizzle-orm';
 import type { TrendsLead, DailyDataPoint } from '@/types/admin-analytics';
 
 const logger = createServerLogger('analytics-trends-api');
 
-export async function GET(request: NextRequest) {
+async function handleAnalyticsTrends(request: NextRequest) {
   await connection(); // Force dynamic rendering
-
-  // Rate limiting - 60 requests per minute per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Analytics trends rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
 
   // Require admin authentication
   const authError = await requireAdminAuth();
@@ -42,13 +30,12 @@ export async function GET(request: NextRequest) {
     const parseResult = safeParseSearchParams(searchParams, analyticsTrendsQuerySchema);
     if (!parseResult.success) {
       logger.warn('Invalid query parameters', { errors: parseResult.errors.flatten() });
-      return NextResponse.json(
-        { error: 'Invalid query parameters', details: parseResult.errors.flatten().fieldErrors },
-        { status: 400 }
-      );
+      return validationErrorResponse(parseResult.errors);
     }
 
     const { days } = parseResult.data;
+
+    
 
     // Calculate date range
     const endDate = new Date();
@@ -56,34 +43,20 @@ export async function GET(request: NextRequest) {
     startDate.setDate(startDate.getDate() - days);
 
     // Fetch all leads within date range
-    const leads = await db
-      .select({
-        createdAt: calculatorLeads.createdAt,
-        contacted: calculatorLeads.contacted,
-        converted: calculatorLeads.converted,
-        leadQuality: calculatorLeads.leadQuality,
-        calculatorType: calculatorLeads.calculatorType,
-      })
-      .from(calculatorLeads)
-      .where(
-        and(
-          gte(calculatorLeads.createdAt, startDate),
-          lte(calculatorLeads.createdAt, endDate)
-        )
-      )
-      .orderBy(asc(calculatorLeads.createdAt));
+    const { data: leads, error } = await (await createClient())
+      .from('calculator_leads')
+      .select('created_at, contacted, converted, lead_quality, calculator_type')
+      .gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString())
+      .order('created_at', { ascending: true });
 
-    // Transform to TrendsLead format (snake_case for compatibility)
-    const trendsLeads: TrendsLead[] = leads.map(lead => ({
-      created_at: lead.createdAt.toISOString(),
-      contacted: lead.contacted,
-      converted: lead.converted,
-      lead_quality: lead.leadQuality,
-      calculator_type: lead.calculatorType,
-    }));
+    if (error) {
+      logger.error('Failed to fetch leads for trends', error as Error);
+      return errorResponse('Failed to fetch trends', 500);
+    }
 
     // Group leads by date
-    const dailyData = groupLeadsByDate(trendsLeads, days);
+    const dailyData = groupLeadsByDate(leads || [], days);
 
     // Calculate cumulative data
     const cumulativeLeads = calculateCumulative(dailyData, 'leads');
@@ -91,7 +64,7 @@ export async function GET(request: NextRequest) {
 
     logger.info('Trends fetched', { days, dataPoints: dailyData.length });
 
-    return NextResponse.json({
+    return successResponse({
       dailyData,
       cumulativeLeads,
       cumulativeConversions,
@@ -100,10 +73,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     logger.error('Analytics trends error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to fetch trends' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to fetch trends', 500);
   }
 }
 
@@ -175,3 +145,5 @@ function calculateCumulative(
     };
   });
 }
+
+export const GET = withRateLimit(handleAnalyticsTrends, 'api');

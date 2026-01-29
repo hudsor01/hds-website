@@ -3,35 +3,10 @@
 import { useState, useMemo } from 'react'
 import { useAppForm } from '@/hooks/form-hook'
 import { FieldGroup } from '@/components/ui/field'
-import { Button } from '@/components/ui/button'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import { getFormOptions } from '@/lib/form-utils'
-import { Check } from 'lucide-react'
-
-// Success state component
-function SuccessMessage({ onReset }: { onReset: () => void }) {
-  return (
-    <div className="p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border">
-      <div className="h-full py-6 px-3">
-        <div className="mb-4 flex justify-center border rounded-full w-fit mx-auto p-2">
-          <Check className="size-8" />
-        </div>
-        <h2 className="text-center text-2xl text-pretty font-bold mb-2">
-          Thank you
-        </h2>
-        <p className="text-center text-lg text-pretty text-muted-foreground mb-4">
-          Form submitted successfully, we will get back to you soon
-        </p>
-        <div className="flex justify-center">
-          <Button variant="outline" onClick={onReset}>
-            Send another message
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
+import { FormSuccessMessage } from '@/components/forms'
 
 export default function ContactForm({ className = '' }: { className?: string }) {
   const mutation = useContactFormSubmit()
@@ -68,7 +43,14 @@ export default function ContactForm({ className = '' }: { className?: string }) 
   }
 
   if (showSuccess) {
-    return <SuccessMessage onReset={handleReset} />
+    return (
+      <FormSuccessMessage
+        title="Thank you"
+        message="Form submitted successfully, we will get back to you soon"
+        actionLabel="Send another message"
+        onAction={handleReset}
+      />
+    )
   }
 
   return (

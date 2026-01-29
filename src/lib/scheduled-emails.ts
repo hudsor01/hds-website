@@ -1,14 +1,13 @@
 /**
  * Scheduled Email System
  * Handles delayed email sequences and automated follow-ups
- * Uses Drizzle ORM for persistent storage
+ * Uses Supabase for persistent storage (no memory leaks)
  */
 
-import { eq, and, lte, lt, asc } from 'drizzle-orm';
-import { db } from './db';
-import { scheduledEmails, type ScheduledEmail as ScheduledEmailRow } from './schema';
+import { env } from '@/env';
 import { createServerLogger } from "@/lib/logger";
 import { getResendClient, isResendConfigured } from "@/lib/resend-client";
+import { BUSINESS_INFO } from './constants';
 import {
   cancelEmailSequenceParamsSchema,
   scheduleEmailParamsSchema,
@@ -16,12 +15,30 @@ import {
   type ScheduleEmailParams,
 } from '@/lib/schemas/email';
 import { resendEmailResponseSchema } from '@/lib/schemas/external';
+import type { Database } from '@/types/database';
 import type {
   EmailProcessResult,
   EmailQueueStats,
 } from "@/types/utils";
+import { createClient } from '@supabase/supabase-js';
 import { getEmailSequences, processEmailTemplate } from "./email-utils";
 import { escapeHtml, sanitizeEmailHeader } from "./utils";
+
+function createServiceClient() {
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const publicKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !publicKey) {
+    emailLogger.error('Supabase environment variables are not configured for scheduled emails');
+    return null;
+  }
+
+  return createClient<Database>(
+    supabaseUrl,
+    publicKey,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger();
@@ -29,6 +46,8 @@ emailLogger.setContext({
   component: 'scheduled-emails',
   service: 'email-queue'
 });
+
+
 
 export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> {
   const {
@@ -55,18 +74,35 @@ export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> 
   }
 
   try {
-    const [data] = await db
-      .insert(scheduledEmails)
-      .values({
-        recipientEmail,
-        recipientName,
-        sequenceId,
-        stepId,
-        scheduledFor,
-        variables: variables ?? {},
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('scheduled_emails')
+      .insert({
+        recipient_email: recipientEmail,
+        recipient_name: recipientName,
+        sequence_id: sequenceId,
+        step_id: stepId,
+        scheduled_for: scheduledFor.toISOString(),
+        variables,
         status: 'pending',
       })
-      .returning();
+      .select()
+      .single();
+
+    if (error) {
+      emailLogger.error('Failed to schedule email in Supabase', {
+        error: error.message,
+        recipientEmail,
+        sequenceId,
+        stepId,
+      });
+      return;
+    }
 
     // Log email scheduling with metrics
     emailLogger.info('Email scheduled for delivery', {
@@ -89,7 +125,7 @@ export async function scheduleEmail(params: ScheduleEmailParams): Promise<void> 
 
 /**
  * Schedule email sequence for a new lead
- * Stores in database for persistence
+ * Stores in Supabase for persistence
  */
 export async function scheduleEmailSequence(
   recipientEmail: string,
@@ -132,48 +168,55 @@ export async function processPendingEmails(): Promise<void> {
   const now = new Date();
 
   try {
-    // Fetch pending emails from database
-    const pendingEmails = await db
-      .select()
-      .from(scheduledEmails)
-      .where(
-        and(
-          eq(scheduledEmails.status, 'pending'),
-          lte(scheduledEmails.scheduledFor, now),
-          lt(scheduledEmails.retryCount, 3)
-        )
-      )
-      .orderBy(asc(scheduledEmails.scheduledFor))
-      .limit(100);
+    // Fetch pending emails from Supabase
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return;
+    }
+
+    const { data: pendingEmails, error } = await supabase
+      .from('scheduled_emails')
+      .select('*')
+      .eq('status', 'pending')
+      .lte('scheduled_for', now.toISOString())
+      .lt('retry_count', 3) // Only process if retry_count < max_retries
+      .order('scheduled_for', { ascending: true })
+      .limit(100); // Process in batches of 100
+
+    if (error) {
+      emailLogger.error('Failed to fetch pending emails from Supabase', {
+        error: error.message,
+      });
+      return;
+    }
 
     emailLogger.info('Starting email queue processing', {
-      pendingCount: pendingEmails.length,
+      pendingCount: pendingEmails?.length || 0,
       processTime: now.toISOString()
     });
 
     // Process each email
-    for (const scheduledEmail of pendingEmails) {
+    for (const scheduledEmail of pendingEmails || []) {
       try {
         await sendScheduledEmail(scheduledEmail);
       } catch (error) {
         emailLogger.error('Failed to process scheduled email', {
           emailId: scheduledEmail.id,
-          recipientEmail: scheduledEmail.recipientEmail,
-          sequenceId: scheduledEmail.sequenceId,
+          recipientEmail: scheduledEmail.recipient_email,
+          sequenceId: scheduledEmail.sequence_id,
           error: error instanceof Error ? error.message : String(error)
         });
 
-        const retryCount = scheduledEmail.retryCount ?? 0;
-
         // Increment retry count
-        await db
-          .update(scheduledEmails)
-          .set({
-            retryCount: retryCount + 1,
+        await supabase
+          .from('scheduled_emails')
+          .update({
+            retry_count: scheduledEmail.retry_count + 1,
             error: error instanceof Error ? error.message : String(error),
-            status: retryCount >= 2 ? 'failed' : 'pending',
+            status: scheduledEmail.retry_count >= 2 ? 'failed' : 'pending', // Mark as failed after 3 attempts
           })
-          .where(eq(scheduledEmails.id, scheduledEmail.id));
+          .eq('id', scheduledEmail.id);
       }
     }
   } catch (error) {
@@ -186,45 +229,61 @@ export async function processPendingEmails(): Promise<void> {
 /**
  * Send a scheduled email
  */
-async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<void> {
+async function sendScheduledEmail(
+  scheduledEmail: {
+    id: string;
+    recipient_email: string;
+    recipient_name: string;
+    sequence_id: string;
+    step_id: string;
+    variables: unknown;
+    retry_count: number;
+  }
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  if (!supabase) {
+    return;
+  }
+
   if (!isResendConfigured()) {
     const errorMsg = "Email service not configured";
     emailLogger.warn('Resend API not configured', {
       emailId: scheduledEmail.id,
-      recipientEmail: scheduledEmail.recipientEmail,
-      environment: process.env.NODE_ENV,
-      hasApiKey: !!process.env.RESEND_API_KEY
+      recipientEmail: scheduledEmail.recipient_email,
+      environment: env.NODE_ENV,
+      hasApiKey: !!env.RESEND_API_KEY
     });
 
-    await db
-      .update(scheduledEmails)
-      .set({
+    await supabase
+      .from('scheduled_emails')
+      .update({
         status: 'failed',
         error: errorMsg,
       })
-      .where(eq(scheduledEmails.id, scheduledEmail.id));
+      .eq('id', scheduledEmail.id);
 
     return;
   }
 
   const sequences = getEmailSequences() as Record<string, { subject: string; content: string }>;
-  const sequence = sequences[scheduledEmail.sequenceId];
+  const sequence = sequences[scheduledEmail.sequence_id];
 
   if (!sequence) {
-    const errorMsg = `Email sequence not found: ${scheduledEmail.sequenceId}`;
+    const errorMsg = `Email sequence not found: ${scheduledEmail.sequence_id}`;
 
-    await db
-      .update(scheduledEmails)
-      .set({
+    await supabase
+      .from('scheduled_emails')
+      .update({
         status: 'failed',
         error: errorMsg,
       })
-      .where(eq(scheduledEmails.id, scheduledEmail.id));
+      .eq('id', scheduledEmail.id);
 
     emailLogger.error('Email sequence missing during send', {
       emailId: scheduledEmail.id,
-      recipientEmail: scheduledEmail.recipientEmail,
-      missingSequenceId: scheduledEmail.sequenceId,
+      recipientEmail: scheduledEmail.recipient_email,
+      missingSequenceId: scheduledEmail.sequence_id,
       availableSequences: Object.keys(sequences)
     });
 
@@ -232,7 +291,7 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
   }
 
   // Process template variables
-  const variables = scheduledEmail.variables ?? {};
+  const variables = (scheduledEmail.variables as Record<string, string>) || {};
   const processedSubject = processEmailTemplate(
     sequence.subject,
     variables
@@ -276,13 +335,13 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
           <p style="margin: 0;">
             Richard Hudson<br>
             Hudson Digital Solutions<br>
-            <a href="mailto:hello@hudsondigitalsolutions.com" style="color: #0891b2;">hello@hudsondigitalsolutions.com</a><br>
+            <a href="mailto:${BUSINESS_INFO.email}" style="color: #0891b2;">${BUSINESS_INFO.email}</a><br>
             <a href="https://hudsondigitalsolutions.com" style="color: #0891b2;">hudsondigitalsolutions.com</a>
           </p>
           <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
             You received this email because you requested information from Hudson Digital Solutions.
             <a href="https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(
-              scheduledEmail.recipientEmail
+              scheduledEmail.recipient_email
             )}" style="color: #0891b2;">Unsubscribe</a>
           </p>
         </div>
@@ -290,8 +349,8 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
     `;
 
     const emailResponse = await getResendClient().emails.send({
-      from: "Richard Hudson <hello@hudsondigitalsolutions.com>",
-      to: [scheduledEmail.recipientEmail],
+      from: `Richard Hudson <${BUSINESS_INFO.email}>`,
+      to: [scheduledEmail.recipient_email],
       subject: sanitizeEmailHeader(processedSubject),
       html: htmlContent,
     });
@@ -301,62 +360,85 @@ async function sendScheduledEmail(scheduledEmail: ScheduledEmailRow): Promise<vo
     if (!responseValidation.success) {
       emailLogger.warn('Resend email response validation failed', {
         emailId: scheduledEmail.id,
-        recipientEmail: scheduledEmail.recipientEmail,
+        recipientEmail: scheduledEmail.recipient_email,
         response: emailResponse.data,
         errors: responseValidation.error.issues,
       });
     }
 
-    // Update status in database
-    await db
-      .update(scheduledEmails)
-      .set({
+    // Update status in Supabase
+    await supabase
+      .from('scheduled_emails')
+      .update({
         status: 'sent',
-        sentAt: new Date(),
+        sent_at: new Date().toISOString(),
       })
-      .where(eq(scheduledEmails.id, scheduledEmail.id));
+      .eq('id', scheduledEmail.id);
 
     emailLogger.info('Email sent successfully', {
       emailId: scheduledEmail.id,
-      recipientEmail: scheduledEmail.recipientEmail,
-      recipientName: scheduledEmail.recipientName,
+      recipientEmail: scheduledEmail.recipient_email,
+      recipientName: scheduledEmail.recipient_name,
       subject: processedSubject,
-      sequenceId: scheduledEmail.sequenceId,
+      sequenceId: scheduledEmail.sequence_id,
     });
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : "Unknown error";
-    const retryCount = scheduledEmail.retryCount ?? 0;
 
-    // Update status in database
-    await db
-      .update(scheduledEmails)
-      .set({
-        status: retryCount >= 2 ? 'failed' : 'pending',
+    // Update status in Supabase
+    await supabase
+      .from('scheduled_emails')
+      .update({
+        status: scheduledEmail.retry_count >= 2 ? 'failed' : 'pending',
         error: errorMsg,
-        retryCount: retryCount + 1,
+        retry_count: scheduledEmail.retry_count + 1,
       })
-      .where(eq(scheduledEmails.id, scheduledEmail.id));
+      .eq('id', scheduledEmail.id);
 
     emailLogger.error('Email delivery failed', {
       emailId: scheduledEmail.id,
-      recipientEmail: scheduledEmail.recipientEmail,
+      recipientEmail: scheduledEmail.recipient_email,
       subject: processedSubject,
-      sequenceId: scheduledEmail.sequenceId,
+      sequenceId: scheduledEmail.sequence_id,
       errorMessage: errorMsg,
       errorStack: error instanceof Error ? error.stack : undefined,
-      retryCount: retryCount + 1,
+      retryCount: scheduledEmail.retry_count + 1,
     });
   }
 }
 
 /**
- * Get statistics about scheduled emails from database
+ * Get statistics about scheduled emails from Supabase
  */
 export async function getEmailQueueStats(): Promise<EmailQueueStats> {
   try {
-    const data = await db
-      .select({ status: scheduledEmails.status })
-      .from(scheduledEmails);
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return {
+        pending: 0,
+        sent: 0,
+        failed: 0,
+        total: 0,
+      };
+    }
+
+    const { data, error } = await supabase
+      .from('scheduled_emails')
+      .select('status');
+
+    if (error) {
+      emailLogger.error('Failed to fetch email queue stats', {
+        error: error.message,
+      });
+
+      return {
+        pending: 0,
+        sent: 0,
+        failed: 0,
+        total: 0,
+      };
+    }
 
     const stats = {
       pending: data.filter((e) => e.status === 'pending').length,
@@ -403,24 +485,37 @@ export async function cancelEmailSequence(
   }
 
   try {
-    // Build the where clause based on whether sequenceId is provided
-    const conditions = [
-      eq(scheduledEmails.recipientEmail, recipientEmail),
-      eq(scheduledEmails.status, 'pending'),
-    ];
+    const supabase = createServiceClient();
 
-    if (sequenceId) {
-      conditions.push(eq(scheduledEmails.sequenceId, sequenceId));
+    if (!supabase) {
+      return;
     }
 
-    // Delete matching records
-    await db
-      .delete(scheduledEmails)
-      .where(and(...conditions));
+    let query = supabase
+      .from('scheduled_emails')
+      .delete()
+      .eq('recipient_email', recipientEmail)
+      .eq('status', 'pending');
+
+    if (sequenceId) {
+      query = query.eq('sequence_id', sequenceId);
+    }
+
+    const { error, count } = await query;
+
+    if (error) {
+      emailLogger.error('Failed to cancel email sequence', {
+        error: error.message,
+        recipientEmail,
+        sequenceId,
+      });
+      return;
+    }
 
     emailLogger.info('Email sequence cancelled', {
       recipientEmail,
       sequenceId: sequenceId || 'all',
+      cancelledCount: count || 0,
     });
   } catch (error) {
     emailLogger.error('Exception cancelling email sequence', {
@@ -465,13 +560,26 @@ export async function processEmailsEndpoint(): Promise<EmailProcessResult> {
 // Export queue stats for backwards compatibility
 export async function getScheduledEmailsQueue() {
   try {
-    const data = await db
-      .select()
-      .from(scheduledEmails)
-      .where(eq(scheduledEmails.status, 'pending'))
-      .orderBy(asc(scheduledEmails.scheduledFor));
+    const supabase = createServiceClient();
 
-    return data;
+    if (!supabase) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from('scheduled_emails')
+      .select('*')
+      .eq('status', 'pending')
+      .order('scheduled_for', { ascending: true });
+
+    if (error) {
+      emailLogger.error('Failed to fetch scheduled emails queue', {
+        error: error.message,
+      });
+      return [];
+    }
+
+    return data || [];
   } catch (error) {
     emailLogger.error('Exception fetching scheduled emails queue', {
       error: error instanceof Error ? error.message : String(error),

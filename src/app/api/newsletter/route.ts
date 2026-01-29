@@ -1,12 +1,11 @@
-import { eq, desc, sql } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { leads, type NewLead } from '@/lib/schema';
 import { env } from '@/env';
 import { logger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
-import { NextResponse, type NextRequest } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
+import { type NextRequest } from 'next/server';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 // Define the type for newsletter subscription data
 interface NewsletterSubscription {
@@ -19,17 +18,8 @@ interface NewsletterSubscription {
   user_agent?: string;
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 requests per minute for newsletter signups
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'newsletter');
-  if (!isAllowed) {
-    logger.warn('Newsletter signup rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    );
-  }
+async function handleNewsletterPost(request: NextRequest) {
+  const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
   try {
     const startTime = Date.now();
@@ -55,19 +45,7 @@ export async function POST(request: NextRequest) {
     const validation = newsletterSchema.safeParse(parsedBody);
 
     if (!validation.success) {
-      const errors: Record<string, string[]> = {};
-      validation.error.issues.forEach(issue => {
-        const key = String(issue.path[0]);
-        if (!errors[key]) {
-          errors[key] = [];
-        }
-        errors[key].push(issue.message);
-      });
-
-      return NextResponse.json(
-        { error: 'Validation failed', errors },
-        { status: 400 }
-      );
+      return validationErrorResponse(validation.error);
     }
 
     const validatedData = validation.data;
@@ -96,45 +74,36 @@ export async function POST(request: NextRequest) {
     };
 
     // Save to leads table with newsletter source
-    const leadData: NewLead = {
-      email: subscriptionData.email,
-      name: subscriptionData.first_name || '', // Store first name as part of name
-      source: subscriptionData.source,
-      status: 'newsletter-subscriber', // Different status for newsletter subscribers
-      metadata: {
-        message: 'Signed up for newsletter',
-        consentMarketing: subscriptionData.consent_marketing,
-        consentAnalytics: subscriptionData.consent_analytics,
-        ipAddress: subscriptionData.ip_address,
-        userAgent: subscriptionData.user_agent || null,
-      },
-    };
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .insert([{
+        email: subscriptionData.email,
+        name: subscriptionData.first_name || '', // Store first name as part of name
+        source: subscriptionData.source,
+        status: 'newsletter-subscriber', // Different status for newsletter subscribers
+        message: 'Signed up for newsletter', // Indicate source
+        consent_marketing: subscriptionData.consent_marketing,
+        consent_analytics: subscriptionData.consent_analytics,
+        ip_address: subscriptionData.ip_address,
+        user_agent: subscriptionData.user_agent || null,
+        created_at: new Date().toISOString()
+      }]);
 
-    try {
-      await db.insert(leads).values(leadData);
-    } catch (dbError) {
-      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
-
+    if (error) {
       logger.error('Failed to save newsletter subscriber to database', {
-        error: errorMessage,
+        error: error.message,
         email: subscriptionData.email,
         component: 'NewsletterAPI',
         userFlow: 'newsletter_subscription',
         action: 'POST_newsletter'
       });
 
-      // Check if it's a duplicate email error (PostgreSQL unique violation code)
-      if (errorMessage.includes('23505') || errorMessage.includes('unique constraint')) {
-        return NextResponse.json(
-          { message: 'You are already subscribed to our newsletter!' },
-          { status: 200 } // Return 200 since they're already subscribed
-        );
+      // Check if it's a duplicate email error
+      if (error.code === '23505') { // Unique violation code
+        return successResponse(undefined, 'You are already subscribed to our newsletter!');
       }
 
-      return NextResponse.json(
-        { error: 'Failed to save subscription' },
-        { status: 500 }
-      );
+      return errorResponse('Failed to save subscription', 500);
     }
 
     logger.info('Newsletter subscription saved successfully', {
@@ -151,10 +120,7 @@ export async function POST(request: NextRequest) {
     // 2. Trigger a marketing automation workflow
     // 3. Add to email service provider (Mailchimp, etc.)
 
-    return NextResponse.json({
-      message: 'Thank you for subscribing to our newsletter!',
-      success: true
-    });
+    return successResponse(undefined, 'Thank you for subscribing to our newsletter!');
   } catch (error) {
     logger.error('Error in newsletter signup API', {
       error: error instanceof Error ? error.message : String(error),
@@ -163,26 +129,14 @@ export async function POST(request: NextRequest) {
       action: 'POST_newsletter'
     });
 
-    return NextResponse.json(
-      { error: 'Failed to process subscription' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process subscription', 500);
   }
 }
 
-// GET endpoint for retrieving subscribers (admin only)
-export async function GET(request: NextRequest) {
-  // Rate limiting - 60 requests per minute for admin
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'api');
-  if (!isAllowed) {
-    logger.warn('Newsletter admin rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429 }
-    );
-  }
+export const POST = withRateLimit(handleNewsletterPost, 'newsletter');
 
+// GET endpoint for retrieving subscribers (admin only)
+async function handleNewsletterGet(request: NextRequest) {
   try {
     // Verify this is an admin request
     const authHeader = request.headers.get('authorization');
@@ -190,11 +144,11 @@ export async function GET(request: NextRequest) {
     // Check for admin token (should match the one configured in env)
     if (!env.ADMIN_API_TOKEN) {
       logger.error('ADMIN_API_TOKEN not configured');
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+      return errorResponse('Server configuration error', 500);
     }
 
     if (authHeader !== `Bearer ${env.ADMIN_API_TOKEN}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return errorResponse('Unauthorized', 401);
     }
 
     logger.info('Newsletter subscribers list accessed', {
@@ -211,42 +165,38 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const data = await db
-      .select({
-        email: leads.email,
-        name: leads.name,
-        source: leads.source,
-        createdAt: leads.createdAt,
-      })
-      .from(leads)
-      .where(eq(leads.source, 'newsletter-form'))
-      .orderBy(desc(leads.createdAt))
-      .limit(limit)
-      .offset(offset);
+    const { data, error, count } = await supabaseAdmin
+      .from('leads')
+      .select('email, name, source, created_at', { count: 'exact' })
+      .eq('source', 'newsletter-form') // Filter for newsletter signups only
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
 
-    // Get total count
-    const countResult = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(leads)
-      .where(eq(leads.source, 'newsletter-form'));
-
-    const count = countResult[0]?.count ?? 0;
+    if (error) {
+      logger.error('Failed to retrieve newsletter subscribers', {
+        error: error.message,
+        component: 'NewsletterAPI',
+        userFlow: 'newsletter_admin',
+        action: 'GET_subscribers'
+      });
+      return errorResponse('Failed to retrieve subscribers', 500);
+    }
 
     logger.info('Newsletter subscribers retrieved successfully', {
-      count: data.length,
+      count: data?.length || 0,
       component: 'NewsletterAPI',
       userFlow: 'newsletter_admin',
       action: 'GET_subscribers'
     });
 
-    return NextResponse.json({
+    return successResponse({
       subscribers: data,
-      count,
+      count: count || 0,
       pagination: {
         page,
         limit,
-        total: count,
-        totalPages: Math.ceil(count / limit)
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit)
       }
     });
   } catch (error) {
@@ -257,9 +207,8 @@ export async function GET(request: NextRequest) {
       action: 'GET_subscribers'
     });
 
-    return NextResponse.json(
-      { error: 'Failed to retrieve subscribers' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to retrieve subscribers', 500);
   }
 }
+
+export const GET = withRateLimit(handleNewsletterGet, 'api');

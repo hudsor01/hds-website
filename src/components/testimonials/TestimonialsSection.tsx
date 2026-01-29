@@ -1,7 +1,9 @@
+'use client';
+
 "use client";
 
 import { Star, User } from "lucide-react";
-import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
+import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
 import { cn } from "@/lib/utils";
 
 interface Testimonial {

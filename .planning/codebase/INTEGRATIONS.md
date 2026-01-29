@@ -4,15 +4,16 @@
 
 ## Database
 
-**Neon PostgreSQL with Drizzle ORM:**
-- Connection: `drizzle-orm` with `@neondatabase/serverless` driver
+**Supabase PostgreSQL:**
+- Connection: `@supabase/supabase-js` 2.90.1, `@supabase/ssr` 0.8.0
 - Client creation:
-  - Database: `src/lib/db.ts` (Drizzle client for all queries)
-  - Schema: `src/lib/schema/` (Drizzle schema definitions)
-- Authentication: Neon Auth with `@/lib/auth/client` (browser) and `@/lib/auth/server` (server)
-- Middleware: `proxy.ts` (session handled automatically by Neon Auth SDK)
-- Row Level Security: Database-level policies
-- Environment: `DATABASE_URL`, `NEON_AUTH_BASE_URL`
+  - Browser: `src/utils/supabase/client.ts` (SSR-compatible)
+  - Server: `src/utils/supabase/server.ts` (Server Components with cookies)
+  - Admin: `src/lib/supabase.ts` (service role for public data)
+- Authentication: Built-in auth with SSR support, middleware refresh
+- Middleware: `src/lib/supabase/middleware.ts` (session refresh)
+- Row Level Security: Enabled for multi-tenant data isolation
+- Environment: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ## Email
 
@@ -64,14 +65,15 @@
 
 ## Authentication
 
-**Neon Auth:**
-- Provider: Email/password authentication
-- Session management: Cookie-based with automatic SDK refresh
+**Supabase Auth:**
+- Provider: Email/password, OAuth providers (configurable)
+- Session management: Cookie-based with middleware refresh
 - Client types:
-  - Browser: `authClient` from `@/lib/auth/client` for client components
-  - Server: `getAuthUser()` from `@/lib/auth/server` for Server Components
-- Protected routes: Admin routes use `requireAdminAuth()` from `@/lib/admin-auth`
-- Configuration: Database-level RLS policies
+  - Browser: `createBrowserClient()` for client components
+  - Server: `createServerClient()` for Server Components
+  - Admin: Service role for background operations
+- Protected routes: Middleware-based authentication check
+- Configuration: RLS policies in Supabase dashboard
 
 ## Deployment
 
@@ -94,8 +96,9 @@
 ## Environment Variables
 
 **Required:**
-- `DATABASE_URL` - Neon PostgreSQL connection string
-- `NEON_AUTH_BASE_URL` - Neon Auth service URL (optional, for auth features)
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Admin operations (server-side only)
 - `RESEND_API_KEY` - Email sending
 - `KV_REST_API_URL` - Rate limiting (auto-configured)
 - `KV_REST_API_TOKEN` - Rate limiting (auto-configured)
@@ -118,8 +121,7 @@
 - Server Actions: `src/app/actions/` (form processing, data mutations)
 
 **External Services:**
-- Neon PostgreSQL: Database queries via Drizzle ORM
-- Neon Auth: Authentication operations
+- Supabase API: Database queries, auth operations
 - Resend API: Email delivery
 - Vercel APIs: Analytics, Speed Insights, KV storage
 

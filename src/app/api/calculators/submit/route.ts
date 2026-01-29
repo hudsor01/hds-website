@@ -3,15 +3,17 @@
  * Stores calculator results and triggers email sequences
  */
 
-import { db } from '@/lib/db';
 import { createServerLogger } from '@/lib/logger';
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
+import { notifyHighValueLead } from '@/lib/notifications';
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
+import { BUSINESS_INFO } from '@/lib/constants';
 import { scheduleEmail } from '@/lib/scheduled-emails';
-import { EMAIL_CONFIG } from '@/lib/config/email';
-import { calculatorLeads, type NewCalculatorLead } from '@/lib/schema';
-import { type NextRequest, NextResponse } from 'next/server';
+import type { Database, Json } from '@/types/database';
+import { supabaseAdmin } from '@/lib/supabase';
+import { type NextRequest } from 'next/server';
 import { z } from 'zod';
+import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
 // Schema for calculator submission
 const calculatorSubmitSchema = z.object({
@@ -86,31 +88,15 @@ function getLeadQuality(score: number): 'hot' | 'warm' | 'cold' {
   return 'cold';
 }
 
-export async function POST(request: NextRequest) {
-  // Rate limiting - 3 submissions per 15 minutes per IP
-  const clientIp = getClientIp(request);
-  const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, 'contactForm');
-  if (!isAllowed) {
-    logger.warn('Calculator submission rate limit exceeded', { ip: clientIp });
-    return NextResponse.json(
-      { error: 'Too many submissions. Please try again later.' },
-      { status: 429 }
-    );
-  }
-
+async function handleCalculatorSubmit(request: NextRequest) {
   try {
     const body = await request.json();
 
     // Validate with Zod schema
     const parseResult = calculatorSubmitSchema.safeParse(body);
     if (!parseResult.success) {
-      const errors = parseResult.error.flatten();
-      const firstError = Object.values(errors.fieldErrors)[0]?.[0] || 'Invalid input';
-      logger.warn('Invalid calculator submission', { errors: errors.fieldErrors });
-      return NextResponse.json(
-        { error: firstError, details: errors.fieldErrors },
-        { status: 400 }
-      );
+      logger.warn('Invalid calculator submission', { errors: parseResult.error.issues });
+      return validationErrorResponse(parseResult.error);
     }
 
     const { calculator_type, email, inputs, results } = parseResult.data;
@@ -126,27 +112,28 @@ export async function POST(request: NextRequest) {
       leadQuality,
     });
 
-    // Store in database using Drizzle
-    const insertData: NewCalculatorLead = {
-      calculatorType: calculator_type,
+    // Store in database
+    const insertData = {
+      calculator_type: calculator_type as string,
       email,
       name: typeof inputs.name === 'string' ? inputs.name : null,
       company: typeof inputs.company === 'string' ? inputs.company : null,
       phone: typeof inputs.phone === 'string' ? inputs.phone : null,
-      inputs: inputs,
-      results: results || {},
-      leadScore,
-      leadQuality,
-    };
+      inputs: inputs as Json,
+      results: (results || {}) as Json,
+      lead_score: leadScore,
+      lead_quality: leadQuality,
+    } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
 
-    const [calculatorLead] = await db.insert(calculatorLeads).values(insertData).returning();
+    const { data: calculatorLead, error: dbError } = await supabaseAdmin
+      .from('calculator_leads')
+      .insert(insertData)
+      .select()
+      .single();
 
-    if (!calculatorLead) {
-      logger.error('Failed to store calculator lead - no result returned');
-      return NextResponse.json(
-        { error: 'Failed to store submission' },
-        { status: 500 }
-      );
+    if (dbError) {
+      logger.error('Failed to store calculator lead', dbError);
+      return errorResponse('Failed to store submission', 500);
     }
 
     // Send immediate email with results
@@ -159,7 +146,7 @@ export async function POST(request: NextRequest) {
         );
 
         await getResendClient().emails.send({
-          from: EMAIL_CONFIG.FROM_PERSONAL,
+          from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
           to: email,
           subject: `Your ${getCalculatorName(calculator_type)} Results`,
           html: emailContent,
@@ -172,8 +159,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Extract name for email personalization
+    // Extract name for notifications
     const inputName = typeof inputs.name === 'string' ? inputs.name : '';
+    const nameParts = inputName.split(' ');
+    const firstName = nameParts[0] || email.split('@')[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    // Send high-value lead notifications to Slack/Discord
+    try {
+      await notifyHighValueLead({
+        leadId: calculatorLead.id,
+        firstName,
+        lastName,
+        email,
+        phone: typeof inputs.phone === 'string' ? inputs.phone : undefined,
+        company: typeof inputs.company === 'string' ? inputs.company : undefined,
+        leadScore: leadScore,
+        leadQuality: leadQuality,
+        source: `Calculator - ${getCalculatorName(calculator_type)}`,
+        calculatorType: calculator_type,
+      });
+    } catch (notificationError) {
+      // Log but don't fail the submission if notifications fail
+      logger.error('Failed to send lead notifications', notificationError as Error);
+    }
 
     // Schedule follow-up emails based on lead quality
     const sequenceId = leadQuality === 'hot'
@@ -198,20 +207,18 @@ export async function POST(request: NextRequest) {
       logger.error('Failed to schedule follow-up', scheduleError as Error);
     }
 
-    return NextResponse.json({
-      success: true,
+    return successResponse({
       lead_id: calculatorLead.id,
       lead_score: leadScore,
       lead_quality: leadQuality,
     });
   } catch (error) {
     logger.error('Calculator API error', error instanceof Error ? error : new Error(String(error)));
-    return NextResponse.json(
-      { error: 'Failed to process submission' },
-      { status: 500 }
-    );
+    return errorResponse('Failed to process submission', 500);
   }
 }
+
+export const POST = withRateLimit(handleCalculatorSubmit, 'contactForm');
 
 // Helper functions
 function getCalculatorName(type: string): string {
@@ -238,7 +245,7 @@ function generateResultsEmail(
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background: #111827; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+        <div style="background: linear-gradient(to right, #06b6d4, #0891b2); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
           <h1 style="color: white; margin: 0; font-size: 24px;">Your ${calculatorName} Results</h1>
         </div>
 
@@ -253,30 +260,30 @@ function generateResultsEmail(
                 ([key, value]) => `
               <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 5px;">${key}</div>
-                <div style="font-size: 20px; font-weight: bold; color: #111827;">${value}</div>
+                <div style="font-size: 20px; font-weight: bold; color: #06b6d4;">${value}</div>
               </div>
             `
               )
               .join('')}
           </div>
 
-          <div style="background: #f3f4f6; border-left: 4px solid #d1d5db; padding: 15px; margin-bottom: 20px;">
+          <div style="background: #ecfeff; border-left: 4px solid #06b6d4; padding: 15px; margin-bottom: 20px;">
             <p style="margin: 0; font-size: 14px;">
               <strong>Next Steps:</strong> Our team will review your results and send you personalized recommendations within 24 hours.
             </p>
           </div>
 
           <div style="text-align: center; margin-top: 30px;">
-            <a href="https://hudsondigitalsolutions.com/contact" style="display: inline-block; background: #111827; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            <a href="https://hudsondigitalsolutions.com/contact" style="display: inline-block; background: #06b6d4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
               Schedule Free Consultation
             </a>
           </div>
         </div>
 
         <div style="text-align: center; margin-top: 30px; padding: 20px; color: #6b7280; font-size: 12px;">
-          <p>${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
           <p>
-            <a href="https://hudsondigitalsolutions.com/privacy" style="color: #111827; text-decoration: none;">Privacy Policy</a>
+            <a href="https://hudsondigitalsolutions.com/privacy" style="color: #06b6d4; text-decoration: none;">Privacy Policy</a>
           </p>
         </div>
       </body>

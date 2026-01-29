@@ -1,13 +1,32 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { ttlCalculations, type NewTtlCalculation } from '@/lib/schema';
-import { logger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors'
+import { env } from '@/env';
+import { BUSINESS_INFO } from '@/lib/constants';
+import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
+import { formatCurrency } from '@/lib/utils';
+import type { Database, Json } from '@/types/database';
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+
+type TTLCalculationInsert = Database['public']['Tables']['ttl_calculations']['Insert'];
+
+function createServiceClient() {
+  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = env.SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    logger.error('Supabase environment variables are not configured');
+    return null;
+  }
+
+  return createSupabaseClient<Database>(
+    supabaseUrl,
+    serviceRoleKey,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+}
 
 // Validation schemas
 const saveCalculationSchema = z.object({
@@ -83,6 +102,12 @@ export async function saveCalculation(
   email?: string
 ): Promise<{ success: boolean; shareCode?: string; error?: string }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
     // Validate input
     const validation = saveCalculationSchema.safeParse({ inputs, results, name, email });
     if (!validation.success) {
@@ -96,11 +121,11 @@ export async function saveCalculation(
     const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
-      const [existing] = await db
-        .select({ shareCode: ttlCalculations.shareCode })
-        .from(ttlCalculations)
-        .where(eq(ttlCalculations.shareCode, shareCode))
-        .limit(1);
+      const { data: existing } = await supabase
+        .from('ttl_calculations')
+        .select('share_code')
+        .eq('share_code', shareCode)
+        .single();
 
       if (!existing) {break;}
       shareCode = generateShareCode();
@@ -113,17 +138,24 @@ export async function saveCalculation(
     }
 
     // Insert into database
-    const insertPayload: NewTtlCalculation = {
-      shareCode,
-      inputs: inputs as unknown as Record<string, unknown>,
-      results: results as unknown as Record<string, unknown>,
-      name: name || `$${inputs.purchasePrice.toLocaleString()} - ${inputs.county}`,
+    const insertPayload: TTLCalculationInsert = {
+      share_code: shareCode,
+      inputs: inputs as unknown as Json,
+      results: results as Json,
+      name: name || `${formatCurrency(inputs.purchasePrice)} - ${inputs.county}`,
       email: email ?? null,
       county: inputs.county,
-      purchasePrice: Math.round(inputs.purchasePrice),
+      purchase_price: Math.round(inputs.purchasePrice),
     };
 
-    await db.insert(ttlCalculations).values(insertPayload);
+    const { error: insertError } = await supabase
+      .from('ttl_calculations')
+      .insert(insertPayload);
+
+    if (insertError) {
+      logger.error('Failed to save TTL calculation', { error: insertError });
+      return { success: false, error: 'Failed to save calculation' };
+    }
 
     // If email provided, send results
     if (email) {
@@ -152,31 +184,34 @@ export async function loadCalculation(
       return { success: false, error: 'Invalid share code' };
     }
 
-    // Fetch calculation
-    const [data] = await db
-      .select({
-        inputs: ttlCalculations.inputs,
-        results: ttlCalculations.results,
-        name: ttlCalculations.name,
-        viewCount: ttlCalculations.viewCount,
-      })
-      .from(ttlCalculations)
-      .where(eq(ttlCalculations.shareCode, parsedShareCode.data))
-      .limit(1);
+    const supabase = createServiceClient();
 
-    if (!data) {
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
+    // Fetch calculation
+    const { data, error: fetchError } = await supabase
+      .from('ttl_calculations')
+      .select('inputs, results, name, view_count')
+      .eq('share_code', parsedShareCode.data)
+      .single();
+
+    if (fetchError || !data) {
       logger.warn('TTL calculation not found', { shareCode });
       return { success: false, error: 'Calculation not found or has expired' };
     }
 
-    // Increment view count (fire-and-forget)
-    void db
-      .update(ttlCalculations)
-      .set({
-        viewCount: (data.viewCount ?? 0) + 1,
-        lastViewedAt: new Date(),
-      })
-      .where(eq(ttlCalculations.shareCode, shareCode))
+    // Increment view count (fire-and-forget via service role)
+    void Promise.resolve(
+      supabase
+        .from('ttl_calculations')
+        .update({
+          view_count: (data.view_count ?? 0) + 1,
+          last_viewed_at: new Date().toISOString(),
+        })
+        .eq('share_code', shareCode)
+    )
       .then(() => {/* fire and forget */})
       .catch((err: Error) => logger.error('Failed to update view count', { error: err }));
 
@@ -202,6 +237,12 @@ export async function emailResults(
   email: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return { success: false, error: 'Database not configured' };
+    }
+
     // Validate input
     const validation = emailResultsSchema.safeParse({ shareCode, email });
     if (!validation.success) {
@@ -209,23 +250,19 @@ export async function emailResults(
     }
 
     // Fetch calculation
-    const [data] = await db
-      .select({
-        inputs: ttlCalculations.inputs,
-        results: ttlCalculations.results,
-        name: ttlCalculations.name,
-      })
-      .from(ttlCalculations)
-      .where(eq(ttlCalculations.shareCode, validation.data.shareCode))
-      .limit(1);
+    const { data, error: fetchError } = await supabase
+      .from('ttl_calculations')
+      .select('inputs, results, name')
+      .eq('share_code', validation.data.shareCode)
+      .single();
 
-    if (!data) {
+    if (fetchError || !data) {
       return { success: false, error: 'Calculation not found' };
     }
 
     const inputs = data.inputs as unknown as VehicleInputs;
     const results = data.results as unknown as CalculationResults;
-    const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`;
+    const shareUrl = `${env.NEXT_PUBLIC_SITE_URL || 'https://hudsondigitalsolutions.com'}/texas-ttl-calculator?c=${shareCode}`;
 
     // Ensure results have required properties
     const ttl = results.ttlResults || { salesTax: 0, titleFee: 0, registrationFees: 0, totalTTL: 0 };
@@ -233,9 +270,9 @@ export async function emailResults(
 
     // Send beautiful HTML email
     const { error: emailError } = await getResendClient().emails.send({
-      from: 'Hudson Digital Solutions <hello@hudsondigitalsolutions.com>',
+      from: `${BUSINESS_INFO.name} <${BUSINESS_INFO.email}>`,
       to: email,
-      subject: `Your Texas TTL Calculator Results - $${inputs.purchasePrice.toLocaleString()}`,
+      subject: `Your Texas TTL Calculator Results - ${formatCurrency(inputs.purchasePrice)}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -248,7 +285,7 @@ export async function emailResults(
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
             <!-- Header -->
             <tr>
-              <td style="padding: 32px 24px; background: #111827; text-align: center;">
+              <td style="padding: 32px 24px; background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); text-align: center;">
                 <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Texas TTL Calculator</h1>
                 <p style="margin: 8px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Your calculation results</p>
               </td>
@@ -261,10 +298,10 @@ export async function emailResults(
                   <tr>
                     <td>
                       <h2 style="margin: 0 0 12px; color: #1e293b; font-size: 18px;">Vehicle Details</h2>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Purchase Price:</strong> $${inputs.purchasePrice.toLocaleString()}</p>
+                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Purchase Price:</strong> ${formatCurrency(inputs.purchasePrice)}</p>
                       <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>County:</strong> ${inputs.county}</p>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Down Payment:</strong> $${(inputs.downPayment || 0).toLocaleString()}</p>
-                      ${inputs.tradeInValue ? `<p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Trade-In:</strong> $${inputs.tradeInValue.toLocaleString()}</p>` : ''}
+                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Down Payment:</strong> ${formatCurrency(inputs.downPayment || 0)}</p>
+                      ${inputs.tradeInValue ? `<p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Trade-In:</strong> ${formatCurrency(inputs.tradeInValue)}</p>` : ''}
                     </td>
                   </tr>
                 </table>
@@ -281,7 +318,7 @@ export async function emailResults(
                       <span style="color: #64748b;">Sales Tax (6.25%)</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.salesTax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.salesTax)}</span>
                     </td>
                   </tr>
                   <tr>
@@ -289,7 +326,7 @@ export async function emailResults(
                       <span style="color: #64748b;">Title & Fees</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.titleFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.titleFee)}</span>
                     </td>
                   </tr>
                   <tr>
@@ -297,15 +334,15 @@ export async function emailResults(
                       <span style="color: #64748b;">Registration</span>
                     </td>
                     <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">$${ttl.registrationFees.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.registrationFees)}</span>
                     </td>
                   </tr>
                   <tr>
                     <td style="padding: 12px 0;">
-                      <span style="color: #111827; font-weight: 600; font-size: 16px;">Total TTL</span>
+                      <span style="color: #0891b2; font-weight: 600; font-size: 16px;">Total TTL</span>
                     </td>
                     <td style="padding: 12px 0; text-align: right;">
-                      <span style="color: #111827; font-weight: 700; font-size: 20px;">$${ttl.totalTTL.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      <span style="color: #0891b2; font-weight: 700; font-size: 20px;">${formatCurrency(ttl.totalTTL)}</span>
                     </td>
                   </tr>
                 </table>
@@ -315,11 +352,11 @@ export async function emailResults(
             <!-- Monthly Payment -->
             <tr>
               <td style="padding: 0 24px 24px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #111827; border-radius: 8px; padding: 20px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0891b2; border-radius: 8px; padding: 20px;">
                   <tr>
                     <td style="text-align: center;">
                       <p style="margin: 0 0 4px; color: rgba(255,255,255,0.8); font-size: 14px;">Estimated Monthly Payment</p>
-                      <p style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">$${payment.monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                      <p style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">${formatCurrency(payment.monthlyPayment)}</p>
                       <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">${inputs.loanTermMonths || 60} months @ ${inputs.interestRate || 6.5}% APR</p>
                     </td>
                   </tr>
@@ -330,7 +367,7 @@ export async function emailResults(
             <!-- CTA Button -->
             <tr>
               <td style="padding: 0 24px 32px; text-align: center;">
-                <a href="${shareUrl}" style="display: inline-block; padding: 12px 32px; background-color: #111827; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">View Full Results</a>
+                <a href="${shareUrl}" style="display: inline-block; padding: 12px 32px; background-color: #0891b2; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">View Full Results</a>
                 <p style="margin: 12px 0 0; color: #94a3b8; font-size: 12px;">This link will work for 90 days</p>
               </td>
             </tr>
@@ -342,7 +379,7 @@ export async function emailResults(
                   <strong>Disclaimer:</strong> This calculator provides estimates only. Actual fees may vary by county.
                 </p>
                 <p style="margin: 0; color: #94a3b8; font-size: 12px;">
-                  Powered by <a href="https://hudsondigitalsolutions.com" style="color: #111827; text-decoration: none;">Hudson Digital Solutions</a>
+                  Powered by <a href="https://hudsondigitalsolutions.com" style="color: #0891b2; text-decoration: none;">Hudson Digital Solutions</a>
                 </p>
               </td>
             </tr>
@@ -375,18 +412,29 @@ export async function getCalculatorAnalytics(): Promise<{
   recentCalculations: number;
 }> {
   try {
+    const supabase = createServiceClient();
+
+    if (!supabase) {
+      return {
+        totalCalculations: 0,
+        topCounties: [],
+        avgPurchasePrice: 0,
+        recentCalculations: 0,
+      };
+    }
+
     // Total calculations
-    const allCalcs = await db
-      .select({ id: ttlCalculations.id })
-      .from(ttlCalculations);
-    const totalCalculations = allCalcs.length;
+    const { count: totalCalculations } = await supabase
+      .from('ttl_calculations')
+      .select('*', { count: 'exact', head: true });
 
     // Top counties
-    const countyData = await db
-      .select({ county: ttlCalculations.county })
-      .from(ttlCalculations);
+    const { data: countyData } = await supabase
+      .from('ttl_calculations')
+      .select('county')
+      .not('county', 'is', null);
 
-    const countyCounts = countyData.reduce<Record<string, number>>((acc, { county }) => {
+    const countyCounts = (countyData || []).reduce<Record<string, number>>((acc, { county }) => {
       if (county) {
         acc[county] = (acc[county] || 0) + 1;
       }
@@ -399,31 +447,29 @@ export async function getCalculatorAnalytics(): Promise<{
       .map(([county, count]) => ({ county, count }));
 
     // Average purchase price
-    const priceData = await db
-      .select({ purchasePrice: ttlCalculations.purchasePrice })
-      .from(ttlCalculations);
+    const { data: priceData } = await supabase
+      .from('ttl_calculations')
+      .select('purchase_price')
+      .not('purchase_price', 'is', null);
 
-    const validPrices = priceData.filter((p) => p.purchasePrice !== null);
-    const avgPurchasePrice = validPrices.length > 0
-      ? validPrices.reduce((sum, { purchasePrice }) => sum + (purchasePrice || 0), 0) / validPrices.length
+    const avgPurchasePrice = priceData && priceData.length > 0
+      ? priceData.reduce((sum, { purchase_price }) => sum + (purchase_price || 0), 0) / priceData.length
       : 0;
 
     // Recent calculations (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { gte } = await import('drizzle-orm');
-    const recentCalcs = await db
-      .select({ id: ttlCalculations.id })
-      .from(ttlCalculations)
-      .where(gte(ttlCalculations.createdAt, sevenDaysAgo));
-    const recentCalculations = recentCalcs.length;
+    const { count: recentCalculations } = await supabase
+      .from('ttl_calculations')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', sevenDaysAgo.toISOString());
 
     return {
-      totalCalculations,
+      totalCalculations: totalCalculations || 0,
       topCounties,
       avgPurchasePrice: Math.round(avgPurchasePrice),
-      recentCalculations,
+      recentCalculations: recentCalculations || 0,
     };
   } catch (error) {
     logger.error('Error fetching calculator analytics', castError(error));
