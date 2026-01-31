@@ -3,9 +3,10 @@ import { z } from 'zod';
 // Common validation patterns
 export const emailSchema = z
   .string()
+  .min(1, 'Email is required')
   .email('Please enter a valid email address')
   .toLowerCase()
-  .trim();
+  .trim();;
 
 export const phoneSchema = z
   .string()

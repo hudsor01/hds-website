@@ -18,7 +18,28 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    optimizePackageImports: ['@heroicons/react', '@vercel/analytics'],
+    optimizePackageImports: [
+      '@heroicons/react',
+      '@vercel/analytics',
+      'lucide-react',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-checkbox',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-icons',
+      '@radix-ui/react-label',
+      '@radix-ui/react-radio-group',
+      '@radix-ui/react-select',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-switch',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-tooltip',
+      '@tanstack/react-table',
+      '@tanstack/react-form',
+      '@tanstack/react-query',
+      'react-markdown',
+    ],
   },
 }
 

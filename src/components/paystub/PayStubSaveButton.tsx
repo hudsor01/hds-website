@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { FileText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface PayStubSaveButtonProps {
@@ -11,17 +12,15 @@ interface PayStubSaveButtonProps {
 export const PayStubSaveButton: React.FC<PayStubSaveButtonProps> = ({ onSave }) => {
   return (
     <div className="no-print absolute -top-16 right-0 z-modal">
-      <button
+      <Button
+        type="button"
         onClick={onSave}
-        className={cn(
-          "flex items-center gap-tight px-6 py-3 rounded-md text-sm font-semibold transition-smooth",
-          "bg-accent text-foreground border-0 shadow-xs cursor-pointer",
-          "hover:bg-accent/90 focus-ring"
-        )}
+        variant="default"
+        className={cn("px-6")}
       >
         <FileText className="w-4 h-4" />
         Save as PDF
-      </button>
+      </Button>
     </div>
   )
 }

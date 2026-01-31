@@ -123,7 +123,7 @@ export default function GlobalNotFound() {
                   Services
                 </Link>
                 <Link
-                  href="/portfolio"
+                  href="/showcase"
                   style={{
                     color: '#06b6d4',
                     textDecoration: 'none',
