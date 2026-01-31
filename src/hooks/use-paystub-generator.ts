@@ -75,36 +75,34 @@ export function usePaystubGenerator() {
   }, [urlState, formState]);
 
   // Sync form state to URL when values change (after initial load)
-  // Note: We intentionally only depend on specific properties, not the whole formState object
+  const { paystubData, selectedState } = formState;
+  const { employeeName, employeeId, employerName, hourlyRate, hoursPerPeriod, filingStatus, taxYear } = paystubData;
+
   useEffect(() => {
     if (!hasInitializedFromUrl.current) {return;}
 
-    const { paystubData, selectedState } = formState;
-
-    // Only update URL if there's meaningful data
-    const hasData = paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod;
+    const hasData = employeeName || hourlyRate || hoursPerPeriod;
     if (!hasData) {return;}
 
     setUrlState({
-      name: paystubData.employeeName || null,
-      id: paystubData.employeeId || null,
-      employer: paystubData.employerName || null,
-      rate: paystubData.hourlyRate || null,
-      hours: paystubData.hoursPerPeriod || null,
-      status: paystubData.filingStatus,
-      year: paystubData.taxYear,
+      name: employeeName || null,
+      id: employeeId || null,
+      employer: employerName || null,
+      rate: hourlyRate || null,
+      hours: hoursPerPeriod || null,
+      status: filingStatus,
+      year: taxYear,
       state: selectedState || null,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally only depend on specific properties
   }, [
-    formState.paystubData.employeeName,
-    formState.paystubData.employeeId,
-    formState.paystubData.employerName,
-    formState.paystubData.hourlyRate,
-    formState.paystubData.hoursPerPeriod,
-    formState.paystubData.filingStatus,
-    formState.paystubData.taxYear,
-    formState.selectedState,
+    employeeName,
+    employeeId,
+    employerName,
+    hourlyRate,
+    hoursPerPeriod,
+    filingStatus,
+    taxYear,
+    selectedState,
     setUrlState,
   ]);
 
