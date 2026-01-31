@@ -7,6 +7,7 @@
 
 import { trackEvent } from '@/lib/analytics';
 import { SERVICE_TYPES } from '@/types/testimonials';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Send, Star } from 'lucide-react'
 import { FormSuccessMessage } from '@/components/forms';
@@ -105,13 +106,15 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
         </label>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
-            <button
+            <Button
               key={star}
               type="button"
               onClick={() => handleChange('rating', star)}
               onMouseEnter={() => setHoveredRating(star)}
               onMouseLeave={() => setHoveredRating(null)}
-              className="p-1 transition-transform hover:scale-110"
+              variant="ghost"
+              size="icon"
+              className="hover:scale-110"
               aria-label={`Rate ${star} stars`}
             >
               <Star
@@ -121,7 +124,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
                     : 'text-muted-foreground'
                 }`}
               />
-            </button>
+            </Button>
           ))}
         </div>
         <p className="text-sm text-muted-foreground mt-1">
@@ -245,10 +248,11 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
       )}
 
       {/* Submit Button */}
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+        variant="default"
+        className="w-full"
       >
         {isSubmitting ? (
           'Submitting...'
@@ -258,7 +262,7 @@ export function TestimonialForm({ requestId, token, defaultName }: TestimonialFo
             Submit Testimonial
           </>
         )}
-      </button>
+      </Button>
     </form>
   );
 }

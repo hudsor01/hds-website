@@ -1,5 +1,3 @@
-'use client';
-
 "use client"
 
 import { Slot } from "@radix-ui/react-slot"
@@ -7,22 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { logger } from "@/lib/logger"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-tight whitespace-nowrap rounded-md text-sm font-medium transition-smooth disabled:pointer-events-none disabled:opacity-50 will-change-transform [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-hidden focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
-        default: "bg-primary text-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "bg-destructive text-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        success: "bg-success text-success-foreground hover:bg-success-dark",
+        accent: "bg-accent text-accent-foreground hover:bg-accent/90",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-border bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        muted:
+          "bg-muted text-muted-foreground hover:bg-muted/80",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "text-muted-foreground hover:text-foreground hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -46,12 +47,8 @@ export interface ButtonProps
  extends React.ComponentProps<"button">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
- /** Track this button click as a conversion event for analytics */
+  /** Track this button click as a conversion event (handled by Vercel Analytics) */
   trackConversion?: boolean
-  /** Custom conversion label for analytics (defaults to button text content) */
-  conversionLabel?: string
-  /** Business value tier for analytics (defaults based on variant) */
-  conversionValue?: "high" | "medium" | "low"
 }
 
 function Button({
@@ -59,54 +56,19 @@ function Button({
   variant,
   size,
   asChild = false,
-  trackConversion = false,
- conversionLabel,
-  conversionValue,
-  onClick,
-  children,
+  // trackConversion prop kept for API compatibility, tracking handled by Vercel Analytics
+  trackConversion: _trackConversion,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot : "button"
-
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      // Track conversion if enabled
-      if (trackConversion) {
-        const label = conversionLabel || (typeof children === 'string' ? children : 'Button Click')
-        const value = conversionValue || (variant === 'default' ? 'high' : 'medium')
-
-        logger.info('Conversion button clicked', {
-          label,
-          variant: variant || 'default',
-          size: size || 'default',
-          businessValue: value,
-          component: 'Button',
-          conversionEvent: 'button_click'
-        })
-      }
-
-      // Call original onClick handler
-      onClick?.(event)
-    },
-    [
-      trackConversion,
-      conversionLabel,
-      conversionValue,
-      children,
-      variant,
-      size,
-      onClick,
-    ]
-  )
 
   return (
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      onClick={handleClick}
       {...props}
     >
-      {children}
+      {props.children}
     </Comp>
   )
 }
