@@ -6,7 +6,7 @@ This directory contains configuration for sending **grouped, throttled email ale
 
 The alerting architecture consists of:
 
-1. **Application** - Logs errors to Supabase `error_logs` table with fingerprints for grouping
+1. **Application** - Logs errors to Neon `error_logs` table with fingerprints for grouping
 2. **Prometheus** - Queries error metrics and evaluates alert rules
 3. **Alertmanager** - Groups alerts by fingerprint and sends batched email notifications
 

@@ -218,7 +218,7 @@ export default function FAQPage() {
               <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
                 Schedule a free consultation call and we&apos;ll answer all your questions about your project.
               </p>
-              <Button asChild variant="default" size="lg" trackConversion={true}>
+              <Button asChild variant="accent" size="lg" trackConversion={true}>
       <Link href="/contact">
         Schedule Free Consultation
         <ArrowRight className="w-4 h-4" />

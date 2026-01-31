@@ -11,25 +11,26 @@ import { Button } from '@/components/ui/button';
 // Error handling is now managed by React Query for API calls
 
 interface ErrorFallbackProps {
-  error: Error;
+  error: unknown;
   resetErrorBoundary: () => void;
 }
 
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ComponentType<ErrorFallbackProps>;
-  onError?: (error: Error, errorInfo: ReactErrorInfo) => void;
+  onError?: (error: unknown, errorInfo: ReactErrorInfo) => void;
   onReset?: () => void;
   resetKeys?: Array<string | number>;
 }
 
 function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   const [copied, setCopied] = useState(false);
+  const errorObj = error instanceof Error ? error : new Error(String(error));
 
   const copyErrorDetails = async () => {
     if (!error) {return;}
 
-    const errorDetails = `Error: ${error.message}\n\nStack Trace:\n${error.stack}\n\nTimestamp: ${new Date().toISOString()}\nUser Agent: ${navigator.userAgent}\nURL: ${window.location.href}\nPlatform: ${navigator.platform}\nLanguage: ${navigator.language}`;
+    const errorDetails = `Error: ${errorObj.message}\n\nStack Trace:\n${errorObj.stack}\n\nTimestamp: ${new Date().toISOString()}\nUser Agent: ${navigator.userAgent}\nURL: ${window.location.href}\nPlatform: ${navigator.platform}\nLanguage: ${navigator.language}`;
 
     try {
       await navigator.clipboard.writeText(errorDetails);
@@ -55,8 +56,8 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
 
     try {
       const errorReport = {
-        message: error.message,
-        stack: error.stack,
+        message: errorObj.message,
+        stack: errorObj.stack,
         url: window.location.href,
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
@@ -91,7 +92,7 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
             We&apos;re sorry for the inconvenience. Please try refreshing the page or contact us if the problem persists.
           </p>
 
-          {error && (
+          {errorObj && (
             <details className="text-left mb-content-block bg-bg-overlay/30 rounded-lg border border-danger/20">
               <summary className="text-danger cursor-pointer mb-subheading flex-between">
                 <span>Error Details</span>
@@ -109,9 +110,9 @@ function DefaultErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
               </summary>
               <div className="mt-3">
                 <pre className="text-xs text-secondary-foreground overflow-auto scrollbar-hide whitespace-pre-wrap">
-                  {error.message}
+                  {errorObj.message}
                   {'\n'}
-                  {error.stack}
+                  {errorObj.stack}
                 </pre>
                 <div className="mt-3 pt-3 border-t border-danger/20 flex flex-col sm:flex-row gap-tight">
                   <button
@@ -175,9 +176,11 @@ export function ErrorBoundary({
   onReset,
   resetKeys,
 }: ErrorBoundaryProps) {
-  const handleError = (error: Error, errorInfo: ReactErrorInfo) => {
+  const handleError = (error: unknown, errorInfo: ReactErrorInfo) => {
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+
     // Track error in analytics
-    trackError(error, true);
+    trackError(errorObj, true);
 
     // Call custom error handler if provided
     onError?.(error, errorInfo);
@@ -185,10 +188,10 @@ export function ErrorBoundary({
     // Log error with structured context
     logger.error('Error Boundary Caught', {
       error: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-        cause: (error as Error & { cause?: unknown }).cause
+        name: errorObj.name,
+        message: errorObj.message,
+        stack: errorObj.stack,
+        cause: errorObj.cause
       },
       componentStack: errorInfo.componentStack,
       errorBoundary: 'React Error Boundary',
@@ -278,7 +281,8 @@ export function AsyncErrorBoundary({ children }: { children: ReactNode }) {
       resetKeys={['async-error']}
       onError={(error) => {
         // Special handling for async errors
-        if (error.message.includes('ChunkLoadError') || error.message.includes('Loading chunk')) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (message.includes('ChunkLoadError') || message.includes('Loading chunk')) {
           // Reload the page for chunk loading errors
           window.location.reload();
         }

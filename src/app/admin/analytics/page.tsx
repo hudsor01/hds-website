@@ -10,6 +10,7 @@ import { MetricCard } from '@/components/admin/MetricCard';
 import { SimpleBarChart } from '@/components/admin/SimpleBarChart';
 import { TrendLineChart } from '@/components/admin/TrendLineChart';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { logger } from '@/lib/logger';
 import {
@@ -213,13 +214,10 @@ export default function AnalyticsDashboard() {
                 </select>
               </div>
 
-              <button
-                onClick={handleExport}
-                className="inline-flex items-center gap-tight rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
-              >
+              <Button type="button" onClick={handleExport} variant="default">
                 <Download className="h-4 w-4" />
                 Export CSV
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -240,12 +238,16 @@ export default function AnalyticsDashboard() {
                 className="w-full rounded-md border-border-primary py-2 pl-10 pr-10 text-sm focus:border-primary focus:ring-primary dark:border-border-primary-dark dark:bg-bg-secondary-dark dark:text-foreground dark:placeholder-text-muted"
               />
               {searchQuery && (
-                <button
+                <Button
+                  type="button"
                   onClick={() => void setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-secondary-foreground dark:hover:text-secondary-foreground"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  aria-label="Clear search"
                 >
                   <X className="h-4 w-4" />
-                </button>
+                </Button>
               )}
             </div>
 
