@@ -2,57 +2,55 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-09)
+See: .planning/PROJECT.md (updated 2026-01-30)
 
-**Core value:** Working tools (paystub/invoice/timesheet generators) and contact form stay functional while everything else becomes dramatically simpler. If it's not essential to these features, it gets removed.
-**Current focus:** Phase 1 — Dependency Audit & Pruning
+**Core value:** Working tools (paystub/invoice/timesheet generators) and contact form stay functional while the codebase becomes production-grade.
+**Current focus:** v1.1 Code Review Remediation -- Phase 11 (TypeScript Strictness & Code Quality)
 
 ## Current Position
 
-Phase: 1 of 10 (Dependency Audit & Pruning)
-Plan: 5 plans created, ready to execute
-Status: Planning complete, ready for execution
-Last activity: 2026-01-09 — Phase 1 planning complete (5 plans)
+Phase: 11 of 16 (TypeScript Strictness & Code Quality)
+Plan: Not yet planned
+Status: Ready to plan
+Last activity: 2026-01-30 -- v1.0 milestone archived, v1.1 roadmap created
 
-Progress: █░░░░░░░░░ 10%
+Progress: ██████████░░░░░░ 63% (v1.0 complete, v1.1 starting)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
+- Total plans completed: 30+ (v1.0)
+- Average duration: ~1 day per phase
+- Total execution time: 20 days
 
-**By Phase:**
+**By Milestone:**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| — | — | — | — |
-
-**Recent Trend:**
-- Last 5 plans: —
-- Trend: —
+| Milestone | Phases | Duration | Result |
+|-----------|--------|----------|--------|
+| v1.0 Cleanup | 10 phases | 20 days | -21,797 net lines, 45% fewer deps |
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-(None yet)
+- Aggressive dependency pruning (130+ to 72 packages) -- Good
+- Standardized on TanStack ecosystem -- Good
+- Removed Supabase auth middleware -- Good
+- database.ts left as-is (auto-generated, 6,286 lines) -- Practical
+- Excluded JSDoc/architecture docs from v1.1 (contradicts CLAUDE.md) -- Intentional
 
 ### Deferred Issues
 
-None yet.
+- @react-pdf/renderer incompatible with Turbopack (pre-existing, all branches)
+- database.ts at 6,286 lines (auto-generated, not actionable)
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ## Session Continuity
 
-Last session: 2026-01-09
-Stopped at: Phase 1 planning complete (5 plans created)
+Last session: 2026-01-30
+Stopped at: v1.0 archived, v1.1 roadmap created from CODE_REVIEW.md
 Resume file: None
-Next action: Execute Plan 1 (Audit UI Components) with /gsd:execute-plan
+Next action: Plan Phase 11 (TypeScript Strictness & Code Quality)
