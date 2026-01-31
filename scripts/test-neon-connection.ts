@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Test script to verify Neon database connection
  * Run: bun run scripts/test-neon-connection.ts
@@ -10,25 +9,25 @@ async function testConnection() {
 
   if (!connectionUrl) {
     console.error('ERROR: POSTGRES_URL environment variable is not set');
-    console.log('Please add POSTGRES_URL to your .env.local file');
+    console.warn('Please add POSTGRES_URL to your .env.local file');
     process.exit(1);
   }
 
-  console.log('Connecting to Neon PostgreSQL...\n');
+  console.warn('Connecting to Neon PostgreSQL...\n');
 
   const sql = new SQL(connectionUrl);
 
   try {
     // Test 1: Get PostgreSQL version
     const [versionResult] = await sql`SELECT version()`;
-    console.log('Connected to Neon!');
-    console.log('PostgreSQL version:', versionResult.version);
-    console.log('');
+    console.warn('Connected to Neon!');
+    console.warn('PostgreSQL version:', versionResult.version);
+    console.warn('');
 
     // Test 2: Get server time
     const [timeResult] = await sql`SELECT NOW() as current_time`;
-    console.log('Server time:', timeResult.current_time);
-    console.log('');
+    console.warn('Server time:', timeResult.current_time);
+    console.warn('');
 
     // Test 3: Check available extensions
     const extensions = await sql`
@@ -36,11 +35,11 @@ async function testConnection() {
       FROM pg_extension
       ORDER BY extname
     `;
-    console.log('Installed extensions:');
+    console.warn('Installed extensions:');
     for (const ext of extensions) {
-      console.log(`  - ${ext.extname} (${ext.extversion})`);
+      console.warn(`  - ${ext.extname} (${ext.extversion})`);
     }
-    console.log('');
+    console.warn('');
 
     // Test 4: Check connection info
     const [connInfo] = await sql`
@@ -49,12 +48,12 @@ async function testConnection() {
         current_user as user,
         inet_server_addr() as server_ip
     `;
-    console.log('Connection info:');
-    console.log(`  Database: ${connInfo.database}`);
-    console.log(`  User: ${connInfo.user}`);
-    console.log('');
+    console.warn('Connection info:');
+    console.warn(`  Database: ${connInfo.database}`);
+    console.warn(`  User: ${connInfo.user}`);
+    console.warn('');
 
-    console.log('All connection tests passed!');
+    console.warn('All connection tests passed!');
 
     await sql.close();
     process.exit(0);

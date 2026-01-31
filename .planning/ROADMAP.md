@@ -1,125 +1,87 @@
-# Roadmap: Business Website Cleanup & Simplification
+# Roadmap: Hudson Digital Solutions Website
 
 ## Overview
 
-Transform a feature-complete Next.js business website from 130+ dependencies and scattered code patterns into a lean, maintainable codebase. Each phase systematically removes bloat while preserving working functionality (contact form, tool generators). The journey moves from dependency cleanup through code elimination, integration simplification, and ends with comprehensive validation that nothing broke.
+Production-quality Next.js business website with tool generators, contact forms, and comprehensive testing. Ongoing improvement through systematic code review remediation.
 
 ## Domain Expertise
 
 None
 
-## Phases
+## Milestones
 
-- [ ] **Phase 1: Dependency Audit & Pruning** - Identify and remove unused npm packages
-- [ ] **Phase 2: Dead Code Elimination** - Remove unused components, functions, and files
-- [ ] **Phase 3: Integration Cleanup** - Remove/simplify over-engineered integrations
-- [ ] **Phase 4: Code Deduplication** - Eliminate DRY violations and consolidate patterns
-- [ ] **Phase 5: Configuration Simplification** - Clean up config files, extract magic numbers
-- [ ] **Phase 6: Component Structure Optimization** - Remove unnecessary abstractions
-- [ ] **Phase 7: Build & Bundle Optimization** - Tree-shake, reduce first load JS
-- [ ] **Phase 8: Testing Infrastructure Review** - Simplify testing setup
-- [ ] **Phase 9: Documentation & Environment** - Create .env.example and clean docs
-- [ ] **Phase 10: Final Validation & Verification** - End-to-end testing of all features
+- [v1.0 Cleanup & Simplification](milestones/v1.0-ROADMAP.md) (Phases 1-10) -- SHIPPED 2026-01-30
+- **v1.1 Code Review Remediation** -- Phases 11-16 (in progress)
 
-## Phase Details
+## Completed Milestones
 
-### Phase 1: Dependency Audit & Pruning
-**Goal**: Remove unused packages from the 130+ npm dependencies, reducing installation size and attack surface
-**Depends on**: Nothing (first phase)
-**Research**: Unlikely (package.json analysis, tooling like depcheck)
-**Plans**: 5 plans created
+<details>
+<summary>v1.0 Cleanup & Simplification (Phases 1-10) -- SHIPPED 2026-01-30</summary>
 
-1. PLAN-01-ui-components.md - Audit Radix UI and UI libraries
-2. PLAN-02-state-management.md - Audit React Query, TanStack, Zustand
-3. PLAN-03-build-tools.md - Audit tsx, sharp, vercel CLI
-4. PLAN-04-testing.md - Audit Testing Library, MSW, Playwright
-5. PLAN-05-cleanup-verification.md - Final cleanup and verification
+- [x] Phase 1: Dependency Audit & Pruning (5 plans)
+- [x] Phase 2: Dead Code Elimination (4 plans)
+- [x] Phase 3: Integration Cleanup (1 plan)
+- [x] Phase 4: Code Deduplication (merged into other phases)
+- [x] Phase 5: Configuration Simplification (6 plans)
+- [x] Phase 6: Component Structure Optimization (5 plans)
+- [x] Phase 7: Build & Bundle Optimization (2 plans)
+- [x] Phase 8: Testing Infrastructure Review (4 plans)
+- [x] Phase 9: Documentation & Environment (4 plans)
+- [x] Phase 10: Final Validation & Verification
 
-### Phase 2: Dead Code Elimination
-**Goal**: Remove orphaned components, unused functions, commented code, and exports that aren't imported anywhere
-**Depends on**: Phase 1 (cleaner dependency tree makes dead code more obvious)
-**Research**: Unlikely (static analysis with existing tools)
-**Plans**: TBD
+</details>
 
-Plans will be determined during phase planning.
+## v1.1 Code Review Remediation
 
-### Phase 3: Integration Cleanup
-**Goal**: Remove or simplify over-engineered integrations (unused Supabase auth, disabled analytics features, unnecessary services)
-**Depends on**: Phase 2 (know what's dead before removing integrations)
-**Research**: Likely (need to verify if Supabase auth is used, how to safely remove)
-**Research topics**: Supabase client removal patterns, analytics cleanup without breaking deployment
-**Plans**: TBD
+Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remaining grouped into 6 phases.
 
-Plans will be determined during phase planning.
+### Phase 11: TypeScript Strictness & Code Quality
+**Goal**: Enable strict TypeScript settings, fix import patterns, clean remaining unused code
+**Depends on**: v1.0 complete
+**Items**: CODE_REVIEW #6 (unused code), #17 (TypeScript config), #18 (import patterns)
 
-### Phase 4: Code Deduplication
-**Goal**: Consolidate duplicated logic identified in concerns (contact form duplication, repeated patterns)
-**Depends on**: Phase 3 (cleaner integration layer before consolidating patterns)
-**Research**: Unlikely (internal refactoring using established patterns)
-**Plans**: TBD
+### Phase 12: Test Coverage & Infrastructure
+**Goal**: Increase test coverage for critical business logic, fix test configuration
+**Depends on**: Phase 11 (cleaner code = easier to test)
+**Items**: CODE_REVIEW #8 (test coverage), #9 (Playwright config)
 
-Plans will be determined during phase planning.
+### Phase 13: Error Handling & Resilience
+**Goal**: Add error boundaries around major features, improve error logging
+**Depends on**: Phase 12 (tests verify error handling works)
+**Items**: CODE_REVIEW #12 (error boundaries)
 
-### Phase 5: Configuration Simplification
-**Goal**: Extract hardcoded configuration values to constants, clean up unnecessary config files
-**Depends on**: Phase 4 (consolidated code makes config needs clearer)
-**Research**: Unlikely (internal organization, no external dependencies)
-**Plans**: TBD
+### Phase 14: Security Hardening
+**Goal**: Audit input validation gaps, document rate limiting configuration
+**Depends on**: Phase 13 (error handling catches validation failures)
+**Items**: CODE_REVIEW #15 (input validation), #16 (rate limiting docs)
 
-Plans will be determined during phase planning.
+### Phase 15: Performance Optimization
+**Goal**: Code splitting for heavy libraries, bundle size monitoring
+**Depends on**: Phase 14 (security before performance)
+**Items**: CODE_REVIEW #13 (bundle size), #14 (image optimization)
 
-### Phase 6: Component Structure Optimization
-**Goal**: Remove unnecessary abstractions, flatten overly nested component hierarchies
-**Depends on**: Phase 5 (clear configuration makes component responsibilities obvious)
-**Research**: Unlikely (internal React patterns, server component optimization)
-**Plans**: TBD
+### Phase 16: Architecture & Component Patterns
+**Goal**: Audit server/client component boundaries, evaluate provider stack, extract large components
+**Depends on**: Phase 15 (optimized code before restructuring)
+**Items**: CODE_REVIEW #5 (component bloat), #10 (component patterns), #11 (provider stack)
 
-Plans will be determined during phase planning.
-
-### Phase 7: Build & Bundle Optimization
-**Goal**: Tree-shake unused code, reduce first load JS under 180kB, improve build speed
-**Depends on**: Phase 6 (optimized components reduce bundle size)
-**Research**: Likely (Next.js bundle analyzer, tree-shaking techniques)
-**Research topics**: Next.js 16 bundle optimization, dynamic imports strategy, Tailwind purge configuration
-**Plans**: TBD
-
-Plans will be determined during phase planning.
-
-### Phase 8: Testing Infrastructure Review
-**Goal**: Simplify testing setup while maintaining coverage for critical paths (contact form, tool generators)
-**Depends on**: Phase 7 (smaller bundle = faster tests)
-**Research**: Unlikely (existing Playwright + Bun test patterns)
-**Plans**: TBD
-
-Plans will be determined during phase planning.
-
-### Phase 9: Documentation & Environment
-**Goal**: Create missing .env.example, clean up documentation, remove stale comments
-**Depends on**: Phase 8 (final codebase state clear)
-**Research**: Unlikely (documentation and environment setup)
-**Plans**: TBD
-
-Plans will be determined during phase planning.
-
-### Phase 10: Final Validation & Verification
-**Goal**: End-to-end manual testing of all core features (contact form, paystub/invoice/timesheet generators) to ensure zero regression
-**Depends on**: Phase 9 (all cleanup complete)
-**Research**: Unlikely (manual testing and verification)
-**Plans**: TBD
-
-Plans will be determined during phase planning.
+### Excluded Items (Already Resolved or Not Actionable)
+- CODE_REVIEW #1 (missing core utilities) -- FIXED in v1.0
+- CODE_REVIEW #2 (type system inconsistencies) -- FIXED in v1.0
+- CODE_REVIEW #3 (Buffer type mismatches) -- FIXED in v1.0
+- CODE_REVIEW #7 (failing unit tests) -- FIXED in v1.0 (334 passing)
+- CODE_REVIEW #4 (database.ts size) -- Auto-generated file, splitting not practical
+- CODE_REVIEW #19 (code documentation) -- Contradicts CLAUDE.md: "Don't add docstrings to code you didn't change"
+- CODE_REVIEW #20 (architecture docs) -- Contradicts CLAUDE.md: "NEVER proactively create documentation files"
 
 ## Progress
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. Dependency Audit & Pruning | 0/5 | Planning complete | - |
-| 2. Dead Code Elimination | 0/TBD | Not started | - |
-| 3. Integration Cleanup | 0/TBD | Not started | - |
-| 4. Code Deduplication | 0/TBD | Not started | - |
-| 5. Configuration Simplification | 0/TBD | Not started | - |
-| 6. Component Structure Optimization | 0/TBD | Not started | - |
-| 7. Build & Bundle Optimization | 0/TBD | Not started | - |
-| 8. Testing Infrastructure Review | 0/TBD | Not started | - |
-| 9. Documentation & Environment | 0/TBD | Not started | - |
-| 10. Final Validation & Verification | 0/TBD | Not started | - |
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1-10 | v1.0 | 30+/30+ | Complete | 2026-01-30 |
+| 11. TypeScript Strictness | v1.1 | 0/TBD | Not started | - |
+| 12. Test Coverage | v1.1 | 0/TBD | Not started | - |
+| 13. Error Handling | v1.1 | 0/TBD | Not started | - |
+| 14. Security Hardening | v1.1 | 0/TBD | Not started | - |
+| 15. Performance Optimization | v1.1 | 0/TBD | Not started | - |
+| 16. Architecture & Components | v1.1 | 0/TBD | Not started | - |
