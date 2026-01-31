@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { logger } from "@/lib/logger";
 import { clearFormData, loadFormData, saveFormData } from "@/lib/paystub-calculator/storage";
-import type { PaystubData, FilingStatus } from "@/types/paystub";
+import type { FilingStatus, PaystubData } from "@/types/paystub";
 
 interface UsePaystubPersistenceProps {
   paystubData: PaystubData;
@@ -17,50 +17,70 @@ export function usePaystubPersistence({
   setPaystubData,
   setSelectedState,
 }: UsePaystubPersistenceProps) {
-  // Load saved form data on mount
+  // Track if initial load has completed to avoid save-on-load cycle
+  const hasLoadedRef = useRef(false);
+  const isInitialMountRef = useRef(true);
+
+  // Load saved data on mount (runs once)
   useEffect(() => {
-    const savedData = loadFormData();
-    if (!savedData) {
+    // Skip if already loaded
+    if (hasLoadedRef.current) {
       return;
     }
 
-    logger.info("Paystub form data restored from previous session", {
+    const savedData = loadFormData();
+    if (!savedData) {
+      hasLoadedRef.current = true;
+      return;
+    }
+
+    logger.info("Restoring paystub form data from localStorage", {
       component: "usePaystubPersistence",
       userFlow: "paystub_tool_usage",
-      action: "form_data_restored",
+      action: "data_restored",
       businessValue: "medium",
-      restoredFields: {
-        employeeName: !!savedData.employeeName,
-        employeeId: !!savedData.employeeId,
-        employerName: !!savedData.employerName,
-        hourlyRate: !!savedData.hourlyRate,
-        hoursPerPeriod: !!savedData.hoursPerPeriod,
-        state: !!savedData.state,
-        taxYear: savedData.taxYear,
-      },
     });
 
+    // Restore form data (cast filingStatus to proper type)
     setPaystubData((prev) => ({
       ...prev,
-      employeeName: savedData.employeeName,
-      employeeId: savedData.employeeId,
-      employerName: savedData.employerName,
-      hourlyRate: savedData.hourlyRate,
-      hoursPerPeriod: savedData.hoursPerPeriod,
-      filingStatus: savedData.filingStatus as FilingStatus,
-      taxYear: savedData.taxYear,
+      employeeName: savedData.employeeName || prev.employeeName,
+      employeeId: savedData.employeeId || prev.employeeId,
+      employerName: savedData.employerName || prev.employerName,
+      hourlyRate: savedData.hourlyRate || prev.hourlyRate,
+      hoursPerPeriod: savedData.hoursPerPeriod || prev.hoursPerPeriod,
+      filingStatus: (savedData.filingStatus as FilingStatus) || prev.filingStatus,
+      taxYear: savedData.taxYear || prev.taxYear,
     }));
 
+    // Restore selected state if saved
     if (savedData.state) {
       setSelectedState(savedData.state);
     }
 
-    toast.success("Form data restored from previous session");
+    hasLoadedRef.current = true;
   }, [setPaystubData, setSelectedState]);
 
-  // Auto-save form data
-  const saveCurrentFormData = useCallback(() => {
-    const dataToSave = {
+  // Auto-save form data when it changes (after initial load)
+  useEffect(() => {
+    // Skip initial mount and wait for load to complete
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false;
+      return;
+    }
+
+    // Don't save until initial load is complete
+    if (!hasLoadedRef.current) {
+      return;
+    }
+
+    // Only save if there's meaningful data
+    const hasData = paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod;
+    if (!hasData) {
+      return;
+    }
+
+    saveFormData({
       employeeName: paystubData.employeeName,
       employeeId: paystubData.employeeId,
       employerName: paystubData.employerName,
@@ -69,18 +89,19 @@ export function usePaystubPersistence({
       filingStatus: paystubData.filingStatus,
       taxYear: paystubData.taxYear,
       state: selectedState,
-    };
-    saveFormData(dataToSave);
-  }, [paystubData, selectedState]);
+    });
+  }, [
+    paystubData.employeeName,
+    paystubData.employeeId,
+    paystubData.employerName,
+    paystubData.hourlyRate,
+    paystubData.hoursPerPeriod,
+    paystubData.filingStatus,
+    paystubData.taxYear,
+    selectedState,
+  ]);
 
-  // Save form data whenever it changes
-  useEffect(() => {
-    if (paystubData.employeeName || paystubData.hourlyRate || paystubData.hoursPerPeriod) {
-      saveCurrentFormData();
-    }
-  }, [paystubData, selectedState, saveCurrentFormData]);
-
-  const clearForm = () => {
+  const clearForm = useCallback(() => {
     logger.info("Paystub form cleared by user", {
       component: "usePaystubPersistence",
       userFlow: "paystub_tool_usage",
@@ -97,7 +118,7 @@ export function usePaystubPersistence({
       const firstInput = document.querySelector("input[type=\"text\"]") as HTMLInputElement | null;
       firstInput?.focus();
     }, 100);
-  };
+  }, [paystubData.employeeName, paystubData.hourlyRate, paystubData.hoursPerPeriod]);
 
   return {
     clearForm,

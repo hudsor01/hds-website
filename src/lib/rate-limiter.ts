@@ -1,4 +1,3 @@
-import { env } from '@/env'
 import type { RateLimitEntry } from '@/types/api'
 import { logger } from './logger'
 
@@ -33,43 +32,15 @@ export const RATE_LIMIT_CONFIGS = {
 export type RateLimitType = keyof typeof RATE_LIMIT_CONFIGS;
 
 /**
- * Distributed rate limiter using Vercel KV
- * Falls back to in-memory store for local development
+ * In-memory rate limiter
+ * Simple and effective for single-instance deployments
  */
 export class UnifiedRateLimiter {
   private store: Map<string, RateLimitEntry> = new Map();
   private cleanupInterval: NodeJS.Timeout | null = null;
- private useKV: boolean = false;
-  private kv: unknown | null = null;
 
   constructor() {
-    // Initialize Vercel KV if available
-    // Wrap in try-catch to handle test environments where server-only env vars aren't accessible
-    try {
-      if (typeof window === 'undefined' && env.KV_REST_API_URL && env.KV_REST_API_TOKEN) {
-        this.initializeKV();
-      } else {
-        logger.info('KV not configured, using in-memory rate limiter (local dev only)');
-        this.initializeInMemory();
-      }
-    } catch {
-      // In test/client environments, server env vars may not be accessible
-      logger.info('Using in-memory rate limiter (test/client environment)');
-      this.initializeInMemory();
-    }
-  }
-
-  private async initializeKV() {
-    try {
-      // Use dynamic import - we'll handle the type in the method
-      const kvModule = await import('@vercel/kv');
-      this.kv = kvModule.kv;
-      this.useKV = true;
-      logger.info('Distributed rate limiter initialized with Vercel KV');
-    } catch (error) {
-      logger.error('Failed to initialize Vercel KV, falling back to in-memory', error as Error);
-      this.initializeInMemory();
-    }
+    this.initializeInMemory();
   }
 
   private initializeInMemory() {
@@ -84,11 +55,12 @@ export class UnifiedRateLimiter {
         this.destroy();
       });
     }
+
+    logger.info('In-memory rate limiter initialized');
   }
 
   /**
    * Build a namespaced key for rate limiting
-   * This ensures different limit types don't share counters
    */
   private buildKey(identifier: string, limitType: RateLimitType): string {
     return `${limitType}:${identifier}`;
@@ -103,67 +75,11 @@ export class UnifiedRateLimiter {
   ): Promise<boolean> {
     const config = RATE_LIMIT_CONFIGS[limitType];
     const key = this.buildKey(identifier, limitType);
-
-    if (this.useKV && this.kv) {
-      return this.checkLimitKV(key, config.maxRequests, config.windowMs);
-    }
-
     return this._checkLimit(key, config.maxRequests, config.windowMs);
   }
 
   /**
-   * Check rate limit using Vercel KV (distributed)
-   */
-  private async checkLimitKV(
-    identifier: string,
-    maxRequests: number,
-    windowMs: number
- ): Promise<boolean> {
-    if (!this.kv) {return false;}
-
-    const now = Date.now();
-    const key = `ratelimit:${identifier}`;
-    const kv = this.kv as { get: (key: string) => Promise<unknown>; set: (key: string, value: unknown, options?: unknown) => Promise<unknown> };
-
-    try {
-      // Get current count and reset time
-      const data = await kv.get(key);
-      const typedData = data as RateLimitEntry | null;
-
-      if (!typedData || now > typedData.resetTime) {
-        // Create new entry or reset expired one
-        const newEntry: RateLimitEntry = {
-          count: 1,
-          resetTime: now + windowMs,
-        };
-        // Set with TTL to auto-expire
-        await kv.set(key, newEntry, {
-          px: windowMs,
-        });
-        return true;
-      }
-
-      if (typedData.count >= maxRequests) {
-        return false;
-      }
-
-      // Increment count atomically
-      typedData.count++;
-      const ttl = typedData.resetTime - now;
-      await kv.set(key, typedData, {
-        px: Math.max(ttl, 100), // At least 1 second TTL
-      });
-
-      return true;
-    } catch (error) {
-      logger.error('KV rate limit check failed', error as Error);
-      // Fail open in case of KV issues
-      return true;
-    }
-  }
-
-  /**
-   * Check rate limit with in-memory store (fallback)
+   * Check rate limit with in-memory store
    */
   private async _checkLimit(
     identifier: string,
@@ -204,10 +120,6 @@ export class UnifiedRateLimiter {
     const now = Date.now();
     const key = this.buildKey(identifier, limitType);
 
-    if (this.useKV && this.kv) {
-      return this.getLimitInfoKV(key, config.maxRequests, config.windowMs);
-    }
-
     const entry = this.store.get(key);
 
     if (!entry || now > entry.resetTime) {
@@ -224,54 +136,6 @@ export class UnifiedRateLimiter {
       resetTime: entry.resetTime,
       isLimited: entry.count >= config.maxRequests
     };
-  }
-
-  /**
-   * Get rate limit info from Vercel KV
-   */
-  private async getLimitInfoKV(
-    identifier: string,
-    maxRequests: number,
-    windowMs: number
- ): Promise<{ remaining: number; resetTime: number; isLimited: boolean }> {
-    if (!this.kv) {
-      return {
-        remaining: maxRequests,
-        resetTime: Date.now() + windowMs,
-        isLimited: false
-      };
-    }
-
-    const now = Date.now();
-    const key = `ratelimit:${identifier}`;
-    const kv = this.kv as { get: (key: string) => Promise<unknown>; set: (key: string, value: unknown, options?: unknown) => Promise<unknown> };
-
-    try {
-      const data = await kv.get(key);
-      const typedData = data as RateLimitEntry | null;
-
-      if (!typedData || now > typedData.resetTime) {
-        return {
-          remaining: maxRequests,
-          resetTime: now + windowMs,
-          isLimited: false
-        };
-      }
-
-      const remaining = Math.max(0, maxRequests - typedData.count);
-      return {
-        remaining,
-        resetTime: typedData.resetTime,
-        isLimited: typedData.count >= maxRequests
-      };
-    } catch (error) {
-      logger.error('Failed to get KV limit info', error as Error);
-      return {
-        remaining: maxRequests,
-        resetTime: now + windowMs,
-        isLimited: false
-      };
-    }
   }
 
   private cleanup(): void {

@@ -3,7 +3,7 @@
  * PATCH /api/testimonials/[id] - Update testimonial (approve/feature)
  * DELETE /api/testimonials/[id] - Delete testimonial
  *
- * SECURITY: These endpoints require admin authentication via Supabase session
+ * SECURITY: These endpoints require admin authentication via Neon Auth session
  */
 
 import { type NextRequest } from 'next/server';
