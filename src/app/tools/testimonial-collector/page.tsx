@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
-import { TIMEOUTS } from '@/lib/constants';
+import { TIMEOUTS } from '@/lib/constants/timeouts';
 import { logger } from '@/lib/logger';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';

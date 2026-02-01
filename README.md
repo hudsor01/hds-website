@@ -41,10 +41,7 @@ A modern, high-performance business website built with Next.js 15, React, and Ty
 
    **Required Variables** (app won't start without these):
    - `RESEND_API_KEY` - Email service for contact forms
-   - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` - Supabase public key
-   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (server-only)
-   - `SUPABASE_PUBLISHABLE_KEY` - Supabase publishable key
+   - `POSTGRES_URL` - Neon PostgreSQL connection string
 
    **Optional Variables**:
    - `CSRF_SECRET` - CSRF protection (required in production, 32+ characters)

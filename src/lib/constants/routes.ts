@@ -3,7 +3,7 @@
  * Type-safe constants for all app navigation
  *
  * Usage:
- *   import { ROUTES, TOOL_ROUTES } from '@/lib/constants';
+ *   import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes';
  *   <Link href={ROUTES.CONTACT}>Contact</Link>
  *   <Link href={TOOL_ROUTES.TTL_CALCULATOR}>TTL Calculator</Link>
  */

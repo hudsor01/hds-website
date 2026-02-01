@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerLogger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors'
+import { castError } from '@/lib/errors'
 import { env } from '@/env';
 
 // Health check endpoint for monitoring

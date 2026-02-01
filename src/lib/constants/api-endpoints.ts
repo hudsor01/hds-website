@@ -3,7 +3,7 @@
  * Type-safe constants for all API calls
  *
  * Usage:
- *   import { API_ENDPOINTS } from '@/lib/constants';
+ *   import { API_ENDPOINTS } from '@/lib/constants/api-endpoints';
  *   const response = await fetch(API_ENDPOINTS.CONTACT, { ... });
  */
 
@@ -49,7 +49,6 @@ export const ADMIN_API_ENDPOINTS = {
 /** Internal API endpoints (server-side only) */
 export const INTERNAL_API_ENDPOINTS = {
   SCHEDULED_EMAILS_PROCESS: '/api/scheduled-emails/process',
-  WEBHOOKS_SUPABASE: '/api/webhooks/supabase',
   WEBHOOKS_N8N: '/api/webhooks/n8n',
 } as const;
 

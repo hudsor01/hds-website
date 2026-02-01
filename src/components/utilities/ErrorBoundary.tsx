@@ -3,7 +3,8 @@
 import { useState, type ComponentType, type ReactNode, type ErrorInfo as ReactErrorInfo } from 'react';
 import { Card } from "@/components/ui/card";
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { TIMEOUTS, BUSINESS_INFO } from '@/lib/constants';
+import { TIMEOUTS } from '@/lib/constants/timeouts';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { AlertTriangle, RotateCw, Clipboard, Check } from 'lucide-react';
 import { trackError } from '@/lib/analytics';
 import { logger, castError } from '@/lib/logger';

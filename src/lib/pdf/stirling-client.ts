@@ -4,7 +4,7 @@
  */
 
 import { logger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
+import { castError } from '@/lib/errors';
 
 /**
  * Get the Stirling PDF URL, throwing a clear error if not configured

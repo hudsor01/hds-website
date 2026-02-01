@@ -6,7 +6,9 @@
 import { type NextRequest, connection } from 'next/server'
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
-import { supabaseAdmin } from '@/lib/supabase'
+import { db } from '@/lib/db'
+import { errorLogs } from '@/lib/schemas/system'
+import { eq, desc } from 'drizzle-orm'
 import { requireAdminAuth, validateAdminAuth } from '@/lib/admin-auth'
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper'
 import { resolveErrorSchema } from '@/lib/schemas/error-logs'
@@ -19,7 +21,7 @@ interface RouteContext {
   }>
 }
 
-async function handleErrorDetail(request: NextRequest, context: RouteContext) {
+async function handleErrorDetail(_request: NextRequest, context: RouteContext) {
   await connection()
 
   const authError = await requireAdminAuth()
@@ -34,18 +36,13 @@ async function handleErrorDetail(request: NextRequest, context: RouteContext) {
       return errorResponse('Invalid fingerprint', 400)
     }
 
-    const { data: errorOccurrences, error: fetchError } = await supabaseAdmin
-      .from('error_logs')
-      .select('*')
-      .eq('fingerprint', fingerprint)
-      .order('created_at', { ascending: false })
+    const errorOccurrences = await db
+      .select()
+      .from(errorLogs)
+      .where(eq(errorLogs.fingerprint, fingerprint))
+      .orderBy(desc(errorLogs.createdAt))
 
-    if (fetchError) {
-      logger.error('Failed to fetch error occurrences', fetchError)
-      return errorResponse('Failed to fetch error occurrences', 500)
-    }
-
-    if (!errorOccurrences || errorOccurrences.length === 0) {
+    if (errorOccurrences.length === 0) {
       return errorResponse('Error not found', 404)
     }
 
@@ -55,7 +52,7 @@ async function handleErrorDetail(request: NextRequest, context: RouteContext) {
     }
 
     const totalCount = errorOccurrences.length
-    const resolvedCount = errorOccurrences.filter((e) => e.resolved_at !== null).length
+    const resolvedCount = errorOccurrences.filter((e) => e.resolvedAt !== null).length
 
     logger.info('Error details fetched', {
       fingerprint,
@@ -64,14 +61,14 @@ async function handleErrorDetail(request: NextRequest, context: RouteContext) {
 
     return successResponse({
       fingerprint,
-      error_type: firstOccurrence.error_type,
+      error_type: firstOccurrence.errorType,
       message: firstOccurrence.message,
       level: firstOccurrence.level,
       route: firstOccurrence.route,
       total_count: totalCount,
       resolved_count: resolvedCount,
-      first_seen: errorOccurrences[errorOccurrences.length - 1]?.created_at,
-      last_seen: firstOccurrence.created_at,
+      first_seen: errorOccurrences[errorOccurrences.length - 1]?.createdAt?.toISOString(),
+      last_seen: firstOccurrence.createdAt.toISOString(),
       occurrences: errorOccurrences.slice(0, 50),
     })
   } catch (error) {
@@ -114,26 +111,21 @@ async function handleErrorResolve(request: NextRequest, context: RouteContext) {
 
     const updateData = resolved
       ? {
-          resolved_at: new Date().toISOString(),
-          resolved_by: auth.user.id,
+          resolvedAt: new Date(),
+          resolvedBy: auth.user.id,
         }
       : {
-          resolved_at: null,
-          resolved_by: null,
+          resolvedAt: null,
+          resolvedBy: null,
         }
 
-    const { data, error: updateError } = await supabaseAdmin
-      .from('error_logs')
-      .update(updateData)
-      .eq('fingerprint', fingerprint)
-      .select()
+    const data = await db
+      .update(errorLogs)
+      .set(updateData)
+      .where(eq(errorLogs.fingerprint, fingerprint))
+      .returning()
 
-    if (updateError) {
-      logger.error('Failed to update error resolution status', updateError)
-      return errorResponse('Failed to update error resolution status', 500)
-    }
-
-    if (!data || data.length === 0) {
+    if (data.length === 0) {
       return errorResponse('Error not found', 404)
     }
 
@@ -148,7 +140,7 @@ async function handleErrorResolve(request: NextRequest, context: RouteContext) {
       fingerprint,
       resolved,
       updated_count: data.length,
-      resolved_at: updateData.resolved_at,
+      resolved_at: updateData.resolvedAt?.toISOString() ?? null,
     })
   } catch (error) {
     logger.error(

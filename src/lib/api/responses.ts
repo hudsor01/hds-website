@@ -4,7 +4,21 @@
  */
 
 import type { ZodError } from 'zod';
-import { formatValidationError } from '@/lib/validation';
+
+interface FormattedValidationError {
+  fieldErrors: Record<string, string[]>;
+  firstError: string;
+}
+
+function formatValidationError(error: ZodError): FormattedValidationError {
+  const flattened = error.flatten();
+  const fieldErrors = flattened.fieldErrors as Record<string, string[]>;
+  const firstFieldError = Object.values(fieldErrors)[0]?.[0];
+  const firstFormError = flattened.formErrors[0];
+  const firstError = firstFieldError || firstFormError || 'Invalid input';
+
+  return { fieldErrors, firstError };
+}
 
 /**
  * Success response with optional data and message

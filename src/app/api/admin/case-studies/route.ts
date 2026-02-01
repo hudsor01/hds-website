@@ -6,14 +6,12 @@
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { showcase } from '@/lib/schemas/schema';
+import { eq, and, desc } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
-import type { Database } from '@/types/database';
-
-type CaseStudyInsert = Database['public']['Tables']['case_studies']['Insert'];
-type CaseStudyUpdate = Database['public']['Tables']['case_studies']['Update'];
 
 const CaseStudySchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -52,19 +50,13 @@ async function handleAdminCaseStudiesGet(_request: NextRequest) {
   }
 
   try {
-    const supabase = await createClient();
+    const caseStudies = await db
+      .select()
+      .from(showcase)
+      .where(eq(showcase.showcaseType, 'detailed'))
+      .orderBy(desc(showcase.createdAt));
 
-    const { data: caseStudies, error } = await supabase
-      .from('case_studies')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      logger.error('Failed to fetch case studies:', error as Error);
-      return errorResponse('Failed to fetch case studies', 500);
-    }
-
-    return successResponse({ caseStudies: caseStudies || [] });
+    return successResponse({ caseStudies });
   } catch (error) {
     logger.error('Admin case studies API error:', error as Error);
     return errorResponse('Internal server error', 500);
@@ -84,59 +76,47 @@ async function handleAdminCaseStudiesPost(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = CaseStudySchema.parse(body);
-    const supabase = await createClient();
 
     // Check if slug already exists
-    const { data: existing, error: existingError } = await supabase
-      .from('case_studies')
-      .select('id')
-      .eq('slug', validatedData.slug)
-      .maybeSingle();
+    const existing = await db
+      .select({ id: showcase.id })
+      .from(showcase)
+      .where(eq(showcase.slug, validatedData.slug));
 
-    if (existingError && existingError.code !== 'PGRST116') {
-      logger.error('Failed to check case study slug uniqueness', existingError as Error);
-      return errorResponse('Unable to validate slug', 500);
-    }
-
-    if (existing) {
+    if (existing.length > 0) {
       return errorResponse('A case study with this slug already exists', 400);
     }
 
-    const insertData: CaseStudyInsert = {
-      title: validatedData.title,
-      slug: validatedData.slug,
-      client_name: validatedData.client_name,
-      industry: validatedData.industry,
-      project_type: validatedData.project_type,
-      description: validatedData.description,
-      challenge: validatedData.challenge,
-      solution: validatedData.solution,
-      results: validatedData.results,
-      technologies: validatedData.technologies.length ? validatedData.technologies : null,
-      metrics: validatedData.metrics.length ? validatedData.metrics : null,
-      testimonial_author: validatedData.testimonial_author || null,
-      testimonial_role: validatedData.testimonial_role || null,
-      testimonial_text: validatedData.testimonial_text || null,
-      testimonial_video_url: validatedData.testimonial_video_url || null,
-      thumbnail_url: validatedData.thumbnail_url || null,
-      featured_image_url: validatedData.featured_image_url || null,
-      project_url: validatedData.project_url || null,
-      project_duration: validatedData.project_duration || null,
-      team_size: validatedData.team_size ?? null,
-      published: validatedData.published ?? false,
-      featured: validatedData.featured ?? false,
-    } satisfies CaseStudyInsert;
-
-    const { data: caseStudy, error } = await supabase
-      .from('case_studies')
-      .insert(insertData)
-      .select('*')
-      .maybeSingle();
-
-    if (error) {
-      logger.error('Failed to create case study:', error as Error);
-      return errorResponse('Failed to create case study', 500);
-    }
+    const [caseStudy] = await db
+      .insert(showcase)
+      .values({
+        showcaseType: 'detailed',
+        title: validatedData.title,
+        slug: validatedData.slug,
+        clientName: validatedData.client_name,
+        industry: validatedData.industry,
+        projectType: validatedData.project_type,
+        description: validatedData.description,
+        challenge: validatedData.challenge,
+        solution: validatedData.solution,
+        results: validatedData.results,
+        technologies: validatedData.technologies.length ? validatedData.technologies : [],
+        metrics: validatedData.metrics.length
+          ? Object.fromEntries(validatedData.metrics.map(m => [m.label, m.value]))
+          : {},
+        testimonialAuthor: validatedData.testimonial_author ?? null,
+        testimonialRole: validatedData.testimonial_role ?? null,
+        testimonialText: validatedData.testimonial_text ?? null,
+        testimonialVideoUrl: validatedData.testimonial_video_url ?? null,
+        imageUrl: validatedData.thumbnail_url ?? null,
+        ogImageUrl: validatedData.featured_image_url ?? null,
+        externalLink: validatedData.project_url ?? null,
+        projectDuration: validatedData.project_duration ?? null,
+        teamSize: validatedData.team_size ?? null,
+        published: validatedData.published ?? false,
+        featured: validatedData.featured ?? false,
+      })
+      .returning();
 
     return successResponse({ caseStudy }, undefined, 201);
   } catch (error) {
@@ -168,36 +148,40 @@ async function handleAdminCaseStudiesPut(request: NextRequest) {
     }
 
     const validatedData = CaseStudySchema.partial().parse(updateData);
-    const supabase = await createClient();
 
-    const updateFields: CaseStudyUpdate = {
-      ...validatedData,
-      technologies: validatedData.technologies ?? undefined,
-      metrics: validatedData.metrics ?? undefined,
-      testimonial_author: validatedData.testimonial_author ?? undefined,
-      testimonial_role: validatedData.testimonial_role ?? undefined,
-      testimonial_text: validatedData.testimonial_text ?? undefined,
-      testimonial_video_url: validatedData.testimonial_video_url ?? undefined,
-      thumbnail_url: validatedData.thumbnail_url ?? undefined,
-      featured_image_url: validatedData.featured_image_url ?? undefined,
-      project_url: validatedData.project_url ?? undefined,
-      project_duration: validatedData.project_duration ?? undefined,
-      team_size: validatedData.team_size ?? undefined,
-      published: validatedData.published ?? undefined,
-      featured: validatedData.featured ?? undefined,
-    };
+    // Map validated snake_case fields to Drizzle camelCase columns
+    const updateFields: Partial<typeof showcase.$inferInsert> = {};
 
-    const { data: caseStudy, error } = await supabase
-      .from('case_studies')
-      .update(updateFields)
-      .eq('id', id)
-      .select('*')
-      .maybeSingle();
-
-    if (error) {
-      logger.error('Failed to update case study:', error as Error);
-      return errorResponse('Failed to update case study', 500);
+    if (validatedData.title !== undefined) {updateFields.title = validatedData.title;}
+    if (validatedData.slug !== undefined) {updateFields.slug = validatedData.slug;}
+    if (validatedData.client_name !== undefined) {updateFields.clientName = validatedData.client_name;}
+    if (validatedData.industry !== undefined) {updateFields.industry = validatedData.industry;}
+    if (validatedData.project_type !== undefined) {updateFields.projectType = validatedData.project_type;}
+    if (validatedData.description !== undefined) {updateFields.description = validatedData.description;}
+    if (validatedData.challenge !== undefined) {updateFields.challenge = validatedData.challenge;}
+    if (validatedData.solution !== undefined) {updateFields.solution = validatedData.solution;}
+    if (validatedData.results !== undefined) {updateFields.results = validatedData.results;}
+    if (validatedData.technologies !== undefined) {updateFields.technologies = validatedData.technologies;}
+    if (validatedData.metrics !== undefined) {
+      updateFields.metrics = Object.fromEntries(validatedData.metrics.map(m => [m.label, m.value]));
     }
+    if (validatedData.testimonial_author !== undefined) {updateFields.testimonialAuthor = validatedData.testimonial_author;}
+    if (validatedData.testimonial_role !== undefined) {updateFields.testimonialRole = validatedData.testimonial_role;}
+    if (validatedData.testimonial_text !== undefined) {updateFields.testimonialText = validatedData.testimonial_text;}
+    if (validatedData.testimonial_video_url !== undefined) {updateFields.testimonialVideoUrl = validatedData.testimonial_video_url;}
+    if (validatedData.thumbnail_url !== undefined) {updateFields.imageUrl = validatedData.thumbnail_url;}
+    if (validatedData.featured_image_url !== undefined) {updateFields.ogImageUrl = validatedData.featured_image_url;}
+    if (validatedData.project_url !== undefined) {updateFields.externalLink = validatedData.project_url;}
+    if (validatedData.project_duration !== undefined) {updateFields.projectDuration = validatedData.project_duration;}
+    if (validatedData.team_size !== undefined) {updateFields.teamSize = validatedData.team_size;}
+    if (validatedData.published !== undefined) {updateFields.published = validatedData.published;}
+    if (validatedData.featured !== undefined) {updateFields.featured = validatedData.featured;}
+
+    const [caseStudy] = await db
+      .update(showcase)
+      .set(updateFields)
+      .where(and(eq(showcase.id, id), eq(showcase.showcaseType, 'detailed')))
+      .returning();
 
     return successResponse({ caseStudy });
   } catch (error) {
@@ -236,17 +220,10 @@ async function handleAdminCaseStudiesDelete(request: NextRequest) {
     }
 
     const { id } = parseResult.data;
-    const supabase = await createClient();
 
-    const { error } = await supabase
-      .from('case_studies')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      logger.error('Failed to delete case study:', error as Error);
-      return errorResponse('Failed to delete case study', 500);
-    }
+    await db
+      .delete(showcase)
+      .where(and(eq(showcase.id, id), eq(showcase.showcaseType, 'detailed')));
 
     return successResponse({ success: true });
   } catch (error) {

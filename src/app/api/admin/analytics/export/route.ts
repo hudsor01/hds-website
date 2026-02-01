@@ -6,7 +6,9 @@
 import { type NextRequest, NextResponse, connection } from 'next/server';
 import { errorResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads, leadAttribution } from '@/lib/schemas/schema';
+import { eq, and, gte, lte, desc } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsExportQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
@@ -35,74 +37,68 @@ async function handleAnalyticsExport(request: NextRequest) {
 
     const { quality, type: calculatorType, startDate, endDate } = parseResult.data;
 
-    
+    // Build conditions
+    const conditions = [];
 
-    // Build query
-    let query = (await createClient())
-      .from('calculator_leads')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    // Apply filters
     if (quality) {
-      query = query.eq('lead_quality', quality);
+      conditions.push(eq(calculatorLeads.leadQuality, quality));
     }
 
     if (calculatorType) {
-      query = query.eq('calculator_type', calculatorType);
+      conditions.push(eq(calculatorLeads.calculatorType, calculatorType));
     }
 
     if (startDate) {
-      query = query.gte('created_at', startDate);
+      conditions.push(gte(calculatorLeads.createdAt, new Date(startDate)));
     }
 
     if (endDate) {
-      query = query.lte('created_at', endDate);
+      conditions.push(lte(calculatorLeads.createdAt, new Date(endDate)));
     }
 
-    const { data: leads, error } = await query;
-
-    if (error) {
-      logger.error('Failed to fetch leads for export', error as Error);
-      return errorResponse('Failed to fetch leads', 500);
-    }
-
-    // Enrich leads with attribution data
-    const enrichedLeads: LeadExportData[] = await Promise.all(
-      (leads || []).map(async (lead): Promise<LeadExportData> => {
-        const { data: attribution } = await (await createClient())
-          .from('lead_attribution')
-          .select('*')
-          .eq('email', lead.email)
-          .single();
-
-        return {
-          id: lead.id,
-          email: lead.email,
-          name: lead.name,
-          company: lead.company,
-          phone: lead.phone,
-          calculator_type: lead.calculator_type,
-          lead_score: lead.lead_score,
-          lead_quality: lead.lead_quality,
-          contacted: lead.contacted,
-          converted: lead.converted,
-          created_at: lead.created_at,
-          contacted_at: lead.contacted_at,
-          converted_at: lead.converted_at,
-          conversion_value: lead.conversion_value,
-          attribution: attribution ? {
-            source: attribution.source ?? '',
-            medium: attribution.medium ?? '',
-            campaign: attribution.campaign ?? '',
-            device_type: attribution.device_type ?? '',
-            browser: attribution.browser ?? '',
-            referrer: attribution.referrer ?? '',
-            landing_page: attribution.landing_page ?? '',
-          } : null,
-        };
+    // Use a left join to avoid N+1 queries for attribution data
+    const rows = await db
+      .select({
+        lead: calculatorLeads,
+        attribution: {
+          source: leadAttribution.source,
+          medium: leadAttribution.medium,
+          campaign: leadAttribution.campaign,
+          referrer: leadAttribution.referrer,
+          landingPage: leadAttribution.landingPage,
+        },
       })
-    );
+      .from(calculatorLeads)
+      .leftJoin(leadAttribution, eq(calculatorLeads.id, leadAttribution.leadId))
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(calculatorLeads.createdAt));
+
+    // Map to export format
+    const enrichedLeads: LeadExportData[] = rows.map((row) => ({
+      id: row.lead.id,
+      email: row.lead.email,
+      name: row.lead.name,
+      company: row.lead.company,
+      phone: row.lead.phone,
+      calculator_type: row.lead.calculatorType,
+      lead_score: row.lead.leadScore,
+      lead_quality: row.lead.leadQuality,
+      contacted: row.lead.contacted,
+      converted: row.lead.converted,
+      created_at: row.lead.createdAt.toISOString(),
+      contacted_at: row.lead.contactedAt?.toISOString() ?? null,
+      converted_at: row.lead.convertedAt?.toISOString() ?? null,
+      conversion_value: row.lead.conversionValue ? Number(row.lead.conversionValue) : null,
+      attribution: row.attribution !== null ? {
+        source: row.attribution.source ?? '',
+        medium: row.attribution.medium ?? '',
+        campaign: row.attribution.campaign ?? '',
+        device_type: '',
+        browser: '',
+        referrer: row.attribution.referrer ?? '',
+        landing_page: row.attribution.landingPage ?? '',
+      } : null,
+    }));
 
     // Convert to CSV
     const csv = convertToCSV(enrichedLeads);

@@ -9,7 +9,7 @@ import {
   type ContractData,
 } from '@/lib/pdf/contract-html-template';
 import { logger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
+import { castError } from '@/lib/errors';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 

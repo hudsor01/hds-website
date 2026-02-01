@@ -5,7 +5,8 @@
 
 import { logger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
-import { supabaseAdmin } from "@/lib/supabase";
+import { db } from '@/lib/db';
+import { webVitals } from '@/lib/schemas/analytics';
 import { type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
@@ -35,25 +36,19 @@ async function handleWebVitals(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown';
     const referer = request.headers.get('referer') || request.url;
 
-    // Insert web vital
-    const webVitalData = {
-      metric_type: validatedData.name,
-      value: validatedData.value,
-      rating: validatedData.rating || null,
-      page_path: referer,
-      user_agent: userAgent || null,
-      device_type: null,
-      connection_type: null,
-      session_id: null,
-    };
-
     // Store web vitals data
-    const { error } = await supabaseAdmin
-      .from('web_vitals')
-      .insert(webVitalData);
-
-    if (error) {
-      logger.error('Failed to store web vital:', error as Error);
+    try {
+      await db.insert(webVitals).values({
+        name: validatedData.name,
+        value: String(validatedData.value),
+        rating: validatedData.rating || null,
+        delta: String(validatedData.delta),
+        navigationType: validatedData.navigation_type,
+        url: referer,
+        userAgent: userAgent || null,
+      });
+    } catch (dbError) {
+      logger.error('Failed to store web vital:', dbError as Error);
       // Don't return error to client - fail silently
     }
 

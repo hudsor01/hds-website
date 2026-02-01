@@ -6,7 +6,7 @@
 import { generatePDFFromHTML } from '@/lib/pdf/stirling-client';
 import { generateInvoiceHTML, type InvoiceData } from '@/lib/pdf/invoice-html-template';
 import { logger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
+import { castError } from '@/lib/errors';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 

@@ -6,7 +6,9 @@
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schemas/schema';
+import { eq } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
@@ -29,29 +31,27 @@ async function handleLeadUpdate(
   }
 
   try {
-    
-
     const body = await request.json();
 
     // Validate input
     const validatedData = UpdateLeadSchema.parse(body);
 
-    // Build update object
-    const updates: Record<string, unknown> = {};
+    // Build update object with Drizzle camelCase column names
+    const updates: Partial<typeof calculatorLeads.$inferInsert> = {};
 
     if (validatedData.contacted !== undefined) {
       updates.contacted = validatedData.contacted;
       if (validatedData.contacted) {
-        updates.contacted_at = new Date().toISOString();
+        updates.contactedAt = new Date();
       }
     }
 
     if (validatedData.converted !== undefined) {
       updates.converted = validatedData.converted;
       if (validatedData.converted) {
-        updates.converted_at = new Date().toISOString();
+        updates.convertedAt = new Date();
         if (validatedData.conversion_value) {
-          updates.conversion_value = validatedData.conversion_value;
+          updates.conversionValue = String(validatedData.conversion_value);
         }
       }
     }
@@ -61,17 +61,11 @@ async function handleLeadUpdate(
     }
 
     // Update lead in database
-    const { data, error } = await (await createClient())
-      .from('calculator_leads')
-      .update(updates)
-      .eq('id', params.id)
-      .select()
-      .single();
-
-    if (error) {
-      logger.error('Failed to update lead:', error as Error);
-      return errorResponse('Failed to update lead', 500);
-    }
+    const [data] = await db
+      .update(calculatorLeads)
+      .set(updates)
+      .where(eq(calculatorLeads.id, params.id))
+      .returning();
 
     return successResponse({ lead: data });
   } catch (error) {

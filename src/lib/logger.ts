@@ -1,11 +1,11 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging with Supabase error tracking
+ * Provides server and client logging with database error tracking
  */
 
 import { env } from '@/env';
-import { supabaseAdmin } from '@/lib/supabase'
-import type { Json } from '@/types/database'
+import { db } from '@/lib/db';
+import { errorLogs } from '@/lib/schemas/system';
 import type {
   ErrorLogData,
   LogContext,
@@ -88,28 +88,32 @@ function generateFingerprint(
 }
 
 /**
- * Push error to Supabase (non-blocking, fire-and-forget)
+ * Push error to database (non-blocking, fire-and-forget)
  * Note: Uses console.error as final fallback since we can't use the logger to log logger failures
  */
-async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
+async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
   try {
-    // Cast metadata to match database Json type
-    const dbPayload = {
-      ...payload,
-      metadata: payload.metadata as Record<string, Json | undefined>,
-    }
-    const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
-    if (error) {
-      // Final fallback - can't use logger here as it would cause recursion
-      if (env.NODE_ENV === 'development') {
-        console.error('[Logger] Failed to push to Supabase:', error.message)
-      }
-    }
+    await db.insert(errorLogs).values({
+      fingerprint: payload.fingerprint,
+      errorType: payload.error_type,
+      level: payload.level,
+      message: payload.message,
+      stackTrace: payload.stack_trace,
+      url: payload.url,
+      method: payload.method,
+      route: payload.route,
+      requestId: payload.request_id,
+      userId: payload.user_id,
+      userEmail: payload.user_email,
+      environment: payload.environment,
+      vercelRegion: payload.vercel_region,
+      metadata: payload.metadata,
+    });
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
     if (env.NODE_ENV === 'development') {
-      console.error('[Logger] Failed to push to Supabase:', e)
+      console.error('[Logger] Failed to push to database:', e)
     }
   }
 }
@@ -200,9 +204,9 @@ class BaseLogger implements Logger {
     const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
+    // Push to database in production (non-blocking, server-side only)
     if (env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('error', message, errorData, context);
+      this.pushErrorToDatabase('error', message, errorData, context);
     }
   }
 
@@ -210,13 +214,13 @@ class BaseLogger implements Logger {
     const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
+    // Push to database in production (non-blocking, server-side only)
     if (env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('fatal', message, errorData, context);
+      this.pushErrorToDatabase('fatal', message, errorData, context);
     }
   }
 
-  private pushErrorToSupabase(
+  private pushErrorToDatabase(
     level: ErrorLevel,
     message: string,
     errorData?: ErrorLogData,
@@ -248,7 +252,7 @@ class BaseLogger implements Logger {
     }
 
     // Fire and forget - don't await
-    void pushToSupabase(payload)
+    void pushToDatabase(payload)
   }
 
   time(label: string): void {

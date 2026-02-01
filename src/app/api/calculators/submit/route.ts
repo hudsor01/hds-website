@@ -7,10 +7,10 @@ import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
-import { BUSINESS_INFO } from '@/lib/constants';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { scheduleEmail } from '@/lib/scheduled-emails';
-import type { Database, Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schemas/leads';
 import { type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
@@ -113,26 +113,20 @@ async function handleCalculatorSubmit(request: NextRequest) {
     });
 
     // Store in database
-    const insertData = {
-      calculator_type: calculator_type as string,
+    const [calculatorLead] = await db.insert(calculatorLeads).values({
+      calculatorType: calculator_type as string,
       email,
       name: typeof inputs.name === 'string' ? inputs.name : null,
       company: typeof inputs.company === 'string' ? inputs.company : null,
       phone: typeof inputs.phone === 'string' ? inputs.phone : null,
-      inputs: inputs as Json,
-      results: (results || {}) as Json,
-      lead_score: leadScore,
-      lead_quality: leadQuality,
-    } satisfies Database['public']['Tables']['calculator_leads']['Insert'];
+      inputs: inputs,
+      results: results || {},
+      leadScore: leadScore,
+      leadQuality: leadQuality,
+    }).returning();
 
-    const { data: calculatorLead, error: dbError } = await supabaseAdmin
-      .from('calculator_leads')
-      .insert(insertData)
-      .select()
-      .single();
-
-    if (dbError) {
-      logger.error('Failed to store calculator lead', dbError);
+    if (!calculatorLead) {
+      logger.error('Failed to store calculator lead - no row returned');
       return errorResponse('Failed to store submission', 500);
     }
 

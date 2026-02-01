@@ -42,8 +42,6 @@
 		"@radix-ui/react-slot": "1.2.4",
 		"@react-email/render": "2.0.4",
 		"@react-pdf/renderer": "4.3.2",
-		"@supabase/ssr": "0.8.0",
-		"@supabase/supabase-js": "2.93.3",
 		"@t3-oss/env-nextjs": "0.13.10",
 		"@tailwindcss/typography": "0.5.19",
 		"@tanstack/react-form": "1.28.0",
@@ -67,7 +65,7 @@
 		"sonner": "2.0.7",
 		"tailwind-merge": "3.4.0",
 		"zod": "4.3.6",
-		"zustand": "5.0.10"
+		"zustand": "5.0.11"
 	},
 	"devDependencies": {
 		"@happy-dom/global-registrator": "20.4.0",
@@ -94,8 +92,7 @@
 	},
 	"resolutions": {
 		"path-to-regexp": "8.3.0",
-		"esbuild": "0.27.1",
-		"undici": "7.16.0"
+		"esbuild": "0.27.1"
 	},
 	"overrides": {
 		"path-to-regexp": "8.3.0",

@@ -6,8 +6,8 @@
 import { env } from '@/env';
 import { castError, createServerLogger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
-import type { Database, Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
+import { db } from '@/lib/db';
+import { customEvents } from '@/lib/schemas/analytics';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
@@ -39,7 +39,7 @@ async function handleAnalyticsPost(request: NextRequest) {
     const eventCategory = typeof properties.category === 'string' ? properties.category : 'general';
     const eventLabel = typeof properties.label === 'string' ? properties.label : null;
     const eventValue = typeof properties.value === 'number' ? properties.value : null;
-    const metadata = (properties ?? {}) as Json;
+    const metadata = (properties ?? {}) as Record<string, unknown>;
 
     // Log the event
     logger.info('Analytics event received', {
@@ -50,24 +50,18 @@ async function handleAnalyticsPost(request: NextRequest) {
       timestamp: timestamp || Date.now(),
     });
 
-    // Store in Supabase
+    // Store in database
     try {
-      const insertPayload: Database['public']['Tables']['custom_events']['Insert'] = {
-        event_name: eventName,
-        event_category: eventCategory,
-        event_label: eventLabel,
-        event_value: eventValue,
-        session_id: sessionId || null,
-        user_id: userId || null,
-        metadata,
-        timestamp: new Date(timestamp || Date.now()).toISOString(),
-      };
-
-      const { error } = await supabaseAdmin.from('custom_events').insert(insertPayload);
-
-      if (error) {
-        logger.error('Failed to store analytics event in database', castError(error));
-      }
+      await db.insert(customEvents).values({
+        eventName,
+        category: eventCategory,
+        label: eventLabel,
+        value: eventValue !== null ? String(eventValue) : null,
+        sessionId: sessionId || null,
+        userId: userId || null,
+        properties: metadata,
+        timestamp: new Date(timestamp || Date.now()),
+      });
     } catch (dbError) {
       // Don't fail the request if database insert fails
       logger.error('Failed to store analytics event in database', castError(dbError));
