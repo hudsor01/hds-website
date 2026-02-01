@@ -3,7 +3,7 @@
  * Dynamic location pages for SEO and local marketing
  */
 
-import { BUSINESS_INFO } from './constants';
+import { BUSINESS_INFO } from './constants/business';
 
 // Location type definition
 export interface LocationFeature {

@@ -8,7 +8,9 @@ import { createServerLogger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmail } from '@/lib/scheduled-emails';
 import { emailSequenceIdSchema } from '@/lib/schemas/email';
-import { supabaseAdmin } from '@/lib/supabase';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schemas/leads';
+import { eq } from 'drizzle-orm';
 import { type NextRequest, NextResponse } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { z } from 'zod';
@@ -123,23 +125,20 @@ async function handleNewLead(body: unknown) {
     const { data } = validation.data;
 
     // Store lead in database
-    const { data: lead, error: dbError } = await supabaseAdmin
-      .from('calculator_leads')
-      .insert({
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        company: data.company,
-        calculator_type: 'n8n-integration',
-        inputs: { source: data.source },
-        lead_score: data.leadScore,
-        lead_quality: data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold',
-      })
-      .select()
-      .single();
+    const leadQuality = data.leadScore >= LEAD_QUALITY_THRESHOLDS.HOT ? 'hot' : data.leadScore >= LEAD_QUALITY_THRESHOLDS.WARM ? 'warm' : 'cold';
+    const [lead] = await db.insert(calculatorLeads).values({
+      email: data.email,
+      name: data.name,
+      phone: data.phone,
+      company: data.company,
+      calculatorType: 'n8n-integration',
+      inputs: { source: data.source },
+      leadScore: data.leadScore,
+      leadQuality,
+    }).returning();
 
-    if (dbError) {
-      logger.error('Failed to store lead from n8n', dbError);
+    if (!lead) {
+      logger.error('Failed to store lead from n8n - no row returned');
       return errorResponse('Failed to store lead', 500);
     }
 
@@ -153,7 +152,7 @@ async function handleNewLead(body: unknown) {
         phone: data.phone,
         company: data.company,
         leadScore: data.leadScore,
-        leadQuality: lead.lead_quality || 'warm',
+        leadQuality: lead.leadQuality || 'warm',
         source: `n8n Integration - ${data.source}`,
       });
     }
@@ -229,13 +228,12 @@ async function handleUpdateLead(body: unknown) {
 
     const { data } = validation.data;
 
-    const { error: updateError } = await supabaseAdmin
-      .from('calculator_leads')
-      .update(data.updates)
-      .eq('id', data.leadId);
-
-    if (updateError) {
-      logger.error('Failed to update lead from n8n', updateError);
+    try {
+      await db.update(calculatorLeads)
+        .set(data.updates)
+        .where(eq(calculatorLeads.id, data.leadId));
+    } catch (updateError) {
+      logger.error('Failed to update lead from n8n', updateError as Error);
       return errorResponse('Failed to update lead', 500);
     }
 

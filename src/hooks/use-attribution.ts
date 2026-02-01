@@ -9,7 +9,7 @@ import {
   getAttributionForSubmission,
 } from '@/lib/attribution';
 import { logger } from '@/lib/logger';
-import { API_ENDPOINTS } from '@/lib/constants';
+import { API_ENDPOINTS } from '@/lib/constants/api-endpoints';
 import type { UTMParameters, LeadAttributionData } from '@/types/analytics';
 
 export interface UseAttributionReturn {

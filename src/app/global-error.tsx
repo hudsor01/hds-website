@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { BUSINESS_INFO } from '@/lib/constants';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { createServerLogger } from '@/lib/logger';
 
 export default function GlobalError({

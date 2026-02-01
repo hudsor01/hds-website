@@ -133,23 +133,23 @@ describe('Admin Authentication', () => {
      * Simulates the role check logic from admin-auth.ts
      * This is the logic used in hasAdminRole() function
      */
-    const checkAdminRole = (user: { user_metadata?: { role?: string } }): boolean => {
-      return user.user_metadata?.role === 'admin';
+    const checkAdminRole = (user: { metadata?: { role?: string } }): boolean => {
+      return user.metadata?.role === 'admin';
     };
 
     it('accepts user with admin role in metadata', () => {
-      expect(checkAdminRole({ user_metadata: { role: 'admin' } })).toBe(true);
+      expect(checkAdminRole({ metadata: { role: 'admin' } })).toBe(true);
     });
 
     it('rejects user without admin role', () => {
-      expect(checkAdminRole({ user_metadata: { role: 'user' } })).toBe(false);
-      expect(checkAdminRole({ user_metadata: { role: 'moderator' } })).toBe(false);
-      expect(checkAdminRole({ user_metadata: {} })).toBe(false);
+      expect(checkAdminRole({ metadata: { role: 'user' } })).toBe(false);
+      expect(checkAdminRole({ metadata: { role: 'moderator' } })).toBe(false);
+      expect(checkAdminRole({ metadata: {} })).toBe(false);
       expect(checkAdminRole({})).toBe(false);
     });
 
     it('rejects user with undefined metadata', () => {
-      expect(checkAdminRole({ user_metadata: undefined })).toBe(false);
+      expect(checkAdminRole({ metadata: undefined })).toBe(false);
     });
   });
 });

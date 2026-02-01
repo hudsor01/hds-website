@@ -2,7 +2,7 @@
  * API Route: Testimonials
  * GET /api/testimonials - List testimonials
  *   - Public: Returns only approved testimonials (no auth required)
- *   - Admin: Returns all testimonials including unapproved (requires Supabase session)
+ *   - Admin: Returns all testimonials including unapproved (requires admin auth)
  *
  * Query params:
  *   - all=true: Request all testimonials (requires admin auth)

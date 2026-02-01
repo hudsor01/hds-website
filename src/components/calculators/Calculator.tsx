@@ -2,7 +2,7 @@
 
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator';
 import { JsonLd } from '@/components/utilities/JsonLd';
-import { TIMEOUTS } from '@/lib/constants';
+import { TIMEOUTS } from '@/lib/constants/timeouts';
 import { logger } from '@/lib/logger';
 import { formatCurrency } from '@/lib/utils';
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react';

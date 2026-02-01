@@ -1,32 +1,15 @@
 'use server';
 
+import { db } from '@/lib/db';
 import { env } from '@/env';
-import { BUSINESS_INFO } from '@/lib/constants';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { castError, logger } from '@/lib/logger';
 import { getResendClient } from '@/lib/resend-client';
+import { ttlCalculations } from '@/lib/schemas/ttl';
 import { formatCurrency } from '@/lib/utils';
-import type { Database, Json } from '@/types/database';
 import type { CalculationResults, VehicleInputs } from '@/types/ttl-types';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { count, eq, isNotNull, sql } from 'drizzle-orm';
 import { z } from 'zod';
-
-type TTLCalculationInsert = Database['public']['Tables']['ttl_calculations']['Insert'];
-
-function createServiceClient() {
-  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = env.SUPABASE_PUBLISHABLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return null;
-  }
-
-  return createSupabaseClient<Database>(
-    supabaseUrl,
-    serviceRoleKey,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  );
-}
 
 // Validation schemas
 const saveCalculationSchema = z.object({
@@ -102,12 +85,6 @@ export async function saveCalculation(
   email?: string
 ): Promise<{ success: boolean; shareCode?: string; error?: string }> {
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     // Validate input
     const validation = saveCalculationSchema.safeParse({ inputs, results, name, email });
     if (!validation.success) {
@@ -121,13 +98,13 @@ export async function saveCalculation(
     const maxAttempts = 5;
 
     while (attempts < maxAttempts) {
-      const { data: existing } = await supabase
-        .from('ttl_calculations')
-        .select('share_code')
-        .eq('share_code', shareCode)
-        .single();
+      const existing = await db
+        .select({ shareCode: ttlCalculations.shareCode })
+        .from(ttlCalculations)
+        .where(eq(ttlCalculations.shareCode, shareCode))
+        .limit(1);
 
-      if (!existing) {break;}
+      if (existing.length === 0) {break;}
       shareCode = generateShareCode();
       attempts++;
     }
@@ -138,24 +115,15 @@ export async function saveCalculation(
     }
 
     // Insert into database
-    const insertPayload: TTLCalculationInsert = {
-      share_code: shareCode,
-      inputs: inputs as unknown as Json,
-      results: results as Json,
+    await db.insert(ttlCalculations).values({
+      shareCode,
+      inputs: inputs as unknown,
+      results: results as unknown,
       name: name || `${formatCurrency(inputs.purchasePrice)} - ${inputs.county}`,
       email: email ?? null,
       county: inputs.county,
-      purchase_price: Math.round(inputs.purchasePrice),
-    };
-
-    const { error: insertError } = await supabase
-      .from('ttl_calculations')
-      .insert(insertPayload);
-
-    if (insertError) {
-      logger.error('Failed to save TTL calculation', { error: insertError });
-      return { success: false, error: 'Failed to save calculation' };
-    }
+      purchasePrice: Math.round(inputs.purchasePrice),
+    });
 
     // If email provided, send results
     if (email) {
@@ -184,34 +152,32 @@ export async function loadCalculation(
       return { success: false, error: 'Invalid share code' };
     }
 
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     // Fetch calculation
-    const { data, error: fetchError } = await supabase
-      .from('ttl_calculations')
-      .select('inputs, results, name, view_count')
-      .eq('share_code', parsedShareCode.data)
-      .single();
+    const rows = await db
+      .select({
+        inputs: ttlCalculations.inputs,
+        results: ttlCalculations.results,
+        name: ttlCalculations.name,
+        viewCount: ttlCalculations.viewCount,
+      })
+      .from(ttlCalculations)
+      .where(eq(ttlCalculations.shareCode, parsedShareCode.data))
+      .limit(1);
 
-    if (fetchError || !data) {
+    const data = rows[0];
+    if (!data) {
       logger.warn('TTL calculation not found', { shareCode });
       return { success: false, error: 'Calculation not found or has expired' };
     }
 
-    // Increment view count (fire-and-forget via service role)
-    void Promise.resolve(
-      supabase
-        .from('ttl_calculations')
-        .update({
-          view_count: (data.view_count ?? 0) + 1,
-          last_viewed_at: new Date().toISOString(),
-        })
-        .eq('share_code', shareCode)
-    )
+    // Increment view count (fire-and-forget)
+    void db
+      .update(ttlCalculations)
+      .set({
+        viewCount: sql`${ttlCalculations.viewCount} + 1`,
+        lastViewedAt: new Date(),
+      })
+      .where(eq(ttlCalculations.shareCode, shareCode))
       .then(() => {/* fire and forget */})
       .catch((err: Error) => logger.error('Failed to update view count', { error: err }));
 
@@ -237,12 +203,6 @@ export async function emailResults(
   email: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return { success: false, error: 'Database not configured' };
-    }
-
     // Validate input
     const validation = emailResultsSchema.safeParse({ shareCode, email });
     if (!validation.success) {
@@ -250,13 +210,18 @@ export async function emailResults(
     }
 
     // Fetch calculation
-    const { data, error: fetchError } = await supabase
-      .from('ttl_calculations')
-      .select('inputs, results, name')
-      .eq('share_code', validation.data.shareCode)
-      .single();
+    const rows = await db
+      .select({
+        inputs: ttlCalculations.inputs,
+        results: ttlCalculations.results,
+        name: ttlCalculations.name,
+      })
+      .from(ttlCalculations)
+      .where(eq(ttlCalculations.shareCode, validation.data.shareCode))
+      .limit(1);
 
-    if (fetchError || !data) {
+    const data = rows[0];
+    if (!data) {
       return { success: false, error: 'Calculation not found' };
     }
 
@@ -412,64 +377,62 @@ export async function getCalculatorAnalytics(): Promise<{
   recentCalculations: number;
 }> {
   try {
-    const supabase = createServiceClient();
-
-    if (!supabase) {
-      return {
-        totalCalculations: 0,
-        topCounties: [],
-        avgPurchasePrice: 0,
-        recentCalculations: 0,
-      };
-    }
-
     // Total calculations
-    const { count: totalCalculations } = await supabase
-      .from('ttl_calculations')
-      .select('*', { count: 'exact', head: true });
+    const totalResult = await db
+      .select({ count: count() })
+      .from(ttlCalculations);
+    const totalCalculations = totalResult[0]?.count ?? 0;
 
     // Top counties
-    const { data: countyData } = await supabase
-      .from('ttl_calculations')
-      .select('county')
-      .not('county', 'is', null);
+    const countyData = await db
+      .select({ county: ttlCalculations.county })
+      .from(ttlCalculations)
+      .where(isNotNull(ttlCalculations.county));
 
-    const countyCounts = (countyData || []).reduce<Record<string, number>>((acc, { county }) => {
-      if (county) {
-        acc[county] = (acc[county] || 0) + 1;
-      }
-      return acc;
-    }, {});
+    const countyCounts = countyData.reduce<Record<string, number>>(
+      (acc: Record<string, number>, row: { county: string | null }) => {
+        if (row.county) {
+          acc[row.county] = (acc[row.county] || 0) + 1;
+        }
+        return acc;
+      },
+      {},
+    );
 
     const topCounties = Object.entries(countyCounts)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a], [, b]) => Number(b) - Number(a))
       .slice(0, 5)
-      .map(([county, count]) => ({ county, count }));
+      .map(([county, countVal]) => ({ county, count: countVal }));
 
     // Average purchase price
-    const { data: priceData } = await supabase
-      .from('ttl_calculations')
-      .select('purchase_price')
-      .not('purchase_price', 'is', null);
+    const priceData = await db
+      .select({ purchasePrice: ttlCalculations.purchasePrice })
+      .from(ttlCalculations)
+      .where(isNotNull(ttlCalculations.purchasePrice));
 
-    const avgPurchasePrice = priceData && priceData.length > 0
-      ? priceData.reduce((sum, { purchase_price }) => sum + (purchase_price || 0), 0) / priceData.length
+    const avgPurchasePrice = priceData.length > 0
+      ? priceData.reduce(
+          (sum: number, row: { purchasePrice: number | null }) =>
+            sum + (row.purchasePrice || 0),
+          0,
+        ) / priceData.length
       : 0;
 
     // Recent calculations (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { count: recentCalculations } = await supabase
-      .from('ttl_calculations')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', sevenDaysAgo.toISOString());
+    const recentResult = await db
+      .select({ count: count() })
+      .from(ttlCalculations)
+      .where(sql`${ttlCalculations.createdAt} >= ${sevenDaysAgo.toISOString()}`);
+    const recentCalculations = recentResult[0]?.count ?? 0;
 
     return {
-      totalCalculations: totalCalculations || 0,
+      totalCalculations,
       topCounties,
       avgPurchasePrice: Math.round(avgPurchasePrice),
-      recentCalculations: recentCalculations || 0,
+      recentCalculations,
     };
   } catch (error) {
     logger.error('Error fetching calculator analytics', castError(error));

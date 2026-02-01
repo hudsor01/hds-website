@@ -1,34 +1,29 @@
 /**
  * Analytics Processing Cron Job
- * Processes and aggregates analytics data from Supabase
+ * Processes and aggregates analytics data
  */
 
 import { env } from '@/env';
 import { createServerLogger } from '@/lib/logger';
 import { cronAuthHeaderSchema } from '@/lib/schemas/api';
-import type { Json } from '@/types/database';
-import { supabaseAdmin } from '@/lib/supabase';
+import { db } from '@/lib/db';
+import { cronLogs, processingQueue } from '@/lib/schemas/system';
+import { customEvents, conversionFunnel } from '@/lib/schemas/analytics';
+import { leads } from '@/lib/schemas/leads';
+import { eq, gte, isNull, and, lt, or } from 'drizzle-orm';
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 
 const logger = createServerLogger('analytics-cron')
 
-type SupabaseErrorRecord = { error: true }
-
-const isSupabaseErrorRecord = (item: unknown): item is SupabaseErrorRecord => {
-  if (typeof item !== 'object' || item === null) {
-    return false
-  }
-
-  const record = item as Record<string, unknown>
-  return record.error === true
-}
-
 async function logCronExecution(jobName: string, status: string, error?: string) {
   try {
-    await supabaseAdmin
-      .from('cron_logs')
-      .insert({ job_name: jobName, status, error_message: error });
+    await db.insert(cronLogs).values({
+      jobName,
+      status,
+      startedAt: new Date(),
+      errorMessage: error,
+    });
   } catch (e) {
     // Non-critical for main job, but log for debugging
     logger.warn('Failed to log cron execution to database', {
@@ -41,72 +36,17 @@ async function logCronExecution(jobName: string, status: string, error?: string)
 
 async function enqueueLogProcessing(data: Record<string, unknown>) {
   try {
-    const payload = {
-      data: data as Json,
-      created_at: new Date().toISOString(),
-    };
-
-    await supabaseAdmin
-      .from('processing_queue')
-      .insert(payload);
+    await db.insert(processingQueue).values({
+      queueName: 'analytics',
+      taskType: typeof data.type === 'string' ? data.type : 'unknown',
+      payload: data,
+    });
   } catch (e) {
     // Non-critical for main job, but log for debugging
     logger.warn('Failed to enqueue log processing', {
       dataType: data.type,
       error: e instanceof Error ? e.message : String(e),
     });
-  }
-}
-
-async function createCustomEventsTable() {
-  const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    logger.error('Supabase environment variables are not configured');
-    return;
-  }
-
-  const sql = `
-    create table if not exists public.custom_events (
-      id uuid default gen_random_uuid() primary key,
-      event_name text not null,
-      event_category text default 'general',
-      event_label text,
-      event_value numeric,
-      session_id text,
-      user_id text,
-      page_path text,
-      properties jsonb,
-      metadata jsonb default '{}'::jsonb,
-      timestamp timestamptz default now(),
-      ip_address inet,
-      user_agent text,
-      value numeric
-    );
-    create index if not exists idx_custom_events_event_name on public.custom_events(event_name);
-    create index if not exists idx_custom_events_category on public.custom_events(event_category);
-    create index if not exists idx_custom_events_session_id on public.custom_events(session_id);
-    create index if not exists idx_custom_events_timestamp on public.custom_events(timestamp);
-  `;
-
-  try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/execute_sql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: serviceRoleKey,
-        Authorization: `Bearer ${serviceRoleKey}`,
-      },
-      body: JSON.stringify({ sql }),
-    });
-
-    if (!response.ok) {
-      const body = await response.text();
-      logger.error('Failed to create custom_events table', { status: response.status, body });
-    }
-  } catch (error) {
-    logger.error('Failed to create custom_events table', error instanceof Error ? error : new Error(String(error)));
   }
 }
 
@@ -134,8 +74,6 @@ export async function POST(request: NextRequest) {
       logger.warn('Unauthorized cron request')
       return errorResponse('Unauthorized', 401)
     }
-
-    await createCustomEventsTable()
 
     // Process analytics data
     const results = await Promise.all([
@@ -169,19 +107,20 @@ export async function POST(request: NextRequest) {
 async function processCustomEvents(): Promise<number> {
   try {
     // Get custom events from the last 24 hours
-    const { data, error } = await supabaseAdmin
-      .from('custom_events')
-      .select('event_name, event_category, event_value, session_id, user_id')
-      .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
-
-    if (error) {
-      logger.error('Failed to fetch custom events', error);
-      return 0;
-    }
+    const data = await db
+      .select({
+        eventName: customEvents.eventName,
+        category: customEvents.category,
+        value: customEvents.value,
+        sessionId: customEvents.sessionId,
+        userId: customEvents.userId,
+      })
+      .from(customEvents)
+      .where(gte(customEvents.timestamp, new Date(Date.now() - 24 * 60 * 60 * 1000)));
 
     // Aggregate by event name and category
-    const aggregated = data?.reduce((acc, curr) => {
-      const key = `${curr.event_category}-${curr.event_name}`;
+    const aggregated = data.reduce((acc, curr) => {
+      const key = `${curr.category}-${curr.eventName}`;
       if (!acc[key]) {
         acc[key] = {
           count: 0,
@@ -192,20 +131,20 @@ async function processCustomEvents(): Promise<number> {
       }
       const eventData = acc[key];
       eventData.count++;
-      if (curr.event_value) {
-        eventData.total_value += curr.event_value;
+      if (curr.value) {
+        eventData.total_value += Number(curr.value);
       }
-      if (curr.session_id) {
-        eventData.unique_sessions.add(curr.session_id);
+      if (curr.sessionId) {
+        eventData.unique_sessions.add(curr.sessionId);
       }
-      if (curr.user_id) {
-        eventData.unique_users.add(curr.user_id);
+      if (curr.userId) {
+        eventData.unique_users.add(curr.userId);
       }
       return acc;
     }, {} as Record<string, { count: number; total_value: number; unique_sessions: Set<string>; unique_users: Set<string> }>);
 
     // Log aggregated data
-    if (aggregated && Object.keys(aggregated).length > 0) {
+    if (Object.keys(aggregated).length > 0) {
       await enqueueLogProcessing({
         type: 'custom_events_aggregated',
         data: aggregated,
@@ -213,7 +152,7 @@ async function processCustomEvents(): Promise<number> {
       });
     }
 
-    return data?.length || 0;
+    return data.length;
   } catch (error) {
     logger.error('Custom events processing failed', error instanceof Error ? error : new Error(String(error)));
     return 0;
@@ -222,21 +161,29 @@ async function processCustomEvents(): Promise<number> {
 
 async function processLeadScoring(): Promise<number> {
   try {
-    // Get leads that need scoring (new leads without scores or updated recently)
-    const { data, error } = await supabaseAdmin
-      .from('leads')
-      .select('id, email, source, created_at, status')
-      .or('lead_score.is.null,and(lead_score.lt.50,updated_at.lt.' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() + ')');
+    // Get leads that need scoring (new leads without scores or with low scores updated > 7 days ago)
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    if (error) {
-      logger.error('Failed to fetch leads for scoring', error);
-      return 0;
-    }
+    const data = await db
+      .select({
+        id: leads.id,
+        email: leads.email,
+        source: leads.source,
+        createdAt: leads.createdAt,
+        status: leads.status,
+      })
+      .from(leads)
+      .where(
+        or(
+          isNull(leads.score),
+          and(lt(leads.score, 50), lt(leads.updatedAt, sevenDaysAgo))
+        )
+      );
 
     let scoredCount = 0;
 
     // Simple scoring algorithm based on source and status
-    for (const lead of data || []) {
+    for (const lead of data) {
       let score = 0;
 
       // Base score by source
@@ -270,13 +217,13 @@ async function processLeadScoring(): Promise<number> {
       }
 
       // Update the lead score
-      const { error: updateError } = await supabaseAdmin
-        .from('leads')
-        .update({ lead_score: Math.min(score, 100) })
-        .eq('id', lead.id);
-
-      if (!updateError) {
+      try {
+        await db.update(leads)
+          .set({ score: Math.min(score, 100) })
+          .where(eq(leads.id, lead.id));
         scoredCount++;
+      } catch {
+        // Continue scoring other leads if one fails
       }
     }
 
@@ -284,7 +231,7 @@ async function processLeadScoring(): Promise<number> {
     if (scoredCount > 0) {
       await enqueueLogProcessing({
         type: 'leads_scored',
-        data: { scored_count: scoredCount, total_leads: data?.length || 0 },
+        data: { scored_count: scoredCount, total_leads: data.length },
         timestamp: new Date().toISOString(),
       });
     }
@@ -298,66 +245,58 @@ async function processLeadScoring(): Promise<number> {
 
 async function processConversionFunnels(): Promise<number> {
   try {
-    // Get recent funnel steps
-    const result = await supabaseAdmin
-      .from('conversion_funnel')
-      .select('funnel_name, step_name, step_order, completed_at, session_id, user_id')
-      .gte('completed_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()); // Last 7 days
+    // Get recent funnel steps from the last 7 days
+    const data = await db
+      .select({
+        funnelName: conversionFunnel.funnelName,
+        stepName: conversionFunnel.stepName,
+        stepOrder: conversionFunnel.stepOrder,
+        completionTime: conversionFunnel.completionTime,
+        sessionId: conversionFunnel.sessionId,
+        userId: conversionFunnel.userId,
+      })
+      .from(conversionFunnel)
+      .where(gte(conversionFunnel.completionTime, new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)));
 
-    if (result.error) {
-      logger.error('Failed to fetch conversion funnel data', result.error);
-      return 0;
-    }
-
-    // If data is null or an error object, return 0
-    if (!result.data) {
+    if (data.length === 0) {
       logger.warn('No conversion funnel data returned');
       return 0;
     }
 
-    // Check if this is an error object disguised as data
-    const firstItem = result.data[0];
-    if (Array.isArray(result.data) && result.data.length > 0 && isSupabaseErrorRecord(firstItem)) {
-      logger.warn('Supabase query returned schema error, skipping conversion funnel processing');
-      return 0;
-    }
-
     // Aggregate by funnel name
-    const funnels = result.data.reduce((acc, curr) => {
-      if ('funnel_name' in curr && 'step_order' in curr && 'step_name' in curr) {
-        const funnelName = curr.funnel_name as string;
-        if (!acc[funnelName]) {
-          acc[funnelName] = {
-            steps: {} as Record<number, { name: string; completions: number; unique_sessions: Set<string>; unique_users: Set<string>; conversion_rate?: number }>,
-            total_completions: 0,
+    const funnels = data.reduce((acc, curr) => {
+      const funnelName = curr.funnelName;
+      if (!acc[funnelName]) {
+        acc[funnelName] = {
+          steps: {} as Record<number, { name: string; completions: number; unique_sessions: Set<string>; unique_users: Set<string>; conversion_rate?: number }>,
+          total_completions: 0,
+        };
+      }
+
+      const funnel = acc[funnelName];
+      if (funnel) {
+        const stepOrder = curr.stepOrder;
+        if (!funnel.steps[stepOrder]) {
+          funnel.steps[stepOrder] = {
+            name: curr.stepName,
+            completions: 0,
+            unique_sessions: new Set<string>(),
+            unique_users: new Set<string>(),
           };
         }
 
-        const funnel = acc[funnelName];
-        if (funnel) {
-          const stepOrder = curr.step_order as number;
-          if (!funnel.steps[stepOrder]) {
-            funnel.steps[stepOrder] = {
-              name: curr.step_name as string,
-              completions: 0,
-              unique_sessions: new Set<string>(),
-              unique_users: new Set<string>(),
-            };
+        const step = funnel.steps[stepOrder];
+        if (step) {
+          step.completions++;
+          if (curr.sessionId) {
+            step.unique_sessions.add(curr.sessionId);
+          }
+          if (curr.userId) {
+            step.unique_users.add(curr.userId);
           }
 
-          const step = funnel.steps[stepOrder];
-          if (step) {
-            step.completions++;
-            if ('session_id' in curr && curr.session_id) {
-              step.unique_sessions.add(curr.session_id as string);
-            }
-            if ('user_id' in curr && curr.user_id) {
-              step.unique_users.add(curr.user_id as string);
-            }
-
-            if ('completed_at' in curr && curr.completed_at) {
-              funnel.total_completions++;
-            }
+          if (curr.completionTime) {
+            funnel.total_completions++;
           }
         }
       }
@@ -366,34 +305,32 @@ async function processConversionFunnels(): Promise<number> {
     }, {} as Record<string, { steps: Record<number, { name: string; completions: number; unique_sessions: Set<string>; unique_users: Set<string>; conversion_rate?: number }>; total_completions: number }>);
 
     // Calculate conversion rates
-    if (funnels) {
-      Object.keys(funnels).forEach(funnelName => {
-        const funnel = funnels[funnelName];
-        if (funnel) {
-          const stepOrders = Object.keys(funnel.steps).map(Number).sort((a, b) => a - b);
+    Object.keys(funnels).forEach(funnelName => {
+      const funnel = funnels[funnelName];
+      if (funnel) {
+        const stepOrders = Object.keys(funnel.steps).map(Number).sort((a, b) => a - b);
 
-          for (let i = 1; i < stepOrders.length; i++) {
-            const prevOrder = stepOrders[i - 1];
-            const currOrder = stepOrders[i];
-            if (prevOrder !== undefined && currOrder !== undefined) {
-              const prevStep = funnel.steps[prevOrder];
-              const currStep = funnel.steps[currOrder];
+        for (let i = 1; i < stepOrders.length; i++) {
+          const prevOrder = stepOrders[i - 1];
+          const currOrder = stepOrders[i];
+          if (prevOrder !== undefined && currOrder !== undefined) {
+            const prevStep = funnel.steps[prevOrder];
+            const currStep = funnel.steps[currOrder];
 
-              if (prevStep && currStep) {
-                const conversionRate = prevStep.unique_sessions.size > 0
-                  ? (currStep.unique_sessions.size / prevStep.unique_sessions.size) * 100
-                  : 0;
+            if (prevStep && currStep) {
+              const conversionRate = prevStep.unique_sessions.size > 0
+                ? (currStep.unique_sessions.size / prevStep.unique_sessions.size) * 100
+                : 0;
 
-                currStep.conversion_rate = conversionRate;
-              }
+              currStep.conversion_rate = conversionRate;
             }
           }
         }
-      });
-    }
+      }
+    });
 
     // Log funnel data
-    if (funnels && Object.keys(funnels).length > 0) {
+    if (Object.keys(funnels).length > 0) {
       await enqueueLogProcessing({
         type: 'conversion_funnels_analyzed',
         data: funnels,
@@ -401,7 +338,7 @@ async function processConversionFunnels(): Promise<number> {
       });
     }
 
-    return result.data?.length || 0;
+    return data.length;
   } catch (error) {
     logger.error('Conversion funnels processing failed', error instanceof Error ? error : new Error(String(error)));
     return 0;

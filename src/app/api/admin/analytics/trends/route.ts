@@ -6,7 +6,9 @@
 import { type NextRequest, connection } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads } from '@/lib/schemas/schema';
+import { and, gte, lte, asc } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { analyticsTrendsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
@@ -35,28 +37,40 @@ async function handleAnalyticsTrends(request: NextRequest) {
 
     const { days } = parseResult.data;
 
-    
-
     // Calculate date range
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
     // Fetch all leads within date range
-    const { data: leads, error } = await (await createClient())
-      .from('calculator_leads')
-      .select('created_at, contacted, converted, lead_quality, calculator_type')
-      .gte('created_at', startDate.toISOString())
-      .lte('created_at', endDate.toISOString())
-      .order('created_at', { ascending: true });
+    const rows = await db
+      .select({
+        createdAt: calculatorLeads.createdAt,
+        contacted: calculatorLeads.contacted,
+        converted: calculatorLeads.converted,
+        leadQuality: calculatorLeads.leadQuality,
+        calculatorType: calculatorLeads.calculatorType,
+      })
+      .from(calculatorLeads)
+      .where(
+        and(
+          gte(calculatorLeads.createdAt, startDate),
+          lte(calculatorLeads.createdAt, endDate)
+        )
+      )
+      .orderBy(asc(calculatorLeads.createdAt));
 
-    if (error) {
-      logger.error('Failed to fetch leads for trends', error as Error);
-      return errorResponse('Failed to fetch trends', 500);
-    }
+    // Map Drizzle camelCase results to the TrendsLead snake_case interface
+    const leads: TrendsLead[] = rows.map((row) => ({
+        created_at: row.createdAt.toISOString(),
+        contacted: row.contacted,
+        converted: row.converted,
+        lead_quality: row.leadQuality,
+        calculator_type: row.calculatorType,
+      }));
 
     // Group leads by date
-    const dailyData = groupLeadsByDate(leads || [], days);
+    const dailyData = groupLeadsByDate(leads, days);
 
     // Calculate cumulative data
     const cumulativeLeads = calculateCumulative(dailyData, 'leads');

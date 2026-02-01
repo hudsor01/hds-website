@@ -61,7 +61,7 @@ async function handlePatchTestimonial(request: NextRequest, { params }: RoutePar
   }
 }
 
-async function handleDeleteTestimonial(request: NextRequest, { params }: RouteParams) {
+async function handleDeleteTestimonial(_request: NextRequest, { params }: RouteParams) {
   // Require admin authentication
   const authError = await requireAdminAuth();
   if (authError) {

@@ -8,7 +8,8 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
-import { TIMEOUTS, BUSINESS_INFO } from '@/lib/constants';
+import { TIMEOUTS } from '@/lib/constants/timeouts';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Braces, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { logger } from '@/lib/logger';

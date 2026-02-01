@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { CalculatorLayout } from '@/components/calculators/CalculatorLayout';
 import { CalculatorInput } from '@/components/calculators/CalculatorInput';
-import { TIMEOUTS } from '@/lib/constants';
+import { TIMEOUTS } from '@/lib/constants/timeouts';
 import { trackEvent } from '@/lib/analytics';
 import { Copy, Check, Eye, Code } from 'lucide-react';
 import { logger } from '@/lib/logger';

@@ -3,9 +3,9 @@
  * Drizzle ORM with Neon serverless driver for PostgreSQL
  * Works in both Bun and Node.js runtimes (Next.js build compatibility)
  */
-import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
-import * as schema from './schema';
+import { drizzle } from 'drizzle-orm/neon-http';
+import * as schema from './schemas/schema';
 
 // Lazy initialization to avoid connection during build time
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;

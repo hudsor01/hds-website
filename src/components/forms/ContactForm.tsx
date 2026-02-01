@@ -5,17 +5,17 @@ import { useAppForm } from '@/hooks/form-hook'
 import { FieldGroup } from '@/components/ui/field'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
-import { getFormOptions } from '@/lib/form-utils'
+import formOptions from '@/data/form-options.json'
 import { FormSuccessMessage } from '@/components/forms'
 
 export default function ContactForm({ className = '' }: { className?: string }) {
   const mutation = useContactFormSubmit()
   const [showSuccess, setShowSuccess] = useState(false)
 
-  const serviceOptions = useMemo(() => getFormOptions('services'), [])
-  const budgetOptions = useMemo(() => getFormOptions('budget'), [])
-  const timelineOptions = useMemo(() => getFormOptions('timeline'), [])
-  const contactTimeOptions = useMemo(() => getFormOptions('contactTime'), [])
+  const serviceOptions = useMemo(() => formOptions.services, [])
+  const budgetOptions = useMemo(() => formOptions.budget, [])
+  const timelineOptions = useMemo(() => formOptions.timeline, [])
+  const contactTimeOptions = useMemo(() => formOptions.contactTime, [])
 
   const form = useAppForm({
     defaultValues: {

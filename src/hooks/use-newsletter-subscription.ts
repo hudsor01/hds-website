@@ -6,7 +6,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { trackEvent } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
-import { API_ENDPOINTS } from '@/lib/constants';
+import { API_ENDPOINTS } from '@/lib/constants/api-endpoints';
 
 interface NewsletterData {
   email: string;

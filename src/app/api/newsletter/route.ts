@@ -3,7 +3,9 @@ import { logger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { newsletterSchema } from '@/lib/schemas/contact';
 import { detectInjectionAttempt } from '@/lib/utils';
-import { supabaseAdmin } from '@/lib/supabase';
+import { db } from '@/lib/db';
+import { leads } from '@/lib/schemas/leads';
+import { eq, desc, count } from 'drizzle-orm';
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 
@@ -74,32 +76,32 @@ async function handleNewsletterPost(request: NextRequest) {
     };
 
     // Save to leads table with newsletter source
-    const { error } = await supabaseAdmin
-      .from('leads')
-      .insert([{
+    try {
+      await db.insert(leads).values({
         email: subscriptionData.email,
-        name: subscriptionData.first_name || '', // Store first name as part of name
+        name: subscriptionData.first_name || '',
         source: subscriptionData.source,
-        status: 'newsletter-subscriber', // Different status for newsletter subscribers
-        message: 'Signed up for newsletter', // Indicate source
-        consent_marketing: subscriptionData.consent_marketing,
-        consent_analytics: subscriptionData.consent_analytics,
-        ip_address: subscriptionData.ip_address,
-        user_agent: subscriptionData.user_agent || null,
-        created_at: new Date().toISOString()
-      }]);
-
-    if (error) {
+        status: 'newsletter-subscriber',
+        metadata: {
+          message: 'Signed up for newsletter',
+          consent_marketing: subscriptionData.consent_marketing,
+          consent_analytics: subscriptionData.consent_analytics,
+          ip_address: subscriptionData.ip_address,
+          user_agent: subscriptionData.user_agent || null,
+        },
+      });
+    } catch (dbError) {
+      const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
       logger.error('Failed to save newsletter subscriber to database', {
-        error: error.message,
+        error: errorMessage,
         email: subscriptionData.email,
         component: 'NewsletterAPI',
         userFlow: 'newsletter_subscription',
         action: 'POST_newsletter'
       });
 
-      // Check if it's a duplicate email error
-      if (error.code === '23505') { // Unique violation code
+      // Check if it's a duplicate email error (unique violation)
+      if (errorMessage.includes('unique') || errorMessage.includes('duplicate') || errorMessage.includes('23505')) {
         return successResponse(undefined, 'You are already subscribed to our newsletter!');
       }
 
@@ -165,25 +167,28 @@ async function handleNewsletterGet(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Retrieve newsletter subscribers from leads table (with privacy considerations)
-    const { data, error, count } = await supabaseAdmin
-      .from('leads')
-      .select('email, name, source, created_at', { count: 'exact' })
-      .eq('source', 'newsletter-form') // Filter for newsletter signups only
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(leads)
+      .where(eq(leads.source, 'newsletter-form'));
 
-    if (error) {
-      logger.error('Failed to retrieve newsletter subscribers', {
-        error: error.message,
-        component: 'NewsletterAPI',
-        userFlow: 'newsletter_admin',
-        action: 'GET_subscribers'
-      });
-      return errorResponse('Failed to retrieve subscribers', 500);
-    }
+    const totalCount = countResult?.count ?? 0;
+
+    const data = await db
+      .select({
+        email: leads.email,
+        name: leads.name,
+        source: leads.source,
+        createdAt: leads.createdAt,
+      })
+      .from(leads)
+      .where(eq(leads.source, 'newsletter-form'))
+      .orderBy(desc(leads.createdAt))
+      .offset(offset)
+      .limit(limit);
 
     logger.info('Newsletter subscribers retrieved successfully', {
-      count: data?.length || 0,
+      count: data.length,
       component: 'NewsletterAPI',
       userFlow: 'newsletter_admin',
       action: 'GET_subscribers'
@@ -191,12 +196,12 @@ async function handleNewsletterGet(request: NextRequest) {
 
     return successResponse({
       subscribers: data,
-      count: count || 0,
+      count: totalCount,
       pagination: {
         page,
         limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
+        total: totalCount,
+        totalPages: Math.ceil(totalCount / limit)
       }
     });
   } catch (error) {

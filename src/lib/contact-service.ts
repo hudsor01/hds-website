@@ -9,7 +9,7 @@
  * - Welcome emails
  */
 
-import { EMAIL_CONFIG } from '@/lib/config/email';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 import { DISPLAY_CATEGORY_THRESHOLDS, LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils';
@@ -19,6 +19,12 @@ import { detectInjectionAttempt, escapeHtml } from '@/lib/utils';
 import { castError, type Logger } from '@/lib/logger';
 import { notifyHighValueLead } from '@/lib/notifications';
 import { scheduleEmailSequence } from '@/lib/scheduled-emails';
+
+const EMAIL_CONFIG = {
+  FROM_ADMIN: `${BUSINESS_INFO.displayName} <noreply@hudsondigitalsolutions.com>`,
+  FROM_PERSONAL: `Richard Hudson <${BUSINESS_INFO.email}>`,
+  TO_ADMIN: BUSINESS_INFO.email,
+} as const;
 
 /**
  * Check for suspicious content in form fields

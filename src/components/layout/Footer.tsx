@@ -5,7 +5,8 @@
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
-import { BUSINESS_INFO, ROUTES } from "@/lib/constants";
+import { BUSINESS_INFO } from "@/lib/constants/business";
+import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
 import {
   CheckCircle,

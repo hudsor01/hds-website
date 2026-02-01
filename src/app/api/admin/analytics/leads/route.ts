@@ -6,12 +6,27 @@
 import { type NextRequest, connection } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { createServerLogger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { calculatorLeads, leadAttribution } from '@/lib/schemas/schema';
+import { eq, and, desc, asc, type SQL } from 'drizzle-orm';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
-import { analyticsLeadsQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
+import { analyticsLeadsQuerySchema, safeParseSearchParams, type LeadSortBy } from '@/lib/schemas/query-params';
 
 const logger = createServerLogger('analytics-leads-api');
+
+/** Map validated sort column names to Drizzle column references */
+function getSortColumn(sortBy: LeadSortBy) {
+  const sortColumnMap = {
+    created_at: calculatorLeads.createdAt,
+    lead_score: calculatorLeads.leadScore,
+    email: calculatorLeads.email,
+    calculator_type: calculatorLeads.calculatorType,
+    lead_quality: calculatorLeads.leadQuality,
+  } as const;
+
+  return sortColumnMap[sortBy];
+}
 
 async function handleAnalyticsLeads(request: NextRequest) {
   await connection(); // Force dynamic rendering
@@ -34,57 +49,44 @@ async function handleAnalyticsLeads(request: NextRequest) {
 
     const { limit, quality, type: calculatorType, sortBy, sortOrder } = parseResult.data;
 
-    
+    // Build filter conditions
+    const conditions: SQL[] = [];
 
-    // Build query with JOIN to avoid N+1 problem
-    // Previously: 1 query for leads + N queries for attribution = N+1 queries
-    // Now: 1 query with left join = 1 query total
-    let query = (await createClient())
-      .from('calculator_leads')
-      .select(`
-        *,
-        attribution:lead_attribution(
-          first_touch_utm_source,
-          first_touch_utm_medium,
-          first_touch_utm_campaign,
-          last_touch_utm_source,
-          last_touch_utm_medium,
-          last_touch_utm_campaign,
-          referrer,
-          landing_page,
-          created_at
-        )
-      `);
-
-    // Apply filters
     if (quality) {
-      query = query.eq('lead_quality', quality);
+      conditions.push(eq(calculatorLeads.leadQuality, quality));
     }
 
     if (calculatorType) {
-      query = query.eq('calculator_type', calculatorType);
+      conditions.push(eq(calculatorLeads.calculatorType, calculatorType));
     }
 
-    // Apply sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    // Determine sort direction
+    const sortColumn = getSortColumn(sortBy);
+    const orderByClause = sortOrder === 'asc' ? asc(sortColumn) : desc(sortColumn);
 
-    // Apply limit
-    query = query.limit(limit);
-
-    const { data: leads, error } = await query;
-
-    if (error) {
-      logger.error('Failed to fetch leads', error as Error);
-      return errorResponse('Failed to fetch leads', 500);
-    }
+    // Query with LEFT JOIN to avoid N+1 problem
+    const rows = await db
+      .select({
+        lead: calculatorLeads,
+        attribution: {
+          source: leadAttribution.source,
+          medium: leadAttribution.medium,
+          campaign: leadAttribution.campaign,
+          referrer: leadAttribution.referrer,
+          landingPage: leadAttribution.landingPage,
+          createdAt: leadAttribution.timestamp,
+        },
+      })
+      .from(calculatorLeads)
+      .leftJoin(leadAttribution, eq(calculatorLeads.id, leadAttribution.leadId))
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(orderByClause)
+      .limit(limit);
 
     // Transform the joined data to match expected format
-    // Supabase returns attribution as an array, we want single object or null
-    const enrichedLeads = (leads || []).map((lead) => ({
-      ...lead,
-      attribution: Array.isArray(lead.attribution) && lead.attribution.length > 0
-        ? lead.attribution[0]
-        : lead.attribution || null,
+    const enrichedLeads = rows.map((row) => ({
+      ...row.lead,
+      attribution: row.attribution !== null ? row.attribution : null,
     }));
 
     logger.info('Leads fetched', { count: enrichedLeads.length, quality, calculatorType });

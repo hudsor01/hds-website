@@ -4,15 +4,14 @@
  */
 
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
-import type { Database } from '@/types/database';
+import { db } from '@/lib/db';
+import { leadNotes } from '@/lib/schemas/schema';
+import { eq, asc } from 'drizzle-orm';
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
 import { requireAdminAuth } from '@/lib/admin-auth';
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 import { z } from 'zod';
-
-type LeadNoteInsert = Database['public']['Tables']['lead_notes']['Insert'];
 
 const CreateNoteSchema = z.object({
   note_type: z.enum(['note', 'status_change', 'email_sent', 'call', 'meeting']),
@@ -22,7 +21,7 @@ const CreateNoteSchema = z.object({
 });
 
 async function handleLeadNotesGet(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -34,21 +33,14 @@ async function handleLeadNotesGet(
   }
 
   try {
-    const supabase = await createClient();
+    // Fetch all notes for this lead
+    const notes = await db
+      .select()
+      .from(leadNotes)
+      .where(eq(leadNotes.leadId, id))
+      .orderBy(asc(leadNotes.createdAt));
 
-    // Fetch all notes for this lead (RLS enforces admin access)
-    const { data: notes, error } = await supabase
-      .from('lead_notes')
-      .select('*')
-      .eq('lead_id', id)
-      .order('created_at', { ascending: true });
-
-    if (error) {
-      logger.error('Failed to fetch notes:', error as Error);
-      return errorResponse('Failed to fetch notes', 500);
-    }
-
-    return successResponse({ notes: notes || [] });
+    return successResponse({ notes });
   } catch (error) {
     logger.error('Notes fetch error:', error as Error);
     return errorResponse('Internal server error', 500);
@@ -70,30 +62,21 @@ async function handleLeadNotesPost(
   }
 
   try {
-    const supabase = await createClient();
     const body = await request.json();
 
     // Validate input
     const validatedData = CreateNoteSchema.parse(body);
 
-    // Insert note (RLS enforces admin access)
-    const noteData: LeadNoteInsert = {
-      lead_id: id,
-      content: validatedData.content,
-      note_type: validatedData.note_type,
-      created_by: validatedData.created_by || 'admin',
-    };
-
-    const { data: note, error } = await supabase
-      .from('lead_notes')
-      .insert(noteData)
-      .select('*')
-      .maybeSingle();
-
-    if (error) {
-      logger.error('Failed to create note:', error as Error);
-      return errorResponse('Failed to create note', 500);
-    }
+    // Insert note
+    const [note] = await db
+      .insert(leadNotes)
+      .values({
+        leadId: id,
+        content: validatedData.content,
+        noteType: validatedData.note_type,
+        createdBy: validatedData.created_by || 'admin',
+      })
+      .returning();
 
     return successResponse({ note });
   } catch (error) {

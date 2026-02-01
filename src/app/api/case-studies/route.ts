@@ -5,7 +5,9 @@
 
 import { type NextRequest, connection } from 'next/server';
 import { logger } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/server';
+import { db } from '@/lib/db';
+import { showcase } from '@/lib/schemas/schema';
+import { eq, and, desc } from 'drizzle-orm';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { caseStudiesQuerySchema, safeParseSearchParams } from '@/lib/schemas/query-params';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
@@ -25,22 +27,16 @@ async function handleCaseStudiesGet(request: NextRequest) {
 
     const { industry, featured, slug } = parseResult.data;
 
-    // Use server client - RLS allows public reads of published case studies
-    const supabase = await createClient();
-
     // If slug is provided, return single case study
     if (slug) {
-      const { data: caseStudy, error } = await supabase
-        .from('case_studies')
-        .select('*')
-        .eq('slug', slug)
-        .eq('published', true)
-        .maybeSingle();
+      const conditions = and(
+        eq(showcase.showcaseType, 'detailed'),
+        eq(showcase.slug, slug),
+        eq(showcase.published, true)
+      );
 
-      if (error && error.code !== 'PGRST116') {
-        logger.error('Failed to fetch case study by slug', error as Error);
-        return errorResponse('Failed to fetch case study', 500);
-      }
+      const results = await db.select().from(showcase).where(conditions);
+      const caseStudy = results[0] ?? null;
 
       if (!caseStudy) {
         return errorResponse('Case study not found', 404);
@@ -49,31 +45,29 @@ async function handleCaseStudiesGet(request: NextRequest) {
       return successResponse({ caseStudy });
     }
 
-    // Build query for list of case studies
-    let query = supabase
-      .from('case_studies')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
+    // Build conditions for list of case studies
+    const conditions = [
+      eq(showcase.showcaseType, 'detailed'),
+      eq(showcase.published, true),
+    ];
 
     // Filter by industry if provided
     if (industry) {
-      query = query.eq('industry', industry);
+      conditions.push(eq(showcase.industry, industry));
     }
 
     // Filter by featured if provided
     if (featured) {
-      query = query.eq('featured', true);
+      conditions.push(eq(showcase.featured, true));
     }
 
-    const { data: caseStudies, error } = await query;
+    const caseStudies = await db
+      .select()
+      .from(showcase)
+      .where(and(...conditions))
+      .orderBy(desc(showcase.createdAt));
 
-    if (error) {
-      logger.error('Failed to fetch case studies:', error as Error);
-      return errorResponse('Failed to fetch case studies', 500);
-    }
-
-    return successResponse({ caseStudies: caseStudies || [] });
+    return successResponse({ caseStudies });
   } catch (error) {
     logger.error('Case studies API error:', error as Error);
     return errorResponse('Internal server error', 500);
