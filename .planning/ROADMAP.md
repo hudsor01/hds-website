@@ -11,7 +11,7 @@ None
 ## Milestones
 
 - [v1.0 Cleanup & Simplification](milestones/v1.0-ROADMAP.md) (Phases 1-10) -- SHIPPED 2026-01-30
-- **v1.1 Code Review Remediation** -- Phases 11-16 (in progress)
+- **v1.1 Code Review Remediation** -- Phases 11-17 (in progress)
 
 ## Completed Milestones
 
@@ -65,6 +65,11 @@ Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remai
 **Depends on**: Phase 15 (optimized code before restructuring)
 **Items**: CODE_REVIEW #5 (component bloat), #10 (component patterns), #11 (provider stack)
 
+### Phase 17: Next.js 16 Alignment
+**Goal**: Align project structure with Next.js 16 conventions, remove dead code, fix security issues
+**Depends on**: Phase 11 (cleaner imports = easier to audit)
+**Items**: Next.js 16 structural review findings (7 items)
+
 ### Excluded Items (Already Resolved or Not Actionable)
 - CODE_REVIEW #1 (missing core utilities) -- FIXED in v1.0
 - CODE_REVIEW #2 (type system inconsistencies) -- FIXED in v1.0
@@ -79,9 +84,10 @@ Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remai
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-10 | v1.0 | 30+/30+ | Complete | 2026-01-30 |
-| 11. TypeScript Strictness | v1.1 | 0/TBD | Not started | - |
+| 11. TypeScript Strictness | v1.1 | 2/2 | Complete | 2026-02-02 |
 | 12. Test Coverage | v1.1 | 0/TBD | Not started | - |
 | 13. Error Handling | v1.1 | 0/TBD | Not started | - |
 | 14. Security Hardening | v1.1 | 0/TBD | Not started | - |
 | 15. Performance Optimization | v1.1 | 0/TBD | Not started | - |
 | 16. Architecture & Components | v1.1 | 0/TBD | Not started | - |
+| 17. Next.js 16 Alignment | v1.1 | 0/TBD | Not started | - |
