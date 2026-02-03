@@ -1,5 +1,5 @@
 import { logger } from '@/lib/logger';
-import type { CalculationResults, SavedCalculation, VehicleInputs } from '../../types/ttl-types';
+import type { CalculationResults, SavedCalculation, VehicleInputs } from '@/types/ttl-types';
 import { calculatePayment, calculateTTL } from './calculator';
 import { calculateLeaseComparison } from './lease';
 import { calculateTCO } from './tco';
