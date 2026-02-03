@@ -10,7 +10,7 @@ import { SERVICE_TYPES } from '@/types/testimonials';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Send, Star } from 'lucide-react'
-import { FormSuccessMessage } from '@/components/forms';
+import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage';
 import { useState } from 'react';
 
 interface TestimonialFormProps {

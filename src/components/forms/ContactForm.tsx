@@ -6,7 +6,7 @@ import { FieldGroup } from '@/components/ui/field'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import formOptions from '@/data/form-options.json'
-import { FormSuccessMessage } from '@/components/forms'
+import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
 
 export default function ContactForm({ className = '' }: { className?: string }) {
   const mutation = useContactFormSubmit()

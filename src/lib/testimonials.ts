@@ -6,7 +6,7 @@
 
 import { randomBytes } from 'crypto';
 import { desc, eq } from 'drizzle-orm';
-import type { ServiceType, Testimonial, TestimonialRequest } from '../types/testimonials';
+import type { ServiceType, Testimonial, TestimonialRequest } from '@/types/testimonials';
 import { db } from './db';
 import { testimonialRequests, testimonials } from './schemas/schema';
 
