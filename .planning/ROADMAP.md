@@ -90,4 +90,4 @@ Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remai
 | 14. Security Hardening | v1.1 | 0/TBD | Not started | - |
 | 15. Performance Optimization | v1.1 | 0/TBD | Not started | - |
 | 16. Architecture & Components | v1.1 | 0/TBD | Not started | - |
-| 17. Next.js 16 Alignment | v1.1 | 0/TBD | Not started | - |
+| 17. Next.js 16 Alignment | v1.1 | 1/1 | Complete | 2026-02-02 |
