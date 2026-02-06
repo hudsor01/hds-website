@@ -22,7 +22,7 @@ import { createTestLogger } from './test-logger';
 const PAGES_TO_TEST = [
   { path: '/', name: 'home' },
   { path: '/services', name: 'services' },
-  { path: '/portfolio', name: 'portfolio' },
+  { path: '/showcase', name: 'portfolio' },
   { path: '/pricing', name: 'pricing' },
   { path: '/contact', name: 'contact' },
   { path: '/about', name: 'about' },

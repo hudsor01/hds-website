@@ -425,7 +425,7 @@ test.describe('Dark Mode - All Pages', () => {
   const pages = [
     { path: '/', name: 'Home' },
     { path: '/services', name: 'Services' },
-    { path: '/portfolio', name: 'Portfolio' },
+    { path: '/showcase', name: 'Portfolio' },
     { path: '/pricing', name: 'Pricing' },
     { path: '/contact', name: 'Contact' },
   ];

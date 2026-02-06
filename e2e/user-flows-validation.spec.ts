@@ -66,11 +66,11 @@ test.describe('User Flow Validation', () => {
 
     test('should navigate from portfolio to contact', async ({ page }) => {
       // Start at portfolio page
-      await page.goto('/portfolio')
+      await page.goto('/showcase')
       await page.waitForLoadState('networkidle')
 
       // Verify portfolio projects are visible
-      await expect(page.locator('h1, h2').filter({ hasText: /portfolio|project/i }).first()).toBeVisible()
+      await expect(page.locator('h1, h2').filter({ hasText: /showcase|project/i }).first()).toBeVisible()
 
       // Click "Start Your Project" CTA
       const ctaButton = page.locator('a[href="/contact"], button:has-text("Start Your Project")').first()
@@ -161,11 +161,11 @@ test.describe('User Flow Validation', () => {
 
   test.describe('Portfolio Browsing Flow', () => {
     test('should browse portfolio projects', async ({ page }) => {
-      await page.goto('/portfolio')
+      await page.goto('/showcase')
       await page.waitForLoadState('networkidle')
 
       // Verify portfolio page loads
-      await expect(page.locator('h1, h2').filter({ hasText: /portfolio|project/i }).first()).toBeVisible()
+      await expect(page.locator('h1, h2').filter({ hasText: /showcase|project/i }).first()).toBeVisible()
 
       // Verify projects are displayed
       const projectCards = page.locator('[class*="glass-card"], [class*="card"]')
@@ -185,7 +185,7 @@ test.describe('User Flow Validation', () => {
     })
 
     test('should view live project sites from portfolio', async ({ page, context }) => {
-      await page.goto('/portfolio')
+      await page.goto('/showcase')
       await page.waitForLoadState('networkidle')
 
       // Find "View Live Site" link
@@ -204,7 +204,7 @@ test.describe('User Flow Validation', () => {
     })
 
     test('should navigate from portfolio stats to CTA', async ({ page }) => {
-      await page.goto('/portfolio')
+      await page.goto('/showcase')
       await page.waitForLoadState('networkidle')
 
       // Scroll to stats section
@@ -225,7 +225,8 @@ test.describe('User Flow Validation', () => {
     })
   })
 
-  test.describe('Paystub Generator Flow', () => {
+  // Skipped: paystub-generator route was removed during v1.0 consolidation
+  test.describe.skip('Paystub Generator Flow', () => {
     test('should complete paystub generation flow', async ({ page }) => {
       await page.goto('/paystub-generator')
       await page.waitForLoadState('networkidle')
@@ -327,7 +328,7 @@ test.describe('User Flow Validation', () => {
 
     test('should interact with touch elements on mobile', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 })
-      await page.goto('/portfolio')
+      await page.goto('/showcase')
       await page.waitForLoadState('networkidle')
 
       // Verify horizontal scroll on portfolio cards
@@ -472,8 +473,8 @@ test.describe('User Flow Validation', () => {
       await expect(page).toHaveURL(/.*services/)
 
       // Portfolio
-      await page.locator('a[href="/portfolio"]').first().click()
-      await page.waitForURL('**/portfolio')
+      await page.locator('a[href="/showcase"]').first().click()
+      await page.waitForURL('**/showcase')
       await expect(page).toHaveURL(/.*portfolio/)
 
       // About
