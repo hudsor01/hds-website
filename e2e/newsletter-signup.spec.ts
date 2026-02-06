@@ -99,12 +99,20 @@ test.describe('Newsletter Signup - Homepage', () => {
     const subscribeButton = page.locator('button', { hasText: /subscribe/i }).first()
     await subscribeButton.click()
 
-    // Wait for result
-    await page.waitForTimeout(2000)
+    // Wait for API response and toast notification
+    await page.waitForTimeout(3000)
 
-    // Check for success message or error (error expected in test env without email service)
-    const successVisible = await page.locator('text=/thank you|subscribed|check your email|confirm/i').isVisible().catch(() => false)
-    const errorVisible = await page.locator('text=/error|failed|try again|something went wrong/i').isVisible().catch(() => false)
+    // Check for success message or error in page content AND toast notifications
+    // Toasts appear in a portal at the top-right, so check both page and toast container
+    const pageSuccessVisible = await page.locator('text=/thank you|subscribed|check your email|confirm/i').isVisible().catch(() => false)
+    const pageErrorVisible = await page.locator('text=/error|failed|try again|something went wrong/i').isVisible().catch(() => false)
+
+    // Also check for toast notifications (sonner renders in [data-sonner-toaster])
+    const toastSuccess = await page.locator('[data-sonner-toaster] >> text=/success|subscribed|thank you/i').isVisible().catch(() => false)
+    const toastError = await page.locator('[data-sonner-toaster] >> text=/error|failed/i').isVisible().catch(() => false)
+
+    const successVisible = pageSuccessVisible || toastSuccess
+    const errorVisible = pageErrorVisible || toastError
 
     if (successVisible) {
       logger.complete('Newsletter subscription successful')
