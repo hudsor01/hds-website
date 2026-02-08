@@ -99,28 +99,40 @@ test.describe('Newsletter Signup - Homepage', () => {
     const subscribeButton = page.locator('button', { hasText: /subscribe/i }).first()
     await subscribeButton.click()
 
-    // Wait for API response and toast notification
-    await page.waitForTimeout(3000)
+    // Wait for the button to change state (loading -> success/subscribed) or error to appear
+    // The button shows "Subscribing..." during loading and "Subscribed" on success
+    const loadingEnded = page.locator('button:has-text("Subscribe"), button:has-text("Subscribed")')
+    await loadingEnded.first().waitFor({ timeout: 10000 })
 
-    // Check for success message or error in page content AND toast notifications
-    // Toasts appear in a portal at the top-right, so check both page and toast container
-    const pageSuccessVisible = await page.locator('text=/thank you|subscribed|check your email|confirm/i').isVisible().catch(() => false)
-    const pageErrorVisible = await page.locator('text=/error|failed|try again|something went wrong/i').isVisible().catch(() => false)
+    // Success indicators:
+    // 1. Button text changes to "Subscribed"
+    // 2. Success message appears: "Thank you! Check your email to confirm your subscription."
+    // 3. Input becomes disabled
+    const buttonText = await subscribeButton.textContent()
+    const buttonHasSubscribed = buttonText?.toLowerCase().includes('subscribed') ?? false
 
-    // Also check for toast notifications (sonner renders in [data-sonner-toaster])
-    const toastSuccess = await page.locator('[data-sonner-toaster] >> text=/success|subscribed|thank you/i').isVisible().catch(() => false)
-    const toastError = await page.locator('[data-sonner-toaster] >> text=/error|failed/i').isVisible().catch(() => false)
+    // Check for inline success message
+    const successMessage = page.locator('text=/Thank you.*Check your email/i')
+    const successMessageVisible = await successMessage.isVisible().catch(() => false)
 
-    const successVisible = pageSuccessVisible || toastSuccess
-    const errorVisible = pageErrorVisible || toastError
+    // Check for error message (rate limit, already subscribed, etc.)
+    const errorMessage = page.locator('text=/too many requests|already subscribed|failed|error|something went wrong/i')
+    const errorMessageVisible = await errorMessage.isVisible().catch(() => false)
+
+    const successVisible = buttonHasSubscribed || successMessageVisible
+    const errorVisible = errorMessageVisible
 
     if (successVisible) {
       logger.complete('Newsletter subscription successful')
     } else if (errorVisible) {
       logger.warn('Newsletter subscription returned error (expected in test env)')
+    } else {
+      // Take screenshot for debugging
+      await page.screenshot({ path: `test-results/newsletter-debug-${Date.now()}.png` })
+      logger.warn('No success or error message visible - check screenshot')
     }
 
-    // Either success or error should appear
+    // Either success or error should appear (rate limiting can cause errors in test)
     expect(successVisible || errorVisible).toBeTruthy()
   })
 
