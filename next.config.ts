@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // Transpile ESM packages for webpack compatibility
+  transpilePackages: ['@react-pdf/renderer'],
+
   experimental: {
     optimizePackageImports: [
       '@heroicons/react',
