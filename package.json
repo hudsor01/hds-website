@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"dev:https": "cross-env HTTPS=true next dev",
-		"build": "next build",
+		"build": "next build --webpack",
 		"start": "next start",
 		"lint": "eslint .",
 		"generate-sitemap": "bun run scripts/generate-sitemap.ts",
