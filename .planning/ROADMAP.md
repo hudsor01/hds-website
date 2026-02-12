@@ -76,7 +76,7 @@ Audit findings addressed:
 - CSP reports route has empty string in EXPECTED_CSP_FIELDS array
 
 Plans:
-- [ ] 37-01: TBD (run /gsd:plan-phase 37 to break down)
+- [ ] 37-01: Env validation, .env.example update, CSP fix (2 tasks)
 
 #### Phase 38: API Route Cleanup & Consolidation
 **Goal**: Consolidate duplicate newsletter endpoints, evaluate orphaned API routes (health/pagespeed/csrf/paystub), enable disabled cron processing for web vitals and page analytics
