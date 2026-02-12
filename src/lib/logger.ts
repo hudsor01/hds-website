@@ -7,13 +7,15 @@ import { env } from '@/env';
 import { db } from '@/lib/db';
 import { errorLogs } from '@/lib/schemas/system';
 import type {
+  ErrorContext,
+  ErrorLevel,
   ErrorLogData,
+  ErrorLogPayload,
   LogContext,
   Logger,
   LogLevel,
   ServerLogger
 } from '@/types/logger'
-import type { ErrorContext, ErrorLogPayload, ErrorLevel } from '@/types/error-logging'
 
 export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
 
