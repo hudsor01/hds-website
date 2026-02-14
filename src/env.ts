@@ -14,13 +14,18 @@ export const env = createEnv({
    * These are only available on the server and never sent to the client
    */
   server: {
+    // Node environment
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+
+    // Database - Neon/Drizzle (optional for CI builds)
+    POSTGRES_URL: z.string().url().optional(),
+
     // Email - Optional (features degrade gracefully without it)
     RESEND_API_KEY: z.string().min(1).optional(),
 
     // Webhooks - Optional
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
     SLACK_WEBHOOK_URL: z.string().url().optional(),
-    N8N_WEBHOOK_SECRET: z.string().optional(),
 
     // Security - CSRF_SECRET is required in production
     CSRF_SECRET: z
@@ -50,8 +55,8 @@ export const env = createEnv({
     // JWT Secret for authentication
     JWT_SECRET: z.string().min(16).optional(),
 
-    // Node environment
-    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    // PDF Generation - Stirling PDF service
+    STIRLING_PDF_URL: z.string().url().optional(),
 
     // Vercel deployment info
     VERCEL_REGION: z.string().optional(),
@@ -76,10 +81,11 @@ export const env = createEnv({
    */
   runtimeEnv: {
     // Server
+    NODE_ENV: process.env.NODE_ENV,
+    POSTGRES_URL: process.env.POSTGRES_URL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     SLACK_WEBHOOK_URL: process.env.SLACK_WEBHOOK_URL,
-    N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
     CSRF_SECRET: process.env.CSRF_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
     KV_REST_API_URL: process.env.KV_REST_API_URL,
@@ -89,7 +95,7 @@ export const env = createEnv({
     ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,
     ADMIN_EMAILS: process.env.ADMIN_EMAILS,
     JWT_SECRET: process.env.JWT_SECRET,
-    NODE_ENV: process.env.NODE_ENV,
+    STIRLING_PDF_URL: process.env.STIRLING_PDF_URL,
     VERCEL_REGION: process.env.VERCEL_REGION,
     npm_package_version: process.env.npm_package_version,
 

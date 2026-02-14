@@ -40,16 +40,9 @@ export const API_ENDPOINTS = {
   ANALYTICS_PROCESSING: '/api/analytics/processing',
 } as const;
 
-/** Admin API endpoints (service role required) */
-export const ADMIN_API_ENDPOINTS = {
-  USERS: '/api/admin/users',
-  ANALYTICS: '/api/admin/analytics',
-} as const;
-
 /** Internal API endpoints (server-side only) */
 export const INTERNAL_API_ENDPOINTS = {
   SCHEDULED_EMAILS_PROCESS: '/api/scheduled-emails/process',
-  WEBHOOKS_N8N: '/api/webhooks/n8n',
 } as const;
 
 /**
@@ -73,5 +66,4 @@ export function buildApiUrl(endpoint: string, params?: Record<string, string | n
 
 // Type exports
 export type ApiEndpoint = typeof API_ENDPOINTS[keyof typeof API_ENDPOINTS];
-export type AdminApiEndpoint = typeof ADMIN_API_ENDPOINTS[keyof typeof ADMIN_API_ENDPOINTS];
 export type InternalApiEndpoint = typeof INTERNAL_API_ENDPOINTS[keyof typeof INTERNAL_API_ENDPOINTS];

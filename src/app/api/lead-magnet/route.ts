@@ -1,4 +1,5 @@
 import { type NextRequest } from 'next/server';
+import { env } from '@/env';
 import { getResendClient, isResendConfigured } from '@/lib/resend-client';
 import { applySecurityHeaders } from '@/lib/security-headers';
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses';
@@ -221,7 +222,7 @@ async function handleLeadMagnet(request: NextRequest) {
         }
         
         // Send Discord notification if configured
-        if (process.env.DISCORD_WEBHOOK_URL) {
+        if (env.DISCORD_WEBHOOK_URL) {
           try {
             // Build Discord webhook payload
             const discordPayload = {
@@ -256,7 +257,7 @@ async function handleLeadMagnet(request: NextRequest) {
               });
             } else {
               // Send validated payload
-              const discordResponse = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+              const discordResponse = await fetch(env.DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
