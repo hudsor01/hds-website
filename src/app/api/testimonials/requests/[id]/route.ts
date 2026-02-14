@@ -1,14 +1,11 @@
 /**
  * API Route: Individual Testimonial Request
  * DELETE /api/testimonials/requests/[id] - Delete testimonial request
- *
- * SECURITY: This endpoint requires admin authentication via Neon Auth session
  */
 
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { deleteTestimonialRequest } from '@/lib/testimonials';
-import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 
@@ -17,12 +14,6 @@ interface RouteParams {
 }
 
 async function handleTestimonialRequestDelete(_request: NextRequest, { params }: RouteParams) {
-  // Require admin authentication
-  const authError = await requireAdminAuth();
-  if (authError) {
-    return authError;
-  }
-
   try {
     const { id } = await params;
 

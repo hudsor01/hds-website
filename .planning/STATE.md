@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Working tools (paystub/invoice/timesheet generators) and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, and optimized performance.
-**Current focus:** v2.0 Audit Remediation & Feature Completion -- Phase 37 (Environment & Configuration Hygiene)
+**Current focus:** v2.0 Audit Remediation & Feature Completion -- Phase 38 complete, ready for Phase 39
 
 ## Current Position
 
-Phase: 37 of 44 (Environment & Configuration Hygiene)
-Plan: 37-01 created (1 plan, 2 tasks)
-Status: Ready to execute
-Last activity: 2026-02-11 -- Phase 37 planned
+Phase: 38 of 44 (API Route Cleanup & Consolidation) -- COMPLETE
+Plan: 38-01 executed
+Status: Phase 38 complete
+Last activity: 2026-02-14 -- Phase 38 executed
 
-Progress: ░░░░░░░░░░░░░░░░ 0%
+Progress: ████████░░░░░░░░ 25% (2/8 phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 33 (30 in v1.0, 3 in v1.1)
+- Total plans completed: 35 (30 in v1.0, 3 in v1.1, 2 in v2.0)
 - Average duration: ~1 day per phase
 - Total execution time: 23 days
 
@@ -29,7 +29,7 @@ Progress: ░░░░░░░░░░░░░░░░ 0%
 |-----------|--------|----------|--------|
 | v1.0 Cleanup | 10 phases | 20 days | -21,797 net lines, 45% fewer deps |
 | v1.1 Remediation | 2/7 phases | 3 days | Strict TS, @/ imports, barrel removed, loading states |
-| v2.0 Audit Remediation | 0/8 phases | - | Milestone created |
+| v2.0 Audit Remediation | 2/8 phases | 1 day | API routes 23->11, 6 dead env vars removed |
 
 ## Accumulated Context
 
@@ -43,6 +43,10 @@ Progress: ░░░░░░░░░░░░░░░░ 0%
 - Eliminated barrel files (src/components/forms/index.ts) -- Better tree-shaking
 - Removed unused admin panel (34 files, 3,716 lines) -- 2026-02-10
 - v1.1 phases 12-16 deferred to v2.0 (superseded by audit findings) -- 2026-02-10
+- Deleted dead auth route + @neondatabase/auth (no auth system) -- 2026-02-14
+- Deleted dead n8n webhook route + workflow JSON files -- 2026-02-14
+- Aggressive API cleanup: deleted 14 orphaned routes, fake admin-auth -- 2026-02-14
+- No auth system needed: this is a customer-facing website, not a SaaS app -- Confirmed
 
 ### Deferred Issues
 
@@ -55,12 +59,24 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Phase 37 planned
+Last session: 2026-02-14
+Stopped at: Phase 38 complete
 Resume file: None
-Next action: Execute Phase 37-01 (/gsd:execute-plan .planning/phases/37-environment-configuration-hygiene/37-01-PLAN.md)
+Next action: Begin Phase 39
 
 ## Recent Completions
+
+### Phase 38: API Route Cleanup & Consolidation (Complete)
+- 38-01: Deleted 14 orphaned routes, admin-auth.ts, broken attribution hook
+- Stripped fake auth from 4 testimonial routes
+- Cleaned api-endpoints.ts (15 -> 6 constants), removed 6 dead env vars
+- Created paystub tool page at /tools/paystub-calculator
+- Cleaned 5 dead test files/blocks
+- 11 API routes remaining, all verified with consumers
+
+### Phase 37: Environment & Configuration Hygiene (Complete)
+- 37-01: Env vars through env.ts, .env.example updated, CSP fix, dead auth/n8n removed
+- +35/-1,135 lines, 17 files, 1 dependency removed
 
 ### Admin Panel Removal (2026-02-10)
 - Removed 34 files (admin pages, components, API routes, types, store)

@@ -9,7 +9,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useAttribution } from '@/hooks/use-attribution';
 import { trackConversion } from '@/lib/analytics';
 import { logger } from '@/lib/logger';
 import { CheckCircle2 } from 'lucide-react';
@@ -41,17 +40,12 @@ export function CalculatorResults({
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const { sendAttribution } = useAttribution();
-
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
 
     try {
-      // Send attribution with email
-      await sendAttribution(email);
-
       // Store calculator results
       const response = await fetch('/api/calculators/submit', {
         method: 'POST',
