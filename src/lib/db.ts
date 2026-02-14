@@ -5,17 +5,18 @@
  */
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
+import { env } from '@/env';
 import * as schema from './schemas/schema';
 
 // Check if we're in a CI build environment without database
-const isCIBuild = process.env.SKIP_ENV_VALIDATION === 'true' && !process.env.POSTGRES_URL;
+const isCIBuild = process.env.SKIP_ENV_VALIDATION === 'true' && !env.POSTGRES_URL;
 
 // Lazy initialization to avoid connection during build time
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
 function getDb(): ReturnType<typeof drizzle<typeof schema>> {
   if (!_db) {
-    const url = process.env.POSTGRES_URL;
+    const url = env.POSTGRES_URL;
     if (!url) {
       throw new Error('POSTGRES_URL environment variable is not set');
     }
