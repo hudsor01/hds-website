@@ -36,24 +36,12 @@ export const env = createEnv({
         (val) => process.env.NODE_ENV !== 'production' || !!val,
         'CSRF_SECRET is required in production'
       ),
-    CRON_SECRET: z.string().optional(),
-
-    // Vercel KV for distributed rate limiting
-    KV_REST_API_URL: z.string().url().optional(),
-    KV_REST_API_TOKEN: z.string().optional(),
 
     // SEO
     GOOGLE_SITE_VERIFICATION: z.string().optional(),
 
     // Base URL
     BASE_URL: z.string().url().optional().default("http://localhost:3000"),
-
-    // Admin API token
-    ADMIN_API_TOKEN: z.string().min(16).optional(),
-    ADMIN_EMAILS: z.string().optional(),
-
-    // JWT Secret for authentication
-    JWT_SECRET: z.string().min(16).optional(),
 
     // PDF Generation - Stirling PDF service
     STIRLING_PDF_URL: z.string().url().optional(),
@@ -87,14 +75,8 @@ export const env = createEnv({
     DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL,
     SLACK_WEBHOOK_URL: process.env.SLACK_WEBHOOK_URL,
     CSRF_SECRET: process.env.CSRF_SECRET,
-    CRON_SECRET: process.env.CRON_SECRET,
-    KV_REST_API_URL: process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
     GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
     BASE_URL: process.env.BASE_URL,
-    ADMIN_API_TOKEN: process.env.ADMIN_API_TOKEN,
-    ADMIN_EMAILS: process.env.ADMIN_EMAILS,
-    JWT_SECRET: process.env.JWT_SECRET,
     STIRLING_PDF_URL: process.env.STIRLING_PDF_URL,
     VERCEL_REGION: process.env.VERCEL_REGION,
     npm_package_version: process.env.npm_package_version,

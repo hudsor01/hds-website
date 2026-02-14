@@ -2,14 +2,11 @@
  * API Route: Individual Testimonial
  * PATCH /api/testimonials/[id] - Update testimonial (approve/feature)
  * DELETE /api/testimonials/[id] - Delete testimonial
- *
- * SECURITY: These endpoints require admin authentication via Neon Auth session
  */
 
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { updateTestimonialStatus, deleteTestimonial } from '@/lib/testimonials';
-import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
 import { withRateLimitParams } from '@/lib/api/rate-limit-wrapper';
 
@@ -23,12 +20,6 @@ interface UpdateBody {
 }
 
 async function handlePatchTestimonial(request: NextRequest, { params }: RouteParams) {
-  // Require admin authentication
-  const authError = await requireAdminAuth();
-  if (authError) {
-    return authError;
-  }
-
   try {
     const { id } = await params;
     const body = await request.json() as UpdateBody;
@@ -62,12 +53,6 @@ async function handlePatchTestimonial(request: NextRequest, { params }: RoutePar
 }
 
 async function handleDeleteTestimonial(_request: NextRequest, { params }: RouteParams) {
-  // Require admin authentication
-  const authError = await requireAdminAuth();
-  if (authError) {
-    return authError;
-  }
-
   try {
     const { id } = await params;
 

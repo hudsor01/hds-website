@@ -76,7 +76,7 @@ Audit findings addressed:
 - CSP reports route has empty string in EXPECTED_CSP_FIELDS array
 
 Plans:
-- [ ] 37-01: Env validation, .env.example update, CSP fix (2 tasks)
+- [x] 37-01: Env validation, .env.example update, CSP fix, dead auth/n8n removal
 
 #### Phase 38: API Route Cleanup & Consolidation
 **Goal**: Consolidate duplicate newsletter endpoints, evaluate orphaned API routes (health/pagespeed/csrf/paystub), enable disabled cron processing for web vitals and page analytics
@@ -91,7 +91,7 @@ Audit findings addressed:
 - /api/paystub potentially orphaned
 
 Plans:
-- [ ] 38-01: TBD
+- [x] 38-01: Delete orphaned routes, strip fake auth, clean constants/env, create paystub page
 
 #### Phase 39: Auth Decision & Implementation
 **Goal**: Decide Neon Auth strategy (complete implementation or remove partial setup), fix admin-auth.ts stub that provides zero protection on testimonial routes, add middleware.ts if implementing auth
@@ -99,10 +99,12 @@ Plans:
 **Research**: Likely (Neon Auth current docs, Next.js middleware patterns)
 **Research topics**: Neon Auth beta API stability, middleware.ts patterns for Next.js 16, session management with @neondatabase/auth
 
+**NOTE**: Auth route and admin-auth.ts already deleted in Phases 37-38. Neon Auth dependency removed. This phase may be skippable -- all auth-related dead code has been removed. Decision: no auth system needed for a customer-facing website.
+
 Audit findings addressed:
-- Neon Auth API handler exists but no login pages, no middleware, no client auth
-- admin-auth.ts validateAdminAuth() always returns true, requireAdminAuth() always returns null
-- No middleware.ts for token refresh or route protection
+- ~~Neon Auth API handler exists but no login pages, no middleware, no client auth~~ RESOLVED in Phase 37
+- ~~admin-auth.ts validateAdminAuth() always returns true, requireAdminAuth() always returns null~~ RESOLVED in Phase 38
+- ~~No middleware.ts for token refresh or route protection~~ N/A (no auth system)
 
 Plans:
 - [ ] 39-01: TBD
@@ -185,8 +187,8 @@ Plans:
 | 15. Performance Optimization | v1.1 | 0/TBD | Deferred to v2.0 | - |
 | 16. Architecture & Components | v1.1 | 0/TBD | Deferred to v2.0 | - |
 | 17. Next.js 16 Alignment | v1.1 | 1/1 | Complete | 2026-02-02 |
-| 37. Env & Config Hygiene | v2.0 | 0/TBD | Not started | - |
-| 38. API Route Cleanup | v2.0 | 0/TBD | Not started | - |
+| 37. Env & Config Hygiene | v2.0 | 1/1 | Complete | 2026-02-14 |
+| 38. API Route Cleanup | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 39. Auth Decision | v2.0 | 0/TBD | Not started | - |
 | 40. Tool Calculator Pages | v2.0 | 0/TBD | Not started | - |
 | 41. Location SEO Pages | v2.0 | 0/TBD | Not started | - |

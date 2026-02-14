@@ -12,8 +12,6 @@ function setupEnvMock() {
     env: {
       NODE_ENV: 'test',
       CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
-      KV_REST_API_URL: undefined,
-      KV_REST_API_TOKEN: undefined,
       RESEND_API_KEY: 'test-resend-key',
       NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
       npm_package_version: '1.0.0',
