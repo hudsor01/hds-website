@@ -1,34 +1,4 @@
-/**
- * Location Data for Texas Cities
- * Dynamic location pages for SEO and local marketing
- */
-
-import { BUSINESS_INFO } from './constants/business';
-
-// Location type definition
-export interface LocationFeature {
-  title: string;
-  description: string;
-}
-
-export interface LocationStats {
-  businesses: string;
-  projects: string;
-  satisfaction: string;
-}
-
-export interface LocationData {
-  slug: string;
-  city: string;
-  state: string;
-  stateCode: string;
-  tagline: string;
-  description: string;
-  metaDescription: string;
-  neighborhoods: string[];
-  stats: LocationStats;
-  features: LocationFeature[];
-}
+import type { LocationData } from './types';
 
 export const TEXAS_LOCATIONS: LocationData[] = [
   {
@@ -176,45 +146,91 @@ export const TEXAS_LOCATIONS: LocationData[] = [
       },
     ],
   },
-];
-
-/**
- * Get all location slugs for static generation
- */
-export function getAllLocationSlugs(): string[] {
-  return TEXAS_LOCATIONS.map((location) => location.slug);
-}
-
-/**
- * Get location data by slug
- */
-export function getLocationBySlug(slug: string): LocationData | undefined {
-  return TEXAS_LOCATIONS.find((location) => location.slug === slug);
-}
-
-/**
- * Generate LocalBusiness schema for a location
- */
-export function generateLocalBusinessSchema(location: LocationData) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: 'Hudson Digital Solutions',
-    url: `https://hudsondigitalsolutions.com/locations/${location.slug}`,
-    email: BUSINESS_INFO.email,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: location.city,
-      addressRegion: location.stateCode,
-      addressCountry: 'US',
+  {
+    slug: 'el-paso',
+    city: 'El Paso',
+    state: 'Texas',
+    stateCode: 'TX',
+    tagline: 'Sun City Digital Solutions',
+    description: 'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City enterprises.',
+    metaDescription: 'Web development and digital solutions in El Paso, TX. Custom websites and bilingual web applications for Sun City and Borderland businesses.',
+    neighborhoods: ['Downtown El Paso', 'Westside', 'Eastside', 'Upper Valley', 'Mission Valley', 'Horizon City', 'Socorro', 'Las Cruces'],
+    stats: {
+      businesses: '15+',
+      projects: '25+',
+      satisfaction: '100%',
     },
-    areaServed: location.neighborhoods.map((name) => ({
-      '@type': 'City',
-      name,
-    })),
-    sameAs: [
-      'https://www.linkedin.com/company/hudson-digital-solutions',
-      'https://twitter.com/hudsondigital',
+    features: [
+      {
+        title: 'Bilingual Web Solutions',
+        description: 'English and Spanish websites for El Paso businesses serving the Borderland community.',
+      },
+      {
+        title: 'Cross-Border Commerce',
+        description: 'E-commerce platforms supporting US-Mexico trade and international business operations.',
+      },
+      {
+        title: 'Local Business Growth',
+        description: 'Digital marketing and web presence for El Paso small businesses and restaurants.',
+      },
     ],
-  };
-}
+  },
+  {
+    slug: 'arlington',
+    city: 'Arlington',
+    state: 'Texas',
+    stateCode: 'TX',
+    tagline: 'Entertainment Capital Meets Digital Innovation',
+    description: 'Home to AT&T Stadium and Globe Life Field, Arlington is a hub for entertainment and mid-cities businesses that need powerful digital solutions.',
+    metaDescription: 'Professional web development in Arlington, TX. Custom websites, e-commerce, and digital solutions for DFW mid-cities businesses.',
+    neighborhoods: ['Downtown Arlington', 'Entertainment District', 'Viridian', 'Mansfield', 'Grand Prairie', 'Pantego', 'Dalworthington Gardens', 'Kennedale'],
+    stats: {
+      businesses: '10+',
+      projects: '20+',
+      satisfaction: '100%',
+    },
+    features: [
+      {
+        title: 'Entertainment & Events',
+        description: 'Websites and booking platforms for Arlington entertainment venues and event companies.',
+      },
+      {
+        title: 'Restaurant & Hospitality',
+        description: 'Online ordering, reservations, and marketing sites for Arlington restaurants and hotels.',
+      },
+      {
+        title: 'Small Business Web Design',
+        description: 'Affordable, high-quality websites for Arlington small businesses and service providers.',
+      },
+    ],
+  },
+  {
+    slug: 'corpus-christi',
+    city: 'Corpus Christi',
+    state: 'Texas',
+    stateCode: 'TX',
+    tagline: 'Coastal City, Digital Horizons',
+    description: 'From the Sparkling City by the Sea to the Coastal Bend region, we help Corpus Christi businesses establish a commanding digital presence.',
+    metaDescription: 'Web development in Corpus Christi, TX. Custom websites and digital solutions for Coastal Bend tourism, energy, and maritime businesses.',
+    neighborhoods: ['Downtown', 'Southside', 'Flour Bluff', 'Calallen', 'Portland', 'Padre Island', 'Robstown', 'Rockport'],
+    stats: {
+      businesses: '10+',
+      projects: '15+',
+      satisfaction: '100%',
+    },
+    features: [
+      {
+        title: 'Tourism & Hospitality',
+        description: 'Engaging websites for Corpus Christi beach resorts, fishing charters, and tourism operators.',
+      },
+      {
+        title: 'Energy & Maritime',
+        description: 'Custom web applications for Port of Corpus Christi energy and shipping companies.',
+      },
+      {
+        title: 'Local Service Businesses',
+        description: 'Professional websites for Coastal Bend contractors, restaurants, and service providers.',
+      },
+    ],
+  },
+];
