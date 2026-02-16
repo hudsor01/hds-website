@@ -176,4 +176,4 @@ export const unifiedRateLimiter = {
 };
 
 // Re-export getClientIp from centralized location for backwards compatibility
-export { getClientIp } from './utils/request';
+export { getClientIp } from './request';

@@ -1,6 +1,6 @@
 // Centralized SEO configuration for Next.js App Router
 import type { SEOMetaData } from '@/types/seo';
-import { BUSINESS_INFO } from '@/lib/constants';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 
 /**
  * SEO_CONFIG provides static metadata and structured data for each route.

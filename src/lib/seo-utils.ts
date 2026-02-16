@@ -1,7 +1,7 @@
 // Native SEO utilities - logic only, no data bloat
 
 import seoKeywords from '@/data/seo-keywords.json';
-import { BUSINESS_INFO } from '@/lib/constants';
+import { BUSINESS_INFO } from '@/lib/constants/business';
 
 /**
  * Generate meta title with company branding

@@ -30,7 +30,7 @@ const VIEWPORTS = {
 const CRITICAL_PAGES = [
   { path: '/', name: 'Home' },
   { path: '/services', name: 'Services' },
-  { path: '/portfolio', name: 'Portfolio' },
+  { path: '/showcase', name: 'Portfolio' },
   { path: '/pricing', name: 'Pricing' },
   { path: '/contact', name: 'Contact' },
 ];

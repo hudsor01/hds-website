@@ -18,11 +18,12 @@ import { createTestLogger } from './test-logger'
 test.describe('Contact Form', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/contact')
+    // Wait for the dynamically imported form to load
+    await page.locator('form').waitFor({ state: 'visible', timeout: 15000 })
   })
 
   test('should display contact form with all fields', async ({ page }) => {
-    // Check form is visible
-    await expect(page.locator('form')).toBeVisible()
+    // Form is already visible (waited in beforeEach)
 
     // Check all text input fields are present (using id selectors)
     await expect(page.locator('#firstName')).toBeVisible()

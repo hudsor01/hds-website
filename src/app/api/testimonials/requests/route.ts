@@ -1,25 +1,16 @@
 /**
  * API Route: Testimonial Requests
- * GET /api/testimonials/requests - List all testimonial requests (admin only)
- * POST /api/testimonials/requests - Create a new testimonial request (admin only)
- *
- * SECURITY: These endpoints require admin authentication via Neon Auth session
+ * GET /api/testimonials/requests - List all testimonial requests
+ * POST /api/testimonials/requests - Create a new testimonial request
  */
 
 import { type NextRequest } from 'next/server';
 import { errorResponse, successResponse } from '@/lib/api/responses';
 import { getTestimonialRequests, createTestimonialRequest } from '@/lib/testimonials';
-import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 
 async function handleTestimonialRequestsGet(_request: NextRequest) {
-  // Require admin authentication
-  const authError = await requireAdminAuth();
-  if (authError) {
-    return authError;
-  }
-
   try {
     const requests = await getTestimonialRequests();
 
@@ -44,12 +35,6 @@ interface CreateRequestBody {
 export const GET = withRateLimit(handleTestimonialRequestsGet, 'api');
 
 async function handleTestimonialRequestsPost(request: NextRequest) {
-  // Require admin authentication
-  const authError = await requireAdminAuth();
-  if (authError) {
-    return authError;
-  }
-
   try {
     const body = await request.json() as CreateRequestBody;
 

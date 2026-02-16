@@ -1,18 +1,13 @@
 /**
  * API Route: Testimonials
  * GET /api/testimonials - List testimonials
- *   - Public: Returns only approved testimonials (no auth required)
- *   - Admin: Returns all testimonials including unapproved (requires Supabase session)
  *
  * Query params:
- *   - all=true: Request all testimonials (requires admin auth)
- *
- * SECURITY: Accessing unapproved testimonials requires admin authentication
+ *   - all=true: Return all testimonials including unapproved
  */
 
 import { type NextRequest } from 'next/server';
 import { getAllTestimonials, getApprovedTestimonials } from '@/lib/testimonials';
-import { requireAdminAuth } from '@/lib/admin-auth';
 import { logger } from '@/lib/logger';
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
 import { errorResponse, successResponse } from '@/lib/api/responses';
@@ -22,14 +17,8 @@ async function handleGetTestimonials(request: NextRequest) {
     const url = new URL(request.url);
     const requestAll = url.searchParams.get('all') === 'true';
 
-    // If requesting all testimonials (including unapproved), require admin auth
     if (requestAll) {
-      const authError = await requireAdminAuth();
-      if (authError) {
-        return authError;
-      }
-
-      logger.info('Admin fetching all testimonials', {
+      logger.info('Fetching all testimonials', {
         component: 'TestimonialsAPI',
         action: 'list-all',
       });
@@ -38,7 +27,6 @@ async function handleGetTestimonials(request: NextRequest) {
       return successResponse({ testimonials });
     }
 
-    // Public access: only approved testimonials
     logger.info('Public testimonials API accessed', {
       component: 'TestimonialsAPI',
       action: 'list-approved',

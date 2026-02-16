@@ -3,7 +3,7 @@
  * Type-safe constants for all app navigation
  *
  * Usage:
- *   import { ROUTES, TOOL_ROUTES } from '@/lib/constants';
+ *   import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes';
  *   <Link href={ROUTES.CONTACT}>Contact</Link>
  *   <Link href={TOOL_ROUTES.TTL_CALCULATOR}>TTL Calculator</Link>
  */
@@ -29,8 +29,7 @@ export const TOOL_ROUTES = {
   MORTGAGE_CALCULATOR: '/tools/mortgage-calculator',
   PERFORMANCE_CALCULATOR: '/tools/performance-calculator',
   TIP_CALCULATOR: '/tools/tip-calculator',
-  LOAN_CALCULATOR: '/tools/loan-calculator',
-  PAYSTUB_GENERATOR: '/tools/paystub-generator',
+  PAYSTUB_CALCULATOR: '/tools/paystub-calculator',
   CONTRACT_GENERATOR: '/tools/contract-generator',
   INVOICE_GENERATOR: '/tools/invoice-generator',
   PROPOSAL_GENERATOR: '/tools/proposal-generator',

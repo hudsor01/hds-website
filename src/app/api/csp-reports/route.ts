@@ -10,7 +10,7 @@ const EXPECTED_CSP_FIELDS = [
   'original-policy',
   'document-uri',
   'source-file',
-  'line-number', "",
+  'line-number',
   'column-number',
   'effective-directive',
   'status-code',

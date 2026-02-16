@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { FormField, CurrencyInput } from '@/components/forms'
+import { FormField } from '@/components/forms/FormField'
+import { CurrencyInput } from '@/components/forms/CurrencyInput'
 import {
   Select,
   SelectContent,

@@ -3,15 +3,16 @@
  * Handles communication with self-hosted Stirling PDF instance
  */
 
+import { env } from '@/env';
 import { logger } from '@/lib/logger';
-import { castError } from '@/lib/utils/errors';
+import { castError } from '@/lib/errors';
 
 /**
  * Get the Stirling PDF URL, throwing a clear error if not configured
  * Lazy evaluation allows build to succeed without the env var
  */
 function getStirlingPDFUrl(): string {
-  const url = process.env.STIRLING_PDF_URL;
+  const url = env.STIRLING_PDF_URL;
   if (!url) {
     throw new Error(
       'STIRLING_PDF_URL environment variable is not set. ' +

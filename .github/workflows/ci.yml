@@ -117,3 +117,5 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
           CSRF_SECRET: ci-build-dummy-secret-32-chars-long
+          NEON_AUTH_BASE_URL: https://ci-build-placeholder.neon.tech
+          NEON_AUTH_COOKIE_SECRET: ci-build-dummy-cookie-secret-32chars

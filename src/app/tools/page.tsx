@@ -20,7 +20,7 @@ const tools = [
   {
     title: 'ROI Calculator',
     description: 'Calculate how much additional revenue you could generate by improving your website&amp;apos;s conversion rate.',
-    href: '/roi-calculator',
+    href: '/tools/roi-calculator',
     icon: (
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -36,7 +36,7 @@ const tools = [
   {
     title: 'Website Cost Estimator',
     description: 'Get an instant estimate for your website project based on your specific requirements and features.',
-    href: '/cost-estimator',
+    href: '/tools/cost-estimator',
     icon: (
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -52,7 +52,7 @@ const tools = [
   {
     title: 'Performance Savings Calculator',
     description: 'Discover how much revenue you&apos;re losing due to slow website performance with real PageSpeed analysis.',
-    href: '/performance-calculator',
+    href: '/tools/performance-calculator',
     icon: (
       <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

@@ -1,19 +1,21 @@
 /**
  * Unified Logging Implementation
- * Provides server and client logging with Supabase error tracking
+ * Provides server and client logging with database error tracking
  */
 
 import { env } from '@/env';
-import { supabaseAdmin } from '@/lib/supabase'
-import type { Json } from '@/types/database'
+import { db } from '@/lib/db';
+import { errorLogs } from '@/lib/schemas/system';
 import type {
+  ErrorContext,
+  ErrorLevel,
   ErrorLogData,
+  ErrorLogPayload,
   LogContext,
   Logger,
   LogLevel,
   ServerLogger
 } from '@/types/logger'
-import type { ErrorContext, ErrorLogPayload, ErrorLevel } from '@/types/error-logging'
 
 export type { Logger, LogContext, LogLevel, ServerLogger } from '@/types/logger';
 
@@ -88,28 +90,32 @@ function generateFingerprint(
 }
 
 /**
- * Push error to Supabase (non-blocking, fire-and-forget)
+ * Push error to database (non-blocking, fire-and-forget)
  * Note: Uses console.error as final fallback since we can't use the logger to log logger failures
  */
-async function pushToSupabase(payload: ErrorLogPayload): Promise<void> {
+async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
   try {
-    // Cast metadata to match database Json type
-    const dbPayload = {
-      ...payload,
-      metadata: payload.metadata as Record<string, Json | undefined>,
-    }
-    const { error } = await supabaseAdmin.from('error_logs').insert(dbPayload)
-    if (error) {
-      // Final fallback - can't use logger here as it would cause recursion
-      if (env.NODE_ENV === 'development') {
-        console.error('[Logger] Failed to push to Supabase:', error.message)
-      }
-    }
+    await db.insert(errorLogs).values({
+      fingerprint: payload.fingerprint,
+      errorType: payload.error_type,
+      level: payload.level,
+      message: payload.message,
+      stackTrace: payload.stack_trace,
+      url: payload.url,
+      method: payload.method,
+      route: payload.route,
+      requestId: payload.request_id,
+      userId: payload.user_id,
+      userEmail: payload.user_email,
+      environment: payload.environment,
+      vercelRegion: payload.vercel_region,
+      metadata: payload.metadata,
+    });
   } catch (e) {
     // Never throw - logging should not break the app
     // Final fallback - can't use logger here as it would cause recursion
-    if (env.NODE_ENV === 'development') {
-      console.error('[Logger] Failed to push to Supabase:', e)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Logger] Failed to push to database:', e)
     }
   }
 }
@@ -132,7 +138,7 @@ class BaseLogger implements Logger {
       this.context.isServer = false;
     } else {
       this.context.isServer = true;
-      this.context.environment = env.NODE_ENV ?? 'development';
+      this.context.environment = process.env.NODE_ENV ?? 'development';
     }
   }
 
@@ -167,7 +173,7 @@ class BaseLogger implements Logger {
     };
 
     // Only log error and warn levels to console to comply with ESLint rules
-    if (env.NODE_ENV === 'development' || this.isBrowser) {
+    if (process.env.NODE_ENV === 'development' || this.isBrowser) {
       if (level === 'error') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       } else if (level === 'warn') {
@@ -177,7 +183,7 @@ class BaseLogger implements Logger {
 
     // In production, you might want to send to analytics or external logging service
     // For now, we'll just log error and warn levels to console in production
-    if (env.NODE_ENV === 'production' && !this.isBrowser) {
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
       if (level === 'error' || level === 'warn') {
         console.error(`[${level.toUpperCase()}] ${message}`, logData);
       }
@@ -200,9 +206,9 @@ class BaseLogger implements Logger {
     const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
-    if (env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('error', message, errorData, context);
+    // Push to database in production (non-blocking, server-side only)
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToDatabase('error', message, errorData, context);
     }
   }
 
@@ -210,13 +216,13 @@ class BaseLogger implements Logger {
     const errorData = error ? castError(error) : undefined;
     this.log('error', message, errorData);
 
-    // Push to Supabase in production (non-blocking, server-side only)
-    if (env.NODE_ENV === 'production' && !this.isBrowser) {
-      this.pushErrorToSupabase('fatal', message, errorData, context);
+    // Push to database in production (non-blocking, server-side only)
+    if (process.env.NODE_ENV === 'production' && !this.isBrowser) {
+      this.pushErrorToDatabase('fatal', message, errorData, context);
     }
   }
 
-  private pushErrorToSupabase(
+  private pushErrorToDatabase(
     level: ErrorLevel,
     message: string,
     errorData?: ErrorLogData,
@@ -237,7 +243,7 @@ class BaseLogger implements Logger {
       request_id: context?.requestId,
       user_id: context?.userId,
       user_email: context?.userEmail,
-      environment: env.NODE_ENV || 'development',
+      environment: process.env.NODE_ENV || 'development',
       vercel_region: env.VERCEL_REGION,
       metadata: {
         ...context?.metadata,
@@ -248,7 +254,7 @@ class BaseLogger implements Logger {
     }
 
     // Fire and forget - don't await
-    void pushToSupabase(payload)
+    void pushToDatabase(payload)
   }
 
   time(label: string): void {
@@ -319,7 +325,7 @@ export function createServerLogger(name?: string): ServerLogger {
   const context: LogContext = {
     component: name || 'server',
     isServer: true,
-    environment: env.NODE_ENV ?? 'development',
+    environment: process.env.NODE_ENV ?? 'development',
   };
 
   if (name) {
@@ -335,7 +341,9 @@ export function createServerLogger(name?: string): ServerLogger {
 export const logger: Logger = new BaseLogger({
   component: 'default',
   isServer: typeof window === 'undefined',
-  environment: env.NODE_ENV ?? 'development',
+  // Use process.env.NODE_ENV directly - Next.js inlines this at build time
+  // (process.env.NODE_ENV is server-only and throws on client)
+  environment: (process.env.NODE_ENV as 'development' | 'test' | 'production') ?? 'development',
 });
 
 // Add global type for session ID

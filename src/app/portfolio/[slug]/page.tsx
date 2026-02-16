@@ -9,19 +9,18 @@ import { Analytics } from '@/components/utilities/Analytics';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
 import {
-  getProjectBySlug,
-  getAllProjectSlugs,
-  parseProjectStats,
-  getProjects,
-} from '@/lib/projects';
+  getShowcaseBySlug,
+  getAllShowcaseSlugs,
+  getShowcaseItems,
+} from '@/lib/showcase';
 
-// Enable ISR with 1-hour revalidation for Supabase data
+// Enable ISR with 1-hour revalidation for database data
 // React cache() handles request deduplication at data layer
 export const revalidate = 3600;
 
 // Generate static params for all projects
 export async function generateStaticParams() {
-  const slugs = await getAllProjectSlugs();
+  const slugs = await getAllShowcaseSlugs();
   const results = slugs.map((slug) => ({ slug }));
 
   // Next.js 16: cacheComponents requires at least one static param
@@ -39,7 +38,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const project = await getShowcaseBySlug(slug);
 
   if (!project) {
     return {
@@ -48,10 +47,9 @@ export async function generateMetadata({
     };
   }
 
-  const title = project.meta_title || `${project.title} - Case Study | Hudson Digital`;
-  const description =
-    project.meta_description || project.description || 'View this project case study.';
-  const ogImage = project.og_image_url || project.image_url || '/og-image.jpg';
+  const title = `${project.title} - Case Study | Hudson Digital`;
+  const description = project.description || 'View this project case study.';
+  const ogImage = project.ogImageUrl || project.imageUrl || '/og-image.jpg';
 
   return {
     title,
@@ -61,8 +59,8 @@ export async function generateMetadata({
       description,
       images: [ogImage],
       type: 'article',
-      publishedTime: project.published_at || project.created_at,
-      modifiedTime: project.updated_at,
+      publishedTime: project.publishedAt?.toISOString() ?? project.createdAt?.toISOString(),
+      modifiedTime: project.updatedAt?.toISOString(),
     },
     twitter: {
       card: 'summary_large_image',
@@ -78,19 +76,19 @@ export async function generateMetadata({
 
 // Async component that fetches project data
 async function ProjectContent({ slug }: { slug: string }) {
-  const project = await getProjectBySlug(slug);
+  const project = await getShowcaseBySlug(slug);
 
   if (!project) {
     notFound();
   }
 
-  const stats = parseProjectStats(project.stats);
-  const allProjects = await getProjects();
+  const stats = project.metrics;
+  const allProjects = await getShowcaseItems();
   const relatedProjects = allProjects
     .filter(
       (p) =>
         p.id !== project.id &&
-        (p.category === project.category || p.tech_stack.some((t) => project.tech_stack.includes(t)))
+        (p.category === project.category || p.technologies.some((t) => project.technologies.includes(t)))
     )
     .slice(0, 3);
 
@@ -100,14 +98,14 @@ async function ProjectContent({ slug }: { slug: string }) {
     '@type': 'CreativeWork',
     name: project.title,
     description: project.description,
-    image: project.image_url,
+    image: project.imageUrl,
     author: {
       '@type': 'Organization',
       name: 'Hudson Digital Solutions',
       url: 'https://hudsondigitalsolutions.com',
     },
-    datePublished: project.published_at || project.created_at,
-    dateModified: project.updated_at,
+    datePublished: project.publishedAt?.toISOString() ?? project.createdAt?.toISOString(),
+    dateModified: project.updatedAt?.toISOString(),
     url: `https://hudsondigitalsolutions.com/portfolio/${project.slug}`,
   };
 
@@ -136,34 +134,34 @@ async function ProjectContent({ slug }: { slug: string }) {
 
                 <p className="text-xl text-muted leading-relaxed">{project.description}</p>
 
-                {project.long_description && (
+                {project.longDescription && (
                   <div className="typography">
-                    <p className="text-muted-foreground leading-relaxed">{project.long_description}</p>
+                    <p className="text-muted-foreground leading-relaxed">{project.longDescription}</p>
                   </div>
                 )}
 
                 {/* Meta Info */}
                 <div className="flex flex-wrap gap-comfortable text-sm text-muted-foreground">
-                  {project.published_at && (
+                  {project.publishedAt && (
                     <div className="flex items-center gap-tight">
                       <Calendar className="w-4 h-4" />
-                      {formatDate(project.published_at, 'long')}
+                      {formatDate(project.publishedAt.toISOString(), 'long')}
                     </div>
                   )}
-                  {project.view_count > 0 && (
+                  {project.viewCount > 0 && (
                     <div className="flex items-center gap-tight">
                       <Eye className="w-4 h-4" />
-                      {project.view_count.toLocaleString()} views
+                      {project.viewCount.toLocaleString()} views
                     </div>
                   )}
                 </div>
 
                 {/* CTA Buttons */}
                 <div className="flex flex-wrap gap-content">
-                  {project.external_link && (
+                  {project.externalLink && (
                     <Button asChild variant="default" size="lg">
                       <Link
-                        href={project.external_link}
+                        href={project.externalLink}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -172,10 +170,10 @@ async function ProjectContent({ slug }: { slug: string }) {
                       </Link>
                     </Button>
                   )}
-                  {project.github_link && (
+                  {project.githubLink && (
                     <Button asChild variant="outline" size="lg">
                       <Link
-                        href={project.github_link}
+                        href={project.githubLink}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -188,10 +186,11 @@ async function ProjectContent({ slug }: { slug: string }) {
               </div>
 
               {/* Project Image */}
-              <div className={`relative overflow-hidden rounded-2xl ${project.gradient_class} p-1`}>
-                <div className="relative h-96 lg:h-[500px] overflow-hidden bg-background/20">
+              {project.imageUrl && (
+              <div className={`relative overflow-hidden rounded-2xl ${project.gradientClass} p-1`}>
+                <div className="relative h-96 lg:h-125 overflow-hidden bg-background/20">
                   <Image
-                    src={project.image_url}
+                    src={project.imageUrl}
                     alt={project.title}
                     fill
                     className="object-cover"
@@ -200,6 +199,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   />
                 </div>
               </div>
+              )}
             </div>
           </div>
         </section>
@@ -233,7 +233,7 @@ async function ProjectContent({ slug }: { slug: string }) {
             <Card variant="glassSection" size="lg" >
               <h2 className="text-2xl font-bold text-foreground mb-content-block">Technologies Used</h2>
               <div className="flex flex-wrap gap-3">
-                {project.tech_stack.map((tech) => (
+                {project.technologies.map((tech) => (
                   <span
                     key={tech}
                     className="px-4 py-2 glass-card-light rounded-full text-sm text-muted hover:border-accent/50 hover:text-accent transition-colors"
@@ -259,17 +259,19 @@ async function ProjectContent({ slug }: { slug: string }) {
                     className="group block"
                   >
                     <Card variant="glass" className="card-hover-glow transition-all duration-300">
+                    {relatedProject.imageUrl && (
                     <div
-                      className={`${relatedProject.gradient_class} h-48 relative overflow-hidden`}
+                      className={`${relatedProject.gradientClass} h-48 relative overflow-hidden`}
                     >
                       <Image
-                        src={relatedProject.image_url}
+                        src={relatedProject.imageUrl}
                         alt={relatedProject.title}
                         fill
                         className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>
+                    )}
                     <div >
                       <div className="text-sm text-accent mb-subheading">{relatedProject.category}</div>
                       <h3 className="text-xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
