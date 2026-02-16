@@ -67,7 +67,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <p className="text-xl text-muted leading-relaxed max-w-xl">
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
                   We build and scale your technical operations in weeks, not months.
                   No hiring delays. No training costs. Just proven senior talent ready to execute.
                 </p>
@@ -93,13 +93,13 @@ export default function HomePage() {
                     <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-success-text" />
                     </div>
-                    <span className="text-sm font-medium text-muted">Proven ROI Results</span>
+                    <span className="text-sm font-medium text-muted-foreground">Proven ROI Results</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
                       <Users className="w-5 h-5 text-info-text" />
                     </div>
-                    <span className="text-sm font-medium text-muted">Zero onboarding time</span>
+                    <span className="text-sm font-medium text-muted-foreground">Zero onboarding time</span>
                   </div>
                 </div>
               </div>
@@ -252,7 +252,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-foreground transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted-foreground mb-3 group-hover:text-foreground transition-colors duration-300">
                     {result.label}
                   </div>
 
