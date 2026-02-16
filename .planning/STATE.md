@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Working tools (paystub/invoice/timesheet generators) and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, and optimized performance.
-**Current focus:** v2.0 Audit Remediation & Feature Completion -- Phase 38 complete, ready for Phase 39
+**Current focus:** v2.0 Audit Remediation & Feature Completion -- MILESTONE COMPLETE
 
 ## Current Position
 
-Phase: 38 of 44 (API Route Cleanup & Consolidation) -- COMPLETE
-Plan: 38-01 executed
-Status: Phase 38 complete
-Last activity: 2026-02-14 -- Phase 38 executed
+Phase: 44 of 44 (Test Coverage & Final Verification) -- COMPLETE
+Plan: 44-01 executed
+Status: v2.0 MILESTONE COMPLETE
+Last activity: 2026-02-14 -- Phase 44 executed, v2.0 shipped
 
-Progress: ████████░░░░░░░░ 25% (2/8 phases)
+Progress: ████████████████████ 100% (8/8 phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 35 (30 in v1.0, 3 in v1.1, 2 in v2.0)
+- Total plans completed: 41 (30 in v1.0, 3 in v1.1, 8 in v2.0)
 - Average duration: ~1 day per phase
 - Total execution time: 23 days
 
@@ -29,7 +29,7 @@ Progress: ████████░░░░░░░░ 25% (2/8 phases)
 |-----------|--------|----------|--------|
 | v1.0 Cleanup | 10 phases | 20 days | -21,797 net lines, 45% fewer deps |
 | v1.1 Remediation | 2/7 phases | 3 days | Strict TS, @/ imports, barrel removed, loading states |
-| v2.0 Audit Remediation | 2/8 phases | 1 day | API routes 23->11, 6 dead env vars removed |
+| v2.0 Audit Remediation | 8/8 phases | 1 day | SHIPPED -- API cleanup, tool pages, locations, DB blog, architecture, tests |
 
 ## Accumulated Context
 
@@ -47,11 +47,17 @@ Progress: ████████░░░░░░░░ 25% (2/8 phases)
 - Deleted dead n8n webhook route + workflow JSON files -- 2026-02-14
 - Aggressive API cleanup: deleted 14 orphaned routes, fake admin-auth -- 2026-02-14
 - No auth system needed: this is a customer-facing website, not a SaaS app -- Confirmed
+- New tool pages as server components with metadata exports -- Better than existing 'use client' pattern
+- Blog fully database-backed via Drizzle/Neon (replaced static arrays) -- 2026-02-14
+- Used drizzle-kit push (not migrate) for schema sync -- Consistent with project workflow
+- Seed data via Neon MCP run_sql (not scripts) -- No production credentials in codebase
 
 ### Deferred Issues
 
 - @react-pdf/renderer incompatible with Turbopack (pre-existing, all branches)
 - database.ts at 6,286 lines (auto-generated, not actionable)
+- TTL Calculator uses next/head (Pages Router pattern) -- silently ignored in App Router, Phase 43 concern
+- Tools index page only lists 3 of 14 tools -- future enhancement
 
 ### Blockers/Concerns
 
@@ -60,11 +66,46 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Phase 38 complete
+Stopped at: v2.0 milestone complete
 Resume file: None
-Next action: Begin Phase 39
+Next action: Define v3.0 milestone or review deferred issues
 
 ## Recent Completions
+
+### Phase 44: Test Coverage & Final Verification (Complete)
+- 44-01: Added 31 tests (19 blog, 12 locations) -- 328 total passing
+- blog.ts: 84% function coverage, 88% line coverage
+- locations.ts: 100% function + line coverage
+- Full verification: 0 TypeScript errors, 0 ESLint errors
+
+### Phase 43: Next.js Architecture Alignment (Complete)
+- 43-01: Removed next/head from Calculator.tsx, refactored 9 client tool pages to server+client pattern
+- All tool pages now export SEO metadata (was impossible as 'use client' pages)
+- Full codebase audit: 100% compliance with Next.js 15+ patterns
+- v1.1 deferred items (Phases 15, 16) addressed
+
+### Phase 42: Blog Data Strategy (Complete)
+- 42-01: Database-backed blog + structured data maximization
+- Created 4 Drizzle tables (blog_authors, blog_tags, blog_posts, blog_post_tags)
+- Rewrote blog.ts with Drizzle queries (same API surface)
+- Deleted 3 static blog pages (1,443 lines) -- dynamic [slug] route handles all
+- Added BlogPosting + BreadcrumbList JSON-LD to blog posts
+- Added BreadcrumbList JSON-LD to location pages
+
+### Phase 41: Location SEO Pages (Complete)
+- 41-01: Created /locations/[slug] with 5 Texas cities
+- Server component with generateStaticParams, generateMetadata, LocalBusiness JSON-LD
+- locations.ts no longer orphaned (first consumer)
+
+### Phase 40: Tool Calculator Pages (Complete)
+- 40-01: Created 4 page.tsx wrappers (ROI, Cost, Mortgage, TTL)
+- Server components with metadata exports (follows CLAUDE.md)
+- Fixed routes.ts: removed LOAN_CALCULATOR, renamed PAYSTUB_GENERATOR
+- Fixed 3 broken links on tools index page
+- 14 tool pages total, all routes verified
+
+### Phase 39: Auth Decision (Complete -- resolved in 37-38)
+- No plan needed -- all auth-related dead code already removed
 
 ### Phase 38: API Route Cleanup & Consolidation (Complete)
 - 38-01: Deleted 14 orphaned routes, admin-auth.ts, broken attribution hook
