@@ -31,16 +31,21 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
 }
 
 export async function generateStaticParams() {
-  const authors = await getAuthors();
-  const results = authors.map((author) => ({
-    slug: author.slug,
-  }));
+  try {
+    const authors = await getAuthors();
+    const results = authors.map((author) => ({
+      slug: author.slug,
+    }));
 
-  if (results.length === 0) {
+    if (results.length === 0) {
+      return [{ slug: '__placeholder__' }];
+    }
+
+    return results;
+  } catch {
+    // Tables may not exist yet during initial deployment
     return [{ slug: '__placeholder__' }];
   }
-
-  return results;
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {
