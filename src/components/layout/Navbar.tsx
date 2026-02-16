@@ -44,7 +44,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-modal bg-background/20 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-modal bg-background/90 backdrop-blur-xl"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -66,7 +66,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
                     Hudson Digital Solutions
                   </span>
                 </div>
-                <div className="text-xs text-accent/80 font-medium tracking-wider uppercase">
+                <div className="text-xs text-accent font-medium tracking-wider uppercase">
                   Ship 3x Faster, 60% Cheaper
                 </div>
               </div>
@@ -82,7 +82,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
                     "px-4 py-2 text-sm font-medium rounded-lg transition-smooth",
                     pathname === item.href
                       ? "text-accent bg-accent/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent dark:text-foreground"
                   )}
                   role="menuitem"
                   aria-current={pathname === item.href ? "page" : undefined}
