@@ -77,7 +77,7 @@ function mapPost(
     excerpt: post.excerpt,
     content: post.content,
     feature_image: post.featureImage,
-    published_at: post.publishedAt?.toISOString() ?? '',
+    published_at: post.publishedAt?.toISOString() ?? new Date().toISOString(),
     reading_time: post.readingTime,
     featured: post.featured ?? false,
     tags,
