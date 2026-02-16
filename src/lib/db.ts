@@ -8,8 +8,8 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { env } from '@/env';
 import * as schema from './schemas/schema';
 
-// Check if we're in a CI build environment without database
-const isCIBuild = process.env.SKIP_ENV_VALIDATION === 'true' && !env.POSTGRES_URL;
+// Use mock DB when no database URL is available (CI, preview deploys without DB)
+const hasNoDatabase = !env.POSTGRES_URL;
 
 // Lazy initialization to avoid connection during build time
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
@@ -57,8 +57,8 @@ function createMockDb() {
   });
 }
 
-// Proxy for lazy initialization - uses mock in CI builds
-export const db = isCIBuild
+// Proxy for lazy initialization - uses mock when no DB is configured
+export const db = hasNoDatabase
   ? createMockDb()
   : new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
       get(_, prop) {
