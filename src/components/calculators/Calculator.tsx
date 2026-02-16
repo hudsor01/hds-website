@@ -12,7 +12,7 @@ import type {
 	VehicleInputs
 } from '@/types/ttl-types'
 import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react'
-import Head from 'next/head'
+
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
@@ -179,31 +179,6 @@ export function Calculator() {
 
 	return (
 		<div className="min-h-screen bg-primary/10 py-8 px-4">
-			<Head>
-				<title>
-					Texas TTL Calculator - Calculate Vehicle Tax, Title, and License Fees
-				</title>
-				<meta
-					name="description"
-					content="Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers."
-				/>
-				<meta
-					name="keywords"
-					content="Texas TTL calculator, vehicle tax calculator, car title fees, license fees Texas, auto loan calculator, car payment calculator"
-				/>
-				<meta property="og:title" content="Texas TTL Calculator" />
-				<meta
-					property="og:description"
-					content="Calculate tax, title, license fees and monthly payments for vehicles in Texas"
-				/>
-				<meta property="og:type" content="website" />
-				<meta name="twitter:card" content="summary" />
-				<meta name="twitter:title" content="Texas TTL Calculator" />
-				<meta
-					name="twitter:description"
-					content="Calculate tax, title, license fees and monthly payments for vehicles in Texas"
-				/>
-			</Head>
 			<JsonLd
 				data={{
 					'@context': 'https://schema.org',
