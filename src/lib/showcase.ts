@@ -3,16 +3,16 @@
  * Handles both portfolio items (quick) and case studies (detailed)
  */
 
-import { eq, and, desc, asc } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { cache } from 'react';
 import { db } from './db';
-import { showcase, type Showcase } from './schema';
 import { createServerLogger } from './logger';
+import { showcase, type Showcase } from './schemas/schema';
 
 const logger = createServerLogger();
 
 // Re-export the type for convenience
-export type { Showcase } from './schema';
+export type { Showcase } from './schemas/schema';
 
 export type ShowcaseType = 'quick' | 'detailed';
 

@@ -2,7 +2,7 @@
  * Showcase Data Layer Tests
  * Tests the unified showcase system that combines portfolio and case studies
  */
-import { describe, test, expect, mock, beforeEach } from 'bun:test';
+import { beforeEach, describe, expect, mock, test } from 'bun:test';
 
 // Mock the database module before importing showcase
 const mockSelect = mock(() => ({
@@ -273,7 +273,7 @@ describe('Showcase Data Layer', () => {
 
 describe('Showcase Schema Alignment', () => {
   test('schema exports showcase table', async () => {
-    const schema = await import('@/lib/schema');
+    const schema = await import('@/lib/schemas/schema');
     expect(schema.showcase).toBeDefined();
   });
 

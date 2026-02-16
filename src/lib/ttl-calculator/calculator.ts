@@ -1,4 +1,4 @@
-import type { PaymentResults, TTLResults, VehicleInputs } from '../../types/ttl-types'
+import type { PaymentResults, TTLResults, VehicleInputs } from '@/types/ttl-types';
 
 // Texas county-specific fees - using more comprehensive data
 // Define the CountyFees type
@@ -148,7 +148,7 @@ export function calculatePayment(
   const totalFinanced = monthlyPayment * termMonths;
   const totalInterest = totalFinanced - loanAmount;
 
-   return {
+  return {
     loanAmount,
     monthlyPayment,
     biweeklyPayment: monthlyPayment / 2,

@@ -4,11 +4,11 @@
  * Note: Types and constants are in ./testimonials/types.ts for client component compatibility
  */
 
-import { eq, desc } from 'drizzle-orm';
 import { randomBytes } from 'crypto';
+import { desc, eq } from 'drizzle-orm';
+import type { ServiceType, Testimonial, TestimonialRequest } from '@/types/testimonials';
 import { db } from './db';
-import { testimonials, testimonialRequests } from './schema';
-import type { ServiceType, Testimonial, TestimonialRequest } from '../types/testimonials';
+import { testimonialRequests, testimonials } from './schemas/schema';
 
 export type { ServiceType, Testimonial, TestimonialRequest };
 
@@ -16,7 +16,7 @@ export type { ServiceType, Testimonial, TestimonialRequest };
 import type {
   Testimonial as DbTestimonial,
   TestimonialRequest as DbTestimonialRequest
-} from './schema/content';
+} from './schemas/content';
 
 /**
  * Map database row to TestimonialRequest type

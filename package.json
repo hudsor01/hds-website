@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"dev:https": "cross-env HTTPS=true next dev",
-		"build": "next build",
+		"build": "next build --webpack",
 		"start": "next start",
 		"lint": "eslint .",
 		"generate-sitemap": "bun run scripts/generate-sitemap.ts",
@@ -32,6 +32,8 @@
 		"prepare": "lefthook install"
 	},
 	"dependencies": {
+		"@neondatabase/neon-js": "0.2.0-beta.1",
+		"@neondatabase/serverless": "1.0.2",
 		"@radix-ui/react-accordion": "1.2.12",
 		"@radix-ui/react-checkbox": "1.3.3",
 		"@radix-ui/react-dialog": "1.1.15",
@@ -42,8 +44,6 @@
 		"@radix-ui/react-slot": "1.2.4",
 		"@react-email/render": "2.0.4",
 		"@react-pdf/renderer": "4.3.2",
-		"@supabase/ssr": "0.8.0",
-		"@supabase/supabase-js": "2.93.3",
 		"@t3-oss/env-nextjs": "0.13.10",
 		"@tailwindcss/typography": "0.5.19",
 		"@tanstack/react-form": "1.28.0",
@@ -55,6 +55,7 @@
 		"class-variance-authority": "0.7.1",
 		"clsx": "2.1.1",
 		"dompurify": "3.3.1",
+		"drizzle-orm": "0.45.1",
 		"lucide-react": "0.563.0",
 		"next-themes": "0.4.6",
 		"nuqs": "2.8.7",
@@ -67,7 +68,7 @@
 		"sonner": "2.0.7",
 		"tailwind-merge": "3.4.0",
 		"zod": "4.3.6",
-		"zustand": "5.0.10"
+		"zustand": "5.0.11"
 	},
 	"devDependencies": {
 		"@happy-dom/global-registrator": "20.4.0",
@@ -80,6 +81,7 @@
 		"@types/node": "25.1.0",
 		"@types/react": "19.2.10",
 		"@types/react-dom": "19.2.3",
+		"drizzle-kit": "0.31.8",
 		"eslint": "9.39.2",
 		"eslint-config-next": "16.1.6",
 		"lefthook": "2.0.16",
@@ -94,8 +96,7 @@
 	},
 	"resolutions": {
 		"path-to-regexp": "8.3.0",
-		"esbuild": "0.27.1",
-		"undici": "7.16.0"
+		"esbuild": "0.27.1"
 	},
 	"overrides": {
 		"path-to-regexp": "8.3.0",

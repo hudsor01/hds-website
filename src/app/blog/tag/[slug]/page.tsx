@@ -30,16 +30,21 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 }
 
 export async function generateStaticParams() {
-  const tags = await getTags();
-  const results = tags.map((tag) => ({
-    slug: tag.slug,
-  }));
+  try {
+    const tags = await getTags();
+    const results = tags.map((tag) => ({
+      slug: tag.slug,
+    }));
 
-  if (results.length === 0) {
+    if (results.length === 0) {
+      return [{ slug: '__placeholder__' }];
+    }
+
+    return results;
+  } catch {
+    // Tables may not exist yet during initial deployment
     return [{ slug: '__placeholder__' }];
   }
-
-  return results;
 }
 
 export default async function TagPage({ params }: TagPageProps) {

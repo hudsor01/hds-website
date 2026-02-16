@@ -1,4 +1,4 @@
-import type { TCOResults, VehicleInputs } from '../../types/ttl-types'
+import type { TCOResults, VehicleInputs } from '@/types/ttl-types';
 
 /**
  * Calculate Total Cost of Ownership over the ownership period
@@ -51,7 +51,7 @@ function calculateMonthlyPayment(input: VehicleInputs): number {
   }
 
   return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
-         (Math.pow(1 + monthlyRate, months) - 1);
+    (Math.pow(1 + monthlyRate, months) - 1);
 }
 
 /**

@@ -3,9 +3,9 @@
  * Functions for managing help center content with Drizzle ORM
  */
 
-import { eq, and, asc, or, ilike } from 'drizzle-orm';
+import { and, asc, eq, ilike, or } from 'drizzle-orm';
 import { db } from './db';
-import { helpArticles, type HelpArticle as HelpArticleRow } from './schema';
+import { helpArticles, type HelpArticle as HelpArticleRow } from './schemas/schema';
 
 export interface HelpArticle {
   id: string;

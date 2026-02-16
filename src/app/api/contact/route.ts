@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger'
 import { isResendConfigured } from '@/lib/resend-client'
 import { contactFormSchema, scoreLeadFromContactData } from '@/lib/schemas/contact'
-import { getClientIp } from '@/lib/utils/request'
+import { getClientIp } from '@/lib/request'
 import type { NextRequest } from 'next/server'
 import { errorResponse, successResponse, validationErrorResponse } from '@/lib/api/responses'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
@@ -12,7 +12,7 @@ import {
   sendWelcomeEmail,
   sendLeadNotifications,
   scheduleFollowUpEmails,
-} from '@/lib/services/contact-service'
+} from '@/lib/contact-service'
 
 async function handleContactPost(request: NextRequest) {
   const logContext = { component: 'contact-form', timestamp: Date.now() };

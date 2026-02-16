@@ -1,5 +1,4 @@
 # Lefthook configuration
-# Replaces husky for git hooks
 # Documentation: https://github.com/evilmartians/lefthook
 
 pre-commit:
