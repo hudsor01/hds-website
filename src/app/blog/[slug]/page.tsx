@@ -8,6 +8,8 @@ import { getPostBySlug, getPostsByTag, getPosts } from "@/lib/blog";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { JsonLd } from "@/components/utilities/JsonLd";
+import { BUSINESS_INFO } from "@/lib/constants/business";
 import { formatDate } from "@/lib/utils";
 
 interface BlogPostPageProps {
@@ -87,8 +89,58 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     relatedPosts = related.filter((p) => p.id !== post.id).slice(0, 3);
   }
 
+  const canonicalUrl = `https://hudsondigitalsolutions.com/blog/${post.slug}`;
+
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.published_at,
+    image: post.feature_image ?? undefined,
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: BUSINESS_INFO.name,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://hudsondigitalsolutions.com',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: 'https://hudsondigitalsolutions.com/blog',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+      },
+    ],
+  };
+
   return (
     <main className="min-h-screen bg-background">
+      <JsonLd data={blogPostingSchema} />
+      <JsonLd data={breadcrumbSchema} />
+
       {/* Back to Blog */}
       <div className="container-wide py-8">
         <Link
