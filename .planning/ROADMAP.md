@@ -107,7 +107,7 @@ Audit findings addressed:
 - ~~No middleware.ts for token refresh or route protection~~ N/A (no auth system)
 
 Plans:
-- [ ] 39-01: TBD
+- [x] 39-01: N/A -- all findings resolved in Phases 37-38 (auth route deleted, admin-auth deleted, no auth needed)
 
 #### Phase 40: Tool Calculator Pages
 **Goal**: Create page.tsx wrappers for ROI Calculator, Cost Estimator, and Mortgage Calculator client components; wire TTL Calculator to a consistent page; clean up route constants that reference non-existent pages
@@ -121,7 +121,7 @@ Audit findings addressed:
 - TOOL_ROUTES defines PAYSTUB_GENERATOR and LOAN_CALCULATOR with no pages
 
 Plans:
-- [ ] 40-01: TBD
+- [x] 40-01: Create 4 tool page wrappers, fix route constants and broken index links
 
 #### Phase 41: Location SEO Pages
 **Goal**: Create /locations/[slug] dynamic pages using existing src/lib/locations.ts data (5 Texas cities), add generateStaticParams, proper metadata, LocalBusiness structured data
@@ -133,47 +133,42 @@ Audit findings addressed:
 - src/lib/locations.ts has 5 Texas cities with full SEO data but ZERO imports anywhere
 
 Plans:
-- [ ] 41-01: TBD
+- [x] 41-01: Create /locations/[slug] dynamic pages with SEO metadata and LocalBusiness schema
 
-#### Phase 42: Blog Data Strategy
-**Goal**: Decide whether blog should be database-backed (Drizzle) or remain static placeholder; implement chosen approach so blog pages serve real content
+#### Phase 42: Blog Data Strategy -- COMPLETE
+**Goal**: Database-backed blog via Drizzle/Neon + structured data maximization (BlogPosting, BreadcrumbList)
 **Depends on**: Phase 41 (content pages before blog)
-**Research**: Unlikely (Drizzle patterns already established in codebase)
-**Plans**: TBD
 
 Audit findings addressed:
 - src/lib/blog.ts has hardcoded placeholder blog posts with empty content
 - Blog pages render but content is placeholder ("This post content is coming soon")
+- Location pages lack BreadcrumbList structured data
 
 Plans:
-- [ ] 42-01: TBD
+- [x] 42-01: Database-backed blog + structured data (schema, seed, Drizzle queries, JSON-LD)
 
-#### Phase 43: Next.js Architecture Alignment
-**Goal**: Audit all pages for modern Next.js 16 conventions (async params, proper metadata exports, generateStaticParams where applicable, server-first components); address v1.1 deferred items for architecture, performance, and component patterns
+#### Phase 43: Next.js Architecture Alignment -- COMPLETE
+**Goal**: Audit all pages for modern Next.js 15+ conventions; fix legacy patterns; add metadata to all tool pages
 **Depends on**: Phase 42 (all new pages exist before auditing patterns)
-**Research**: Unlikely (patterns already established in newer pages)
-**Plans**: TBD
 
 Audit findings addressed:
-- Ensure consistent modern patterns across all pages (old and new)
-- v1.1 Phase 15 (Performance Optimization) items
-- v1.1 Phase 16 (Architecture & Component Patterns) items
+- Removed next/head (Pages Router) from Calculator.tsx
+- 9 'use client' tool pages couldn't export metadata; refactored to server+client pattern
+- v1.1 Phase 15 (Performance) and Phase 16 (Architecture) items resolved
 
 Plans:
-- [ ] 43-01: TBD
+- [x] 43-01: Architecture audit, next/head removal, 9 tool pages refactored to server+client
 
-#### Phase 44: Test Coverage & Final Verification
-**Goal**: Add tests for all new pages and features created in this milestone, verify zero regressions, run full lint/typecheck/test suite
+#### Phase 44: Test Coverage & Final Verification -- COMPLETE
+**Goal**: Add tests for v2.0 features, verify zero regressions across full suite
 **Depends on**: Phase 43 (all code finalized before testing)
-**Research**: Unlikely (existing test patterns in codebase)
-**Plans**: TBD
 
 Audit findings addressed:
-- v1.1 Phase 12 (Test Coverage & Infrastructure) items
-- Comprehensive verification of all v2.0 changes
+- v1.1 Phase 12 (Test Coverage & Infrastructure) items for v2.0 modules
+- Comprehensive verification of all v2.0 changes (328 tests, 0 errors)
 
 Plans:
-- [ ] 44-01: TBD
+- [x] 44-01: blog.ts tests (19), locations.ts tests (12), full suite verification
 
 ## Progress
 
@@ -189,9 +184,9 @@ Plans:
 | 17. Next.js 16 Alignment | v1.1 | 1/1 | Complete | 2026-02-02 |
 | 37. Env & Config Hygiene | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 38. API Route Cleanup | v2.0 | 1/1 | Complete | 2026-02-14 |
-| 39. Auth Decision | v2.0 | 0/TBD | Not started | - |
-| 40. Tool Calculator Pages | v2.0 | 0/TBD | Not started | - |
-| 41. Location SEO Pages | v2.0 | 0/TBD | Not started | - |
+| 39. Auth Decision | v2.0 | 1/1 | Complete (resolved in 37-38) | 2026-02-14 |
+| 40. Tool Calculator Pages | v2.0 | 1/1 | Complete | 2026-02-14 |
+| 41. Location SEO Pages | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 42. Blog Data Strategy | v2.0 | 0/TBD | Not started | - |
 | 43. Next.js Architecture | v2.0 | 0/TBD | Not started | - |
 | 44. Test & Verification | v2.0 | 0/TBD | Not started | - |
