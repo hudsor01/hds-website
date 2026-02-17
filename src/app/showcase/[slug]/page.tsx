@@ -66,7 +66,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
       <section className="py-12 px-4">
         <div className="container-wide">
           <div className="mb-content-block">
-            <span className="px-3 py-1 bg-primary-hover/30 border border-primary/30 rounded-full text-accent text-sm font-semibold">
+            <span className="px-3 py-1 bg-primary/30 border border-primary/30 rounded-full text-accent text-sm font-semibold">
               {item.industry ?? item.category} {item.projectType && `\u2022 ${item.projectType}`}
             </span>
           </div>
@@ -75,7 +75,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
             {item.title}
           </h1>
 
-          <p className="text-2xl text-muted mb-comfortable max-w-4xl">
+          <p className="text-2xl text-muted-foreground mb-comfortable max-w-4xl">
             {item.description}
           </p>
 
@@ -108,7 +108,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                   <div className="text-5xl font-black text-accent mb-subheading">
                     {metric.value}
                   </div>
-                  <div className="text-muted">{metric.label}</div>
+                  <div className="text-muted-foreground">{metric.label}</div>
                 </Card>
               ))}
             </div>
@@ -127,7 +127,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-content-block">The Challenge</h2>
                     <Card variant="glass" size="lg">
-                      <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
+                      <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                         {item.challenge}
                       </p>
                     </Card>
@@ -138,7 +138,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-content-block">Our Solution</h2>
                     <Card variant="glass" size="lg">
-                      <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
+                      <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                         {item.solution}
                       </p>
 
@@ -149,7 +149,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                             {item.technologies.map((tech, i) => (
                               <span
                                 key={i}
-                                className="px-3 py-1 bg-muted/50 border border-border rounded-full text-muted text-sm"
+                                className="px-3 py-1 bg-muted/50 border border-border rounded-full text-muted-foreground text-sm"
                               >
                                 {tech}
                               </span>
@@ -165,7 +165,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-content-block">The Results</h2>
                     <Card variant="glass" size="lg">
-                      <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
+                      <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                         {item.results}
                       </p>
 
@@ -193,7 +193,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-content-block">About This Project</h2>
                     <Card variant="glass" size="lg">
-                      <p className="text-lg text-muted leading-relaxed whitespace-pre-line">
+                      <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                         {item.longDescription}
                       </p>
                     </Card>
@@ -208,7 +208,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                         {item.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="px-4 py-2 bg-muted/50 border border-border rounded-full text-muted"
+                            className="px-4 py-2 bg-muted/50 border border-border rounded-full text-muted-foreground"
                           >
                             {tech}
                           </span>
@@ -269,13 +269,13 @@ async function ShowcaseContent({ slug }: { slug: string }) {
                     </div>
                   )}
 
-                  <blockquote className="text-2xl text-muted italic mb-content-block">
+                  <blockquote className="text-2xl text-muted-foreground italic mb-content-block">
                     &ldquo;{item.testimonialText}&rdquo;
                   </blockquote>
 
                   {item.testimonialAuthor && (
                     <div className="flex items-center gap-content">
-                      <div className="w-16 h-16 rounded-full bg-primary/80/20 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
                         <span className="text-accent font-bold text-2xl">
                           {item.testimonialAuthor.charAt(0)}
                         </span>
@@ -311,7 +311,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
             <h2 className="text-4xl font-black text-foreground mb-content-block">
               Want Results Like This?
             </h2>
-            <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-comfortable max-w-2xl mx-auto">
               Let&apos;s discuss how we can help you achieve similar results for your business.
             </p>
             <Button asChild variant="accent" size="lg" trackConversion={true}>

@@ -245,7 +245,7 @@ export default function ContractGeneratorClient() {
                 onClick={() => handleTemplateChange(template.value)}
                 className={`p-4 rounded-lg border text-left transition-colors ${
                   contractData.template === template.value
-                    ? 'border-primary bg-accent/10 dark:bg-primary-hover/20'
+                    ? 'border-primary bg-accent/10 dark:bg-primary/20'
                     : 'border-border hover:border-accent hover:bg-muted/50'
                 }`}
               >
@@ -510,7 +510,7 @@ export default function ContractGeneratorClient() {
             <PDFDownloadLink
               document={<ContractDocument data={contractData} />}
               fileName={getFileName()}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
               onClick={() => {
                 trackEvent('contract_downloaded', {
                   template: contractData.template,

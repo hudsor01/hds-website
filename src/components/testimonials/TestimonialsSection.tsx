@@ -102,7 +102,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                 href="#"
                 cta="View Case Study"
                 background={
-                  <div className="absolute inset-0 bg-background-10 card-padding">
+                  <div className="absolute inset-0 bg-background/10 card-padding">
                     {/* Rating Stars */}
                     {testimonial.rating && (
                       <div className="flex items-center gap-1 mb-heading">
@@ -120,7 +120,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
                     )}
 
                     {/* Testimonial Content */}
-                    <blockquote className="text-muted leading-relaxed mb-content-block text-responsive-sm">
+                    <blockquote className="text-muted-foreground leading-relaxed mb-content-block text-responsive-sm">
                       &quot;{testimonial.content}&quot;
                     </blockquote>
 

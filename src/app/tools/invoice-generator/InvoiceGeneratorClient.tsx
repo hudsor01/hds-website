@@ -459,7 +459,7 @@ export default function InvoiceGeneratorClient() {
             <button
               type="button"
               onClick={addLineItem}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+              className="flex items-center gap-1 text-sm text-primary hover:text-accent"
             >
               <Plus className="w-4 h-4" />
               Add Item
@@ -619,7 +619,7 @@ export default function InvoiceGeneratorClient() {
             <PDFDownloadLink
               document={<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />}
               fileName={`${invoiceData.invoiceNumber}.pdf`}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
               onClick={() => {
                 trackEvent('invoice_downloaded', {
                   invoice_number: invoiceData.invoiceNumber,

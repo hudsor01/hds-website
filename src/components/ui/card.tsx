@@ -17,7 +17,7 @@ const cardVariants = cva(
         default: "border-border shadow-xs",
         glass: "glass-card",
         glassLight: "glass-card-light",
-        glassSection: "glass-section",
+        glassSection: "glass-card-light",
         outline: "border-2 border-accent/30 bg-transparent",
       },
       size: {
@@ -139,7 +139,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                   <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-muted">{feature}</span>
+                  <span className="text-muted-foreground">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -180,7 +180,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           >
             {/* Header Section */}
             <div className="text-center mb-comfortable">
-              <h3 className="text-card-title font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
+              <h3 className="text-xl font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
                 {name}
               </h3>
               <div className="text-section-title font-black text-accent mb-subheading">
@@ -196,7 +196,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             {/* ROI Badge */}
             {roi && (
               <div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
-                <p className="text-caption font-bold text-success-text text-center">
+                <p className="text-xs font-bold text-success-text text-center">
                   {roi}
                 </p>
               </div>
@@ -206,14 +206,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             <div className="space-y-content mb-comfortable flex-grow">
               {/* Included Features */}
               <div>
-                <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
+                <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
                   What&apos;s Included
                 </h4>
                 <ul className="space-y-tight">
                   {features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-content">
                       <div className="w-2 h-2 rounded-full bg-muted mt-2 shrink-0" />
-                      <span className="text-caption text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         {feature}
                       </span>
                     </li>
@@ -224,7 +224,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               {/* Not Included */}
               {notIncluded.length > 0 && (
                 <div>
-                  <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
+                  <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
                     Not Included
                   </h4>
                   <ul className="space-y-tight">
@@ -395,7 +395,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           {/* Highlight Label */}
           {highlight && (
             <div className="mb-card-content">
-              <div className="px-4 py-2 text-caption font-semibold text-accent-foreground bg-accent border border-accent rounded-md inline-block">
+              <div className="px-4 py-2 text-xs font-semibold text-accent-foreground bg-accent border border-accent rounded-md inline-block">
                 {highlight}
               </div>
             </div>
@@ -414,11 +414,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
             <div className="font-semibold text-foreground">
               {name}
             </div>
-            <div className="text-caption text-muted-foreground">
+            <div className="text-xs text-muted-foreground">
               {role} at {company}
             </div>
             {service && (
-              <div className="text-caption text-accent mt-2">
+              <div className="text-xs text-accent mt-2">
                 {service}
               </div>
             )}

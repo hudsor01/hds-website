@@ -170,7 +170,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80"
             >
               Get Started
               <ArrowRight className="h-4 w-4" />

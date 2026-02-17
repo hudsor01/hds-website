@@ -31,7 +31,7 @@ export function CalculatorLayout({
         {/* Header */}
         <div className="mb-comfortable text-center">
           {icon && (
-            <div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
+            <div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
               {icon}
             </div>
           )}
@@ -55,7 +55,7 @@ export function CalculatorLayout({
           <div className="mt-heading text-center">
             <Link
               href="/services"
-              className="text-sm text-primary hover:text-primary-hover dark:text-accent dark:hover:text-accent/80"
+              className="text-sm text-primary hover:text-accent dark:text-accent dark:hover:text-accent/80"
             >
               ← Back to Services
             </Link>

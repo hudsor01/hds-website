@@ -103,7 +103,7 @@ export default function PaystubCalculatorClient() {
             ))}
 
           {/* Annual Totals */}
-          <Card className="bg-accent/10 dark:bg-primary-hover/20">
+          <Card className="bg-accent/10 dark:bg-primary/20">
             <h3 className="text-lg font-semibold text-foreground mb-heading">Annual Totals</h3>
             <div className="grid gap-content sm:grid-cols-2">
               <div>

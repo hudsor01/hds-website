@@ -97,7 +97,7 @@ export function CalculatorResults({
               size="sm"
               className={
                 result.highlight
-                  ? 'border-accent/40 bg-accent/10 dark:border-primary-hover dark:bg-primary-hover/20'
+                  ? 'border-accent/40 bg-accent/10 dark:border-primary/50 dark:bg-primary/20'
                   : 'bg-muted dark:bg-muted'
               }
             >
@@ -131,7 +131,7 @@ export function CalculatorResults({
 
       {/* Email Capture */}
       {showEmailCapture && !emailSubmitted && (
-        <Card size="none" className="border-2 border-dashed border-accent/60 bg-accent/10/50 card-padding dark:border-primary-hover dark:bg-primary-hover/10">
+        <Card size="none" className="border-2 border-dashed border-accent/60 bg-accent/10 card-padding dark:border-primary/50 dark:bg-primary/10">
           <h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-foreground">
             Get Your Detailed Report
           </h4>

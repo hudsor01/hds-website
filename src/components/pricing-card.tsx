@@ -54,7 +54,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         )}
       >
         <div className="text-center mb-comfortable">
-          <h3 className="text-card-title font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
+          <h3 className="text-xl font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
             {name}
           </h3>
           <div className="text-section-title font-black text-accent mb-subheading">
@@ -69,7 +69,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
         {roi && (
           <div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
-            <p className="text-caption font-bold text-success-text text-center">
+            <p className="text-xs font-bold text-success-text text-center">
               {roi}
             </p>
           </div>
@@ -77,14 +77,14 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
         <div className="space-y-content mb-comfortable flex-grow">
           <div>
-            <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
+            <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
               What&apos;s Included
             </h4>
             <ul className="space-y-tight">
               {features.map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-content">
                   <div className="w-2 h-2 rounded-full bg-muted mt-2 shrink-0" />
-                  <span className="text-caption text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {feature}
                   </span>
                 </li>
@@ -94,7 +94,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
           {notIncluded.length > 0 && (
             <div>
-              <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
+              <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
                 Not Included
               </h4>
               <ul className="space-y-tight">
