@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
+import { CustomerLogos } from '@/components/ui/CustomerLogos';
 import { ROUTES } from '@/lib/constants/routes';
 import {
   ArrowRight,
@@ -47,6 +48,9 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
+      {/* Customer Logos Bar */}
+      <CustomerLogos />
+
       {/* Hero Section - Seamless Layout */}
       <section className="relative py-section lg:py-40 px-4 sm:px-6">
         <div className="container-wide">
@@ -72,19 +76,24 @@ export default function HomePage() {
                   No hiring delays. No training costs. Just proven senior talent ready to execute.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-comfortable">
-                  <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href={ROUTES.CONTACT}>
-        See Your ROI in 30 Days
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
-                  <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href={ROUTES.PORTFOLIO}>
-        View Case Studies
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-comfortable">
+                    <Button asChild variant="default" size="lg" trackConversion={true}>
+                      <Link href={ROUTES.CONTACT}>
+                        See Your ROI in 30 Days
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="lg" trackConversion={true}>
+                      <Link href="/roi-calculator">
+                        Calculate Your Savings
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-center sm:text-left">
+                    Free consultation, no commitment required
+                  </p>
                 </div>
 
                 {/* Trust Indicators */}
@@ -100,6 +109,12 @@ export default function HomePage() {
                       <Users className="w-5 h-5 text-info-text" />
                     </div>
                     <span className="text-sm font-medium text-muted-foreground">Zero onboarding time</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Rocket className="w-5 h-5 text-accent" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">100+ Projects Delivered</span>
                   </div>
                 </div>
               </div>
