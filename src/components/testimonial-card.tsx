@@ -2,7 +2,6 @@ import * as React from 'react'
 import { MessageCircle, Star } from 'lucide-react'
 
 import { GlassCard } from '@/components/glass-card'
-import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 export interface TestimonialCardProps
@@ -59,9 +58,9 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
 
       {highlight && (
         <div className="mb-card-content">
-          <Badge variant="accent" className="px-4 py-2 text-caption font-semibold">
+          <div className="px-4 py-2 text-xs font-semibold text-accent-foreground bg-accent border border-accent rounded-md inline-block">
             {highlight}
-          </Badge>
+          </div>
         </div>
       )}
 
@@ -74,11 +73,11 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
 
       <div className="border-t border-border pt-6">
         <div className="font-semibold text-foreground">{name}</div>
-        <div className="text-caption text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           {role} at {company}
         </div>
         {service && (
-          <div className="text-caption text-accent mt-2">{service}</div>
+          <div className="text-xs text-accent mt-2">{service}</div>
         )}
       </div>
     </GlassCard>

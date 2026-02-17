@@ -194,8 +194,8 @@ export default function TipCalculatorClient() {
           <div className="space-y-content border-t border-border pt-6">
             {/* Per Person (if splitting) */}
             {inputs.splitCount > 1 && (
-              <Card className="bg-accent/10 dark:bg-primary-hover/20">
-                <h4 className="text-sm font-medium text-primary-hover dark:text-accent/80 mb-heading">
+              <Card className="bg-accent/10 dark:bg-primary/20">
+                <h4 className="text-sm font-medium text-accent dark:text-accent/80 mb-heading">
                   Per Person ({inputs.splitCount} people)
                 </h4>
                 <div className="grid grid-cols-3 gap-content">

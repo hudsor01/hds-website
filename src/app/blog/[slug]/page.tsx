@@ -188,7 +188,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="text-xl text-muted mb-comfortable text-pretty">
+              <p className="text-xl text-muted-foreground mb-comfortable text-pretty">
                 {post.excerpt}
               </p>
             )}
@@ -264,7 +264,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <h2 className="text-3xl font-black text-foreground mb-heading text-balance">
               Ready to Build Your Competitive Advantage?
             </h2>
-            <p className="text-xl text-muted mb-comfortable text-pretty">
+            <p className="text-xl text-muted-foreground mb-comfortable text-pretty">
               Let&apos;s engineer a digital solution that dominates your market.
             </p>
             <Link

@@ -9,7 +9,7 @@ export default function GoogleMap() {
         <h2 className="text-3xl font-bold text-foreground mb-heading">
           Dallas-Fort Worth Metroplex
         </h2>
-        <p className="text-muted text-lg">
+        <p className="text-muted-foreground text-lg">
           Serving businesses across the DFW area with cutting-edge digital solutions
         </p>
       </div>

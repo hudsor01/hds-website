@@ -91,14 +91,14 @@ export default function TestimonialsPage() {
       {/* Hero Section */}
       <section className="relative pt-32 section-spacing page-padding-x">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/80/10 blur-3xl rounded-full"></div>
+          <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 blur-3xl rounded-full"></div>
           <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-info/10 blur-3xl rounded-full"></div>
         </div>
 
         <div className="relative z-sticky container-wide">
           <div className="text-center space-y-comfortable">
             <div>
-              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-caption font-medium inline-block">
+              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-medium inline-block">
                 Client Success Stories
               </span>
             </div>
@@ -112,7 +112,7 @@ export default function TestimonialsPage() {
             </div>
 
             <div className="typography">
-              <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
+              <p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
                 Don&apos;t just take our word for it. See what businesses are achieving with our revenue-focused engineering solutions.
               </p>
             </div>
@@ -126,19 +126,19 @@ export default function TestimonialsPage() {
           <div className="grid-4 gap-comfortable">
             <div className="text-center">
               <div className="text-responsive-lg font-black text-accent">100%</div>
-              <div className="text-caption text-muted-foreground mt-1">Client Satisfaction</div>
+              <div className="text-xs text-muted-foreground mt-1">Client Satisfaction</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-accent">Growing</div>
-              <div className="text-caption text-muted-foreground mt-1">Projects Delivered</div>
+              <div className="text-xs text-muted-foreground mt-1">Projects Delivered</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-accent">3.5x</div>
-              <div className="text-caption text-muted-foreground mt-1">Average ROI</div>
+              <div className="text-xs text-muted-foreground mt-1">Average ROI</div>
             </div>
             <div className="text-center">
               <div className="text-responsive-lg font-black text-accent">24hr</div>
-              <div className="text-caption text-muted-foreground mt-1">Response Time</div>
+              <div className="text-xs text-muted-foreground mt-1">Response Time</div>
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function TestimonialsPage() {
                 What Our Clients Say
               </span>
             </h2>
-            <p className="text-subheading text-muted-foreground container-narrow">
+            <p className="text-lg text-muted-foreground container-narrow">
               Every testimonial represents a business that chose excellence over mediocrity
             </p>
           </div>
@@ -172,7 +172,7 @@ export default function TestimonialsPage() {
 
                 {/* Highlight Label */}
                 <div className="mb-card-content">
-                  <span className="px-4 py-2 rounded-full bg-accent/10 text-accent text-caption font-semibold">
+                  <span className="px-4 py-2 rounded-full bg-accent/10 text-accent text-xs font-semibold">
                     {testimonial.highlight}
                   </span>
                 </div>
@@ -190,10 +190,10 @@ export default function TestimonialsPage() {
                   <div className="font-semibold text-foreground">
                     {testimonial.name}
                   </div>
-                  <div className="text-caption text-muted-foreground">
+                  <div className="text-xs text-muted-foreground">
                     {testimonial.role} at {testimonial.company}
                   </div>
-                  <div className="text-caption text-accent mt-2">
+                  <div className="text-xs text-accent mt-2">
                     {testimonial.service}
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function TestimonialsPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-muted container-narrow mb-content-block">
+              <p className="text-lg text-muted-foreground container-narrow mb-content-block">
                 Join the growing list of businesses that have transformed their technical capabilities with Hudson Digital Solutions.
               </p>
             </div>
@@ -223,7 +223,7 @@ export default function TestimonialsPage() {
             <div className="flex flex-col sm:flex-row gap-content justify-center">
               <Link
                 href="/contact"
-                className="group inline-flex-center px-8 py-4 text-body font-semibold text-black bg-muted-hover rounded-lg"
+                className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-secondary rounded-lg"
               >
                 Start Your Transformation
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -231,7 +231,7 @@ export default function TestimonialsPage() {
 
               <Link
                 href="/showcase"
-                className="inline-flex-center px-8 py-4 text-body font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
               >
                 View Portfolio
               </Link>

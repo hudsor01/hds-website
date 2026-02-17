@@ -249,7 +249,7 @@ export default function PerformanceCalculatorClient() {
           <button
             type="submit"
             disabled={isAnalyzing}
-            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-primary"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             {isAnalyzing ? (
               <span className="flex items-center justify-center">

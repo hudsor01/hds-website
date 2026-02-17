@@ -117,7 +117,7 @@ export default function ServicesPage() {
         <div className="relative z-sticky container-wide sm:px-6 lg:px-8 text-center">
           <div className="space-y-sections">
             <div>
-              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-responsive-sm blur-backdrop">
+              <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-responsive-sm backdrop-blur-sm">
                 Professional Services
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function ServicesPage() {
       <section id="services-list" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
+            <h2 className="text-lg font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Our Services
               </span>
@@ -193,7 +193,7 @@ export default function ServicesPage() {
       <section className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
+            <h2 className="text-lg font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Proven Results
               </span>
@@ -225,7 +225,7 @@ export default function ServicesPage() {
       <section id="process" className="relative py-section px-4">
         <div className="container-wide">
           <div className="text-center mb-16">
-            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
+            <h2 className="text-lg font-black text-foreground mb-content-block">
               <span className="text-accent">
                 Our Process
               </span>
@@ -270,7 +270,7 @@ export default function ServicesPage() {
       <section className="relative py-section px-4">
         <div className="container-wide">
           <Card variant="glassSection" size="none" className="relative z-sticky text-center p-12 md:p-16">
-            <h2 className="text-responsive-md font-black text-foreground mb-content-block">
+            <h2 className="text-lg font-black text-foreground mb-content-block">
               Ready to accelerate
               <span className="text-accent">
                 {" "}your growth?

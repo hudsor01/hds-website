@@ -100,15 +100,15 @@ export default function Footer() {
 
               {/* Quick Stats */}
               <div className="space-y-tight">
-                <div className="flex items-center gap-tight text-muted">
+                <div className="flex items-center gap-tight text-muted-foreground">
                   <CheckCircle className="h-4 w-4 text-accent" />
                   <span className="small">Proven Track Record</span>
                 </div>
-                <div className="flex items-center gap-tight text-muted">
+                <div className="flex items-center gap-tight text-muted-foreground">
                   <CheckCircle className="h-4 w-4 text-accent" />
                   <span className="small">Proven ROI Results</span>
                 </div>
-                <div className="flex items-center gap-tight text-muted">
+                <div className="flex items-center gap-tight text-muted-foreground">
                   <Clock className="h-4 w-4 text-accent" />
                   <span className="small">Response within 2 hours</span>
                 </div>
@@ -177,7 +177,7 @@ export default function Footer() {
 
                 <a
                   href="mailto:{BUSINESS_INFO.email}"
-                  className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+                  className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
                 >
                   <Mail className="h-4 w-4" />
                   <span className="small">{BUSINESS_INFO.email}</span>

@@ -2,7 +2,6 @@ import { Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -48,7 +47,7 @@ function ContactFormSkeleton() {
       {/* Message textarea */}
       <div className="h-32 bg-input rounded-lg"></div>
       {/* Submit button */}
-      <div className="h-12 bg-primary/80/20 rounded-lg border border-primary/30"></div>
+      <div className="h-12 bg-primary/20 rounded-lg border border-primary/30"></div>
     </div>
   );
 }
@@ -60,7 +59,7 @@ export default function ContactPage() {
       <section className="relative min-h-screen flex-center overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
           <div className="absolute inset-0 grid-pattern" />
         </div>
@@ -69,12 +68,6 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-sections items-center">
             {/* Left Column - Hero Content */}
             <div className="space-y-comfortable">
-              <div>
-                <Badge variant="accent" className="px-4 py-2 text-caption">
-                  Let&apos;s Connect
-                </Badge>
-              </div>
-
               <div>
                 <h1 className="text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance">
                   <span className="inline-block">Get Your Free</span>
@@ -86,7 +79,7 @@ export default function ContactPage() {
               </div>
 
               <div className="typography">
-                <p className="text-responsive-md text-muted leading-relaxed text-pretty">
+                <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
                   See exactly where your tech stack is leaking revenue—and how to fix it. No sales pitch. No commitment. Just actionable insights you can use immediately.
                 </p>
               </div>
@@ -94,50 +87,50 @@ export default function ContactPage() {
               {/* Contact Info - Enhanced */}
               <div className="space-y-content">
                 <Card variant="glassLight" size="sm" className="space-y-tight">
-                  <h3 className="text-body-lg font-bold text-foreground mb-subheading">What Happens Next?</h3>
+                  <h3 className="text-lg font-bold text-foreground mb-subheading">What Happens Next?</h3>
 
-                  <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-primary-20 border border-accent/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted-foreground">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
                       <span className="text-accent font-bold">1</span>
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">We respond within 2 hours</p>
-                      <p className="text-caption">Get a confirmation email with next steps</p>
+                      <p className="text-xs">Get a confirmation email with next steps</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-primary-20 border border-accent/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted-foreground">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
                       <span className="text-accent font-bold">2</span>
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">30-minute strategy call</p>
-                      <p className="text-caption">We analyze your needs and identify revenue opportunities</p>
+                      <p className="text-xs">We analyze your needs and identify revenue opportunities</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-content text-muted">
-                    <div className="w-10 h-10 rounded-full bg-primary-20 border border-accent/30 flex-center shrink-0">
+                  <div className="flex items-start gap-content text-muted-foreground">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
                       <span className="text-accent font-bold">3</span>
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Get your custom roadmap</p>
-                      <p className="text-caption">Detailed plan with ROI projections you can use immediately</p>
+                      <p className="text-xs">Detailed plan with ROI projections you can use immediately</p>
                     </div>
                   </div>
                 </Card>
 
-                <div className="flex items-center gap-content text-muted px-4 py-2 bg-success-text/10 border border-success-text/30 rounded-lg">
+                <div className="flex items-center gap-content text-muted-foreground px-4 py-2 bg-success-text/10 border border-success-text/30 rounded-lg">
                   <Clock className="w-6 h-6 text-success-text shrink-0" />
                   <div>
                     <p className="font-semibold text-foreground">Guaranteed Response</p>
-                    <p className="text-caption">Within 2 hours during business hours</p>
+                    <p className="text-xs">Within 2 hours during business hours</p>
                   </div>
                 </div>
 
                 <div className="px-4 py-2 bg-accent/10 border border-accent/30 rounded-lg">
-                  <p className="text-caption text-accent font-semibold mb-subheading">Join growing businesses</p>
-                  <p className="text-caption text-muted-foreground">Proven ROI results</p>
+                  <p className="text-xs text-accent font-semibold mb-subheading">Join growing businesses</p>
+                  <p className="text-xs text-muted-foreground">Proven ROI results</p>
                 </div>
               </div>
             </div>
@@ -145,10 +138,10 @@ export default function ContactPage() {
             {/* Right Column - Contact Form */}
             <div className="relative">
               <Card variant="glass" size="lg" className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-background-5" />
+                <div className="absolute inset-0 bg-background/5" />
                 <div className="relative z-sticky">
                   <div className="text-center mb-comfortable">
-                    <h2 className="text-card-title font-bold text-foreground mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
+                    <h2 className="text-xl font-bold text-foreground mb-subheading text-balance">Claim Your Free ROI Analysis</h2>
                     <div className="typography">
                       <p className="text-muted-foreground text-pretty">Tell us about your business and we&apos;ll show you exactly where you&apos;re losing revenue—and how to fix it.</p>
                     </div>
@@ -160,7 +153,7 @@ export default function ContactPage() {
 
                   {/* Trust badges */}
                   <div className="mt-card-content pt-card-content border-t border-white/10">
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-content text-caption text-muted-foreground">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-content text-xs text-muted-foreground">
                       <div className="flex items-center gap-tight">
                         <div className="w-4 h-4 bg-success-text rounded-full"></div>
                         <span>No sales pitch</span>
@@ -192,7 +185,7 @@ export default function ContactPage() {
               </span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-muted container-narrow text-pretty">
+              <p className="text-lg text-muted-foreground container-narrow text-pretty">
                 Located in the heart of Florida&apos;s tech corridor, ready to serve clients worldwide.
               </p>
             </div>

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { X } from 'lucide-react'
 
 import { GlassCard } from '@/components/glass-card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -38,10 +37,10 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
   ) => (
     <div ref={ref} className={cn('relative', className)} {...props}>
       {popular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-          <Badge variant="default" className="px-4 py-2 text-caption font-bold">
+        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="px-3 py-1 text-xs font-bold text-accent-foreground bg-accent rounded-md shadow-lg">
             MOST POPULAR
-          </Badge>
+          </div>
         </div>
       )}
 
@@ -55,7 +54,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
         )}
       >
         <div className="text-center mb-comfortable">
-          <h3 className="text-card-title font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
+          <h3 className="text-xl font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
             {name}
           </h3>
           <div className="text-section-title font-black text-accent mb-subheading">
@@ -70,7 +69,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
         {roi && (
           <div className="mb-card-content p-button bg-success-text/10 border border-success-text/30 rounded-lg">
-            <p className="text-caption font-bold text-success-text text-center">
+            <p className="text-xs font-bold text-success-text text-center">
               {roi}
             </p>
           </div>
@@ -78,14 +77,14 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
         <div className="space-y-content mb-comfortable flex-grow">
           <div>
-            <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
+            <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
               What&apos;s Included
             </h4>
             <ul className="space-y-tight">
               {features.map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-content">
                   <div className="w-2 h-2 rounded-full bg-muted mt-2 shrink-0" />
-                  <span className="text-caption text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {feature}
                   </span>
                 </li>
@@ -95,7 +94,7 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 
           {notIncluded.length > 0 && (
             <div>
-              <h4 className="text-caption uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
+              <h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
                 Not Included
               </h4>
               <ul className="space-y-tight">
