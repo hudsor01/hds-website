@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
-import { CustomerLogos } from '@/components/ui/CustomerLogos';
 import { ROUTES } from '@/lib/constants/routes';
 import {
   ArrowRight,
@@ -48,11 +47,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Customer Logos Bar */}
-      <CustomerLogos />
-
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-section lg:py-40 px-4 sm:px-6">
+      <section className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 px-4 sm:px-6">
         <div className="container-wide">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
 
