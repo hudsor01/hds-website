@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
-import { ROUTES } from '@/lib/constants/routes';
+import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes';
 import {
   ArrowRight,
   BarChart3,
@@ -81,7 +81,7 @@ export default function HomePage() {
                       </Link>
                     </Button>
                     <Button asChild variant="outline" size="lg" trackConversion={true}>
-                      <Link href="/roi-calculator">
+                      <Link href={TOOL_ROUTES.ROI_CALCULATOR}>
                         Calculate Your Savings
                         <ArrowRight className="w-4 h-4" />
                       </Link>
@@ -313,7 +313,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-sections">
             {/* ROI Calculator */}
-            <Link href="/roi-calculator" className="group block">
+            <Link href={TOOL_ROUTES.ROI_CALCULATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
@@ -359,7 +359,7 @@ export default function HomePage() {
             </Link>
 
             {/* Cost Estimator */}
-            <Link href="/cost-estimator" className="group block">
+            <Link href={TOOL_ROUTES.COST_ESTIMATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
@@ -405,7 +405,7 @@ export default function HomePage() {
             </Link>
 
             {/* Performance Calculator */}
-            <Link href="/performance-calculator" className="group block">
+            <Link href={TOOL_ROUTES.PERFORMANCE_CALCULATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
