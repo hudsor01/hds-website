@@ -2,7 +2,6 @@ import { Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -69,12 +68,6 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-sections items-center">
             {/* Left Column - Hero Content */}
             <div className="space-y-comfortable">
-              <div>
-                <Badge variant="accent" className="px-4 py-2 text-caption">
-                  Let&apos;s Connect
-                </Badge>
-              </div>
-
               <div>
                 <h1 className="text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance">
                   <span className="inline-block">Get Your Free</span>
