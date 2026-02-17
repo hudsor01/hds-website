@@ -164,7 +164,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
                   "block px-4 py-3 rounded-lg text-base font-medium transition-smooth",
                   pathname === item.href
                     ? "bg-accent/10 text-accent"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    : "text-muted-foreground dark:text-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
                 role="menuitem"
                 aria-current={pathname === item.href ? "page" : undefined}
@@ -177,7 +177,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               <Link
                 href={ROUTES.CONTACT}
                 onClick={() => handleNavClick()}
-                className="block w-full text-center px-4 py-3 text-muted-foreground font-medium rounded-lg hover:bg-accent hover:text-accent-foreground transition-smooth"
+                className="block w-full text-center px-4 py-3 text-muted-foreground dark:text-foreground font-medium rounded-lg hover:bg-accent hover:text-accent-foreground transition-smooth"
               >
                 Talk to Sales
               </Link>
