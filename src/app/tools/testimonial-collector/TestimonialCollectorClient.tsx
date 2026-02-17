@@ -298,7 +298,7 @@ export default function TestimonialCollectorClient() {
                       href={testimonial.video_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:text-accent"
                     >
                       <ExternalLink className="w-3 h-3" />
                       View Video
@@ -351,7 +351,7 @@ export default function TestimonialCollectorClient() {
         {/* Requests Tab */}
         {!isLoading && activeTab === 'requests' && (
           <div className="space-y-content">
-            <Card size="sm" className="bg-accent/10 dark:bg-primary-hover/20 text-sm text-primary-hover dark:text-accent/80">
+            <Card size="sm" className="bg-accent/10 dark:bg-primary/20 text-sm text-accent dark:text-accent/80">
               <strong>Public Link:</strong>{' '}
               <code className="bg-card/50 dark:bg-background/20 px-2 py-0.5 rounded">
                 {typeof window !== 'undefined' && `${window.location.origin}/testimonials/submit`}
@@ -364,7 +364,7 @@ export default function TestimonialCollectorClient() {
                 <p>No private collection links created yet.</p>
                 <button
                   onClick={() => setActiveTab('create')}
-                  className="mt-4 px-4 py-2 bg-primary text-foreground rounded-lg text-sm font-medium hover:bg-primary-hover"
+                  className="mt-4 px-4 py-2 bg-primary text-foreground rounded-lg text-sm font-medium hover:bg-primary/80"
                 >
                   Create Your First Link
                 </button>
@@ -496,7 +496,7 @@ export default function TestimonialCollectorClient() {
                 </Card>
                 <button
                   onClick={() => setCreatedLink(null)}
-                  className="flex items-center gap-tight text-primary hover:text-primary-hover text-sm font-medium"
+                  className="flex items-center gap-tight text-primary hover:text-accent text-sm font-medium"
                 >
                   <Plus className="w-4 h-4" /> Create Another Link
                 </button>
@@ -538,7 +538,7 @@ export default function TestimonialCollectorClient() {
                 <button
                   type="submit"
                   disabled={!newRequest.clientName.trim() || isCreating}
-                  className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-5 h-5" />
                   {isCreating ? 'Creating...' : 'Create Private Link'}

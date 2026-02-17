@@ -131,7 +131,7 @@ export default function PricingPage() {
 
             {/* Section Label */}
             <div className="inline-block mb-comfortable">
-              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-caption font-medium">
+              <span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-medium">
                 Transparent Pricing
               </span>
             </div>
@@ -148,7 +148,7 @@ export default function PricingPage() {
             </h1>
 
             <div className="typography">
-              <p className="text-subheading text-muted-foreground leading-relaxed container-narrow text-pretty">
+              <p className="text-lg text-muted-foreground leading-relaxed container-narrow text-pretty">
                 Stop paying for websites that sit on a shelf. Our pricing is designed around ROI—if you don&apos;t see measurable results within 90 days, we keep working for free.
                 No hidden fees. No surprises. Just revenue-driven results.
               </p>
@@ -188,7 +188,7 @@ export default function PricingPage() {
               Frequently Asked <span className="text-accent">Questions</span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-muted-foreground">
+              <p className="text-lg text-muted-foreground">
                 Everything you need to know about our pricing and process
               </p>
             </div>
@@ -202,7 +202,7 @@ export default function PricingPage() {
                 size="md"
                 className="hover:border-accent/50"
               >
-                <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">{faq.question}</h3>
+                <h3 className="text-lg font-bold text-foreground mb-subheading text-balance">{faq.question}</h3>
                 <div className="typography">
                   <p className="text-muted-foreground leading-relaxed text-pretty">{faq.answer}</p>
                 </div>
@@ -221,7 +221,7 @@ export default function PricingPage() {
             </h2>
 
             <div className="typography">
-              <p className="text-subheading text-muted mb-heading container-narrow">
+              <p className="text-lg text-muted-foreground mb-heading container-narrow">
                 Get a free 30-minute ROI analysis showing exactly where your tech stack is leaking revenue—and how to plug the leaks fast.
               </p>
               <p className="text-accent font-semibold mb-content-block">
@@ -245,7 +245,7 @@ export default function PricingPage() {
 
             {/* Trust signals */}
             <div className="mt-content-block pt-8 border-t border-white/10">
-              <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-caption text-muted-foreground">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-xs text-muted-foreground">
                 <div>90-day ROI guarantee</div>
                 <div>Response within 2 hours</div>
                 <div>50+ successful projects</div>

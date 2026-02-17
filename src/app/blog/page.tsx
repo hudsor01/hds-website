@@ -49,14 +49,14 @@ export default async function BlogPage() {
         </div>
 
         <div className="relative container-wide text-center">
-          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-accent/60 bg-accent/10 text-accent font-semibold text-body-lg">
+          <div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-accent/60 bg-accent/10 text-accent font-semibold text-lg">
             <span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
             Strategic Insights
           </div>
           <h1 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
             Business <span className="text-accent">Strategy</span> Blog
           </h1>
-          <p className="text-subheading text-muted container-narrow text-pretty">
+          <p className="text-lg text-muted-foreground container-narrow text-pretty">
             Strategic insights on web development, business growth, and digital dominance. Learn how to engineer competitive advantages through technology.
           </p>
         </div>
@@ -68,7 +68,7 @@ export default async function BlogPage() {
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-foreground mb-heading text-balance">Featured Articles</h2>
-              <p className="text-muted text-pretty">Essential reading for ambitious business owners</p>
+              <p className="text-muted-foreground text-pretty">Essential reading for ambitious business owners</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sections">
@@ -88,12 +88,12 @@ export default async function BlogPage() {
             <div className="flex-1">
               <div className="text-center lg:text-left mb-content-block">
                 <h2 className="text-section-title font-black text-foreground mb-subheading text-balance">All Articles</h2>
-                <p className="text-muted text-pretty">Strategic insights for business growth and digital dominance</p>
+                <p className="text-muted-foreground text-pretty">Strategic insights for business growth and digital dominance</p>
               </div>
 
               {allPosts.length === 0 ? (
                 <Card variant="glass" size="lg" className="text-center">
-                  <p className="text-muted text-lg">No articles found. Check back soon for new content!</p>
+                  <p className="text-muted-foreground text-lg">No articles found. Check back soon for new content!</p>
                 </Card>
               ) : (
                 <div className="space-y-sections">
@@ -109,7 +109,7 @@ export default async function BlogPage() {
               {/* Newsletter Signup */}
               <Card variant="glass" >
                 <h3 className="text-xl font-bold text-foreground mb-heading text-balance">Stay Updated</h3>
-                <p className="text-muted mb-heading text-pretty">Get strategic insights delivered to your inbox.</p>
+                <p className="text-muted-foreground mb-heading text-pretty">Get strategic insights delivered to your inbox.</p>
                 <Link
                   href="/contact"
                   className="inline-block w-full text-center bg-accent text-black font-semibold py-2 px-6 rounded-lg hover:bg-primary/80 transition-colors"
@@ -124,8 +124,8 @@ export default async function BlogPage() {
 
               {/* CTA */}
               <Card variant="glass" size="sm" className="text-center">
-                <h3 className="text-subheading font-bold text-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
-                <p className="text-muted mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
+                <h3 className="text-lg font-bold text-foreground mb-subheading text-balance">Ready to Dominate Your Market?</h3>
+                <p className="text-muted-foreground mb-subheading text-pretty">Let&apos;s engineer your competitive advantage.</p>
                 <Link
                   href="/contact"
                   className="inline-block bg-success-text text-black font-semibold p-button rounded-lg hover:bg-success transition-colors"

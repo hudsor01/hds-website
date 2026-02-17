@@ -150,7 +150,7 @@ export default function FAQPage() {
               Frequently Asked <span className="text-accent">Questions</span>
             </h1>
 
-            <p className="text-xl text-muted mb-comfortable max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-comfortable max-w-3xl mx-auto">
               Everything you need to know about our web development services, process, and pricing.
             </p>
 
@@ -196,7 +196,7 @@ export default function FAQPage() {
                             </span>
                           </AccordionTrigger>
                           <AccordionContent className="px-6 pb-6">
-                            <p className="text-muted leading-relaxed">{faq.answer}</p>
+                            <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
                           </AccordionContent>
                         </AccordionItem>
                       ))}
@@ -215,7 +215,7 @@ export default function FAQPage() {
               <h2 className="text-4xl font-black text-foreground mb-content-block">
                 Still Have Questions?
               </h2>
-              <p className="text-xl text-muted mb-comfortable max-w-2xl mx-auto">
+              <p className="text-xl text-muted-foreground mb-comfortable max-w-2xl mx-auto">
                 Schedule a free consultation call and we&apos;ll answer all your questions about your project.
               </p>
               <Button asChild variant="accent" size="lg" trackConversion={true}>

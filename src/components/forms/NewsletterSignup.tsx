@@ -60,7 +60,7 @@ function NewsletterSignupContent({
     <Card size={variantConfig[variant].size} className={variantConfig[variant].className}>
       <div className="flex items-start gap-3">
         <div className="shrink-0">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 dark:bg-primary-hover">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
             <Mail className="h-5 w-5 text-primary dark:text-accent" />
           </div>
         </div>

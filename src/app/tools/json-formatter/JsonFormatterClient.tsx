@@ -154,7 +154,7 @@ export default function JsonFormatterClient() {
             <div className="flex gap-tight">
               <button
                 onClick={loadSample}
-                className="text-xs text-primary hover:text-primary-hover"
+                className="text-xs text-primary hover:text-accent"
               >
                 Load Sample
               </button>
@@ -217,7 +217,7 @@ export default function JsonFormatterClient() {
           <button
             onClick={formatJson}
             disabled={!inputJson.trim()}
-            className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Format
           </button>
@@ -246,7 +246,7 @@ export default function JsonFormatterClient() {
               </label>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-1 text-xs text-primary hover:text-primary-hover"
+                className="flex items-center gap-1 text-xs text-primary hover:text-accent"
               >
                 {copied ? (
                   <>

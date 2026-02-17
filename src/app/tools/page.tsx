@@ -93,7 +93,7 @@ export default function ToolsPage() {
                 className="group relative flex flex-col shadow-xs transition-all hover:shadow-lg dark:bg-muted"
               >
                 {/* Icon */}
-                <div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-primary-hover dark:text-accent">
+                <div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-secondary dark:text-accent">
                   {tool.icon}
                 </div>
 
@@ -121,7 +121,7 @@ export default function ToolsPage() {
                 {/* CTA */}
                 <Link
                   href={tool.href}
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
                 >
                   {tool.cta}
                   <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

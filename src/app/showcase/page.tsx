@@ -62,7 +62,7 @@ async function ShowcaseProjects() {
               </span>
             </h2>
             <div className="typography">
-              <p className="text-subheading text-muted-foreground container-narrow">
+              <p className="text-lg text-muted-foreground container-narrow">
                 Real projects delivering measurable results for clients across industries.
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function ShowcasePage() {
         <section className="relative min-h-screen flex-center overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-20 rounded-full blur-3xl" />
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
             <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
             <div className="absolute inset-0 grid-pattern" />
           </div>
@@ -114,7 +114,7 @@ export default function ShowcasePage() {
           <div className="relative z-sticky container-wide text-center">
             <div className="space-y-comfortable">
               <div>
-                <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/60/30 bg-accent/10 text-accent font-semibold text-sm blur-backdrop">
+                <span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-sm backdrop-blur-sm">
                   <Sparkles className="w-4 h-4" />
                   Award-Winning Projects
                 </span>
@@ -128,7 +128,7 @@ export default function ShowcasePage() {
               </div>
 
               <div className="typography">
-                <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
+                <p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
                   Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.
                 </p>
               </div>
@@ -176,7 +176,7 @@ export default function ShowcasePage() {
               </h2>
 
               <div className="typography">
-                <p className="text-subheading text-muted container-narrow mb-content-block">
+                <p className="text-lg text-muted-foreground container-narrow mb-content-block">
                   Join these industry leaders in transforming your digital presence into a competitive advantage. Let&apos;s build something amazing together.
                 </p>
               </div>

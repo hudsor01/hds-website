@@ -20,7 +20,7 @@ export function BackgroundPattern({
       {/* Floating ambient shapes */}
       {showBackgroundShapes && (
         <>
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
           
           {/* Additional shapes for hero variant */}
@@ -33,7 +33,7 @@ export function BackgroundPattern({
           
           {/* Smaller accents for minimal variant */}
           {variant === 'minimal' && (
-            <div className="absolute top-1/3 right-1/2 w-24 h-24 bg-primary-20 opacity-75 rounded-full blur-xl" />
+            <div className="absolute top-1/3 right-1/2 w-24 h-24 bg-primary/20 opacity-75 rounded-full blur-xl" />
           )}
         </>
       )}

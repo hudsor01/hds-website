@@ -414,7 +414,7 @@ export function MortgageCalculatorClient() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary-hover focus:outline-hidden focus:ring-2 focus:ring-primary"
+            className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
           >
             Calculate Payment
           </button>
