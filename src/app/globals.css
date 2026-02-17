@@ -224,6 +224,40 @@ button, a, [role="button"] {
 @utility gap-comfortable { gap: 1.5rem; }
 @utility gap-sections { gap: 3rem; }
 
+/* Section padding */
+@utility py-section { padding-block: 5rem; }
+@utility py-section-sm { padding-block: 3rem; }
+
+/* Card padding sizes */
+@utility card-padding-sm { padding: 1rem; }
+@utility card-padding { padding: 1.5rem; }
+@utility card-padding-lg { padding: 2rem; }
+
+/* Margin bottom scale */
+@utility mb-subheading { margin-bottom: 0.5rem; }
+@utility mb-heading { margin-bottom: 1rem; }
+@utility mb-comfortable { margin-bottom: 1.5rem; }
+@utility mb-content-block { margin-bottom: 2rem; }
+@utility mb-card-content { margin-bottom: 1.25rem; }
+
+/* Margin top scale */
+@utility mt-heading { margin-top: 1rem; }
+@utility mt-card-content { margin-top: 1.25rem; }
+
+/* Padding */
+@utility p-button { padding: 0.625rem 1rem; }
+
+/* Vertical spacing stacks */
+@utility space-y-tight { & > :not(:first-child) { margin-top: 0.5rem; } }
+@utility space-y-content { & > :not(:first-child) { margin-top: 1rem; } }
+@utility space-y-comfortable { & > :not(:first-child) { margin-top: 1.5rem; } }
+@utility space-y-sections { & > :not(:first-child) { margin-top: 3rem; } }
+
+/* Z-index scale */
+@utility z-sticky { z-index: 40; }
+@utility z-fixed { z-index: 50; }
+@utility z-nav { z-index: 60; }
+
 /* Animation */
 @keyframes blob {
   0% { transform: translate(0, 0) scale(1); }
