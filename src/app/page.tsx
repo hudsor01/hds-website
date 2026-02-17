@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes';
+import { SEO_CONFIG } from '@/utils/seo';
 import {
   ArrowRight,
   BarChart3,
@@ -15,6 +17,27 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+
+export const metadata: Metadata = {
+  title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+  description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+  keywords: SEO_CONFIG.home?.keywords,
+  openGraph: {
+    title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+    description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+    url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com',
+    images: SEO_CONFIG.home?.ogImage ? [{ url: SEO_CONFIG.home.ogImage, alt: SEO_CONFIG.home.title }] : [],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+    description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+    images: SEO_CONFIG.home?.ogImage ? [SEO_CONFIG.home.ogImage] : [],
+  },
+  alternates: {
+    canonical: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com',
+  },
+};
 
 export default function HomePage() {
   const solutions = [
@@ -120,7 +143,7 @@ export default function HomePage() {
             <div className="mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-primary/80/20 rounded-3xl blur-3xl opacity-50" />
+                <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-3xl opacity-50" />
                 <div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
@@ -187,7 +210,7 @@ export default function HomePage() {
               >
                 <div className="space-y-comfortable">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-background-20 border border-primary/30 hover-lift will-change-transform transition-smooth">
+                    <div className="p-3 rounded-xl bg-background/20 border border-primary/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-accent" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">
@@ -287,7 +310,7 @@ export default function HomePage() {
           </div>
 
           {/* Bottom accent section */}
-          <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
+          <div className="text-center mt-16 pt-8 border-t border-border/30">
             <p className="text-muted-foreground text-sm font-medium">
               Join <span className="text-accent font-semibold">growing businesses</span> who transformed with Hudson Digital Solutions
             </p>
@@ -323,7 +346,7 @@ export default function HomePage() {
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
               <div className="mb-content-block">
-                <div className="w-16 h-16 rounded-lg bg-primary/80/10 flex items-center justify-center mb-heading group-hover:bg-primary/80/20 transition-colors">
+                <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
                   <TrendingUp className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
@@ -481,7 +504,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6">
         <div className="container-wide text-center">
           <Card variant="glassSection" size="none" className="p-12 md:p-20">
-            <div className="w-20 h-20 rounded-2xl bg-primary/80/10 flex items-center justify-center mx-auto mb-comfortable">
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-comfortable">
               <Rocket className="w-10 h-10 text-accent" />
             </div>
 

@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import * as React from "react"
 import type { ComponentType, SVGProps } from 'react'
 import Link from "next/link"
