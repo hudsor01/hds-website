@@ -257,6 +257,7 @@ button, a, [role="button"] {
 @utility z-sticky { z-index: 40; }
 @utility z-fixed { z-index: 50; }
 @utility z-nav { z-index: 60; }
+@utility z-modal { z-index: 70; }
 
 /* Animation */
 @keyframes blob {
