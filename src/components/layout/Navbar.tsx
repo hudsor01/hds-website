@@ -82,7 +82,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
                     "px-4 py-2 text-sm font-medium rounded-lg transition-smooth",
                     pathname === item.href
                       ? "text-accent bg-accent/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent dark:text-foreground"
+                      : "text-muted-foreground hover:text-accent-foreground hover:bg-accent dark:text-foreground"
                   )}
                   role="menuitem"
                   aria-current={pathname === item.href ? "page" : undefined}
@@ -126,7 +126,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent focus-ring"
+              className="md:hidden relative p-2 rounded-lg text-muted-foreground hover:text-accent-foreground hover:bg-accent focus-ring"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
@@ -164,7 +164,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
                   "block px-4 py-3 rounded-lg text-base font-medium transition-smooth",
                   pathname === item.href
                     ? "bg-accent/10 text-accent"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
                 role="menuitem"
                 aria-current={pathname === item.href ? "page" : undefined}
@@ -177,7 +177,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
               <Link
                 href={ROUTES.CONTACT}
                 onClick={() => handleNavClick()}
-                className="block w-full text-center px-4 py-3 text-muted-foreground font-medium rounded-lg hover:bg-accent hover:text-foreground transition-smooth"
+                className="block w-full text-center px-4 py-3 text-muted-foreground font-medium rounded-lg hover:bg-accent hover:text-accent-foreground transition-smooth"
               >
                 Talk to Sales
               </Link>
