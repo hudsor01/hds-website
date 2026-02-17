@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Code2, ExternalLink, Sparkles } from 'lucide-react'
 
 import { GlassCard } from '@/components/glass-card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -58,24 +57,18 @@ const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
             <div className="absolute inset-0 grid-pattern-light" />
 
             <div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-foreground">
-              <Badge
-                variant="outline"
-                className="inline-flex flex-center gap-tight px-3 py-1 text-sm mb-heading mx-auto"
-              >
+              <div className="inline-flex flex-center gap-2 px-3 py-1 text-sm mb-4 mx-auto text-muted-foreground">
                 <Code2 className="w-4 h-4" />
-                {category}
-              </Badge>
+                <span>{category}</span>
+              </div>
 
               <h3 className="text-responsive-lg font-black mb-3">{title}</h3>
 
               {featured && (
-                <Badge
-                  variant="accent"
-                  className="inline-flex flex-center gap-tight px-3 py-1 text-sm font-medium mx-auto"
-                >
+                <div className="inline-flex flex-center gap-2 px-3 py-1 text-sm font-medium mx-auto text-accent">
                   <Sparkles className="w-4 h-4" />
-                  Featured Project
-                </Badge>
+                  <span>Featured Project</span>
+                </div>
               )}
             </div>
 
@@ -113,15 +106,14 @@ const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
               </div>
             )}
 
-            <div className="flex flex-wrap gap-tight">
+            <div className="flex flex-wrap gap-2">
               {tech_stack.map((tech) => (
-                <Badge
+                <span
                   key={tech}
-                  variant="outline"
-                  className="px-3 py-1 text-sm hover:border-accent/50 hover:text-accent transition-colors duration-300"
+                  className="px-3 py-1 text-sm text-muted-foreground border border-border rounded-md hover:border-accent/50 hover:text-accent transition-colors duration-300"
                 >
                   {tech}
-                </Badge>
+                </span>
               ))}
             </div>
           </div>

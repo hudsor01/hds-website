@@ -462,7 +462,7 @@ export default function ProposalGeneratorClient() {
             <button
               type="button"
               onClick={addScopeItem}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+              className="flex items-center gap-1 text-sm text-primary hover:text-accent"
             >
               <Plus className="w-4 h-4" />
               Add Item
@@ -499,7 +499,7 @@ export default function ProposalGeneratorClient() {
             <button
               type="button"
               onClick={addMilestone}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+              className="flex items-center gap-1 text-sm text-primary hover:text-accent"
             >
               <Plus className="w-4 h-4" />
               Add Phase
@@ -550,7 +550,7 @@ export default function ProposalGeneratorClient() {
             <button
               type="button"
               onClick={addPricingItem}
-              className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
+              className="flex items-center gap-1 text-sm text-primary hover:text-accent"
             >
               <Plus className="w-4 h-4" />
               Add Item
@@ -641,7 +641,7 @@ export default function ProposalGeneratorClient() {
             <PDFDownloadLink
               document={<ProposalDocument data={{ ...proposalData, total: computedTotal }} />}
               fileName={getFileName()}
-              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary-hover"
+              className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
               onClick={() => {
                 trackEvent('proposal_downloaded', {
                   project_name: proposalData.projectName,

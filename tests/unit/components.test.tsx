@@ -255,7 +255,7 @@ describe('Card Component (Glass Variants)', () => {
 
     rerender(<Card variant="glassSection">Content</Card>)
     card = container.firstChild
-    expect(card).toHaveClass('glass-section')
+    expect(card).toHaveClass('glass-card-light')
   })
 
   it('should apply different size variants', () => {

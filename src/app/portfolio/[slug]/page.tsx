@@ -132,7 +132,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                   {project.title}
                 </h1>
 
-                <p className="text-xl text-muted leading-relaxed">{project.description}</p>
+                <p className="text-xl text-muted-foreground leading-relaxed">{project.description}</p>
 
                 {project.longDescription && (
                   <div className="typography">
@@ -236,7 +236,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                 {project.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-4 py-2 glass-card-light rounded-full text-sm text-muted hover:border-accent/50 hover:text-accent transition-colors"
+                    className="px-4 py-2 glass-card-light rounded-full text-sm text-muted-foreground hover:border-accent/50 hover:text-accent transition-colors"
                   >
                     {tech}
                   </span>
@@ -297,7 +297,7 @@ async function ProjectContent({ slug }: { slug: string }) {
                 Ready to create your
                 <span className="text-accent"> success story?</span>
               </h2>
-              <p className="text-xl text-muted mb-10 max-w-2xl mx-auto">
+              <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
                 Let&apos;s build something amazing together. Get in touch to discuss your project.
               </p>
               <Button asChild variant="default" size="lg" trackConversion={true}>

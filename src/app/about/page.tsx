@@ -15,7 +15,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
@@ -59,12 +58,6 @@ export default function AboutPage() {
         <div className="relative z-sticky container-wide text-center">
           <div className="space-y-sections">
             <div>
-              <Badge variant="accent" className="px-4 py-2 text-sm">
-                Our Story
-              </Badge>
-            </div>
-
-            <div>
               <h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block mr-4">Built for</span>
                 <span className="inline-block mr-4 text-accent">Excellence</span>
@@ -72,7 +65,7 @@ export default function AboutPage() {
             </div>
 
             <div className="typography">
-              <p className="text-responsive-md text-muted-foreground container-wide leading-relaxed text-pretty">
+              <p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
                 Where proven revenue impact meets obsessive engineering standards. We don&apos;t build websites—we forge revenue machines.
               </p>
             </div>
@@ -166,7 +159,7 @@ export default function AboutPage() {
                 Technical Arsenal
               </span>
             </h2>
-            <p className="text-xl text-muted container-narrow text-pretty">
+            <p className="text-xl text-muted-foreground container-narrow text-pretty">
               Forged through enterprise-level battles, refined through startup agility, and sharpened by revenue-focused engineering.
             </p>
           </div>
@@ -244,7 +237,7 @@ export default function AboutPage() {
                 The Revenue Engineer Behind the Code
               </span>
             </h2>
-            <p className="text-xl text-muted container-narrow text-pretty">
+            <p className="text-xl text-muted-foreground container-narrow text-pretty">
               Why trust a former revenue operations professional to build your website? Because they understand something agencies don&apos;t: every feature must justify its existence in dollars.
             </p>
           </div>
@@ -302,7 +295,7 @@ export default function AboutPage() {
                 Engineering Principles
               </span>
             </h2>
-            <p className="text-xl text-muted container-narrow text-pretty">
+            <p className="text-xl text-muted-foreground container-narrow text-pretty">
               The core beliefs that drive every line of code, every design decision, and every strategic recommendation.
             </p>
           </div>
@@ -315,7 +308,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">Performance First</h3>
               </div>
-              <p className="text-muted group-hover:text-foreground transition-smooth">
+              <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
                 Every millisecond matters. We engineer for speed because fast sites convert better, rank higher, and deliver superior user experiences.
               </p>
             </Card>
@@ -327,7 +320,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-success-text transition-smooth">Data Driven</h3>
               </div>
-              <p className="text-muted group-hover:text-foreground transition-smooth">
+              <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
                 Assumptions kill businesses. Every decision is backed by data, every feature is measured, and every optimization is validated.
               </p>
             </Card>
@@ -339,7 +332,7 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground group-hover:text-orange-text transition-smooth">Scalable Architecture</h3>
               </div>
-              <p className="text-muted group-hover:text-foreground transition-smooth">
+              <p className="text-muted-foreground group-hover:text-foreground transition-smooth">
                 We build for tomorrow&apos;s growth, not just today&apos;s needs. Every solution is architected to scale with your business ambitions.
               </p>
             </Card>
@@ -358,7 +351,7 @@ export default function AboutPage() {
               </span>
             </h2>
 
-            <p className="text-xl text-muted container-narrow mb-10 text-pretty">
+            <p className="text-xl text-muted-foreground container-narrow mb-10 text-pretty">
               Stop settling for ordinary. Let&apos;s build something that doesn&apos;t just work—it dominates.
             </p>
 

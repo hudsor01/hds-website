@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { Card } from "@/components/ui/card";
-import { ROUTES } from '@/lib/constants/routes';
+import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes';
+import { SEO_CONFIG } from '@/utils/seo';
 import {
   ArrowRight,
   BarChart3,
@@ -15,6 +17,27 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup';
+
+export const metadata: Metadata = {
+  title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+  description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+  keywords: SEO_CONFIG.home?.keywords,
+  openGraph: {
+    title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+    description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+    url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com',
+    images: SEO_CONFIG.home?.ogImage ? [{ url: SEO_CONFIG.home.ogImage, alt: SEO_CONFIG.home.title }] : [],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
+    description: SEO_CONFIG.home?.description ?? 'Custom web development with proven ROI results.',
+    images: SEO_CONFIG.home?.ogImage ? [SEO_CONFIG.home.ogImage] : [],
+  },
+  alternates: {
+    canonical: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com',
+  },
+};
 
 export default function HomePage() {
   const solutions = [
@@ -48,7 +71,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section - Seamless Layout */}
-      <section className="relative py-section lg:py-40 px-4 sm:px-6">
+      <section className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 px-4 sm:px-6">
         <div className="container-wide">
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
 
@@ -67,24 +90,29 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <p className="text-xl text-muted leading-relaxed max-w-xl">
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
                   We build and scale your technical operations in weeks, not months.
                   No hiring delays. No training costs. Just proven senior talent ready to execute.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-comfortable">
-                  <Button asChild variant="default" size="lg" trackConversion={true}>
-      <Link href={ROUTES.CONTACT}>
-        See Your ROI in 30 Days
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
-                  <Button asChild variant="outline" size="lg" trackConversion={true}>
-      <Link href={ROUTES.PORTFOLIO}>
-        View Case Studies
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-comfortable">
+                    <Button asChild variant="default" size="lg" trackConversion={true}>
+                      <Link href={ROUTES.CONTACT}>
+                        See Your ROI in 30 Days
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="lg" trackConversion={true}>
+                      <Link href={TOOL_ROUTES.ROI_CALCULATOR}>
+                        Calculate Your Savings
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-center sm:text-left">
+                    Free consultation, no commitment required
+                  </p>
                 </div>
 
                 {/* Trust Indicators */}
@@ -93,13 +121,19 @@ export default function HomePage() {
                     <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
                       <Clock className="w-5 h-5 text-success-text" />
                     </div>
-                    <span className="text-sm font-medium text-muted">Proven ROI Results</span>
+                    <span className="text-sm font-medium text-muted-foreground">Proven ROI Results</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
                       <Users className="w-5 h-5 text-info-text" />
                     </div>
-                    <span className="text-sm font-medium text-muted">Zero onboarding time</span>
+                    <span className="text-sm font-medium text-muted-foreground">Zero onboarding time</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <Rocket className="w-5 h-5 text-accent" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">100+ Projects Delivered</span>
                   </div>
                 </div>
               </div>
@@ -109,7 +143,7 @@ export default function HomePage() {
             <div className="mt-16 lg:mt-0">
               <div className="relative">
                 {/* Animated Background Elements */}
-                <div className="absolute inset-0 bg-primary/80/20 rounded-3xl blur-3xl opacity-50" />
+                <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-3xl opacity-50" />
                 <div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
 
                 {/* Terminal Window */}
@@ -176,7 +210,7 @@ export default function HomePage() {
               >
                 <div className="space-y-comfortable">
                   <div className="flex-center space-x-4">
-                    <div className="p-3 rounded-xl bg-background-20 border border-primary/30 hover-lift will-change-transform transition-smooth">
+                    <div className="p-3 rounded-xl bg-background/20 border border-primary/30 hover-lift will-change-transform transition-smooth">
                       <solution.icon className="h-6 w-6 text-accent" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">
@@ -252,7 +286,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Label with enhanced typography */}
-                  <div className="text-lg font-bold text-muted mb-3 group-hover:text-foreground transition-colors duration-300">
+                  <div className="text-lg font-bold text-muted-foreground mb-3 group-hover:text-foreground transition-colors duration-300">
                     {result.label}
                   </div>
 
@@ -276,7 +310,7 @@ export default function HomePage() {
           </div>
 
           {/* Bottom accent section */}
-          <div className="text-center mt-16 pt-8 border-t border-border-primary/30">
+          <div className="text-center mt-16 pt-8 border-t border-border/30">
             <p className="text-muted-foreground text-sm font-medium">
               Join <span className="text-accent font-semibold">growing businesses</span> who transformed with Hudson Digital Solutions
             </p>
@@ -302,7 +336,7 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-sections">
             {/* ROI Calculator */}
-            <Link href="/roi-calculator" className="group block">
+            <Link href={TOOL_ROUTES.ROI_CALCULATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
@@ -312,7 +346,7 @@ export default function HomePage() {
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
 
               <div className="mb-content-block">
-                <div className="w-16 h-16 rounded-lg bg-primary/80/10 flex items-center justify-center mb-heading group-hover:bg-primary/80/20 transition-colors">
+                <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
                   <TrendingUp className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
@@ -348,7 +382,7 @@ export default function HomePage() {
             </Link>
 
             {/* Cost Estimator */}
-            <Link href="/cost-estimator" className="group block">
+            <Link href={TOOL_ROUTES.COST_ESTIMATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
@@ -394,7 +428,7 @@ export default function HomePage() {
             </Link>
 
             {/* Performance Calculator */}
-            <Link href="/performance-calculator" className="group block">
+            <Link href={TOOL_ROUTES.PERFORMANCE_CALCULATOR} className="group block">
               <Card
                 variant="glassLight"
                 size="lg"
@@ -470,7 +504,7 @@ export default function HomePage() {
       <section className="py-section px-4 sm:px-6">
         <div className="container-wide text-center">
           <Card variant="glassSection" size="none" className="p-12 md:p-20">
-            <div className="w-20 h-20 rounded-2xl bg-primary/80/10 flex items-center justify-center mx-auto mb-comfortable">
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-comfortable">
               <Rocket className="w-10 h-10 text-accent" />
             </div>
 
