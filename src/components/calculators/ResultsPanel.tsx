@@ -1,6 +1,5 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type {
@@ -61,9 +60,9 @@ export function ResultsPanel({
 						<h2 className="text-xl font-bold">Calculation Results</h2>
 					</div>
 					{calculationResults && (
-						<Badge variant="secondary" className="px-3 py-1 text-sm">
+						<span className="px-3 py-1 text-sm text-muted-foreground border border-border rounded-md">
 							Texas
-						</Badge>
+						</span>
 					)}
 				</div>
 

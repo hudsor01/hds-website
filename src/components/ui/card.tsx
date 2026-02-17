@@ -10,7 +10,6 @@ import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/utilities/Icon"
 import { Button } from "./button"
-import { Badge } from "./badge"
 
 const cardVariants = cva(
   "rounded-xl border bg-card text-card-foreground transition-smooth",
@@ -164,12 +163,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
       return (
         <div ref={ref} className={cn("relative", className)}>
-          {/* Popular Badge */}
+          {/* Popular Label */}
           {popular && (
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-              <Badge variant="default" className="px-4 py-2 text-caption font-bold">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+              <div className="px-3 py-1 text-xs font-bold text-accent-foreground bg-accent rounded-md shadow-lg">
                 MOST POPULAR
-              </Badge>
+              </div>
             </div>
           )}
 
@@ -289,29 +288,23 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 <div className="absolute inset-0 grid-pattern-light" />
 
                 <div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-foreground">
-                  {/* Category Badge */}
-                  <Badge
-                    variant="outline"
-                    className="inline-flex flex-center gap-tight px-3 py-1 text-sm mb-heading mx-auto"
-                  >
+                  {/* Category Label */}
+                  <div className="inline-flex flex-center gap-2 px-3 py-1 text-sm mb-4 mx-auto text-muted-foreground">
                     <Code2 className="w-4 h-4" />
-                    {category}
-                  </Badge>
+                    <span>{category}</span>
+                  </div>
 
                   {/* Title */}
                   <h3 className="text-responsive-lg font-black mb-3">
                     {title}
                   </h3>
 
-                  {/* Featured Badge */}
+                  {/* Featured Label */}
                   {featured && (
-                    <Badge
-                      variant="accent"
-                      className="inline-flex flex-center gap-tight px-3 py-1 text-sm font-medium mx-auto"
-                    >
+                    <div className="inline-flex flex-center gap-2 px-3 py-1 text-sm font-medium mx-auto text-accent">
                       <Sparkles className="w-4 h-4" />
-                      Featured Project
-                    </Badge>
+                      <span>Featured Project</span>
+                    </div>
                   )}
                 </div>
 
@@ -356,13 +349,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
                 {/* Tech Stack */}
                 <div className="flex flex-wrap gap-tight">
                   {tech_stack.map((tech) => (
-                    <Badge
+                    <span
                       key={tech}
-                      variant="outline"
-                      className="px-3 py-1 text-sm hover:border-accent/50 hover:text-accent transition-colors duration-300"
+                      className="px-3 py-1 text-sm text-muted-foreground border border-border rounded-md hover:border-accent/50 hover:text-accent transition-colors duration-300"
                     >
                       {tech}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -405,9 +397,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
           {/* Highlight Label */}
           {highlight && (
             <div className="mb-card-content">
-              <Badge variant="accent" className="px-4 py-2 text-caption font-semibold">
+              <div className="px-4 py-2 text-caption font-semibold text-accent-foreground bg-accent border border-accent rounded-md inline-block">
                 {highlight}
-              </Badge>
+              </div>
             </div>
           )}
 

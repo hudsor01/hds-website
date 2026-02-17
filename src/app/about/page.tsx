@@ -15,7 +15,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
@@ -58,12 +57,6 @@ export default function AboutPage() {
 
         <div className="relative z-sticky container-wide text-center">
           <div className="space-y-sections">
-            <div>
-              <Badge variant="accent" className="px-4 py-2 text-sm">
-                Our Story
-              </Badge>
-            </div>
-
             <div>
               <h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
                 <span className="inline-block mr-4">Built for</span>

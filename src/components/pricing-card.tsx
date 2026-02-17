@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { X } from 'lucide-react'
 
 import { GlassCard } from '@/components/glass-card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -38,10 +37,10 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
   ) => (
     <div ref={ref} className={cn('relative', className)} {...props}>
       {popular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-          <Badge variant="default" className="px-4 py-2 text-caption font-bold">
+        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="px-3 py-1 text-xs font-bold text-accent-foreground bg-accent rounded-md shadow-lg">
             MOST POPULAR
-          </Badge>
+          </div>
         </div>
       )}
 
