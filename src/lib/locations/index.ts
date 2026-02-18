@@ -49,6 +49,20 @@ export function getLocationBySlug(slug: string): LocationData | undefined {
 }
 
 /**
+ * Get all locations grouped by state name
+ */
+export function getLocationsByState(): Record<string, LocationData[]> {
+  return LOCATIONS.reduce((acc, location) => {
+    const state = location.state;
+    if (!acc[state]) {
+      acc[state] = [];
+    }
+    acc[state].push(location);
+    return acc;
+  }, {} as Record<string, LocationData[]>);
+}
+
+/**
  * Generate LocalBusiness schema for a location
  */
 export function generateLocalBusinessSchema(location: LocationData) {
