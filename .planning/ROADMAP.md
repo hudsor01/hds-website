@@ -208,7 +208,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 48-01: TBD
+- [x] 48-01: Add getLocationsByState helper, create /locations index page, expand sitemap to 85+ entries
 
 #### Phase 49: E2E Test Suite
 
@@ -255,6 +255,6 @@ Plans:
 | 45. UI/UX Alignment | v2.0 | 1/1 | Complete | 2026-02-17 |
 | 46. Blog Content Seeding | v3.0 | 1/1 | Complete | 2026-02-18 |
 | 47. Tools Index — All 13 Tools | v3.0 | 1/1 | Complete | 2026-02-18 |
-| 48. National Location Pages | v3.0 | 0/TBD | Not started | - |
+| 48. National Location Pages | v3.0 | 1/1 | Complete | 2026-02-18 |
 | 49. E2E Test Suite | v3.0 | 0/TBD | Not started | - |
 | 50. Performance Audit | v3.0 | 0/TBD | Not started | - |
