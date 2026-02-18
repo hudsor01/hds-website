@@ -34,6 +34,8 @@ export const TOOL_ROUTES = {
   INVOICE_GENERATOR: '/tools/invoice-generator',
   PROPOSAL_GENERATOR: '/tools/proposal-generator',
   JSON_FORMATTER: '/tools/json-formatter',
+  META_TAG_GENERATOR: '/tools/meta-tag-generator',
+  TESTIMONIAL_COLLECTOR: '/tools/testimonial-collector',
 } as const;
 
 /** Dynamic routes with helper functions */
