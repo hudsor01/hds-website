@@ -198,7 +198,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 47-01: TBD
+- [x] 47-01: Add 2 missing TOOL_ROUTES, expand /tools index from 3 to 13 tools with Lucide icons
 
 #### Phase 48: National Location Pages
 
@@ -254,7 +254,7 @@ Plans:
 | 44. Test & Verification | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 45. UI/UX Alignment | v2.0 | 1/1 | Complete | 2026-02-17 |
 | 46. Blog Content Seeding | v3.0 | 1/1 | Complete | 2026-02-18 |
-| 47. Tools Index — All 14 Tools | v3.0 | 0/TBD | Not started | - |
+| 47. Tools Index — All 13 Tools | v3.0 | 1/1 | Complete | 2026-02-18 |
 | 48. National Location Pages | v3.0 | 0/TBD | Not started | - |
 | 49. E2E Test Suite | v3.0 | 0/TBD | Not started | - |
 | 50. Performance Audit | v3.0 | 0/TBD | Not started | - |
