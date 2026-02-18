@@ -16,21 +16,8 @@ None
 
 ## Completed Milestones
 
-<details>
-<summary>v1.0 Cleanup & Simplification (Phases 1-10) -- SHIPPED 2026-01-30</summary>
-
-- [x] Phase 1: Dependency Audit & Pruning (5 plans)
-- [x] Phase 2: Dead Code Elimination (4 plans)
-- [x] Phase 3: Integration Cleanup (1 plan)
-- [x] Phase 4: Code Deduplication (merged into other phases)
-- [x] Phase 5: Configuration Simplification (6 plans)
-- [x] Phase 6: Component Structure Optimization (5 plans)
-- [x] Phase 7: Build & Bundle Optimization (2 plans)
-- [x] Phase 8: Testing Infrastructure Review (4 plans)
-- [x] Phase 9: Documentation & Environment (4 plans)
-- [x] Phase 10: Final Validation & Verification
-
-</details>
+- ✅ [v1.0 Cleanup & Simplification](milestones/v1.0-ROADMAP.md) (Phases 1-10) — SHIPPED 2026-01-30
+- ✅ [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) — SHIPPED 2026-02-17
 
 <details>
 <summary>v1.1 Code Review Remediation (Phases 11-17) -- PARTIAL</summary>
@@ -56,7 +43,8 @@ Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remai
 
 </details>
 
-## v2.0 Audit Remediation & Feature Completion
+<details>
+<summary>✅ v2.0 Audit Remediation & Feature Completion (Phases 37-45) — SHIPPED 2026-02-17</summary>
 
 **Milestone Goal:** Address all findings from the comprehensive 4-agent codebase audit: wire orphaned code to pages, clean up API routes, decide on authentication strategy, align with modern Next.js patterns, and verify everything works.
 
@@ -183,7 +171,9 @@ Issues addressed:
 - backdrop-blur-xl not applying correctly
 
 Plans:
-- [ ] 45-01: TBD (run /gsd:plan-phase 45 to break down)
+- [x] 45-01: Navbar dark mode, phantom CSS utilities, silent Tailwind class audit, WCAG AA fixes
+
+</details>
 
 ## Progress
 
@@ -205,4 +195,4 @@ Plans:
 | 42. Blog Data Strategy | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 43. Next.js Architecture | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 44. Test & Verification | v2.0 | 1/1 | Complete | 2026-02-14 |
-| 45. UI/UX Alignment | v2.0 | 0/TBD | Not started | - |
+| 45. UI/UX Alignment | v2.0 | 1/1 | Complete | 2026-02-17 |
