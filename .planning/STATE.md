@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-Phase: 46 of 50 (Blog Content Seeding)
+Phase: 47 of 50 (Tools Index — All 14 Tools)
 Plan: Not started
-Status: Ready to plan — v3.0 milestone initialized 2026-02-18
-Last activity: 2026-02-18 — v3.0 Growth & Content milestone created (Phases 46-50)
+Status: Ready to plan
+Last activity: 2026-02-18 — Phase 46 complete (automated Neon pipeline via n8n Blog Generator)
 
-Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ░░░░░ 0/5 phases
+Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ▓░░░░ 1/5 phases
 
 ## Performance Metrics
 
@@ -51,6 +51,8 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ░░░░░ 0/5 phas
 - Blog fully database-backed via Drizzle/Neon (replaced static arrays) -- 2026-02-14
 - Used drizzle-kit push (not migrate) for schema sync -- Consistent with project workflow
 - Seed data via Neon MCP run_sql (not scripts) -- No production credentials in codebase
+- Blog content seeded via automated n8n pipeline, not manual insertion -- 2026-02-18
+- n8n Blog Generator (workflow zVe2oKlxqHps4njw) now auto-publishes to Neon on every run
 
 ### Deferred Issues
 
@@ -66,11 +68,18 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: v3.0 milestone created. Phase 46 (Blog Content Seeding) ready to plan.
+Stopped at: Phase 46 complete. n8n Blog Generator wired to Neon; awaiting first scheduled run at :15.
 Resume file: None
-Next action: /gsd:plan-phase 46
+Next action: /gsd:plan-phase 47
 
 ## Recent Completions
+
+### Phase 46: Blog Content Seeding (Complete)
+- 46-01: Fixed broken homelab infrastructure (PostgreSQL+n8n CrashLoopBackOff, 14 days down)
+- Fixed hds_generated_blogs schema (missing cycle_number column causing silent INSERT failures)
+- Created n8n Neon credential; added 3 nodes to Blog Generator for auto-publish to Neon
+- Workflow now fans out: Save HDS to Postgres → (RAG Store) + (Convert MD→HTML → Neon INSERT)
+- Next scheduled run at :15 will populate blog_posts in Neon automatically
 
 ### Phase 45: UI/UX Alignment & Accessibility (Complete)
 - 45-01: Navbar dark mode visibility, phantom CSS utility fix, badge removal, broken links
