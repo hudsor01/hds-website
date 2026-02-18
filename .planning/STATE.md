@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v3.0 Growth & Content (Phase 49 — E2E Test Suite)
+**Current focus:** v3.0 Growth & Content (Phase 50 — Performance Audit & Core Web Vitals)
 
 ## Current Position
 
-Phase: 49 of 50 (E2E Test Suite)
+Phase: 50 of 50 (Performance Audit & Core Web Vitals)
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-02-18 — Phase 48 complete (/locations index, sitemap expanded to 85+ entries)
+Last activity: 2026-02-18 — Phase 49 complete (E2E suite: 18 tests, tools + locations)
 
-Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ▓▓▓░░ 3/5 phases
+Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ▓▓▓▓░ 4/5 phases
 
 ## Performance Metrics
 
@@ -73,6 +73,12 @@ Resume file: None
 Next action: /gsd:plan-phase 49
 
 ## Recent Completions
+
+### Phase 49: E2E Test Suite (Complete)
+- 49-01: Created e2e/tools.spec.ts (11 tests: tools index + paystub/invoice/contract generators)
+- Created e2e/locations.spec.ts (7 tests: locations index + dallas slug page)
+- Fixed slug: plan used 'dallas-tx' but actual slug is 'dallas' (LocationData.slug)
+- 329 unit tests continue to pass, 0 TS errors, 0 ESLint errors
 
 ### Phase 48: National Location Pages (Complete)
 - 48-01: Added getLocationsByState() to locations/index.ts (reduce groupBy state)
