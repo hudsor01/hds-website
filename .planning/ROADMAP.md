@@ -219,7 +219,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 49-01: TBD
+- [ ] 49-01: Create e2e/tools.spec.ts and e2e/locations.spec.ts (tools index + 3 generators + locations)
 
 #### Phase 50: Performance Audit & Core Web Vitals
 
