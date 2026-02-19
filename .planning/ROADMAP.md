@@ -12,7 +12,8 @@ None
 
 - [v1.0 Cleanup & Simplification](milestones/v1.0-ROADMAP.md) (Phases 1-10) -- SHIPPED 2026-01-30
 - **v1.1 Code Review Remediation** -- Phases 11-17 (partial -- 11, 17 complete; 12-16 deferred to v2.0)
-- **v2.0 Audit Remediation & Feature Completion** -- Phases 37-44 (in progress)
+- [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) -- SHIPPED 2026-02-17
+- **v3.0 Growth & Content** -- Phases 46-50 (in progress)
 
 ## Completed Milestones
 
@@ -175,6 +176,62 @@ Plans:
 
 </details>
 
+### v3.0 Growth & Content (In Progress)
+
+**Milestone Goal:** Surface all existing features to users, load real content, prove correctness with E2E tests, and optimize for performance before a marketing push.
+
+#### Phase 46: Blog Content Seeding
+
+**Goal**: Seed real blog posts written by the user into Neon via MCP run_sql — no code changes, pure data operation
+**Depends on**: v2.0 complete (blog schema already created in Phase 42)
+**Research**: Unlikely (Drizzle schema exists: blog_posts, blog_authors, blog_tags, blog_post_tags)
+**Plans**: TBD
+
+Plans:
+- [ ] 46-01: TBD (run /gsd:plan-phase 46 to break down)
+
+#### Phase 47: Tools Index — All 14 Tools
+
+**Goal**: Fix the /tools index page to list all 14 tool pages; currently shows only 3
+**Depends on**: Phase 46
+**Research**: Unlikely (TOOL_ROUTES constant already exists with all 14 routes)
+**Plans**: TBD
+
+Plans:
+- [ ] 47-01: TBD
+
+#### Phase 48: National Location Pages
+
+**Goal**: Expand location coverage from 5 Texas cities to top 50–100 major US metro areas with full SEO metadata and LocalBusiness JSON-LD
+**Depends on**: Phase 47
+**Research**: Unlikely (existing locations.ts + /locations/[slug] dynamic route pattern already in place)
+**Plans**: TBD
+
+Plans:
+- [ ] 48-01: TBD
+
+#### Phase 49: E2E Test Suite
+
+**Goal**: Playwright end-to-end tests for critical user journeys — contact form submission, tool generators (paystub, invoice), and navigation flows
+**Depends on**: Phase 48
+**Research**: Likely (need to verify Playwright config status, check e2e/ directory, establish test patterns)
+**Research topics**: Playwright config in project, existing e2e/ test files, CI integration for E2E, test data strategy
+**Plans**: TBD
+
+Plans:
+- [ ] 49-01: TBD
+
+#### Phase 50: Performance Audit & Core Web Vitals
+
+**Goal**: Core Web Vitals audit, bundle size review, image optimization pass — hit Lighthouse targets before marketing push
+**Depends on**: Phase 49
+**Research**: Likely (Next.js bundle analyzer setup, Lighthouse CI config, Core Web Vitals tooling)
+**Research topics**: next/bundle-analyzer, Lighthouse CI GitHub Action, CLS/LCP/FID sources in Next.js 15 App Router
+**Plans**: TBD
+
+Plans:
+- [ ] 50-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -196,3 +253,8 @@ Plans:
 | 43. Next.js Architecture | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 44. Test & Verification | v2.0 | 1/1 | Complete | 2026-02-14 |
 | 45. UI/UX Alignment | v2.0 | 1/1 | Complete | 2026-02-17 |
+| 46. Blog Content Seeding | v3.0 | 0/TBD | Not started | - |
+| 47. Tools Index — All 14 Tools | v3.0 | 0/TBD | Not started | - |
+| 48. National Location Pages | v3.0 | 0/TBD | Not started | - |
+| 49. E2E Test Suite | v3.0 | 0/TBD | Not started | - |
+| 50. Performance Audit | v3.0 | 0/TBD | Not started | - |
