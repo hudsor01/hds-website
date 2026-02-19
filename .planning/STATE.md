@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v3.0 Growth & Content (Phase 50 — Performance Audit & Core Web Vitals)
+**Current focus:** v3.0 complete — all 5 phases shipped. Ready for /gsd:complete-milestone.
 
 ## Current Position
 
-Phase: 50 of 50 (Performance Audit & Core Web Vitals)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-02-18 — Phase 49 complete (E2E suite: 18 tests, tools + locations)
+Phase: 50 of 50 (Performance Audit & Core Web Vitals) — COMPLETE
+Plan: 50-01 complete
+Status: v3.0 milestone complete — ready to archive
+Last activity: 2026-02-18 — Phase 50 complete (DOMPurify SSR fix, author LCP, bundle audit)
 
-Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ▓▓▓▓░ 4/5 phases
+Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ 5/5 phases
 
 ## Performance Metrics
 
@@ -68,11 +68,18 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-18
-Stopped at: Phase 48 complete. /locations index lists 75 cities across 11 states; sitemap has 85+ entries.
+Stopped at: Phase 50 complete. v3.0 milestone done (all 5 phases shipped).
 Resume file: None
-Next action: /gsd:plan-phase 49
+Next action: /gsd:complete-milestone
 
 ## Recent Completions
+
+### Phase 50: Performance Audit & Core Web Vitals (Complete)
+- 50-01: Fixed DOMPurify SSR crash blocking all blog static page generation (129 pages now generate)
+- Added `priority` prop to author page hero image for LCP improvement
+- Bundle audit: @react-pdf/renderer (702kB) already lazy-loaded correctly; page chunks 3-44kB
+- Confirmed: compress: true, WebP images, optimizePackageImports, @vercel/speed-insights in root layout
+- No raw <img> tags found — all images use next/image
 
 ### Phase 49: E2E Test Suite (Complete)
 - 49-01: Created e2e/tools.spec.ts (11 tests: tools index + paystub/invoice/contract generators)
