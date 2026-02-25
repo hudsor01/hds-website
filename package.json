@@ -31,6 +31,7 @@
 		"clean:test": "rm -rf playwright-report test-results",
 		"test:install": "npm run test:e2e:install",
 		"test:update-snapshots": "playwright test --update-snapshots",
+		"db:push": "drizzle-kit push",
 		"prepare": "lefthook install"
 	},
 	"dependencies": {
