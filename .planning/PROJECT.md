@@ -47,7 +47,11 @@ Working tools and contact form stay functional while the codebase achieves produ
 
 ### Active
 
-(None — all planned features shipped. Next milestone TBD.)
+- [ ] Design system tokens overhauled: type scale, color palette, spacing rhythm, surface/card treatment — v4.0
+- [ ] Homepage hero compelling: distinctive background, strong headline hierarchy, polished CTAs — v4.0
+- [ ] Core components polished: buttons, inputs, cards, navbar — not generic shadcn defaults — v4.0
+- [ ] Tool pages have focused, professional layout with polished form/output presentation — v4.0
+- [ ] Services, About, and Location pages feel like premium landing pages — v4.0
 
 ### Out of Scope
 
