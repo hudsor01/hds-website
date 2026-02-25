@@ -1,7 +1,13 @@
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import type { Metadata, Viewport } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { Toaster } from 'sonner'
 import Footer from '@/components/layout/Footer'
 import NavbarLight from '@/components/layout/Navbar'
 import { Analytics } from '@/components/utilities/Analytics'
 import { ErrorBoundary } from '@/components/utilities/ErrorBoundary'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import ScrollToTop from '@/components/utilities/ScrollToTop'
 import { WebVitalsReporting } from '@/components/utilities/WebVitalsReporting'
 import { env } from '@/env'
@@ -11,11 +17,6 @@ import {
 	generateWebsiteSchema
 } from '@/lib/seo-utils'
 import ClientProviders from '@/providers/ClientProviders'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { Toaster } from 'sonner'
 import './globals.css'
 
 const geistSans = Geist({
@@ -108,15 +109,6 @@ export const metadata: Metadata = {
 		email: false,
 		address: false,
 		telephone: false
-	},
-	other: {
-		'ld+json': JSON.stringify(
-			[
-				generateWebsiteSchema(),
-				generateOrganizationSchema(),
-				generateLocalBusinessSchema()
-			].filter(Boolean)
-		)
 	}
 }
 
@@ -184,6 +176,15 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
 				suppressHydrationWarning
 			>
+				<a
+					href="#main-content"
+					className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded focus:shadow-lg"
+				>
+					Skip to main content
+				</a>
+				<JsonLd data={generateWebsiteSchema()} />
+				<JsonLd data={generateOrganizationSchema()} />
+				<JsonLd data={generateLocalBusinessSchema()} />
 				<NuqsAdapter>
 					<ClientProviders>
 						<ErrorBoundary>

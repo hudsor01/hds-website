@@ -1,13 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type {
-	CalculationResults,
-	PaymentResults,
-	TTLResults,
-	VehicleInputs
-} from '@/types/ttl-types'
 import {
 	AlertCircle,
 	Check,
@@ -19,6 +11,14 @@ import {
 	Save,
 	Share2
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type {
+	CalculationResults,
+	PaymentResults,
+	TTLResults,
+	VehicleInputs
+} from '@/types/ttl-types'
 
 interface ResultsPanelProps {
 	vehicleInput: VehicleInputs

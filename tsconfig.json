@@ -13,7 +13,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
-    "noImplicitOverride": false,
+    "noImplicitOverride": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",

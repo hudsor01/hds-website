@@ -1,40 +1,48 @@
-import type { TCOResults, VehicleInputs } from '@/types/ttl-types';
+import type { TCOResults, VehicleInputs } from '@/types/ttl-types'
 
 /**
  * Calculate Total Cost of Ownership over the ownership period
  * Optimized for React Server Components with pure function approach
  */
 export function calculateTCO(input: VehicleInputs): TCOResults {
-  // Calculate total ownership cost over the period
-  const totalOwnershipYears = input.loanTermMonths ? Math.ceil(input.loanTermMonths / 12) : 5;
+	// Calculate total ownership cost over the period
+	const totalOwnershipYears = input.loanTermMonths
+		? Math.ceil(input.loanTermMonths / 12)
+		: 5
 
-  // Annual maintenance cost (increases over time)
-  const totalMaintenanceCost = Array.from({ length: totalOwnershipYears }, (_, i) => {
-    const year = i + 1;
-    const baseMaintenance = input.maintenanceCostPerYear || 0;
-    const maintenanceGrowth = Math.pow(1.07, year - 1); // 7% increase per year
-    return baseMaintenance * maintenanceGrowth;
-  }).reduce((sum, cost) => sum + cost, 0);
+	// Annual maintenance cost (increases over time)
+	const totalMaintenanceCost = Array.from(
+		{ length: totalOwnershipYears },
+		(_, i) => {
+			const year = i + 1
+			const baseMaintenance = input.maintenanceCostPerYear || 0
+			const maintenanceGrowth = 1.07 ** (year - 1) // 7% increase per year
+			return baseMaintenance * maintenanceGrowth
+		}
+	).reduce((sum, cost) => sum + cost, 0)
 
-  // Annual fuel/energy cost
-  const annualFuelCost = calculateAnnualFuelCost(input);
-  const totalFuelCost = annualFuelCost * totalOwnershipYears;
+	// Annual fuel/energy cost
+	const annualFuelCost = calculateAnnualFuelCost(input)
+	const totalFuelCost = annualFuelCost * totalOwnershipYears
 
-  // Include purchase price and financing costs in TCO
-  const financingCost = input.loanTermMonths * calculateMonthlyPayment(input) - (input.purchasePrice - input.downPayment);
+	// Include purchase price and financing costs in TCO
+	const financingCost =
+		input.loanTermMonths * calculateMonthlyPayment(input) -
+		(input.purchasePrice - input.downPayment)
 
-  // Total cost of ownership
-  const totalCostOfOwnership = input.purchasePrice + totalMaintenanceCost + totalFuelCost + financingCost;
+	// Total cost of ownership
+	const totalCostOfOwnership =
+		input.purchasePrice + totalMaintenanceCost + totalFuelCost + financingCost
 
-  // Annual cost
-  const annualCost = totalCostOfOwnership / totalOwnershipYears;
+	// Annual cost
+	const annualCost = totalCostOfOwnership / totalOwnershipYears
 
-  return {
-    totalCostOfOwnership,
-    annualCost,
-    maintenanceCost: totalMaintenanceCost,
-    fuelCost: totalFuelCost
-  };
+	return {
+		totalCostOfOwnership,
+		annualCost,
+		maintenanceCost: totalMaintenanceCost,
+		fuelCost: totalFuelCost
+	}
 }
 
 /**
@@ -42,16 +50,18 @@ export function calculateTCO(input: VehicleInputs): TCOResults {
  * Pure function optimized for performance
  */
 function calculateMonthlyPayment(input: VehicleInputs): number {
-  const principal = input.purchasePrice - input.downPayment;
-  const monthlyRate = input.interestRate / 1200;
-  const months = input.loanTermMonths;
+	const principal = input.purchasePrice - input.downPayment
+	const monthlyRate = input.interestRate / 1200
+	const months = input.loanTermMonths
 
-  if (monthlyRate === 0 || months === 0) {
-    return months === 0 ? 0 : principal / months;
-  }
+	if (monthlyRate === 0 || months === 0) {
+		return months === 0 ? 0 : principal / months
+	}
 
-  return (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
-    (Math.pow(1 + monthlyRate, months) - 1);
+	return (
+		(principal * monthlyRate * (1 + monthlyRate) ** months) /
+		((1 + monthlyRate) ** months - 1)
+	)
 }
 
 /**
@@ -59,21 +69,30 @@ function calculateMonthlyPayment(input: VehicleInputs): number {
  * Optimized for electric vs gas vehicles with sensible defaults
  */
 export function calculateAnnualFuelCost(input: VehicleInputs): number {
-  if (input.isElectric) {
-    // Electric vehicle: miles per year / miles per kWh * electricity rate ($/kWh)
-    const milesPerKwh = 3.5; // Average EV efficiency
-    return (input.milesPerYear || 12000) / milesPerKwh * (input.electricityRate || 0.13);
-  } else {
-    // Gas vehicle: miles per year / mpg * gas price
-    return (input.milesPerYear || 12000) / (input.mpg || 25) * (input.gasPrice || 3.0);
-  }
+	if (input.isElectric) {
+		// Electric vehicle: miles per year / miles per kWh * electricity rate ($/kWh)
+		const milesPerKwh = 3.5 // Average EV efficiency
+		return (
+			((input.milesPerYear || 12000) / milesPerKwh) *
+			(input.electricityRate || 0.13)
+		)
+	} else {
+		// Gas vehicle: miles per year / mpg * gas price
+		return (
+			((input.milesPerYear || 12000) / (input.mpg || 25)) *
+			(input.gasPrice || 3.0)
+		)
+	}
 }
 
 /**
  * Calculate total fuel cost over ownership period
  * Pure function for React Server Components compatibility
  */
-export function calculateTotalFuelCost(input: VehicleInputs, years: number = 5): number {
-  const annualFuelCost = calculateAnnualFuelCost(input);
-  return annualFuelCost * years;
+export function calculateTotalFuelCost(
+	input: VehicleInputs,
+	years: number = 5
+): number {
+	const annualFuelCost = calculateAnnualFuelCost(input)
+	return annualFuelCost * years
 }

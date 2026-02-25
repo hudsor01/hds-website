@@ -1,12 +1,12 @@
 'use client'
 
+import { Calculator } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type {
 	PaymentResults,
 	TTLResults,
 	VehicleInputs as VehicleInputType
 } from '@/types/ttl-types'
-import { Calculator } from 'lucide-react'
 import { AdvancedOptions } from './AdvancedOptions'
 import { FinancingInputs } from './FinancingInputs'
 import { VehicleInputs } from './VehicleInputs'

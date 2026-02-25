@@ -3,66 +3,69 @@
  * Converts contract data to professional HTML with inline CSS for PDF generation
  */
 
-export type ContractTemplate = 'service-agreement' | 'nda' | 'freelance-contract';
+export type ContractTemplate =
+	| 'service-agreement'
+	| 'nda'
+	| 'freelance-contract'
 
 export interface ContractData {
-  // Template type
-  template: ContractTemplate;
+	// Template type
+	template: ContractTemplate
 
-  // Provider details
-  providerName: string;
-  providerAddress: string;
-  providerCity: string;
-  providerState: string;
-  providerZip: string;
-  providerEmail: string;
+	// Provider details
+	providerName: string
+	providerAddress: string
+	providerCity: string
+	providerState: string
+	providerZip: string
+	providerEmail: string
 
-  // Client details
-  clientName?: string;
-  clientCompany?: string;
-  clientAddress: string;
-  clientCity: string;
-  clientState: string;
-  clientZip: string;
-  clientEmail: string;
+	// Client details
+	clientName?: string
+	clientCompany?: string
+	clientAddress: string
+	clientCity: string
+	clientState: string
+	clientZip: string
+	clientEmail: string
 
-  // Contract details
-  effectiveDate: string;
-  endDate?: string;
-  scopeOfWork?: string;
-  paymentAmount?: string;
-  paymentTerms?: string;
-  timeline?: string;
-  customClauses?: string;
+	// Contract details
+	effectiveDate: string
+	endDate?: string
+	scopeOfWork?: string
+	paymentAmount?: string
+	paymentTerms?: string
+	timeline?: string
+	customClauses?: string
 }
 
 function formatDate(dateString: string): string {
-  if (!dateString) {
-    return '__________________';
-  }
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+	if (!dateString) {
+		return '__________________'
+	}
+	const date = new Date(dateString)
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	})
 }
 
 function getTemplateTitle(template: ContractTemplate): string {
-  switch (template) {
-    case 'service-agreement':
-      return 'SERVICE AGREEMENT';
-    case 'nda':
-      return 'NON-DISCLOSURE AGREEMENT';
-    case 'freelance-contract':
-      return 'FREELANCE CONTRACT';
-    default:
-      return 'CONTRACT';
-  }
+	switch (template) {
+		case 'service-agreement':
+			return 'SERVICE AGREEMENT'
+		case 'nda':
+			return 'NON-DISCLOSURE AGREEMENT'
+		case 'freelance-contract':
+			return 'FREELANCE CONTRACT'
+		default:
+			return 'CONTRACT'
+	}
 }
 
 function getServiceAgreementContent(data: ContractData): string {
-  return `
+	return `
     <div class="section">
       <h2 class="section-title">1. SERVICES</h2>
       <p class="paragraph">
@@ -118,11 +121,11 @@ function getServiceAgreementContent(data: ContractData): string {
         The Service Provider's liability shall be limited to the total fees paid by the Client under this agreement. Neither party shall be liable for indirect, incidental, or consequential damages.
       </p>
     </div>
-  `;
+  `
 }
 
 function getNDAContent(data: ContractData): string {
-  return `
+	return `
     <div class="section">
       <h2 class="section-title">1. DEFINITION OF CONFIDENTIAL INFORMATION</h2>
       <p class="paragraph">
@@ -168,11 +171,11 @@ function getNDAContent(data: ContractData): string {
         The parties acknowledge that breach of this agreement may cause irreparable harm and that monetary damages may be inadequate. Therefore, the Disclosing Party shall be entitled to seek equitable relief, including injunction and specific performance, in addition to other available remedies.
       </p>
     </div>
-  `;
+  `
 }
 
 function getFreelanceContractContent(data: ContractData): string {
-  return `
+	return `
     <div class="section">
       <h2 class="section-title">1. ENGAGEMENT</h2>
       <p class="paragraph">
@@ -232,26 +235,28 @@ function getFreelanceContractContent(data: ContractData): string {
         The fee includes up to two (2) rounds of revisions. Additional revisions will be billed at an agreed hourly rate.
       </p>
     </div>
-  `;
+  `
 }
 
 function getTemplateContent(data: ContractData): string {
-  switch (data.template) {
-    case 'nda':
-      return getNDAContent(data);
-    case 'freelance-contract':
-      return getFreelanceContractContent(data);
-    default:
-      return getServiceAgreementContent(data);
-  }
+	switch (data.template) {
+		case 'nda':
+			return getNDAContent(data)
+		case 'freelance-contract':
+			return getFreelanceContractContent(data)
+		default:
+			return getServiceAgreementContent(data)
+	}
 }
 
 export function generateContractHTML(data: ContractData): string {
-  const clientDisplay = data.clientName || data.clientCompany;
-  const providerLabel = data.template === 'nda' ? 'PARTY A (DISCLOSING PARTY)' : 'SERVICE PROVIDER';
-  const clientLabel = data.template === 'nda' ? 'PARTY B (RECEIVING PARTY)' : 'CLIENT';
+	const clientDisplay = data.clientName || data.clientCompany
+	const providerLabel =
+		data.template === 'nda' ? 'PARTY A (DISCLOSING PARTY)' : 'SERVICE PROVIDER'
+	const clientLabel =
+		data.template === 'nda' ? 'PARTY B (RECEIVING PARTY)' : 'CLIENT'
 
-  return `
+	return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -469,15 +474,15 @@ export function generateContractHTML(data: ContractData): string {
 
     <!-- Custom Clauses -->
     ${
-      data.customClauses
-        ? `
+			data.customClauses
+				? `
     <div class="section">
       <h2 class="section-title">ADDITIONAL TERMS</h2>
       <p class="paragraph">${data.customClauses}</p>
     </div>
     `
-        : ''
-    }
+				: ''
+		}
 
     <!-- Governing Law -->
     <div class="section">
@@ -517,5 +522,5 @@ export function generateContractHTML(data: ContractData): string {
   </div>
 </body>
 </html>
-  `.trim();
+  `.trim()
 }

@@ -8,6 +8,20 @@
       "when": 1771112305362,
       "tag": "0000_bitter_lilith",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771112305363,
+      "tag": "0001_enable_rls",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771198400000,
+      "tag": "0002_production_fixes",
+      "breakpoints": true
     }
   ]
 }

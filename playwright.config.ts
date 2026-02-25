@@ -2,7 +2,6 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  testIgnore: '**/api/**',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   // Retry failed tests (helps with server stability issues)

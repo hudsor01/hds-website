@@ -1,35 +1,35 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "bunVersion": "1.3.4",
-  "installCommand": "bun install --frozen-lockfile",
-  "buildCommand": "bun run build",
-  "rewrites": [
-    {
-      "source": "/blog/rss",
-      "destination": "/api/rss/feed"
-    },
-    {
-      "source": "/blog/feed",
-      "destination": "/api/rss/feed"
-    },
-    {
-      "source": "/rss",
-      "destination": "/api/rss/feed"
-    },
-    {
-      "source": "/feed",
-      "destination": "/api/rss/feed"
-    }
-  ],
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"framework": "nextjs",
+	"bunVersion": "1.3.8",
+	"installCommand": "bun install --frozen-lockfile",
+	"buildCommand": "bun run build",
+	"rewrites": [
+		{
+			"source": "/blog/rss",
+			"destination": "/api/rss/feed"
+		},
+		{
+			"source": "/blog/feed",
+			"destination": "/api/rss/feed"
+		},
+		{
+			"source": "/rss",
+			"destination": "/api/rss/feed"
+		},
+		{
+			"source": "/feed",
+			"destination": "/api/rss/feed"
+		}
+	],
 
-  "redirects": [
-    {
-      "source": "/portfolio",
-      "destination": "/services",
-      "permanent": true
-    }
-  ],
+	"redirects": [
+		{
+			"source": "/portfolio",
+			"destination": "/services",
+			"permanent": true
+		}
+	],
 
-  "regions": ["iad1"]
+	"regions": ["iad1"]
 }

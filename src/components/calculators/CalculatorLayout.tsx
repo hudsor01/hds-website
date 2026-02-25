@@ -1,99 +1,98 @@
-'use client';
+'use client'
 
 /**
  * Calculator Layout Component
  * Provides consistent layout and structure for all calculator tools
  */
 
-
-import { type ReactNode } from 'react';
-import Link from 'next/link';
-import { Card } from '@/components/ui/card';
+import Link from 'next/link'
+import type { ReactNode } from 'react'
+import { Card } from '@/components/ui/card'
 
 interface CalculatorLayoutProps {
-  title: string;
-  description: string;
-  icon?: ReactNode;
-  children: ReactNode;
-  showBackLink?: boolean;
+	title: string
+	description: string
+	icon?: ReactNode
+	children: ReactNode
+	showBackLink?: boolean
 }
 
 export function CalculatorLayout({
-  title,
-  description,
-  icon,
-  children,
-  showBackLink = true,
+	title,
+	description,
+	icon,
+	children,
+	showBackLink = true
 }: CalculatorLayoutProps) {
-  return (
-    <div className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
-      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-comfortable text-center">
-          {icon && (
-            <div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
-              {icon}
-            </div>
-          )}
+	return (
+		<div className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
+			<div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+				{/* Header */}
+				<div className="mb-comfortable text-center">
+					{icon && (
+						<div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
+							{icon}
+						</div>
+					)}
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-foreground">
-            {title}
-          </h1>
+					<h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground dark:text-foreground">
+						{title}
+					</h1>
 
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
-            {description}
-          </p>
-        </div>
+					<p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
+						{description}
+					</p>
+				</div>
 
-        {/* Calculator Content */}
-        <Card size="none" className="card-padding sm:card-padding-lg">
-          {children}
-        </Card>
+				{/* Calculator Content */}
+				<Card size="none" className="card-padding sm:card-padding-lg">
+					{children}
+				</Card>
 
-        {/* Back Link */}
-        {showBackLink && (
-          <div className="mt-heading text-center">
-            <Link
-              href="/services"
-              className="text-sm text-primary hover:text-accent dark:text-accent dark:hover:text-accent/80"
-            >
-              ← Back to Services
-            </Link>
-          </div>
-        )}
+				{/* Back Link */}
+				{showBackLink && (
+					<div className="mt-heading text-center">
+						<Link
+							href="/services"
+							className="text-sm text-primary hover:text-accent dark:text-accent dark:hover:text-accent/80"
+						>
+							← Back to Services
+						</Link>
+					</div>
+				)}
 
-        {/* Trust Signals */}
-        <div className="mt-12 border-t border-border pt-8 dark:border-border">
-          <div className="grid gap-comfortable sm:grid-cols-3">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary dark:text-accent">
-                Growing
-              </div>
-              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
-                Calculations Performed
-              </div>
-            </div>
+				{/* Trust Signals */}
+				<div className="mt-12 border-t border-border pt-8 dark:border-border">
+					<div className="grid gap-comfortable sm:grid-cols-3">
+						<div className="text-center">
+							<div className="text-2xl font-bold text-primary dark:text-accent">
+								Growing
+							</div>
+							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+								Calculations Performed
+							</div>
+						</div>
 
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary dark:text-accent">
-                98%
-              </div>
-              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
-                Accuracy Rate
-              </div>
-            </div>
+						<div className="text-center">
+							<div className="text-2xl font-bold text-primary dark:text-accent">
+								98%
+							</div>
+							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+								Accuracy Rate
+							</div>
+						</div>
 
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary dark:text-accent">
-                Free
-              </div>
-              <div className="text-sm text-muted-foreground dark:text-muted-foreground">
-                No Credit Card Required
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+						<div className="text-center">
+							<div className="text-2xl font-bold text-primary dark:text-accent">
+								Free
+							</div>
+							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+								No Credit Card Required
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 }

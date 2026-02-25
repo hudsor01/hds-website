@@ -4,11 +4,11 @@
  * Uses useSyncExternalStore for proper SSR/hydration handling.
  */
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react'
 
 // No-op subscribe function - we don't need to subscribe to anything
 // The value never changes after initial hydration
-const emptySubscribe = () => () => {};
+const emptySubscribe = () => () => {}
 
 /**
  * Returns true when running on the client after hydration, false during SSR.
@@ -21,9 +21,9 @@ const emptySubscribe = () => () => {};
  * }
  */
 export function useHydrated(): boolean {
-  return useSyncExternalStore(
-    emptySubscribe,
-    () => true, // Client snapshot - always true
-    () => false // Server snapshot - always false
-  );
+	return useSyncExternalStore(
+		emptySubscribe,
+		() => true, // Client snapshot - always true
+		() => false // Server snapshot - always false
+	)
 }

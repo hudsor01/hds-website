@@ -3,10 +3,10 @@
  * Higher-order function that wraps route handlers with rate limiting
  */
 
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter';
-import { createServerLogger } from '@/lib/logger';
-import { errorResponse } from '@/lib/api/responses';
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server'
+import { errorResponse } from '@/lib/api/responses'
+import { createServerLogger } from '@/lib/logger'
+import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter'
 
 /**
  * Rate limit keys corresponding to different rate limiting tiers
@@ -16,21 +16,22 @@ import type { NextRequest } from 'next/server';
  * - newsletter: Newsletter signups (3 requests/min)
  * - testimonials: Testimonial submissions
  */
-type RateLimitKey = 
-  | 'api' 
-  | 'readOnlyApi' 
-  | 'contactFormApi'
-  | 'contactForm'
-  | 'newsletter'
-  | 'default';
+type RateLimitKey =
+	| 'api'
+	| 'readOnlyApi'
+	| 'contactFormApi'
+	| 'contactForm'
+	| 'newsletter'
+	| 'pagespeedApi'
+	| 'default'
 
 /**
  * Wraps a route handler with rate limiting middleware
- * 
+ *
  * @param handler - The route handler function to wrap
  * @param limitKey - The rate limit tier to apply
  * @returns A wrapped handler with rate limiting applied
- * 
+ *
  * @example
  * ```typescript
  * // Simple route
@@ -38,7 +39,7 @@ type RateLimitKey =
  *   // Handler logic
  * }
  * export const POST = withRateLimit(handleContact, 'contactFormApi');
- * 
+ *
  * // Route with params
  * async function handleUpdate(request: NextRequest, context: { params: Promise<{ id: string }> }) {
  *   const { id } = await context.params;
@@ -48,59 +49,53 @@ type RateLimitKey =
  * ```
  */
 export function withRateLimit(
-  handler: (request: NextRequest) => Promise<Response>,
-  limitKey: RateLimitKey = 'api'
+	handler: (request: NextRequest) => Promise<Response>,
+	limitKey: RateLimitKey = 'api'
 ) {
-  const logger = createServerLogger('rate-limit-wrapper');
-  
-  return async (request: NextRequest): Promise<Response> => {
-    const clientIp = getClientIp(request);
-    const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey);
+	const logger = createServerLogger('rate-limit-wrapper')
 
-    if (!isAllowed) {
-      logger.warn(`Rate limit exceeded for ${limitKey}`, {
-        ip: clientIp,
-        endpoint: request.nextUrl.pathname
-      });
-      return errorResponse(
-        'Too many requests. Please try again later.',
-        429
-      );
-    }
+	return async (request: NextRequest): Promise<Response> => {
+		const clientIp = getClientIp(request)
+		const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey)
 
-    return handler(request);
-  };
+		if (!isAllowed) {
+			logger.warn(`Rate limit exceeded for ${limitKey}`, {
+				ip: clientIp,
+				endpoint: request.nextUrl.pathname
+			})
+			return errorResponse('Too many requests. Please try again later.', 429)
+		}
+
+		return handler(request)
+	}
 }
 
 /**
  * Wraps a route handler with params with rate limiting middleware
  * Use this for dynamic routes like /api/items/[id]
- * 
+ *
  * @param handler - The route handler function with params to wrap
  * @param limitKey - The rate limit tier to apply
  * @returns A wrapped handler with rate limiting applied
  */
 export function withRateLimitParams<T>(
-  handler: (request: NextRequest, context: T) => Promise<Response>,
-  limitKey: RateLimitKey = 'api'
+	handler: (request: NextRequest, context: T) => Promise<Response>,
+	limitKey: RateLimitKey = 'api'
 ) {
-  const logger = createServerLogger('rate-limit-wrapper');
-  
-  return async (request: NextRequest, context: T): Promise<Response> => {
-    const clientIp = getClientIp(request);
-    const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey);
+	const logger = createServerLogger('rate-limit-wrapper')
 
-    if (!isAllowed) {
-      logger.warn(`Rate limit exceeded for ${limitKey}`, {
-        ip: clientIp,
-        endpoint: request.nextUrl.pathname
-      });
-      return errorResponse(
-        'Too many requests. Please try again later.',
-        429
-      );
-    }
+	return async (request: NextRequest, context: T): Promise<Response> => {
+		const clientIp = getClientIp(request)
+		const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey)
 
-    return handler(request, context);
-  };
+		if (!isAllowed) {
+			logger.warn(`Rate limit exceeded for ${limitKey}`, {
+				ip: clientIp,
+				endpoint: request.nextUrl.pathname
+			})
+			return errorResponse('Too many requests. Please try again later.', 429)
+		}
+
+		return handler(request, context)
+	}
 }

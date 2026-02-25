@@ -8,8 +8,8 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'
-import type { VehicleInputs as VehicleInput } from '@/types/ttl-types'
 import { COUNTY_FEES } from '@/lib/ttl-calculator/calculator'
+import type { VehicleInputs as VehicleInput } from '@/types/ttl-types'
 
 interface VehicleInputsProps {
 	vehicleInput: VehicleInput

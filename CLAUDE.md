@@ -112,17 +112,17 @@ Code must be written for human understanding first, performance second. No cleve
 - SubmitButton uses useFormStatus for pending state
 - Progressive enhancement - forms work without JS
 
-**Unit Tests (Vitest):**
+**Unit Tests (bun:test):**
 - Location: tests/unit/
 - Test utilities, validation, pure functions
 - Mock external dependencies
-- Run: pnpm test:unit
+- Run: bun test tests/
 
 **E2E Tests (Playwright):**
 - Location: e2e/
 - Test user flows, form submissions, navigation
 - Multiple browsers: chromium, firefox, webkit
-- Run: pnpm test:e2e (all) or pnpm test:e2e:fast (chromium only)
+- Run: bun run test:e2e (all) or bun run test:e2e:fast (chromium only)
 
 **Test Coverage:**
 - Validation schemas must have tests
@@ -218,23 +218,23 @@ Code must be written for human understanding first, performance second. No cleve
 ## DEVELOPMENT COMMANDS
 
 **Development:**
-- pnpm dev - Start development server
-- pnpm build - Production build
-- pnpm start - Start production server
-- pnpm lint - Run ESLint
-- pnpm typecheck - TypeScript type checking
-- pnpm test:unit - Run unit tests
-- pnpm test:e2e - Run E2E tests (all browsers)
-- pnpm test:e2e:fast - Run E2E tests (chromium only)
-- pnpm test:all - Run all checks (lint, typecheck, tests)
+- bun run dev - Start development server
+- bun run build - Production build
+- bun run start - Start production server
+- bun run lint - Run Biome check (linter + formatter check)
+- bun run typecheck - TypeScript type checking
+- bun test tests/ - Run unit tests
+- bun run test:e2e - Run E2E tests (all browsers)
+- bun run test:e2e:fast - Run E2E tests (chromium only)
+- bun run test:all - Run all checks (lint, typecheck, tests)
 
 **Analysis:**
-- pnpm test:unit:coverage - Test coverage report
+- bun run test:unit:coverage - Test coverage report
 
 ## GIT WORKFLOW
 
 **Before Commit:**
-- Run: pnpm lint && pnpm typecheck
+- Run: bun run lint && bun run typecheck
 - Fix all errors and warnings
 - Verify build succeeds
 

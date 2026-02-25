@@ -1,147 +1,163 @@
 // Performance optimization utilities
-import type { CLSEntry } from "@/types/performance";
-import { logger } from '@/lib/logger';
-import analytics from '@/lib/analytics';
+
+import analytics from '@/lib/analytics'
+import { logger } from '@/lib/logger'
+import type { CLSEntry } from '@/types/performance'
 
 // Lazy loading for images
 export function setupLazyLoading() {
-  if ("IntersectionObserver" in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target as HTMLImageElement;
-          img.src = img.dataset.src || "";
-          img.classList.remove("lazy");
-          observer.unobserve(img);
-        }
-      });
-    });
+	if ('IntersectionObserver' in window) {
+		const imageObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const img = entry.target as HTMLImageElement
+					img.src = img.dataset.src || ''
+					img.classList.remove('lazy')
+					observer.unobserve(img)
+				}
+			})
+		})
 
-    document.querySelectorAll("img[data-src]").forEach((img) => {
-      imageObserver.observe(img);
-    });
-  }
+		document.querySelectorAll('img[data-src]').forEach(img => {
+			imageObserver.observe(img)
+		})
+	}
 }
 
 // Critical resource hints
 export function addResourceHints() {
-  const head = document.head;
+	const head = document.head
 
-  // Preload critical fonts
-  const fontPreload = document.createElement("link");
-  fontPreload.rel = "preload";
-  fontPreload.href =
-    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap";
-  fontPreload.as = "style";
-  fontPreload.crossOrigin = "anonymous";
-  head.appendChild(fontPreload);
+	// Preload critical fonts
+	const fontPreload = document.createElement('link')
+	fontPreload.rel = 'preload'
+	fontPreload.href =
+		'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'
+	fontPreload.as = 'style'
+	fontPreload.crossOrigin = 'anonymous'
+	head.appendChild(fontPreload)
 
-  // DNS prefetch for external resources
-  const dnsPrefetches = [
-    "https://fonts.googleapis.com",
-    "https://fonts.gstatic.com",
-  ];
+	// DNS prefetch for external resources
+	const dnsPrefetches = [
+		'https://fonts.googleapis.com',
+		'https://fonts.gstatic.com'
+	]
 
-  dnsPrefetches.forEach((domain) => {
-    const link = document.createElement("link");
-    link.rel = "dns-prefetch";
-    link.href = domain;
-    head.appendChild(link);
-  });
+	dnsPrefetches.forEach(domain => {
+		const link = document.createElement('link')
+		link.rel = 'dns-prefetch'
+		link.href = domain
+		head.appendChild(link)
+	})
 }
 
 // Note: Service Worker registration is handled by ServiceWorkerRegistration.tsx component
 
 // Web Vitals tracking
-let _clsValue = 0; // Track cumulative layout shift - used in CLS observer
+let _clsValue = 0 // Track cumulative layout shift - used in CLS observer
 
 export function trackWebVitals() {
-  // Core Web Vitals tracking would go here
-  // This is a placeholder for actual implementation
-  if ("PerformanceObserver" in window) {
-    // Track LCP
-    new PerformanceObserver(() => {
-      // Track LCP entry for performance monitoring
-      // LCP tracking would be implemented here
-    }).observe({ entryTypes: ["largest-contentful-paint"] });
+	// Core Web Vitals tracking would go here
+	// This is a placeholder for actual implementation
+	if ('PerformanceObserver' in window) {
+		// Track LCP
+		new PerformanceObserver(() => {
+			// Track LCP entry for performance monitoring
+			// LCP tracking would be implemented here
+		}).observe({ entryTypes: ['largest-contentful-paint'] })
 
-    // Track FID
-    new PerformanceObserver(() => {
-      // Track FID entry for performance monitoring
-      // FID tracking would be implemented here
-    }).observe({ entryTypes: ["first-input"] });
+		// Track FID
+		new PerformanceObserver(() => {
+			// Track FID entry for performance monitoring
+			// FID tracking would be implemented here
+		}).observe({ entryTypes: ['first-input'] })
 
-    // Track CLS
-    new PerformanceObserver((entryList) => {
-      // Track CLS value for performance monitoring
-      const entries = entryList.getEntries();
-      entries.forEach((entry) => {
-        const clsEntry = entry as CLSEntry;
-        if (!clsEntry.hadRecentInput) {
-          _clsValue += clsEntry.value;
-        }
-      });
-      // Track CLS value with structured logging and analytics
-      logger.info('Core Web Vitals - CLS measurement', {
-        metric: 'cls',
-        value: _clsValue,
-        threshold: _clsValue > 0.1 ? 'poor' : _clsValue > 0.05 ? 'needs-improvement' : 'good',
-        url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-        viewport: typeof window !== 'undefined' ? {
-          width: window.innerWidth,
-          height: window.innerHeight
-        } : null,
-        timestamp: Date.now()
-      });
+		// Track CLS
+		new PerformanceObserver(entryList => {
+			// Track CLS value for performance monitoring
+			const entries = entryList.getEntries()
+			entries.forEach(entry => {
+				const clsEntry = entry as CLSEntry
+				if (!clsEntry.hadRecentInput) {
+					_clsValue += clsEntry.value
+				}
+			})
+			// Track CLS value with structured logging and analytics
+			logger.info('Core Web Vitals - CLS measurement', {
+				metric: 'cls',
+				value: _clsValue,
+				threshold:
+					_clsValue > 0.1
+						? 'poor'
+						: _clsValue > 0.05
+							? 'needs-improvement'
+							: 'good',
+				url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+				viewport:
+					typeof window !== 'undefined'
+						? {
+								width: window.innerWidth,
+								height: window.innerHeight
+							}
+						: null,
+				timestamp: Date.now()
+			})
 
-      // Send to analytics for performance tracking
-      if (typeof window !== 'undefined' && analytics) {
-        analytics.trackEvent('web_vitals_cls', {
-          cls_value: _clsValue,
-          performance_rating: _clsValue > 0.1 ? 'poor' : _clsValue > 0.05 ? 'needs-improvement' : 'good',
-          page_url: window.location.href,
-          viewport_width: window.innerWidth,
-          viewport_height: window.innerHeight
-        });
-      }
-    }).observe({ entryTypes: ["layout-shift"] });
-  }
+			// Send to analytics for performance tracking
+			if (typeof window !== 'undefined' && analytics) {
+				analytics.trackEvent('web_vitals_cls', {
+					cls_value: _clsValue,
+					performance_rating:
+						_clsValue > 0.1
+							? 'poor'
+							: _clsValue > 0.05
+								? 'needs-improvement'
+								: 'good',
+					page_url: window.location.href,
+					viewport_width: window.innerWidth,
+					viewport_height: window.innerHeight
+				})
+			}
+		}).observe({ entryTypes: ['layout-shift'] })
+	}
 }
 
 // Simple image helpers - use Next.js Image component instead of complex optimization
 export function createOptimizedImage(
-  src: string,
-  alt: string,
-  className?: string
+	src: string,
+	alt: string,
+	className?: string
 ) {
-  // Simple image element - Next.js Image component handles optimization automatically
-  const img = document.createElement("img");
-  img.alt = alt;
-  img.loading = "lazy";
-  img.decoding = "async";
-  img.src = src;
-  if (className) {img.className = className;}
+	// Simple image element - Next.js Image component handles optimization automatically
+	const img = document.createElement('img')
+	img.alt = alt
+	img.loading = 'lazy'
+	img.decoding = 'async'
+	img.src = src
+	if (className) {
+		img.className = className
+	}
 
-  return img;
+	return img
 }
 
 // Preload critical routes
 export function preloadCriticalRoutes() {
-  const routes = ["/services", "/contact"];
+	const routes = ['/services', '/contact']
 
-  routes.forEach((route) => {
-    const link = document.createElement("link");
-    link.rel = "prefetch";
-    link.href = route;
-    document.head.appendChild(link);
-  });
+	routes.forEach(route => {
+		const link = document.createElement('link')
+		link.rel = 'prefetch'
+		link.href = route
+		document.head.appendChild(link)
+	})
 }
 
 // Initialize all performance optimizations
 export function initPerformanceOptimizations() {
-  setupLazyLoading();
-  addResourceHints();
-  trackWebVitals();
-  preloadCriticalRoutes();
-  // registerServiceWorker() // Uncomment when SW is implemented
+	setupLazyLoading()
+	addResourceHints()
+	trackWebVitals()
+	preloadCriticalRoutes()
+	// registerServiceWorker() // Uncomment when SW is implemented
 }

@@ -9,13 +9,13 @@
 
 /** Public API endpoints */
 export const API_ENDPOINTS = {
-  CONTACT: '/api/contact',
-  NEWSLETTER_SUBSCRIBE: '/api/newsletter/subscribe',
-  TESTIMONIALS: '/api/testimonials',
-  CALCULATORS_SUBMIT: '/api/calculators/submit',
-  PAGESPEED: '/api/pagespeed',
-  WEB_VITALS: '/api/web-vitals',
-} as const;
+	CONTACT: '/api/contact',
+	NEWSLETTER_SUBSCRIBE: '/api/newsletter/subscribe',
+	TESTIMONIALS: '/api/testimonials',
+	CALCULATORS_SUBMIT: '/api/calculators/submit',
+	PAGESPEED: '/api/pagespeed',
+	WEB_VITALS: '/api/web-vitals'
+} as const
 
 // Type exports
-export type ApiEndpoint = typeof API_ENDPOINTS[keyof typeof API_ENDPOINTS];
+export type ApiEndpoint = (typeof API_ENDPOINTS)[keyof typeof API_ENDPOINTS]

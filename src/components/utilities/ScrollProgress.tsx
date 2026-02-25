@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * Scroll Progress Indicator Component
@@ -34,61 +34,66 @@ const PROGRESS_UPDATE_THRESHOLD = 1 // Only update if progress changes by more t
 const PROGRESS_BAR_Z_INDEX = 50 // Z-index for progress bar (above content, below modals)
 
 export default function ScrollProgress() {
-  const [progress, setProgress] = useState(0)
-  const rafIdRef = useRef<number | null>(null)
-  const lastProgressRef = useRef(0)
+	const [progress, setProgress] = useState(0)
+	const rafIdRef = useRef<number | null>(null)
+	const lastProgressRef = useRef(0)
 
-  useEffect(() => {
-    const updateProgress = () => {
-      // Calculate scroll progress
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
-      const scrollProgress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+	useEffect(() => {
+		const updateProgress = () => {
+			// Calculate scroll progress
+			const scrollTop = window.scrollY
+			const docHeight =
+				document.documentElement.scrollHeight -
+				document.documentElement.clientHeight
+			const scrollProgress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
 
-      // Only update state if progress changed significantly (performance optimization)
-      if (Math.abs(scrollProgress - lastProgressRef.current) > PROGRESS_UPDATE_THRESHOLD) {
-        setProgress(scrollProgress)
-        lastProgressRef.current = scrollProgress
-      }
-    }
+			// Only update state if progress changed significantly (performance optimization)
+			if (
+				Math.abs(scrollProgress - lastProgressRef.current) >
+				PROGRESS_UPDATE_THRESHOLD
+			) {
+				setProgress(scrollProgress)
+				lastProgressRef.current = scrollProgress
+			}
+		}
 
-    const handleScroll = () => {
-      // Cancel previous frame if still pending
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-      }
-      // Schedule update on next frame
-      rafIdRef.current = requestAnimationFrame(updateProgress)
-    }
+		const handleScroll = () => {
+			// Cancel previous frame if still pending
+			if (rafIdRef.current !== null) {
+				cancelAnimationFrame(rafIdRef.current)
+			}
+			// Schedule update on next frame
+			rafIdRef.current = requestAnimationFrame(updateProgress)
+		}
 
-    // Set initial progress
-    updateProgress()
+		// Set initial progress
+		updateProgress()
 
-    // Add scroll listener
-    window.addEventListener('scroll', handleScroll, { passive: true })
+		// Add scroll listener
+		window.addEventListener('scroll', handleScroll, { passive: true })
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-      }
-    }
-  }, [])
+		return () => {
+			window.removeEventListener('scroll', handleScroll)
+			if (rafIdRef.current !== null) {
+				cancelAnimationFrame(rafIdRef.current)
+			}
+		}
+	}, [])
 
-  return (
-    <div
-      className="fixed top-0 left-0 right-0 h-1 bg-muted/50 backdrop-blur-xs"
-      style={{ zIndex: PROGRESS_BAR_Z_INDEX }}
-      role="progressbar"
-      aria-label="Reading progress"
-      aria-valuenow={Math.round(progress)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
-      <div
-        className="h-full bg-primary/10 transition-all duration-150 ease-out"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  )
+	return (
+		<div
+			className="fixed top-0 left-0 right-0 h-1 bg-muted/50 backdrop-blur-xs"
+			style={{ zIndex: PROGRESS_BAR_Z_INDEX }}
+			role="progressbar"
+			aria-label="Reading progress"
+			aria-valuenow={Math.round(progress)}
+			aria-valuemin={0}
+			aria-valuemax={100}
+		>
+			<div
+				className="h-full bg-primary/10 transition-all duration-150 ease-out"
+				style={{ width: `${progress}%` }}
+			/>
+		</div>
+	)
 }

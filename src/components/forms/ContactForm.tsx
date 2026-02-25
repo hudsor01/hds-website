@@ -1,212 +1,217 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { useAppForm } from '@/hooks/form-hook'
-import { FieldGroup } from '@/components/ui/field'
-import type { ContactFormData } from '@/lib/schemas/contact'
-import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
-import formOptions from '@/data/form-options.json'
+import { useMemo, useState } from 'react'
 import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
+import { FieldGroup } from '@/components/ui/field'
+import formOptions from '@/data/form-options.json'
+import { useAppForm } from '@/hooks/form-hook'
+import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
+import type { ContactFormData } from '@/lib/schemas/contact'
 
-export default function ContactForm({ className = '' }: { className?: string }) {
-  const mutation = useContactFormSubmit()
-  const [showSuccess, setShowSuccess] = useState(false)
+export default function ContactForm({
+	className = ''
+}: {
+	className?: string
+}) {
+	const mutation = useContactFormSubmit()
+	const [showSuccess, setShowSuccess] = useState(false)
 
-  const serviceOptions = useMemo(() => formOptions.services, [])
-  const budgetOptions = useMemo(() => formOptions.budget, [])
-  const timelineOptions = useMemo(() => formOptions.timeline, [])
-  const contactTimeOptions = useMemo(() => formOptions.contactTime, [])
+	const serviceOptions = useMemo(() => formOptions.services, [])
+	const budgetOptions = useMemo(() => formOptions.budget, [])
+	const timelineOptions = useMemo(() => formOptions.timeline, [])
+	const contactTimeOptions = useMemo(() => formOptions.contactTime, [])
 
-  const form = useAppForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      company: '',
-      service: 'web-development',
-      bestTimeToContact: 'anytime',
-      budget: 'under-5k',
-      timeline: 'flexible',
-      message: ''
-    },
-    onSubmit: async ({ value }) => {
-      await mutation.mutateAsync(value as ContactFormData)
-      setShowSuccess(true)
-    },
-  })
+	const form = useAppForm({
+		defaultValues: {
+			firstName: '',
+			lastName: '',
+			email: '',
+			phone: '',
+			company: '',
+			service: 'web-development',
+			bestTimeToContact: 'anytime',
+			budget: 'under-5k',
+			timeline: 'flexible',
+			message: ''
+		},
+		onSubmit: async ({ value }) => {
+			await mutation.mutateAsync(value as ContactFormData)
+			setShowSuccess(true)
+		}
+	})
 
-  const handleReset = () => {
-    form.reset()
-    setShowSuccess(false)
-    mutation.reset()
-  }
+	const handleReset = () => {
+		form.reset()
+		setShowSuccess(false)
+		mutation.reset()
+	}
 
-  if (showSuccess) {
-    return (
-      <FormSuccessMessage
-        title="Thank you"
-        message="Form submitted successfully, we will get back to you soon"
-        actionLabel="Send another message"
-        onAction={handleReset}
-      />
-    )
-  }
+	if (showSuccess) {
+		return (
+			<FormSuccessMessage
+				title="Thank you"
+				message="Form submitted successfully, we will get back to you soon"
+				actionLabel="Send another message"
+				onAction={handleReset}
+			/>
+		)
+	}
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        form.handleSubmit()
-      }}
-      className={`p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border max-w-3xl mx-auto ${className}`}
-    >
-      <FieldGroup className="grid md:grid-cols-6 gap-4 mb-6">
-        {/* First Name */}
-        <div className="md:col-span-3">
-          <form.AppField name="firstName">
-            {(field) => (
-              <field.TextField
-                label="First Name"
-                placeholder="Enter your first name"
-                autoComplete="given-name"
-              />
-            )}
-          </form.AppField>
-        </div>
+	return (
+		<form
+			onSubmit={e => {
+				e.preventDefault()
+				e.stopPropagation()
+				form.handleSubmit()
+			}}
+			className={`p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border max-w-3xl mx-auto ${className}`}
+		>
+			<FieldGroup className="grid md:grid-cols-6 gap-4 mb-6">
+				{/* First Name */}
+				<div className="md:col-span-3">
+					<form.AppField name="firstName">
+						{field => (
+							<field.TextField
+								label="First Name"
+								placeholder="Enter your first name"
+								autoComplete="given-name"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Last Name */}
-        <div className="md:col-span-3">
-          <form.AppField name="lastName">
-            {(field) => (
-              <field.TextField
-                label="Last Name"
-                placeholder="Enter your last name"
-                autoComplete="family-name"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Last Name */}
+				<div className="md:col-span-3">
+					<form.AppField name="lastName">
+						{field => (
+							<field.TextField
+								label="Last Name"
+								placeholder="Enter your last name"
+								autoComplete="family-name"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Email */}
-        <div className="md:col-span-6">
-          <form.AppField name="email">
-            {(field) => (
-              <field.EmailField
-                label="Email Address"
-                placeholder="Enter your email address"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Email */}
+				<div className="md:col-span-6">
+					<form.AppField name="email">
+						{field => (
+							<field.EmailField
+								label="Email Address"
+								placeholder="Enter your email address"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Phone */}
-        <div className="md:col-span-3">
-          <form.AppField name="phone">
-            {(field) => (
-              <field.PhoneField
-                label="Phone (Optional)"
-                placeholder="Enter your phone number"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Phone */}
+				<div className="md:col-span-3">
+					<form.AppField name="phone">
+						{field => (
+							<field.PhoneField
+								label="Phone (Optional)"
+								placeholder="Enter your phone number"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Company */}
-        <div className="md:col-span-3">
-          <form.AppField name="company">
-            {(field) => (
-              <field.TextField
-                label="Company (Optional)"
-                placeholder="Enter your company name"
-                autoComplete="organization"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Company */}
+				<div className="md:col-span-3">
+					<form.AppField name="company">
+						{field => (
+							<field.TextField
+								label="Company (Optional)"
+								placeholder="Enter your company name"
+								autoComplete="organization"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Service */}
-        <div className="md:col-span-3">
-          <form.AppField name="service">
-            {(field) => (
-              <field.SelectField
-                label="Service Interest"
-                options={serviceOptions}
-                placeholder="Select a service"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Service */}
+				<div className="md:col-span-3">
+					<form.AppField name="service">
+						{field => (
+							<field.SelectField
+								label="Service Interest"
+								options={serviceOptions}
+								placeholder="Select a service"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Best Time to Contact */}
-        <div className="md:col-span-3">
-          <form.AppField name="bestTimeToContact">
-            {(field) => (
-              <field.SelectField
-                label="Best Time to Contact"
-                options={contactTimeOptions}
-                placeholder="Select preferred time"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Best Time to Contact */}
+				<div className="md:col-span-3">
+					<form.AppField name="bestTimeToContact">
+						{field => (
+							<field.SelectField
+								label="Best Time to Contact"
+								options={contactTimeOptions}
+								placeholder="Select preferred time"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Budget */}
-        <div className="md:col-span-3">
-          <form.AppField name="budget">
-            {(field) => (
-              <field.SelectField
-                label="Budget Range"
-                options={budgetOptions}
-                placeholder="Select budget range"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Budget */}
+				<div className="md:col-span-3">
+					<form.AppField name="budget">
+						{field => (
+							<field.SelectField
+								label="Budget Range"
+								options={budgetOptions}
+								placeholder="Select budget range"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Timeline */}
-        <div className="md:col-span-3">
-          <form.AppField name="timeline">
-            {(field) => (
-              <field.SelectField
-                label="Project Timeline"
-                options={timelineOptions}
-                placeholder="Select timeline"
-              />
-            )}
-          </form.AppField>
-        </div>
+				{/* Timeline */}
+				<div className="md:col-span-3">
+					<form.AppField name="timeline">
+						{field => (
+							<field.SelectField
+								label="Project Timeline"
+								options={timelineOptions}
+								placeholder="Select timeline"
+							/>
+						)}
+					</form.AppField>
+				</div>
 
-        {/* Message */}
-        <div className="col-span-full">
-          <form.AppField name="message">
-            {(field) => (
-              <field.TextareaField
-                label="Message"
-                placeholder="Tell us about your project..."
-                rows={6}
-              />
-            )}
-          </form.AppField>
-        </div>
-      </FieldGroup>
+				{/* Message */}
+				<div className="col-span-full">
+					<form.AppField name="message">
+						{field => (
+							<field.TextareaField
+								label="Message"
+								placeholder="Tell us about your project..."
+								rows={6}
+							/>
+						)}
+					</form.AppField>
+				</div>
+			</FieldGroup>
 
-      {/* Mutation error */}
-      {mutation.isError && (
-        <div className="mb-4 text-sm text-destructive">
-          {mutation.error?.message || 'An error occurred'}
-        </div>
-      )}
+			{/* Mutation error */}
+			{mutation.isError && (
+				<div
+					className="mb-4 text-sm text-destructive"
+					aria-live="assertive"
+					role="alert"
+				>
+					{mutation.error?.message || 'An error occurred'}
+				</div>
+			)}
 
-      <div className="flex justify-end items-center w-full">
-        <form.AppForm>
-          <form.SubmitButton
-            label="Submit"
-            loadingLabel="Submitting..."
-          />
-        </form.AppForm>
-      </div>
-    </form>
-  )
+			<div className="flex justify-end items-center w-full">
+				<form.AppForm>
+					<form.SubmitButton label="Submit" loadingLabel="Submitting..." />
+				</form.AppForm>
+			</div>
+		</form>
+	)
 }

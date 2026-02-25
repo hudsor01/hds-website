@@ -4,7 +4,7 @@
 
 // Form validation error types for paystub
 export interface FormErrors {
-  employeeName?: string
-  hourlyRate?: string
-  hoursPerPeriod?: string
+	employeeName?: string
+	hourlyRate?: string
+	hoursPerPeriod?: string
 }

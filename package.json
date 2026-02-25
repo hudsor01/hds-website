@@ -8,7 +8,9 @@
 		"dev:https": "cross-env HTTPS=true next dev",
 		"build": "next build --webpack",
 		"start": "next start",
-		"lint": "eslint .",
+		"lint": "biome check src/",
+		"lint:fix": "biome check src/ --write",
+		"format": "biome format --write src/",
 		"generate-sitemap": "bun run scripts/generate-sitemap.ts",
 		"typecheck": "tsc --noEmit",
 		"test:e2e": "playwright test",
@@ -29,10 +31,10 @@
 		"clean:test": "rm -rf playwright-report test-results",
 		"test:install": "npm run test:e2e:install",
 		"test:update-snapshots": "playwright test --update-snapshots",
+		"db:push": "drizzle-kit push",
 		"prepare": "lefthook install"
 	},
 	"dependencies": {
-		"@neondatabase/neon-js": "0.2.0-beta.1",
 		"@neondatabase/serverless": "1.0.2",
 		"@radix-ui/react-accordion": "1.2.12",
 		"@radix-ui/react-checkbox": "1.3.3",
@@ -71,6 +73,7 @@
 		"zustand": "5.0.11"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "2.4.4",
 		"@happy-dom/global-registrator": "20.6.1",
 		"@playwright/test": "1.58.2",
 		"@tailwindcss/postcss": "4.1.18",
@@ -78,25 +81,19 @@
 		"@testing-library/react": "16.3.2",
 		"@testing-library/user-event": "14.6.1",
 		"@types/bun": "1.3.9",
+		"@types/dompurify": "3.2.0",
 		"@types/node": "25.2.3",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
 		"drizzle-kit": "0.31.8",
-		"eslint": "9.39.2",
-		"eslint-config-next": "16.1.6",
 		"lefthook": "2.1.1",
 		"msw": "2.12.10",
 		"next": "16.1.6",
 		"playwright": "1.58.2",
-		"prettier": "3.8.1",
 		"react": "19.2.4",
 		"react-dom": "19.2.4",
 		"tailwindcss": "4.1.18",
 		"typescript": "5.9.3"
-	},
-	"resolutions": {
-		"path-to-regexp": "8.3.0",
-		"esbuild": "0.27.1"
 	},
 	"overrides": {
 		"path-to-regexp": "8.3.0",

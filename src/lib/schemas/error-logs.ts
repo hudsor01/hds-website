@@ -15,18 +15,18 @@ export const resolvedFilterSchema = z.enum(['true', 'false', 'all'])
 export type ResolvedFilter = z.infer<typeof resolvedFilterSchema>
 
 export const errorLogsQuerySchema = z.object({
-  timeRange: timeRangeSchema.default('24h'),
-  errorType: z.string().max(100).optional(),
-  route: z.string().max(200).optional(),
-  level: errorLevelSchema.optional(),
-  search: z.string().max(200).optional(),
-  resolved: resolvedFilterSchema.default('all'),
-  limit: z.coerce.number().int().positive().max(100).default(50),
-  offset: z.coerce.number().int().min(0).default(0),
+	timeRange: timeRangeSchema.default('24h'),
+	errorType: z.string().max(100).optional(),
+	route: z.string().max(200).optional(),
+	level: errorLevelSchema.optional(),
+	search: z.string().max(200).optional(),
+	resolved: resolvedFilterSchema.default('all'),
+	limit: z.coerce.number().int().positive().max(100).default(50),
+	offset: z.coerce.number().int().min(0).default(0)
 })
 export type ErrorLogsQuery = z.infer<typeof errorLogsQuerySchema>
 
 export const resolveErrorSchema = z.object({
-  resolved: z.boolean(),
+	resolved: z.boolean()
 })
 export type ResolveError = z.infer<typeof resolveErrorSchema>

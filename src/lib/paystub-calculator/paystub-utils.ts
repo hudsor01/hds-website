@@ -6,19 +6,19 @@ import { getTaxDataForYear } from './tax-data'
  * Get pay frequencies options
  */
 export function getPayFrequencies() {
-  return payDates.payFrequencies
+	return payDates.payFrequencies
 }
 
 /**
  * Get default periods for pay frequency
  */
 export function getDefaultPeriods() {
-  return payDates.defaultPeriods
+	return payDates.defaultPeriods
 }
 
 /**
  * Get current tax year data (simplified)
  */
 export function getCurrentTaxData(year?: number): TaxData {
-  return getTaxDataForYear(year);
+	return getTaxDataForYear(year)
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { Plus, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -9,7 +10,6 @@ import type {
 	TTLResults,
 	VehicleInputs
 } from '@/types/ttl-types'
-import { Plus, Settings } from 'lucide-react'
 
 interface AdvancedOptionsProps {
 	vehicleInput: VehicleInputs

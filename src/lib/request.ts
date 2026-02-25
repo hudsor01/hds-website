@@ -3,7 +3,7 @@
  * Centralized utilities for extracting information from Next.js requests
  */
 
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server'
 
 /**
  * Extract client IP address from Next.js request headers
@@ -25,25 +25,25 @@ import type { NextRequest } from 'next/server';
  * ```
  */
 export function getClientIp(request: NextRequest): string {
-  // Check x-forwarded-for header (standard for proxies/load balancers)
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    // x-forwarded-for can contain multiple IPs (client, proxy1, proxy2, ...)
-    // The first IP is the original client
-    const firstIp = forwardedFor.split(',')[0]?.trim();
-    if (firstIp) {
-      return firstIp;
-    }
-  }
+	// Check x-forwarded-for header (standard for proxies/load balancers)
+	const forwardedFor = request.headers.get('x-forwarded-for')
+	if (forwardedFor) {
+		// x-forwarded-for can contain multiple IPs (client, proxy1, proxy2, ...)
+		// The first IP is the original client
+		const firstIp = forwardedFor.split(',')[0]?.trim()
+		if (firstIp) {
+			return firstIp
+		}
+	}
 
-  // Check x-real-ip header (alternative used by some proxies)
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp?.trim()) {
-    return realIp.trim();
-  }
+	// Check x-real-ip header (alternative used by some proxies)
+	const realIp = request.headers.get('x-real-ip')
+	if (realIp?.trim()) {
+		return realIp.trim()
+	}
 
-  // Fallback to localhost (development/testing)
-  return '127.0.0.1';
+	// Fallback to localhost (development/testing)
+	return '127.0.0.1'
 }
 
 /**
@@ -65,21 +65,21 @@ export function getClientIp(request: NextRequest): string {
  * ```
  */
 export function getClientIpFromHeaders(headers: Headers): string {
-  // Check x-forwarded-for header
-  const forwardedFor = headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    const firstIp = forwardedFor.split(',')[0]?.trim();
-    if (firstIp) {
-      return firstIp;
-    }
-  }
+	// Check x-forwarded-for header
+	const forwardedFor = headers.get('x-forwarded-for')
+	if (forwardedFor) {
+		const firstIp = forwardedFor.split(',')[0]?.trim()
+		if (firstIp) {
+			return firstIp
+		}
+	}
 
-  // Check x-real-ip header
-  const realIp = headers.get('x-real-ip');
-  if (realIp?.trim()) {
-    return realIp.trim();
-  }
+	// Check x-real-ip header
+	const realIp = headers.get('x-real-ip')
+	if (realIp?.trim()) {
+		return realIp.trim()
+	}
 
-  // Fallback to localhost
-  return '127.0.0.1';
+	// Fallback to localhost
+	return '127.0.0.1'
 }

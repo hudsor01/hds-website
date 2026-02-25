@@ -3,23 +3,23 @@
  * Prevents typos and makes tracking easier
  */
 export const STORAGE_KEYS = {
-  /** TTL calculator saved calculations */
-  TTL_SAVED_CALCULATIONS: 'savedCalculations',
+	/** TTL calculator saved calculations */
+	TTL_SAVED_CALCULATIONS: 'savedCalculations',
 
-  /** User theme preference */
-  THEME: 'theme',
+	/** User theme preference */
+	THEME: 'theme',
 
-  /** Tool usage analytics */
-  TOOL_USAGE: 'toolUsage',
+	/** Tool usage analytics */
+	TOOL_USAGE: 'toolUsage',
 
-  /** Form draft data */
-  FORM_DRAFTS: 'formDrafts',
+	/** Form draft data */
+	FORM_DRAFTS: 'formDrafts',
 
-  /** Authentication token */
-  AUTH_TOKEN: 'auth-token',
+	/** Authentication token */
+	AUTH_TOKEN: 'auth-token',
 
-  /** Analytics session identifier */
-  SESSION_ID: 'session_id',
-} as const;
+	/** Analytics session identifier */
+	SESSION_ID: 'session_id'
+} as const
 
-export type StorageKey = keyof typeof STORAGE_KEYS;
+export type StorageKey = keyof typeof STORAGE_KEYS

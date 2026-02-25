@@ -1,5 +1,33 @@
 # Project Milestones: Hudson Digital Solutions Website
 
+## v3.0 Growth & Content (Shipped: 2026-02-18)
+
+**Delivered:** Surfaced all features to users, automated blog content pipeline, expanded location coverage to 75 cities nationwide, added E2E test coverage, and validated performance infrastructure — ready for marketing push.
+
+**Phases completed:** 46-50 (5 plans total)
+
+**Key accomplishments:**
+
+- Automated blog content pipeline: fixed broken homelab infrastructure (14 days down), wired n8n Blog Generator to auto-publish AI-generated posts to Neon every 2 hours
+- Surfaced all 13 tools on /tools index (was showing 3 of 13 with hardcoded array)
+- Expanded location coverage from 5 Texas cities to 75 cities across 11 states (Arizona, Arkansas, Colorado, Florida, Georgia, Louisiana, New Mexico, North Carolina, Oklahoma, Tennessee, Texas)
+- Created /locations index page and expanded sitemap from 9 to 85+ entries (10 static + 75 locations + dynamic blog posts)
+- Added E2E test coverage: 18 Playwright tests (tools index + 3 generators + locations) to prevent UI regressions
+- Fixed production build-blocking bug: DOMPurify SSR crash during blog static generation (added `typeof window` guard)
+- Validated performance infrastructure: bundle audit confirmed lazy-loading patterns, WebP images, Core Web Vitals monitoring in place
+
+**Stats:**
+
+- 19 files changed, 1,313 insertions, 75 deletions (net +1,238 lines)
+- 5 phases, 5 plans, 12 commits
+- 1 day from start to ship (2026-02-17 to 2026-02-18)
+
+**Git range:** `feat(47-01)` → `perf(50-01)`
+
+**What's next:** TBD — all planned features shipped, next milestone to be defined
+
+---
+
 ## v2.0 Audit Remediation & Feature Completion (Shipped: 2026-02-17)
 
 **Delivered:** Wired all orphaned code to live pages, eliminated silent Tailwind failures across 38+ files, database-backed blog, 9 new tool/location pages, and full WCAG AA accessibility compliance — 329 passing tests, zero errors.
@@ -54,3 +82,26 @@
 **What's next:** Address remaining code review items (test coverage, TypeScript strictness, input validation, performance optimization)
 
 ---
+
+## v3.1 Biome Migration (Shipped: 2026-02-25)
+
+**Delivered:** Replaced ESLint + Prettier with Biome as the sole linter/formatter — single Rust binary, zero npm vulnerability surface from linting deps, full TypeScript/React/Next.js rule parity with zero regressions.
+
+**Phases completed:** 53-55 (3 phases, 3 plans)
+
+**Key accomplishments:**
+
+- Installed Biome 2.4.4 with exact pin, hand-crafted biome.json covering lint/format/CSS/React/Next.js domains; 263 source files cleaned of import violations in one sweep
+- Migrated all developer tooling to Biome: package.json scripts, lefthook pre-commit staged-files hook, CI "Run Biome" step, VSCode format-on-save with biomejs.biome extension
+- Confirmed format sweep was a no-op (Phase 53 commit was the de-facto reformat — git blame preserved)
+- Removed ESLint, eslint-config-next, prettier and all transitive deps; deleted all config files (eslint.config.mjs, .prettierrc.json, .prettierignore) — zero residual surface
+- All verification gates passed: 360 unit tests, 139 static pages, 0 TypeScript errors, 0 Biome violations
+
+**Stats:**
+
+- 3 phases, 3 plans, ~28 commits
+- Timeline: 1 day (2026-02-24 to 2026-02-25)
+- ~13 deps removed (ESLint/Prettier and transitive)
+
+---
+
