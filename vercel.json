@@ -31,5 +31,12 @@
 		}
 	],
 
+	"crons": [
+		{
+			"path": "/api/process-emails",
+			"schedule": "0 0 * * *"
+		}
+	],
+
 	"regions": ["iad1"]
 }
