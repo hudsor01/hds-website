@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Phase: 56 (Design System Foundation) — not yet planned
-Plan: —
-Status: REQUIREMENTS.md and ROADMAP.md complete; ready for /gsd:plan-phase 56
-Last activity: 2026-02-25 — v4.0 requirements defined (21 reqs across 5 phases), roadmap phases 56-60 added
+Phase: 56 (Design System Foundation) — executing
+Plan: 1/2 complete (56-01 done, 56-02 next)
+Status: Plan 56-01 complete; dark mode wired, brand palette refined, surface elevation tokens added
+Last activity: 2026-02-25 — Phase 56 Plan 01 executed (dark mode + surface tokens)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -44,6 +44,10 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - All key page types in scope: Homepage, Tools, Services/About, Locations
 - Design tokens first (Phase 56), then components (57-58), then pages (59-60)
 - OKLCH color space for brand palette — more perceptually uniform than HSL
+- [Phase 56-01]: Dark mode uses .dark {} selector to remap base tokens; @theme {} retains -dark suffix utilities
+- [Phase 56-01]: --color-scheme removed from @theme {}; use :root { color-scheme: light } / .dark { color-scheme: dark }
+- [Phase 56-01]: Surface elevation: 5 levels (sunken/base/raised/elevated/overlay), light + dark variants in both @theme and .dark
+- [Phase 56-01]: Pre-existing blog build failure (sanitize error) confirmed unrelated to CSS phase changes
 
 **v3.1 Biome Migration:**
 - Biome 2.4.4 exact pin (`-E` flag) — zero peer dependencies
@@ -80,6 +84,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-25
-Stopped at: v4.0 new-milestone complete. REQUIREMENTS.md + ROADMAP.md phases 56-60 defined.
-Resume file: N/A — ready to plan phase 56.
-Next action: /gsd:plan-phase 56
+Stopped at: Completed 56-01-PLAN.md (dark mode + surface tokens)
+Resume file: None
+Next action: Execute 56-02-PLAN.md (type scale, shadow tokens, font fix)
