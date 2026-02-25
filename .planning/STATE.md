@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v4.0 UI Redesign — defining requirements
+**Current focus:** v4.0 UI Redesign — Phase 56 Design System Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 56 (Design System Foundation) — not yet planned
 Plan: —
-Status: Defining requirements for v4.0 UI Redesign
-Last activity: 2026-02-25 — v4.0 milestone started; questioning complete, PROJECT.md updated
+Status: REQUIREMENTS.md and ROADMAP.md complete; ready for /gsd:plan-phase 56
+Last activity: 2026-02-25 — v4.0 requirements defined (21 reqs across 5 phases), roadmap phases 56-60 added
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -37,6 +37,15 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 
 ### Decisions
 
+**v4.0 UI Redesign:**
+- Stay with Tailwind + shadcn — redesign through CSS tokens and shadcn overrides, no library swap
+- No animations in this milestone — focus on static quality first
+- Inspiration: Resend, Linear, Clerk — purposeful dark aesthetic, tight type scale, polished components
+- All key page types in scope: Homepage, Tools, Services/About, Locations
+- Design tokens first (Phase 56), then components (57-58), then pages (59-60)
+- OKLCH color space for brand palette — more perceptually uniform than HSL
+
+**v3.1 Biome Migration:**
 - Biome 2.4.4 exact pin (`-E` flag) — zero peer dependencies
 - No hybrid ESLint + Biome — research confirms full coverage
 - CSS formatting excluded — Biome CSS formatter experimental in 2.x
@@ -70,7 +79,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-24
-Stopped at: v3.1 milestone complete. All 3 phases delivered.
-Resume file: N/A — milestone boundary. Run /gsd:new-milestone for next milestone.
-Next action: /gsd:new-milestone
+Last session: 2026-02-25
+Stopped at: v4.0 new-milestone complete. REQUIREMENTS.md + ROADMAP.md phases 56-60 defined.
+Resume file: N/A — ready to plan phase 56.
+Next action: /gsd:plan-phase 56
