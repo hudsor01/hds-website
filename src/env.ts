@@ -19,13 +19,13 @@ export const env = createEnv({
 			.enum(['development', 'test', 'production'])
 			.default('development'),
 
-		// Database - Neon/Drizzle (optional for CI builds, required in production)
+		// Database - Neon/Drizzle (optional for CI/preview builds, required in production)
 		POSTGRES_URL: z
 			.string()
 			.url()
 			.optional()
 			.refine(
-				val => process.env.NODE_ENV !== 'production' || !!val,
+				val => process.env.VERCEL_ENV !== 'production' || !!val,
 				'POSTGRES_URL is required in production'
 			),
 
@@ -39,13 +39,13 @@ export const env = createEnv({
 		DISCORD_WEBHOOK_URL: z.string().url().optional(),
 		SLACK_WEBHOOK_URL: z.string().url().optional(),
 
-		// Security - CSRF_SECRET is required in production
+		// Security - CSRF_SECRET is required in Vercel production
 		CSRF_SECRET: z
 			.string()
 			.min(32, 'CSRF_SECRET must be at least 32 characters')
 			.optional()
 			.refine(
-				val => process.env.NODE_ENV !== 'production' || !!val,
+				val => process.env.VERCEL_ENV !== 'production' || !!val,
 				'CSRF_SECRET is required in production'
 			),
 
@@ -64,23 +64,23 @@ export const env = createEnv({
 		// Package metadata (available at build time)
 		npm_package_version: z.string().optional(),
 
-		// Admin authentication (required in production)
+		// Admin authentication (required in Vercel production)
 		ADMIN_SECRET: z
 			.string()
 			.min(32, 'ADMIN_SECRET must be at least 32 characters')
 			.optional()
 			.refine(
-				val => process.env.NODE_ENV !== 'production' || !!val,
+				val => process.env.VERCEL_ENV !== 'production' || !!val,
 				'ADMIN_SECRET is required in production'
 			),
 
-		// Cron job authentication (required in production)
+		// Cron job authentication (required in Vercel production)
 		CRON_SECRET: z
 			.string()
 			.min(32, 'CRON_SECRET must be at least 32 characters')
 			.optional()
 			.refine(
-				val => process.env.NODE_ENV !== 'production' || !!val,
+				val => process.env.VERCEL_ENV !== 'production' || !!val,
 				'CRON_SECRET is required in production'
 			),
 
