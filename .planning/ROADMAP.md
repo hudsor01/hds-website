@@ -233,13 +233,9 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 **Goal**: Overhaul CSS custom properties in `globals.css` — define a complete token system covering brand colors (OKLCH), neutral grays, typography scale, spacing, radius, shadows, and surface variants. This is the foundation all subsequent phases build on.
 **Depends on**: None (foundation phase)
 **Research**: Unlikely — Tailwind + shadcn token patterns well understood
-**Plans**: 2 plans
+**Plans**: TBD
 
 Requirements covered: DSYS-01, DSYS-02, DSYS-03, DSYS-04, DSYS-05
-
-Plans:
-- [ ] 56-01-PLAN.md — Dark mode wiring (.dark {} block) + brand palette refinement + surface elevation tokens
-- [ ] 56-02-PLAN.md — Type scale tokens + shadow scale tokens + font fix + semantic class updates
 
 #### Phase 57: Homepage & Hero Redesign
 
@@ -310,7 +306,7 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 53. Biome Install & Configuration | v3.1 | 1/1 | Complete | 2026-02-24 |
 | 54. Format Sweep & Workflow Integration | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
-| 56. Design System Foundation | 2/2 | Complete    | 2026-02-25 | - |
+| 56. Design System Foundation | v4.0 | 0/TBD | Pending | - |
 | 57. Homepage & Hero Redesign | v4.0 | 0/TBD | Pending | - |
 | 58. Core Component Polish | v4.0 | 0/TBD | Pending | - |
 | 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
