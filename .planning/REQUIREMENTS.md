@@ -9,9 +9,9 @@
 
 - [x] **DSYS-01**: CSS custom properties in `globals.css` fully overhauled — complete token system covering brand colors, neutral grays, spacing scale, radius, shadows, and surface variants
 - [x] **DSYS-02**: Brand color palette defined using OKLCH — primary, accent, and neutral sequences that are distinct from shadcn defaults
-- [ ] **DSYS-03**: Typography scale defined — heading sizes (h1–h4), body sizes, monospace, letter spacing, line heights, and font weight tokens — applied consistently across the site
+- [x] **DSYS-03**: Typography scale defined — heading sizes (h1–h4), body sizes, monospace, letter spacing, line heights, and font weight tokens — applied consistently across the site
 - [x] **DSYS-04**: Surface/card elevation tokens defined — background, card, elevated, overlay levels with corresponding border and shadow tokens
-- [ ] **DSYS-05**: Tailwind config extends theme with design tokens — no scattered hardcoded hex/rgb values in new token definitions
+- [x] **DSYS-05**: Tailwind config extends theme with design tokens — no scattered hardcoded hex/rgb values in new token definitions
 
 ### HERO — Homepage & Value Proposition
 
@@ -59,9 +59,9 @@ Which phases cover which requirements.
 |-------------|-------|--------|
 | DSYS-01 | Phase 56 | Complete |
 | DSYS-02 | Phase 56 | Complete |
-| DSYS-03 | Phase 56 | Pending |
+| DSYS-03 | Phase 56 | Complete |
 | DSYS-04 | Phase 56 | Complete |
-| DSYS-05 | Phase 56 | Pending |
+| DSYS-05 | Phase 56 | Complete |
 | HERO-01 | Phase 57 | Pending |
 | HERO-02 | Phase 57 | Pending |
 | HERO-03 | Phase 57 | Pending |
