@@ -3,44 +3,44 @@
  * Direct wrapper for Vercel Analytics with minimal abstraction
  */
 
-import { track as vercelTrack } from '@vercel/analytics';
-import { logger } from '@/lib/logger';
-import type {
-  EventProperties,
-  UserProperties,
-} from "@/types/analytics";
+import { track as vercelTrack } from '@vercel/analytics'
+import { logger } from '@/lib/logger'
+import type { EventProperties, UserProperties } from '@/types/analytics'
 
-type AnalyticsValue = string | number | boolean | null | undefined;
+type AnalyticsValue = string | number | boolean | null | undefined
 
 /**
  * Track custom event
  * Used for general event tracking (page views, user actions, etc.)
  */
-export function trackEvent(eventName: string, properties?: EventProperties): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
+export function trackEvent(
+	eventName: string,
+	properties?: EventProperties
+): void {
+	if (typeof window === 'undefined') {
+		return
+	}
 
-  try {
-    vercelTrack(eventName, properties);
-  } catch (error) {
-    logger.warn('Failed to track event:', error);
-  }
+	try {
+		vercelTrack(eventName, properties)
+	} catch (error) {
+		logger.warn('Failed to track event:', error)
+	}
 }
 
 /**
  * Identify user (tracked as event since Vercel Analytics doesn't support user identification)
  */
 export function identify(userId: string, properties?: UserProperties): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
+	if (typeof window === 'undefined') {
+		return
+	}
 
-  try {
-    vercelTrack('user_identified', { userId, ...properties });
-  } catch (error) {
-    logger.warn('Failed to identify user:', error);
-  }
+	try {
+		vercelTrack('user_identified', { userId, ...properties })
+	} catch (error) {
+		logger.warn('Failed to identify user:', error)
+	}
 }
 
 /**
@@ -48,25 +48,25 @@ export function identify(userId: string, properties?: UserProperties): void {
  * For tracking business-critical conversion events
  */
 export function trackConversion(
-  conversionType: string,
-  value?: number,
-  currency = 'USD',
-  properties?: Record<string, AnalyticsValue>
+	conversionType: string,
+	value?: number,
+	currency = 'USD',
+	properties?: Record<string, AnalyticsValue>
 ): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
+	if (typeof window === 'undefined') {
+		return
+	}
 
-  try {
-    vercelTrack('conversion', {
-      conversionType,
-      value,
-      currency,
-      ...properties
-    });
-  } catch (error) {
-    logger.warn('Failed to track conversion:', error);
-  }
+	try {
+		vercelTrack('conversion', {
+			conversionType,
+			value,
+			currency,
+			...properties
+		})
+	} catch (error) {
+		logger.warn('Failed to track conversion:', error)
+	}
 }
 
 /**
@@ -74,22 +74,22 @@ export function trackConversion(
  * For logging application errors to analytics
  */
 export function trackError(error: Error | string, fatal = false): void {
-  if (typeof window === 'undefined') {
-    return;
-  }
+	if (typeof window === 'undefined') {
+		return
+	}
 
-  try {
-    const errorMessage = error instanceof Error ? error.message : error;
-    const errorStack = error instanceof Error ? error.stack : undefined;
+	try {
+		const errorMessage = error instanceof Error ? error.message : error
+		const errorStack = error instanceof Error ? error.stack : undefined
 
-    vercelTrack('error', {
-      message: errorMessage,
-      stack: errorStack,
-      fatal
-    });
-  } catch (err) {
-    logger.warn('Failed to track error:', err);
-  }
+		vercelTrack('error', {
+			message: errorMessage,
+			stack: errorStack,
+			fatal
+		})
+	} catch (err) {
+		logger.warn('Failed to track error:', err)
+	}
 }
 
 /**
@@ -97,10 +97,10 @@ export function trackError(error: Error | string, fatal = false): void {
  * Provides both direct exports and default object with methods
  */
 const analytics = {
-  trackEvent,
-  identify,
-  trackConversion,
-  trackError,
-};
+	trackEvent,
+	identify,
+	trackConversion,
+	trackError
+}
 
-export default analytics;
+export default analytics

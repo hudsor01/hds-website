@@ -4,61 +4,61 @@
  */
 
 export interface InvoiceLineItem {
-  id: string;
-  description: string;
-  quantity: number;
-  rate: number;
-  amount: number;
+	id: string
+	description: string
+	quantity: number
+	rate: number
+	amount: number
 }
 
 export interface InvoiceData {
-  // Company details
-  companyName: string;
-  companyAddress: string;
-  companyCity: string;
-  companyState: string;
-  companyZip: string;
-  companyEmail: string;
-  companyPhone: string;
+	// Company details
+	companyName: string
+	companyAddress: string
+	companyCity: string
+	companyState: string
+	companyZip: string
+	companyEmail: string
+	companyPhone: string
 
-  // Client details
-  clientName: string;
-  clientAddress: string;
-  clientCity: string;
-  clientState: string;
-  clientZip: string;
-  clientEmail: string;
+	// Client details
+	clientName: string
+	clientAddress: string
+	clientCity: string
+	clientState: string
+	clientZip: string
+	clientEmail: string
 
-  // Invoice metadata
-  invoiceNumber: string;
-  invoiceDate: string;
-  dueDate: string;
+	// Invoice metadata
+	invoiceNumber: string
+	invoiceDate: string
+	dueDate: string
 
-  // Line items
-  lineItems: InvoiceLineItem[];
+	// Line items
+	lineItems: InvoiceLineItem[]
 
-  // Totals
-  subtotal: number;
-  taxRate: number;
-  taxAmount: number;
-  total: number;
+	// Totals
+	subtotal: number
+	taxRate: number
+	taxAmount: number
+	total: number
 
-  // Optional
-  notes?: string;
-  terms?: string;
+	// Optional
+	notes?: string
+	terms?: string
 }
 
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
+	return new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD'
+	}).format(amount)
 }
 
 export function generateInvoiceHTML(data: InvoiceData): string {
-  const lineItemsHTML = data.lineItems
-    .map(
-      (item, index) => `
+	const lineItemsHTML = data.lineItems
+		.map(
+			(item, index) => `
       <tr style="${index % 2 === 1 ? 'background-color: #f9fafb;' : ''}">
         <td style="padding: 12px 16px; text-align: left; font-size: 14px; color: #374151; border-bottom: 1px solid #e5e7eb;">
           ${item.description}
@@ -74,10 +74,10 @@ export function generateInvoiceHTML(data: InvoiceData): string {
         </td>
       </tr>
     `
-    )
-    .join('');
+		)
+		.join('')
 
-  return `
+	return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -318,28 +318,28 @@ export function generateInvoiceHTML(data: InvoiceData): string {
     </div>
 
     ${
-      data.notes
-        ? `
+			data.notes
+				? `
     <!-- Notes -->
     <div class="notes-section">
       <h3>Notes</h3>
       <p>${data.notes}</p>
     </div>
     `
-        : ''
-    }
+				: ''
+		}
 
     ${
-      data.terms
-        ? `
+			data.terms
+				? `
     <!-- Terms -->
     <div class="notes-section">
       <h3>Payment Terms</h3>
       <p>${data.terms}</p>
     </div>
     `
-        : ''
-    }
+				: ''
+		}
 
     <!-- Footer -->
     <div class="footer">
@@ -348,5 +348,5 @@ export function generateInvoiceHTML(data: InvoiceData): string {
   </div>
 </body>
 </html>
-  `.trim();
+  `.trim()
 }

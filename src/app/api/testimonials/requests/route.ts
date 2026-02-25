@@ -4,74 +4,89 @@
  * POST /api/testimonials/requests - Create a new testimonial request
  */
 
-import { type NextRequest } from 'next/server';
-import { errorResponse, successResponse } from '@/lib/api/responses';
-import { getTestimonialRequests, createTestimonialRequest } from '@/lib/testimonials';
-import { logger } from '@/lib/logger';
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper';
+import type { NextRequest } from 'next/server'
+import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { errorResponse, successResponse } from '@/lib/api/responses'
+import { validateAdminAuth } from '@/lib/auth/admin'
+import { logger } from '@/lib/logger'
+import {
+	createTestimonialRequest,
+	getTestimonialRequests
+} from '@/lib/testimonials'
 
-async function handleTestimonialRequestsGet(_request: NextRequest) {
-  try {
-    const requests = await getTestimonialRequests();
+async function handleTestimonialRequestsGet(request: NextRequest) {
+	const authError = validateAdminAuth(request)
+	if (authError) {
+		return authError
+	}
+	try {
+		const requests = await getTestimonialRequests()
 
-    return successResponse({ requests });
-  } catch (error) {
-    logger.error('Error fetching testimonial requests', {
-      error: error instanceof Error ? error.message : String(error),
-      component: 'TestimonialRequestsAPI',
-      action: 'list',
-    });
+		return successResponse({ requests })
+	} catch (error) {
+		logger.error('Error fetching testimonial requests', {
+			error: error instanceof Error ? error.message : String(error),
+			component: 'TestimonialRequestsAPI',
+			action: 'list'
+		})
 
-    return errorResponse('Failed to fetch requests', 500);
-  }
+		return errorResponse('Failed to fetch requests', 500)
+	}
 }
 
 interface CreateRequestBody {
-  clientName: string;
-  clientEmail?: string;
-  projectName?: string;
+	clientName: string
+	clientEmail?: string
+	projectName?: string
 }
 
-export const GET = withRateLimit(handleTestimonialRequestsGet, 'api');
+export const GET = withRateLimit(handleTestimonialRequestsGet, 'api')
 
 async function handleTestimonialRequestsPost(request: NextRequest) {
-  try {
-    const body = await request.json() as CreateRequestBody;
+	const authError = validateAdminAuth(request)
+	if (authError) {
+		return authError
+	}
+	try {
+		const body = (await request.json()) as CreateRequestBody
 
-    if (!body.clientName?.trim()) {
-      return errorResponse('Client name is required', 400);
-    }
+		if (!body.clientName?.trim()) {
+			return errorResponse('Client name is required', 400)
+		}
 
-    const newRequest = await createTestimonialRequest(
-      body.clientName,
-      body.clientEmail,
-      body.projectName
-    );
+		const newRequest = await createTestimonialRequest(
+			body.clientName,
+			body.clientEmail,
+			body.projectName
+		)
 
-    if (!newRequest) {
-      throw new Error('Failed to create request');
-    }
+		if (!newRequest) {
+			throw new Error('Failed to create request')
+		}
 
-    logger.info('Testimonial request created', {
-      component: 'TestimonialRequestsAPI',
-      action: 'create',
-      requestId: newRequest.id,
-      clientName: body.clientName,
-    });
+		logger.info('Testimonial request created', {
+			component: 'TestimonialRequestsAPI',
+			action: 'create',
+			requestId: newRequest.id,
+			clientName: body.clientName
+		})
 
-    return successResponse({
-      token: newRequest.token,
-      id: newRequest.id,
-    });
-  } catch (error) {
-    logger.error('Error creating testimonial request', {
-      error: error instanceof Error ? error.message : String(error),
-      component: 'TestimonialRequestsAPI',
-      action: 'create',
-    });
+		return successResponse({
+			token: newRequest.token,
+			id: newRequest.id
+		})
+	} catch (error) {
+		logger.error('Error creating testimonial request', {
+			error: error instanceof Error ? error.message : String(error),
+			component: 'TestimonialRequestsAPI',
+			action: 'create'
+		})
 
-    return errorResponse('Failed to create request', 500);
-  }
+		return errorResponse('Failed to create request', 500)
+	}
 }
 
-export const POST = withRateLimit(handleTestimonialRequestsPost, 'contactFormApi');
+export const POST = withRateLimit(
+	handleTestimonialRequestsPost,
+	'contactFormApi'
+)

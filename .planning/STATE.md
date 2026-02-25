@@ -2,62 +2,67 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-30)
+See: .planning/PROJECT.md (updated 2026-02-24 after Phase 55)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v3.0 Growth & Content (Phase 46 — Blog Content Seeding)
+**Current focus:** v3.1 Biome Migration — COMPLETE
 
 ## Current Position
 
-Phase: 46 of 50 (Blog Content Seeding)
-Plan: Not started
-Status: Ready to plan — v3.0 milestone initialized 2026-02-18
-Last activity: 2026-02-18 — v3.0 Growth & Content milestone created (Phases 46-50)
+Phase: 55 of 55 in v3.1 (Old Tooling Removal) — COMPLETE
+Plan: 1 of 1 in current phase
+Status: v3.1 milestone complete
+Last activity: 2026-02-24 — Phase 55 complete: ESLint/Prettier removed, Biome sole linter/formatter, 360 tests pass, 139 pages build, 0 TS errors
 
-Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ░░░░░ 0/5 phases
+Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 41 (30 in v1.0, 3 in v1.1, 8 in v2.0)
+- Total plans completed: 46 (30 in v1.0, 3 in v1.1, 8 in v2.0, 2 gap-closure, 3 in v3.1)
 - Average duration: ~1 day per phase
-- Total execution time: 23 days
+- Total execution time: 24 days
 
 **By Milestone:**
 
 | Milestone | Phases | Duration | Result |
 |-----------|--------|----------|--------|
 | v1.0 Cleanup | 10 phases | 20 days | -21,797 net lines, 45% fewer deps |
-| v1.1 Remediation | 2/7 phases | 3 days | Strict TS, @/ imports, barrel removed, loading states |
-| v2.0 Audit Remediation | 8/8 phases | 1 day | SHIPPED -- API cleanup, tool pages, locations, DB blog, architecture, tests |
+| v1.1 Remediation | 2/7 phases | 3 days | Strict TS, @/ imports |
+| v2.0 Audit Remediation | 8/8 phases | 1 day | API cleanup, tool pages, DB blog, tests |
+| v3.0 Growth & Content | 5+2 phases | 1 day | 75 location pages, E2E tests, blog pipeline |
+| v3.1 Biome Migration | 3 phases | 1 day | Biome sole linter/formatter, zero ESLint/Prettier surface |
 
 ## Accumulated Context
 
 ### Decisions
 
-- Aggressive dependency pruning (130+ to 72 packages) -- Good
-- Standardized on TanStack ecosystem -- Good
-- Migrated from Supabase to Drizzle ORM + Neon -- 2026-02-02
-- database.ts left as-is (auto-generated, 6,286 lines) -- Practical
-- Excluded JSDoc/architecture docs from v1.1 (contradicts CLAUDE.md) -- Intentional
-- Eliminated barrel files (src/components/forms/index.ts) -- Better tree-shaking
-- Removed unused admin panel (34 files, 3,716 lines) -- 2026-02-10
-- v1.1 phases 12-16 deferred to v2.0 (superseded by audit findings) -- 2026-02-10
-- Deleted dead auth route + @neondatabase/auth (no auth system) -- 2026-02-14
-- Deleted dead n8n webhook route + workflow JSON files -- 2026-02-14
-- Aggressive API cleanup: deleted 14 orphaned routes, fake admin-auth -- 2026-02-14
-- No auth system needed: this is a customer-facing website, not a SaaS app -- Confirmed
-- New tool pages as server components with metadata exports -- Better than existing 'use client' pattern
-- Blog fully database-backed via Drizzle/Neon (replaced static arrays) -- 2026-02-14
-- Used drizzle-kit push (not migrate) for schema sync -- Consistent with project workflow
-- Seed data via Neon MCP run_sql (not scripts) -- No production credentials in codebase
+- Biome 2.4.4 exact pin (`-E` flag) — zero peer dependencies
+- No hybrid ESLint + Biome — research confirms full coverage
+- CSS formatting excluded — Biome CSS formatter experimental in 2.x
+- `noConsoleLog` (not `noConsole`) — matches project intent (allow warn/error)
+- Format sweep MUST be an isolated commit — preserves git blame
+- Three unused-vars rules needed: `noUnusedVariables` + `noUnusedFunctionParameters` + `noUnusedImports`
+- `useBlockStatements` must be explicitly set — not in Biome recommended
+- `tsc --noEmit` retained — Biome does not run type-aware rules
+- `biome migrate eslint` not used — eslint-config-next cyclic reference (issue #2935, closed-not-planned)
+- `arrowParentheses: asNeeded` — matches .prettierrc.json `arrowParens: avoid`, minimises Phase 54 diff
+- `noNonNullAssertion: error` — escalated from ESLint warn per fail-fast principle; zero violations in codebase
+- 15 recommended rules disabled (a11y, complexity, security, suspicious groups) — fire on clean code with no ESLint equivalent; no suppression comments used
+- Rule gap `no-duplicate-imports` accepted — no Biome 2.4.4 equivalent; organizeImports covers merge case
+- Rule gap `react-hooks/set-state-in-effect` accepted — Biome issue #6856; codebase clean
+- CLEN-03 satisfied by Phase 53 commit 3042e73 (confirmed no-op sweep in Phase 54)
+- lefthook uses `{staged_files}` (lefthook variable) not `--staged` (Biome flag) per official docs
+- Pre-commit: block-only, no auto-fix; pre-push removed (pre-commit is sufficient)
+- Prettier kept for markdown only — JS/TS/JSON/CSS all use biomejs.biome extension
+- CSS formatter: set to biomejs.biome in VSCode (biome.json has CSS enabled)
+- [Phase 55]: Prettier removed entirely (not kept for markdown) per v3.1 zero-surface goal
+- [Phase 55]: VSCode markdown formatter set to null + formatOnSave:false to prevent missing extension error after Prettier removal
+- [Phase 55]: All 16 catch {} blocks reviewed — only 4 testimonials.ts blocks needed annotation; all others had functional bodies or comments
 
-### Deferred Issues
+### Pending Todos
 
-- @react-pdf/renderer incompatible with Turbopack (pre-existing, all branches)
-- database.ts at 6,286 lines (auto-generated, not actionable)
-- TTL Calculator uses next/head (Pages Router pattern) -- silently ignored in App Router, Phase 43 concern
-- Tools index page only lists 3 of 14 tools -- future enhancement
+None.
 
 ### Blockers/Concerns
 
@@ -65,87 +70,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-18
-Stopped at: v3.0 milestone created. Phase 46 (Blog Content Seeding) ready to plan.
-Resume file: None
-Next action: /gsd:plan-phase 46
-
-## Recent Completions
-
-### Phase 45: UI/UX Alignment & Accessibility (Complete)
-- 45-01: Navbar dark mode visibility, phantom CSS utility fix, badge removal, broken links
-- Fixed `--color-muted-foreground-dark` oklch(0.65→0.85) for WCAG AA compliance
-- Added 34 missing @utility class definitions to globals.css (was causing site-wide layout collapse)
-- Removed all Badge component usage (9 files) -- generic badges signal AI-generated code
-- Fixed 4 broken calculator links (/roi-calculator etc → /tools/* via TOOL_ROUTES)
-- Fixed navbar hover contrast: hover:text-accent-foreground (not text-foreground) on amber bg
-- PR #120: https://github.com/hudsor01/hds-website/pull/120
-
-### Phase 44: Test Coverage & Final Verification (Complete)
-- 44-01: Added 31 tests (19 blog, 12 locations) -- 328 total passing
-- blog.ts: 84% function coverage, 88% line coverage
-- locations.ts: 100% function + line coverage
-- Full verification: 0 TypeScript errors, 0 ESLint errors
-
-### Phase 43: Next.js Architecture Alignment (Complete)
-- 43-01: Removed next/head from Calculator.tsx, refactored 9 client tool pages to server+client pattern
-- All tool pages now export SEO metadata (was impossible as 'use client' pages)
-- Full codebase audit: 100% compliance with Next.js 15+ patterns
-- v1.1 deferred items (Phases 15, 16) addressed
-
-### Phase 42: Blog Data Strategy (Complete)
-- 42-01: Database-backed blog + structured data maximization
-- Created 4 Drizzle tables (blog_authors, blog_tags, blog_posts, blog_post_tags)
-- Rewrote blog.ts with Drizzle queries (same API surface)
-- Deleted 3 static blog pages (1,443 lines) -- dynamic [slug] route handles all
-- Added BlogPosting + BreadcrumbList JSON-LD to blog posts
-- Added BreadcrumbList JSON-LD to location pages
-
-### Phase 41: Location SEO Pages (Complete)
-- 41-01: Created /locations/[slug] with 5 Texas cities
-- Server component with generateStaticParams, generateMetadata, LocalBusiness JSON-LD
-- locations.ts no longer orphaned (first consumer)
-
-### Phase 40: Tool Calculator Pages (Complete)
-- 40-01: Created 4 page.tsx wrappers (ROI, Cost, Mortgage, TTL)
-- Server components with metadata exports (follows CLAUDE.md)
-- Fixed routes.ts: removed LOAN_CALCULATOR, renamed PAYSTUB_GENERATOR
-- Fixed 3 broken links on tools index page
-- 14 tool pages total, all routes verified
-
-### Phase 39: Auth Decision (Complete -- resolved in 37-38)
-- No plan needed -- all auth-related dead code already removed
-
-### Phase 38: API Route Cleanup & Consolidation (Complete)
-- 38-01: Deleted 14 orphaned routes, admin-auth.ts, broken attribution hook
-- Stripped fake auth from 4 testimonial routes
-- Cleaned api-endpoints.ts (15 -> 6 constants), removed 6 dead env vars
-- Created paystub tool page at /tools/paystub-calculator
-- Cleaned 5 dead test files/blocks
-- 11 API routes remaining, all verified with consumers
-
-### Phase 37: Environment & Configuration Hygiene (Complete)
-- 37-01: Env vars through env.ts, .env.example updated, CSP fix, dead auth/n8n removed
-- +35/-1,135 lines, 17 files, 1 dependency removed
-
-### Admin Panel Removal (2026-02-10)
-- Removed 34 files (admin pages, components, API routes, types, store)
-- Moved shared types to types/logger.ts
-- Zero TypeScript errors, zero lint errors
-
-### Phase 11: TypeScript Strictness & Code Quality (Complete)
-- 11-01: Enable noUnusedLocals/noUnusedParameters
-- 11-02: Convert parent-directory imports to @/ paths, eliminate barrel file
-
-### Phase 17: Next.js 16 Alignment (Complete)
-- 17-01: Add loading.tsx to dynamic routes, clean layout/tsconfig
-
-### Roadmap Evolution
-
-- v1.0 created: Cleanup & simplification, 10 phases (1-10) -- 2026-01-11
-- v1.0 shipped: 2026-01-30
-- v1.1 created: Code review remediation, 7 phases (11-17) -- 2026-01-30
-- v2.0 created: Audit remediation & feature completion, 8 phases (37-44) -- 2026-02-10
-- Phase 45 added: UI/UX Alignment & Accessibility (navbar contrast, dark mode colors, WCAG AA compliance) -- 2026-02-16
-- v2.0 shipped: 2026-02-17 — tagged v2.0
-- v3.0 created: Growth & Content, 5 phases (46-50) -- 2026-02-18
+Last session: 2026-02-24
+Stopped at: v3.1 milestone complete. All 3 phases delivered.
+Resume file: N/A — milestone boundary. Run /gsd:new-milestone for next milestone.
+Next action: /gsd:new-milestone
