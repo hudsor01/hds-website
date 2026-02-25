@@ -147,6 +147,7 @@
 	--font-weight-semibold: 600;
 	--font-weight-bold: 700;
 	--font-weight-heading: 700;
+	--font-weight-black: 900;
 
 	/* Line heights */
 	--line-height-tight: 1.1;
@@ -412,13 +413,62 @@ a,
 		font-size: var(--font-size-hero);
 		line-height: var(--line-height-hero);
 		letter-spacing: var(--tracking-heading);
-		font-weight: var(--font-weight-heading);
+		font-weight: var(--font-weight-black);
 	}
 	.text-section-title {
 		font-size: var(--font-size-4xl);
 		line-height: var(--line-height-snug);
 		letter-spacing: var(--tracking-heading);
 		font-weight: var(--font-weight-semibold);
+	}
+	.text-eyebrow {
+		font-size: var(--font-size-xs);
+		font-weight: var(--font-weight-semibold);
+		letter-spacing: var(--tracking-widest);
+		line-height: var(--line-height-normal);
+		text-transform: uppercase;
+	}
+	.text-hero-subtitle {
+		font-size: var(--font-size-xl);
+		font-weight: var(--font-weight-normal);
+		line-height: var(--line-height-relaxed);
+		letter-spacing: var(--tracking-normal);
+	}
+	.text-h1 {
+		font-size: var(--font-size-4xl);
+		font-weight: var(--font-weight-bold);
+		line-height: var(--line-height-snug);
+		letter-spacing: var(--tracking-heading);
+	}
+	.text-h2 {
+		font-size: var(--font-size-3xl);
+		font-weight: var(--font-weight-semibold);
+		line-height: var(--line-height-snug);
+		letter-spacing: var(--tracking-heading);
+	}
+	.text-h3 {
+		font-size: var(--font-size-2xl);
+		font-weight: var(--font-weight-semibold);
+		line-height: var(--line-height-normal);
+		letter-spacing: var(--tracking-tight);
+	}
+	.text-h4 {
+		font-size: var(--font-size-xl);
+		font-weight: var(--font-weight-medium);
+		line-height: var(--line-height-normal);
+		letter-spacing: var(--tracking-normal);
+	}
+	.text-lead {
+		font-size: var(--font-size-lg);
+		font-weight: var(--font-weight-normal);
+		line-height: var(--line-height-relaxed);
+		letter-spacing: var(--tracking-normal);
+	}
+	.text-caption {
+		font-size: var(--font-size-xs);
+		font-weight: var(--font-weight-normal);
+		line-height: var(--line-height-normal);
+		letter-spacing: var(--tracking-normal);
 	}
 
 	.link-primary {
