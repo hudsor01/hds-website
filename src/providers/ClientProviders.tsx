@@ -1,31 +1,32 @@
-'use client';
+'use client'
 
-import { QueryProvider } from '@/providers/QueryProvider';
-import { cleanupAccessibilityFeatures, initAccessibilityFeatures } from '@/utils/accessibility';
-import { ThemeProvider } from 'next-themes';
-import { useEffect, type ReactNode } from 'react';
+import { ThemeProvider } from 'next-themes'
+import { type ReactNode, useEffect } from 'react'
+import { QueryProvider } from '@/providers/QueryProvider'
+import {
+	cleanupAccessibilityFeatures,
+	initAccessibilityFeatures
+} from '@/utils/accessibility'
 
 interface ClientProvidersProps {
-  children: ReactNode;
+	children: ReactNode
 }
 
 export default function ClientProviders({ children }: ClientProvidersProps) {
-  // Initialize accessibility features on mount and cleanup on unmount
-  // Per MDN: Proper cleanup prevents memory leaks in SPAs
-  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_concerns
-  useEffect(() => {
-    initAccessibilityFeatures();
+	// Initialize accessibility features on mount and cleanup on unmount
+	// Per MDN: Proper cleanup prevents memory leaks in SPAs
+	// Reference: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_concerns
+	useEffect(() => {
+		initAccessibilityFeatures()
 
-    return () => {
-      cleanupAccessibilityFeatures();
-    };
-  }, []);
+		return () => {
+			cleanupAccessibilityFeatures()
+		}
+	}, [])
 
-  return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <QueryProvider>
-        {children}
-      </QueryProvider>
-    </ThemeProvider>
-  );
+	return (
+		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+			<QueryProvider>{children}</QueryProvider>
+		</ThemeProvider>
+	)
 }

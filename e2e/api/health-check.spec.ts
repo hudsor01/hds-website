@@ -54,8 +54,24 @@ test.describe('Health Check - Response Format', () => {
     if (response.ok()) {
       const data = await response.json()
 
+      // Route emits: { status: 'ok', timestamp, database: 'ok', latency_ms, version }
       expect(data).toHaveProperty('status')
       expect(['ok', 'healthy', 'degraded', 'unhealthy']).toContain(data.status)
+    }
+  })
+
+  test('should include database, latency_ms, and version fields on healthy response', async ({ request }) => {
+    const response = await request.get(HEALTH_ENDPOINT)
+
+    if (response.ok()) {
+      const data = await response.json()
+
+      expect(data).toHaveProperty('database', 'ok')
+      expect(data).toHaveProperty('latency_ms')
+      expect(typeof data.latency_ms).toBe('number')
+      expect(data.latency_ms).toBeGreaterThanOrEqual(0)
+      expect(data).toHaveProperty('version')
+      expect(typeof data.version).toBe('string')
     }
   })
 
@@ -155,9 +171,9 @@ test.describe('Health Check - Service Availability', () => {
     if (response.ok()) {
       const data = await response.json()
 
-      // May include database status
+      // Route returns 'ok' on success, 'error' on failure
       if (data.database !== undefined) {
-        expect(['connected', 'disconnected', 'error']).toContain(data.database)
+        expect(['ok', 'error']).toContain(data.database)
       }
     }
   })
@@ -198,19 +214,22 @@ test.describe('Health Check - Error Scenarios', () => {
       const data = await response.json()
 
       expect(data).toHaveProperty('status')
+      // Route returns { status: 'error' } on DB failure
       expect(['unhealthy', 'degraded', 'error']).toContain(data.status)
+      expect(data.database).toBe('error')
     }
   })
 
-  test('should include error details when unhealthy', async ({ request }) => {
+  test('should include status and database fields when unhealthy', async ({ request }) => {
     const response = await request.get(HEALTH_ENDPOINT)
 
     if (response.status() === 503) {
       const data = await response.json()
 
-      // Should explain what's wrong
-      expect(data).toHaveProperty('error')
-      expect(typeof data.error).toBe('string')
+      // Route returns { status: 'error', timestamp, database: 'error' }
+      expect(data).toHaveProperty('status', 'error')
+      expect(data).toHaveProperty('database', 'error')
+      expect(data).toHaveProperty('timestamp')
     }
   })
 })

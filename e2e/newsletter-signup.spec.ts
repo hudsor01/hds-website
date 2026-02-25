@@ -136,6 +136,48 @@ test.describe('Newsletter Signup - Homepage', () => {
     expect(successVisible || errorVisible).toBeTruthy()
   })
 
+  test('should complete full subscription journey with API confirmation', async ({ page }, testInfo: TestInfo) => {
+    const logger = createTestLogger(testInfo.title)
+
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+
+    const emailInput = page.locator('#newsletter-email')
+    await emailInput.scrollIntoViewIfNeeded()
+    await expect(emailInput).toBeVisible()
+
+    // Use real email — upsert behavior means re-runs are idempotent (no duplicate rows)
+    // WARNING: This may return 400 if already subscribed as active. Both 200 and 400 are tested.
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        resp =>
+          resp.url().includes('/api/newsletter/subscribe') &&
+          resp.request().method() === 'POST'
+      ),
+      (async () => {
+        await emailInput.fill('rhudson42@yahoo.com')
+        await page.locator('button[type="submit"]').filter({ hasText: /subscribe/i }).click()
+      })(),
+    ])
+
+    logger.step(`API response status: ${response.status()}`)
+
+    // 200 = new/reactivated subscription (DB insert succeeded)
+    // 400 = already active subscriber (also a valid DB state)
+    expect([200, 400]).toContain(response.status())
+
+    if (response.status() === 200) {
+      // Success path: UI must show confirmation message
+      await expect(
+        page.locator('text=Thank you! Check your email to confirm your subscription.')
+      ).toBeVisible({ timeout: 10000 })
+      logger.complete('Subscription confirmed: API 200 + success message visible')
+    } else {
+      // Already subscribed path: UI shows error or stays interactive
+      logger.complete('Email already subscribed: API 400 is a valid DB state')
+    }
+  })
+
   test('should show loading state during submission', async ({ page }, testInfo: TestInfo) => {
     const logger = createTestLogger(testInfo.title)
 

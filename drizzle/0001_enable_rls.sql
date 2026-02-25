@@ -3,7 +3,7 @@
 --
 -- Policy Strategy:
 -- 1. All tables have RLS enabled
--- 2. Public content tables (case_studies, testimonials, projects, help_articles) allow public read
+-- 2. Public content tables (testimonials, help_articles) allow public read
 -- 3. Admin/internal tables restrict to owner role
 -- 4. Write operations require owner role (server-side only)
 
@@ -15,7 +15,6 @@ ALTER TABLE public.calculator_leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lead_attribution ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lead_notes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.case_studies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.testimonial_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.help_articles ENABLE ROW LEVEL SECURITY;
@@ -27,36 +26,43 @@ ALTER TABLE public.ab_test_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.scheduled_emails ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.email_engagement ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.error_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cron_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.webhook_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.api_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.processing_queue ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ttl_calculations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.blog_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.blog_authors ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.showcase ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================================
 -- PUBLIC CONTENT: Read access for everyone
 -- ============================================================================
-
--- Case Studies: Public read for published content
-CREATE POLICY "Public read published case studies"
-  ON public.case_studies FOR SELECT
-  USING (published = true);
 
 -- Testimonials: Public read for published content
 CREATE POLICY "Public read published testimonials"
   ON public.testimonials FOR SELECT
   USING (published = true);
 
--- Projects: Public read for published content
-CREATE POLICY "Public read published projects"
-  ON public.projects FOR SELECT
-  USING (published = true);
-
 -- Help Articles: Public read for published content
 CREATE POLICY "Public read published help articles"
   ON public.help_articles FOR SELECT
+  USING (published = true);
+
+-- Blog Posts: Public read for published content
+CREATE POLICY "Public read published blog posts"
+  ON public.blog_posts FOR SELECT
+  USING (published = true);
+
+-- Blog Authors: Public read
+CREATE POLICY "Public read blog authors"
+  ON public.blog_authors FOR SELECT
+  USING (true);
+
+-- Showcase: Public read for published content
+CREATE POLICY "Public read published showcase"
+  ON public.showcase FOR SELECT
   USING (published = true);
 
 -- ============================================================================
@@ -87,12 +93,6 @@ CREATE POLICY "Owner full access lead_notes"
 -- Leads
 CREATE POLICY "Owner full access leads"
   ON public.leads FOR ALL
-  TO neondb_owner
-  USING (true) WITH CHECK (true);
-
--- Case Studies (owner can also read unpublished)
-CREATE POLICY "Owner full access case_studies"
-  ON public.case_studies FOR ALL
   TO neondb_owner
   USING (true) WITH CHECK (true);
 
@@ -162,12 +162,6 @@ CREATE POLICY "Owner full access email_engagement"
   TO neondb_owner
   USING (true) WITH CHECK (true);
 
--- Projects (owner can also read unpublished)
-CREATE POLICY "Owner full access projects"
-  ON public.projects FOR ALL
-  TO neondb_owner
-  USING (true) WITH CHECK (true);
-
 -- Error Logs
 CREATE POLICY "Owner full access error_logs"
   ON public.error_logs FOR ALL
@@ -204,18 +198,36 @@ CREATE POLICY "Owner full access ttl_calculations"
   TO neondb_owner
   USING (true) WITH CHECK (true);
 
+-- Blog Posts (owner can also read unpublished)
+CREATE POLICY "Owner full access blog_posts"
+  ON public.blog_posts FOR ALL
+  TO neondb_owner
+  USING (true) WITH CHECK (true);
+
+-- Blog Authors
+CREATE POLICY "Owner full access blog_authors"
+  ON public.blog_authors FOR ALL
+  TO neondb_owner
+  USING (true) WITH CHECK (true);
+
+-- Showcase (owner can also read unpublished)
+CREATE POLICY "Owner full access showcase"
+  ON public.showcase FOR ALL
+  TO neondb_owner
+  USING (true) WITH CHECK (true);
+
 -- ============================================================================
 -- Comments
 -- ============================================================================
 
-COMMENT ON POLICY "Public read published case studies" ON public.case_studies
-IS 'Allow anonymous read access to published case studies for public website';
-
 COMMENT ON POLICY "Public read published testimonials" ON public.testimonials
 IS 'Allow anonymous read access to published testimonials for public website';
 
-COMMENT ON POLICY "Public read published projects" ON public.projects
-IS 'Allow anonymous read access to published projects for portfolio pages';
-
 COMMENT ON POLICY "Public read published help articles" ON public.help_articles
 IS 'Allow anonymous read access to published help articles for help center';
+
+COMMENT ON POLICY "Public read published blog posts" ON public.blog_posts
+IS 'Allow anonymous read access to published blog posts for public website';
+
+COMMENT ON POLICY "Public read published showcase" ON public.showcase
+IS 'Allow anonymous read access to published showcase entries for portfolio pages';

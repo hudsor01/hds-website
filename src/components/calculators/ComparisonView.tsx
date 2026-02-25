@@ -1,12 +1,12 @@
 'use client'
 
+import { X } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import type {
 	PaymentResults,
 	TTLResults,
 	VehicleInputs
 } from '@/types/ttl-types'
-import { X } from 'lucide-react'
 
 interface ComparisonViewProps {
 	comparisonVehicles: Array<{

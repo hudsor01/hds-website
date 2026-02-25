@@ -86,18 +86,20 @@ test.describe('Contact Form', () => {
     await expect(page.locator('form')).toBeVisible()
 
     // Success message should NOT appear
-    const successVisible = await page.locator('text=/Thank you/i').isVisible().catch(() => false)
+    const successVisible = await page.locator('h2', { hasText: 'Thank you' }).isVisible().catch(() => false)
     expect(successVisible).toBe(false)
   })
 
   test('should successfully submit form with valid data', async ({ page }, testInfo: TestInfo) => {
+    // WARNING: This test sends a real email to rhudson42@yahoo.com via Resend.
+    // Run intentionally, not in loops.
     const logger = createTestLogger(testInfo.title)
 
     // Fill in required text fields
-    await page.fill('#firstName', 'John')
-    await page.fill('#lastName', 'Doe')
-    await page.fill('#email', 'john.doe@example.com')
-    await page.fill('#message', 'This is a test message for the contact form. I am interested in your web development services.')
+    await page.fill('#firstName', 'Richard')
+    await page.fill('#lastName', 'Hudson')
+    await page.fill('#email', 'rhudson42@yahoo.com')
+    await page.fill('#message', 'This is an automated E2E journey test. Please disregard.')
 
     // Fill optional text fields
     await page.fill('#phone', '555-123-4567')
@@ -123,24 +125,15 @@ test.describe('Contact Form', () => {
 
     logger.step('Selected dropdown options')
 
-    // Submit form
+    // Submit form and wait for API response event-driven
     await page.locator('button[type="submit"]').click()
 
-    // Wait for form to process (give it time to show success/error)
-    await page.waitForTimeout(3000)
+    // Hard assertions: FormSuccessMessage renders h2 "Thank you" and replaces the form
+    await expect(page.locator('h2', { hasText: 'Thank you' })).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('text=Form submitted successfully, we will get back to you soon')).toBeVisible()
+    await expect(page.locator('form')).not.toBeVisible()
 
-    // Check for success message
-    const successVisible = await page.locator('text=/Thank you/i').isVisible().catch(() => false)
-
-    if (successVisible) {
-      logger.complete('Form submitted successfully - success message visible')
-    } else {
-      logger.warn('No success message visible - form may show inline validation or submission may have failed')
-    }
-
-    // Test passes if form submitted without crashing (page may navigate or show success)
-    // Just verify something is visible on the page
-    await expect(page.locator('body')).toBeVisible()
+    logger.complete('Form submitted successfully - success message and h2 visible, form hidden')
   })
 
   test('should show pending state while submitting', async ({ page }, testInfo: TestInfo) => {

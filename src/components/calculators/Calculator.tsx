@@ -1,6 +1,10 @@
 'use client'
 
+import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator'
+import { InputPanel } from '@/components/InputPanel/InputPanel'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
@@ -11,11 +15,6 @@ import type {
 	TTLResults,
 	VehicleInputs
 } from '@/types/ttl-types'
-import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react'
-
-import { useState, useTransition } from 'react'
-import { toast } from 'sonner'
-import { InputPanel } from '@/components/InputPanel/InputPanel'
 import { ComparisonView } from './ComparisonView'
 import { ResultsPanel } from './ResultsPanel'
 

@@ -1,89 +1,89 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // Common validation patterns
 export const emailSchema = z
-  .string()
-  .min(1, 'Email is required')
-  .email('Please enter a valid email address')
-  .toLowerCase()
-  .trim();;
+	.string()
+	.min(1, 'Email is required')
+	.email('Please enter a valid email address')
+	.toLowerCase()
+	.trim()
 
 export const phoneSchema = z
-  .string()
-  .regex(
-    /^[\d\s\-\+\(\)]+$/,
-    'Please enter a valid phone number'
-  )
-  .min(10, 'Phone number must be at least 10 characters')
-  .max(20, 'Phone number must be less than 20 characters')
-  .optional()
-  .or(z.literal(''));
+	.string()
+	.regex(/^[\d\s\-+()]+$/, 'Please enter a valid phone number')
+	.min(10, 'Phone number must be at least 10 characters')
+	.max(20, 'Phone number must be less than 20 characters')
+	.optional()
+	.or(z.literal(''))
 
 export const urlSchema = z
-  .string()
-  .url('Please enter a valid URL')
-  .startsWith('https://', 'URL must use HTTPS');
+	.string()
+	.url('Please enter a valid URL')
+	.startsWith('https://', 'URL must use HTTPS')
 
 export const nameSchema = z
-  .string()
-  .min(2, 'Name must be at least 2 characters')
-  .max(50, 'Name must be less than 50 characters')
-  .regex(/^[a-zA-Z\s\-']+$/, 'Name can only contain letters, spaces, hyphens, and apostrophes')
-  .trim();
+	.string()
+	.min(2, 'Name must be at least 2 characters')
+	.max(50, 'Name must be less than 50 characters')
+	.regex(
+		/^[a-zA-Z\s\-']+$/,
+		'Name can only contain letters, spaces, hyphens, and apostrophes'
+	)
+	.trim()
 
 export const companySchema = z
-  .string()
-  .max(100, 'Company name must be less than 100 characters')
-  .optional()
-  .or(z.literal(''));
+	.string()
+	.max(100, 'Company name must be less than 100 characters')
+	.optional()
+	.or(z.literal(''))
 
 export const messageSchema = z
-  .string()
-  .min(10, 'Message must be at least 10 characters')
-  .max(5000, 'Message must be less than 5000 characters')
-  .trim();
+	.string()
+	.min(10, 'Message must be at least 10 characters')
+	.max(5000, 'Message must be less than 5000 characters')
+	.trim()
 
 // Common response schemas
 export const apiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-  z.object({
-    success: z.boolean(),
-    message: z.string().optional(),
-    data: dataSchema.optional(),
-    error: z.string().optional(),
-    errors: z.record(z.string(), z.array(z.string())).optional(),
-  });
+	z.object({
+		success: z.boolean(),
+		message: z.string().optional(),
+		data: dataSchema.optional(),
+		error: z.string().optional(),
+		errors: z.record(z.string(), z.array(z.string())).optional()
+	})
 
 export const paginationSchema = z.object({
-  page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().positive().max(100).default(10),
-  total: z.number().int().nonnegative().optional(),
-  totalPages: z.number().int().nonnegative().optional(),
-});
+	page: z.coerce.number().int().positive().default(1),
+	limit: z.coerce.number().int().positive().max(100).default(10),
+	total: z.number().int().nonnegative().optional(),
+	totalPages: z.number().int().nonnegative().optional()
+})
 
 export const timestampSchema = z.object({
-  createdAt: z.date().or(z.string().datetime()),
-  updatedAt: z.date().or(z.string().datetime()),
-});
+	createdAt: z.date().or(z.string().datetime()),
+	updatedAt: z.date().or(z.string().datetime())
+})
 
 // Service options for contact forms
 export const serviceOptionsSchema = z.enum([
-  'web-development',
-  'custom-software',
-  'consulting',
-  'other',
-]);
+	'web-development',
+	'custom-software',
+	'consulting',
+	'other'
+])
 
 export const budgetOptionsSchema = z.enum([
-  'under-5k',
-  '5k-15k',
-  '15k-50k',
-  '50k-plus',
-]);
+	'under-5k',
+	'5k-15k',
+	'15k-50k',
+	'50k-plus'
+])
 
 export const timelineOptionsSchema = z.enum([
-  'asap',
-  '1-month',
-  '3-months',
-  '6-months',
-  'flexible',
-]);
+	'asap',
+	'1-month',
+	'3-months',
+	'6-months',
+	'flexible'
+])

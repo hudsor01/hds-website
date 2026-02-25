@@ -1,0 +1,125 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	},
+	"files": {
+		"includes": [
+			"**",
+			"!!.next",
+			"!!out",
+			"!!build",
+			"!!coverage",
+			"!!playwright-report",
+			"!!test-results",
+			"!!.vercel",
+			"!!node_modules"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineEnding": "lf",
+		"lineWidth": 80
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "asNeeded",
+			"trailingCommas": "none",
+			"arrowParentheses": "asNeeded",
+			"bracketSpacing": true,
+			"bracketSameLine": false
+		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		},
+		"formatter": {
+			"enabled": true,
+			"indentStyle": "tab",
+			"indentWidth": 2,
+			"lineEnding": "lf",
+			"lineWidth": 80,
+			"quoteStyle": "single"
+		},
+		"linter": {
+			"enabled": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"noLabelWithoutControl": "off",
+				"noRedundantRoles": "off",
+				"noStaticElementInteractions": "off",
+				"noSvgWithoutTitle": "off",
+				"useButtonType": "off",
+				"useFocusableInteractive": "off",
+				"useHtmlLang": "off",
+				"useKeyWithClickEvents": "off",
+				"useKeyWithMouseEvents": "off",
+				"useSemanticElements": "off"
+			},
+			"complexity": {
+				"noImportantStyles": "off",
+				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noUnusedFunctionParameters": "error",
+				"noUnusedImports": "error"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			},
+			"style": {
+				"useBlockStatements": "error",
+				"useConst": "error",
+				"useImportType": "error",
+				"noNonNullAssertion": "error"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off",
+				"noImplicitAnyLet": "off",
+				"noShadowRestrictedNames": "off",
+				"noThenProperty": "off",
+				"noVar": "error",
+				"noExplicitAny": "error",
+				"noTsIgnore": "error",
+				"noConsole": {
+					"level": "error",
+					"options": {
+						"allow": ["warn", "error"]
+					}
+				},
+				"noDebugger": "error",
+				"noDoubleEquals": "error"
+			}
+		},
+		"domains": {
+			"react": "recommended",
+			"next": "recommended"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}

@@ -65,7 +65,7 @@ test.describe('Email Queue Processing - Authentication', () => {
     expect([200, 500]).toContain(response.status())
   })
 
-  test('should return 500 if CRON_SECRET environment variable not set', async ({ request }) => {
+  test('should return 503 if CRON_SECRET environment variable not set', async ({ request }) => {
     // This test assumes CRON_SECRET might not be set in test environment
     // In production, this would always be set
 
@@ -75,8 +75,9 @@ test.describe('Email Queue Processing - Authentication', () => {
       }
     })
 
-    // Will be either 401 (unauthorized) or 500 (env var not set)
-    expect([401, 500]).toContain(response.status())
+    // Will be 401 (wrong token) or 503 (env var not configured)
+    // The route returns 503 when CRON_SECRET is undefined
+    expect([401, 503]).toContain(response.status())
   })
 })
 

@@ -115,6 +115,9 @@ public/.htaccess
 public/_headers
 public/sitemap.xml
 
+# Workflow tool artifacts
+.full-stack-feature/
+
 # Development documentation with sensitive info
 docs/cloudflare-tunnel-config.yml
 docs/docker-compose-grafana.yml
