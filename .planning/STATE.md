@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-24 after Phase 55)
+See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v3.1 Biome Migration — COMPLETE
+**Current focus:** v4.0 UI Redesign — defining requirements
 
 ## Current Position
 
-Phase: 55 of 55 in v3.1 (Old Tooling Removal) — COMPLETE
-Plan: 1 of 1 in current phase
-Status: v3.1 milestone complete
-Last activity: 2026-02-24 — Phase 55 complete: ESLint/Prettier removed, Biome sole linter/formatter, 360 tests pass, 139 pages build, 0 TS errors
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements for v4.0 UI Redesign
+Last activity: 2026-02-25 — v4.0 milestone started; questioning complete, PROJECT.md updated
 
-Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅
+Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
 ## Performance Metrics
 
