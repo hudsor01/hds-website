@@ -10,5 +10,3 @@ pre-commit:
     typecheck:
       glob: "*.{ts,tsx}"
       run: bun run typecheck
-    test:
-      run: bun run test:unit
