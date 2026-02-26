@@ -91,7 +91,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
 					<div className="flex items-center justify-center gap-2 mb-heading text-primary">
 						<MapPin className="h-6 w-6" />
-						<span className="text-sm font-semibold uppercase tracking-wide">
+						<span className="text-eyebrow">
 							{location.city}, {location.stateCode}
 						</span>
 					</div>
