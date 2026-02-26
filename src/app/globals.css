@@ -354,6 +354,30 @@ a,
 		background-size: 64px 64px;
 	}
 
+	/* Dark-mode optimised grid — 18% opacity so lines are visible on dark bg */
+	.grid-pattern-dark {
+		background-image:
+			linear-gradient(
+				oklch(from var(--color-border) l c h / 0.18) 1px,
+				transparent 1px
+			),
+			linear-gradient(
+				90deg,
+				oklch(from var(--color-border) l c h / 0.18) 1px,
+				transparent 1px
+			);
+		background-size: 52px 52px;
+	}
+
+	/* Radial amber spotlight — for hero and CTA dark sections */
+	.hero-spotlight {
+		background: radial-gradient(
+			ellipse 80% 55% at 50% 0%,
+			oklch(from var(--color-accent) l c h / 0.1),
+			transparent 65%
+		);
+	}
+
 	.container-narrow {
 		max-width: 42rem;
 		margin-inline: auto;
