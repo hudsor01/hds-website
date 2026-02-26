@@ -11,6 +11,7 @@ import {
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
+import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
@@ -47,42 +48,6 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-	const solutions = [
-		{
-			icon: Code2,
-			title: 'Ship Features Faster',
-			description:
-				'Launch new features in days, not months. We handle the entire technical stack.',
-			features: [
-				'React/Next.js Development',
-				'API & Database Architecture',
-				'99.9% Uptime Guaranteed'
-			]
-		},
-		{
-			icon: Settings,
-			title: 'Fix Revenue Leaks',
-			description:
-				'Stop losing 30% of leads to broken processes. Automate everything that slows you down.',
-			features: [
-				'CRM Integration',
-				'Lead Scoring Automation',
-				'Real-time Analytics'
-			]
-		},
-		{
-			icon: BarChart3,
-			title: 'Scale Without Breaking',
-			description:
-				'Handle 10x growth without rebuilding. We future-proof your tech from day one.',
-			features: [
-				'Performance Audits',
-				'Infrastructure Planning',
-				'Cost Optimization'
-			]
-		}
-	]
-
 	const results = [
 		{ metric: 'Fast', label: 'Delivery Timeline', period: '2-4 weeks typical' },
 		{ metric: 'Proven', label: 'Track Record', period: 'Real client results' },
@@ -132,159 +97,114 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* Solutions Grid */}
+			{/* Solutions Section */}
 			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
+					<div className="text-center mb-content-block">
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							How We Solve Your Biggest Problems
 						</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-							Three ways we help SaaS companies go from struggling to scaling
+						<p className="text-lead text-muted-foreground max-w-3xl mx-auto">
+							Three ways we help businesses go from struggling to scaling.
 						</p>
 					</div>
 
-					<div className="grid lg:grid-cols-3 gap-sections">
-						{solutions.map((solution, index) => (
-							<Card
-								key={index}
-								variant="glassLight"
-								size="lg"
-								hover
-								className="group relative transform-gpu"
-							>
-								<div className="space-y-comfortable">
-									<div className="flex-center space-x-4">
-										<div className="p-3 rounded-xl bg-background/20 border border-primary/30 hover-lift will-change-transform transition-smooth">
-											<solution.icon className="h-6 w-6 text-accent" />
-										</div>
-										<h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">
-											{solution.title}
-										</h3>
-									</div>
-
-									<div className="typography">
-										<p className="muted leading-relaxed">
-											{solution.description}
-										</p>
-									</div>
-
-									<div className="space-y-3">
-										{solution.features.map((feature, featureIndex) => (
-											<div key={featureIndex} className="flex-center space-x-3">
-												<div className="w-2 h-2 rounded-full bg-muted" />
-												<span className="text-responsive-sm text-muted-foreground">
-													{feature}
-												</span>
-											</div>
-										))}
-									</div>
-								</div>
-							</Card>
-						))}
-					</div>
+					<BentoGrid className="auto-rows-auto">
+						<BentoCard
+							name="Ship Features Faster"
+							description="Launch new features in days, not months. We handle the entire technical stack — React/Next.js, API architecture, and 99.9% uptime."
+							Icon={Code2}
+							href={ROUTES.CONTACT}
+							cta="Get Started"
+							background={
+								<div className="absolute inset-0" aria-hidden="true" />
+							}
+							className="col-span-3 md:col-span-2 bg-surface-raised border-border shadow-sm"
+						/>
+						<BentoCard
+							name="Fix Revenue Leaks"
+							description="Stop losing leads to broken processes. Automate everything that slows you down — CRM integration, lead scoring, real-time analytics."
+							Icon={Settings}
+							href={ROUTES.CONTACT}
+							cta="Learn More"
+							background={
+								<div className="absolute inset-0" aria-hidden="true" />
+							}
+							className="col-span-3 md:col-span-1 bg-surface-raised border-border shadow-sm"
+						/>
+						<BentoCard
+							name="Scale Without Breaking"
+							description="Handle 10x growth without rebuilding. We future-proof your tech from day one — performance audits, infrastructure planning, cost optimization."
+							Icon={BarChart3}
+							href={ROUTES.CONTACT}
+							cta="See How"
+							background={
+								<div className="absolute inset-0" aria-hidden="true" />
+							}
+							className="col-span-3 bg-surface-raised border-border shadow-sm"
+						/>
+					</BentoGrid>
 				</div>
 			</section>
 
-			{/* Results Section - Enhanced */}
-			<section className="relative py-section px-4 sm:px-6 bg-muted overflow-hidden">
-				{/* Background Elements */}
-				<div className="absolute inset-0 bg-primary/5" />
-				<div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-				<div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-info-text/5 rounded-full blur-3xl" />
-
-				<div className="container-wide relative">
-					<div className="text-center mb-24">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
-							<span className="text-accent relative inline-block">
-								Proven Impact
-								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
-							</span>
+			{/* Results Section */}
+			<section className="py-section px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="text-center mb-content-block">
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Proven Impact
 						</h2>
 
-						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
-							Numbers don&apos;t lie - our clients see{' '}
-							<span className="text-accent font-semibold">
-								measurable results
-							</span>{' '}
-							that transform their businesses
+						<p className="text-lead text-muted-foreground max-w-3xl mx-auto">
+							Numbers don&apos;t lie - our clients see measurable results that
+							transform their businesses
 						</p>
 					</div>
 
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-sections lg:gap-10">
 						{results.map((result, index) => (
-							<div
-								key={index}
-								className="text-center group relative"
-								style={{ animationDelay: `${index * 100}ms` }}
-							>
-								{/* Card with enhanced styling */}
+							<div key={index} className="text-center">
 								<Card
 									variant="glassLight"
 									size="lg"
-									hover
-									className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 group-hover:transform group-hover:scale-105 lg:p-10"
+									className="relative border border-accent/20 hover:border-accent/40 transition-smooth lg:p-10"
 								>
-									{/* Top accent line */}
-									<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
-									{/* Metric with enhanced styling */}
-									<div className="relative mb-heading">
-										<div className="text-4xl lg:text-5xl font-black text-foreground mb-subheading group-hover:text-accent transition-all duration-300 font-mono">
+									<div className="mb-heading">
+										<div className="text-4xl lg:text-5xl font-black text-foreground mb-subheading font-mono">
 											{result.metric}
 										</div>
-										<div className="absolute -inset-4 bg-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-sticky"></div>
 									</div>
 
-									{/* Label with enhanced typography */}
-									<div className="text-lg font-bold text-muted-foreground mb-3 group-hover:text-foreground transition-colors duration-300">
+									<div className="text-lg font-bold text-muted-foreground mb-3">
 										{result.label}
 									</div>
 
-									{/* Period with accent styling */}
 									<div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-muted/50 rounded-full border border-border/50">
 										{result.period}
 									</div>
-
-									{/* Subtle glow effect */}
-									<div className="absolute inset-0 bg-accent/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 								</Card>
-
-								{/* Connecting dots for visual flow */}
-								{index < results.length - 1 && (
-									<div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
-										<div className="w-3 h-0.5 bg-accent/50"></div>
-									</div>
-								)}
 							</div>
 						))}
 					</div>
 
-					{/* Bottom accent section */}
 					<div className="text-center mt-16 pt-8 border-t border-border/30">
 						<p className="text-muted-foreground text-sm font-medium">
-							Join{' '}
-							<span className="text-accent font-semibold">
-								growing businesses
-							</span>{' '}
-							who transformed with Hudson Digital Solutions
+							Join growing businesses who transformed with Hudson Digital
+							Solutions
 						</p>
 					</div>
 				</div>
 			</section>
 
 			{/* Free Tools Section */}
-			<section className="py-section px-4 sm:px-6 bg-background">
+			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
-							<span className="text-accent relative inline-block">
-								Free Business Tools
-								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
-							</span>
+					<div className="text-center mb-content-block">
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Free Business Tools
 						</h2>
 
-						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
+						<p className="text-lead text-muted-foreground max-w-3xl mx-auto">
 							Calculate your potential in 60 seconds. No signup required.
 						</p>
 					</div>
@@ -295,13 +215,10 @@ export default function HomePage() {
 							<Card
 								variant="glassLight"
 								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
+								className="relative border border-accent/20 hover:border-accent/40 transition-smooth"
 							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
 								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
+									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading">
 										<TrendingUp className="w-8 h-8 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
@@ -315,34 +232,22 @@ export default function HomePage() {
 
 								<ul className="space-y-tight mb-content-block">
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Calculate potential revenue increase
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Understand conversion impact
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Make data-driven decisions
 									</li>
 								</ul>
 
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
+								<div className="flex items-center gap-tight text-accent font-semibold">
 									<span>Try Calculator</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+									<ArrowRight className="w-5 h-5" aria-hidden="true" />
 								</div>
 							</Card>
 						</Link>
@@ -352,13 +257,10 @@ export default function HomePage() {
 							<Card
 								variant="glassLight"
 								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
+								className="relative border border-accent/20 hover:border-accent/40 transition-smooth"
 							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
 								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
+									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading">
 										<Calculator className="w-8 h-8 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
@@ -372,34 +274,22 @@ export default function HomePage() {
 
 								<ul className="space-y-tight mb-content-block">
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Transparent pricing breakdown
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Timeline estimates included
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Feature-based pricing
 									</li>
 								</ul>
 
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
+								<div className="flex items-center gap-tight text-accent font-semibold">
 									<span>Get Estimate</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+									<ArrowRight className="w-5 h-5" aria-hidden="true" />
 								</div>
 							</Card>
 						</Link>
@@ -412,13 +302,10 @@ export default function HomePage() {
 							<Card
 								variant="glassLight"
 								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
+								className="relative border border-accent/20 hover:border-accent/40 transition-smooth"
 							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
 								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
+									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading">
 										<Zap className="w-8 h-8 text-accent" />
 									</div>
 									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
@@ -432,34 +319,22 @@ export default function HomePage() {
 
 								<ul className="space-y-tight mb-content-block">
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Real PageSpeed analysis
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Revenue impact calculation
 									</li>
 									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+										<div className="w-1.5 h-1.5 rounded-full bg-accent" />
 										Core Web Vitals insights
 									</li>
 								</ul>
 
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
+								<div className="flex items-center gap-tight text-accent font-semibold">
 									<span>Analyze Site</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+									<ArrowRight className="w-5 h-5" aria-hidden="true" />
 								</div>
 							</Card>
 						</Link>
@@ -471,19 +346,7 @@ export default function HomePage() {
 							className="inline-flex items-center gap-tight text-accent hover:text-info font-semibold transition-colors"
 						>
 							View All Tools
-							<svg
-								className="w-5 h-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 5l7 7-7 7"
-								/>
-							</svg>
+							<ArrowRight className="w-5 h-5" aria-hidden="true" />
 						</Link>
 					</div>
 				</div>
@@ -509,11 +372,8 @@ export default function HomePage() {
 							<Rocket className="w-10 h-10 text-accent" />
 						</div>
 
-						<h2 className="text-responsive-2xl text-foreground mb-content-block max-w-4xl mx-auto text-balance">
-							Your competitors ship faster.
-							<span className="block text-accent mt-4">
-								Why don&apos;t you?
-							</span>
+						<h2 className="text-section-title text-foreground mb-content-block max-w-4xl mx-auto text-balance">
+							Your competitors ship faster. Why don&apos;t you?
 						</h2>
 
 						<p className="text-lead text-muted-foreground mb-12 max-w-3xl mx-auto">
@@ -522,23 +382,13 @@ export default function HomePage() {
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-comfortable justify-center">
-							<Button
-								asChild
-								variant="default"
-								size="lg"
-								trackConversion={true}
-							>
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href={ROUTES.CONTACT}>
 									Get Your Free Roadmap
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>
-							<Button
-								asChild
-								variant="outline"
-								size="lg"
-								trackConversion={true}
-							>
+							<Button asChild variant="ghost" size="xl" trackConversion={true}>
 								<Link href={ROUTES.PORTFOLIO}>
 									See Proven Results First
 									<ArrowRight className="w-4 h-4" />
