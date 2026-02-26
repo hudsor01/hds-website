@@ -2,12 +2,10 @@ import {
 	ArrowRight,
 	BarChart3,
 	Calculator,
-	Clock,
 	Code2,
 	Rocket,
 	Settings,
 	TrendingUp,
-	Users,
 	Zap
 } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -98,162 +96,38 @@ export default function HomePage() {
 
 	return (
 		<main className="min-h-screen bg-background">
-			{/* Hero Section - Seamless Layout */}
-			<section className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-						{/* Left Side - Content */}
-						<div className="lg:pr-8">
-							<div className="space-y-sections">
-								<div>
-									<h1 className="text-page-title text-foreground leading-tight mb-comfortable text-balance">
-										<span className="block mb-subheading">
-											Stop Losing Revenue to
-										</span>
-										<span className="block text-accent">
-											Technical Bottlenecks
-										</span>
-									</h1>
-									<p className="text-hero-subtitle text-accent mb-content-block">
-										Ship 3x Faster, 60% Cheaper
-									</p>
-								</div>
+			{/* Hero Section */}
+			<section className="relative flex items-center justify-center px-4 sm:px-6 py-section bg-background-dark">
+				{/* Static grid texture — no gradient, no animation */}
+				<div
+					className="absolute inset-0 grid-pattern-minimal pointer-events-none"
+					aria-hidden="true"
+				/>
 
-								<p className="text-lead text-muted-foreground max-w-xl">
-									We build and scale your technical operations in weeks, not
-									months. No hiring delays. No training costs. Just proven
-									senior talent ready to execute.
-								</p>
+				<div className="relative container-narrow text-center">
+					<h1 className="text-page-title text-foreground leading-tight mb-comfortable text-balance">
+						Stop Losing Revenue to Technical Bottlenecks
+					</h1>
 
-								<div className="space-y-3">
-									<div className="flex flex-col sm:flex-row gap-comfortable">
-										<Button
-											asChild
-											variant="default"
-											size="lg"
-											trackConversion={true}
-										>
-											<Link href={ROUTES.CONTACT}>
-												See Your ROI in 30 Days
-												<ArrowRight className="w-4 h-4" />
-											</Link>
-										</Button>
-										<Button
-											asChild
-											variant="outline"
-											size="lg"
-											trackConversion={true}
-										>
-											<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
-												Calculate Your Savings
-												<ArrowRight className="w-4 h-4" />
-											</Link>
-										</Button>
-									</div>
-									<p className="text-sm text-muted-foreground text-center sm:text-left">
-										Free consultation, no commitment required
-									</p>
-								</div>
+					<p className="text-lead text-muted-foreground mb-content-block max-w-2xl mx-auto text-balance">
+						We build and scale your technical operations in weeks, not months.
+						No hiring delays. No training costs. Just proven senior talent ready
+						to execute.
+					</p>
 
-								{/* Trust Indicators */}
-								<div className="flex flex-wrap gap-sections pt-6">
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
-											<Clock className="w-5 h-5 text-success-text" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											Proven ROI Results
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
-											<Users className="w-5 h-5 text-info-text" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											Zero onboarding time
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-											<Rocket className="w-5 h-5 text-accent" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											100+ Projects Delivered
-										</span>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						{/* Right Side - Terminal Display */}
-						<div className="mt-16 lg:mt-0">
-							<div className="relative">
-								{/* Animated Background Elements */}
-								<div className="absolute inset-0 bg-primary/20 rounded-3xl blur-3xl opacity-50" />
-								<div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
-
-								{/* Terminal Window */}
-								<Card
-									variant="glassLight"
-									size="none"
-									className="relative overflow-hidden"
-								>
-									{/* Terminal Header */}
-									<div className="bg-card/80 border-b border-border px-4 py-3 flex-between">
-										<div className="flex-center gap-tight">
-											<div className="w-3 h-3 rounded-full bg-destructive" />
-											<div className="w-3 h-3 rounded-full bg-warning" />
-											<div className="w-3 h-3 rounded-full bg-success" />
-										</div>
-										<div className="text-xs text-muted-foreground font-mono">
-											hudson-deploy.sh
-										</div>
-										<div className="w-3 h-3 bg-success-text rounded-full" />
-									</div>
-
-									{/* Terminal Content */}
-									<div
-										className="p-6 font-mono text-sm space-y-tight"
-										role="log"
-									>
-										<div className="text-accent">
-											$ npm run deploy --production
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Build completed in 1.8s
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Tests passed (147/147)
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Security scan clean
-										</div>
-										<div className="text-info">
-											&gt; Deploying to production...
-										</div>
-										<div className="text-success">
-											[OK] Deployment successful
-										</div>
-										<div className="text-warning">
-											[LIVE] at https://client-app.com
-										</div>
-
-										<div className="pt-2 space-y-1">
-											<div className="text-accent/80">Performance: 100/100</div>
-											<div className="text-accent/80">
-												Accessibility: 100/100
-											</div>
-											<div className="text-accent/80">SEO: 98/100</div>
-										</div>
-
-										<div className="text-accent mt-4">
-											<span className="inline-block">$</span>
-											<span className="inline-block w-2 h-4 bg-accent ml-1" />
-										</div>
-									</div>
-								</Card>
-							</div>
-						</div>
+					<div className="flex flex-col sm:flex-row gap-comfortable justify-center">
+						<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Link href={ROUTES.CONTACT}>
+								See Your ROI in 30 Days
+								<ArrowRight className="w-5 h-5" />
+							</Link>
+						</Button>
+						<Button asChild variant="ghost" size="xl" trackConversion={true}>
+							<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
+								Calculate Your Savings
+								<ArrowRight className="w-5 h-5" />
+							</Link>
+						</Button>
 					</div>
 				</div>
 			</section>
