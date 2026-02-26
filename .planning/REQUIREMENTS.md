@@ -15,10 +15,10 @@
 
 ### HERO — Homepage & Value Proposition
 
-- [ ] **HERO-01**: Homepage hero section has a distinctive, non-generic background treatment (gradient, subtle texture, or purposeful dark/light contrast)
-- [ ] **HERO-02**: Hero headline has clear typographic hierarchy — primary claim + supporting statement visually distinct in size and weight
-- [ ] **HERO-03**: Hero CTAs are polished with distinct visual weight — primary action clearly differentiated from secondary
-- [ ] **HERO-04**: Page sections have deliberate vertical rhythm — whitespace, section transitions, and content density feel intentional
+- [x] **HERO-01**: Homepage hero section has a distinctive, non-generic background treatment (gradient, subtle texture, or purposeful dark/light contrast)
+- [x] **HERO-02**: Hero headline has clear typographic hierarchy — primary claim + supporting statement visually distinct in size and weight
+- [x] **HERO-03**: Hero CTAs are polished with distinct visual weight — primary action clearly differentiated from secondary
+- [x] **HERO-04**: Page sections have deliberate vertical rhythm — whitespace, section transitions, and content density feel intentional
 
 ### COMP — Core Component Polish
 
@@ -62,10 +62,10 @@ Which phases cover which requirements.
 | DSYS-03 | Phase 56 | Pending |
 | DSYS-04 | Phase 56 | Pending |
 | DSYS-05 | Phase 56 | Pending |
-| HERO-01 | Phase 57 | Pending |
-| HERO-02 | Phase 57 | Pending |
-| HERO-03 | Phase 57 | Pending |
-| HERO-04 | Phase 57 | Pending |
+| HERO-01 | Phase 57 | Complete |
+| HERO-02 | Phase 57 | Complete |
+| HERO-03 | Phase 57 | Complete |
+| HERO-04 | Phase 57 | Complete |
 | COMP-01 | Phase 58 | Pending |
 | COMP-02 | Phase 58 | Pending |
 | COMP-03 | Phase 58 | Pending |
