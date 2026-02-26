@@ -29,9 +29,7 @@ export function ComparisonView({
 	return (
 		<Card className="mb-content-block">
 			<div className="flex items-center justify-between mb-heading">
-				<h2 className="text-xl font-semibold text-foreground">
-					Compare Vehicles
-				</h2>
+				<h2 className="text-h4 text-foreground">Compare Vehicles</h2>
 				<button
 					onClick={() => setComparisonMode(false)}
 					className="text-muted-foreground hover:text-muted-foreground transition-colors"

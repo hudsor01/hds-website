@@ -60,7 +60,7 @@ const BentoCard = ({
 		<div className="card-padding-sm">
 			<div className="pointer-events-none z-sticky flex transform-gpu flex-col gap-1 transition-all duration-300 lg:group-hover:-translate-y-10">
 				<Icon className="h-12 w-12 origin-left transform-gpu text-foreground transition-all duration-300 ease-in-out group-hover:scale-75 will-change-transform" />
-				<h3 className="text-xl font-semibold text-foreground dark:text-muted-foreground">
+				<h3 className="text-h4 text-foreground dark:text-muted-foreground">
 					{name}
 				</h3>
 				<p className="max-w-lg text-muted-foreground">{description}</p>

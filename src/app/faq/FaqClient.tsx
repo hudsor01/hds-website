@@ -181,7 +181,7 @@ export default function FaqClient() {
 						<div className="space-y-12">
 							{filteredFaqs.map((category, catIndex) => (
 								<div key={catIndex}>
-									<h2 className="text-2xl font-bold text-foreground mb-content-block">
+									<h2 className="text-h3 text-foreground mb-content-block">
 										{category.category}
 									</h2>
 

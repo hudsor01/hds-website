@@ -63,7 +63,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 										Hudson Digital Solutions
 									</span>
 								</div>
-								<div className="text-xs text-accent font-medium tracking-wider uppercase">
+								<div className="text-eyebrow text-accent">
 									Ship 3x Faster, 60% Cheaper
 								</div>
 							</div>

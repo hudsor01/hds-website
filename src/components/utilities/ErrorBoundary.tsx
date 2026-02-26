@@ -100,7 +100,7 @@ function DefaultErrorFallback({
 				<Card variant="glass" size="lg" className="border border-danger/20">
 					<AlertTriangle className="w-16 h-16 text-danger mx-auto mb-content-block" />
 
-					<h2 className="text-2xl font-bold text-foreground mb-heading">
+					<h2 className="text-h3 text-foreground mb-heading">
 						Oops! Something went wrong
 					</h2>
 

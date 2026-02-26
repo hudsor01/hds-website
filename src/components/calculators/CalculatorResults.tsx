@@ -84,7 +84,7 @@ export function CalculatorResults({
 		<div className="space-y-comfortable">
 			{/* Results Display */}
 			<div className="space-y-content">
-				<h3 className="text-xl font-semibold text-foreground dark:text-foreground">
+				<h3 className="text-h4 text-foreground dark:text-foreground">
 					Your Results
 				</h3>
 

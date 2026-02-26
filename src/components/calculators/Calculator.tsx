@@ -199,9 +199,7 @@ export function Calculator() {
 				<div className="text-center mb-comfortable">
 					<div className="flex items-center justify-center gap-3 mb-3">
 						<Car className="w-10 h-10 text-primary" />
-						<h1 className="text-4xl font-bold text-foreground">
-							Texas TTL Calculator
-						</h1>
+						<h1 className="text-h1 text-foreground">Texas TTL Calculator</h1>
 					</div>
 					<p className="text-muted-foreground">
 						Tax, Title, License & Payment Calculator for Texas Vehicles
@@ -271,9 +269,7 @@ export function Calculator() {
 					>
 						<div className="flex items-center gap-3 mb-4">
 							<Share2 className="w-6 h-6 text-primary" />
-							<h2 className="text-xl font-semibold text-foreground">
-								Share Your Results
-							</h2>
+							<h2 className="text-h4 text-foreground">Share Your Results</h2>
 						</div>
 
 						{/* Share Link */}
