@@ -56,17 +56,13 @@ const BentoCard = ({
 	>
 		<div>{background}</div>
 		<div className="card-padding-sm">
-			<div className="pointer-events-none z-sticky flex transform-gpu flex-col gap-1">
+			<div className="pointer-events-none z-sticky flex transform-gpu flex-col gap-1 mb-comfortable">
 				<Icon className="h-12 w-12 origin-left transform-gpu text-foreground" />
-				<h3 className="text-h4 text-foreground dark:text-muted-foreground">
-					{name}
-				</h3>
+				<h3 className="text-h4 text-foreground">{name}</h3>
 				<p className="max-w-lg text-muted-foreground">{description}</p>
 			</div>
 
-			<div
-				className={cn('pointer-events-auto flex w-full flex-row items-center')}
-			>
+			<div className="pointer-events-auto flex w-full flex-row items-center">
 				<Button
 					variant="link"
 					asChild
@@ -79,20 +75,6 @@ const BentoCard = ({
 					</a>
 				</Button>
 			</div>
-		</div>
-
-		<div className="flex flex-row items-center card-padding-sm">
-			<Button
-				variant="link"
-				asChild
-				size="sm"
-				className="pointer-events-auto p-0"
-			>
-				<a href={href}>
-					{cta}
-					<ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" />
-				</a>
-			</Button>
 		</div>
 
 		<div className="pointer-events-none absolute inset-0" />

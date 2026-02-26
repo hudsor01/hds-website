@@ -70,11 +70,11 @@ export default function HomePage() {
 				/>
 
 				<div className="relative container-narrow text-center">
-					<h1 className="text-page-title text-foreground leading-tight mb-comfortable text-balance">
+					<h1 className="text-page-title text-[var(--color-foreground-dark)] leading-tight mb-comfortable text-balance">
 						Stop Losing Revenue to Technical Bottlenecks
 					</h1>
 
-					<p className="text-lead text-muted-foreground mb-content-block max-w-2xl mx-auto text-balance">
+					<p className="text-lead text-[var(--color-muted-foreground-dark)] mb-content-block max-w-2xl mx-auto text-balance">
 						We build and scale your technical operations in weeks, not months.
 						No hiring delays. No training costs. Just proven senior talent ready
 						to execute.
@@ -87,7 +87,13 @@ export default function HomePage() {
 								<ArrowRight className="w-5 h-5" />
 							</Link>
 						</Button>
-						<Button asChild variant="ghost" size="xl" trackConversion={true}>
+						<Button
+							asChild
+							variant="ghost"
+							size="xl"
+							trackConversion={true}
+							className="text-[var(--color-foreground-dark)] border border-white/20 hover:bg-white/10 hover:border-white/30 hover:text-white"
+						>
 							<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
 								Calculate Your Savings
 								<ArrowRight className="w-5 h-5" />
@@ -119,7 +125,7 @@ export default function HomePage() {
 							background={
 								<div className="absolute inset-0" aria-hidden="true" />
 							}
-							className="col-span-3 md:col-span-2 bg-surface-raised border-border shadow-sm"
+							className="col-span-3 md:col-span-2 bg-card border border-border shadow-md"
 						/>
 						<BentoCard
 							name="Fix Revenue Leaks"
@@ -130,7 +136,7 @@ export default function HomePage() {
 							background={
 								<div className="absolute inset-0" aria-hidden="true" />
 							}
-							className="col-span-3 md:col-span-1 bg-surface-raised border-border shadow-sm"
+							className="col-span-3 md:col-span-1 bg-card border border-border shadow-md"
 						/>
 						<BentoCard
 							name="Scale Without Breaking"
@@ -141,7 +147,7 @@ export default function HomePage() {
 							background={
 								<div className="absolute inset-0" aria-hidden="true" />
 							}
-							className="col-span-3 bg-surface-raised border-border shadow-sm"
+							className="col-span-3 bg-card border border-border shadow-md"
 						/>
 					</BentoGrid>
 				</div>
