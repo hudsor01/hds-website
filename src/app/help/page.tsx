@@ -62,7 +62,7 @@ export default async function HelpCenterPage() {
 
 			{/* Categories Grid */}
 			<div className="container-narrow py-12 md:py-16">
-				<h2 className="text-2xl font-bold text-foreground mb-8 text-center">
+				<h2 className="text-h3 text-foreground mb-8 text-center">
 					Browse by Category
 				</h2>
 

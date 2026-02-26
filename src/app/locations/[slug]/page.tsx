@@ -91,7 +91,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
 					<div className="flex items-center justify-center gap-2 mb-heading text-primary">
 						<MapPin className="h-6 w-6" />
-						<span className="text-sm font-semibold uppercase tracking-wide">
+						<span className="text-eyebrow">
 							{location.city}, {location.stateCode}
 						</span>
 					</div>
@@ -109,7 +109,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 					<div className="grid gap-comfortable sm:grid-cols-3 text-center">
 						<div>
-							<div className="text-3xl font-bold text-primary">
+							<div className="text-h2 text-primary">
 								{location.stats.businesses}
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -117,7 +117,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							</div>
 						</div>
 						<div>
-							<div className="text-3xl font-bold text-primary">
+							<div className="text-h2 text-primary">
 								{location.stats.projects}
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -125,7 +125,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							</div>
 						</div>
 						<div>
-							<div className="text-3xl font-bold text-primary">
+							<div className="text-h2 text-primary">
 								{location.stats.satisfaction}
 							</div>
 							<div className="text-sm text-muted-foreground">
@@ -139,7 +139,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			{/* Services */}
 			<section className="py-section-sm">
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-					<h2 className="text-2xl font-bold text-foreground text-center mb-comfortable">
+					<h2 className="text-h3 text-foreground text-center mb-comfortable">
 						Our Services in {location.city}
 					</h2>
 					<div className="grid gap-comfortable sm:grid-cols-3">
@@ -160,7 +160,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			{/* Areas Served */}
 			<section className="py-section-sm bg-muted/50">
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-					<h2 className="text-2xl font-bold text-foreground text-center mb-comfortable">
+					<h2 className="text-h3 text-foreground text-center mb-comfortable">
 						Areas We Serve in {location.city}
 					</h2>
 					<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
@@ -181,7 +181,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			<section className="py-section-sm">
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 					<Card size="lg" className="bg-primary/10 text-center">
-						<h2 className="text-3xl font-bold text-foreground mb-heading">
+						<h2 className="text-h2 text-foreground mb-heading">
 							Ready to Grow Your {location.city} Business?
 						</h2>
 						<p className="text-lg text-muted-foreground mb-comfortable max-w-2xl mx-auto">

@@ -133,7 +133,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 					<Card>
 						<CardContent className="card-padding-lg text-center">
 							<HelpCircle className="size-12 mx-auto text-muted-foreground mb-heading" />
-							<h2 className="text-xl font-semibold text-foreground mb-subheading">
+							<h2 className="text-h4 text-foreground mb-subheading">
 								No articles yet
 							</h2>
 							<p className="text-muted-foreground">

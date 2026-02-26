@@ -54,7 +54,7 @@ export default function Error({
 							/>
 						</svg>
 					</div>
-					<h1 className="text-2xl font-bold text-foreground dark:text-foreground mb-subheading">
+					<h1 className="text-h3 text-foreground dark:text-foreground mb-subheading">
 						Something went wrong
 					</h1>
 					<p className="text-muted-foreground dark:text-muted-foreground mb-content-block">

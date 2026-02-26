@@ -46,7 +46,7 @@ export default function LocationsPage() {
 				<div className="mx-auto max-w-6xl space-y-12">
 					{states.map(state => (
 						<div key={state}>
-							<h2 className="mb-heading text-2xl font-semibold text-foreground border-b border-border pb-2">
+							<h2 className="mb-heading text-h3 text-foreground border-b border-border pb-2">
 								{state}
 							</h2>
 							<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -72,7 +72,7 @@ export default function LocationsPage() {
 			{/* CTA Section */}
 			<section className="px-4 py-section-sm sm:px-6 lg:px-8">
 				<div className="mx-auto max-w-4xl text-center">
-					<h2 className="mb-heading text-2xl font-semibold text-foreground">
+					<h2 className="mb-heading text-h3 text-foreground">
 						Don&apos;t see your city?
 					</h2>
 					<p className="mb-comfortable text-muted-foreground">

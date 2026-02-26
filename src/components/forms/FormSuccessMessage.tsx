@@ -24,9 +24,7 @@ export function FormSuccessMessage({
 				<div className="mb-4 flex justify-center border rounded-full w-fit mx-auto p-2">
 					<CheckCircle2 className="size-8 text-success-dark" />
 				</div>
-				<h2 className="text-center text-2xl text-pretty font-bold mb-2">
-					{title}
-				</h2>
+				<h2 className="text-center text-h3 text-pretty mb-2">{title}</h2>
 				<p className="text-center text-lg text-pretty text-muted-foreground mb-4">
 					{message}
 				</p>
