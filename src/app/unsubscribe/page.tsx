@@ -22,9 +22,7 @@ export default async function UnsubscribePage({
 		<main className="min-h-screen bg-background flex items-center justify-center px-4">
 			<div className="w-full max-w-md">
 				<div className="text-center mb-8">
-					<h1 className="text-2xl font-bold text-foreground mb-2">
-						Unsubscribe
-					</h1>
+					<h1 className="text-h3 text-foreground mb-2">Unsubscribe</h1>
 					<p className="text-muted-foreground">
 						Enter your email address below to unsubscribe from Hudson Digital
 						Solutions email communications.

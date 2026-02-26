@@ -148,7 +148,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 						>
 							<Icon icon={icon} size="lg" className="text-foreground" />
 						</div>
-						<h3 className="text-xl font-bold text-foreground">{title}</h3>
+						<h3 className="text-h4 text-foreground">{title}</h3>
 					</div>
 
 					{/* Description */}
@@ -220,7 +220,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 				>
 					{/* Header Section */}
 					<div className="text-center mb-comfortable">
-						<h3 className="text-xl font-bold text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
+						<h3 className="text-h4 text-foreground mb-subheading text-balance group-hover:text-accent transition-colors">
 							{name}
 						</h3>
 						<div className="text-section-title font-black text-accent mb-subheading">
@@ -246,7 +246,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 					<div className="space-y-content mb-comfortable flex-grow">
 						{/* Included Features */}
 						<div>
-							<h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading">
+							<h4 className="text-eyebrow text-muted-foreground mb-subheading">
 								What&apos;s Included
 							</h4>
 							<ul className="space-y-tight">
@@ -264,7 +264,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 						{/* Not Included */}
 						{notIncluded.length > 0 && (
 							<div>
-								<h4 className="text-xs uppercase tracking-wide text-muted-foreground font-bold mb-subheading mt-card-content">
+								<h4 className="text-eyebrow text-muted-foreground mb-subheading mt-card-content">
 									Not Included
 								</h4>
 								<ul className="space-y-tight">

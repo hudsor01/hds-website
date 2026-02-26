@@ -101,7 +101,7 @@ export default function Footer() {
 							<div className="mb-content-block">
 								<div className="flex items-center gap-tight mb-3">
 									<Rocket className="w-7 h-7 text-accent" />
-									<h3 className="text-xl font-bold text-foreground">HDS</h3>
+									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
 								<p className="text-accent small font-semibold mb-subheading">
 									Ship 3x Faster, 60% Cheaper

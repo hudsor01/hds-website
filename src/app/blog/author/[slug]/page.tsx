@@ -108,7 +108,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 			{/* Posts */}
 			<section className="py-section-sm">
 				<div className="container-wide">
-					<h2 className="text-2xl font-bold text-foreground mb-comfortable">
+					<h2 className="text-h3 text-foreground mb-comfortable">
 						Articles by {author.name}
 					</h2>
 					{posts.length > 0 ? (

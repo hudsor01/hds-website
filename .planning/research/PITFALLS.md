@@ -1,272 +1,427 @@
-# Pitfalls Research: Biome Migration
+# Pitfalls Research
 
-**Project:** Hudson Digital Solutions Website
-**Migration:** ESLint + Prettier → Biome (v3.1 milestone)
-**Researched:** 2026-02-24
-**Overall Confidence:** HIGH (verified against Biome official docs, GitHub issues, and project's actual config files)
+**Domain:** UI/UX redesign of existing production Next.js 15 + Tailwind CSS + shadcn/ui site
+**Researched:** 2026-02-25
+**Confidence:** HIGH (based on shadcn/ui, Tailwind, and Next.js documented mechanics plus project-specific constraints)
 
 ---
 
 ## Critical Pitfalls
 
-These can silently lose rule coverage or break the build if unaddressed.
+### Pitfall 1: Overriding shadcn CSS Variables and Breaking Dark Mode
 
-| Pitfall | Risk Level | Prevention | When to Address |
-|---------|-----------|------------|-----------------|
-| `ban-ts-comment` has no full equivalent in stable Biome | HIGH | Use `noTsComment` (nursery) + manually verify `@ts-ignore` / `@ts-nocheck` / `@ts-check` are individually covered; note current Biome only flags `@ts-ignore` → prefer `@ts-expect-error`, not the full 3-way ban | Phase 1: config setup |
-| `ignoreRestSiblings` default flipped in recent Biome 2.x | HIGH | Explicitly set `"ignoreRestSiblings": true` in `noUnusedVariables` options — do not rely on defaults; this was a documented bug (PR #8398, fixed Dec 2025) but may still be wrong in your installed version | Phase 1: config setup |
-| `no-unused-vars` splits into two Biome rules | HIGH | Enable both `noUnusedVariables` AND `noUnusedImports` in `correctness` — Biome's `noUnusedVariables` does NOT report unused imports; current ESLint config catches both | Phase 1: config setup |
-| `no-html-link-for-pages` has no Biome equivalent | MEDIUM | Accept the gap: this rule warns about `<a href>` to internal pages instead of `<Link>`. Add an E2E or code-review check. The project already passes lint 0-errors so this was enforced at setup; regression risk is low if codebase already has no violations | Phase 1: after migration, manual check |
-| Formatter diff will reformat the entire codebase | HIGH | Run `biome format --write` as a single atomic commit with message "chore: biome format entire codebase" — do NOT mix rule config changes and formatting in one commit; otherwise `git blame` becomes useless | Phase 2: format step |
-| `biome migrate eslint` does not migrate `--include-inspired` rules by default | MEDIUM | Run with `--include-inspired` flag or manually verify inspired-but-not-ported rules; without this, rules like some `react-hooks` analogs may be silently dropped | Phase 1: migration command |
-| `.eslintignore` negated globs are not migrated | MEDIUM | Biome emits a warning for negated glob patterns in `.eslintignore`; verify `biome.json` `ignore` patterns manually against the current ESLint `ignores` array in `eslint.config.mjs` | Phase 1: config review |
-| `eslint-config-next` includes `core-web-vitals` rules not all covered by Biome | MEDIUM | Audit: `noImgElement` is covered; `no-html-link-for-pages` is not; verify current passing-0-errors baseline means no violations exist, then accept the open gap | Phase 1: rule parity check |
-| Tailwind `@apply` / `@tailwind` directives trigger `unknownAtRules` CSS warnings | MEDIUM | Add `"css": { "parser": { "tailwindDirectives": true } }` to `biome.json`; note this is Tailwind v4 syntax — project uses `@tailwindcss/postcss` (v4) so this is required; there is an open bug where this setting does not fully suppress warnings in Biome 2.3.x | Phase 1: biome.json config |
+**What goes wrong:**
+shadcn/ui components are wired entirely to CSS custom properties defined in `globals.css` (e.g., `--background`, `--foreground`, `--card`, `--primary`, `--muted`, `--border`). When a redesign introduces new brand color values by redefining only the `:root` block — or by using Tailwind arbitrary values (`bg-[#1a1a2e]`) on surfaces that contain shadcn components — the `.dark` block and the component internals diverge silently. Buttons look fine in light mode; cards turn white-on-white or black-on-black in dark mode. The regression only appears at runtime — not in TypeScript or Biome.
 
----
+**Why it happens:**
+Designers and developers working primarily in light mode change `:root` variable values without touching the `.dark` block. shadcn components use `hsl(var(--background))` not `bg-white`, so Tailwind arbitrary overrides do not directly break the component — they break the surface the component sits on.
 
-## Next.js 15 Specific Gotchas
+**How to avoid:**
+- Always edit CSS variables in both `:root` and `.dark` blocks simultaneously. Treat them as a single atomic unit.
+- Treat the `globals.css` variable table as a contract: every variable in `:root` must have a corresponding value in `.dark`.
+- Do not use Tailwind arbitrary color values (`bg-[#...]`) on surfaces that contain shadcn components — use the token system instead.
+- After any CSS variable change, render every component variant in both light and dark mode before committing.
 
-### 1. `next lint` runs more than linting
+**Warning signs:**
+- Any `bg-[...]` or `text-[...]` class added to a page wrapper or card that wraps shadcn primitives.
+- `globals.css` diff shows only `:root` block changed with no corresponding `.dark` change.
+- Build passes cleanly but manual dark-mode toggle reveals invisible text or washed-out buttons.
 
-`next lint` performs "doctoring" — it sanity-checks `tsconfig.json`, verifies Next.js compiler options, and manages TypeScript setup. Biome does none of this. Replacing the `lint` script with `biome check .` removes the doctoring side-effect.
-
-**Prevention:** This is acceptable here because `tsconfig.json` is already correct and stable. Keep `bun run typecheck` (`tsc --noEmit`) in `lefthook.yml` and CI to compensate.
-
-**Context:** `next lint` is deprecated as of Next.js 15.5 and removed in Next.js 16. The project already runs Next.js 16.1.6, meaning `next lint` no longer exists — Biome is the natural replacement.
-
-### 2. `eslint-config-next/typescript` transitively enables `@typescript-eslint` rules
-
-The current `eslint.config.mjs` spreads both `nextCoreWebVitals` and `nextTypescript`, which internally activates a large set of typescript-eslint rules beyond what is explicitly listed in the project config. These implicit rules disappear when ESLint is removed.
-
-**Known implicit rules from `eslint-config-next/typescript` to verify in Biome:**
-- `@typescript-eslint/no-require-imports` → Biome: `noCommonJs` (style)
-- `@typescript-eslint/no-array-constructor` → Biome: `useArrayLiterals` (style)
-- React-specific rules from `eslint-plugin-react` / `eslint-plugin-react-hooks`
-
-**Prevention:** After removing ESLint, run `biome check .` on the full codebase and inspect every new error/warning. Do not auto-suppress — investigate each one.
-
-### 3. `react-hooks/set-state-in-effect` has no direct Biome equivalent
-
-The current ESLint config explicitly enables `react-hooks/set-state-in-effect: "error"`. Biome has React hooks rules but this specific rule is not in the current Biome stable ruleset.
-
-**Prevention:** Accept this gap. The rule prevents setting state directly inside `useEffect` without a cleanup or conditional. The pattern is already avoided in this codebase (project passes lint at 0 errors). Low regression risk but not zero.
-
-### 4. `no-console` with allow list requires Biome workaround
-
-The current ESLint config uses `'no-console': ['warn', { allow: ['warn', 'error'] }]`. Biome has `noConsole` but the "allow specific methods" option behavior differs.
-
-**Biome's approach:** `noConsole` (in `nursery` as of recent versions) flags all `console.*` calls. There is no built-in per-method allowlist equivalent to ESLint's `allow` option.
-
-**Prevention:** Use `// biome-ignore lint/nursery/noConsole: ...` for `console.warn` / `console.error` calls, OR configure `noConsoleLog` (which only flags `console.log`, not `warn`/`error`) — this is the better fit for this project since the CLAUDE.md rule prohibits `console.log` but explicitly allows `console.warn` and `console.error`. Use `noConsoleLog` rather than `noConsole`.
-
-### 5. Lefthook `glob` filter + Biome `--staged` behavior
-
-The current `lefthook.yml` runs `bun run lint` (full project scan) on pre-commit, filtered by glob. Biome's `--staged` flag is more efficient and precise for pre-commit use.
-
-**Pitfall:** Keeping `bun run lint` (full scan) in lefthook after migrating to Biome is slow but not broken. However, the glob filter in lefthook (`*.{js,jsx,ts,tsx}`) does not tell Biome what files to check — it only controls when the hook fires. The actual files checked are still determined by Biome's own `include`/`files` config.
-
-**Prevention:** Replace lefthook lint command with: `biome check --no-errors-on-unmatched --files-ignore-unknown=true --staged --colors=off $(git diff --cached --name-only --diff-filter=ACMR | tr '\n' ' ')` or use Biome's native staged-files integration.
+**Phase to address:**
+Design Tokens Phase (first phase of v4.0) — establish the complete token contract for both `:root` and `.dark` before any component work begins.
 
 ---
 
-## TypeScript Strict Mode Gaps
+### Pitfall 2: CSS Specificity Wars Between globals.css Utilities and Tailwind Utility Classes
 
-This project uses TypeScript strict mode with `noUnusedLocals` and `noUnusedParameters` enabled in `tsconfig.json`. These overlap with Biome rules but are NOT redundant — TypeScript checks types, Biome checks syntax/patterns.
+**What goes wrong:**
+This project already uses semantic CSS classes (`.glass-card`, `.gradient-text`, `.hover-lift`, `.button-hover-glow`, `.section-spacing`) defined in `globals.css` using `@layer utilities`. When new polishing work adds `@layer base` or `@layer components` rules — or adds inline Tailwind classes that conflict — Tailwind's cascade order (`base → components → utilities`) causes one rule to silently win over another in a non-obvious way. A component looks correct in isolation but wrong when placed inside a layout section because a `globals.css` rule from `@layer base` overrides a responsive utility applied at the component level.
 
-| ESLint Rule (current) | Biome Equivalent | Gap / Difference |
-|----------------------|-----------------|-----------------|
-| `@typescript-eslint/no-explicit-any: error` | `noExplicitAny` (suspicious) | No gap — direct equivalent. Enable in `suspicious` group. |
-| `@typescript-eslint/no-unused-vars` with `argsIgnorePattern: "^_"` | `noUnusedVariables` (correctness) | Biome auto-ignores `_`-prefixed variables — no pattern config needed. Also enable `noUnusedFunctionParameters` to cover args. |
-| `@typescript-eslint/consistent-type-imports` with `separate-type-imports` | `useImportType` (style) | Direct equivalent. `separate-type-imports` style maps to `useImportType`. |
-| `@typescript-eslint/no-non-null-assertion: warn` | `noNonNullAssertion` (style) | Direct equivalent. Set to `"warn"`. |
-| `@typescript-eslint/ban-ts-comment` with `ts-ignore: false, ts-nocheck: false` | `noTsComment` (nursery) | **Partial coverage only.** Biome's rule currently focuses on `@ts-ignore` → suggest `@ts-expect-error`. The full 3-comment ban (ignore, nocheck, check) is not available in stable. |
-| `no-duplicate-imports: error` | `noUselessImport` or `noDuplicateImports` (correctness) | Biome has `noDuplicateImports` — direct equivalent. |
-| `eqeqeq: ['error', 'always']` | `noDoubleEquals` (suspicious) | Direct equivalent. |
-| `curly: ['error', 'all']` | `useBlockStatements` (style) | Direct equivalent. This project's ESLint enforces curly on all if/else per CLAUDE.md — verify this rule is explicitly enabled, as it's not in Biome's `recommended` set. |
-| `prefer-const: error` | `useConst` (style) | Direct equivalent. |
-| `no-var: error` | `noVar` (style) | Direct equivalent. |
-| `no-debugger: error` | `noDebugger` (suspicious) | Direct equivalent. |
-| `no-unreachable: error` | `noUnreachable` (correctness) | Direct equivalent. |
-| `no-constant-condition: error` | `noConstantCondition` (correctness) | Direct equivalent. |
-| `no-empty: ['error', { allowEmptyCatch: true }]` | `noEmptyBlockStatements` (suspicious) | **Behavioral difference:** Biome does not support `allowEmptyCatch` option — empty catch blocks will be flagged. Workaround: use `// biome-ignore` on legitimate empty catches or add `catch (_e) { /* intentional */ }`. |
-| `react/no-unescaped-entities: off` | N/A — turned off | No action needed. Biome has no equivalent rule. |
-| `react-hooks/set-state-in-effect: error` | No equivalent | Gap — see Next.js gotchas section above. |
-| Type-aware rules (no-floating-promises, etc.) | nursery/noFloatingPromises | **Biome 2.0+ only.** The rule is in nursery and catches ~75% of cases. Not recommended to enable on first migration pass. |
+**Why it happens:**
+Developers add polish as one-off Tailwind classes in JSX without realising a `globals.css` layer rule already targets the same element or property. The specificity hierarchy is invisible in JSX — there is no type error, no Biome warning, no runtime error.
 
-### Rules NOT in Biome stable that this project currently gets from `eslint-config-next/typescript`
+**How to avoid:**
+- Before adding any new `globals.css` rule, search the codebase for existing rules that target the same selector or property.
+- Place new design-system utilities in `@layer utilities` only — never in `@layer base` (reserve base for resets and element defaults only).
+- Document each new semantic class with a comment listing its purpose and what it must not conflict with.
+- Use the `!` (important) Tailwind modifier only as a last resort, with a comment explaining why.
 
-Biome 2.x does not have equivalents for:
-- `@typescript-eslint/no-misused-promises` (type-aware)
-- `@typescript-eslint/no-floating-promises` (in nursery only, 75% detection rate)
-- `@typescript-eslint/strict-boolean-expressions` (type-aware)
+**Warning signs:**
+- A Tailwind class applied in JSX has no visible effect even though the value is correct and valid.
+- A hover state or transition works in isolation but disappears inside a specific layout section.
+- `globals.css` grows past roughly 200 lines without clear `@layer` boundaries.
+- A class from globals.css and a Tailwind utility exist on the same element targeting the same property.
 
-These were likely not enabled via `eslint-config-next/typescript` either (it uses `recommended` not `strict` typescript-eslint), but verify after migration by diffing the rule sets.
+**Phase to address:**
+Design Tokens Phase (Phase 1) — define `@layer` boundaries and the semantic class inventory before any component polish begins. Enforce during every subsequent Component Polish phase.
 
 ---
 
-## Rule Parity Verification
+### Pitfall 3: Breaking Existing WCAG AA Compliance with "Premium" Color Choices
 
-A structured approach to confirming nothing was lost.
+**What goes wrong:**
+The project achieved WCAG AA contrast compliance (4.5:1 for normal text, 3:1 for large text and UI components) in v2.0, explicitly documented in PROJECT.md. A redesign that introduces softer, more "premium" colors — lighter grays, muted brand accents, reduced-opacity overlays — frequently drops contrast ratios below AA thresholds. This is invisible in development unless a contrast checker is run. Real users with low vision are immediately affected.
 
-### Step 1: Capture the current ESLint rule surface before removing anything
+**Why it happens:**
+Design aesthetics and accessibility requirements pull in opposite directions for muted or subtle color schemes. A color described as "sophisticated" or "refined" is often one with insufficient contrast. Palette changes for the premium feel (e.g., switching from a high-contrast dark button to a softer brand gradient) are not automatically validated.
 
-```bash
-# From project root
-npx eslint --print-config src/app/page.tsx > /tmp/eslint-effective-config.json
-```
+**How to avoid:**
+- Run contrast checks on every new color pair before it enters the codebase. Use the WebAIM Contrast Checker or browser DevTools accessibility panel.
+- Include contrast ratios as comments next to CSS variable definitions: `/* --muted-foreground: 4.6:1 on --background */`.
+- Include a contrast verification step in the definition of done for every phase: render the page, check every text color against its background.
+- Never use `opacity-*` on text as a substitute for a lighter color — it reduces contrast without any TypeScript or lint error.
+- `text-muted-foreground` is designed for captions and helper text, not body copy — do not use it on primary content.
 
-This outputs every active rule, including those from `eslint-config-next` spreads. This is the ground truth before migration.
+**Warning signs:**
+- A new color is described as "muted", "soft", "subtle", or "ghost" — these are contrast-risk words.
+- Any `opacity-*` class is applied to text or icon elements.
+- New gradient backgrounds placed under white or light text.
+- The design review focuses on aesthetics without running a contrast check.
 
-### Step 2: After Biome is configured, run both linters on the same file set
-
-```bash
-# Run ESLint (still installed) — capture output
-bun run lint 2>&1 > /tmp/eslint-output.txt
-
-# Run Biome — capture output
-npx @biomejs/biome check . 2>&1 > /tmp/biome-output.txt
-
-# If ESLint finds 0 errors but Biome finds new ones: investigate each
-# If ESLint found something Biome does not: it's a coverage gap
-```
-
-### Step 3: Verify the 8 explicitly configured rules in `eslint.config.mjs`
-
-For each rule in the current config, confirm the Biome equivalent is explicitly enabled in `biome.json`:
-
-| Current ESLint Rule | Biome Rule to Enable | Biome Category |
-|--------------------|---------------------|----------------|
-| `@typescript-eslint/no-unused-vars` | `noUnusedVariables` + `noUnusedFunctionParameters` + `noUnusedImports` | `correctness` |
-| `@typescript-eslint/consistent-type-imports` | `useImportType` | `style` |
-| `@typescript-eslint/no-explicit-any` | `noExplicitAny` | `suspicious` |
-| `@typescript-eslint/no-non-null-assertion` | `noNonNullAssertion` | `style` |
-| `@typescript-eslint/ban-ts-comment` | `noTsComment` (nursery, partial) | `nursery` |
-| `no-console` (warn, allow warn+error) | `noConsoleLog` (not `noConsole`) | `suspicious` |
-| `no-debugger` | `noDebugger` | `suspicious` |
-| `prefer-const` | `useConst` | `style` |
-| `no-var` | `noVar` | `style` |
-| `eqeqeq` | `noDoubleEquals` | `suspicious` |
-| `curly: all` | `useBlockStatements` | `style` |
-| `no-duplicate-imports` | `noDuplicateImports` | `correctness` |
-| `no-unreachable` | `noUnreachable` | `correctness` |
-| `no-constant-condition` | `noConstantCondition` | `correctness` |
-| `no-empty` (allowEmptyCatch) | `noEmptyBlockStatements` (no allowEmptyCatch) | `suspicious` |
-| `react-hooks/set-state-in-effect` | **No equivalent** | — |
-| `no-html-link-for-pages` (from next) | **No equivalent** | — |
-| `no-img-element` (from next) | `noImgElement` (next domain) | `next` |
-
-### Step 4: Verify the formatter produces semantically equivalent output
-
-```bash
-# Run Prettier on a sample file to get current output
-npx prettier --write src/app/page.tsx
-
-# Then run Biome format on the same file
-npx @biomejs/biome format --write src/app/page.tsx
-
-# If output differs, check: tabs vs spaces, trailing commas, arrow parens
-```
-
-For this project's `.prettierrc.json`:
-- `useTabs: true` → `biome.json: { "formatter": { "indentStyle": "tab" } }`
-- `semi: false` → `biome.json: { "javascript": { "formatter": { "semicolons": "asNeeded" } } }`
-- `singleQuote: true` → `biome.json: { "javascript": { "formatter": { "quoteStyle": "single" } } }`
-- `trailingComma: "none"` → `biome.json: { "javascript": { "formatter": { "trailingCommas": "none" } } }`
-- `arrowParens: "avoid"` → `biome.json: { "javascript": { "formatter": { "arrowParentheses": "asNeeded" } } }`
-- `printWidth: 80` → `biome.json: { "formatter": { "lineWidth": 80 } }`
-- `bracketSpacing: true` → Biome default (true), no change needed
-- `endOfLine: "lf"` → `biome.json: { "formatter": { "lineEnding": "lf" } }`
-
-`biome migrate prettier --write` should handle most of this automatically. Verify the output manually — do not trust the migration blindly.
+**Phase to address:**
+Design Tokens Phase (Phase 1) — a bad palette choice here forces re-checking every component in every subsequent phase. Verify AA compliance for the full token set before any component work begins.
 
 ---
 
-## Rollback Strategy
+### Pitfall 4: Shadcn Component Internals Broken by className Overrides
 
-### Prerequisites (before starting migration)
+**What goes wrong:**
+shadcn/ui components accept a `className` prop merged with internal variant classes using `cn()` (clsx + tailwind-merge). When a redesign adds raw Tailwind classes via `className` that conflict with variant classes — for example, `bg-blue-600` on a Button with `variant="outline"` — tailwind-merge resolves the conflict but the variant logic is bypassed. The component looks correct in the default enabled state but is broken for hover, focus, disabled, and loading states. The regression is silent — no TypeScript error, no Biome warning.
 
-1. Create a git branch: `git checkout -b feat/biome-migration`
-2. Commit the current state cleanly (0 lint errors, 0 type errors)
-3. Note the current `package.json` devDependencies for ESLint: `eslint@9.39.2`, `eslint-config-next@16.1.6`, `prettier@3.8.1`
+**Why it happens:**
+`className` overrides feel like the safe, non-destructive way to customise a component. The immediate visual result looks correct. The variant system failures in non-default states are only discovered through manual testing.
 
-### Rollback trigger conditions
+**How to avoid:**
+- For any sustained color or style change, edit the component's `cva()` variant definitions inside the component file, not at the call site via `className`.
+- Never add `bg-*`, `text-*`, `border-*`, or `ring-*` classes via `className` on shadcn primitives — these conflict directly with variant logic.
+- If a new visual style is needed site-wide, create a new variant in the `cva()` call and use the variant prop.
+- Reserve `className` on shadcn components for layout and spacing concerns only: margins, widths, flex/grid placement.
 
-Abort and roll back if any of these occur:
-- More than 5 rules cannot be mapped to Biome equivalents
-- `bun run typecheck` starts failing after Biome changes (indicates config interaction)
-- E2E tests fail in a way that correlates with a formatter change (unlikely but possible if auto-fix mutates semantics)
-- Biome crashes on any file in the codebase
+**Warning signs:**
+- A shadcn component has `className="bg-... text-..."` passed from a parent.
+- The disabled state of a button is visually identical to the enabled state after a style change.
+- Focus ring styles disappear after a "quick fix" className addition.
+- A component looks correct in a screenshot but keyboard navigation shows no focus indicator.
 
-### Rollback procedure
-
-```bash
-# Option A: Git reset (preferred — clean branch)
-git checkout main
-git branch -D feat/biome-migration
-
-# Option B: Selective revert (if migration was done on main)
-git revert <biome-install-commit>..<HEAD>
-bun install  # restores node_modules to pre-migration state
-```
-
-### What to restore manually if needed
-
-```bash
-# Reinstall ESLint + Prettier
-bun add -d eslint@9.39.2 eslint-config-next@16.1.6 prettier@3.8.1
-
-# Restore eslint.config.mjs — already in git history
-# Restore .prettierrc.json — already in git history
-
-# Restore package.json scripts:
-# "lint": "eslint ."
-# Remove any "format" script that was added
-
-# Restore lefthook.yml lint command to: bun run lint
-```
-
-### Partial rollback: keep Biome formatter, revert Biome linter
-
-This is a valid middle-ground if Biome linting has unresolvable gaps:
-
-```bash
-# Keep: biome.json with only formatter config
-# Restore: eslint.config.mjs, eslint packages
-# Update: scripts to run both `biome format` and `eslint .`
-```
-
-This is the "hybrid approach" referenced in community guides. The project could run Biome as formatter-only (replacing Prettier) while keeping ESLint for linting. The `eslint-config-biome` package disables ESLint formatting rules to prevent conflicts in this hybrid setup.
+**Phase to address:**
+Component Polish Phase — when re-styling buttons, inputs, and cards, work inside the `cva()` definitions, not around them.
 
 ---
 
-## Phase-Specific Warnings
+### Pitfall 5: CSS Build Size Regression from Unguarded globals.css Additions
 
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Install Biome | Version pinning — always use `--save-exact` to lock version | `bun add -d --exact @biomejs/biome` |
-| `biome migrate prettier` | `.prettierrc.json` uses `useTabs: true` + `semi: false` — non-default for Biome; migrate command should handle it but verify `biome.json` output | Run migration, then manually confirm every field in `biome.json` formatter section |
-| `biome migrate eslint` | Only migrates rules Biome has equivalents for; rules from `eslint-config-next` spread (not direct config) may not appear | Run with `--include-inspired`; then audit the 8 explicit rules manually |
-| Format whole codebase | Creates a massive diff that pollutes git history | Single commit: `chore: reformat codebase with biome` before any lint config changes |
-| Remove ESLint packages | `eslint-config-next` is also used for Next.js-specific TypeScript transforms; removing it should be safe since Next.js 16.x no longer depends on it for compilation | Verify `bun run build` succeeds after package removal |
-| Update lefthook | Current lefthook runs full project `bun run lint` — this is slow; switch to `--staged` | Use Biome's `--staged` flag in lefthook pre-commit |
-| CI scripts | `bun run test:ci` includes `bun run lint`; if the lint script is now `biome check .`, CI will use Biome automatically | No extra CI config needed beyond script change |
-| VS Code extension | Biome VS Code extension (biomejs.biome) may report "Could not find Biome in dependencies" if `bun` installs to a non-standard path | Set `biome.lspBin` in `.vscode/settings.json` to `./node_modules/@biomejs/biome/bin/biome` |
-| Tailwind CSS warnings | Biome's CSS linter flags `@tailwind` and `@layer` as unknownAtRules; this project uses Tailwind v4 (`@tailwindcss/postcss`) | Add `"css": { "parser": { "tailwindDirectives": true } }` to `biome.json`; note open bug in 2.3.x where this may still warn |
-| TypeScript strict mode interaction | Biome's `useBlockStatements` (curly-all) enforces brace syntax — this was previously enforced by ESLint `curly: all` per CLAUDE.md; ensure it remains `error` not `warn` in Biome | Explicitly set `"useBlockStatements": "error"` in style rules |
+**What goes wrong:**
+The project maintains first-load JS under 180kB per page and has validated performance infrastructure. CSS is separate but a redesign that adds many `@keyframes` blocks, imports animation libraries, or adds large `@font-face` declarations can silently push the CSS bundle past practical limits. Tailwind's JIT purges unused utility classes but does NOT purge manually added `@keyframes`, `@font-face`, or `@layer base` rules.
+
+**Why it happens:**
+CSS additions are not tracked the same way JS bundle size is. Developers add animation keyframes, font weight variants, or icon utilities to `globals.css` without checking the output size. Each addition seems small in isolation; collectively they add up.
+
+**How to avoid:**
+- Run `bun run build` and check `.next/static/css/` output sizes after every significant `globals.css` change.
+- Do not import Framer Motion or GSAP for decorative animations on marketing pages — use Tailwind's built-in `animate-*` utilities or CSS `@keyframes` defined sparingly.
+- If a heavy animation library is genuinely required, wrap it in `next/dynamic` with `ssr: false` so it is not in the critical CSS path.
+- Keep `globals.css` to design tokens and semantic layout utilities — not animation keyframe libraries.
+
+**Warning signs:**
+- `globals.css` grows significantly after a design pass (check `git diff --stat`).
+- New npm packages installed that include `*.css` files — check their sizes.
+- Build output shows a CSS chunk significantly larger than pre-phase baseline.
+- A "smooth animation" is implemented by installing a library rather than writing a CSS class.
+
+**Phase to address:**
+Every phase — enforce a `bun run build` check as part of the definition of done. Most acute risk during any Hero or Animation phase.
+
+---
+
+### Pitfall 6: Google Font Loading Breaking Core Web Vitals (CLS and LCP)
+
+**What goes wrong:**
+Adding a new font family without correct Next.js font optimisation causes Cumulative Layout Shift (CLS) — the page "jumps" when the font loads — and degrades Largest Contentful Paint (LCP). This is especially damaging on the hero section and above-fold text. The project validated Core Web Vitals in v3.0. A font change can silently regress this in production even though the dev server looks fine, because fonts are cached locally during development.
+
+**Why it happens:**
+Developers add a Google Font via `<link>` in the layout or `@import` in `globals.css`. Both use the default browser font-loading behaviour, which causes FOUT (Flash of Unstyled Text) and CLS. Next.js `next/font` solves this with zero-CLS loading but requires a specific import pattern.
+
+**How to avoid:**
+- Use `next/font/google` exclusively — never `<link rel="stylesheet">` for fonts, never `@import url(...)` in CSS.
+- Import the font in `src/app/layout.tsx`, apply the CSS variable to the `<html>` element, reference it via a CSS custom property in `globals.css`.
+- Set `display: 'swap'` and `preload: true` on the font object.
+- Only load the font weights actually used in the design — typically 400, 500, and 700 at most.
+- Test font loading with Chrome DevTools Network throttling set to "Slow 3G" before any font change is merged.
+
+**Warning signs:**
+- A `<link href="https://fonts.googleapis.com/...">` tag appears in any layout or page file.
+- An `@import url("https://fonts.googleapis.com/...")` appears in `globals.css`.
+- Multiple font weights loaded when the design only uses 2-3.
+- CLS score in Vercel Speed Insights spikes after a deployment.
+
+**Phase to address:**
+Design Tokens Phase (Phase 1) — if a font change is needed, establish it using `next/font/google` before any other phase builds on top of it.
+
+---
+
+### Pitfall 7: Accidental Tailwind Major Version Upgrade During Dependency Updates
+
+**What goes wrong:**
+As of early 2026, Tailwind CSS v4 is in active release. The project currently uses Tailwind v3. shadcn/ui components, `tailwind-merge`, and `clsx` all have version-specific behaviour. If Tailwind is inadvertently upgraded to v4 during a dependency update — or if `npx shadcn@latest add` installs components targeting v4 — the entire design system breaks. All `@apply` directives in `globals.css` fail, all `cva()` class strings produce wrong output, and `tailwind-merge` v2/v3 may not handle v4 class names correctly.
+
+**Why it happens:**
+`bun update` or Dependabot bumps can pull in a major version if semver ranges are not pinned. `shadcn@latest` always targets the latest shadcn version, which may assume Tailwind v4.
+
+**How to avoid:**
+- Pin Tailwind to the current major version in `package.json`: `"tailwindcss": "3.x.x"` — not a caret range that allows v4.
+- Before running `shadcn@latest add`, check what Tailwind version the component targets.
+- Do not run `bun update` without reading the dependency changelogs.
+- Verify `tailwind-merge` version compatibility after any Tailwind version change.
+
+**Warning signs:**
+- `tailwindcss` version in `package.json` has been bumped to 4.x in a Dependabot PR.
+- `globals.css` `@apply` directives start throwing errors at build time.
+- shadcn components render with unstyled or broken layouts after a dependency update.
+
+**Phase to address:**
+Pre-work dependency audit at the start of v4.0 before any CSS changes begin.
+
+---
+
+### Pitfall 8: Inline Style Leakage — style={{}} Instead of Tailwind Tokens
+
+**What goes wrong:**
+During rapid design iteration, developers reach for `style={{ color: '#...' }}` or `style={{ background: 'linear-gradient(...)' }}` because it is fast and produces the exact visual result immediately. These inline styles bypass the token system entirely, bypass dark mode (they always apply regardless of theme), bypass Biome lint rules, and create a maintenance debt of hard-coded values scattered through JSX. They also cannot be overridden by Tailwind utilities because inline styles have the highest CSS specificity.
+
+**Why it happens:**
+Speed of iteration during exploratory design. It is faster to inline a value than to add a token to `globals.css` and verify the token applies correctly across light and dark mode.
+
+**How to avoid:**
+- Establish a hard rule: zero `style={{ color: ... }}` or `style={{ background: ... }}` in component files. Layout-only inline styles for dynamic values (computed widths, JS-driven transforms) are acceptable.
+- For "exact" values, define a CSS custom property in `globals.css` as a token and reference it via `bg-[--token-name]` in Tailwind v3.
+- Enforce via code review — Biome does not have a built-in rule for this pattern.
+
+**Warning signs:**
+- Any `style={{` prop containing a color hex, rgb value, or gradient string.
+- `style={{ color: 'white' }}` on elements inside dark-mode sections.
+- A component that loses its dark-mode styling when tested in isolation.
+
+**Phase to address:**
+Component Polish Phase — review every modified component for inline color styles before closing the phase.
+
+---
+
+### Pitfall 9: Mobile Breakpoint Regressions During Desktop-First Polish
+
+**What goes wrong:**
+Design polish work naturally focuses on the desktop viewport where the "premium" aesthetic is most visible. Hero sections, card layouts, and type scales are tuned for 1440px. When tested on mobile, the large type scale causes overflow, hero height is too tall, card paddings are too large, and glassmorphism blur effects cause performance degradation — particularly on iOS Safari, which is sensitive to `backdrop-filter`.
+
+**Why it happens:**
+Tailwind is mobile-first (`sm:`, `md:`, `lg:`) but designers think desktop-first. Developers implement the desktop design and forget to add the smaller-breakpoint base styles. Blur effects are also expensive on mobile GPUs.
+
+**How to avoid:**
+- After every component polish session, resize the browser to 375px (iPhone SE) and 390px (iPhone 14) and verify layout is not broken.
+- Use Tailwind's responsive modifier syntax correctly: base styles handle mobile, `md:` and `lg:` handle larger screens.
+- Limit `backdrop-filter: blur()` to desktop only — test `backdrop-blur-*` on iOS Safari explicitly.
+- Check hero section height on mobile — `min-h-screen` is fine, but a hard-coded pixel value will be too tall.
+
+**Warning signs:**
+- A component has only `lg:` or `xl:` responsive classes with no base styles for mobile.
+- `backdrop-filter` or `blur-*` is applied unconditionally without a mobile breakpoint qualification.
+- Hero `padding-top` is set without a mobile override.
+- A horizontal scrollbar appears at 375px viewport width.
+
+**Phase to address:**
+Every component phase — mobile verification at 375px is part of the definition of done for each component.
+
+---
+
+### Pitfall 10: Test Suite Regression from Component Interface Changes
+
+**What goes wrong:**
+The project has 360 passing unit tests. When a component is polished, its interface may change: new required props, renamed props, removed variants. Test files that import the component directly or via test helpers will fail with TypeScript errors or runtime errors. With 360 tests, even one broken import can cascade failures across many test files, obscuring what actually changed.
+
+**Why it happens:**
+UI polish is perceived as "not touching logic", so test files are not checked before the component change. TypeScript strict mode and `bun:test` treat interface changes as breaking changes regardless.
+
+**How to avoid:**
+- Before changing any component, search `tests/` for its usage: `grep -r "ComponentName" /path/to/tests/`.
+- Add new props as optional with sensible defaults to maintain backward compatibility.
+- Run `bun test tests/` after every component change — not just at the end of a phase.
+- If removing a prop or variant value, check all call sites codebase-wide before removing it.
+
+**Warning signs:**
+- A component prop is renamed or its TypeScript type is narrowed.
+- A `variant` value is removed from a `cva()` definition.
+- Tests start failing with "Property X does not exist on type" TypeScript errors.
+- The passing test count drops between phases.
+
+**Phase to address:**
+Every component phase — run `bun test tests/` immediately after each component change, not at the end.
+
+---
+
+### Pitfall 11: Removing or Hiding Accessible Focus Indicators for Aesthetic Cleanliness
+
+**What goes wrong:**
+Focus rings are visually noisy. During a polish pass, developers add `outline-none` or `ring-0` to interactive elements to achieve a cleaner look. This makes the site completely unusable for keyboard-only users and fails WCAG 2.1 Success Criterion 2.4.7 (Focus Visible). The project achieved WCAG AA compliance — this regression is a direct compliance failure.
+
+**Why it happens:**
+Focus rings are only visible when using a keyboard. Developers testing with a mouse never see them and do not notice when they are removed. The visual cleanliness improvement is immediately obvious; the accessibility breakage is invisible during normal development.
+
+**How to avoid:**
+- Use `focus-visible:ring-2` not `focus:ring-2` — this shows rings only during keyboard navigation, not on mouse click, which satisfies both aesthetics and accessibility.
+- Style the focus ring to match the design system (e.g., `focus-visible:ring-brand-500`) rather than removing it.
+- Include a keyboard-navigation test session as part of the definition of done: tab through the entire page without a mouse, verify every interactive element has a visible focus indicator.
+- Add `outline: none` only when a custom `focus-visible:` replacement is defined in the same rule.
+
+**Warning signs:**
+- Any `outline-none` or `ring-0` added to a button, link, or input without a corresponding `focus-visible:` class.
+- A component's CSS includes `&:focus { outline: none }` without a `&:focus-visible` replacement.
+- Tabbing through the page produces elements that receive focus but have no visible indicator.
+
+**Phase to address:**
+Component Polish Phase — focus state verification is part of the definition of done for every interactive component.
+
+---
+
+### Pitfall 12: Glassmorphism Applied to Form Inputs Making Text Unreadable
+
+**What goes wrong:**
+Glassmorphism (frosted-glass effect using `backdrop-filter: blur()` + semi-transparent background) is a popular premium design choice. Applied to cards and hero overlays it works well. Applied to form inputs, it makes the typed text hard to read — the blurred background makes the input field contrast unpredictable depending on what is behind it, and text legibility degrades as the user types. This is a WCAG failure on dynamic content.
+
+**Why it happens:**
+The glassmorphism treatment is applied consistently across all "card-like" elements including form containers and input fields, without distinguishing between decorative surfaces and interactive data-entry surfaces.
+
+**How to avoid:**
+- Reserve glassmorphism for decorative surfaces: hero overlays, background cards, decorative panels.
+- Keep form inputs and interactive data-entry elements on solid backgrounds with a defined, tested contrast ratio.
+- The `.glass-card` semantic class in this project's `globals.css` should not be applied to form fieldsets or input containers.
+
+**Warning signs:**
+- A `backdrop-blur-*` or `bg-white/10` class applied to a `<form>`, `<fieldset>`, or `<input>` wrapper.
+- Form inputs appear to float over a blurred image or gradient background.
+- Typed text is readable in the placeholder state but difficult to see once actual content is entered.
+
+**Phase to address:**
+Tool Page Polish Phase — form UI polish must use solid backgrounds for inputs, not glass effects.
+
+---
+
+## Technical Debt Patterns
+
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| `style={{ color: '#...' }}` inline | Fast design iteration | Bypasses dark mode, token system, highest specificity — cannot be overridden by Tailwind | Never — use CSS custom property instead |
+| `!important` in globals.css | Forces a style to apply | Specificity arms race; future changes become unpredictable | Never in production code |
+| `className` overrides on shadcn color properties | Quick one-off visual fix | Breaks variant logic for disabled/focus states silently | Never for color/background — only for layout spacing |
+| Duplicating a shadcn component to fully customise it | Full control without variant system | Two components drift; bug fixes must be applied twice | Only if the variant system genuinely cannot express the need |
+| `opacity-*` on text for "muted" effect | Single Tailwind class, looks right | Destroys contrast ratio; fails WCAG AA | Never — use a muted-foreground token instead |
+| Hard-coding `dark:` class alternatives instead of CSS variables | Feels explicit and clear | N × 2 classes for every dark-mode style; high maintenance surface | Only for truly one-off utility classes not part of the design system |
+| Importing Google Fonts via `<link>` or `@import` | Familiar and fast | FOUT, CLS regression, Core Web Vitals damage | Never — always use `next/font/google` |
+| Adding `outline-none` without a `focus-visible:` replacement | Cleaner visual in mouse testing | WCAG 2.4.7 failure; keyboard users cannot navigate | Never — style the ring, do not remove it |
+
+---
+
+## Integration Gotchas
+
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| shadcn/ui + Tailwind | Overriding component colors via `className` at the call site | Edit the `cva()` variant definition inside the component file |
+| shadcn/ui + dark mode | Defining dark-mode colors only in `:root` block | Always define both `:root` and `.dark` (or `:root.dark`) blocks simultaneously |
+| Tailwind + CSS custom properties | Using `var(--token)` directly in Tailwind config | shadcn uses `hsl(var(--token))` — follow the same pattern for all custom tokens |
+| tailwind-merge + shadcn | Passing conflicting Tailwind classes and expecting intuitive resolution | Understand tailwind-merge conflict resolution: last-class-wins per property group; verify in all variant states |
+| next/font + globals.css | Referencing the font family by name directly in CSS | Always use the CSS variable injected by `next/font` into `<html>`; never hard-code the font name string |
+| Biome + globals.css | CSS linting active in Biome 2.4.4; new CSS properties can trigger lint errors | Use standard CSS property names; run `bun run lint` after every `globals.css` change |
+| Vercel + CSS animations | `@keyframes` in globals.css are loaded on every page statically | Keep keyframe definitions minimal; use Tailwind `animate-*` built-ins where possible |
+
+---
+
+## Performance Traps
+
+| Trap | Symptoms | Prevention | When It Breaks |
+|------|----------|------------|----------------|
+| `backdrop-filter: blur()` on every card | Frame drops on mobile, iOS Safari jank | Limit to hero section; disable on mobile with responsive class or `@media (prefers-reduced-motion)` | Any mobile device with integrated GPU, especially iOS |
+| Large `@keyframes` in globals.css | CSS bundle grows; animations load on pages that do not use them | Minimal keyframes; component-scoped for heavy animations | When globals.css has 5+ keyframe definitions |
+| Multiple above-fold images with `priority` | LCP score degrades; images compete for fetch priority | Use `priority` only on the single above-fold LCP element | When hero has more than one `priority` image |
+| Multiple unnecessary font weights loaded | Increased CSS payload, slower font render | Load only weights used (typically 400, 500, 700) | Any slow network connection |
+| Framer Motion imported at page level | +30-60kB in first-load JS | Use `next/dynamic` with `ssr: false`; or replace with CSS `@keyframes` | Any page using Framer Motion without dynamic import |
+| New shadcn components added without a bundle audit | JS bundle grows incrementally | Verify radix-ui primitives are not pulled in for unused components | When 5+ new shadcn components are added in one phase |
+
+---
+
+## UX Pitfalls
+
+| Pitfall | User Impact | Better Approach |
+|---------|-------------|-----------------|
+| Replacing working form error states with prettier layouts that omit error messages | Users cannot tell what went wrong | Preserve `role="alert"` and `aria-live` error regions — polish the container, not the content structure |
+| Removing visible focus rings for a "cleaner look" | Keyboard users cannot navigate the site | Use `focus-visible:ring-2`; style the ring to match the design, never remove it |
+| Hero CTA button with insufficient contrast against a gradient background | CTA is missed by users scanning quickly | Test CTA button contrast against every point of the gradient, not just the start and end colors |
+| Tool page form layout changes that shift the submit button location | Users familiar with the current layout are disoriented | Keep form field order and submit button position stable; polish spacing and style, not structure |
+| Card hover animations that also change text color | Users with motion sensitivity get unexpected color changes | Separate motion from color changes; respect `prefers-reduced-motion` |
+| Glassmorphism on form inputs | Typed text becomes hard to read | Reserve glass effects for decorative surfaces; use solid backgrounds for data-entry elements |
+| Using `text-muted-foreground` on body copy | Low contrast for the primary reading experience | `text-muted-foreground` is for captions and helper text only — verify 4.5:1 contrast on all body copy |
+
+---
+
+## "Looks Done But Isn't" Checklist
+
+- [ ] **Dark mode:** Every new CSS variable has a value in both `:root` and `.dark` blocks — verify by toggling the OS theme preference in a deployed preview.
+- [ ] **WCAG AA:** Every new text/background color pair checked with a contrast ratio tool — 4.5:1 minimum for body text, 3:1 for large text and UI components.
+- [ ] **Keyboard navigation:** Every interactive element (button, link, input, dialog trigger) is reachable and has a visible focus indicator via Tab key — verify without a mouse.
+- [ ] **Mobile layout:** Every component renders correctly at 375px viewport width — verified in Chrome DevTools device mode.
+- [ ] **Focus rings:** No `outline-none` or `ring-0` without a `focus-visible:` replacement on the same element.
+- [ ] **Test suite:** `bun test tests/` passes with 360 or more tests after every component change — not just at the end of a phase.
+- [ ] **Build size:** `bun run build` CSS output in `.next/static/css/` is not significantly larger than the pre-phase baseline.
+- [ ] **Shadcn variant states:** Every modified shadcn component tested in all variant states: default, hover, focus, disabled — not just the enabled default.
+- [ ] **Reduced motion:** Any new CSS animation or transition respects `@media (prefers-reduced-motion: reduce)` — verify in OS accessibility settings.
+- [ ] **Biome clean:** `bun run lint` returns zero violations after every phase — no accumulated suppressions.
+- [ ] **Font loading:** Any new font uses `next/font/google` — no `<link>` or `@import` for fonts anywhere in the codebase.
+
+---
+
+## Recovery Strategies
+
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| Dark mode color regression | MEDIUM | Revert `globals.css` CSS variable changes; re-implement with both `:root` and `.dark` defined simultaneously |
+| WCAG AA contrast failure | LOW-MEDIUM | Run contrast checker on all changed colors; adjust lightness of the failing token until 4.5:1 is met; re-test all usages |
+| CSS specificity conflict | MEDIUM | Use browser DevTools Computed Styles panel to trace which rule wins; resolve by adjusting `@layer` placement |
+| Shadcn variant logic broken by className override | LOW | Remove the offending className; move the style into the component's `cva()` definition; test all variant states |
+| Test suite regression from prop changes | LOW-MEDIUM | Run `bun test tests/` with `--reporter verbose`; fix each failing test before continuing |
+| Build size spike | MEDIUM | Check `.next/static/css/` file sizes; remove unused keyframes and font weights; replace library imports with CSS |
+| Font CLS regression | LOW | Replace `<link>` or `@import` with `next/font/google`; redeploy; verify CLS in Vercel Speed Insights |
+| Tailwind accidental major version upgrade | HIGH | `git revert` the `package.json` change; `bun install`; verify `bun run build` passes; pin the Tailwind version explicitly |
+| Focus ring removed | LOW | Add `focus-visible:ring-2 focus-visible:ring-offset-2` to the element; choose a ring color from the design system |
+
+---
+
+## Pitfall-to-Phase Mapping
+
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Dark mode CSS variable regression | Phase 1: Design Tokens — define complete `:root` + `.dark` token set upfront | Toggle dark mode after every variable change; visual check of all page sections |
+| WCAG AA contrast failure from new palette | Phase 1: Design Tokens — measure contrast for every color pair before adoption | Contrast ratio check for all text/background pairs |
+| Shadcn variant logic broken | Component Polish Phase — edit `cva()` not `className` | Render all variant states (default, hover, focus, disabled) after each component change |
+| CSS specificity war | Phase 1: Design Tokens — establish `@layer` boundaries; enforce in every component phase | `bun run lint` clean; visual check that expected styles apply |
+| Build size regression | Every phase — run `bun run build` after significant CSS changes | `.next/static/css/` file sizes compared to pre-phase baseline |
+| Font CLS / LCP regression | Phase 1: Design Tokens — font choice via `next/font/google` | Vercel Speed Insights CLS score after first deploy |
+| Tailwind accidental major version bump | Pre-work dependency audit before Phase 1 | `package.json` pinned version verified; `bun run build` passes |
+| Inline style leakage | Component Polish Phase — review all JSX for inline color styles | `grep -r 'style={{'` in `src/` returns only layout-justified usages |
+| Mobile breakpoint regressions | Every component phase — mobile check in definition of done | 375px viewport verification after each component |
+| Test suite regression | Every component phase — run tests after each change | `bun test tests/` count equals or exceeds 360 |
+| Focus ring removal | Component Polish Phase — keyboard-only navigation test | Tab through entire page without mouse; every focused element visible |
+| Glassmorphism on form inputs | Tool Page Polish Phase — form UI uses solid backgrounds | Manual test: type text into every input field; verify readability |
+| Reduced-motion violations | Any phase adding animations | `@media (prefers-reduced-motion)` alongside every `@keyframes` definition | OS accessibility toggle removes animations cleanly |
 
 ---
 
 ## Sources
 
-- [Biome: Migrate from ESLint and Prettier](https://biomejs.dev/guides/migrate-eslint-prettier/) — official migration guide with known limitations
-- [Biome Rules Sources](https://biomejs.dev/linter/rules-sources/) — maps ESLint rules to Biome equivalents
-- [Biome: Differences with Prettier](https://biomejs.dev/formatter/differences-with-prettier/) — authoritative list of formatter divergences
-- [noUnusedVariables rule](https://biomejs.dev/linter/rules/no-unused-variables/) — confirms `ignoreRestSiblings` option
-- [ignoreRestSiblings default bug PR #8398](https://github.com/biomejs/biome/pull/8398) — Dec 2025 fix, explicitly set the option
-- [noFloatingPromises nursery rule](https://biomejs.dev/linter/rules/no-floating-promises/) — type-aware, nursery only, ~75% coverage vs typescript-eslint
-- [Next.js + Biome discussion](https://github.com/vercel/next.js/discussions/59347) — confirms `next lint` removed in Next.js 16, Biome is the intended replacement
-- [ban-ts-comment equivalent issue #713](https://github.com/biomejs/biome/issues/713) — partial implementation, not full parity
-- [Tailwind unknownAtRules bug #7899](https://github.com/biomejs/biome/issues/7899) — tailwindDirectives setting bug in Biome 2.3.x
-- [AppSignal: Migrating to BiomeJS](https://blog.appsignal.com/2025/05/07/migrating-a-javascript-project-from-prettier-and-eslint-to-biomejs.html) — practical limitations summary
-- [Biome v2 release](https://biomejs.dev/blog/biome-v2/) — type-aware linting introduced, Next.js domain added
+- shadcn/ui documentation: component variant system (`cva()`), CSS variable architecture — HIGH confidence (official docs)
+- Next.js documentation: `next/font` zero-CLS font loading, `next/dynamic` for code splitting — HIGH confidence (official docs)
+- Tailwind CSS documentation: `@layer` cascade order, `tailwind-merge` conflict resolution behaviour — HIGH confidence (official docs)
+- WCAG 2.1 Success Criterion 1.4.3 (Contrast Minimum), 1.4.11 (Non-text Contrast), 2.4.7 (Focus Visible) — HIGH confidence (W3C specification)
+- Project `.planning/PROJECT.md`: confirmed existing WCAG AA compliance, 360 passing tests, 139 static pages, Biome 2.4.4 toolchain — HIGH confidence (project source of truth)
+- Tailwind v4 migration breaking changes (CSS-first config, `@apply` behaviour) — MEDIUM confidence (based on Tailwind v4 release notes; verify current state before Phase 1)
+- CSS `backdrop-filter` performance on iOS Safari — MEDIUM confidence (widely reported community issue; verify with current browser support data before relying on it)
+- `prefers-reduced-motion` browser support — HIGH confidence (universal browser support as of 2024)
+
+---
+*Pitfalls research for: UI/UX redesign of production Next.js 15 + Tailwind + shadcn/ui site*
+*Researched: 2026-02-25*

@@ -15,6 +15,7 @@ None
 - [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) -- SHIPPED 2026-02-17
 - [v3.0 Growth & Content](milestones/v3.0-ROADMAP.md) (Phases 46-52) -- SHIPPED 2026-02-18, gap closure in progress
 - ✅ [v3.1 Biome Migration](milestones/v3.1-ROADMAP.md) (Phases 53-55) -- SHIPPED 2026-02-25
+- 🚧 **v4.0 UI Redesign** (Phases 56-60) — IN PROGRESS
 
 ## Completed Milestones
 
@@ -221,6 +222,63 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 
 </details>
 
+## Active: v4.0 UI Redesign (Phases 56-60)
+
+**Milestone Goal:** Transform the site from generic shadcn defaults to a premium, distinctive UI inspired by Resend, Linear, and Clerk — through design system tokens, component polish, and page-level redesign.
+
+**Approach:** Design tokens first → component application → page composition. Stay with Tailwind + shadcn; redesign through CSS custom properties and shadcn overrides. Static quality only — no animations in this milestone.
+
+#### Phase 56: Design System Foundation
+
+**Goal**: Overhaul CSS custom properties in `globals.css` — define a complete token system covering brand colors (OKLCH), neutral grays, typography scale, spacing, radius, shadows, and surface variants. This is the foundation all subsequent phases build on.
+**Depends on**: None (foundation phase)
+**Research**: Unlikely — Tailwind + shadcn token patterns well understood
+**Plans**: 2 plans
+
+Requirements covered: DSYS-01, DSYS-02, DSYS-03, DSYS-04, DSYS-05
+
+Plans:
+- [ ] 56-01-PLAN.md — Dark mode wiring (.dark {} block) + brand palette refinement + surface elevation tokens
+- [ ] 56-02-PLAN.md — Type scale tokens + shadow scale tokens + font fix + semantic class updates
+
+#### Phase 57: Homepage & Hero Redesign
+
+**Goal**: Transform the homepage into a compelling, premium landing experience — distinctive hero background treatment, strong headline hierarchy, polished CTAs, and intentional vertical rhythm throughout.
+**Depends on**: Phase 56 (design tokens must be established first)
+**Research**: Unlikely
+**Plans**: TBD
+
+Requirements covered: HERO-01, HERO-02, HERO-03, HERO-04
+
+#### Phase 58: Core Component Polish
+
+**Goal**: Polish all shared UI components away from generic shadcn defaults — buttons (all variants/states), form inputs, card component, navbar backdrop and link treatment, footer, badges.
+**Depends on**: Phase 56 (design tokens established)
+**Research**: Unlikely
+**Plans**: TBD
+
+Requirements covered: COMP-01, COMP-02, COMP-03, COMP-04
+
+#### Phase 59: Tool Page Polish
+
+**Goal**: Give all 13 tool pages a consistent, professional layout — polished header section, form fields styled to design system, and dedicated output/result presentation.
+**Depends on**: Phase 58 (component styles established before applying to tool layouts)
+**Research**: Unlikely
+**Plans**: TBD
+
+Requirements covered: TOOL-01, TOOL-02, TOOL-03, TOOL-04
+
+#### Phase 60: Content Page Polish
+
+**Goal**: Transform Services, About, Contact, and Location pages into premium landing page experiences — clear hierarchy, trust signals, and polished CTAs.
+**Depends on**: Phase 58 (component styles established before applying to pages)
+**Research**: Unlikely
+**Plans**: TBD
+
+Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -252,3 +310,8 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 | 53. Biome Install & Configuration | v3.1 | 1/1 | Complete | 2026-02-24 |
 | 54. Format Sweep & Workflow Integration | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
+| 56. Design System Foundation | 2/2 | Complete    | 2026-02-25 | - |
+| 57. Homepage & Hero Redesign | v4.0 | 0/TBD | Pending | - |
+| 58. Core Component Polish | v4.0 | 0/TBD | Pending | - |
+| 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
+| 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |

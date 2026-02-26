@@ -104,7 +104,7 @@ export default function AboutPage() {
 					<div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
 						{/* Story Content */}
 						<Card variant="glassLight" size="lg" hover className="group">
-							<h3 className="text-2xl font-bold text-foreground mb-content-block group-hover:text-accent transition-smooth">
+							<h3 className="text-h3 text-foreground mb-content-block group-hover:text-accent transition-smooth">
 								Forged in Revenue Operations, Refined in Code
 							</h3>
 							<div className="space-y-comfortable text-muted-foreground leading-relaxed typography">

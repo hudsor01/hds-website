@@ -157,7 +157,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 							<>
 								{item.challenge && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											The Challenge
 										</h2>
 										<Card variant="glass" size="lg">
@@ -170,7 +170,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 								{item.solution && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											Our Solution
 										</h2>
 										<Card variant="glass" size="lg">
@@ -180,7 +180,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 											{item.technologies && item.technologies.length > 0 && (
 												<div className="mt-content-block">
-													<h3 className="text-xl font-semibold text-foreground mb-heading">
+													<h3 className="text-h4 text-foreground mb-heading">
 														Technologies Used
 													</h3>
 													<div className="flex flex-wrap gap-tight">
@@ -201,7 +201,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 								{item.results && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											The Results
 										</h2>
 										<Card variant="glass" size="lg">
@@ -231,7 +231,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 							<>
 								{item.longDescription && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											About This Project
 										</h2>
 										<Card variant="glass" size="lg">
@@ -244,7 +244,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 								{item.technologies && item.technologies.length > 0 && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											Tech Stack
 										</h2>
 										<Card variant="glass" size="lg">
@@ -264,7 +264,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 								{item.externalLink && (
 									<div>
-										<h2 className="text-3xl font-bold text-foreground mb-content-block">
+										<h2 className="text-h2 text-foreground mb-content-block">
 											Links
 										</h2>
 										<Card variant="glass" size="lg">
@@ -299,7 +299,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 						{/* Testimonial - shown for both types if available */}
 						{item.testimonialText && (
 							<div>
-								<h2 className="text-3xl font-bold text-foreground mb-content-block">
+								<h2 className="text-h2 text-foreground mb-content-block">
 									Client Testimonial
 								</h2>
 								<Card variant="glass" size="lg">

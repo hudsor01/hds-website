@@ -221,7 +221,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 				<section className="relative py-12">
 					<div className="container-wide sm:px-6 lg:px-8">
 						<Card variant="glassSection" size="lg">
-							<h2 className="text-2xl font-bold text-foreground mb-comfortable">
+							<h2 className="text-h3 text-foreground mb-comfortable">
 								Project Impact
 							</h2>
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-sections">
@@ -245,7 +245,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 			<section className="relative py-12">
 				<div className="container-wide sm:px-6 lg:px-8">
 					<Card variant="glassSection" size="lg">
-						<h2 className="text-2xl font-bold text-foreground mb-content-block">
+						<h2 className="text-h3 text-foreground mb-content-block">
 							Technologies Used
 						</h2>
 						<div className="flex flex-wrap gap-3">
@@ -266,7 +266,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 			{relatedProjects.length > 0 && (
 				<section className="relative py-12">
 					<div className="container-wide sm:px-6 lg:px-8">
-						<h2 className="text-3xl font-bold text-foreground mb-comfortable">
+						<h2 className="text-h2 text-foreground mb-comfortable">
 							Related Projects
 						</h2>
 						<div className="grid md:grid-cols-3 gap-sections">

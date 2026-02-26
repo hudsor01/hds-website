@@ -106,7 +106,7 @@ export default function HomePage() {
 						<div className="lg:pr-8">
 							<div className="space-y-sections">
 								<div>
-									<h1 className="text-responsive-3xl font-black text-foreground leading-tight mb-comfortable text-balance">
+									<h1 className="text-page-title text-foreground leading-tight mb-comfortable text-balance">
 										<span className="block mb-subheading">
 											Stop Losing Revenue to
 										</span>
@@ -114,12 +114,12 @@ export default function HomePage() {
 											Technical Bottlenecks
 										</span>
 									</h1>
-									<p className="text-responsive-xl font-bold text-accent mb-content-block">
+									<p className="text-hero-subtitle text-accent mb-content-block">
 										Ship 3x Faster, 60% Cheaper
 									</p>
 								</div>
 
-								<p className="text-xl text-muted-foreground leading-relaxed max-w-xl">
+								<p className="text-lead text-muted-foreground max-w-xl">
 									We build and scale your technical operations in weeks, not
 									months. No hiring delays. No training costs. Just proven
 									senior talent ready to execute.
@@ -262,7 +262,7 @@ export default function HomePage() {
 			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
+						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
 							How We Solve Your Biggest Problems
 						</h2>
 						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -321,14 +321,14 @@ export default function HomePage() {
 
 				<div className="container-wide relative">
 					<div className="text-center mb-24">
-						<h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
+						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
 							<span className="text-accent relative inline-block">
 								Proven Impact
 								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
 							</span>
 						</h2>
 
-						<p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-heading">
+						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
 							Numbers don&apos;t lie - our clients see{' '}
 							<span className="text-accent font-semibold">
 								measurable results
@@ -403,14 +403,14 @@ export default function HomePage() {
 			<section className="py-section px-4 sm:px-6 bg-background">
 				<div className="container-wide">
 					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl font-black text-foreground mb-content-block text-balance">
+						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
 							<span className="text-accent relative inline-block">
 								Free Business Tools
 								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
 							</span>
 						</h2>
 
-						<p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto mt-heading">
+						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
 							Calculate your potential in 60 seconds. No signup required.
 						</p>
 					</div>
@@ -430,7 +430,7 @@ export default function HomePage() {
 									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
 										<TrendingUp className="w-8 h-8 text-accent" />
 									</div>
-									<h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
+									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
 										ROI Calculator
 									</h3>
 									<p className="text-muted-foreground text-sm mb-heading">
@@ -487,7 +487,7 @@ export default function HomePage() {
 									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
 										<Calculator className="w-8 h-8 text-accent" />
 									</div>
-									<h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
+									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
 										Cost Estimator
 									</h3>
 									<p className="text-muted-foreground text-sm mb-heading">
@@ -547,7 +547,7 @@ export default function HomePage() {
 									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
 										<Zap className="w-8 h-8 text-accent" />
 									</div>
-									<h3 className="text-2xl font-bold text-foreground mb-subheading group-hover:text-accent transition-colors">
+									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
 										Performance Analyzer
 									</h3>
 									<p className="text-muted-foreground text-sm mb-heading">
@@ -635,14 +635,14 @@ export default function HomePage() {
 							<Rocket className="w-10 h-10 text-accent" />
 						</div>
 
-						<h2 className="text-responsive-2xl font-black text-foreground mb-content-block max-w-4xl mx-auto text-balance">
+						<h2 className="text-responsive-2xl text-foreground mb-content-block max-w-4xl mx-auto text-balance">
 							Your competitors ship faster.
 							<span className="block text-accent mt-4">
 								Why don&apos;t you?
 							</span>
 						</h2>
 
-						<p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+						<p className="text-lead text-muted-foreground mb-12 max-w-3xl mx-auto">
 							Every day you wait is revenue lost. Get a custom roadmap to 10x
 							your technical velocity in our free 30-minute strategy call.
 						</p>

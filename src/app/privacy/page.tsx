@@ -31,7 +31,7 @@ export default function PrivacyPage() {
 
 					<Card variant="glass" size="lg" className="typography">
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Information We Collect
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Automatically Collected Information
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Cookies and Tracking
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								How We Use Your Information
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -106,7 +106,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Information Sharing
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -128,7 +128,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Third-Party Services
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -159,7 +159,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Data Security
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Your Rights
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -204,7 +204,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Data Retention
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -222,7 +222,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Children&apos;s Privacy
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -236,7 +236,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
+							<h2 className="text-h3 text-foreground mb-heading">
 								Changes to This Policy
 							</h2>
 							<div className="text-muted-foreground space-y-content">
@@ -249,9 +249,7 @@ export default function PrivacyPage() {
 						</section>
 
 						<section>
-							<h2 className="text-2xl font-bold text-foreground mb-heading">
-								Contact Us
-							</h2>
+							<h2 className="text-h3 text-foreground mb-heading">Contact Us</h2>
 							<div className="text-muted-foreground space-y-content">
 								<p>
 									If you have any questions about this privacy policy or our

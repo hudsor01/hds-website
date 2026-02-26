@@ -237,7 +237,7 @@ export default function ToolsPage() {
 								</div>
 
 								{/* Content */}
-								<h3 className="mb-subheading text-xl font-semibold text-foreground dark:text-foreground">
+								<h3 className="mb-subheading text-h4 text-foreground dark:text-foreground">
 									{tool.title}
 								</h3>
 
@@ -301,7 +301,7 @@ export default function ToolsPage() {
 						size="lg"
 						className="bg-primary/10 text-center shadow-xl sm:p-12"
 					>
-						<h2 className="mb-heading text-3xl font-bold text-foreground">
+						<h2 className="mb-heading text-h2 text-foreground">
 							Ready to Take Action?
 						</h2>
 						<p className="mb-comfortable text-lg text-accent/30">
@@ -331,7 +331,7 @@ export default function ToolsPage() {
 				<div className="mx-auto max-w-6xl">
 					<div className="grid gap-sections sm:grid-cols-3">
 						<div className="text-center">
-							<div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+							<div className="mb-subheading text-h2 text-primary dark:text-accent">
 								Growing
 							</div>
 							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -340,7 +340,7 @@ export default function ToolsPage() {
 						</div>
 
 						<div className="text-center">
-							<div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+							<div className="mb-subheading text-h2 text-primary dark:text-accent">
 								98%
 							</div>
 							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
@@ -349,7 +349,7 @@ export default function ToolsPage() {
 						</div>
 
 						<div className="text-center">
-							<div className="mb-subheading text-3xl font-bold text-primary dark:text-accent">
+							<div className="mb-subheading text-h2 text-primary dark:text-accent">
 								100%
 							</div>
 							<div className="text-sm text-muted-foreground dark:text-muted-foreground">

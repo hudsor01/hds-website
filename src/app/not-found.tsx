@@ -31,7 +31,7 @@ export default function NotFound() {
 					<h2 className="text-responsive-lg font-black text-foreground mb-heading">
 						Page Not Found
 					</h2>
-					<p className="text-xl text-secondary-foreground mb-8 leading-relaxed">
+					<p className="text-lead text-secondary-foreground mb-8">
 						The page you&apos;re looking for has vanished into the digital void.
 						But don&apos;t worry—our navigation system is still operational.
 					</p>

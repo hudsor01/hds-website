@@ -47,7 +47,11 @@ Working tools and contact form stay functional while the codebase achieves produ
 
 ### Active
 
-(None — all planned features shipped. Next milestone TBD.)
+- [ ] Design system tokens overhauled: type scale, color palette, spacing rhythm, surface/card treatment — v4.0
+- [ ] Homepage hero compelling: distinctive background, strong headline hierarchy, polished CTAs — v4.0
+- [ ] Core components polished: buttons, inputs, cards, navbar — not generic shadcn defaults — v4.0
+- [ ] Tool pages have focused, professional layout with polished form/output presentation — v4.0
+- [ ] Services, About, and Location pages feel like premium landing pages — v4.0
 
 ### Out of Scope
 
@@ -134,4 +138,4 @@ Working tools and contact form stay functional while the codebase achieves produ
 - 360 unit tests passing, 139 static pages building, 0 TS errors, 0 Biome violations
 
 ---
-*Last updated: 2026-02-24 after Phase 55 (Old Tooling Removal & Verification) — v3.1 complete*
+*Last updated: 2026-02-25 starting v4.0 UI Redesign milestone*

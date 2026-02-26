@@ -1,512 +1,365 @@
-# Architecture Research: Biome Integration
+# Architecture Research
 
-**Project:** Hudson Digital Solutions Website
-**Researched:** 2026-02-24
-**Confidence:** HIGH (verified against official Biome docs at biomejs.dev, version 2.4.4)
-
----
-
-## Migration Sequence
-
-Execute these steps in order. Each step is independently verifiable before proceeding.
-
-### Step 1: Install Biome (before removing ESLint)
-
-Run both tools in parallel temporarily to verify rule parity before removing ESLint.
-
-```bash
-bun add -D --exact @biomejs/biome
-```
-
-The `--exact` flag pins the version. Biome recommends this for lockstep consistency across environments. Current stable: **2.4.4**.
-
-### Step 2: Initialize Biome config
-
-```bash
-bunx biome init
-```
-
-This generates a starter `biome.json` at the project root. Do not commit it yet — Step 3 overwrites it.
-
-### Step 3: Migrate from Prettier (runs first — simpler, no rule conflicts)
-
-```bash
-bunx biome migrate prettier --write
-```
-
-Reads `.prettierrc.json` and writes formatter settings into `biome.json`. The project's Prettier config (tabs, no semi, single quotes, printWidth 80, LF) maps cleanly to Biome formatter options.
-
-### Step 4: Migrate from ESLint
-
-```bash
-bunx biome migrate eslint --write --include-inspired
-```
-
-Reads `eslint.config.mjs` and ports rules to `biome.json`. The `--include-inspired` flag includes Biome rules that are semantically similar but not identical to ESLint rules — improves coverage at the cost of some behavioral differences. Review the output carefully.
-
-**What the migration covers from the existing `eslint.config.mjs`:**
-
-| ESLint Rule | Biome Equivalent | Group | Notes |
-|---|---|---|---|
-| `@typescript-eslint/no-unused-vars` | `noUnusedVariables` | correctness | Same `_` prefix ignore pattern supported |
-| `@typescript-eslint/consistent-type-imports` | `useImportType` | style | Maps to `prefer: type-imports` behavior |
-| `@typescript-eslint/no-explicit-any` | `noExplicitAny` | suspicious | Direct equivalent |
-| `@typescript-eslint/no-non-null-assertion` | `noNonNullAssertion` | style | Direct equivalent |
-| `@typescript-eslint/ban-ts-comment` | `noUnusedVariables` / manual review | — | Partial — Biome has `ts-ignore` suppression but no full `ban-ts-comment` with fine-grained options |
-| `no-console` | `noConsole` | suspicious | Configurable `allow` list supported |
-| `no-debugger` | `noDebugger` | suspicious | Direct equivalent, recommended by default |
-| `prefer-const` | `useConst` | style | Direct equivalent |
-| `no-var` | `noVar` | suspicious | Direct equivalent |
-| `eqeqeq` | `noDoubleEquals` | suspicious | Direct equivalent |
-| `curly: all` | `useBlockStatements` | style | Direct equivalent — enforces braces on all blocks |
-| `no-duplicate-imports` | `noImportCycles` (v2.4) | suspicious | Import deduplication via organizer, not a direct lint rule |
-| `no-unreachable` | `noUnreachable` | correctness | Recommended by default |
-| `no-constant-condition` | `noConstantCondition` | correctness | Recommended by default |
-| `no-empty` | `noEmptyBlockStatements` | suspicious | `allowEmptyCatch` maps to `block` scope config |
-| `react/no-unescaped-entities` | `noUnescapedEntities` | correctness | Recommended in react domain |
-| `react-hooks/rules-of-hooks` | `useHookAtTopLevel` | correctness | Recommended in react domain |
-| `react-hooks/exhaustive-deps` | `useExhaustiveDependencies` | correctness | Recommended in react domain; behavior differs on unnecessary deps |
-
-**Not covered by Biome (requires manual verification or accept gap):**
-
-- `react-hooks/set-state-in-effect` — No direct Biome equivalent found. This ESLint rule is non-standard (not in `eslint-plugin-react-hooks` core). Likely a typo or custom rule. Verify whether it actually fires in the current codebase before migration.
-- `@typescript-eslint/ban-ts-comment` fine-grained options — Biome suppresses `biome-ignore` comments but does not offer per-comment-type granularity matching ESLint's `{ 'ts-ignore': false }` config.
-- `@next/eslint-plugin-next` rules — The `eslint-config-next` package includes Next.js-specific rules. Biome's `nextjs` domain (auto-detected from `package.json`) covers the most important ones (`noImgElement`, `noHeadElement`, `noDocumentImportInPage`, `noHeadImportInDocument`, `useGoogleFontPreconnect`, `noUnwantedPolyfillio`, `useInlineScriptId`). Rules focused on internal Next.js routing correctness (e.g., link validation) are not covered.
-
-### Step 5: Hand-tune `biome.json`
-
-Review the generated config against the ESLint rules table above. Manually add any rules the migration missed. See "Files to Create" section for the recommended final config.
-
-### Step 6: Run Biome against the full codebase
-
-```bash
-bunx biome check --write src/
-```
-
-Fix any auto-fixable issues, then review remaining errors manually. Keep a diff of everything Biome changes — this is the formatting pass that rewrites files.
-
-### Step 7: Update package.json scripts
-
-Replace ESLint/Prettier scripts with Biome equivalents. See "Script Updates" section.
-
-### Step 8: Update lefthook.yml
-
-Replace ESLint-based hooks with Biome staged-file checks. See "Lefthook Changes" section.
-
-### Step 9: Update .vscode/settings.json
-
-Replace Prettier formatter references with Biome. See "Files to Modify" section.
-
-### Step 10: Remove ESLint and Prettier
-
-```bash
-bun remove eslint eslint-config-next prettier
-```
-
-Delete config files. See "Files to Delete" section.
-
-### Step 11: Update CI workflow
-
-Rename the "Run ESLint" step to "Run Biome". See "CI Considerations" section.
-
-### Step 12: Verify clean state
-
-```bash
-bun run lint && bun run typecheck && bun run test:unit
-```
-
-All three must pass before the milestone is complete.
+**Domain:** Design System Overhaul — Tailwind v4 + shadcn/ui + Next.js 15 App Router
+**Researched:** 2026-02-25
+**Confidence:** HIGH (based on direct codebase inspection of globals.css, components/ui/, components.json)
 
 ---
 
-## Files to Create
+## Current State (What Already Exists)
 
-### `biome.json` (project root)
+This is a brownfield overhaul, not greenfield. The existing system is more advanced than typical:
 
-The migration commands generate this. After running Steps 3 and 4, the expected final shape should be tuned to match:
+- **Tailwind v4** with `@theme {}` block in `globals.css` — NOT `tailwind.config.ts` (that file does not exist)
+- **CSS custom properties** defined as `--color-*` tokens inside `@theme {}` using OKLCH color space
+- **shadcn/ui** "new-york" style, `cssVariables: true`, components already forked into `src/components/ui/`
+- **Semantic CSS classes** in `@layer components {}`: `.glass-card`, `.glass-card-light`, `.grid-pattern*`, `.hover-lift`, `.card-hover-glow`, `.transition-smooth`, `.typography`, `.container-narrow`, `.container-wide`
+- **Semantic `@utility` blocks**: `section-spacing`, `gap-*`, `py-section*`, `card-padding*`, `mb-*`, `mt-*`, `z-*`
+- **Components already use CVA** (class-variance-authority) with variants: `button.tsx`, `card.tsx`, `input.tsx`
+- **Card is a mega-component** with discriminated union variants: base, service, pricing, project, testimonial
+- **Dark mode** colors defined as `--color-*-dark` suffixed tokens (not a `[data-theme=dark]` block)
 
-```json
-{
-  "$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "includes": [
-      "**/*.{js,jsx,ts,tsx,json,jsonc}"
-    ],
-    "ignoreUnknown": true
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab",
-    "indentWidth": 2,
-    "lineWidth": 80,
-    "lineEnding": "lf"
-  },
-  "javascript": {
-    "formatter": {
-      "semicolons": "asNeeded",
-      "quoteStyle": "single",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "none",
-      "bracketSpacing": true,
-      "bracketSameLine": false,
-      "arrowParentheses": "asNeeded"
-    }
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noConsole": {
-          "level": "warn",
-          "options": {
-            "allow": ["warn", "error"]
-          }
-        },
-        "noExplicitAny": "error",
-        "noVar": "error"
-      },
-      "style": {
-        "useConst": "error",
-        "useBlockStatements": "error",
-        "useImportType": "error",
-        "noNonNullAssertion": "warn"
-      },
-      "correctness": {
-        "noUnusedVariables": "error"
-      }
-    }
-  },
-  "domains": {
-    "next": "recommended",
-    "react": "recommended"
-  },
-  "overrides": [
-    {
-      "includes": [
-        "**/*.{js,mjs,cjs}"
-      ],
-      "linter": {
-        "rules": {
-          "style": {
-            "useImportType": "off"
-          }
-        }
-      }
-    },
-    {
-      "includes": [
-        "e2e/**",
-        "tests/**"
-      ],
-      "linter": {
-        "rules": {
-          "suspicious": {
-            "noConsole": "off"
-          }
-        }
-      }
-    }
-  ]
-}
+---
+
+## System Overview
+
 ```
-
-**Key notes on this config:**
-
-- `vcs.useIgnoreFile: true` makes Biome respect `.gitignore`, eliminating the need for a separate ignore list for `.next/`, `node_modules/`, etc.
-- `domains.next: "recommended"` is auto-detected from `package.json` but explicit declaration is more predictable.
-- `domains.react: "recommended"` enables `useHookAtTopLevel` and `useExhaustiveDependencies` — the React hooks rules the project relied on from `eslint-config-next`.
-- The `overrides` for `e2e/` and `tests/` disable `noConsole` since test files commonly use `console` for debugging.
-- `indentStyle: "tab"` matches the current Prettier config (`useTabs: true`).
-- `semicolons: "asNeeded"` matches `semi: false`.
-- `trailingCommas: "none"` matches the current Prettier setting.
-
----
-
-## Files to Modify
-
-### `package.json`
-
-See "Script Updates" section for the full diff.
-
-### `lefthook.yml`
-
-See "Lefthook Changes" section for the updated config.
-
-### `.vscode/settings.json`
-
-Replace all Prettier formatter references and ESLint settings with Biome:
-
-**Remove:**
-- All `"[language]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }` blocks
-- `"editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" }`
-- `"eslint.validate"` key
-- `"eslint.workingDirectories"` key
-
-**Add:**
-```json
-{
-  "[javascript]": {
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "[json]": {
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true
-  },
-  "editor.codeActionsOnSave": {
-    "quickfix.biome": "explicit",
-    "source.organizeImports.biome": "explicit"
-  }
-}
-```
-
-**Keep unchanged:** CSS, Markdown formatters (Prettier for CSS is acceptable — Biome CSS formatter is experimental and not recommended for production). The `"[markdown]"` entry stays as Prettier.
-
-**IDE extension:** The Biome VSCode extension ID is `biomejs.biome`. Install it. Uninstall `esbenp.prettier-vscode` if desired (keeping it is harmless for CSS/Markdown).
-
-### `next.config.ts`
-
-The current version is Next.js 16.x (based on `package.json`: `"next": "16.1.6"`). In Next.js 16, `next lint` is removed and there is no `eslint` option in `next.config`. The current `next.config.ts` has no `eslint` key, so **no changes are required to `next.config.ts`**. The build no longer runs linting automatically regardless.
-
----
-
-## Files to Delete
-
-| File | Reason |
-|---|---|
-| `eslint.config.mjs` | Replaced by `biome.json` |
-| `.prettierrc.json` | Replaced by `biome.json` formatter settings |
-| `.prettierignore` | Replaced by `vcs.useIgnoreFile: true` + `.gitignore` |
-
-Note: There is no `.eslintignore` in the project root (only in `node_modules`). The ignore patterns in `eslint.config.mjs` map to `vcs.useIgnoreFile` in Biome.
-
----
-
-## Script Updates
-
-| Old Script | New Script | Notes |
-|---|---|---|
-| `"lint": "eslint ."` | `"lint": "biome check --error-on-warnings src/"` | `biome check` runs lint + format check together. `--error-on-warnings` treats all warnings as CI failures. Scope to `src/` to avoid checking generated files. |
-| _(none)_ | `"format": "biome format --write src/"` | New script for formatting only. No Prettier equivalent existed as a script. |
-| `"test:all": "bun run lint && bun run typecheck && bun run test:unit && bun test:e2e:fast"` | `"test:all": "bun run lint && bun run typecheck && bun run test:unit && bun run test:e2e:fast"` | Fix `bun test:e2e:fast` → `bun run test:e2e:fast` (minor pre-existing bug, unrelated to Biome). |
-| `"test:ci": "bun run lint && bun run typecheck && bun run test:unit && bun test:e2e"` | `"test:ci": "bun run lint && bun run typecheck && bun run test:unit && bun run test:e2e"` | Same fix. |
-
-**Complete updated scripts block:**
-
-```json
-"scripts": {
-  "dev": "next dev",
-  "dev:https": "cross-env HTTPS=true next dev",
-  "build": "next build --webpack",
-  "start": "next start",
-  "lint": "biome check --error-on-warnings src/",
-  "format": "biome format --write src/",
-  "generate-sitemap": "bun run scripts/generate-sitemap.ts",
-  "typecheck": "tsc --noEmit",
-  "test:e2e": "playwright test",
-  "test:e2e:ui": "playwright test --ui",
-  "test:e2e:fast": "playwright test --project=chromium --workers=1",
-  "test:e2e:a11y": "playwright test --grep '@accessibility'",
-  "test:e2e:animations": "playwright test --project=animations",
-  "test:e2e:animations:quick": "playwright test animations-quick.spec.ts --grep '@critical'",
-  "test:e2e:report": "playwright show-report",
-  "test:e2e:install": "playwright install",
-  "test:unit": "bun test tests/",
-  "test:unit:watch": "bun test --watch tests/",
-  "test:unit:coverage": "bun test --coverage tests/",
-  "test:all": "bun run lint && bun run typecheck && bun run test:unit && bun run test:e2e:fast",
-  "test:ci": "bun run lint && bun run typecheck && bun run test:unit && bun run test:e2e",
-  "env:setup": "cp .env.example .env.local && echo 'Created .env.local from template. Please update with your actual values.'",
-  "clean": "rm -rf .next out playwright-report test-results",
-  "clean:test": "rm -rf playwright-report test-results",
-  "test:install": "npm run test:e2e:install",
-  "test:update-snapshots": "playwright test --update-snapshots",
-  "prepare": "lefthook install"
-}
+┌────────────────────────────────────────────────────────────────────┐
+│                     globals.css (single source of truth)           │
+│                                                                     │
+│  @theme { --color-*, --font-*, --radius }  <- Design tokens        │
+│  @layer components { .glass-card, .typography, .hover-lift ... }   │
+│  @utility { section-spacing, gap-*, card-padding-*, z-* ... }      │
+└────────────────────┬───────────────────────────────────────────────┘
+                     │ CSS custom properties consumed by
+                     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                  src/components/ui/  (forked shadcn)               │
+│                                                                     │
+│  button.tsx   -> CVA variants, uses bg-primary, bg-accent etc.     │
+│  card.tsx     -> CVA variants, uses glass-card, card-padding-*     │
+│  input.tsx    -> CVA variants, uses border-input, bg-background    │
+│  badge.tsx, dialog.tsx, select.tsx, textarea.tsx ...               │
+└────────────────────┬───────────────────────────────────────────────┘
+                     │ composed into
+                     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│              src/components/  (feature components)                 │
+│                                                                     │
+│  layout/NavbarLight.tsx, Footer.tsx                                 │
+│  forms/ContactForm.tsx, SubmitButton.tsx ...                        │
+│  utilities/Icon.tsx, JsonLd.tsx, BackgroundPattern.tsx ...         │
+└────────────────────┬───────────────────────────────────────────────┘
+                     │ assembled into
+                     ▼
+┌────────────────────────────────────────────────────────────────────┐
+│              src/app/  (Next.js 15 App Router pages)               │
+│                                                                     │
+│  page.tsx (server) + [Feature]Client.tsx (client boundary)         │
+│  (tools)/, locations/, blog/, api/, actions/                       │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Lefthook Changes
+## Component Responsibilities
 
-The current config runs the full lint on every pre-commit/pre-push for any matching file change. Biome enables a better pattern: run only on staged files and auto-stage fixes.
-
-**Updated `lefthook.yml`:**
-
-```yaml
-# Lefthook configuration
-# Documentation: https://github.com/evilmartians/lefthook
-
-pre-commit:
-  parallel: true
-  commands:
-    lint:
-      glob: "*.{js,jsx,ts,tsx,json,jsonc}"
-      run: bunx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
-      stage_fixed: true
-    typecheck:
-      glob: "*.{ts,tsx}"
-      run: bun run typecheck
-    test:
-      run: bun run test:unit
-
-pre-push:
-  parallel: true
-  commands:
-    lint:
-      glob: "*.{js,jsx,ts,tsx,json,jsonc}"
-      run: bunx biome check --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
-      stage_fixed: false
-    typecheck:
-      glob: "*.{ts,tsx}"
-      run: bun run typecheck
-    test:
-      run: bun run test:unit
-```
-
-**Key changes from current config:**
-
-| Aspect | Before | After |
-|---|---|---|
-| Lint command | `bun run lint` (full repo ESLint scan) | `bunx biome check --write ... {staged_files}` (staged files only) |
-| Auto-fix | None — ESLint did not auto-fix in hooks | `--write` + `stage_fixed: true` on pre-commit applies safe fixes and re-stages |
-| Pre-push | Same full scan as pre-commit | Staged-file check without `--write` (read-only verification) |
-| Speed | Full repo scan each time | Per-file Biome — significantly faster |
-
-**Flag explanation:**
-
-- `{staged_files}`: Lefthook expands this to the list of staged files. Biome receives only changed files.
-- `--write`: Applies formatter and safe lint fixes. Pre-commit only — pre-push is read-only.
-- `--no-errors-on-unmatched`: Prevents errors when no staged files match the glob (e.g., committing only a `.md` file).
-- `--files-ignore-unknown=true`: Silently skips file types Biome does not process.
-- `--colors=off`: Cleaner output in terminal hooks.
-- `stage_fixed: true`: After Biome rewrites a file, lefthook re-stages it so the commit includes the corrected version.
+| Component | Responsibility | Current State |
+|-----------|----------------|---------------|
+| `globals.css @theme {}` | All design tokens — color, font, radius | Exists, uses OKLCH, missing type scale tokens |
+| `globals.css @layer components` | Reusable semantic CSS classes | Complete: .glass-card, .typography etc. |
+| `globals.css @utility` | Tailwind v4 custom utilities | Complete: spacing/gap/z-index scale |
+| `src/components/ui/button.tsx` | Button variants via CVA | Forked, has xl size, accent/success/muted variants |
+| `src/components/ui/card.tsx` | Card variants + specialized cards | Heavily forked, mega-component |
+| `src/components/ui/input.tsx` | Input with currency variant | Lightly forked |
+| `src/components/layout/NavbarLight.tsx` | Primary navigation | Exists, needs polish audit |
+| `src/components/ui/ThemeToggle.tsx` | Dark/light mode switcher | Exists |
 
 ---
 
-## CI Considerations
+## Recommended Project Structure (Design System Files Only)
 
-The `.github/workflows/ci.yml` `quality` job runs `bun run lint`. Since the `lint` script is updated to call Biome, **no structural changes to the CI workflow are required** — only the step name should be updated for clarity.
-
-**Changes to `ci.yml` quality job:**
-
-```yaml
-# Before:
-- name: Run ESLint
-  run: bun run lint
-
-# After:
-- name: Run Biome
-  run: bun run lint
 ```
+src/app/
+└── globals.css                     # ALL tokens live here — single source of truth
+                                    # @theme: colors, fonts, radius, spacing scale
+                                    # @layer components: semantic CSS classes
+                                    # @utility: Tailwind v4 custom utilities
 
-Only the step name changes. The command (`bun run lint`) is unchanged because the `lint` script now invokes Biome.
-
-**Cache key consideration:** The CI cache key uses `bun.lockb`. After removing ESLint and Prettier packages, `bun.lockb` changes. The existing cache restore-keys pattern handles this gracefully — first run after the change will be a cache miss, subsequent runs will hit.
-
-**No new secrets or environment variables needed.** Biome runs entirely locally with no external service calls.
-
-**Vercel deployment:** Vercel runs `bun run build` via the build command. Next.js 16 does not run `next lint` during build, so Biome is not involved in the Vercel build pipeline at all. No Vercel configuration changes needed.
+src/components/
+├── ui/                             # Forked shadcn primitives — edit in place, never re-generate
+│   ├── button.tsx                  # CVA variants — add/change here only
+│   ├── card.tsx                    # CVA variants + specialized card types
+│   ├── input.tsx                   # CVA variants
+│   ├── badge.tsx                   # Polish: size/color variants
+│   ├── select.tsx                  # Polish: match input height/border treatment
+│   └── textarea.tsx                # Polish: match input treatment
+├── layout/
+│   ├── NavbarLight.tsx             # Phase 2 target: polished nav
+│   └── Footer.tsx                  # Phase 2 target: polished footer
+└── utilities/
+    └── BackgroundPattern.tsx       # Encapsulates grid-pattern classes
+```
 
 ---
 
-## Architecture Summary
+## Architectural Patterns
 
-### Data Flow: Before vs After
+### Pattern 1: Token-First in `@theme {}`
 
-**Before:**
+**What:** All design decisions expressed as CSS custom properties inside Tailwind v4's `@theme {}` block. No values hard-coded in components.
+
+**When to use:** Any new color, spacing value, font size, shadow, or border-radius decision.
+
+**Trade-offs:** Single source of truth, easy to change globally. Requires discipline — components must reference tokens, not raw values.
+
+**Current gap:** Type scale tokens exist as `clamp()` inside named CSS classes (`.text-page-title`, `.text-section-title`) but NOT as `--font-size-*` tokens in `@theme {}`. This means type scale values are not reusable across components without duplication.
+
+**Recommended additions to `@theme {}`:**
+```css
+/* Fluid type scale */
+--font-size-xs:   clamp(0.75rem, 1.5vw, 0.875rem);
+--font-size-sm:   clamp(0.875rem, 1.8vw, 1rem);
+--font-size-base: clamp(1rem, 2vw, 1.125rem);
+--font-size-lg:   clamp(1.125rem, 2.5vw, 1.25rem);
+--font-size-xl:   clamp(1.25rem, 3vw, 1.5rem);
+--font-size-2xl:  clamp(1.5rem, 3.5vw, 1.875rem);
+--font-size-3xl:  clamp(1.875rem, 4vw, 2.25rem);
+--font-size-4xl:  clamp(2.25rem, 5vw, 3rem);
+--font-size-hero: clamp(2.5rem, 6vw, 4rem);
+
+/* Shadow scale */
+--shadow-sm:   0 1px 2px oklch(from var(--foreground) l c h / 0.05);
+--shadow-md:   0 4px 12px oklch(from var(--foreground) l c h / 0.08);
+--shadow-lg:   0 8px 24px oklch(from var(--foreground) l c h / 0.10);
+--shadow-xl:   0 20px 40px oklch(from var(--foreground) l c h / 0.12);
+--shadow-glow: 0 0 30px oklch(from var(--primary) l c h / 0.20);
 ```
-Developer saves file
-  → Prettier (VSCode on-save) formats file
-  → git commit triggered
-  → lefthook pre-commit:
-      → bun run lint (ESLint full repo scan)
-      → bun run typecheck
-      → bun run test:unit
-  → CI: bun run lint (ESLint), bun run typecheck, bun run test:unit
-```
 
-**After:**
-```
-Developer saves file
-  → Biome (VSCode on-save via biomejs.biome extension) formats + lints file
-  → git commit triggered
-  → lefthook pre-commit:
-      → bunx biome check --write {staged_files} (staged files only, auto-fixes + re-stages)
-      → bun run typecheck
-      → bun run test:unit
-  → CI: bun run lint (Biome full src/ scan), bun run typecheck, bun run test:unit
-```
+### Pattern 2: Edit Forked shadcn Components In-Place
 
-### Component Map
+**What:** shadcn components in `src/components/ui/` are already forked. Modify them directly. Never run `npx shadcn add` on components that already exist — it overwrites customizations.
 
-| Component | Old | New |
-|---|---|---|
-| Formatter | Prettier (`prettier` package) | Biome formatter (built into `@biomejs/biome`) |
-| Linter | ESLint + `eslint-config-next` + TypeScript ESLint | Biome linter (built into `@biomejs/biome`) |
-| Git hook runner | lefthook (unchanged) | lefthook (unchanged) |
-| Type checker | tsc (unchanged) | tsc (unchanged) |
-| Unit test runner | Bun test (unchanged) | Bun test (unchanged) |
-| E2E test runner | Playwright (unchanged) | Playwright (unchanged) |
-| Config file | `eslint.config.mjs` + `.prettierrc.json` | `biome.json` (single file) |
-| VSCode extension | `esbenp.prettier-vscode` + `dbaeumer.vscode-eslint` | `biomejs.biome` |
+**When to use:** When a primitive needs a new variant, size, or behavior change.
 
-### Packages Removed vs Added
+**Trade-offs:** Full control, zero upstream dependency. Must manually check shadcn changelog for new primitives.
 
-**Removed from `devDependencies`:**
-- `eslint`
-- `eslint-config-next`
-- `prettier`
+**Constraint:** `components.json` has `style: "new-york"` and `cssVariables: true`. Preserve this if running `npx shadcn add` for NEW components not yet present in `src/components/ui/`.
 
-**Added to `devDependencies`:**
-- `@biomejs/biome` (exact version pin)
+**Override strategy — three tiers:**
+1. **CVA variants** (preferred): Add a new `variant` or `size` to the existing `cva()` call. Zero risk of breaking other usages.
+2. **className prop** (acceptable): Pass `className` at call site for one-off overrides. Tailwind Merge (`cn()`) handles conflicts correctly.
+3. **New component wrapping primitive** (for complex cases): Create e.g. `ButtonCTA.tsx` that imports `Button` and hard-codes variant/size. Use when a specific composition repeats 3+ times.
 
-This reduces the devDependency count from 23 to 21 and removes the largest vulnerability surface (ESLint's ecosystem of 100+ transitive packages).
+**What NOT to do:** Do not edit `globals.css` to add per-component CSS overrides. Put variant logic in the component file.
+
+### Pattern 3: Dark Mode via `-dark` Suffixed Tokens
+
+**What:** The existing `globals.css` defines dark mode colors as `--color-background-dark`, `--color-primary-dark` etc. inside `@theme {}`. This is NOT a `@media (prefers-color-scheme: dark)` or `[data-theme=dark]` approach in the token definitions.
+
+**When to use:** Follow the existing pattern for any new dark mode tokens.
+
+**Trade-offs:** Tokens are available to Tailwind as utilities (e.g., `bg-background-dark`) but the swap mechanism requires a `.dark {}` CSS block or similar to reassign the base token values.
+
+**Critical verification needed in Phase 1:** Confirm whether `ThemeToggle.tsx` sets `class="dark"` on `<html>` and whether `globals.css` has a `.dark {}` selector block that reassigns e.g. `--color-background` to the dark value. If this wiring is absent, dark mode tokens are defined but never activated.
+
+### Pattern 4: Semantic Classes Over Inline Utilities for Repeated Patterns
+
+**What:** Complex repeated visual patterns (`.glass-card`, `.grid-pattern`, `.card-hover-glow`) live in `@layer components {}` as named classes.
+
+**When to use:** Any visual pattern applied in 3 or more places.
+
+**Trade-offs:** More maintainable, easier to change globally, readable JSX. Slightly less explicit than reading inline Tailwind utilities.
+
+**Correct for v4:** In Tailwind v4, `@layer components {}` works correctly without `@apply`.
 
 ---
 
-## Confidence Assessment
+## Data Flow for Design Token Changes
 
-| Area | Confidence | Source |
-|---|---|---|
-| Biome v2.4.4 is current stable | HIGH | npmjs.com + biomejs.dev/blog/biome-v2-4/ |
-| `biome migrate prettier/eslint` commands | HIGH | biomejs.dev/guides/migrate-eslint-prettier/ |
-| Lefthook `{staged_files}` + `stage_fixed` pattern | HIGH | biomejs.dev/recipes/git-hooks/ |
-| React domain hooks rules coverage | HIGH | biomejs.dev/linter/domains/ |
-| Next.js 16 removes `next lint` from build | HIGH | vercel/next.js discussion #59347, Next.js changelog |
-| `no-duplicate-imports` gap | MEDIUM | Biome import organizer merges duplicates but no standalone lint rule confirmed |
-| `react-hooks/set-state-in-effect` gap | LOW | Non-standard rule; behavior unclear without testing against actual codebase |
-| `ban-ts-comment` partial coverage | MEDIUM | Biome has ts-comment suppression but config granularity not verified against exact ESLint options used |
+```
+globals.css @theme { --color-primary: oklch(...) }
+    |
+    +-- Tailwind auto-generates: bg-primary, text-primary, border-primary, ring-primary etc.
+    |
+    +-- shadcn components use: bg-primary, hover:bg-primary/90 etc.
+    |
+    +-- globals.css @layer components use: var(--primary), oklch(from var(--primary) l c h / 0.15)
+```
+
+**Key insight:** Tailwind v4 auto-generates utility classes from `@theme {}` tokens. Changing `--color-primary` updates all `bg-primary`, `text-primary`, `border-primary` usages across the codebase automatically. No rebuild config needed.
+
+**OKLCH relative color syntax** (`oklch(from var(--primary) l c h / 0.20)`) is used throughout `globals.css` for alpha variants. This requires evergreen browsers. Already in production — do not add polyfills.
+
+---
+
+## Build Order: Tokens First, Components Second, Pages Third
+
+This is the critical dependency chain. Each phase cannot proceed until the previous is stable.
+
+### Phase 1: Token Foundation (globals.css only)
+
+**Files changed:** `src/app/globals.css` only
+
+**Work items:**
+1. Add `--font-size-*` fluid type scale tokens to `@theme {}`
+2. Add `--shadow-*` scale tokens to `@theme {}`
+3. Audit and fix dark mode wiring — confirm `.dark {}` selector reassigns base tokens
+4. Review and refine OKLCH color values if palette adjustment needed
+5. Replace `.text-page-title` / `.text-section-title` clamp() values with references to new tokens
+
+**Does NOT touch:** Any component files, any page files.
+
+**Why first:** Every component in Phase 2 will reference these tokens. If tokens change after components are written, components must be re-edited.
+
+**Integration point for Phase 2:** Components reference `var(--font-size-hero)` for hero text, `var(--shadow-lg)` for card shadows, etc.
+
+### Phase 2: Component Polish (src/components/ui/ and src/components/layout/)
+
+**Files changed:** Files in `src/components/ui/`, `src/components/layout/`
+
+**Dependencies:** Phase 1 tokens must be finalized.
+
+**Work items:**
+1. `button.tsx` — Refine `xl` variant, add hover animations using `--shadow-*` tokens
+2. `card.tsx` — Integrate `--shadow-*` tokens, refine glass effect, verify hover states
+3. `input.tsx` / `select.tsx` / `textarea.tsx` — Consistent `h-10` height, consistent focus ring using `--color-ring`
+4. `badge.tsx` — Add semantic color variants (success, warning, info) using existing semantic tokens
+5. `NavbarLight.tsx` — Scroll behavior, active state styling, mobile menu polish
+6. `Footer.tsx` — Link hover states, layout polish
+
+**Does NOT touch:** Page files in `src/app/`.
+
+**Why second:** Pages use these components. Elevated component quality propagates everywhere automatically.
+
+**Integration point for Phase 3:** Pages need only page-level layout work. Primitive quality is already elevated.
+
+### Phase 3: Page Layout Polish (src/app/ pages)
+
+**Files changed:** Page files and their client components in `src/app/`
+
+**Dependencies:** Phase 1 tokens, Phase 2 components.
+
+**Priority order within Phase 3:**
+1. Homepage (`src/app/page.tsx` + client component) — highest visibility, hero section
+2. Services page — primary conversion page
+3. Tool pages — 13 tools, form/output presentation template
+4. Location pages — 75 pages share a template, one fix propagates everywhere
+5. About page
+6. Blog pages — typography and reading experience
+
+**Why last:** Pages are the assembly layer. With tokens stable and components polished, page work is section layout, copy hierarchy, and visual rhythm.
+
+---
+
+## Integration Points Between Phases
+
+| Boundary | Phase 1 Provides | Phase 2 Consumes |
+|----------|-----------------|-----------------|
+| Type scale | `--font-size-hero` through `--font-size-xs` | Button label sizing, Card heading sizes, Nav font sizes |
+| Shadow scale | `--shadow-sm` through `--shadow-glow` | Card hover shadows, Button focus rings, Dialog elevation |
+| Dark mode | Verified `.dark {}` swap for base tokens | All components inherit correct dark values automatically |
+| Color refinements | Updated OKLCH values for primary/accent/etc. | `bg-primary`, `text-accent` etc. update automatically |
+
+| Boundary | Phase 2 Provides | Phase 3 Consumes |
+|----------|-----------------|-----------------|
+| Polished Button | `xl` variant, refined hover, correct shadows | Hero CTA, contact form submit, tool CTAs |
+| Polished Card | Premium glass treatment, consistent padding | Services section, pricing, tools index cards |
+| Polished Inputs | Consistent height, focus ring, error states | All 13 tool forms, contact form |
+| Polished Navbar | Active states, scroll behavior | All 130+ pages automatically via layout |
+
+---
+
+## Files Changed Per Phase (Explicit List)
+
+### Phase 1 Files
+- `src/app/globals.css` — add type scale tokens, shadow scale tokens, verify/add dark mode `.dark {}` block
+
+### Phase 2 Files
+- `src/components/ui/button.tsx` — variant/size refinements
+- `src/components/ui/card.tsx` — shadow token integration, glass refinement
+- `src/components/ui/input.tsx` — height/focus consistency
+- `src/components/ui/select.tsx` — height/focus consistency (match input)
+- `src/components/ui/textarea.tsx` — focus consistency (match input)
+- `src/components/ui/badge.tsx` — semantic color variants
+- `src/components/layout/NavbarLight.tsx` — scroll state, active links, mobile menu
+- `src/components/layout/Footer.tsx` — link states, layout
+
+### Phase 3 Files (page-level, ordered by priority)
+- `src/app/page.tsx` + client component — hero section, section layouts
+- `src/app/services/page.tsx` — premium landing page treatment
+- `src/app/(tools)/*/page.tsx` — form/output layout (13 files)
+- `src/app/locations/[slug]/page.tsx` — template polish (propagates to 75 pages)
+- `src/app/about/page.tsx` — page layout
+- `src/app/blog/*/page.tsx` — typography and reading experience
+
+---
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Adding `tailwind.config.ts` for Theme Extension
+
+**What people do:** Create `tailwind.config.ts` with `theme.extend` to add custom tokens.
+
+**Why it's wrong:** This project uses Tailwind v4 with `@theme {}` in CSS. Adding `tailwind.config.ts` creates two sources of truth and causes conflicts. Tailwind v4 resolves the theme from CSS, not JS config.
+
+**Do this instead:** All tokens go in the `@theme {}` block in `globals.css`.
+
+### Anti-Pattern 2: Re-running `npx shadcn add` on Existing Components
+
+**What people do:** Run `npx shadcn add button` to "update" the button component.
+
+**Why it's wrong:** Overwrites the forked file, losing all custom variants (`xl` size, `accent`/`success`/`muted` variants, `trackConversion` prop, etc.).
+
+**Do this instead:** Edit `src/components/ui/button.tsx` directly. Check shadcn changelog manually if you need to port a specific upstream change.
+
+### Anti-Pattern 3: Hardcoding Color Values in Components
+
+**What people do:** Write `bg-[#2B4B8C]` or `text-[oklch(0.35_0.08_255)]` in a component.
+
+**Why it's wrong:** Breaks dark mode, bypasses token system, makes global color changes require grep-and-replace.
+
+**Do this instead:** Use token-based utilities: `bg-primary`, `bg-primary/80`, `text-muted-foreground`. If a shade doesn't exist as a utility, add it as a token in `@theme {}`.
+
+### Anti-Pattern 4: Using `@apply` in Tailwind v4
+
+**What people do:** Write `@apply flex items-center` inside `@layer components`.
+
+**Why it's wrong:** `@apply` is deprecated and unreliable in Tailwind v4.
+
+**Do this instead:** Write native CSS in `@layer components {}` blocks (already done throughout `globals.css`), or use Tailwind utility classes inline in JSX.
+
+### Anti-Pattern 5: Per-Component CSS Overrides in globals.css
+
+**What people do:** Add `.button-cta { background: var(--accent); }` to globals.css to override a specific button instance.
+
+**Why it's wrong:** globals.css should contain only design tokens and reusable patterns. Per-component overrides create hidden coupling and make components unpredictable.
+
+**Do this instead:** Add a CVA variant to `button.tsx` or pass `className` at the call site.
+
+---
+
+## Scaling Considerations
+
+This is a marketing/tools website. Scaling here means "design system scales across 130+ pages" not infrastructure scaling.
+
+| Scale | Architecture Adjustment |
+|-------|------------------------|
+| 13 tools, 75 location pages (current) | Single `globals.css`, components in `src/components/ui/` — correct as-is |
+| Adding more page types | Follow existing patterns. New page types get their own layout only if genuinely different. |
+| Multiple contributors | Design tokens in `globals.css` are the shared contract. CVA variants are the component vocabulary. |
 
 ---
 
 ## Sources
 
-- [Biome Getting Started](https://biomejs.dev/guides/getting-started/)
-- [Biome Migration from ESLint & Prettier](https://biomejs.dev/guides/migrate-eslint-prettier/)
-- [Biome Git Hooks Recipe (Lefthook)](https://biomejs.dev/recipes/git-hooks/)
-- [Biome Domains](https://biomejs.dev/linter/domains/)
-- [Biome v2.4 Release](https://biomejs.dev/blog/biome-v2-4/)
-- [Biome Rules Sources (ESLint mapping)](https://biomejs.dev/linter/rules-sources/)
-- [useExhaustiveDependencies](https://biomejs.dev/linter/rules/use-exhaustive-dependencies/)
-- [useHookAtTopLevel](https://biomejs.dev/linter/rules/use-hook-at-top-level/)
-- [Next.js Alternative Linters Discussion](https://github.com/vercel/next.js/discussions/59347)
-- [Biome Configuration Reference](https://biomejs.dev/reference/configuration/)
+- Direct codebase inspection: `src/app/globals.css` (578 lines), `src/components/ui/button.tsx`, `src/components/ui/card.tsx`, `src/components/ui/input.tsx`, `components.json`
+- Tailwind v4 `@theme {}` pattern confirmed by presence of `@import 'tailwindcss'` and `@theme {}` block (no `tailwind.config.ts` present)
+- shadcn "new-york" style confirmed by `components.json` `style: "new-york"` and `cssVariables: true`
+- OKLCH relative color syntax usage confirmed throughout `globals.css`
+- All findings from direct code inspection — HIGH confidence, no training data assumptions
+
+---
+
+*Architecture research for: Design system overhaul within Tailwind v4 + shadcn/ui + Next.js 15*
+*Researched: 2026-02-25*

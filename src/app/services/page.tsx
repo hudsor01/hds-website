@@ -239,7 +239,7 @@ export default function ServicesPage() {
 								hover
 								className="relative text-center"
 							>
-								<div className="text-4xl font-bold text-foreground mb-subheading">
+								<div className="text-h1 text-foreground mb-subheading">
 									{stat.value}
 								</div>
 								<div className="small muted">{stat.label}</div>

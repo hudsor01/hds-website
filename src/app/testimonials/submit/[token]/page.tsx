@@ -54,7 +54,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted dark:bg-success-bg-dark/30 flex items-center justify-center">
 							<CheckCircle2 className="w-8 h-8 text-success-dark" />
 						</div>
-						<h1 className="text-2xl font-bold text-foreground mb-heading">
+						<h1 className="text-h3 text-foreground mb-heading">
 							Already Submitted
 						</h1>
 						<p className="text-muted-foreground">
@@ -76,9 +76,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-warning-muted dark:bg-warning-bg-dark/30 flex items-center justify-center">
 							<AlertCircle className="w-8 h-8 text-warning-dark" />
 						</div>
-						<h1 className="text-2xl font-bold text-foreground mb-heading">
-							Link Expired
-						</h1>
+						<h1 className="text-h3 text-foreground mb-heading">Link Expired</h1>
 						<p className="text-muted-foreground mb-content-block">
 							This testimonial link has expired. If you&apos;d still like to
 							share your feedback, please contact us for a new link.
