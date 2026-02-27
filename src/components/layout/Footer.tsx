@@ -10,9 +10,9 @@ import { cn } from '@/lib/utils'
 
 const footerLinks = {
 	solutions: [
-		{ name: 'Ship Features Faster', href: ROUTES.SERVICES },
+		{ name: 'Website Development', href: ROUTES.SERVICES },
 		{ name: 'Fix Revenue Leaks', href: ROUTES.SERVICES },
-		{ name: 'Scale Without Breaking', href: ROUTES.SERVICES },
+		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
 		{ name: 'View Case Studies', href: ROUTES.PORTFOLIO }
 	],
 	company: [
@@ -98,10 +98,11 @@ export default function Footer() {
 									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
 								<p className="text-accent small font-semibold mb-subheading">
-									Ship 3x Faster, 60% Cheaper
+									Automate. Integrate. Grow.
 								</p>
 								<p className="small muted">
-									We eliminate technical bottlenecks so you can focus on growth
+									We build your website, connect your tools, and automate the
+									work — so you can focus on growing.
 								</p>
 							</div>
 
@@ -169,11 +170,11 @@ export default function Footer() {
 						{/* CTA Section */}
 						<div className="md:col-span-1">
 							<h4 className="text-foreground font-semibold mb-heading">
-								Ready to Ship Faster?
+								Ready to Grow Faster?
 							</h4>
 							<p className="small muted mb-heading">
-								Get your free technical roadmap and see how we can help you ship
-								3x faster.
+								Book your free strategy call and see how we can help you launch
+								and automate 3x faster.
 							</p>
 
 							<div className="space-y-3">
@@ -184,7 +185,7 @@ export default function Footer() {
 									trackConversion={true}
 									className="w-full"
 								>
-									<Link href={ROUTES.CONTACT}>Get Free Roadmap</Link>
+									<Link href={ROUTES.CONTACT}>Book a Free Strategy Call</Link>
 								</Button>
 
 								<a
