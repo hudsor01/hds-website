@@ -159,7 +159,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Tech & Cybersecurity',
 				description:
-					'Web platforms for Tampa tech companies, SOCOM-adjacent cybersecurity firms, and SaaS startups.'
+					'Website development and automation for Tampa businesses — from service companies to local retailers.'
 			},
 			{
 				title: 'Healthcare & BioScience',

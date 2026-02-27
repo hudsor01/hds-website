@@ -10,7 +10,7 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		description:
 			'Atlanta is a powerhouse of commerce, tech, and culture. We help ATL businesses from Buckhead to Midtown compete with modern web solutions.',
 		metaDescription:
-			'Web development and SaaS consulting in Atlanta, GA. Custom websites, web applications, and digital solutions for Georgia businesses.',
+			'Website development and business automation in Atlanta, GA. We build your website, connect your tools, and automate the work for Georgia businesses.',
 		neighborhoods: [
 			'Midtown',
 			'Buckhead',
@@ -38,9 +38,9 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 					'Websites and digital platforms for Atlanta film, music, and media companies.'
 			},
 			{
-				title: 'Enterprise Applications',
+				title: 'Business Systems',
 				description:
-					'Scalable web applications for Fortune 500 companies headquartered in Atlanta.'
+					'Websites, integrations, and automation built around how your Atlanta business actually works.'
 			}
 		]
 	},

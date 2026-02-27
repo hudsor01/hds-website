@@ -200,19 +200,19 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech Company Solutions',
+				title: 'Local Business Websites',
 				description:
-					'Web applications and platforms for Chandler tech companies, semiconductor firms, and data centers.'
+					'Modern, fast websites for Arizona businesses — designed to convert visitors into customers.'
 			},
 			{
-				title: 'Startup MVP Development',
+				title: 'Website Launch Packages',
 				description:
-					'Rapid prototyping and MVP development for Chandler and East Valley tech startups.'
+					'Get your business online fast — professional website, setup, and launch handled end to end.'
 			},
 			{
-				title: 'Corporate Web Solutions',
+				title: 'Business Website Solutions',
 				description:
-					'Enterprise websites and intranets for Chandler corporate campuses and Fortune 500 offices.'
+					'Professional websites and business systems for Chandler businesses of every size.'
 			}
 		]
 	},
