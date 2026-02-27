@@ -40,7 +40,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			{
 				title: 'Banking & Insurance',
 				description:
-					'Secure web platforms for Little Rock financial institutions, insurance companies, and fintech startups.'
+					'Secure web platforms for Little Rock financial institutions, insurance companies, and local financial businesses.'
 			}
 		]
 	},
@@ -96,7 +96,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		description:
 			'Home to the University of Arkansas and a booming NWA tech corridor, Fayetteville is one of the fastest-growing metros in the country. We build digital solutions for the NWA market.',
 		metaDescription:
-			'Web development in Fayetteville, AR. Custom websites, startup MVPs, and digital solutions for Northwest Arkansas tech companies and businesses.',
+			'Website development and business automation in Fayetteville, AR. We build your website, connect your tools, and automate the work for Northwest Arkansas businesses.',
 		neighborhoods: [
 			'Downtown Square',
 			'Dickson Street',
@@ -114,9 +114,9 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech Startup Development',
+				title: 'Business Automation',
 				description:
-					'MVP development for NWA tech startups, Walmart-affiliated vendors, and university spin-offs.'
+					'Automate manual work — connect your CRM, booking, and tools so your Fayetteville business runs itself.'
 			},
 			{
 				title: 'Cycling & Outdoor',

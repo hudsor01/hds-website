@@ -53,7 +53,7 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		description:
 			"New Mexico's largest city, Albuquerque combines Sandia Labs innovation with a vibrant cultural scene. We build digital solutions for Duke City businesses across every sector.",
 		metaDescription:
-			'Web development in Albuquerque, NM. Custom websites, tech applications, and digital solutions for Duke City businesses and startups.',
+			'Website development and business automation in Albuquerque, NM. We build your website, connect your tools, and automate the work for Duke City businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Old Town',

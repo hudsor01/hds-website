@@ -225,7 +225,7 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		description:
 			'Home to the University of Georgia and a legendary music scene, Athens blends academic excellence with creative culture. We build digital solutions for the Classic City.',
 		metaDescription:
-			'Web development in Athens, GA. Custom websites and digital solutions for UGA area businesses, startups, and creative companies.',
+			'Web development in Athens, GA. Custom websites and digital solutions for UGA area businesses and creative companies.',
 		neighborhoods: [
 			'Downtown',
 			'Five Points',
@@ -245,7 +245,7 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			{
 				title: 'University & Research',
 				description:
-					'Web platforms for UGA programs, research labs, and university-affiliated startups in Athens.'
+					'Web platforms for UGA programs, research labs, and university-affiliated businesses in Athens.'
 			},
 			{
 				title: 'Music & Entertainment',
