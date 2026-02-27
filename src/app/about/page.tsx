@@ -68,18 +68,18 @@ export default function AboutPage() {
 					<div className="space-y-sections">
 						<div>
 							<h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
-								<span className="inline-block mr-4">Built for</span>
+								<span className="inline-block mr-4">Built Around</span>
 								<span className="inline-block mr-4 text-accent">
-									Excellence
+									Your Business
 								</span>
 							</h1>
 						</div>
 
 						<div className="typography">
 							<p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
-								Where proven revenue impact meets obsessive engineering
-								standards. We don&apos;t build websites—we forge revenue
-								machines.
+								Where real business experience meets the technical skill to
+								build it. We don&apos;t just build websites — we build the
+								system behind them.
 							</p>
 						</div>
 					</div>
@@ -105,43 +105,44 @@ export default function AboutPage() {
 						{/* Story Content */}
 						<Card variant="glassLight" size="lg" hover className="group">
 							<h3 className="text-h3 text-foreground mb-content-block group-hover:text-accent transition-smooth">
-								Forged in Revenue Operations, Refined in Code
+								Built in Revenue Operations, Refined in Practice
 							</h3>
 							<div className="space-y-comfortable text-muted-foreground leading-relaxed typography">
 								<p>
 									Most agencies learned web development in bootcamps. We learned
-									it in the trenches of enterprise revenue operations—where
-									every line of code either makes money or loses it.
+									it in the trenches of revenue operations — where every
+									decision either moves the business forward or holds it back.
 								</p>
 								<p>
 									With{' '}
 									<strong className="text-accent">proven revenue impact</strong>{' '}
-									across Fortune 500 companies and high-growth startups, we
-									discovered something agencies miss:
+									across growing businesses, we discovered something agencies
+									miss:{' '}
 									<strong className="text-info">
-										{' '}
-										websites don&apos;t fail because of bad code—they fail
-										because they don&apos;t understand revenue
+										websites don&apos;t fail because of bad code — they fail
+										because they&apos;re not connected to how the business
+										actually runs
 									</strong>
 									.
 								</p>
 								<p>
 									That&apos;s why our clients see{' '}
 									<strong className="text-accent">proven ROI results</strong> in
-									months, not years. We don&apos;t just ship features. We ship{' '}
+									months, not years. We don&apos;t just launch websites. We
+									build{' '}
 									<Link href="/services" className="link-primary font-semibold">
-										revenue engines
+										connected business systems
 									</Link>{' '}
-									backed by analytics, A/B testing, and ruthless optimization.
-									Every pixel, every animation, every database query is measured
+									backed by analytics, automation, and relentless optimisation.
+									Every page, every integration, every workflow is measured
 									against one metric:{' '}
 									<strong className="text-success-text">
-										does this make money?
+										does this help your business grow?
 									</strong>
 								</p>
 								<p className="text-foreground font-semibold">
 									We&apos;re not another agency promising &quot;beautiful
-									websites.&quot; We&apos;re revenue engineers who happen to
+									websites.&quot; We&apos;re business builders who happen to
 									write beautiful code.{' '}
 									<Link href="/contact" className="link-primary">
 										Let&apos;s talk about your project
@@ -163,7 +164,7 @@ export default function AboutPage() {
 									</h3>
 								</div>
 								<p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-									Make enterprise-grade development accessible to growing
+									Make great websites and automation accessible to growing
 									businesses. No more choosing between &quot;affordable but
 									mediocre&quot; or &quot;excellent but unaffordable.&quot; Get
 									both.
@@ -199,11 +200,11 @@ export default function AboutPage() {
 				<div className="container-wide">
 					<div className="text-center mb-16">
 						<h2 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
-							<span className="text-accent">Technical Arsenal</span>
+							<span className="text-accent">What We Build With</span>
 						</h2>
 						<p className="text-xl text-muted-foreground container-narrow text-pretty">
-							Forged through enterprise-level battles, refined through startup
-							agility, and sharpened by revenue-focused engineering.
+							Proven tools. Modern technology. Everything chosen because it
+							delivers results for business owners.
 						</p>
 					</div>
 
@@ -218,10 +219,10 @@ export default function AboutPage() {
 								</h3>
 							</div>
 							<ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
-								<li>• Next.js 15 & React 19</li>
-								<li>• TypeScript & Node.js</li>
-								<li>• Progressive Web Apps</li>
-								<li>• Performance Optimization</li>
+								<li>• Fast, modern websites</li>
+								<li>• Mobile-ready by default</li>
+								<li>• Built to convert visitors</li>
+								<li>• Optimised for search</li>
 							</ul>
 						</Card>
 
@@ -236,7 +237,7 @@ export default function AboutPage() {
 							</div>
 							<ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
 								<li>• Revenue Attribution</li>
-								<li>• Conversion Optimization</li>
+								<li>• Conversion Optimisation</li>
 								<li>• A/B Testing</li>
 								<li>• Performance Monitoring</li>
 							</ul>
@@ -269,7 +270,7 @@ export default function AboutPage() {
 								</h3>
 							</div>
 							<ul className="text-muted-foreground space-y-tight text-sm group-hover:text-foreground transition-smooth">
-								<li>• Zero-Trust Architecture</li>
+								<li>• Bank-Level Security</li>
 								<li>• GDPR Compliance</li>
 								<li>• Performance Security</li>
 								<li>• Vulnerability Assessment</li>
@@ -285,26 +286,26 @@ export default function AboutPage() {
 					<div className="text-center mb-16">
 						<h2 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
 							<span className="text-accent">
-								The Revenue Engineer Behind the Code
+								The Business Builder Behind the Work
 							</span>
 						</h2>
 						<p className="text-xl text-muted-foreground container-narrow text-pretty">
 							Why trust a former revenue operations professional to build your
-							website? Because they understand something agencies don&apos;t:
-							every feature must justify its existence in dollars.
+							business system? Because they understand something agencies
+							don&apos;t: every feature must earn its place by saving you time
+							or making you money.
 						</p>
 					</div>
 
 					<Card variant="glassLight" size="lg" hover className="group">
 						<div className="space-y-sections text-muted-foreground leading-relaxed">
 							<p className="text-lg group-hover:text-foreground transition-smooth">
-								Before writing a single line of client code, I spent 5+ years as
-								a{' '}
+								Before building for clients, I spent 5+ years as a{' '}
 								<strong className="text-accent">
 									revenue operations professional
 								</strong>{' '}
-								at enterprise SaaS companies. I didn&apos;t build features—I
-								built systems that generated{' '}
+								at enterprise SaaS companies. I didn&apos;t just build websites
+								— I built the processes behind them that generated{' '}
 								<strong className="text-accent">
 									measurable revenue impact
 								</strong>
@@ -315,28 +316,30 @@ export default function AboutPage() {
 								Here&apos;s what I learned:{' '}
 								<strong className="text-info">
 									most websites fail not because of bad technology, but because
-									of bad economics
+									they&apos;re disconnected from how the business actually
+									operates
 								</strong>
-								. Agencies charge $50K for a beautiful site that converts at
-								1.2%. We charge $5K-8K for a revenue-optimized machine that
-								converts at 4%+. The math is simple.
+								. Agencies charge $50K for a beautiful site that no one can
+								manage. We build connected systems that save you hours every
+								week and convert visitors into paying customers.
 							</p>
 
 							<p className="text-lg group-hover:text-foreground transition-smooth">
-								When I discovered businesses were hemorrhaging money on bloated
-								agencies and junior developers who couldn&apos;t spell
-								&quot;ROI,&quot; I knew there was a gap. Hudson Digital
-								Solutions fills that gap:{' '}
+								When I saw how many small business owners were drowning in
+								manual work — copying data between tools, chasing leads by hand,
+								updating spreadsheets — I knew there was a better way. Hudson
+								Digital Solutions exists to fix that:{' '}
 								<strong className="text-accent">
-									enterprise-grade development at startup prices, with revenue
-									accountability baked into every line of code
+									websites, integrations, and automation built around how your
+									business actually works
 								</strong>
 								.
 							</p>
 
 							<p className="text-xl text-foreground font-bold border-l-4 border-accent pl-6 py-4 bg-accent/5">
-								&quot;I don&apos;t care how beautiful your code is if it
-								doesn&apos;t make money. Ship results or ship nothing.&quot;
+								&quot;I don&apos;t care how beautiful your website is if it
+								doesn&apos;t save you time or bring in revenue. Build results or
+								build nothing.&quot;
 							</p>
 
 							<div className="grid md:grid-cols-4 gap-sections mt-12 pt-8 border-t border-white/20">
@@ -383,11 +386,11 @@ export default function AboutPage() {
 				<div className="container-wide">
 					<div className="text-center mb-16">
 						<h2 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
-							<span className="text-accent">Engineering Principles</span>
+							<span className="text-accent">How We Work</span>
 						</h2>
 						<p className="text-xl text-muted-foreground container-narrow text-pretty">
-							The core beliefs that drive every line of code, every design
-							decision, and every strategic recommendation.
+							The core beliefs that drive every website we build, every tool we
+							connect, and every workflow we automate.
 						</p>
 					</div>
 
@@ -402,9 +405,9 @@ export default function AboutPage() {
 								</h3>
 							</div>
 							<p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-								Every millisecond matters. We engineer for speed because fast
-								sites convert better, rank higher, and deliver superior user
-								experiences.
+								Every millisecond matters. We build for speed because fast sites
+								convert better, rank higher, and deliver a better experience for
+								your customers.
 							</p>
 						</Card>
 
@@ -419,7 +422,8 @@ export default function AboutPage() {
 							</div>
 							<p className="text-muted-foreground group-hover:text-foreground transition-smooth">
 								Assumptions kill businesses. Every decision is backed by data,
-								every feature is measured, and every optimization is validated.
+								every feature is measured, and every optimisation is validated
+								against real results.
 							</p>
 						</Card>
 
@@ -429,13 +433,12 @@ export default function AboutPage() {
 									<Settings className="w-8 h-8 text-orange-text" />
 								</div>
 								<h3 className="text-xl font-bold text-foreground group-hover:text-orange-text transition-smooth">
-									Scalable Architecture
+									Built to Grow With You
 								</h3>
 							</div>
 							<p className="text-muted-foreground group-hover:text-foreground transition-smooth">
-								We build for tomorrow&apos;s growth, not just today&apos;s
-								needs. Every solution is architected to scale with your business
-								ambitions.
+								We build for growth. Your website and systems grow with your
+								business — no expensive rebuilds when you scale.
 							</p>
 						</Card>
 					</div>
@@ -451,13 +454,14 @@ export default function AboutPage() {
 						className="relative z-sticky text-center"
 					>
 						<h2 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
-							Ready to engineer
-							<span className="text-accent"> your success?</span>
+							Ready to build
+							<span className="text-accent"> your business system?</span>
 						</h2>
 
 						<p className="text-xl text-muted-foreground container-narrow mb-10 text-pretty">
-							Stop settling for ordinary. Let&apos;s build something that
-							doesn&apos;t just work—it dominates.
+							Stop doing manually what should run automatically. Let&apos;s
+							build a website and system that works for you — even when
+							you&apos;re not.
 						</p>
 
 						<div className="flex flex-col sm:flex-row flex-center gap-content">

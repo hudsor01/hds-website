@@ -10,11 +10,11 @@ import FaqClient from './FaqClient'
 export const metadata: Metadata = {
 	title: 'Frequently Asked Questions | Hudson Digital Solutions',
 	description:
-		'Get answers to common questions about our web development services, pricing, process, and timelines. Everything you need to know before starting your project.',
+		'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines. Everything you need to know before starting your project.',
 	openGraph: {
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Get answers to common questions about our web development services, pricing, process, and timelines.',
+			'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines.',
 		url: 'https://hudsondigitalsolutions.com/faq',
 		images: [
 			{
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Get answers to common questions about our web development services, pricing, process, and timelines.',
+			'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines.',
 		images: ['/HDS-Logo.webp']
 	},
 	alternates: {
@@ -48,7 +48,7 @@ const faqSchema = {
 			name: 'What web development services do you offer?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'We offer full-stack web development, SaaS development, e-commerce solutions, mobile app development, API development, database design, performance optimization, and technical consulting.'
+				text: 'We build websites that convert visitors into customers, connect your business tools so data flows automatically, and automate the workflows that cost you time. Think: your website, your CRM, your calendar, your payment processor — all working together without manual effort.'
 			}
 		},
 		{
@@ -64,7 +64,7 @@ const faqSchema = {
 			name: 'What is your typical project timeline?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce platforms take 8-12 weeks. Custom SaaS applications typically take 3-6 months.'
+				text: 'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Projects with custom integrations and automation typically take 3-6 months.'
 			}
 		},
 		{
@@ -72,7 +72,7 @@ const faqSchema = {
 			name: 'Do you offer monthly retainer packages?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Yes! We offer ongoing maintenance and support retainers starting at $2,500/month. This includes regular updates, security patches, performance monitoring, feature additions, and priority support.'
+				text: 'Yes. We offer ongoing maintenance and support retainers starting at $2,500/month. This includes regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house.'
 			}
 		}
 	]

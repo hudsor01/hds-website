@@ -72,11 +72,11 @@ const pricingTiers = [
 		description:
 			'Find $50K-$180K in hidden revenue leaks within 30 days. Average client finds 5-10x value in first month.',
 		features: [
-			'Technical audit & assessment',
+			'Complete business review',
 			'Revenue leak identification',
 			'Conversion optimization roadmap',
-			'Performance bottleneck analysis',
-			'Security vulnerability assessment',
+			'Speed and conversion analysis',
+			'Security check',
 			'Competitive analysis',
 			'Detailed action plan with ROI projections',
 			'2-4 week delivery'
@@ -95,7 +95,7 @@ const pricingTiers = [
 		features: [
 			'Custom React/Next.js development',
 			'Conversion-focused design',
-			'Database integration',
+			'Connects to your tools',
 			'User authentication',
 			'API development',
 			'A/B testing infrastructure',
@@ -113,13 +113,13 @@ const pricingTiers = [
 		name: 'Business Automation Suite',
 		price: 'Starting at $8,000',
 		description:
-			'Save 20+ hours/week and eliminate $50K+ in annual process costs. Automation that scales with your growth.',
+			'Save 20+ hours/week and eliminate $50K+ in annual wasted time and overhead. Automation that grows when you do.',
 		features: [
 			'End-to-end process automation',
 			'CRM/Email/Analytics integrations',
 			'Custom workflow engines',
 			'Advanced analytics dashboards',
-			'Scalable cloud architecture',
+			'Always reliable infrastructure',
 			'Security & compliance',
 			'Performance monitoring',
 			'Training & documentation',

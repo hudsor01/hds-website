@@ -7,11 +7,11 @@
 
 ### DSYS — Design System Foundation
 
-- [ ] **DSYS-01**: CSS custom properties in `globals.css` fully overhauled — complete token system covering brand colors, neutral grays, spacing scale, radius, shadows, and surface variants
-- [ ] **DSYS-02**: Brand color palette defined using OKLCH — primary, accent, and neutral sequences that are distinct from shadcn defaults
-- [ ] **DSYS-03**: Typography scale defined — heading sizes (h1–h4), body sizes, monospace, letter spacing, line heights, and font weight tokens — applied consistently across the site
-- [ ] **DSYS-04**: Surface/card elevation tokens defined — background, card, elevated, overlay levels with corresponding border and shadow tokens
-- [ ] **DSYS-05**: Tailwind config extends theme with design tokens — no scattered hardcoded hex/rgb values in new token definitions
+- [x] **DSYS-01**: CSS custom properties in `globals.css` fully overhauled — complete token system covering brand colors, neutral grays, spacing scale, radius, shadows, and surface variants
+- [x] **DSYS-02**: Brand color palette defined using OKLCH — primary, accent, and neutral sequences that are distinct from shadcn defaults
+- [x] **DSYS-03**: Typography scale defined — heading sizes (h1–h4), body sizes, monospace, letter spacing, line heights, and font weight tokens — applied consistently across the site
+- [x] **DSYS-04**: Surface/card elevation tokens defined — background, card, elevated, overlay levels with corresponding border and shadow tokens
+- [x] **DSYS-05**: Tailwind config extends theme with design tokens — no scattered hardcoded hex/rgb values in new token definitions
 
 ### HERO — Homepage & Value Proposition
 
@@ -22,10 +22,10 @@
 
 ### COMP — Core Component Polish
 
-- [ ] **COMP-01**: Button component has distinct, polished variants — primary (brand color), secondary (outlined or muted), ghost (text-only) — all with proper hover/focus/active states
-- [ ] **COMP-02**: Form inputs and textareas have consistent styling — focus ring, label positioning, placeholder treatment, error state, disabled state
-- [ ] **COMP-03**: Card component is visually distinct from page background — clear border/shadow/surface treatment with consistent padding
-- [ ] **COMP-04**: Navbar is polished — proper backdrop treatment, link hover states, active indicator, mobile menu consistency
+- [x] **COMP-01**: Button component has distinct, polished variants — primary (brand color), secondary (outlined or muted), ghost (text-only) — all with proper hover/focus/active states
+- [x] **COMP-02**: Form inputs and textareas have consistent styling — focus ring, label positioning, placeholder treatment, error state, disabled state
+- [x] **COMP-03**: Card component is visually distinct from page background — clear border/shadow/surface treatment with consistent padding
+- [x] **COMP-04**: Navbar is polished — proper backdrop treatment, link hover states, active indicator, mobile menu consistency
 
 ### TOOL — Tool Page Polish
 
@@ -57,19 +57,19 @@ Which phases cover which requirements.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSYS-01 | Phase 56 | Pending |
-| DSYS-02 | Phase 56 | Pending |
-| DSYS-03 | Phase 56 | Pending |
-| DSYS-04 | Phase 56 | Pending |
-| DSYS-05 | Phase 56 | Pending |
+| DSYS-01 | Phase 56 | Complete |
+| DSYS-02 | Phase 56 | Complete |
+| DSYS-03 | Phase 56 | Complete |
+| DSYS-04 | Phase 56 | Complete |
+| DSYS-05 | Phase 56 | Complete |
 | HERO-01 | Phase 57 | Complete |
 | HERO-02 | Phase 57 | Complete |
 | HERO-03 | Phase 57 | Complete |
 | HERO-04 | Phase 57 | Complete |
-| COMP-01 | Phase 58 | Pending |
-| COMP-02 | Phase 58 | Pending |
-| COMP-03 | Phase 58 | Pending |
-| COMP-04 | Phase 58 | Pending |
+| COMP-01 | Phase 58 | Complete |
+| COMP-02 | Phase 58 | Complete |
+| COMP-03 | Phase 58 | Complete |
+| COMP-04 | Phase 58 | Complete |
 | TOOL-01 | Phase 59 | Pending |
 | TOOL-02 | Phase 59 | Pending |
 | TOOL-03 | Phase 59 | Pending |

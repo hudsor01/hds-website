@@ -9,13 +9,13 @@ export const metadata: Metadata = {
 	title:
 		'Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy',
 	description:
-		'Strategic insights on web development, business growth, and digital dominance from Hudson Digital Solutions. Learn how to engineer competitive advantages through technology.',
+		"Practical insights on websites, tool integrations, and business automation from Hudson Digital Solutions. Learn how to make technology work harder so you don't have to.",
 	keywords:
 		'web development blog, business strategy, digital marketing, competitive advantage, web performance, Hudson Digital Solutions',
 	openGraph: {
 		title: 'Blog - Hudson Digital Solutions',
 		description:
-			'Strategic insights on web development, business growth, and digital dominance',
+			'Practical insights on websites, tool integrations, and business automation',
 		url: 'https://hudsondigitalsolutions.com/blog',
 		images: [
 			{
@@ -55,15 +55,15 @@ export default async function BlogPage() {
 				<div className="relative container-wide text-center">
 					<div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-accent/60 bg-accent/10 text-accent font-semibold text-lg">
 						<span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
-						Strategic Insights
+						Practical Insights
 					</div>
 					<h1 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
 						Business <span className="text-accent">Strategy</span> Blog
 					</h1>
 					<p className="text-lg text-muted-foreground container-narrow text-pretty">
-						Strategic insights on web development, business growth, and digital
-						dominance. Learn how to engineer competitive advantages through
-						technology.
+						Practical insights on websites, tool integrations, and business
+						automation. Learn how to make technology work harder so you
+						don&apos;t have to.
 					</p>
 				</div>
 			</section>
@@ -101,7 +101,8 @@ export default async function BlogPage() {
 									All Articles
 								</h2>
 								<p className="text-muted-foreground text-pretty">
-									Strategic insights for business growth and digital dominance
+									Practical guides for business owners who want more from their
+									technology
 								</p>
 							</div>
 
@@ -147,10 +148,10 @@ export default async function BlogPage() {
 							{/* CTA */}
 							<Card variant="glass" size="sm" className="text-center">
 								<h3 className="text-lg font-bold text-foreground mb-subheading text-balance">
-									Ready to Dominate Your Market?
+									Ready to grow your business?
 								</h3>
 								<p className="text-muted-foreground mb-subheading text-pretty">
-									Let&apos;s engineer your competitive advantage.
+									Let&apos;s build the system that runs it.
 								</p>
 								<Link
 									href="/contact"

@@ -26,45 +26,45 @@ interface Service {
 
 const services: Service[] = [
 	{
-		title: 'Web Applications',
+		title: 'Website Development',
 		description:
-			'Custom web applications built with modern frameworks and scalable architecture.',
+			'Build your digital front door. Custom websites with admin panels so you control your content, mobile-ready and built to convert visitors into customers.',
 		features: [
-			'React & Next.js Development',
-			'API Design & Integration',
-			'Database Architecture',
-			'Performance Optimization',
-			'Cloud Deployment'
+			'Custom Design & Build',
+			'Admin Panel So You Control Content',
+			'Works With Your Data',
+			'Fast-Loading, Every Time',
+			'Always Reliable, Always Available'
 		],
 		pricing: 'Starting at $5,000',
 		icon: Code2,
 		gradient: 'bg-muted'
 	},
 	{
-		title: 'Custom Solutions',
+		title: 'Integrations & Connections',
 		description:
-			'Tailored software solutions designed specifically for your business needs.',
+			'We link your website to every tool your business runs on — CRM, payments, calendar, email. Data flows automatically, nothing falls through the cracks.',
 		features: [
-			'Business Process Automation',
-			'System Integrations',
-			'Data Analytics Platforms',
-			'Revenue Operations',
-			'Legacy System Modernization'
+			'HubSpot CRM Connection',
+			'Stripe Payment Setup',
+			'Calendar & Booking Systems',
+			'Email Platform Sync',
+			'Outdated Systems Upgraded'
 		],
 		pricing: 'Starting at $8,000',
 		icon: Settings,
 		gradient: 'bg-info/20'
 	},
 	{
-		title: 'Strategic Consulting',
+		title: 'Business Automation',
 		description:
-			'Technical strategy and planning to accelerate your business growth.',
+			'Follow-up emails, onboarding sequences, appointment reminders, invoice chasing. We automate the workflows that eat your time so your business runs without you.',
 		features: [
-			'Technical Architecture Review',
-			'Growth Strategy Planning',
-			'Performance Audits',
-			'Technology Roadmapping',
-			'ROI Optimization'
+			'HubSpot Workflow Automation',
+			'Zapier & n8n Integrations',
+			'Automated Follow-Up Sequences',
+			'Appointment & Reminder Flows',
+			'Invoice & Payment Chasing'
 		],
 		pricing: 'Starting at $2,000',
 		icon: BarChart3,
@@ -96,28 +96,28 @@ const process: ProcessStep[] = [
 		step: '01',
 		title: 'Discovery',
 		description:
-			'Deep dive into your business requirements, technical challenges, and growth objectives.',
+			'We learn how your business works today — what you do manually, what tools you use, and where time is being lost.',
 		icon: Search
 	},
 	{
 		step: '02',
 		title: 'Strategy',
 		description:
-			'Develop a comprehensive technical strategy with clear timelines and success metrics.',
+			'We map out exactly what to build, connect, or automate — with clear timelines and a plain-English plan you can follow.',
 		icon: ClipboardList
 	},
 	{
 		step: '03',
 		title: 'Development',
 		description:
-			'Build your solution using best practices, modern technologies, and scalable architecture.',
+			'We build your solution quickly and reliably so you can launch with confidence.',
 		icon: Zap
 	},
 	{
 		step: '04',
 		title: 'Launch',
 		description:
-			'Deploy, monitor, and optimize your solution for maximum impact and performance.',
+			'We go live, make sure everything works, and stay available so nothing catches you off guard.',
 		icon: Rocket
 	}
 ]
@@ -140,17 +140,17 @@ export default function ServicesPage() {
 
 						<div>
 							<h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
-								<span className="inline-block">Technical</span>
-								<span className="inline-block mx-4 text-accent">Services</span>
-								<span className="inline-block">That</span>
-								<span className="inline-block ml-4 text-accent">Scale</span>
+								<span className="inline-block">Everything Your</span>
+								<span className="inline-block mx-4 text-accent">Business</span>
+								<span className="inline-block">Needs</span>
+								<span className="inline-block ml-4 text-accent">Online</span>
 							</h1>
 						</div>
 
 						<div className="typography">
 							<p className="large text-muted-foreground container-wide leading-relaxed text-pretty">
-								Expert technical solutions designed to accelerate your business
-								growth without the overhead of full-time development teams.
+								From your first website to full business automation — we handle
+								it all so you don&apos;t have to.
 							</p>
 						</div>
 
@@ -189,12 +189,13 @@ export default function ServicesPage() {
 				<div className="container-wide">
 					<div className="text-center mb-16">
 						<h2 className="text-lg font-black text-foreground mb-content-block">
-							<span className="text-accent">Our Services</span>
+							<span className="text-accent">
+								Services That Grow Your Business
+							</span>
 						</h2>
 						<div className="typography">
 							<p className="large muted container-narrow">
-								Comprehensive technical solutions tailored to your business
-								needs.
+								We handle the tech. You focus on running your business.
 							</p>
 						</div>
 					</div>
@@ -224,8 +225,8 @@ export default function ServicesPage() {
 						</h2>
 						<div className="typography">
 							<p className="large muted container-narrow">
-								Our track record speaks for itself - delivering exceptional
-								results for clients across industries.
+								Small business owners trust us to get it done right and on time
+								— without the technical runaround.
 							</p>
 						</div>
 					</div>
@@ -257,8 +258,8 @@ export default function ServicesPage() {
 						</h2>
 						<div className="typography">
 							<p className="large text-muted-foreground container-narrow">
-								A proven methodology that ensures successful project delivery
-								every time.
+								Simple, clear steps from first conversation to live and working
+								— no technical jargon required.
 							</p>
 						</div>
 					</div>
@@ -303,14 +304,15 @@ export default function ServicesPage() {
 						className="relative z-sticky text-center p-12 md:p-16"
 					>
 						<h2 className="text-lg font-black text-foreground mb-content-block">
-							Ready to accelerate
-							<span className="text-accent"> your growth?</span>
+							Ready to stop doing it
+							<span className="text-accent"> manually?</span>
 						</h2>
 
 						<div className="typography">
 							<p className="large muted container-narrow mb-10">
-								Let&apos;s discuss your specific technical needs and create a
-								custom solution that drives real results for your business.
+								Tell us what&apos;s taking up your time. We&apos;ll put together
+								a plan to build, connect, or automate it — and give you back
+								your day.
 							</p>
 						</div>
 
