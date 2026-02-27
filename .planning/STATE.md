@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Phase: 58 (Core Component Polish) — IN PROGRESS (Plan 02 of 4 done)
-Plan: 58-02 complete — COMP-01 button polish and COMP-02 input/label polish done; 34/37 tests pass
-Status: 58-02 done — button shadow+active states, input aria-invalid error parity, label duplicate directive removed
-Last activity: 2026-02-27 — 58-02 committed (2 commits: df5e53c, 541104f)
+Phase: 58 (Core Component Polish) — IN PROGRESS (Plan 03 of 4 done)
+Plan: 58-03 complete — COMP-03 card surface elevation and COMP-04 navbar hover fix + footer token done; 62 tests pass
+Status: 58-03 done — card bg-surface-raised/shadow-sm/border-border-subtle, navbar hover:bg-muted, footer bg-background-dark
+Last activity: 2026-02-27 — 58-03 committed (2 commits: f932a66, b35b083)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -51,6 +51,7 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 | Phase 57 P04 | 0 | 1 task (verify) | 0 files |
 | Phase 58-core-component-polish P01 | 11 | 2 tasks | 2 files |
 | Phase 58-core-component-polish P02 | 10 | 2 tasks | 3 files |
+| Phase 58-core-component-polish P03 | 7 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -94,10 +95,12 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - [Phase 57]: Removed 'use client' from bento-grid.tsx — static layout component needs no client directive; Icon function props cannot be serialized across server-client boundary in Next.js SSG
 - [Phase 57]: Removed solutions array and map in page.tsx — BentoGrid uses inline BentoCard declarations because each card needs different col-span; YAGNI
 - [Phase 57 P04]: User approved complete redesign without corrections — all HERO-01 through HERO-04 visual requirements confirmed as implemented in Plans 01-03
-- [Phase 58-core-component-polish]: Footer inline style test uses class assertion (bg-nav-dark) because JSDOM does not render React style props as DOM attributes
+- [Phase 58-core-component-polish]: Footer inline style test uses class assertion (bg-nav-dark) because JSDOM does not render React style props as DOM attributes — CORRECTED in P03: test assertion updated to bg-background-dark (actual token name)
 - [Phase 58-core-component-polish]: Guard assertions pass in RED phase for COMP-02/03 — textarea parity, ghost variant, glass unaffected checks are intentionally green
 - [Phase 58-core-component-polish P02]: bg-surface-sunken used directly in Tailwind v4 — token auto-generated from --color-surface-sunken in @theme {}; no bracket syntax needed
 - [Phase 58-core-component-polish P02]: aria-invalid error classes placed in inputVariants base string so all variants (default and currency) inherit error state automatically
+- [Phase 58-core-component-polish P03]: bg-nav-dark was used in test but never defined as a token; bg-background-dark is the correct Phase 56 token for footer dark background
+- [Phase 58-core-component-polish P03]: Footer overlay div (absolute inset-0 bg-(--color-nav-dark)) removed alongside inline style — bg-background-dark on footer element handles background directly
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-27
-Stopped at: Completed 58-02-PLAN.md (COMP-01/02 button+input polish — 34/37 component tests green)
+Stopped at: Completed 58-03-PLAN.md (COMP-03/04 card surface + navbar hover + footer token — 62 tests green)
 Resume file: N/A
-Next action: Plan 58-03 (COMP-03 card surface tokens + COMP-04 navbar polish)
+Next action: Plan 58-04 (final phase plan — verification or remaining COMP requirements)
