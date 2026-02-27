@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Retroactive Verification
 status: unknown
-last_updated: "2026-02-26T23:51:09.063Z"
+last_updated: "2026-02-27T00:33:12.598Z"
 progress:
-  total_phases: 52
+  total_phases: 53
   completed_phases: 21
-  total_plans: 39
-  completed_plans: 32
+  total_plans: 43
+  completed_plans: 33
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Phase: 57 (Homepage Hero Redesign) — COMPLETE (all 4 plans done)
-Plan: Phase 57 complete — ready for next phase
-Status: Phase 57 complete — all HERO-01 through HERO-04 visually confirmed by user; homepage redesign shipped
-Last activity: 2026-02-26 — 57-04 user visual verification approved; Phase 57 closed
+Phase: 58 (Core Component Polish) — IN PROGRESS (Plan 02 of 4 done)
+Plan: 58-02 complete — COMP-01 button polish and COMP-02 input/label polish done; 34/37 tests pass
+Status: 58-02 done — button shadow+active states, input aria-invalid error parity, label duplicate directive removed
+Last activity: 2026-02-27 — 58-02 committed (2 commits: df5e53c, 541104f)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -49,6 +49,8 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 | Phase 57 P02 | 15 | 2 tasks | 2 files |
 | Phase 57 P03 | 27 | 2 tasks | 2 files |
 | Phase 57 P04 | 0 | 1 task (verify) | 0 files |
+| Phase 58-core-component-polish P01 | 11 | 2 tasks | 2 files |
+| Phase 58-core-component-polish P02 | 10 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -92,6 +94,10 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - [Phase 57]: Removed 'use client' from bento-grid.tsx — static layout component needs no client directive; Icon function props cannot be serialized across server-client boundary in Next.js SSG
 - [Phase 57]: Removed solutions array and map in page.tsx — BentoGrid uses inline BentoCard declarations because each card needs different col-span; YAGNI
 - [Phase 57 P04]: User approved complete redesign without corrections — all HERO-01 through HERO-04 visual requirements confirmed as implemented in Plans 01-03
+- [Phase 58-core-component-polish]: Footer inline style test uses class assertion (bg-nav-dark) because JSDOM does not render React style props as DOM attributes
+- [Phase 58-core-component-polish]: Guard assertions pass in RED phase for COMP-02/03 — textarea parity, ghost variant, glass unaffected checks are intentionally green
+- [Phase 58-core-component-polish P02]: bg-surface-sunken used directly in Tailwind v4 — token auto-generated from --color-surface-sunken in @theme {}; no bracket syntax needed
+- [Phase 58-core-component-polish P02]: aria-invalid error classes placed in inputVariants base string so all variants (default and currency) inherit error state automatically
 
 ### Pending Todos
 
@@ -103,7 +109,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-26
-Stopped at: Completed 57-04-PLAN.md (visual verification — user approved full redesign; Phase 57 complete)
+Last session: 2026-02-27
+Stopped at: Completed 58-02-PLAN.md (COMP-01/02 button+input polish — 34/37 component tests green)
 Resume file: N/A
-Next action: Begin next phase per ROADMAP
+Next action: Plan 58-03 (COMP-03 card surface tokens + COMP-04 navbar polish)
