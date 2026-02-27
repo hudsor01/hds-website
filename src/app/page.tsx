@@ -1,6 +1,5 @@
 import {
 	ArrowRight,
-	BarChart3,
 	Calculator,
 	Check,
 	Code2,
@@ -46,58 +45,38 @@ export const metadata: Metadata = {
 	}
 }
 
-const recentDeliveries = [
-	{
-		timeAgo: '2h ago',
-		feature: 'Stripe payment integration',
-		industry: 'E-commerce SaaS'
-	},
-	{
-		timeAgo: '1d ago',
-		feature: 'Auth migration to Next.js 15',
-		industry: 'B2B Platform'
-	},
-	{
-		timeAgo: '3d ago',
-		feature: 'Real-time analytics dashboard',
-		industry: 'Fintech Startup'
-	},
-	{
-		timeAgo: '5d ago',
-		feature: 'API performance overhaul',
-		industry: 'Healthcare SaaS'
-	},
-	{
-		timeAgo: '1wk ago',
-		feature: 'Full checkout redesign',
-		industry: 'Retail Platform'
-	}
+const automationItems = [
+	{ trigger: 'Lead submits a form', outcome: 'lands in your CRM instantly' },
+	{ trigger: 'New client signs on', outcome: 'onboarding sequence fires' },
+	{ trigger: 'Booking confirmed', outcome: 'calendar syncs + texts sent' },
+	{ trigger: 'Invoice goes overdue', outcome: 'reminder sequence starts' },
+	{ trigger: 'Every Monday morning', outcome: 'digest report hits your inbox' }
 ]
 
 const solutions = [
 	{
 		Icon: Code2,
-		title: 'Ship Features Faster',
+		title: 'A Website That Works For You',
 		description:
-			'Launch new features in days, not months. We handle the entire technical stack — React/Next.js, API architecture, and 99.9% uptime.',
-		stat: '3×',
-		statLabel: 'faster delivery'
+			'Your digital front door, built to capture leads and represent your business professionally. Mobile-ready, fast, and with an admin panel so you can update it without calling a developer.',
+		stat: '2–4 wks',
+		statLabel: 'to launch'
+	},
+	{
+		Icon: Zap,
+		title: 'All Your Tools, Connected',
+		description:
+			'We link your site to your CRM, payment processor, calendar, and email so data flows automatically. No more copy-pasting between apps or losing leads in the gaps.',
+		stat: '20+',
+		statLabel: 'tools we connect'
 	},
 	{
 		Icon: Settings,
-		title: 'Fix Revenue Leaks',
+		title: 'Workflows That Run Themselves',
 		description:
-			'Stop losing leads to broken processes. Automate everything that slows you down — CRM integration, lead scoring, real-time analytics.',
-		stat: '60%',
-		statLabel: 'cost reduction'
-	},
-	{
-		Icon: BarChart3,
-		title: 'Scale Without Breaking',
-		description:
-			'Handle 10× growth without rebuilding. We future-proof your tech from day one — performance audits, infrastructure planning, cost optimisation.',
-		stat: '10×',
-		statLabel: 'growth ready'
+			'Follow-up emails, client onboarding, appointment reminders, invoice chasing — all automated. Your business keeps moving even when you step away.',
+		stat: '10+ hrs',
+		statLabel: 'saved per week'
 	}
 ]
 
@@ -148,14 +127,14 @@ export default function HomePage() {
 							</div>
 
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
-								Stop Losing Revenue to Technical Bottlenecks
+								Your Business Should Run Itself
 							</h1>
 
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">
-								Your roadmap slips while engineers fight fires. We embed as your
-								fractional engineering team — owning delivery from architecture
-								to deployment, eliminating debt, and shipping in 2–4 weeks. No
-								hiring. No overhead.
+								Most businesses have a website. Few have a system behind it. We
+								build your site, connect your tools, and automate the workflows
+								that eat your time — from first lead to closed deal. One
+								partner, end to end.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3">
@@ -166,7 +145,7 @@ export default function HomePage() {
 									trackConversion={true}
 								>
 									<Link href={ROUTES.CONTACT}>
-										Get Your Free Roadmap
+										Get a Free Strategy Call
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>
@@ -214,46 +193,38 @@ export default function HomePage() {
 							</div>
 						</div>
 
-						{/* Right — live delivery feed */}
+						{/* Right — automation feed */}
 						<div className="lg:col-span-2">
 							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
 								{/* Header */}
-								<div className="px-5 py-3.5 border-b border-border/60 flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<span className="relative flex h-2 w-2 shrink-0">
-											<span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
-											<span className="relative flex h-2 w-2 rounded-full bg-emerald-400" />
-										</span>
+								<div className="px-5 py-4 border-b border-border/60">
+									<div className="flex items-center gap-2 mb-1">
+										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
 										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
-											Recent Deliveries
+											What Gets Automated
 										</span>
 									</div>
-									<span className="text-xs text-muted-foreground">
-										40+ projects
-									</span>
+									<p className="text-xs text-muted-foreground">
+										After we wire up your stack
+									</p>
 								</div>
 
-								{/* Delivery rows */}
-								{recentDeliveries.map(delivery => (
+								{/* Automation rows */}
+								{automationItems.map(item => (
 									<div
-										key={delivery.feature}
-										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-start justify-between gap-4"
+										key={item.trigger}
+										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-center gap-3"
 									>
-										<div className="min-w-0">
-											<div className="text-xs text-muted-foreground mb-0.5">
-												{delivery.timeAgo}
-											</div>
-											<div className="text-sm font-medium text-foreground truncate">
-												{delivery.feature}
-											</div>
-											<div className="text-xs text-muted-foreground">
-												{delivery.industry}
-											</div>
-										</div>
-										<div className="flex items-center gap-1 text-emerald-400 shrink-0 pt-0.5">
-											<Check className="w-3.5 h-3.5" />
-											<span className="text-xs font-medium">shipped</span>
-										</div>
+										<Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+										<p className="text-sm leading-snug">
+											<span className="text-muted-foreground">
+												{item.trigger}
+											</span>
+											<span className="text-muted-foreground/40 mx-1.5">→</span>
+											<span className="text-foreground font-medium">
+												{item.outcome}
+											</span>
+										</p>
 									</div>
 								))}
 							</div>
@@ -267,11 +238,11 @@ export default function HomePage() {
 				<div className="container-wide">
 					<div className="text-center mb-16">
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							How We Solve Your Biggest Problems
+							One Partner. Three Phases. End to End.
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Three focused ways we turn technical struggles into competitive
-							advantages.
+							Most businesses have a website. Few have the system behind it. We
+							handle all three layers so nothing falls through the cracks.
 						</p>
 					</div>
 
@@ -321,10 +292,11 @@ export default function HomePage() {
 				<div className="container-wide">
 					<div className="text-center mb-16">
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Proven Impact
+							By the Numbers
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Every engagement is measured. Here&apos;s what our clients see.
+							Real timelines, real experience, real availability — no agency
+							fluff.
 						</p>
 					</div>
 
@@ -467,12 +439,14 @@ export default function HomePage() {
 							</div>
 
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Your competitors ship faster. Why don&apos;t you?
+								Ready to stop running your business manually?
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Every day you wait is revenue lost. Get a custom roadmap to 10×
-								your technical velocity in our free 30-minute strategy call.
+								Every week without automation is another week of manual
+								follow-ups, missed leads, and time you won&apos;t get back.
+								Let&apos;s map out what your business looks like when the system
+								runs itself.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -483,7 +457,7 @@ export default function HomePage() {
 									trackConversion={true}
 								>
 									<Link href={ROUTES.CONTACT}>
-										Get Your Free Roadmap
+										Get a Free Strategy Call
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>
@@ -494,7 +468,7 @@ export default function HomePage() {
 									trackConversion={true}
 									className="border border-border/50 hover:bg-muted/20 hover:border-border"
 								>
-									<Link href={ROUTES.PORTFOLIO}>See Proven Results First</Link>
+									<Link href={ROUTES.PORTFOLIO}>See What We&apos;ve Built</Link>
 								</Button>
 							</div>
 						</div>

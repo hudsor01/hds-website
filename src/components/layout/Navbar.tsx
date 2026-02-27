@@ -97,7 +97,7 @@ const Navbar = memo(function Navbar() {
 								onClick={handleNavClick}
 							>
 								<Link href={ROUTES.CONTACT}>
-									Start Shipping Faster
+									Get Started
 									<ArrowRight className="w-3.5 h-3.5" />
 								</Link>
 							</Button>
