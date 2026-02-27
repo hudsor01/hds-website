@@ -30,7 +30,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Fintech & Banking',
 				description:
-					'Secure web platforms for Charlotte financial institutions, fintech startups, and banking services.'
+					'Secure web platforms for Charlotte financial institutions, banks, and financial service businesses.'
 			},
 			{
 				title: 'Website & Business Systems',
@@ -38,9 +38,9 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 					'Professional websites and connected systems for Charlotte businesses of every size.'
 			},
 			{
-				title: 'Startup Acceleration',
+				title: 'Business Automation',
 				description:
-					'MVP development and digital strategy for Charlotte startups and emerging businesses.'
+					'Automate manual work — connect your CRM, booking, and tools so your Charlotte business runs itself.'
 			}
 		]
 	},
@@ -53,7 +53,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		description:
 			"North Carolina's capital and anchor of the Research Triangle, Raleigh is a powerhouse of tech, biotech, and education. We build digital solutions for the Triangle market.",
 		metaDescription:
-			'Web development in Raleigh, NC. Custom websites, tech startup platforms, and digital solutions for Research Triangle businesses.',
+			'Website development and business automation in Raleigh, NC. We build your website, connect your tools, and automate the work for Research Triangle businesses.',
 		neighborhoods: [
 			'Downtown',
 			'North Hills',
@@ -137,7 +137,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		stateCode: 'NC',
 		tagline: 'Bull City Digital Innovation',
 		description:
-			'Durham is the innovation engine of the Research Triangle with Duke University, a thriving startup scene, and world-class healthcare. We build digital solutions for the Bull City.',
+			'Durham is the innovation engine of the Research Triangle with Duke University, a thriving business community, and world-class healthcare. We build digital solutions for the Bull City.',
 		metaDescription:
 			'Web development in Durham, NC. Custom websites, biotech platforms, and digital solutions for Research Triangle businesses and Duke community.',
 		neighborhoods: [
@@ -167,9 +167,9 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 					'HIPAA-compliant web solutions for Duke Health partners and Durham healthcare technology companies.'
 			},
 			{
-				title: 'Startup & Innovation',
+				title: 'Business Automation',
 				description:
-					'MVP development for Durham startups, American Underground companies, and Triangle tech ventures.'
+					'Automate manual work — connect your CRM, booking, and tools so your Durham business runs itself.'
 			}
 		]
 	},

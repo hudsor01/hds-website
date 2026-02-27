@@ -51,7 +51,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Space City Digital Excellence',
 		description:
-			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with cutting-edge web solutions and digital strategy.',
+			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with website development, tool integrations, and business automation.',
 		metaDescription:
 			'Website development and business automation in Houston, TX. We build your website, connect your tools, and automate the work for Houston businesses.',
 		neighborhoods: [
@@ -94,7 +94,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Keep Austin Weird, Make Your Website Great',
 		description:
-			'In the heart of Silicon Hills, we partner with Austin tech companies and creative businesses to build innovative digital experiences.',
+			'In the heart of Silicon Hills, we help Austin businesses get online, connect their tools, and automate the work — so they can focus on growing.',
 		metaDescription:
 			'Website development and business automation in Austin, TX. We build your website, connect your tools, and automate the work for Austin businesses.',
 		neighborhoods: [

@@ -33,9 +33,9 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 					'E-commerce and brand websites for Denver outdoor recreation and lifestyle companies.'
 			},
 			{
-				title: 'Tech Startup MVPs',
+				title: 'Business Automation',
 				description:
-					'Rapid MVP development for Denver and Boulder tech startups seeking investment.'
+					'Automate manual work — connect your CRM, booking, and tools so your Denver business runs itself.'
 			},
 			{
 				title: 'Cannabis Industry Tech',
@@ -96,7 +96,7 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		description:
 			'Fort Collins combines Colorado State University, a world-class craft beer scene, and a thriving tech community. We build digital solutions for the Choice City.',
 		metaDescription:
-			'Web development in Fort Collins, CO. Custom websites, startup MVPs, and digital solutions for Northern Colorado businesses and CSU community.',
+			'Website development and business automation in Fort Collins, CO. We build your website, connect your tools, and automate the work for Northern Colorado businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Old Town',
@@ -121,7 +121,7 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 			{
 				title: 'Clean Energy Tech',
 				description:
-					'Web platforms for Northern Colorado renewable energy companies, cleantech startups, and sustainability firms.'
+					'Web platforms for Northern Colorado renewable energy companies, cleantech firms, and sustainability businesses.'
 			},
 			{
 				title: 'University & AgTech',
@@ -137,9 +137,9 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		stateCode: 'CO',
 		tagline: 'Innovation at Altitude',
 		description:
-			'Boulder is a global hub for natural products, aerospace research, and outdoor lifestyle brands. We build cutting-edge digital solutions for the Boulder tech ecosystem.',
+			'Boulder is a global hub for natural products, aerospace research, and outdoor lifestyle brands. We build websites, tool integrations, and automation for Boulder businesses.',
 		metaDescription:
-			'Web development in Boulder, CO. Custom websites, startup platforms, and digital solutions for Boulder tech companies and outdoor brands.',
+			'Website development and business automation in Boulder, CO. We build your website, connect your tools, and automate the work for Boulder businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Pearl Street',

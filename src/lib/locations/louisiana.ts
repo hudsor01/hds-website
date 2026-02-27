@@ -139,7 +139,7 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		description:
 			'The heart of Cajun Country and a growing tech hub, Lafayette combines rich culture with innovative business. We build digital solutions for Acadiana.',
 		metaDescription:
-			'Web development in Lafayette, LA. Custom websites and digital solutions for Acadiana businesses, tech startups, and oil and gas companies.',
+			'Website development and business automation in Lafayette, LA. We build your website, connect your tools, and automate the work for Acadiana businesses.',
 		neighborhoods: [
 			'Downtown',
 			'River Ranch',
@@ -162,9 +162,9 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 					'Custom web applications for Lafayette energy companies, field service providers, and oilfield contractors.'
 			},
 			{
-				title: 'Tech Startup Development',
+				title: 'Business Automation',
 				description:
-					'MVP development and digital platforms for Lafayette tech startups in the growing Acadiana tech corridor.'
+					'Automate manual work — connect your CRM, booking, and tools so your Lafayette business runs itself.'
 			},
 			{
 				title: 'Cultural & Tourism',
