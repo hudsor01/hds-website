@@ -22,11 +22,7 @@ const navigation: NavigationItem[] = [
 	{ name: 'Pricing', href: '/pricing' } // Note: /pricing not in ROUTES yet
 ]
 
-interface NavbarProps {
-	variant?: 'default' | 'light'
-}
-
-const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
+const Navbar = memo(function Navbar() {
 	const pathname = usePathname()
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -34,39 +30,25 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 		setMobileMenuOpen(false)
 	}, [])
 
-	const spacingClass = variant === 'light' ? 'gap-0.5' : 'gap-sections'
-
 	return (
 		<nav
-			className="fixed top-0 left-0 right-0 z-modal bg-background/90 backdrop-blur-xl"
+			className="fixed top-0 left-0 right-0 z-modal bg-background/95 backdrop-blur-xl border-b border-border/40"
 			role="navigation"
 			aria-label="Main navigation"
 		>
 			<div className="relative container-wide sm:px-6 lg:px-8">
-				<div className="flex-between h-16">
-					{/* Logo Section */}
-					<div className={cn('flex items-center', spacingClass)}>
+				<div className="flex-between h-14">
+					{/* Logo + Nav group */}
+					<div className="flex items-center gap-8">
 						<Link
 							href={ROUTES.HOME}
-							className={cn(
-								'group flex items-center focus-ring rounded-lg',
-								spacingClass
-							)}
+							className="group flex items-center gap-2.5 focus-ring rounded-lg"
 							aria-label="Hudson Digital Solutions - Home"
 						>
-							<div className="relative">
-								<Rocket className="w-8 h-8 text-accent" />
-							</div>
-							<div>
-								<div className="flex items-baseline gap-1">
-									<span className="text-lg font-bold text-foreground">
-										Hudson Digital Solutions
-									</span>
-								</div>
-								<div className="text-eyebrow text-accent">
-									Ship 3x Faster, 60% Cheaper
-								</div>
-							</div>
+							<Rocket className="w-5 h-5 text-accent shrink-0" />
+							<span className="text-sm font-semibold text-foreground whitespace-nowrap tracking-tight">
+								Hudson Digital Solutions
+							</span>
 						</Link>
 
 						{/* Desktop Navigation */}
@@ -80,7 +62,7 @@ const Navbar = memo(function Navbar({ variant = 'default' }: NavbarProps) {
 									key={item.name}
 									href={item.href}
 									className={cn(
-										'px-4 py-2 text-sm font-medium rounded-lg transition-smooth',
+										'px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',
 										pathname === item.href
 											? 'text-accent bg-accent/10'
 											: 'text-muted-foreground hover:text-foreground hover:bg-muted dark:text-foreground'

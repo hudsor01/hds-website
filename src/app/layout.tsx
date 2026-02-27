@@ -189,7 +189,7 @@ export default function RootLayout({
 					<ClientProviders>
 						<ErrorBoundary>
 							<NavbarLight />
-							<div id="main-content" className="min-h-screen pt-16">
+							<div id="main-content" className="min-h-screen pt-14">
 								{children}
 							</div>
 							<Footer />
