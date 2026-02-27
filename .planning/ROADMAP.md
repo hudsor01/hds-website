@@ -324,6 +324,6 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 56. Design System Foundation | v4.0 | 0/2 | Planned | - |
 | 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
-| 58. Core Component Polish | 2/4 | In Progress|  | - |
+| 58. Core Component Polish | 3/4 | In Progress|  | - |
 | 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
 | 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |
