@@ -67,31 +67,31 @@ const faqPageSchema = {
 
 const pricingTiers = [
 	{
-		name: 'Revenue Leak Audit',
+		name: 'Website Performance Audit',
 		price: 'Starting at $2,000',
 		description:
-			'Find $50K-$180K in hidden revenue leaks within 30 days. Average client finds 5-10x value in first month.',
+			'Find exactly where your website is losing visitors, leads, and customers. Get a clear action plan in 2-4 weeks.',
 		features: [
-			'Complete business review',
-			'Revenue leak identification',
+			'Complete website review',
+			'Missed opportunity identification',
 			'Conversion optimization roadmap',
 			'Speed and conversion analysis',
 			'Security check',
 			'Competitive analysis',
-			'Detailed action plan with ROI projections',
+			'Detailed action plan with clear next steps',
 			'2-4 week delivery'
 		],
 		notIncluded: ['Development work', 'Ongoing maintenance'],
 		popular: false,
-		cta: 'Find Your Revenue Leaks',
+		cta: 'Audit My Website',
 		href: '/contact',
-		roi: '5-10x value typically found'
+		roi: 'Clear action plan in 2-4 weeks'
 	},
 	{
-		name: 'Revenue-Optimized Web App',
+		name: 'Business Website',
 		price: 'Starting at $5,000',
 		description:
-			'Websites that pay for themselves. Average 40% conversion increase within 90 days or we keep working for free.',
+			'A professional website built to bring in customers. Average 40% more leads within 90 days or we keep working for free.',
 		features: [
 			'Custom React/Next.js development',
 			'Conversion-focused design',
@@ -105,7 +105,7 @@ const pricingTiers = [
 		],
 		notIncluded: ['Complex integrations', 'E-commerce functionality'],
 		popular: true,
-		cta: 'Build My Revenue Machine',
+		cta: 'Build My Website',
 		href: '/contact',
 		roi: '250% average ROI in 6 months'
 	},
@@ -261,23 +261,23 @@ export default function PricingPage() {
 				<div className="container-wide text-center">
 					<Card variant="glassSection" size="md">
 						<h2 className="text-responsive-lg font-black text-foreground mb-heading">
-							Ready for Development That Actually Makes Money?
+							Ready to Get More from Your Website?
 						</h2>
 
 						<div className="typography">
 							<p className="text-lg text-muted-foreground mb-heading container-narrow">
-								Get a free 30-minute ROI analysis showing exactly where your
-								tech stack is leaking revenue—and how to plug the leaks fast.
+								Get a free 30-minute strategy call showing exactly where your
+								website is losing customers—and how to bring more in.
 							</p>
 							<p className="text-accent font-semibold mb-content-block">
-								No sales pitch. No commitment. Just a detailed roadmap you can
+								No sales pitch. No commitment. Just a clear action plan you can
 								use immediately (even if you never hire us).
 							</p>
 						</div>
 
 						<div className="flex flex-col sm:flex-row gap-content justify-center">
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">Claim Your Free ROI Analysis</Link>
+								<Link href="/contact">Claim Your Free Strategy Call</Link>
 							</Button>
 
 							<Button asChild variant="outline" size="xl">

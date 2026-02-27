@@ -15,13 +15,13 @@ const testimonials = [
 	{
 		id: 1,
 		name: 'Michael Chen',
-		company: 'TechStart Inc.',
-		role: 'CTO',
+		company: 'Riverside Plumbing Co.',
+		role: 'Owner',
 		content:
-			'Hudson Digital Solutions delivered beyond our expectations. They transformed our MVP into a scalable platform that handles 100K+ users.',
+			'Hudson Digital Solutions delivered beyond our expectations. They built us a website and booking system that doubled our inbound leads within 60 days.',
 		rating: 5,
-		service: 'SaaS Development',
-		highlight: '10x Performance'
+		service: 'Business Website',
+		highlight: '2x More Leads'
 	},
 	{
 		id: 2,

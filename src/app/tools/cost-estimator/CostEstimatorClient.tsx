@@ -42,7 +42,7 @@ const websiteTypes = [
 	{ value: 'business-website', label: 'Business Website', basePrice: 5000 },
 	{ value: 'e-commerce', label: 'E-Commerce Store', basePrice: 10000 },
 	{ value: 'web-app', label: 'Web Application', basePrice: 15000 },
-	{ value: 'enterprise', label: 'Enterprise Solution', basePrice: 30000 }
+	{ value: 'enterprise', label: 'Custom Platform', basePrice: 30000 }
 ]
 
 const availableFeatures = [

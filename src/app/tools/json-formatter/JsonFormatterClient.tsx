@@ -119,7 +119,11 @@ export default function JsonFormatterClient() {
 	const loadSample = () => {
 		const sample = {
 			name: 'Hudson Digital Solutions',
-			services: ['Web Development', 'SaaS Consulting', 'Digital Marketing'],
+			services: [
+				'Website Development',
+				'Business Automation',
+				'Tool Integrations'
+			],
 			contact: {
 				email: BUSINESS_INFO.email,
 				location: 'Texas, USA'

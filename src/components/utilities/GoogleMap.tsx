@@ -10,8 +10,8 @@ export default function GoogleMap() {
 					Dallas-Fort Worth Metroplex
 				</h2>
 				<p className="text-muted-foreground text-lg">
-					Serving businesses across the DFW area with cutting-edge digital
-					solutions
+					Serving businesses across the DFW area with professional web
+					development and automation
 				</p>
 			</div>
 

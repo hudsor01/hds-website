@@ -103,9 +103,9 @@ const faqs = [
 					"Schedule a free 30-minute consultation call. We'll discuss your business goals, what's working, what isn't, and where automation or a better website could make the biggest difference. After the call, we'll send a detailed proposal with exact pricing and deliverables."
 			},
 			{
-				question: 'Do you work with startups?',
+				question: 'Do you work with new businesses?',
 				answer:
-					"Absolutely. We understand fast timelines, tight budgets, and the need for quick wins. We help early-stage businesses get their digital foundation right from day one — so you're not paying to fix it later."
+					"Absolutely. We understand fast timelines, tight budgets, and the need for quick wins. We help new businesses get their digital foundation right from day one — so you're not paying to redo it later."
 			},
 			{
 				question: 'What payment terms do you offer?',

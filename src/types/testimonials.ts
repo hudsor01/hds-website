@@ -37,15 +37,15 @@ export interface Testimonial {
 
 export type ServiceType =
 	| 'web-development'
-	| 'saas-consulting'
+	| 'business-automation'
 	| 'digital-marketing'
 	| 'ui-ux-design'
 	| 'seo'
 	| 'other'
 
 export const SERVICE_TYPES: { value: ServiceType; label: string }[] = [
-	{ value: 'web-development', label: 'Web Development' },
-	{ value: 'saas-consulting', label: 'SaaS Consulting' },
+	{ value: 'web-development', label: 'Website Development' },
+	{ value: 'business-automation', label: 'Business Automation' },
 	{ value: 'digital-marketing', label: 'Digital Marketing' },
 	{ value: 'ui-ux-design', label: 'UI/UX Design' },
 	{ value: 'seo', label: 'SEO Services' },

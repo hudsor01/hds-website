@@ -61,7 +61,7 @@ export function generateWebsiteSchema() {
 		name: 'Hudson Digital Solutions',
 		url: 'https://hudsondigitalsolutions.com',
 		description:
-			'Senior engineering team that eliminates technical bottlenecks. Ship 3x faster, 60% cheaper.',
+			'Professional website development and business automation for small businesses.',
 		potentialAction: {
 			'@type': 'SearchAction',
 			target: {
@@ -85,7 +85,7 @@ export function generateOrganizationSchema() {
 		url: 'https://hudsondigitalsolutions.com',
 		logo: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
 		description:
-			'Senior engineering team that eliminates technical bottlenecks.',
+			'Professional website development and business automation for small businesses.',
 		foundingDate: '2020',
 		address: {
 			'@type': 'PostalAddress',

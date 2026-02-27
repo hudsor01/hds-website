@@ -304,8 +304,8 @@ export default function AboutPage() {
 								<strong className="text-accent">
 									revenue operations professional
 								</strong>{' '}
-								at enterprise SaaS companies. I didn&apos;t just build websites
-								— I built the processes behind them that generated{' '}
+								at established companies. I didn&apos;t just build websites — I
+								built the processes behind them that generated{' '}
 								<strong className="text-accent">
 									measurable revenue impact
 								</strong>
@@ -348,7 +348,7 @@ export default function AboutPage() {
 										5+
 									</div>
 									<div className="text-sm text-muted-foreground group-hover:text-muted-foreground transition-smooth">
-										Years in RevOps
+										Years of Experience
 									</div>
 								</div>
 								<div className="text-center">

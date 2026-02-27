@@ -29,7 +29,11 @@ export const testimonials = pgTable(
 		updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow()
 	},
 	table => [
-		index('idx_testimonials_published').on(table.published, table.featured)
+		index('idx_testimonials_published').on(
+			table.published,
+			table.featured,
+			table.createdAt
+		)
 	]
 )
 

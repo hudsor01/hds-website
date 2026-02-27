@@ -13,11 +13,11 @@ export const revalidate = 3600
 export const metadata: Metadata = {
 	title: 'Showcase - Our Work | Hudson Digital Solutions',
 	description:
-		'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+		'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
 	openGraph: {
 		title: 'Showcase - Our Work | Hudson Digital Solutions',
 		description:
-			'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+			'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
 		type: 'website'
 	}
 }
@@ -133,9 +133,9 @@ export default function ShowcasePage() {
 
 							<div className="typography">
 								<p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
-									Real projects delivering measurable results. From SaaS
-									platforms to business websites, see how we transform ideas
-									into success stories.
+									Real projects delivering measurable results. From small local
+									businesses to growing e-commerce shops, see how we help
+									businesses get online and grow.
 								</p>
 							</div>
 

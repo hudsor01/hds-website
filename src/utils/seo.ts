@@ -10,11 +10,11 @@ import type { SEOMetaData } from '@/types/seo'
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
 		title:
-			'Turn Your Website Into a Revenue Machine | Proven ROI Results | Hudson Digital Solutions',
+			'Professional Websites & Business Automation for Small Businesses | Hudson Digital Solutions',
 		description:
-			'Stop losing revenue to technical bottlenecks. Custom web development that pays for itself with proven ROI results. Ship 3x faster, convert 2x better. Measurable revenue impact for growing businesses. Get your free ROI roadmap today.',
+			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
 		keywords:
-			'revenue-driven web development, high converting websites 2025, web development ROI, website revenue optimization, conversion rate optimization CRO, Next.js development services, React development agency, business automation software, SaaS development, technical debt solutions, web application development, startup web development',
+			'professional web development, small business websites, website development, business automation, tool integrations, e-commerce website, local business website, Next.js development, React development, website design',
 		ogImage: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
 		canonical: 'https://hudsondigitalsolutions.com/',
 		structuredData: {
@@ -23,7 +23,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			name: 'Hudson Digital Solutions',
 			url: 'https://hudsondigitalsolutions.com',
 			description:
-				'Premium web development and digital strategy services with proven ROI results',
+				'Professional website development and business automation for small businesses',
 			publisher: {
 				'@type': 'Organization',
 				name: 'Hudson Digital Solutions',
@@ -40,15 +40,15 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 
 	services: {
 		title:
-			'Development That Pays for Itself | 90-Day ROI Guarantee | Hudson Digital Solutions',
+			'Website Development, Integrations & Business Automation | Hudson Digital Solutions',
 		description:
-			'Stop paying for development that sits on a shelf. Revenue-optimized web apps (40% conversion increase), business automation (save 20+ hours/week), and revenue leak audits (find $50K-$180K in lost revenue). Services generate measurable ROI within 90 days—or we keep working for free. No agencies. No junior devs. Just senior engineers who understand revenue.',
+			'Professional websites, tool integrations, and business automation for small businesses. Get online, connect your systems, and automate manual work. Experienced developers who understand your business — results in 30-90 days.',
 		keywords:
-			'ROI-driven web development, conversion-optimized websites, business process automation, revenue operations automation, web application development, SaaS development services, technical consulting ROI, performance optimization services, revenue leak analysis, CRM integration services, marketing automation development',
+			'professional web development, conversion-optimized websites, business process automation, workflow automation, web application development, custom web applications, small business websites, performance optimization, CRM integration, marketing automation',
 		ogTitle:
-			'Development That Pays for Itself - 90-Day ROI Guarantee | Hudson Digital',
+			'Website Development & Business Automation for Small Businesses | Hudson Digital',
 		ogDescription:
-			'Revenue-optimized development services with 90-day ROI guarantee. Web apps with 40% conversion increases, automation saving 20+ hours/week. Find $50K-$180K in revenue leaks.',
+			'Professional websites, tool integrations, and business automation. Get online, connect your tools, and automate manual work. Results in 30-90 days.',
 		canonical: 'https://hudsondigitalsolutions.com/services',
 		structuredData: {
 			'@context': 'https://schema.org',
@@ -70,15 +70,15 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 
 	about: {
 		title:
-			'Revenue Engineers Who Happen to Write Code | Proven Impact | Hudson Digital Solutions',
+			'Experienced Developers Who Understand Your Business | Hudson Digital Solutions',
 		description:
-			'Revenue engineers with proven impact. We forge websites that dominate, not just work. Enterprise-grade development for ambitious businesses.',
+			'Experienced web developers who understand business, not just code. We build websites, connect your tools, and automate your work — so you can focus on your customers.',
 		keywords:
-			'revenue operations engineering, RevOps development, enterprise web development, startup development services, ROI-focused development, conversion rate optimization experts, business automation specialists, technical revenue optimization, SaaS development experts, growth engineering team',
+			'web development team, experienced developers, business automation specialists, website development agency, small business web experts, custom web development, workflow automation, business operations',
 		ogTitle:
-			'Revenue Engineers Behind the Code - Proven Impact | Hudson Digital',
+			'Experienced Developers Who Understand Your Business | Hudson Digital',
 		ogDescription:
-			'Former RevOps professionals turned engineers. Proven revenue impact with measurable ROI. We understand revenue, not just code.',
+			'Experienced developers with a business background. We build websites and automation that actually move the needle for small businesses.',
 		canonical: 'https://hudsondigitalsolutions.com/about',
 		structuredData: {
 			'@context': 'https://schema.org',
@@ -90,15 +90,14 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	},
 
 	contact: {
-		title:
-			'Get Your Free ROI Roadmap in 30 Minutes | No Sales Pitch | Hudson Digital Solutions',
-		description: `See exactly where your tech stack is leaking revenue—and how to fix it. Free 30-minute ROI analysis with detailed action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Join growing businesses with proven ROI results. Email: ${BUSINESS_INFO.email}`,
+		title: 'Book a Free Strategy Call | Hudson Digital Solutions',
+		description: `See exactly where your website is losing customers—and how to fix it. Free 30-minute strategy call with a clear action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Email: ${BUSINESS_INFO.email}`,
 		keywords:
-			'free ROI analysis, revenue leak audit, technical consultation, web development consultation, conversion optimization audit, performance audit services, free strategy session, business technology assessment, revenue operations consulting, growth engineering consultation',
+			'free website strategy, website consultation, web development consultation, conversion optimization audit, website performance audit, free strategy session, business website assessment, small business consulting, development consultation, website improvement',
 		ogTitle:
-			'Free ROI Roadmap - Find Revenue Leaks in 30 Minutes | Hudson Digital',
+			'Free Strategy Call - Improve Your Website in 30 Minutes | Hudson Digital',
 		ogDescription:
-			'Free 30-minute ROI analysis showing exactly where your tech leaks revenue. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
+			'Free 30-minute strategy call showing exactly where your website is losing customers. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
 		canonical: 'https://hudsondigitalsolutions.com/contact',
 		structuredData: {
 			'@context': 'https://schema.org',
