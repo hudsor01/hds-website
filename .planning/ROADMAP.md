@@ -260,10 +260,16 @@ Plans:
 
 **Goal**: Polish all shared UI components away from generic shadcn defaults — buttons (all variants/states), form inputs, card component, navbar backdrop and link treatment, footer, badges.
 **Depends on**: Phase 56 (design tokens established)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (58-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: COMP-01, COMP-02, COMP-03, COMP-04
+
+Plans:
+- [ ] 58-01-PLAN.md — TDD scaffold: failing assertions for COMP-01 through COMP-04
+- [ ] 58-02-PLAN.md — Button + Input/Textarea/Label polish (COMP-01, COMP-02)
+- [ ] 58-03-PLAN.md — Card + Navbar + Footer polish (COMP-03, COMP-04)
+- [ ] 58-04-PLAN.md — Automated verification + visual checkpoint
 
 #### Phase 59: Tool Page Polish
 
@@ -317,7 +323,7 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 54. Format Sweep & Workflow Integration | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 56. Design System Foundation | v4.0 | 0/2 | Planned | - |
-| 57. Homepage & Hero Redesign | 4/4 | Complete    | 2026-02-26 | - |
-| 58. Core Component Polish | v4.0 | 0/TBD | Pending | - |
+| 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
+| 58. Core Component Polish | v4.0 | 0/4 | Planned | - |
 | 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
 | 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |
