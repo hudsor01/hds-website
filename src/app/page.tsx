@@ -7,7 +7,6 @@ import {
 	Rocket,
 	Settings,
 	TrendingUp,
-	X,
 	Zap
 } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -47,12 +46,32 @@ export const metadata: Metadata = {
 	}
 }
 
-const comparisonRows = [
-	{ bad: '3–6 month timelines', good: '2–4 week delivery' },
-	{ bad: '$15k+/mo hiring cost', good: '60% less overhead' },
-	{ bad: 'Technical debt piles up', good: 'Clean architecture' },
-	{ bad: 'Features ship late', good: 'Ships on schedule' },
-	{ bad: 'Junior dev oversight', good: '10+ yr engineers' }
+const recentDeliveries = [
+	{
+		timeAgo: '2h ago',
+		feature: 'Stripe payment integration',
+		industry: 'E-commerce SaaS'
+	},
+	{
+		timeAgo: '1d ago',
+		feature: 'Auth migration to Next.js 15',
+		industry: 'B2B Platform'
+	},
+	{
+		timeAgo: '3d ago',
+		feature: 'Real-time analytics dashboard',
+		industry: 'Fintech Startup'
+	},
+	{
+		timeAgo: '5d ago',
+		feature: 'API performance overhaul',
+		industry: 'Healthcare SaaS'
+	},
+	{
+		timeAgo: '1wk ago',
+		feature: 'Full checkout redesign',
+		industry: 'Retail Platform'
+	}
 ]
 
 const solutions = [
@@ -133,9 +152,10 @@ export default function HomePage() {
 							</h1>
 
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">
-								Senior engineering team that eliminates your technical debt,
-								ships features in weeks, and scales your stack — without the
-								hiring headaches.
+								Your roadmap slips while engineers fight fires. We embed as your
+								fractional engineering team — owning delivery from architecture
+								to deployment, eliminating debt, and shipping in 2–4 weeks. No
+								hiring. No overhead.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3">
@@ -194,40 +214,45 @@ export default function HomePage() {
 							</div>
 						</div>
 
-						{/* Right — before/after comparison panel */}
+						{/* Right — live delivery feed */}
 						<div className="lg:col-span-2">
 							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
-								{/* Column headers */}
-								<div className="grid grid-cols-2 border-b border-border/60">
-									<div className="px-5 py-3 border-r border-border/60 flex items-center gap-2">
-										<X className="w-3.5 h-3.5 text-red-400 shrink-0" />
-										<span className="text-xs font-semibold text-red-400 uppercase tracking-widest">
-											Without us
+								{/* Header */}
+								<div className="px-5 py-3.5 border-b border-border/60 flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										<span className="relative flex h-2 w-2 shrink-0">
+											<span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
+											<span className="relative flex h-2 w-2 rounded-full bg-emerald-400" />
+										</span>
+										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
+											Recent Deliveries
 										</span>
 									</div>
-									<div className="px-5 py-3 flex items-center gap-2">
-										<Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-										<span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">
-											With us
-										</span>
-									</div>
+									<span className="text-xs text-muted-foreground">
+										40+ projects
+									</span>
 								</div>
 
-								{/* Comparison rows */}
-								{comparisonRows.map(row => (
+								{/* Delivery rows */}
+								{recentDeliveries.map(delivery => (
 									<div
-										key={row.bad}
-										className="grid grid-cols-2 border-b border-border/40 last:border-0"
+										key={delivery.feature}
+										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-start justify-between gap-4"
 									>
-										<div className="px-5 py-3.5 border-r border-border/40 flex items-center gap-2">
-											<X className="w-3 h-3 text-red-400/50 shrink-0" />
-											<span className="text-sm text-red-400/70">{row.bad}</span>
+										<div className="min-w-0">
+											<div className="text-xs text-muted-foreground mb-0.5">
+												{delivery.timeAgo}
+											</div>
+											<div className="text-sm font-medium text-foreground truncate">
+												{delivery.feature}
+											</div>
+											<div className="text-xs text-muted-foreground">
+												{delivery.industry}
+											</div>
 										</div>
-										<div className="px-5 py-3.5 flex items-center gap-2">
-											<Check className="w-3 h-3 text-emerald-400 shrink-0" />
-											<span className="text-sm text-emerald-400/90">
-												{row.good}
-											</span>
+										<div className="flex items-center gap-1 text-emerald-400 shrink-0 pt-0.5">
+											<Check className="w-3.5 h-3.5" />
+											<span className="text-xs font-medium">shipped</span>
 										</div>
 									</div>
 								))}
