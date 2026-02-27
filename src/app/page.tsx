@@ -2,10 +2,12 @@ import {
 	ArrowRight,
 	BarChart3,
 	Calculator,
+	Check,
 	Code2,
 	Rocket,
 	Settings,
 	TrendingUp,
+	X,
 	Zap
 } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -44,6 +46,14 @@ export const metadata: Metadata = {
 			SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
 	}
 }
+
+const comparisonRows = [
+	{ bad: '3–6 month timelines', good: '2–4 week delivery' },
+	{ bad: '$15k+/mo hiring cost', good: '60% less overhead' },
+	{ bad: 'Technical debt piles up', good: 'Clean architecture' },
+	{ bad: 'Features ship late', good: 'Ships on schedule' },
+	{ bad: 'Junior dev oversight', good: '10+ yr engineers' }
+]
 
 const solutions = [
 	{
@@ -91,94 +101,136 @@ export default function HomePage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* ── HERO ──────────────────────────────────────────── */}
-			<section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-background-dark">
-				{/* Grid texture — increased opacity for dark bg visibility */}
+			<section className="relative flex min-h-[90vh] items-center overflow-hidden bg-background-dark">
 				<div
 					className="absolute inset-0 grid-pattern-dark pointer-events-none"
 					aria-hidden="true"
 				/>
-
-				{/* Amber radial spotlight from top-centre */}
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-
-				{/* Bottom fade into next section */}
 				<div
 					className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none"
 					aria-hidden="true"
 				/>
 
-				<div className="relative z-10 container-narrow text-center px-4 py-28">
-					{/* Announcement badge */}
-					<div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/50 bg-muted/10 text-sm text-muted-foreground mb-10">
-						<span className="relative flex h-2 w-2 shrink-0">
-							<span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
-							<span className="relative flex h-2 w-2 rounded-full bg-accent" />
-						</span>
-						Limited availability — 3 project spots open for Q1 2026
-					</div>
-
-					{/* Headline */}
-					<h1 className="text-page-title text-foreground leading-tight mb-6 text-balance">
-						Stop Losing Revenue to Technical Bottlenecks
-					</h1>
-
-					{/* Supporting copy */}
-					<p className="text-lead text-muted-foreground mb-10 max-w-xl mx-auto text-balance">
-						Senior engineering team that eliminates your technical debt, ships
-						features in weeks, and scales your stack — without the hiring
-						headaches.
-					</p>
-
-					{/* CTAs */}
-					<div className="flex flex-col sm:flex-row gap-3 justify-center mb-16">
-						<Button asChild variant="accent" size="xl" trackConversion={true}>
-							<Link href={ROUTES.CONTACT}>
-								Get Your Free Roadmap
-								<ArrowRight className="w-4 h-4" />
-							</Link>
-						</Button>
-						<Button
-							asChild
-							variant="ghost"
-							size="xl"
-							trackConversion={true}
-							className="text-foreground border border-border/50 hover:bg-muted/20 hover:border-border"
-						>
-							<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
-								Calculate Your Savings
-							</Link>
-						</Button>
-					</div>
-
-					{/* Stats row */}
-					<div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
-						<div className="text-center">
-							<div className="text-2xl font-black text-foreground tabular-nums">
-								2–4 wks
+				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 py-24">
+					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
+						{/* Left — headline + CTAs */}
+						<div className="lg:col-span-3 flex flex-col gap-8">
+							{/* Availability badge */}
+							<div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/50 bg-muted/10 text-sm text-muted-foreground w-fit">
+								<span className="relative flex h-2 w-2 shrink-0">
+									<span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
+									<span className="relative flex h-2 w-2 rounded-full bg-accent" />
+								</span>
+								Limited availability — 3 project spots open for Q1 2026
 							</div>
-							<div className="text-sm text-muted-foreground mt-0.5">
-								First delivery
+
+							<h1 className="text-page-title text-foreground leading-tight text-balance">
+								Stop Losing Revenue to Technical Bottlenecks
+							</h1>
+
+							<p className="text-lead text-muted-foreground max-w-lg text-balance">
+								Senior engineering team that eliminates your technical debt,
+								ships features in weeks, and scales your stack — without the
+								hiring headaches.
+							</p>
+
+							<div className="flex flex-col sm:flex-row gap-3">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href={ROUTES.CONTACT}>
+										Get Your Free Roadmap
+										<ArrowRight className="w-4 h-4" />
+									</Link>
+								</Button>
+								<Button
+									asChild
+									variant="ghost"
+									size="xl"
+									trackConversion={true}
+									className="text-foreground border border-border/50 hover:bg-muted/20 hover:border-border"
+								>
+									<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
+										Calculate Your Savings
+									</Link>
+								</Button>
+							</div>
+
+							{/* Stats */}
+							<div className="flex items-center gap-6">
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										2–4 wks
+									</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										First delivery
+									</div>
+								</div>
+								<div className="w-px h-8 bg-border/40" />
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										40+
+									</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										Projects delivered
+									</div>
+								</div>
+								<div className="w-px h-8 bg-border/40" />
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										10+ yrs
+									</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										Experience
+									</div>
+								</div>
 							</div>
 						</div>
-						<div className="w-px h-10 bg-border/40 hidden sm:block" />
-						<div className="text-center">
-							<div className="text-2xl font-black text-foreground tabular-nums">
-								40+
-							</div>
-							<div className="text-sm text-muted-foreground mt-0.5">
-								Projects delivered
-							</div>
-						</div>
-						<div className="w-px h-10 bg-border/40 hidden sm:block" />
-						<div className="text-center">
-							<div className="text-2xl font-black text-foreground tabular-nums">
-								10+ yrs
-							</div>
-							<div className="text-sm text-muted-foreground mt-0.5">
-								Combined experience
+
+						{/* Right — before/after comparison panel */}
+						<div className="lg:col-span-2">
+							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
+								{/* Column headers */}
+								<div className="grid grid-cols-2 border-b border-border/60">
+									<div className="px-5 py-3 border-r border-border/60 flex items-center gap-2">
+										<X className="w-3.5 h-3.5 text-red-400 shrink-0" />
+										<span className="text-xs font-semibold text-red-400 uppercase tracking-widest">
+											Without us
+										</span>
+									</div>
+									<div className="px-5 py-3 flex items-center gap-2">
+										<Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+										<span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">
+											With us
+										</span>
+									</div>
+								</div>
+
+								{/* Comparison rows */}
+								{comparisonRows.map(row => (
+									<div
+										key={row.bad}
+										className="grid grid-cols-2 border-b border-border/40 last:border-0"
+									>
+										<div className="px-5 py-3.5 border-r border-border/40 flex items-center gap-2">
+											<X className="w-3 h-3 text-red-400/50 shrink-0" />
+											<span className="text-sm text-red-400/70">{row.bad}</span>
+										</div>
+										<div className="px-5 py-3.5 flex items-center gap-2">
+											<Check className="w-3 h-3 text-emerald-400 shrink-0" />
+											<span className="text-sm text-emerald-400/90">
+												{row.good}
+											</span>
+										</div>
+									</div>
+								))}
 							</div>
 						</div>
 					</div>
