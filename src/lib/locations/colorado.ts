@@ -10,7 +10,7 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		description:
 			'Denver is booming with tech talent and outdoor lifestyle brands. We build digital solutions for the Front Range that scale as fast as the city grows.',
 		metaDescription:
-			'Web development and digital solutions in Denver, CO. Custom websites, SaaS applications, and web platforms for Colorado businesses and startups.',
+			'Website development and business automation in Denver, CO. We build your website, connect your tools, and automate the work for Colorado businesses.',
 		neighborhoods: [
 			'Downtown Denver',
 			'LoDo',
