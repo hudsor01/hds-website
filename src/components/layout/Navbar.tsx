@@ -167,7 +167,7 @@ const Navbar = memo(function Navbar() {
 								className="w-full"
 								onClick={handleNavClick}
 							>
-								<Link href={ROUTES.CONTACT}>Get Free Roadmap</Link>
+								<Link href={ROUTES.CONTACT}>Book Free Call</Link>
 							</Button>
 						</div>
 					</div>

@@ -51,7 +51,7 @@ const DEFAULT_COMPANY = {
 	companyEmail: BUSINESS_INFO.email,
 	companyPhone: '',
 	companyDescription:
-		'Hudson Digital Solutions is a Texas-based digital agency specializing in web development, SaaS consulting, and digital marketing. We partner with businesses to create exceptional digital experiences that drive growth and deliver measurable results.'
+		'Hudson Digital Solutions is a Texas-based web development agency specializing in websites, tool integrations, and business automation for small businesses. We build your website, connect your tools, and automate the work so you can focus on running your business.'
 }
 
 const formatDateForInput = (date: Date): string => {

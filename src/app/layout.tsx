@@ -44,16 +44,18 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-	title: 'Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper',
+	title:
+		'Hudson Digital Solutions - Websites & Automation for Small Businesses',
 	description:
-		'Senior engineering team that eliminates your technical bottlenecks. Launch features in days, not months. Proven ROI results. Get your free roadmap.',
+		'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently.',
 	keywords:
-		'technical consulting, B2B SaaS development, React experts, Next.js development, scale engineering team, technical bottlenecks, fractional CTO, ship features faster',
+		'small business website, website development, business automation, web design, tool integrations, e-commerce website, local business website, Texas web developer, professional website',
 	metadataBase: new URL('https://hudsondigitalsolutions.com'),
 	openGraph: {
-		title: 'Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper',
+		title:
+			'Hudson Digital Solutions - Websites & Automation for Small Businesses',
 		description:
-			'Senior engineering team that eliminates your technical bottlenecks. Proven ROI results.',
+			'Professional website development and business automation for small businesses. Get online and connect your tools.',
 		url: 'https://hudsondigitalsolutions.com',
 		siteName: 'Hudson Digital Solutions',
 		images: [
@@ -69,9 +71,10 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title: 'Hudson Digital Solutions - Ship 3x Faster, 60% Cheaper',
+		title:
+			'Hudson Digital Solutions - Websites & Automation for Small Businesses',
 		description:
-			'Senior engineering team that eliminates your technical bottlenecks. Proven ROI results.',
+			'Professional website development and business automation for small businesses. Get online and connect your tools.',
 		images: ['/HDS-Logo.webp']
 	},
 	robots: {

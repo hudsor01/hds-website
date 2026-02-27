@@ -56,7 +56,7 @@ const faqSchema = {
 			name: 'How much does it cost to build a website?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Website costs vary based on complexity. A simple business website starts at $5,000-$10,000. E-commerce sites range from $15,000-$50,000. Custom SaaS applications start at $50,000+.'
+				text: 'Website costs vary based on complexity. A simple business website starts at $5,000-$10,000. E-commerce sites range from $15,000-$50,000. Custom web applications start at $50,000+.'
 			}
 		},
 		{

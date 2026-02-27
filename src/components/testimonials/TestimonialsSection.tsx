@@ -22,7 +22,7 @@ const testimonials: Testimonial[] = [
 		id: '1',
 		name: 'Sarah Johnson',
 		role: 'CEO',
-		company: 'TechStart Solutions',
+		company: 'Sunrise Bakery Co.',
 		content:
 			'Hudson Digital transformed our online presence completely. Their attention to detail and technical expertise exceeded our expectations.',
 		rating: 5,

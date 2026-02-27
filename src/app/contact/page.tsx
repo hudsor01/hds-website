@@ -5,13 +5,13 @@ import { Suspense } from 'react'
 import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
-	title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
+	title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
 	description:
-		'Get a free 30-minute ROI roadmap for your business. See where your tech stack is leaking revenue and how to fix it. Guaranteed 2-hour response time.',
+		"Book a free 30-minute strategy call. We'll talk through your website goals, what's working, and where a better website or automation could make the biggest difference.",
 	openGraph: {
-		title: 'Contact Us - Free ROI Analysis | Hudson Digital Solutions',
+		title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
 		description:
-			'Get a free 30-minute ROI roadmap. No sales pitch, just actionable insights.'
+			'Book a free 30-minute strategy call. No sales pitch — just clear next steps for your business.'
 	}
 }
 
@@ -70,9 +70,11 @@ export default function ContactPage() {
 						<div className="space-y-comfortable">
 							<div>
 								<h1 className="text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance">
-									<span className="inline-block">Get Your Free</span>
+									<span className="inline-block">Book Your Free</span>
 									<br />
-									<span className="inline-block text-accent">ROI Roadmap</span>
+									<span className="inline-block text-accent">
+										Strategy Call
+									</span>
 									<br />
 									<span className="inline-block">in 30 Minutes</span>
 								</h1>
@@ -80,8 +82,8 @@ export default function ContactPage() {
 
 							<div className="typography">
 								<p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-									See exactly where your tech stack is leaking revenue—and how
-									to fix it. No sales pitch. No commitment. Just actionable
+									See exactly where your website is losing customers—and how to
+									fix it. No sales pitch. No commitment. Just actionable
 									insights you can use immediately.
 								</p>
 							</div>
@@ -171,7 +173,7 @@ export default function ContactPage() {
 								<div className="relative z-sticky">
 									<div className="text-center mb-comfortable">
 										<h2 className="text-xl font-bold text-foreground mb-subheading text-balance">
-											Claim Your Free ROI Analysis
+											Claim Your Free Strategy Call
 										</h2>
 										<div className="typography">
 											<p className="text-muted-foreground text-pretty">

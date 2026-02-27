@@ -90,7 +90,7 @@ const results = [
 	{
 		metric: '10+ yrs',
 		label: 'Combined experience',
-		period: 'Senior engineers only'
+		period: 'Experienced developers'
 	},
 	{ metric: '24/7', label: 'Support available', period: 'When you need us' }
 ]
@@ -345,8 +345,8 @@ export default function HomePage() {
 									ROI Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
-									See how much revenue you&apos;re leaving on the table with
-									poor conversion rates and technical bottlenecks.
+									See how much business you&apos;re leaving on the table with a
+									website that doesn&apos;t convert visitors into customers.
 								</p>
 								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
 									Try Calculator
@@ -417,8 +417,8 @@ export default function HomePage() {
 					<NewsletterSignup
 						dynamic
 						variant="inline"
-						title="Get Weekly Tech Insights"
-						description="Get weekly insights on scaling engineering teams, technical leadership, and development efficiency. No spam, unsubscribe anytime."
+						title="Get Weekly Business Insights"
+						description="Get weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation. No spam, unsubscribe anytime."
 					/>
 				</div>
 			</section>

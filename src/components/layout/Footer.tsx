@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 const footerLinks = {
 	solutions: [
 		{ name: 'Website Development', href: ROUTES.SERVICES },
-		{ name: 'Fix Revenue Leaks', href: ROUTES.SERVICES },
+		{ name: 'Business Automation', href: ROUTES.SERVICES },
 		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
 		{ name: 'View Case Studies', href: ROUTES.PORTFOLIO }
 	],
@@ -174,7 +174,7 @@ export default function Footer() {
 							</h4>
 							<p className="small muted mb-heading">
 								Book your free strategy call and see how we can help you launch
-								and automate 3x faster.
+								and run your business more efficiently.
 							</p>
 
 							<div className="space-y-3">

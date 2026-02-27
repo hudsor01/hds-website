@@ -8,7 +8,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Digital Solutions for the Big D',
 		description:
-			'From Deep Ellum startups to Uptown enterprises, we help Dallas businesses compete online with a professional website, connected tools, and business automation.',
+			'From Deep Ellum to Uptown, we help Dallas businesses compete online with a professional website, connected tools, and business automation.',
 		metaDescription:
 			'Website development and business automation in Dallas, TX. We build your website, connect your tools, and automate the work for North Texas businesses.',
 		neighborhoods: [
@@ -223,7 +223,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Sun City Digital Solutions',
 		description:
-			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City enterprises.',
+			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City businesses.',
 		metaDescription:
 			'Web development and digital solutions in El Paso, TX. Custom websites and bilingual web applications for Sun City and Borderland businesses.',
 		neighborhoods: [
