@@ -1,10 +1,15 @@
-import { FloatingTextarea, FloatingInput } from '@/components/forms/floating-field'
-import { Card } from "@/components/ui/card";
-import { Button } from '@/components/ui/button'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import {
+	FloatingInput,
+	FloatingTextarea
+} from '@/components/forms/floating-field'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 /**
  * Unit tests for core UI components
@@ -12,351 +17,467 @@ import Link from 'next/link'
  */
 
 afterEach(() => {
-  cleanup();
-  mock.restore();
-});
+	cleanup()
+	mock.restore()
+})
 
 describe('FloatingInput Component', () => {
-  const mockOnChange = mock()
-  const mockOnBlur = mock()
+	const mockOnChange = mock()
+	const mockOnBlur = mock()
 
-  beforeEach(() => {
-    mockOnChange.mockClear()
-    mockOnBlur.mockClear()
-  })
+	beforeEach(() => {
+		mockOnChange.mockClear()
+		mockOnBlur.mockClear()
+	})
 
-  it('should render with correct semantic classes', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Test Input"
-      />
-    )
+	it('should render with correct semantic classes', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Test Input"
+			/>
+		)
 
-    const input = screen.getByRole('textbox', { name: /Test Input/i })
-    expect(input).toBeInTheDocument()
-    expect(input).toHaveClass('pt-4', 'pb-2')
-  })
+		const input = screen.getByRole('textbox', { name: /Test Input/i })
+		expect(input).toBeInTheDocument()
+		expect(input).toHaveClass('pt-4', 'pb-2')
+	})
 
-  it('should float label when focused', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Test Input"
-        id="test-input"
-      />
-    )
+	it('should float label when focused', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Test Input"
+				id="test-input"
+			/>
+		)
 
-    const input = screen.getByRole('textbox', { name: /Test Input/i })
-    const label = screen.getByText('Test Input')
+		const input = screen.getByRole('textbox', { name: /Test Input/i })
+		const label = screen.getByText('Test Input')
 
-    // Label should not be floated initially
-    expect(label).toHaveClass('top-3', 'text-sm')
+		// Label should not be floated initially
+		expect(label).toHaveClass('top-3', 'text-sm')
 
-    // Focus input using fireEvent (avoids fake timer issues)
-    fireEvent.focus(input)
-    expect(label).toHaveClass('-top-2', 'text-xs')
-  })
+		// Focus input using fireEvent (avoids fake timer issues)
+		fireEvent.focus(input)
+		expect(label).toHaveClass('-top-2', 'text-xs')
+	})
 
-  it('should keep label floated when input has value', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value="Some value"
-        onChange={mockOnChange}
-        placeholder="Test Input"
-      />
-    )
+	it('should keep label floated when input has value', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value="Some value"
+				onChange={mockOnChange}
+				placeholder="Test Input"
+			/>
+		)
 
-    const label = screen.getByText('Test Input')
-    expect(label).toHaveClass('-top-2', 'text-xs')
-  })
+		const label = screen.getByText('Test Input')
+		expect(label).toHaveClass('-top-2', 'text-xs')
+	})
 
-  it('should call onChange when typing', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Test Input"
-      />
-    )
+	it('should call onChange when typing', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Test Input"
+			/>
+		)
 
-    const input = screen.getByRole('textbox', { name: /Test Input/i })
-    fireEvent.change(input, { target: { value: 'Hello' } })
+		const input = screen.getByRole('textbox', { name: /Test Input/i })
+		fireEvent.change(input, { target: { value: 'Hello' } })
 
-    expect(mockOnChange).toHaveBeenCalled()
-  })
+		expect(mockOnChange).toHaveBeenCalled()
+	})
 
-  it('should show required indicator when required', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Required Field"
-        required
-      />
-    )
+	it('should show required indicator when required', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Required Field"
+				required
+			/>
+		)
 
-    expect(screen.getByText('*')).toBeInTheDocument()
-    expect(screen.getByText('*')).toHaveClass('text-destructive')
-  })
+		expect(screen.getByText('*')).toBeInTheDocument()
+		expect(screen.getByText('*')).toHaveClass('text-destructive')
+	})
 
-  it('should be disabled when disabled prop is true', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Disabled Input"
-        disabled
-      />
-    )
+	it('should be disabled when disabled prop is true', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Disabled Input"
+				disabled
+			/>
+		)
 
-    const input = screen.getByRole('textbox', { name: /Disabled Input/i })
-    expect(input).toBeDisabled()
-    expect(input).toHaveClass('disabled:cursor-not-allowed', 'disabled:opacity-50')
-  })
+		const input = screen.getByRole('textbox', { name: /Disabled Input/i })
+		expect(input).toBeDisabled()
+		expect(input).toHaveClass(
+			'disabled:cursor-not-allowed',
+			'disabled:opacity-50'
+		)
+	})
 
-  it('should call onBlur when focus is lost', () => {
-    render(
-      <FloatingInput
-        name="test"
-        value=""
-        onChange={mockOnChange}
-        onBlur={mockOnBlur}
-        placeholder="Test Input"
-      />
-    )
+	it('should call onBlur when focus is lost', () => {
+		render(
+			<FloatingInput
+				name="test"
+				value=""
+				onChange={mockOnChange}
+				onBlur={mockOnBlur}
+				placeholder="Test Input"
+			/>
+		)
 
-    const input = screen.getByRole('textbox', { name: /Test Input/i })
-    fireEvent.focus(input)
-    fireEvent.blur(input)
+		const input = screen.getByRole('textbox', { name: /Test Input/i })
+		fireEvent.focus(input)
+		fireEvent.blur(input)
 
-    expect(mockOnBlur).toHaveBeenCalled()
-  })
+		expect(mockOnBlur).toHaveBeenCalled()
+	})
 })
 
 describe('FloatingTextarea Component', () => {
-  const mockOnChange = mock()
+	const mockOnChange = mock()
 
-  beforeEach(() => {
-    mockOnChange.mockClear()
-  })
+	beforeEach(() => {
+		mockOnChange.mockClear()
+	})
 
-  it('should render with semantic tokens', () => {
-    render(
-      <FloatingTextarea
-        name="message"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Your Message"
-      />
-    )
+	it('should render with semantic tokens', () => {
+		render(
+			<FloatingTextarea
+				name="message"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Your Message"
+			/>
+		)
 
-    const textarea = screen.getByRole('textbox', { name: /Your Message/i })
-    expect(textarea).toBeInTheDocument()
-    expect(textarea).toHaveClass('resize-none')
-  })
+		const textarea = screen.getByRole('textbox', { name: /Your Message/i })
+		expect(textarea).toBeInTheDocument()
+		expect(textarea).toHaveClass('resize-none')
+	})
 
-  it('should respect rows prop', () => {
-    render(
-      <FloatingTextarea
-        name="message"
-        value=""
-        onChange={mockOnChange}
-        placeholder="Your Message"
-        rows={6}
-      />
-    )
+	it('should respect rows prop', () => {
+		render(
+			<FloatingTextarea
+				name="message"
+				value=""
+				onChange={mockOnChange}
+				placeholder="Your Message"
+				rows={6}
+			/>
+		)
 
-    const textarea = screen.getByRole('textbox', { name: /Your Message/i })
-    expect(textarea).toHaveAttribute('rows', '6')
-  })
+		const textarea = screen.getByRole('textbox', { name: /Your Message/i })
+		expect(textarea).toHaveAttribute('rows', '6')
+	})
 })
 
 describe('Button Component', () => {
-  it('should render with correct flex layout', () => {
-    render(<Button>Click Me</Button>)
+	it('should render with correct flex layout', () => {
+		render(<Button>Click Me</Button>)
 
-    const button = screen.getByRole('button', { name: 'Click Me' })
-    expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center')
-  })
+		const button = screen.getByRole('button', { name: 'Click Me' })
+		expect(button).toHaveClass('inline-flex', 'items-center', 'justify-center')
+	})
 
-  it('should apply transition-smooth class', () => {
-    render(<Button>Click Me</Button>)
+	it('should apply transition-smooth class', () => {
+		render(<Button>Click Me</Button>)
 
-    const button = screen.getByRole('button', { name: 'Click Me' })
-    expect(button).toHaveClass('transition-smooth')
-  })
+		const button = screen.getByRole('button', { name: 'Click Me' })
+		expect(button).toHaveClass('transition-smooth')
+	})
 
-  it('should render different variants', () => {
-    const { rerender } = render(<Button variant="default">Default</Button>)
-    let button = screen.getByRole('button')
-    expect(button).toHaveClass('bg-primary')
+	it('should render different variants', () => {
+		const { rerender } = render(<Button variant="default">Default</Button>)
+		let button = screen.getByRole('button')
+		expect(button).toHaveClass('bg-primary')
 
-    rerender(<Button variant="destructive">Destructive</Button>)
-    button = screen.getByRole('button')
-    expect(button).toHaveClass('bg-destructive')
+		rerender(<Button variant="destructive">Destructive</Button>)
+		button = screen.getByRole('button')
+		expect(button).toHaveClass('bg-destructive')
 
-    rerender(<Button variant="ghost">Ghost</Button>)
-    button = screen.getByRole('button')
-    expect(button).toHaveClass('hover:bg-muted/50')
-  })
+		rerender(<Button variant="ghost">Ghost</Button>)
+		button = screen.getByRole('button')
+		expect(button).toHaveClass('hover:bg-muted/50')
+	})
 
-  it('should render different sizes', () => {
-    const { rerender } = render(<Button size="sm">Small</Button>)
-    let button = screen.getByRole('button')
-    expect(button).toHaveClass('h-8')
+	it('should render different sizes', () => {
+		const { rerender } = render(<Button size="sm">Small</Button>)
+		let button = screen.getByRole('button')
+		expect(button).toHaveClass('h-8')
 
-    rerender(<Button size="default">Default</Button>)
-    button = screen.getByRole('button')
-    expect(button).toHaveClass('h-9')
+		rerender(<Button size="default">Default</Button>)
+		button = screen.getByRole('button')
+		expect(button).toHaveClass('h-9')
 
-    rerender(<Button size="lg">Large</Button>)
-    button = screen.getByRole('button')
-    expect(button).toHaveClass('h-10')
-  })
+		rerender(<Button size="lg">Large</Button>)
+		button = screen.getByRole('button')
+		expect(button).toHaveClass('h-10')
+	})
 
-  it('should be disabled when disabled prop is true', () => {
-    render(<Button disabled>Disabled</Button>)
+	it('should be disabled when disabled prop is true', () => {
+		render(<Button disabled>Disabled</Button>)
 
-    const button = screen.getByRole('button')
-    expect(button).toBeDisabled()
-    expect(button).toHaveClass('disabled:opacity-50')
-  })
+		const button = screen.getByRole('button')
+		expect(button).toBeDisabled()
+		expect(button).toHaveClass('disabled:opacity-50')
+	})
 
-  it('should handle click events', () => {
-    const handleClick = mock()
+	it('should handle click events', () => {
+		const handleClick = mock()
 
-    render(<Button onClick={handleClick}>Click Me</Button>)
+		render(<Button onClick={handleClick}>Click Me</Button>)
 
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
+		const button = screen.getByRole('button')
+		fireEvent.click(button)
 
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
+		expect(handleClick).toHaveBeenCalledTimes(1)
+	})
 })
 
 describe('Card Component (Glass Variants)', () => {
-  it('should render different glass variants', () => {
-    const { container, rerender } = render(<Card variant="glass">Content</Card>)
-    let card = container.firstChild
-    expect(card).toHaveClass('glass-card')
+	it('should render different glass variants', () => {
+		const { container, rerender } = render(<Card variant="glass">Content</Card>)
+		let card = container.firstChild
+		expect(card).toHaveClass('glass-card')
 
-    rerender(<Card variant="glassLight">Content</Card>)
-    card = container.firstChild
-    expect(card).toHaveClass('glass-card-light')
+		rerender(<Card variant="glassLight">Content</Card>)
+		card = container.firstChild
+		expect(card).toHaveClass('glass-card-light')
 
-    rerender(<Card variant="glassSection">Content</Card>)
-    card = container.firstChild
-    expect(card).toHaveClass('glass-card-light')
-  })
+		rerender(<Card variant="glassSection">Content</Card>)
+		card = container.firstChild
+		expect(card).toHaveClass('glass-card-light')
+	})
 
-  it('should apply different size variants', () => {
-    const { container, rerender } = render(<Card size="sm">Content</Card>)
-    let card = container.firstChild
-    expect(card).toHaveClass('card-padding-sm')
+	it('should apply different size variants', () => {
+		const { container, rerender } = render(<Card size="sm">Content</Card>)
+		let card = container.firstChild
+		expect(card).toHaveClass('card-padding-sm')
 
-    rerender(<Card size="lg">Content</Card>)
-    card = container.firstChild
-    expect(card).toHaveClass('card-padding-lg')
-  })
+		rerender(<Card size="lg">Content</Card>)
+		card = container.firstChild
+		expect(card).toHaveClass('card-padding-lg')
+	})
 
-  it('should merge custom className with glass variant', () => {
-    const { container } = render(<Card variant="glass" className="custom-class">Content</Card>)
+	it('should merge custom className with glass variant', () => {
+		const { container } = render(
+			<Card variant="glass" className="custom-class">
+				Content
+			</Card>
+		)
 
-    const card = container.firstChild
-    expect(card).toHaveClass('glass-card', 'custom-class')
-  })
+		const card = container.firstChild
+		expect(card).toHaveClass('glass-card', 'custom-class')
+	})
 })
 
 describe('Button Component (CTA Pattern)', () => {
-  it('should render as link with asChild', () => {
-    render(<Button asChild variant="default" size="default" trackConversion={true}>
-      <Link href="/test">
-        Test CTA
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>)
+	it('should render as link with asChild', () => {
+		render(
+			<Button asChild variant="default" size="default" trackConversion={true}>
+				<Link href="/test">
+					Test CTA
+					<ArrowRight className="w-4 h-4" />
+				</Link>
+			</Button>
+		)
 
-    const link = screen.getByRole('link', { name: /Test CTA/ })
-    expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('href', '/test')
-  })
+		const link = screen.getByRole('link', { name: /Test CTA/ })
+		expect(link).toBeInTheDocument()
+		expect(link).toHaveAttribute('href', '/test')
+	})
 
-  it('should render different variants', () => {
-    const { rerender } = render(<Button asChild variant="default" size="default" trackConversion={true}>
-      <Link href="/test">
-        Primary
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>)
-    let link = screen.getByRole('link')
-    expect(link).toHaveClass('bg-primary')
+	it('should render different variants', () => {
+		const { rerender } = render(
+			<Button asChild variant="default" size="default" trackConversion={true}>
+				<Link href="/test">
+					Primary
+					<ArrowRight className="w-4 h-4" />
+				</Link>
+			</Button>
+		)
+		let link = screen.getByRole('link')
+		expect(link).toHaveClass('bg-primary')
 
-    rerender(<Button asChild variant="outline" size="default" trackConversion={true}>
-      <Link href="/test">
-        Secondary
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>)
-    link = screen.getByRole('link')
-    expect(link).toHaveClass('border', 'bg-background')
-  })
+		rerender(
+			<Button asChild variant="outline" size="default" trackConversion={true}>
+				<Link href="/test">
+					Secondary
+					<ArrowRight className="w-4 h-4" />
+				</Link>
+			</Button>
+		)
+		link = screen.getByRole('link')
+		expect(link).toHaveClass('border', 'bg-background')
+	})
 
-  it('should show arrow by default', () => {
-    const { container } = render(<Button asChild variant="default" size="default" trackConversion={true}>
-      <Link href="/test">
-        With Arrow
-        <ArrowRight className="w-4 h-4" />
-      </Link>
-    </Button>)
+	it('should show arrow by default', () => {
+		const { container } = render(
+			<Button asChild variant="default" size="default" trackConversion={true}>
+				<Link href="/test">
+					With Arrow
+					<ArrowRight className="w-4 h-4" />
+				</Link>
+			</Button>
+		)
 
-    const svg = container.querySelector('svg')
-    expect(svg).toBeInTheDocument()
-  })
+		const svg = container.querySelector('svg')
+		expect(svg).toBeInTheDocument()
+	})
 
-  it('should hide arrow when not included', () => {
-    const { container } = render(<Button asChild variant="default" size="default" trackConversion={true}>
-      <Link href="/test">
-        No Arrow
-      </Link>
-    </Button>)
+	it('should hide arrow when not included', () => {
+		const { container } = render(
+			<Button asChild variant="default" size="default" trackConversion={true}>
+				<Link href="/test">No Arrow</Link>
+			</Button>
+		)
 
-    const svg = container.querySelector('svg')
-    expect(svg).not.toBeInTheDocument()
-  })
+		const svg = container.querySelector('svg')
+		expect(svg).not.toBeInTheDocument()
+	})
 
-  it('should handle external links', () => {
-    render(<Button asChild variant="default" size="default" trackConversion={true}>
-      <a href="https://external.com" target="_blank" rel="noopener noreferrer">
-        External
-        <ArrowRight className="w-4 h-4" />
-      </a>
-    </Button>)
+	it('should handle external links', () => {
+		render(
+			<Button asChild variant="default" size="default" trackConversion={true}>
+				<a
+					href="https://external.com"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					External
+					<ArrowRight className="w-4 h-4" />
+				</a>
+			</Button>
+		)
 
-    const link = screen.getByRole('link')
-    expect(link).toHaveAttribute('target', '_blank')
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-  })
+		const link = screen.getByRole('link')
+		expect(link).toHaveAttribute('target', '_blank')
+		expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+	})
 })
 
 describe('Semantic Token Usage', () => {
-  it('should use theme variables for colors', () => {
-    const { container } = render(<Button>Test</Button>)
-    const button = container.querySelector('button')
-    expect(button).toBeInTheDocument()
+	it('should use theme variables for colors', () => {
+		const { container } = render(<Button>Test</Button>)
+		const button = container.querySelector('button')
+		expect(button).toBeInTheDocument()
 
-    // Check computed styles use CSS variables
-    if (button) {
-      const styles = window.getComputedStyle(button)
-      expect(styles).toBeDefined()
-    }
-  })
+		// Check computed styles use CSS variables
+		if (button) {
+			const styles = window.getComputedStyle(button)
+			expect(styles).toBeDefined()
+		}
+	})
+})
+
+describe('Button Polish — COMP-01', () => {
+	it('default variant has shadow-sm class', () => {
+		const { container } = render(<Button variant="default">Test</Button>)
+		const button = container.querySelector('button')
+		expect(button?.className ?? '').toContain('shadow-sm')
+	})
+
+	it('default variant has active:bg-primary/70 class', () => {
+		const { container } = render(<Button variant="default">Test</Button>)
+		const button = container.querySelector('button')
+		expect(button?.className ?? '').toContain('active:bg-primary/70')
+	})
+
+	it('accent variant has shadow-sm class', () => {
+		const { container } = render(<Button variant="accent">Test</Button>)
+		const button = container.querySelector('button')
+		expect(button?.className ?? '').toContain('shadow-sm')
+	})
+
+	it('accent variant has active:bg-accent/75 class', () => {
+		const { container } = render(<Button variant="accent">Test</Button>)
+		const button = container.querySelector('button')
+		expect(button?.className ?? '').toContain('active:bg-accent/75')
+	})
+
+	it('ghost variant is visually differentiated — no bg class in base', () => {
+		const { container } = render(<Button variant="ghost">Test</Button>)
+		const button = container.querySelector('button')
+		const cls = button?.className ?? ''
+		// Ghost should NOT have solid background — hover only
+		expect(cls).not.toContain('bg-primary')
+		expect(cls).not.toContain('bg-accent')
+		expect(cls).not.toContain('bg-secondary')
+	})
+})
+
+describe('Input Polish — COMP-02', () => {
+	it('input has aria-invalid:border-destructive class', () => {
+		const { container } = render(<Input />)
+		const input = container.querySelector('input')
+		expect(input?.className ?? '').toContain('aria-invalid:border-destructive')
+	})
+
+	it('input has aria-invalid:ring-destructive/20 class', () => {
+		const { container } = render(<Input />)
+		const input = container.querySelector('input')
+		expect(input?.className ?? '').toContain('aria-invalid:ring-destructive/20')
+	})
+
+	it('input uses bg-surface-sunken (not bg-background) for depth', () => {
+		const { container } = render(<Input />)
+		const input = container.querySelector('input')
+		const cls = input?.className ?? ''
+		expect(cls).toContain('bg-surface-sunken')
+		expect(cls).not.toContain('bg-background')
+	})
+
+	it('textarea already has aria-invalid:border-destructive (parity check)', () => {
+		const { container } = render(<Textarea />)
+		const textarea = container.querySelector('textarea')
+		expect(textarea?.className ?? '').toContain(
+			'aria-invalid:border-destructive'
+		)
+	})
+})
+
+describe('Card Surface — COMP-03', () => {
+	it('default card variant has bg-surface-raised class', () => {
+		const { container } = render(<Card>Content</Card>)
+		const card = container.firstChild as HTMLElement
+		expect(card?.className ?? '').toContain('bg-surface-raised')
+	})
+
+	it('default card variant has shadow-sm (not shadow-xs)', () => {
+		const { container } = render(<Card>Content</Card>)
+		const card = container.firstChild as HTMLElement
+		const cls = card?.className ?? ''
+		expect(cls).toContain('shadow-sm')
+		expect(cls).not.toContain('shadow-xs')
+	})
+
+	it('default card has border-border-subtle class', () => {
+		const { container } = render(<Card>Content</Card>)
+		const card = container.firstChild as HTMLElement
+		expect(card?.className ?? '').toContain('border-border-subtle')
+	})
+
+	it('glass variant is unaffected by default changes', () => {
+		const { container } = render(<Card variant="glass">Content</Card>)
+		const card = container.firstChild as HTMLElement
+		expect(card?.className ?? '').toContain('glass-card')
+		expect(card?.className ?? '').not.toContain('bg-surface-raised')
+	})
 })
