@@ -1,7 +1,5 @@
 'use client'
 
-'use client'
-
 import { CheckCircle, Clock, Mail, Rocket } from 'lucide-react'
 import Link from 'next/link'
 import { useSyncExternalStore } from 'react'
@@ -82,14 +80,10 @@ export default function Footer() {
 
 	return (
 		<footer
-			className="relative mt-auto"
-			style={{ backgroundColor: 'hsl(222 47% 11%)' }}
+			className="relative mt-auto bg-background-dark"
 			role="contentinfo"
 			aria-label="Site footer"
 		>
-			{/* Dark background matching homepage */}
-			<div className="absolute inset-0 bg-(--color-nav-dark)" />
-
 			{/* Top border */}
 			<div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 

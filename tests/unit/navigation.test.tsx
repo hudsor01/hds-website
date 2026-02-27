@@ -303,15 +303,15 @@ describe('Navbar Polish — COMP-04', () => {
 		})
 	})
 
-	it('footer uses token class bg-nav-dark instead of inline style', async () => {
+	it('footer uses token class bg-background-dark instead of inline style', async () => {
 		const { default: Footer } = await import('@/components/layout/Footer')
 		const { container } = render(<Footer />)
 
 		const footer = container.querySelector('footer')
 		expect(footer).toBeInTheDocument()
-		// The inline style hack must be removed and replaced with token class bg-nav-dark
-		// This test fails until Footer.tsx removes style={{ backgroundColor: ... }} and adds bg-nav-dark
+		// The inline style hack must be removed and replaced with token class bg-background-dark
+		// This test fails until Footer.tsx removes style={{ backgroundColor: ... }} and adds bg-background-dark
 		const cls = footer?.className ?? ''
-		expect(cls).toContain('bg-nav-dark')
+		expect(cls).toContain('bg-background-dark')
 	})
 })
