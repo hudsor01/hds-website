@@ -1,14 +1,7 @@
 'use client'
 
 import { cva } from 'class-variance-authority'
-import {
-	Code2,
-	ExternalLink,
-	MessageCircle,
-	Sparkles,
-	Star,
-	X
-} from 'lucide-react'
+import { ExternalLink, MessageCircle, Star, X } from 'lucide-react'
 import Link from 'next/link'
 import type { ComponentType, SVGProps } from 'react'
 import * as React from 'react'
@@ -322,19 +315,20 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 			title,
 			description,
 			category,
+			industry,
+			showcaseType,
 			featured = false,
 			stats = {},
 			tech_stack
 		} = props as ProjectCardProps
 
+		const colors = getProjectColors(industry, category)
+		const metricEntries = Object.entries(stats).slice(0, 3)
+
 		return (
 			<div
 				ref={ref}
-				className={cn(
-					'group relative snap-center shrink-0 w-[85vw] md:w-auto',
-					featured && 'md:col-span-2',
-					className
-				)}
+				className={cn('group relative', featured && 'md:col-span-2', className)}
 			>
 				<Link href={`/showcase/${slug}`}>
 					<div
@@ -343,37 +337,55 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 							'h-full overflow-hidden'
 						)}
 					>
-						{/* Project Header */}
+						{/* Project Header — color identity panel */}
 						<div
+							data-testid="card-header"
 							className={cn(
-								'relative overflow-hidden bg-muted border-b border-border',
-								featured ? 'h-80' : 'h-64'
+								'relative overflow-hidden border-b border-border',
+								featured ? 'h-80' : 'h-64',
+								colors.header
 							)}
 						>
-							{/* Grid pattern overlay */}
-							<div className="absolute inset-0 grid-pattern-light" />
+							<div className="relative z-10 card-padding-lg h-full flex flex-col justify-between py-6">
+								{/* Top: eyebrow */}
+								<p
+									className={cn(
+										'text-xs font-semibold uppercase tracking-widest opacity-60',
+										colors.text
+									)}
+								>
+									{category}
+								</p>
 
-							<div className="relative z-sticky card-padding-lg h-full flex flex-col justify-center text-center text-foreground">
-								{/* Category Label */}
-								<div className="inline-flex flex-center gap-2 px-3 py-1 text-sm mb-4 mx-auto text-muted-foreground">
-									<Code2 className="w-4 h-4" />
-									<span>{category}</span>
-								</div>
+								{/* Mid: title */}
+								<h3
+									className={cn(
+										'text-2xl lg:text-3xl font-black leading-tight',
+										colors.text
+									)}
+								>
+									{title}
+								</h3>
 
-								{/* Title */}
-								<h3 className="text-responsive-lg font-black mb-3">{title}</h3>
-
-								{/* Featured Label */}
-								{featured && (
-									<div className="inline-flex flex-center gap-2 px-3 py-1 text-sm font-medium mx-auto text-accent">
-										<Sparkles className="w-4 h-4" />
-										<span>Featured Project</span>
+								{/* Bottom: type badge */}
+								{showcaseType && (
+									<div>
+										<span
+											className={cn(
+												'inline-block px-3 py-1 rounded-full text-xs font-semibold border',
+												showcaseType === 'detailed'
+													? 'bg-accent/20 text-accent border-accent/30'
+													: 'bg-white/10 border-white/20 text-white/70'
+											)}
+										>
+											{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+										</span>
 									</div>
 								)}
 							</div>
 
-							{/* Hover Overlay */}
-							<div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-fixed">
+							{/* Hover overlay */}
+							<div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
 								<Button
 									variant="default"
 									size="lg"
@@ -386,23 +398,21 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 						</div>
 
 						{/* Project Details */}
-						<div className="card-padding-lg">
-							{/* Description */}
-							<div className="typography mb-comfortable">
-								<p className="text-muted-foreground leading-relaxed text-lg">
-									{description}
-								</p>
-							</div>
+						<div className="card-padding-lg flex flex-col gap-4">
+							{/* Description — 2-line clamp */}
+							<p className="text-muted-foreground leading-relaxed line-clamp-2">
+								{description}
+							</p>
 
-							{/* Stats Grid */}
-							{Object.keys(stats).length > 0 && (
-								<div className="grid grid-cols-3 gap-comfortable mb-comfortable">
-									{Object.entries(stats).map(([key, value]) => (
-										<div key={key} className="text-center">
-											<div className="text-2xl font-bold text-foreground mb-1">
+							{/* Inline metrics — max 3 */}
+							{metricEntries.length > 0 && (
+								<div className="flex items-start gap-6 flex-wrap">
+									{metricEntries.map(([key, value]) => (
+										<div key={key}>
+											<div className="text-xl font-black text-foreground">
 												{value}
 											</div>
-											<div className="text-sm text-muted-foreground capitalize">
+											<div className="text-xs text-muted-foreground capitalize">
 												{key.replace(/([A-Z])/g, ' $1').trim()}
 											</div>
 										</div>
@@ -410,17 +420,19 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 								</div>
 							)}
 
-							{/* Tech Stack */}
-							<div className="flex flex-wrap gap-tight">
-								{tech_stack.map(tech => (
-									<span
-										key={tech}
-										className="px-3 py-1 text-sm text-muted-foreground border border-border rounded-md hover:border-accent/50 hover:text-accent transition-colors duration-300"
-									>
-										{tech}
-									</span>
-								))}
-							</div>
+							{/* Tech stack — max 5 chips */}
+							{tech_stack.length > 0 && (
+								<div className="flex flex-wrap gap-1.5">
+									{tech_stack.slice(0, 5).map(tech => (
+										<span
+											key={tech}
+											className="px-2.5 py-0.5 bg-muted border border-border rounded-full text-xs text-muted-foreground"
+										>
+											{tech}
+										</span>
+									))}
+								</div>
+							)}
 						</div>
 					</div>
 				</Link>
