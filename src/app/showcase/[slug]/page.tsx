@@ -11,7 +11,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
@@ -94,20 +93,20 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 	return (
 		<>
 			{/* Hero */}
-			<section className="py-12 px-4">
-				<div className="container-wide">
-					<div className="mb-content-block">
-						<span className="px-3 py-1 bg-primary/30 border border-primary/30 rounded-full text-accent text-sm font-semibold">
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+					<div className="mb-4">
+						<span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent text-sm font-semibold">
 							{item.industry ?? item.category}{' '}
 							{item.projectType && `\u2022 ${item.projectType}`}
 						</span>
 					</div>
 
-					<h1 className="text-4xl md:text-6xl font-black text-foreground mb-content-block">
+					<h1 className="text-page-title text-foreground leading-tight text-balance mb-6">
 						{item.title}
 					</h1>
 
-					<p className="text-2xl text-muted-foreground mb-comfortable max-w-4xl">
+					<p className="text-lead text-muted-foreground mb-comfortable max-w-4xl">
 						{item.description}
 					</p>
 
@@ -132,16 +131,22 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 			{/* Metrics Showcase */}
 			{metrics.length > 0 && (
-				<section className="py-12 px-4 bg-muted/30">
+				<section className="py-section-sm px-4 sm:px-6 border-b border-border">
 					<div className="container-wide">
-						<div className="grid md:grid-cols-4 gap-comfortable">
+						<div className="grid gap-px md:grid-cols-4 bg-border/30 rounded-2xl overflow-hidden">
 							{metrics.map((metric, i) => (
-								<Card key={i} variant="glass" className="text-center">
-									<div className="text-5xl font-black text-accent mb-subheading">
+								<div
+									key={i}
+									className="bg-background px-8 py-10 text-center relative overflow-hidden"
+								>
+									<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+									<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 										{metric.value}
 									</div>
-									<div className="text-muted-foreground">{metric.label}</div>
-								</Card>
+									<div className="text-sm text-muted-foreground">
+										{metric.label}
+									</div>
+								</div>
 							))}
 						</div>
 					</div>
@@ -149,7 +154,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 			)}
 
 			{/* Main Content - Type-aware rendering */}
-			<section className="py-section-sm px-4">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-5xl">
 					<div className="grid gap-12">
 						{isDetailed ? (
@@ -157,23 +162,23 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 							<>
 								{item.challenge && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											The Challenge
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.challenge}
 											</p>
-										</Card>
+										</div>
 									</div>
 								)}
 
 								{item.solution && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											Our Solution
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.solution}
 											</p>
@@ -195,16 +200,16 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 													</div>
 												</div>
 											)}
-										</Card>
+										</div>
 									</div>
 								)}
 
 								{item.results && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											The Results
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.results}
 											</p>
@@ -222,7 +227,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 													</a>
 												</div>
 											)}
-										</Card>
+										</div>
 									</div>
 								)}
 							</>
@@ -231,23 +236,23 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 							<>
 								{item.longDescription && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											About This Project
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
 												{item.longDescription}
 											</p>
-										</Card>
+										</div>
 									</div>
 								)}
 
 								{item.technologies && item.technologies.length > 0 && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											Tech Stack
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<div className="flex flex-wrap gap-tight">
 												{item.technologies.map((tech, i) => (
 													<span
@@ -258,16 +263,16 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 													</span>
 												))}
 											</div>
-										</Card>
+										</div>
 									</div>
 								)}
 
 								{item.externalLink && (
 									<div>
-										<h2 className="text-h2 text-foreground mb-content-block">
+										<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 											Links
 										</h2>
-										<Card variant="glass" size="lg">
+										<div className="rounded-xl border border-border bg-surface-raised p-8">
 											<div className="flex flex-wrap gap-content">
 												<a
 													href={item.externalLink}
@@ -290,7 +295,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 													</a>
 												)}
 											</div>
-										</Card>
+										</div>
 									</div>
 								)}
 							</>
@@ -299,10 +304,10 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 						{/* Testimonial - shown for both types if available */}
 						{item.testimonialText && (
 							<div>
-								<h2 className="text-h2 text-foreground mb-content-block">
+								<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 									Client Testimonial
 								</h2>
-								<Card variant="glass" size="lg">
+								<div className="rounded-xl border border-border bg-surface-raised p-8">
 									{item.testimonialVideoUrl && (
 										<div className="mb-content-block">
 											<div className="aspect-video rounded-lg overflow-hidden bg-muted">
@@ -326,7 +331,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 									{item.testimonialAuthor && (
 										<div className="flex items-center gap-content">
-											<div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+											<div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
 												<span className="text-accent font-bold text-2xl">
 													{item.testimonialAuthor.charAt(0)}
 												</span>
@@ -348,7 +353,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 											</div>
 										</div>
 									)}
-								</Card>
+								</div>
 							</div>
 						)}
 					</div>
@@ -356,23 +361,29 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 			</section>
 
 			{/* CTA */}
-			<section className="py-section px-4">
+			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<Card variant="glassSection" size="xl" className="text-center">
-						<h2 className="text-4xl font-black text-foreground mb-content-block">
-							Want Results Like This?
-						</h2>
-						<p className="text-xl text-muted-foreground mb-comfortable max-w-2xl mx-auto">
-							Let&apos;s discuss how we can help you achieve similar results for
-							your business.
-						</p>
-						<Button asChild variant="accent" size="lg" trackConversion={true}>
-							<Link href="/contact">
-								Start Your Project
-								<ArrowRight className="w-4 h-4" />
-							</Link>
-						</Button>
-					</Card>
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Want Results Like This?
+							</h2>
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								Let&apos;s discuss how we can help you achieve similar results
+								for your business.
+							</p>
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
+								<Link href="/contact">
+									Start Your Project
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+						</div>
+					</div>
 				</div>
 			</section>
 		</>
@@ -389,7 +400,7 @@ export default async function ShowcaseDetailPage({
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Back Button */}
-			<section className="py-8 px-4">
+			<div className="py-8 px-4 sm:px-6">
 				<div className="container-wide">
 					<Link
 						href="/showcase"
@@ -399,13 +410,13 @@ export default async function ShowcaseDetailPage({
 						Back to Showcase
 					</Link>
 				</div>
-			</section>
+			</div>
 
 			{/* Dynamic content with Suspense */}
 			<Suspense
 				fallback={
 					<div className="container-wide py-section text-center">
-						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
 						<p className="text-muted-foreground text-lg mt-4">
 							Loading project...
 						</p>

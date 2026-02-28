@@ -56,7 +56,7 @@ export function ResultsPanel({
 			<CardContent className="card-padding space-y-comfortable">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-tight">
-						<FileText className="w-6 h-6 text-primary" />
+						<FileText className="w-6 h-6 text-accent" />
 						<h2 className="text-xl font-bold">Calculation Results</h2>
 					</div>
 					{calculationResults && (
@@ -68,7 +68,7 @@ export function ResultsPanel({
 
 				{isLoading && (
 					<div className="text-center py-12">
-						<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-heading"></div>
+						<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent mx-auto mb-heading"></div>
 						<p className="text-muted-foreground font-medium">
 							Calculating your results...
 						</p>
@@ -93,7 +93,7 @@ export function ResultsPanel({
 						<Card>
 							<CardHeader>
 								<div className="flex items-center gap-tight">
-									<CreditCard className="h-4 w-4 text-primary" />
+									<CreditCard className="h-4 w-4 text-accent" />
 									<CardTitle className="text-lg">TTL Breakdown</CardTitle>
 								</div>
 							</CardHeader>
@@ -152,7 +152,7 @@ export function ResultsPanel({
 						<Card>
 							<CardHeader>
 								<div className="flex items-center gap-tight">
-									<DollarSign className="h-4 w-4 text-primary" />
+									<DollarSign className="h-4 w-4 text-accent" />
 									<CardTitle className="text-lg">Monthly Payment</CardTitle>
 								</div>
 							</CardHeader>

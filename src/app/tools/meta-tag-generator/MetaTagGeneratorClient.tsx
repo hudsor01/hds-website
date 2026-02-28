@@ -138,7 +138,7 @@ export default function MetaTagGeneratorClient() {
 		<CalculatorLayout
 			title="Meta Tag Generator"
 			description="Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your website"
-			icon={<Code className="h-8 w-8 text-primary" />}
+			icon={<Code className="h-8 w-8 text-accent" />}
 		>
 			{!showResults ? (
 				<form onSubmit={handleSubmit} className="space-y-comfortable">
@@ -183,7 +183,7 @@ export default function MetaTagGeneratorClient() {
 								onChange={e =>
 									handleInputChange('pageDescription', e.target.value)
 								}
-								className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
+								className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
 								rows={3}
 								required
 								maxLength={170}
@@ -191,7 +191,7 @@ export default function MetaTagGeneratorClient() {
 							/>
 							<div className="flex justify-between items-center mt-1">
 								<span
-									className={`text-xs ${descriptionOptimal ? 'text-success-dark' : descriptionLength > 160 ? 'text-destructive-dark' : 'text-warning-dark'}`}
+									className={`text-xs ${descriptionOptimal ? 'text-success-text' : descriptionLength > 160 ? 'text-destructive-text' : 'text-warning-text'}`}
 								>
 									{descriptionLength}/160 characters{' '}
 									{descriptionOptimal
@@ -286,7 +286,7 @@ export default function MetaTagGeneratorClient() {
 
 					<button
 						type="submit"
-						className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
+						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
 					>
 						Generate Meta Tags
 					</button>
@@ -299,7 +299,7 @@ export default function MetaTagGeneratorClient() {
 							onClick={() => setActiveTab('code')}
 							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
 								activeTab === 'code'
-									? 'border-primary text-primary'
+									? 'border-accent text-accent'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>
@@ -310,7 +310,7 @@ export default function MetaTagGeneratorClient() {
 							onClick={() => setActiveTab('preview')}
 							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
 								activeTab === 'preview'
-									? 'border-primary text-primary'
+									? 'border-accent text-accent'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>
@@ -323,7 +323,7 @@ export default function MetaTagGeneratorClient() {
 						<div className="relative">
 							<button
 								onClick={copyToClipboard}
-								className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-foreground hover:bg-primary/80 transition-colors"
+								className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors"
 							>
 								{copied ? (
 									<>
@@ -351,13 +351,13 @@ export default function MetaTagGeneratorClient() {
 									Google Search Preview
 								</h3>
 								<Card size="sm">
-									<div className="text-info-dark text-lg hover:underline cursor-pointer truncate">
+									<div className="text-info-text text-lg hover:underline cursor-pointer truncate">
 										{inputs.pageTitle || 'Page Title'}
 									</div>
-									<div className="text-success-darker text-sm truncate">
+									<div className="text-success-text text-sm truncate">
 										{inputs.pageUrl || 'https://example.com'}
 									</div>
-									<div className="text-muted-foreground dark:text-muted-foreground text-sm mt-1 line-clamp-2">
+									<div className="text-muted-foreground text-sm mt-1 line-clamp-2">
 										{inputs.pageDescription ||
 											'Page description will appear here...'}
 									</div>
@@ -371,7 +371,7 @@ export default function MetaTagGeneratorClient() {
 								</h3>
 								<div className="rounded-lg border border-border overflow-hidden max-w-md">
 									{inputs.imageUrl ? (
-										<div className="h-48 bg-secondary dark:bg-card flex items-center justify-center">
+										<div className="h-48 bg-surface-raised flex items-center justify-center">
 											<span className="text-muted-foreground text-sm">
 												Image: {inputs.imageUrl}
 											</span>
@@ -383,7 +383,7 @@ export default function MetaTagGeneratorClient() {
 											</span>
 										</div>
 									)}
-									<Card size="sm" className="bg-card dark:bg-card">
+									<Card size="sm" className="bg-surface-raised">
 										<div className="text-xs text-muted-foreground uppercase mb-1">
 											{inputs.siteName ||
 												new URL(inputs.pageUrl || 'https://example.com')
@@ -403,7 +403,7 @@ export default function MetaTagGeneratorClient() {
 
 					<button
 						onClick={() => setShowResults(false)}
-						className="w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-muted-foreground"
+						className="w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
 					>
 						← Edit Information
 					</button>
@@ -411,47 +411,47 @@ export default function MetaTagGeneratorClient() {
 			)}
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h2 className="text-lg font-semibold text-foreground dark:text-foreground">
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h2 className="text-lg font-semibold text-foreground">
 					Meta Tag Best Practices
 				</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Title Tag
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Keep between 50-60 characters. Include your primary keyword near
 							the beginning.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Meta Description
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Aim for 150-160 characters. Include a call-to-action and your
 							target keyword.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Open Graph Images
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Use 1200x630px images for optimal display on Facebook and
 							LinkedIn.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Twitter Cards
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							summary_large_image provides the most visual impact for content
 							sharing.
 						</p>

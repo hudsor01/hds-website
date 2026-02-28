@@ -20,7 +20,7 @@ export default function PaystubCalculatorClient() {
 		<CalculatorLayout
 			title="Paystub Calculator"
 			description="Generate accurate payroll breakdowns with federal and state tax calculations for any pay period"
-			icon={<Banknote className="h-8 w-8 text-primary" />}
+			icon={<Banknote className="h-8 w-8 text-accent" />}
 		>
 			<PaystubForm
 				paystubData={generator.paystubData}
@@ -82,7 +82,7 @@ export default function PaystubCalculatorClient() {
 												<span className="text-muted-foreground">
 													Federal Tax
 												</span>
-												<span className="text-destructive-dark">
+												<span className="text-destructive-text">
 													-{formatCurrency(period.federalTax)}
 												</span>
 											</div>
@@ -90,19 +90,19 @@ export default function PaystubCalculatorClient() {
 												<span className="text-muted-foreground">
 													Social Security
 												</span>
-												<span className="text-destructive-dark">
+												<span className="text-destructive-text">
 													-{formatCurrency(period.socialSecurity)}
 												</span>
 											</div>
 											<div className="flex justify-between text-sm">
 												<span className="text-muted-foreground">Medicare</span>
-												<span className="text-destructive-dark">
+												<span className="text-destructive-text">
 													-{formatCurrency(period.medicare)}
 												</span>
 											</div>
 											<div className="flex justify-between text-sm">
 												<span className="text-muted-foreground">State Tax</span>
-												<span className="text-destructive-dark">
+												<span className="text-destructive-text">
 													-{formatCurrency(period.stateTax)}
 												</span>
 											</div>
@@ -111,7 +111,7 @@ export default function PaystubCalculatorClient() {
 													<span className="text-muted-foreground">
 														Other Deductions
 													</span>
-													<span className="text-destructive-dark">
+													<span className="text-destructive-text">
 														-{formatCurrency(period.otherDeductions)}
 													</span>
 												</div>
@@ -121,7 +121,7 @@ export default function PaystubCalculatorClient() {
 											<span className="font-semibold text-foreground">
 												Net Pay
 											</span>
-											<span className="text-2xl font-bold text-primary">
+											<span className="text-2xl font-bold text-accent">
 												{formatCurrency(period.netPay)}
 											</span>
 										</div>
@@ -130,7 +130,7 @@ export default function PaystubCalculatorClient() {
 							))}
 
 						{/* Annual Totals */}
-						<Card className="bg-accent/10 dark:bg-primary/20">
+						<Card className="bg-accent/10">
 							<h3 className="text-lg font-semibold text-foreground mb-heading">
 								Annual Totals
 							</h3>
@@ -153,7 +153,7 @@ export default function PaystubCalculatorClient() {
 									<div className="text-sm text-muted-foreground">
 										Total Deductions
 									</div>
-									<div className="text-lg font-semibold text-destructive-dark">
+									<div className="text-lg font-semibold text-destructive-text">
 										-
 										{formatCurrency(
 											generator.paystubData.totals.federalTax +
@@ -166,7 +166,7 @@ export default function PaystubCalculatorClient() {
 								</div>
 								<div>
 									<div className="text-sm text-muted-foreground">Net Pay</div>
-									<div className="text-xl font-bold text-primary">
+									<div className="text-xl font-bold text-accent">
 										{formatCurrency(generator.paystubData.totals.netPay)}
 									</div>
 								</div>

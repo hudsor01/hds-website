@@ -2,7 +2,6 @@ import { Clock } from 'lucide-react'
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
 	title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
@@ -25,29 +24,29 @@ const GoogleMap = dynamic(() => import('@/components/utilities/GoogleMap'), {
 })
 
 function MapSkeleton() {
-	return <div className="h-96 bg-card rounded-lg animate-pulse"></div>
+	return <div className="h-96 bg-muted rounded-lg animate-pulse"></div>
 }
 
 function ContactFormSkeleton() {
 	return (
-		<div className="space-y-content animate-pulse">
+		<div className="space-y-4 animate-pulse">
 			{/* Name fields */}
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-content">
-				<div className="h-12 bg-input rounded-lg"></div>
-				<div className="h-12 bg-input rounded-lg"></div>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div className="h-12 bg-muted rounded-lg"></div>
+				<div className="h-12 bg-muted rounded-lg"></div>
 			</div>
 			{/* Email */}
-			<div className="h-12 bg-input rounded-lg"></div>
+			<div className="h-12 bg-muted rounded-lg"></div>
 			{/* Company */}
-			<div className="h-12 bg-input rounded-lg"></div>
+			<div className="h-12 bg-muted rounded-lg"></div>
 			{/* Service select */}
-			<div className="h-12 bg-input rounded-lg"></div>
+			<div className="h-12 bg-muted rounded-lg"></div>
 			{/* Budget select */}
-			<div className="h-12 bg-input rounded-lg"></div>
+			<div className="h-12 bg-muted rounded-lg"></div>
 			{/* Message textarea */}
-			<div className="h-32 bg-input rounded-lg"></div>
+			<div className="h-32 bg-muted rounded-lg"></div>
 			{/* Submit button */}
-			<div className="h-12 bg-primary/20 rounded-lg border border-primary/30"></div>
+			<div className="h-12 bg-muted rounded-lg border border-border"></div>
 		</div>
 	)
 }
@@ -56,186 +55,154 @@ export default function ContactPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative min-h-screen flex-center overflow-hidden">
-				{/* Background Elements */}
-				<div className="absolute inset-0 pointer-events-none">
-					<div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-					<div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
-					<div className="absolute inset-0 grid-pattern" />
-				</div>
-
-				<div className="relative z-sticky container-wide">
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-sections items-center">
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 						{/* Left Column - Hero Content */}
-						<div className="space-y-comfortable">
+						<div className="space-y-8">
 							<div>
-								<h1 className="text-clamp-2xl font-black text-foreground leading-none tracking-tight text-balance">
-									<span className="inline-block">Book Your Free</span>
-									<br />
-									<span className="inline-block text-accent">
-										Strategy Call
-									</span>
-									<br />
-									<span className="inline-block">in 30 Minutes</span>
+								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+									Free Strategy Call
+								</p>
+								<h1 className="text-page-title text-foreground leading-tight text-balance">
+									Book Your Free Strategy Call in 30 Minutes
 								</h1>
 							</div>
 
-							<div className="typography">
-								<p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-									See exactly where your website is losing customers—and how to
-									fix it. No sales pitch. No commitment. Just actionable
-									insights you can use immediately.
-								</p>
+							<p className="text-lead text-muted-foreground">
+								See exactly where your website is losing customers—and how to
+								fix it. No sales pitch. No commitment. Just actionable insights
+								you can use immediately.
+							</p>
+
+							{/* What Happens Next card */}
+							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+								<h3 className="text-h3 text-foreground">What Happens Next?</h3>
+
+								<div className="flex items-start gap-4">
+									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+										<span className="text-accent font-bold text-sm">1</span>
+									</div>
+									<div>
+										<p className="font-semibold text-foreground text-sm">
+											We respond within 2 hours
+										</p>
+										<p className="text-xs text-muted-foreground mt-0.5">
+											Get a confirmation email with next steps
+										</p>
+									</div>
+								</div>
+
+								<div className="flex items-start gap-4">
+									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+										<span className="text-accent font-bold text-sm">2</span>
+									</div>
+									<div>
+										<p className="font-semibold text-foreground text-sm">
+											30-minute strategy call
+										</p>
+										<p className="text-xs text-muted-foreground mt-0.5">
+											We analyze your needs and identify revenue opportunities
+										</p>
+									</div>
+								</div>
+
+								<div className="flex items-start gap-4">
+									<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+										<span className="text-accent font-bold text-sm">3</span>
+									</div>
+									<div>
+										<p className="font-semibold text-foreground text-sm">
+											Get your custom roadmap
+										</p>
+										<p className="text-xs text-muted-foreground mt-0.5">
+											Detailed plan with ROI projections you can use immediately
+										</p>
+									</div>
+								</div>
 							</div>
 
-							{/* Contact Info - Enhanced */}
-							<div className="space-y-content">
-								<Card variant="glassLight" size="sm" className="space-y-tight">
-									<h3 className="text-lg font-bold text-foreground mb-subheading">
-										What Happens Next?
-									</h3>
-
-									<div className="flex items-start gap-content text-muted-foreground">
-										<div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
-											<span className="text-accent font-bold">1</span>
-										</div>
-										<div>
-											<p className="font-semibold text-foreground">
-												We respond within 2 hours
-											</p>
-											<p className="text-xs">
-												Get a confirmation email with next steps
-											</p>
-										</div>
-									</div>
-
-									<div className="flex items-start gap-content text-muted-foreground">
-										<div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
-											<span className="text-accent font-bold">2</span>
-										</div>
-										<div>
-											<p className="font-semibold text-foreground">
-												30-minute strategy call
-											</p>
-											<p className="text-xs">
-												We analyze your needs and identify revenue opportunities
-											</p>
-										</div>
-									</div>
-
-									<div className="flex items-start gap-content text-muted-foreground">
-										<div className="w-10 h-10 rounded-full bg-primary/20 border border-accent/30 flex-center shrink-0">
-											<span className="text-accent font-bold">3</span>
-										</div>
-										<div>
-											<p className="font-semibold text-foreground">
-												Get your custom roadmap
-											</p>
-											<p className="text-xs">
-												Detailed plan with ROI projections you can use
-												immediately
-											</p>
-										</div>
-									</div>
-								</Card>
-
-								<div className="flex items-center gap-content text-muted-foreground px-4 py-2 bg-success-text/10 border border-success-text/30 rounded-lg">
-									<Clock className="w-6 h-6 text-success-text shrink-0" />
-									<div>
-										<p className="font-semibold text-foreground">
-											Guaranteed Response
-										</p>
-										<p className="text-xs">
-											Within 2 hours during business hours
-										</p>
-									</div>
-								</div>
-
-								<div className="px-4 py-2 bg-accent/10 border border-accent/30 rounded-lg">
-									<p className="text-xs text-accent font-semibold mb-subheading">
-										Join growing businesses
+							<div className="flex items-center gap-4 px-4 py-3 rounded-lg border border-border bg-surface-raised">
+								<Clock className="w-5 h-5 text-accent shrink-0" />
+								<div>
+									<p className="font-semibold text-foreground text-sm">
+										Guaranteed Response
 									</p>
 									<p className="text-xs text-muted-foreground">
-										Proven ROI results
+										Within 2 hours during business hours
 									</p>
 								</div>
+							</div>
+
+							<div className="px-4 py-3 rounded-lg border border-accent/20 bg-accent/5">
+								<p className="text-xs text-accent font-semibold mb-1">
+									Join growing businesses
+								</p>
+								<p className="text-xs text-muted-foreground">
+									Proven ROI results
+								</p>
 							</div>
 						</div>
 
 						{/* Right Column - Contact Form */}
-						<div className="relative">
-							<Card
-								variant="glass"
-								size="lg"
-								className="relative rounded-2xl overflow-hidden shadow-2xl"
-							>
-								<div className="absolute inset-0 bg-background/5" />
-								<div className="relative z-sticky">
-									<div className="text-center mb-comfortable">
-										<h2 className="text-xl font-bold text-foreground mb-subheading text-balance">
-											Claim Your Free Strategy Call
-										</h2>
-										<div className="typography">
-											<p className="text-muted-foreground text-pretty">
-												Tell us about your business and we&apos;ll show you
-												exactly where you&apos;re losing revenue—and how to fix
-												it.
-											</p>
-										</div>
+						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="text-center mb-8">
+								<h2 className="text-h3 text-foreground mb-3 text-balance">
+									Claim Your Free Strategy Call
+								</h2>
+								<p className="text-sm text-muted-foreground leading-relaxed">
+									Tell us about your business and we&apos;ll show you exactly
+									where you&apos;re losing revenue—and how to fix it.
+								</p>
+							</div>
+
+							<Suspense fallback={<ContactFormSkeleton />}>
+								<ContactForm />
+							</Suspense>
+
+							{/* Trust badges */}
+							<div className="mt-6 pt-6 border-t border-border">
+								<div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs text-muted-foreground">
+									<div className="flex items-center gap-2">
+										<div className="w-3 h-3 bg-success-text rounded-full"></div>
+										<span>No sales pitch</span>
 									</div>
-
-									<Suspense fallback={<ContactFormSkeleton />}>
-										<ContactForm />
-									</Suspense>
-
-									{/* Trust badges */}
-									<div className="mt-card-content pt-card-content border-t border-white/10">
-										<div className="flex flex-col sm:flex-row justify-center items-center gap-content text-xs text-muted-foreground">
-											<div className="flex items-center gap-tight">
-												<div className="w-4 h-4 bg-success-text rounded-full"></div>
-												<span>No sales pitch</span>
-											</div>
-											<div className="flex items-center gap-tight">
-												<div className="w-4 h-4 bg-accent rounded-full"></div>
-												<span>2-hour response time</span>
-											</div>
-											<div className="flex items-center gap-tight">
-												<div className="w-4 h-4 bg-info rounded-full"></div>
-												<span>Proven success stories</span>
-											</div>
-										</div>
+									<div className="flex items-center gap-2">
+										<div className="w-3 h-3 bg-accent rounded-full"></div>
+										<span>2-hour response time</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<div className="w-3 h-3 bg-info rounded-full"></div>
+										<span>Proven success stories</span>
 									</div>
 								</div>
-							</Card>
+							</div>
 						</div>
 					</div>
 				</div>
 			</section>
 
 			{/* Map Section */}
-			<section className="relative section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-content-block">
-						<h2 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
-							<span className="text-accent">Visit Our Office</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Our Location
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Visit Our Office
 						</h2>
-						<div className="typography">
-							<p className="text-lg text-muted-foreground container-narrow text-pretty">
-								Located in the heart of Florida&apos;s tech corridor, ready to
-								serve clients worldwide.
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Located in the heart of Florida&apos;s tech corridor, ready to
+							serve clients worldwide.
+						</p>
 					</div>
 
-					<Card
-						variant="glassLight"
-						size="sm"
-						className="relative rounded-2xl overflow-hidden"
-					>
+					<div className="rounded-xl border border-border bg-surface-raised overflow-hidden">
 						<Suspense fallback={<MapSkeleton />}>
 							<GoogleMap />
 						</Suspense>
-					</Card>
+					</div>
 				</div>
 			</section>
 		</main>

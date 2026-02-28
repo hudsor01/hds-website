@@ -177,7 +177,7 @@ export function Calculator() {
 	}
 
 	return (
-		<div className="min-h-screen bg-primary/10 py-8 px-4">
+		<div className="min-h-screen bg-background py-8 px-4">
 			<JsonLd
 				data={{
 					'@context': 'https://schema.org',
@@ -198,7 +198,7 @@ export function Calculator() {
 				{/* Header */}
 				<div className="text-center mb-comfortable">
 					<div className="flex items-center justify-center gap-3 mb-3">
-						<Car className="w-10 h-10 text-primary" />
+						<Car className="w-10 h-10 text-accent" />
 						<h1 className="text-h1 text-foreground">Texas TTL Calculator</h1>
 					</div>
 					<p className="text-muted-foreground">
@@ -268,7 +268,7 @@ export function Calculator() {
 						onClick={e => e.stopPropagation()}
 					>
 						<div className="flex items-center gap-3 mb-4">
-							<Share2 className="w-6 h-6 text-primary" />
+							<Share2 className="w-6 h-6 text-accent" />
 							<h2 className="text-h4 text-foreground">Share Your Results</h2>
 						</div>
 
@@ -290,7 +290,7 @@ export function Calculator() {
 								/>
 								<button
 									onClick={copyShareLink}
-									className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
 									aria-label="Copy link"
 								>
 									<Copy className="w-4 h-4" />
@@ -312,12 +312,12 @@ export function Calculator() {
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
+									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-accent/50"
 								/>
 								<button
 									onClick={handleEmailResults}
 									disabled={isPending || !emailInput}
-									className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+									className="px-3 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 									aria-label="Send email"
 								>
 									<Mail className="w-4 h-4" />

@@ -52,7 +52,7 @@ function SubmitButton() {
 		<button
 			type="submit"
 			disabled={pending}
-			className="w-full px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-accent/90 disabled:opacity-50 transition-colors"
+			className="w-full px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent/90 disabled:opacity-50 transition-colors"
 		>
 			{pending ? 'Processing...' : 'Unsubscribe'}
 		</button>

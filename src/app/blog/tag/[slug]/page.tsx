@@ -62,7 +62,7 @@ export default async function TagPage({ params }: TagPageProps) {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Back to Blog */}
-			<div className="container-wide py-8">
+			<div className="container-wide px-4 sm:px-6 py-8">
 				<Link
 					href="/blog"
 					className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
@@ -74,15 +74,11 @@ export default async function TagPage({ params }: TagPageProps) {
 
 			{/* Header */}
 			<section className="relative bg-background py-section-sm overflow-hidden">
-				<div className="absolute inset-0 opacity-10 pointer-events-none">
-					<div className="absolute inset-0 surface-overlay"></div>
-				</div>
-
-				<div className="relative container-wide text-center">
-					<span className="inline-block text-accent font-medium mb-heading">
+				<div className="relative container-wide px-4 sm:px-6 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 						Tag
-					</span>
-					<h1 className="text-4xl md:text-5xl font-black text-foreground mb-heading">
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance mb-heading">
 						{tag.name}
 					</h1>
 					{tag.description && (
@@ -94,7 +90,7 @@ export default async function TagPage({ params }: TagPageProps) {
 			</section>
 
 			{/* Posts */}
-			<section className="py-section-sm">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					{posts.length > 0 ? (
 						<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">

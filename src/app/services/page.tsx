@@ -11,7 +11,6 @@ import {
 	Zap
 } from 'lucide-react'
 import Link from 'next/link'
-import { BackgroundPattern } from '@/components/ui/BackgroundPattern'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -126,81 +125,61 @@ export default function ServicesPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative min-h-screen flex-center overflow-hidden">
-				{/* Background Elements */}
-				<BackgroundPattern variant="default" />
-
-				<div className="relative z-sticky container-wide sm:px-6 lg:px-8 text-center">
-					<div className="space-y-sections">
-						<div>
-							<span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-responsive-sm backdrop-blur-sm">
-								Professional Services
-							</span>
-						</div>
-
-						<div>
-							<h1 className="text-responsive-lg font-black text-foreground leading-none tracking-tight text-balance">
-								<span className="inline-block">Everything Your</span>
-								<span className="inline-block mx-4 text-accent">Business</span>
-								<span className="inline-block">Needs</span>
-								<span className="inline-block ml-4 text-accent">Online</span>
-							</h1>
-						</div>
-
-						<div className="typography">
-							<p className="large text-muted-foreground container-wide leading-relaxed text-pretty">
-								From your first website to full business automation — we handle
-								it all so you don&apos;t have to.
-							</p>
-						</div>
-
-						<div>
-							<div className="flex-center flex-col sm:flex-row gap-content mt-12">
-								<Button
-									asChild
-									variant="default"
-									size="lg"
-									trackConversion={true}
-								>
-									<Link href="/contact">
-										Start Your Project
-										<ArrowRight className="w-4 h-4" />
-									</Link>
-								</Button>
-
-								<Button
-									asChild
-									variant="outline"
-									size="lg"
-									trackConversion={true}
-								>
-									<Link href="#process">
-										See Our Process
-										<ArrowRight className="w-4 h-4" />
-									</Link>
-								</Button>
-							</div>
-						</div>
+			<section className="relative overflow-hidden bg-background">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Professional Services
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
+						Everything Your Business Needs Online
+					</h1>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
+						From your first website to full business automation — we handle it
+						all so you don&apos;t have to.
+					</p>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center">
+						<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Link href="/contact">
+								Start Your Project
+								<ArrowRight className="w-4 h-4" />
+							</Link>
+						</Button>
+						<Button
+							asChild
+							variant="outline"
+							size="xl"
+							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+						>
+							<Link href="#process">See Our Process</Link>
+						</Button>
 					</div>
 				</div>
 			</section>
+
 			{/* Services Section */}
-			<section id="services-list" className="relative py-section px-4">
+			<section id="services-list" className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
-						<h2 className="text-lg font-black text-foreground mb-content-block">
-							<span className="text-accent">
-								Services That Grow Your Business
-							</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							What We Build
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Services That Grow Your Business
 						</h2>
-						<div className="typography">
-							<p className="large muted container-narrow">
-								We handle the tech. You focus on running your business.
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							We handle the tech. You focus on running your business.
+						</p>
 					</div>
 
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-sections mb-16">
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 						{services.map((service, index) => (
 							<Card
 								key={index}
@@ -216,127 +195,128 @@ export default function ServicesPage() {
 					</div>
 				</div>
 			</section>
+
 			{/* Stats Section */}
-			<section className="relative py-section px-4">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
-						<h2 className="text-lg font-black text-foreground mb-content-block">
-							<span className="text-accent">Proven Results</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Track Record
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Proven Results
 						</h2>
-						<div className="typography">
-							<p className="large muted container-narrow">
-								Small business owners trust us to get it done right and on time
-								— without the technical runaround.
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Small business owners trust us to get it done right and on time —
+							without the technical runaround.
+						</p>
 					</div>
 
-					<div className="grid grid-cols-2 md:grid-cols-4 gap-comfortable mb-16">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{stats.map((stat, index) => (
-							<Card
+							<div
 								key={index}
-								variant="glassLight"
-								size="lg"
-								hover
-								className="relative text-center"
+								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
-								<div className="text-h1 text-foreground mb-subheading">
+								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+								<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 									{stat.value}
 								</div>
-								<div className="small muted">{stat.label}</div>
-							</Card>
+								<div className="text-sm text-muted-foreground">
+									{stat.label}
+								</div>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
+
 			{/* Process Section */}
-			<section id="process" className="relative py-section px-4">
+			<section id="process" className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
-						<h2 className="text-lg font-black text-foreground mb-content-block">
-							<span className="text-accent">Our Process</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							How It Works
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Our Process
 						</h2>
-						<div className="typography">
-							<p className="large text-muted-foreground container-narrow">
-								Simple, clear steps from first conversation to live and working
-								— no technical jargon required.
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Simple, clear steps from first conversation to live and working —
+							no technical jargon required.
+						</p>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-sections mb-16">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 						{process.map((step, index) => (
-							<Card
+							<div
 								key={index}
-								variant="glass"
-								size="lg"
-								hover
-								className="group relative text-center"
+								className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors text-center"
 							>
-								<div className="mb-heading flex justify-center">
-									<div className="w-16 h-16 bg-accent/20 rounded-full flex-center">
-										<step.icon className="w-8 h-8 text-accent" />
+								<div className="mb-4 flex justify-center">
+									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+										<step.icon className="w-5 h-5 text-accent" />
 									</div>
 								</div>
-								<div className="text-accent font-bold text-lg mb-subheading">
+								<div className="text-accent font-bold text-sm mb-2 uppercase tracking-widest">
 									{step.step}
 								</div>
-								<h3 className="text-xl font-bold text-foreground mb-heading group-hover:text-accent transition-colors">
+								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
 									{step.title}
 								</h3>
-								<div className="typography">
-									<p className="muted group-hover:text-muted-foreground transition-colors">
-										{step.description}
-									</p>
-								</div>
-							</Card>
+								<p className="text-sm text-muted-foreground leading-relaxed">
+									{step.description}
+								</p>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
 
 			{/* CTA Section */}
-			<section className="relative py-section px-4">
+			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<Card
-						variant="glassSection"
-						size="none"
-						className="relative z-sticky text-center p-12 md:p-16"
-					>
-						<h2 className="text-lg font-black text-foreground mb-content-block">
-							Ready to stop doing it
-							<span className="text-accent"> manually?</span>
-						</h2>
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to stop doing it{' '}
+								<span className="text-accent">manually?</span>
+							</h2>
 
-						<div className="typography">
-							<p className="large muted container-narrow mb-10">
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								Tell us what&apos;s taking up your time. We&apos;ll put together
 								a plan to build, connect, or automate it — and give you back
 								your day.
 							</p>
-						</div>
 
-						<div className="flex flex-col sm:flex-row flex-center gap-content">
-							<Button
-								asChild
-								variant="default"
-								size="xl"
-								trackConversion={true}
-							>
-								<Link href="/contact">
-									Start Your Project
-									<ArrowRight className="w-5 h-5" />
-								</Link>
-							</Button>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href="/contact">
+										Start Your Project
+										<ArrowRight className="w-5 h-5" />
+									</Link>
+								</Button>
 
-							<Button asChild variant="outline" size="xl">
-								<Link href="#services-list">
-									Explore Services
-									<ArrowRight className="w-5 h-5" />
-								</Link>
-							</Button>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href="#services-list">Explore Services</Link>
+								</Button>
+							</div>
 						</div>
-					</Card>
+					</div>
 				</div>
 			</section>
 		</main>

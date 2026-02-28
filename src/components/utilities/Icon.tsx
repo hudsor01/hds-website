@@ -71,7 +71,7 @@ const iconButtonVariants = {
 	default: 'text-muted-foreground hover:text-foreground',
 	ghost: 'text-muted-foreground hover:text-foreground',
 	primary: 'text-accent hover:text-accent/80',
-	danger: 'text-destructive hover:text-destructive-darker'
+	danger: 'text-destructive hover:text-destructive-texter'
 } as const
 
 const iconButtonSizes = {

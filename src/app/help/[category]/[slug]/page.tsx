@@ -16,7 +16,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import {
 	getAdjacentArticles,
 	getArticleBySlug,
@@ -76,22 +76,32 @@ export default async function HelpArticlePage({ params }: PageProps) {
 	})
 
 	return (
-		<div className="min-h-screen bg-muted/30">
-			{/* Header */}
-			<div className="bg-background border-b">
-				<div className="container-narrow py-6">
+		<main className="min-h-screen bg-background">
+			{/* Header / Breadcrumb */}
+			<div className="border-b border-border bg-background">
+				<div className="container-wide px-4 sm:px-6 py-6">
 					{/* Breadcrumb */}
-					<Breadcrumb className="mb-heading">
+					<Breadcrumb className="mb-4">
 						<BreadcrumbList>
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link href="/help">Help Center</Link>
+									<Link
+										href="/help"
+										className="hover:text-foreground transition-colors"
+									>
+										Help Center
+									</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link href={`/help/${category}`}>{categoryInfo.name}</Link>
+									<Link
+										href={`/help/${category}`}
+										className="hover:text-foreground transition-colors"
+									>
+										{categoryInfo.name}
+									</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
@@ -112,12 +122,12 @@ export default async function HelpArticlePage({ params }: PageProps) {
 			</div>
 
 			{/* Article Content */}
-			<div className="container-narrow py-8 md:py-12">
-				<Card>
-					<CardContent className="card-padding md:p-10">
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide max-w-4xl mx-auto">
+					<div className="rounded-xl border border-border bg-surface-raised p-8 md:p-10">
 						{/* Article Header */}
 						<header className="mb-comfortable">
-							<h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+							<h1 className="text-page-title text-foreground leading-tight text-balance mb-3">
 								{article.title}
 							</h1>
 							<div className="flex items-center gap-tight text-sm text-muted-foreground">
@@ -137,7 +147,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 											return (
 												<Link
 													href={href}
-													className="text-(--primary) hover:underline"
+													className="text-accent hover:underline"
 												>
 													{children}
 												</Link>
@@ -148,7 +158,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 												href={href ?? '#'}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-(--primary) hover:underline"
+												className="text-accent hover:underline"
 											>
 												{children}
 											</a>
@@ -156,7 +166,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 									},
 									// Custom heading styles
 									h2: ({ children }) => (
-										<h2 className="text-xl md:text-2xl font-semibold text-foreground mt-heading mb-heading pb-2 border-b">
+										<h2 className="text-xl md:text-2xl font-semibold text-foreground mt-heading mb-heading pb-2 border-b border-border">
 											{children}
 										</h2>
 									),
@@ -217,63 +227,56 @@ export default async function HelpArticlePage({ params }: PageProps) {
 								{article.content}
 							</ReactMarkdown>
 						</div>
-					</CardContent>
-				</Card>
+					</div>
 
-				{/* Navigation */}
-				{(prev || next) && (
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-content mt-content-block">
-						{prev ? (
-							<Link href={`/help/${category}/${prev.slug}`} className="group">
-								<Card className="h-full hover:border-(--primary) transition-colors">
-									<CardContent className="card-padding-sm">
+					{/* Navigation */}
+					{(prev || next) && (
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+							{prev ? (
+								<Link href={`/help/${category}/${prev.slug}`} className="group">
+									<div className="h-full rounded-xl border border-border bg-surface-raised p-5 hover:border-border-strong transition-colors">
 										<div className="flex items-center gap-tight text-sm text-muted-foreground mb-1">
 											<ChevronLeft className="size-4" />
 											Previous
 										</div>
-										<p className="font-medium text-foreground group-hover:text-(--primary) transition-colors">
+										<p className="font-medium text-foreground group-hover:text-accent transition-colors">
 											{prev.title}
 										</p>
-									</CardContent>
-								</Card>
-							</Link>
-						) : (
-							<div />
-						)}
-						{next && (
-							<Link href={`/help/${category}/${next.slug}`} className="group">
-								<Card className="h-full hover:border-(--primary) transition-colors">
-									<CardContent className="card-padding-sm text-right">
+									</div>
+								</Link>
+							) : (
+								<div />
+							)}
+							{next && (
+								<Link href={`/help/${category}/${next.slug}`} className="group">
+									<div className="h-full rounded-xl border border-border bg-surface-raised p-5 hover:border-border-strong transition-colors text-right">
 										<div className="flex items-center justify-end gap-tight text-sm text-muted-foreground mb-1">
 											Next
 											<ChevronRight className="size-4" />
 										</div>
-										<p className="font-medium text-foreground group-hover:text-(--primary) transition-colors">
+										<p className="font-medium text-foreground group-hover:text-accent transition-colors">
 											{next.title}
 										</p>
-									</CardContent>
-								</Card>
-							</Link>
-						)}
-					</div>
-				)}
+									</div>
+								</Link>
+							)}
+						</div>
+					)}
 
-				{/* Help CTA */}
-				<Card className="mt-heading">
-					<CardContent className="card-padding text-center">
-						<p className="text-muted-foreground mb-heading">
+					{/* Help CTA */}
+					<div className="mt-6 rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+						<p className="text-sm text-muted-foreground mb-4">
 							Was this article helpful? Need more assistance?
 						</p>
-						<Link
-							href="/contact"
-							className="inline-flex items-center gap-tight px-4 py-2 bg-[var(--primary)] text-[var(--primary-foreground)] rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
-						>
-							Contact Support
-							<ArrowRight className="size-4" />
-						</Link>
-					</CardContent>
-				</Card>
-			</div>
-		</div>
+						<Button asChild variant="accent" trackConversion={true}>
+							<Link href="/contact">
+								Contact Support
+								<ArrowRight className="size-4" />
+							</Link>
+						</Button>
+					</div>
+				</div>
+			</section>
+		</main>
 	)
 }

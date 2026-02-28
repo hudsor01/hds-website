@@ -85,7 +85,7 @@ export function ComparisonView({
 								<td className="py-3 px-3 text-right">
 									<button
 										onClick={() => removeFromComparison(index)}
-										className="text-destructive hover:text-destructive-darker transition-colors"
+										className="text-destructive hover:text-destructive-texter transition-colors"
 									>
 										<X className="w-4 h-4" />
 									</button>

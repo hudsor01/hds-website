@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Analytics } from '@/components/utilities/Analytics'
 import {
 	getAllShowcaseSlugs,
@@ -121,18 +120,15 @@ async function ProjectContent({ slug }: { slug: string }) {
 			/>
 
 			{/* Hero Section */}
-			<section className="relative py-12">
-				<div className="container-wide sm:px-6 lg:px-8">
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
 					<div className="grid lg:grid-cols-2 gap-12 items-center">
 						{/* Project Info */}
 						<div className="space-y-comfortable">
-							<Card
-								variant="glass"
-								className="inline-flex items-center gap-tight px-3 py-1 rounded-full -light text-sm"
-							>
-								<Code2 className="w-4 h-4" />
+							<span className="inline-flex items-center gap-tight px-3 py-1 rounded-full border border-border bg-surface-raised text-sm text-muted-foreground">
+								<Code2 className="w-4 h-4" aria-hidden="true" />
 								{project.category}
-							</Card>
+							</span>
 
 							<h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground leading-tight">
 								{project.title}
@@ -154,13 +150,13 @@ async function ProjectContent({ slug }: { slug: string }) {
 							<div className="flex flex-wrap gap-comfortable text-sm text-muted-foreground">
 								{project.publishedAt && (
 									<div className="flex items-center gap-tight">
-										<Calendar className="w-4 h-4" />
+										<Calendar className="w-4 h-4" aria-hidden="true" />
 										{formatDate(project.publishedAt.toISOString(), 'long')}
 									</div>
 								)}
 								{project.viewCount > 0 && (
 									<div className="flex items-center gap-tight">
-										<Eye className="w-4 h-4" />
+										<Eye className="w-4 h-4" aria-hidden="true" />
 										{project.viewCount.toLocaleString()} views
 									</div>
 								)}
@@ -218,10 +214,10 @@ async function ProjectContent({ slug }: { slug: string }) {
 
 			{/* Stats Section */}
 			{Object.keys(stats).length > 0 && (
-				<section className="relative py-12">
-					<div className="container-wide sm:px-6 lg:px-8">
-						<Card variant="glassSection" size="lg">
-							<h2 className="text-h3 text-foreground mb-comfortable">
+				<section className="py-section-sm px-4 sm:px-6">
+					<div className="container-wide">
+						<div className="rounded-xl border border-border bg-surface-raised p-8">
+							<h2 className="text-section-title text-foreground mb-comfortable">
 								Project Impact
 							</h2>
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-sections">
@@ -236,39 +232,44 @@ async function ProjectContent({ slug }: { slug: string }) {
 									</div>
 								))}
 							</div>
-						</Card>
+						</div>
 					</div>
 				</section>
 			)}
 
 			{/* Tech Stack */}
-			<section className="relative py-12">
-				<div className="container-wide sm:px-6 lg:px-8">
-					<Card variant="glassSection" size="lg">
-						<h2 className="text-h3 text-foreground mb-content-block">
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="rounded-xl border border-border bg-surface-raised p-8">
+						<h2 className="text-section-title text-foreground mb-content-block">
 							Technologies Used
 						</h2>
 						<div className="flex flex-wrap gap-3">
 							{project.technologies.map(tech => (
 								<span
 									key={tech}
-									className="px-4 py-2 glass-card-light rounded-full text-sm text-muted-foreground hover:border-accent/50 hover:text-accent transition-colors"
+									className="px-4 py-2 rounded-full border border-border bg-background text-sm text-muted-foreground hover:border-accent/50 hover:text-accent transition-colors"
 								>
 									{tech}
 								</span>
 							))}
 						</div>
-					</Card>
+					</div>
 				</div>
 			</section>
 
 			{/* Related Projects */}
 			{relatedProjects.length > 0 && (
-				<section className="relative py-12">
-					<div className="container-wide sm:px-6 lg:px-8">
-						<h2 className="text-h2 text-foreground mb-comfortable">
-							Related Projects
-						</h2>
+				<section className="py-section-sm px-4 sm:px-6">
+					<div className="container-wide">
+						<div className="text-center mb-10">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+								More Work
+							</p>
+							<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+								Related Projects
+							</h2>
+						</div>
 						<div className="grid md:grid-cols-3 gap-sections">
 							{relatedProjects.map(relatedProject => (
 								<Link
@@ -276,10 +277,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 									href={`/portfolio/${relatedProject.slug}`}
 									className="group block"
 								>
-									<Card
-										variant="glass"
-										className="card-hover-glow transition-all duration-300"
-									>
+									<div className="rounded-xl border border-border bg-surface-raised hover:border-border-strong transition-colors overflow-hidden">
 										{relatedProject.imageUrl && (
 											<div
 												className={`${relatedProject.gradientClass} h-48 relative overflow-hidden`}
@@ -293,7 +291,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 												/>
 											</div>
 										)}
-										<div>
+										<div className="p-6">
 											<div className="text-sm text-accent mb-subheading">
 												{relatedProject.category}
 											</div>
@@ -304,7 +302,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 												{relatedProject.description}
 											</p>
 										</div>
-									</Card>
+									</div>
 								</Link>
 							))}
 						</div>
@@ -313,24 +311,30 @@ async function ProjectContent({ slug }: { slug: string }) {
 			)}
 
 			{/* CTA Section */}
-			<section className="relative py-section px-4">
+			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<Card variant="glassSection" className="p-12 md:p-16 text-center">
-						<h2 className="text-4xl font-black text-foreground mb-content-block">
-							Ready to create your
-							<span className="text-accent"> success story?</span>
-						</h2>
-						<p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-							Let&apos;s build something amazing together. Get in touch to
-							discuss your project.
-						</p>
-						<Button asChild variant="default" size="lg" trackConversion={true}>
-							<Link href="/contact">
-								Start Your Project
-								<ExternalLink className="w-5 h-5" />
-							</Link>
-						</Button>
-					</Card>
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to create your{' '}
+								<span className="text-accent">success story?</span>
+							</h2>
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								Let&apos;s build something amazing together. Get in touch to
+								discuss your project.
+							</p>
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
+								<Link href="/contact">
+									Start Your Project
+									<ExternalLink className="w-5 h-5" />
+								</Link>
+							</Button>
+						</div>
+					</div>
 				</div>
 			</section>
 		</>
@@ -345,25 +349,25 @@ export default async function ProjectPage({
 	const { slug } = await params
 
 	return (
-		<main className="min-h-screen bg-background text-foreground">
+		<main className="min-h-screen bg-background">
 			<Analytics />
 
 			{/* Back Button - Static, prerendered */}
-			<div className="container-wide sm:px-6 lg:px-8 pt-24 pb-8">
+			<div className="container-wide px-4 sm:px-6 pt-24 pb-8">
 				<Link
-					href="/portfolio"
+					href="/showcase"
 					className="inline-flex items-center gap-tight text-muted-foreground hover:text-foreground transition-colors"
 				>
-					<ArrowLeft className="w-4 h-4" />
-					Back to Portfolio
+					<ArrowLeft className="w-4 h-4" aria-hidden="true" />
+					Back to Showcase
 				</Link>
 			</div>
 
 			{/* Dynamic content with Suspense */}
 			<Suspense
 				fallback={
-					<div className="container-wide sm:px-6 lg:px-8 py-section text-center">
-						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
+					<div className="container-wide px-4 sm:px-6 py-section text-center">
+						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
 						<p className="text-muted-foreground text-lg mt-4">
 							Loading project...
 						</p>
