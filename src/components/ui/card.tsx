@@ -87,6 +87,8 @@ interface ProjectCardProps extends Omit<BaseCardProps, 'variant'> {
 	title: string
 	description: string
 	category: string
+	industry?: string
+	showcaseType?: 'quick' | 'detailed'
 	featured?: boolean
 	stats?: Record<string, string>
 	tech_stack: string[]
@@ -112,6 +114,23 @@ export type CardProps =
 	| PricingCardProps
 	| ProjectCardProps
 	| TestimonialCardProps
+
+// ── Project card color identity ─────────────────────────────────────────────
+const PROJECT_COLORS: Record<string, { header: string; text: string }> = {
+	'tattoo studio': { header: 'bg-amber-800', text: 'text-amber-50' },
+	'property management saas': { header: 'bg-blue-900', text: 'text-blue-50' },
+	'personal brand': { header: 'bg-teal-800', text: 'text-teal-50' }
+}
+const DEFAULT_PROJECT_COLOR = { header: 'bg-slate-800', text: 'text-slate-50' }
+
+export function getProjectColors(
+	industry: string | null | undefined,
+	category: string | null | undefined
+): { header: string; text: string } {
+	const key = (industry ?? category ?? '').toLowerCase()
+	return PROJECT_COLORS[key] ?? DEFAULT_PROJECT_COLOR
+}
+// ────────────────────────────────────────────────────────────────────────────
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 	const { className, variant, size, hover, ...rest } = props as BaseCardProps
@@ -317,7 +336,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 					className
 				)}
 			>
-				<Link href={`/portfolio/${slug}`}>
+				<Link href={`/showcase/${slug}`}>
 					<div
 						className={cn(
 							cardVariants({ variant: 'glass', size: 'none', hover: true }),
