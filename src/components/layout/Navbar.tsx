@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo, useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
@@ -15,7 +16,7 @@ interface NavigationItem {
 
 const navigation: NavigationItem[] = [
 	{ name: 'Services', href: ROUTES.SERVICES },
-	{ name: 'Portfolio', href: ROUTES.PORTFOLIO },
+	{ name: 'Showcase', href: ROUTES.SHOWCASE },
 	{ name: 'Tools', href: TOOL_ROUTES.INDEX },
 	{ name: 'About', href: ROUTES.ABOUT },
 	{ name: 'Pricing', href: '/pricing' }
@@ -88,7 +89,8 @@ const Navbar = memo(function Navbar() {
 							<ArrowRight className="w-3.5 h-3.5" />
 						</Link>
 
-						<div className="hidden sm:block">
+						<div className="hidden sm:flex items-center gap-2">
+							<ThemeToggle />
 							<Button
 								asChild
 								variant="default"
@@ -169,6 +171,9 @@ const Navbar = memo(function Navbar() {
 							>
 								<Link href={ROUTES.CONTACT}>Book Free Call</Link>
 							</Button>
+						</div>
+						<div className="pt-2 flex justify-end">
+							<ThemeToggle />
 						</div>
 					</div>
 				</div>
