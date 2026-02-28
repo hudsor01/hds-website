@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v4.0 UI Redesign — Phase 57 Homepage Hero Redesign
+**Current focus:** v4.0 UI Redesign — Phase 59 Tool Page Polish
 
 ## Current Position
 
-Phase: 58 (Core Component Polish) — IN PROGRESS (Plan 03 of 4 done)
-Plan: 58-03 complete — COMP-03 card surface elevation and COMP-04 navbar hover fix + footer token done; 62 tests pass
-Status: 58-03 done — card bg-surface-raised/shadow-sm/border-border-subtle, navbar hover:bg-muted, footer bg-background-dark
-Last activity: 2026-02-27 — 58-03 committed (2 commits: f932a66, b35b083)
+Phase: 58 (Core Component Polish) — COMPLETE (4/4 plans done)
+Plan: 58-04 complete — verification + showcase editorial mosaic + light-default theme + footer compact
+Status: Phase 58 closed — 394 tests pass, TypeScript + Biome clean, build green
+Last activity: 2026-02-27 — 58-04 committed (commits: b7a219a, 9986104, 1978f5e, c3c6eb2 + showcase commits)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -113,6 +113,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-27
-Stopped at: Completed 58-03-PLAN.md (COMP-03/04 card surface + navbar hover + footer token — 62 tests green)
+Stopped at: Completed Phase 58 (all 4 plans done — COMP-01/02/03/04 verified, showcase redesigned, light theme wired)
 Resume file: N/A
-Next action: Plan 58-04 (final phase plan — verification or remaining COMP requirements)
+Next action: Phase 59 (Tool Page Polish) — /gsd:plan-phase 59

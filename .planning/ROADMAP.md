@@ -266,10 +266,10 @@ Plans:
 Requirements covered: COMP-01, COMP-02, COMP-03, COMP-04
 
 Plans:
-- [ ] 58-01-PLAN.md — TDD scaffold: failing assertions for COMP-01 through COMP-04
-- [ ] 58-02-PLAN.md — Button + Input/Textarea/Label polish (COMP-01, COMP-02)
-- [ ] 58-03-PLAN.md — Card + Navbar + Footer polish (COMP-03, COMP-04)
-- [ ] 58-04-PLAN.md — Automated verification + visual checkpoint
+- [x] 58-01-PLAN.md — TDD scaffold: failing assertions for COMP-01 through COMP-04
+- [x] 58-02-PLAN.md — Button + Input/Textarea/Label polish (COMP-01, COMP-02)
+- [x] 58-03-PLAN.md — Card + Navbar + Footer polish (COMP-03, COMP-04)
+- [x] 58-04-PLAN.md — Automated verification + visual checkpoint + showcase redesign + light theme
 
 #### Phase 59: Tool Page Polish
 
