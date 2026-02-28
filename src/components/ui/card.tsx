@@ -330,7 +330,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 				ref={ref}
 				className={cn('group relative', featured && 'md:col-span-2', className)}
 			>
-				<Link href={`/showcase/${slug}`}>
+				<Link href={`/showcase/${slug}`} aria-label={`View project: ${title}`}>
 					<div
 						className={cn(
 							cardVariants({ variant: 'glass', size: 'none', hover: true }),
@@ -347,15 +347,22 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 							)}
 						>
 							<div className="relative z-10 card-padding-lg h-full flex flex-col justify-between py-6">
-								{/* Top: eyebrow */}
-								<p
-									className={cn(
-										'text-xs font-semibold uppercase tracking-widest opacity-60',
-										colors.text
+								{/* Top: eyebrow + optional featured badge */}
+								<div className="flex items-center justify-between gap-2">
+									<p
+										className={cn(
+											'text-xs font-semibold uppercase tracking-widest opacity-60',
+											colors.text
+										)}
+									>
+										{category}
+									</p>
+									{featured && (
+										<span className="px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
+											Featured Project
+										</span>
 									)}
-								>
-									{category}
-								</p>
+								</div>
 
 								{/* Mid: title */}
 								<h3
@@ -386,14 +393,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 
 							{/* Hover overlay */}
 							<div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
-								<Button
-									variant="default"
-									size="lg"
-									className="transform hover:scale-105 will-change-transform transform-gpu"
-								>
+								<span className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground font-semibold text-sm pointer-events-none">
 									View Project
-									<ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-								</Button>
+									<ExternalLink className="w-5 h-5" aria-hidden="true" />
+								</span>
 							</div>
 						</div>
 
