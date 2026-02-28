@@ -24,7 +24,7 @@ export default function CostEstimatorPage() {
 		<CalculatorLayout
 			title="Website Cost Estimator"
 			description="Get an instant estimate for your website project based on your specific requirements and features"
-			icon={<Calculator className="h-8 w-8 text-primary" />}
+			icon={<Calculator className="h-8 w-8 text-accent" />}
 		>
 			<CostEstimatorClient />
 		</CalculatorLayout>

@@ -299,7 +299,7 @@ export function MortgageCalculatorClient() {
 									onClick={() => setUsePercent(true)}
 									className={`px-2 py-1 text-xs rounded ${
 										usePercent
-											? 'bg-primary text-foreground'
+											? 'bg-accent text-accent-foreground'
 											: 'bg-muted text-muted-foreground'
 									}`}
 								>
@@ -310,7 +310,7 @@ export function MortgageCalculatorClient() {
 									onClick={() => setUsePercent(false)}
 									className={`px-2 py-1 text-xs rounded ${
 										!usePercent
-											? 'bg-primary text-foreground'
+											? 'bg-accent text-accent-foreground'
 											: 'bg-muted text-muted-foreground'
 									}`}
 								>
@@ -349,7 +349,7 @@ export function MortgageCalculatorClient() {
 							/>
 						)}
 						{inputs.downPaymentPercent < 20 && (
-							<p className="text-xs text-warning-dark dark:text-warning-text">
+							<p className="text-xs text-warning-text">
 								PMI is typically required for down payments less than 20%
 							</p>
 						)}
@@ -454,7 +454,7 @@ export function MortgageCalculatorClient() {
 
 					<button
 						type="submit"
-						className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
+						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
 					>
 						Calculate Payment
 					</button>
@@ -480,7 +480,7 @@ export function MortgageCalculatorClient() {
 							setPmi(0)
 							setHoaFees(0)
 						}}
-						className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:hover:bg-muted-foreground"
+						className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
 					>
 						Recalculate
 					</button>

@@ -1,8 +1,9 @@
+import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { TagList } from '@/components/blog/TagList'
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { getFeaturedPosts, getPosts, getTags } from '@/lib/blog'
 
 export const metadata: Metadata = {
@@ -31,9 +32,6 @@ export const metadata: Metadata = {
 	}
 }
 
-// Static blog data - no revalidation needed
-// For dynamic content, use React cache() at data layer + revalidate here
-
 export default async function BlogPage() {
 	const [featuredPosts, allPostsResult, tags] = await Promise.all([
 		getFeaturedPosts(3),
@@ -46,21 +44,15 @@ export default async function BlogPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative bg-background section-spacing overflow-hidden">
-				<div className="absolute inset-0 opacity-10 pointer-events-none">
-					<div className="absolute inset-0 surface-overlay"></div>
-					<div className="absolute inset-0 grid-pattern-subtle"></div>
-				</div>
-
-				<div className="relative container-wide text-center">
-					<div className="inline-flex flex-center gap-tight px-4 py-2 mb-comfortable rounded-full border border-accent/60 bg-accent/10 text-accent font-semibold text-lg">
-						<span className="w-2 h-2 bg-secondary-400 rounded-full animate-pulse"></span>
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 						Practical Insights
-					</div>
-					<h1 className="text-clamp-xl font-black text-foreground mb-heading text-balance">
-						Business <span className="text-accent">Strategy</span> Blog
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
+						Business Strategy Blog
 					</h1>
-					<p className="text-lg text-muted-foreground container-narrow text-pretty">
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
 						Practical insights on websites, tool integrations, and business
 						automation. Learn how to make technology work harder so you
 						don&apos;t have to.
@@ -70,18 +62,21 @@ export default async function BlogPage() {
 
 			{/* Featured Posts */}
 			{featuredPosts.length > 0 && (
-				<section className="section-spacing bg-primary">
+				<section className="py-section-sm px-4 sm:px-6">
 					<div className="container-wide">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl font-black text-foreground mb-heading text-balance">
+						<div className="text-center mb-10">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+								Editor&apos;s Picks
+							</p>
+							<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 								Featured Articles
 							</h2>
-							<p className="text-muted-foreground text-pretty">
+							<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 								Essential reading for ambitious business owners
 							</p>
 						</div>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-sections">
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{featuredPosts.map(post => (
 								<BlogPostCard key={post.id} post={post} featured />
 							))}
@@ -91,29 +86,32 @@ export default async function BlogPage() {
 			)}
 
 			{/* All Posts */}
-			<section className="section-spacing bg-primary">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="flex flex-col lg:flex-row gap-comfortable">
+					<div className="flex flex-col lg:flex-row gap-10">
 						{/* Main Content */}
 						<div className="flex-1">
-							<div className="text-center lg:text-left mb-content-block">
-								<h2 className="text-section-title font-black text-foreground mb-subheading text-balance">
+							<div className="mb-10">
+								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+									All Articles
+								</p>
+								<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 									All Articles
 								</h2>
-								<p className="text-muted-foreground text-pretty">
+								<p className="text-lead text-muted-foreground max-w-2xl">
 									Practical guides for business owners who want more from their
 									technology
 								</p>
 							</div>
 
 							{allPosts.length === 0 ? (
-								<Card variant="glass" size="lg" className="text-center">
-									<p className="text-muted-foreground text-lg">
+								<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+									<p className="text-sm text-muted-foreground leading-relaxed">
 										No articles found. Check back soon for new content!
 									</p>
-								</Card>
+								</div>
 							) : (
-								<div className="space-y-sections">
+								<div className="space-y-6">
 									{allPosts.map(post => (
 										<BlogPostCard key={post.id} post={post} />
 									))}
@@ -122,44 +120,41 @@ export default async function BlogPage() {
 						</div>
 
 						{/* Sidebar */}
-						<aside className="w-full lg:w-80 space-y-sections">
+						<aside className="w-full lg:w-80 space-y-6">
 							{/* Newsletter Signup */}
-							<Card variant="glass">
-								<h3 className="text-xl font-bold text-foreground mb-heading text-balance">
+							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+								<h3 className="text-h3 text-foreground mb-3 text-balance">
 									Stay Updated
 								</h3>
-								<p className="text-muted-foreground mb-heading text-pretty">
+								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
 									Get strategic insights delivered to your inbox.
 								</p>
-								<Link
-									href="/contact"
-									className="inline-block w-full text-center bg-accent text-black font-semibold py-2 px-6 rounded-lg hover:bg-primary/80 transition-colors"
-								>
-									Contact Us to Subscribe
-								</Link>
-								<p className="text-xs text-muted-foreground mt-2">
+								<Button asChild variant="accent" className="w-full">
+									<Link href="/contact">Contact Us to Subscribe</Link>
+								</Button>
+								<p className="text-xs text-muted-foreground mt-3">
 									Strategic insights, no spam.
 								</p>
-							</Card>
+							</div>
 
 							{/* Topics */}
 							{tags.length > 0 && <TagList tags={tags} />}
 
 							{/* CTA */}
-							<Card variant="glass" size="sm" className="text-center">
-								<h3 className="text-lg font-bold text-foreground mb-subheading text-balance">
+							<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+								<h3 className="text-h3 text-foreground mb-3 text-balance">
 									Ready to grow your business?
 								</h3>
-								<p className="text-muted-foreground mb-subheading text-pretty">
+								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
 									Let&apos;s build the system that runs it.
 								</p>
-								<Link
-									href="/contact"
-									className="inline-block bg-success-text text-black font-semibold p-button rounded-lg hover:bg-success transition-colors"
-								>
-									Get Started
-								</Link>
-							</Card>
+								<Button asChild variant="accent" trackConversion={true}>
+									<Link href="/contact">
+										Get Started
+										<ArrowRight className="w-4 h-4" />
+									</Link>
+								</Button>
+							</div>
 						</aside>
 					</div>
 				</div>

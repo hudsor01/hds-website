@@ -361,7 +361,7 @@ export default function ProposalGeneratorClient() {
 		<CalculatorLayout
 			title="Proposal Generator"
 			description="Create professional project proposals and download them as PDF"
-			icon={<FileSpreadsheet className="h-8 w-8 text-primary" />}
+			icon={<FileSpreadsheet className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-sections">
 				{/* Your Company Info */}
@@ -527,7 +527,7 @@ export default function ProposalGeneratorClient() {
 						<button
 							type="button"
 							onClick={addScopeItem}
-							className="flex items-center gap-1 text-sm text-primary hover:text-accent"
+							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
 							<Plus className="w-4 h-4" />
 							Add Item
@@ -564,7 +564,7 @@ export default function ProposalGeneratorClient() {
 						<button
 							type="button"
 							onClick={addMilestone}
-							className="flex items-center gap-1 text-sm text-primary hover:text-accent"
+							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
 							<Plus className="w-4 h-4" />
 							Add Phase
@@ -632,7 +632,7 @@ export default function ProposalGeneratorClient() {
 						<button
 							type="button"
 							onClick={addPricingItem}
-							className="flex items-center gap-1 text-sm text-primary hover:text-accent"
+							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
 							<Plus className="w-4 h-4" />
 							Add Item
@@ -678,7 +678,7 @@ export default function ProposalGeneratorClient() {
 					<div className="flex justify-end pt-4 border-t border-border">
 						<div className="text-right">
 							<span className="text-sm text-muted-foreground mr-4">Total:</span>
-							<span className="text-xl font-bold text-primary">
+							<span className="text-xl font-bold text-accent">
 								{formatCurrency(computedTotal)}
 							</span>
 						</div>
@@ -712,7 +712,7 @@ export default function ProposalGeneratorClient() {
 					<button
 						type="button"
 						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
 					>
 						<Save className="w-4 h-4" />
 						Save Draft
@@ -722,7 +722,7 @@ export default function ProposalGeneratorClient() {
 						<button
 							type="button"
 							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
 						>
 							<RotateCcw className="w-4 h-4" />
 							Clear Draft
@@ -737,7 +737,7 @@ export default function ProposalGeneratorClient() {
 								/>
 							}
 							fileName={getFileName()}
-							className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
+							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
 							onClick={() => {
 								trackEvent('proposal_downloaded', {
 									project_name: proposalData.projectName,
@@ -772,47 +772,45 @@ export default function ProposalGeneratorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
-					Proposal Tips
-				</h3>
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h3 className="text-lg font-semibold text-foreground">Proposal Tips</h3>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Clear Scope
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Define exactly what&apos;s included (and excluded) to prevent
 							scope creep and set clear expectations.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Value-Based Pricing
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Focus on the value and outcomes you&apos;ll deliver rather than
 							just listing hours or tasks.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Realistic Timeline
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Include buffer time for revisions and unexpected delays.
 							Under-promise and over-deliver.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Expiration Date
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Set a proposal validity period (30 days is common) to create
 							urgency and protect your pricing.
 						</p>

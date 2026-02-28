@@ -9,7 +9,7 @@ import { cleanup, render } from '@testing-library/react'
  * Most will FAIL against the current page.tsx — that is expected.
  * They turn green after Wave 2-3 implementation.
  *
- * HERO-01: Background treatment — no gradient, dark background class
+ * HERO-01: Background treatment — no gradient, light-first bg-background
  * HERO-02: Headline hierarchy — text-page-title on h1, no text-accent on h1
  * HERO-03: CTA differentiation — primary has bg-accent, secondary does not
  * HERO-04: Section rhythm — no bg-muted, no scale-105, no animationDelay
@@ -89,14 +89,18 @@ describe('HomePage structural assertions', () => {
 		expect(primaryCta?.className ?? '').toContain('bg-accent')
 	})
 
-	it('secondary CTA button does not have bg-accent class', () => {
+	it('secondary CTA button is not solid accent — uses outline styling', () => {
 		const { container } = render(<HomePage />)
 		const heroSection = container.querySelector('section')
 		const anchors = Array.from(heroSection?.querySelectorAll('a') ?? [])
 		expect(anchors.length).toBeGreaterThan(1)
 
 		const secondaryCta = anchors[1]
-		expect(secondaryCta?.className ?? '').not.toContain('bg-accent')
+		const cls = secondaryCta?.className ?? ''
+		// Outline variant should have border, not solid bg-accent at rest
+		// (hover:bg-accent is fine as a hover state — only base bg-accent fails)
+		expect(cls).not.toContain('bg-accent text-accent-foreground')
+		expect(cls).toContain('border')
 	})
 
 	// ── HERO-01: Background treatment ────────────────────────────────────────
@@ -110,19 +114,15 @@ describe('HomePage structural assertions', () => {
 		expect(gradientSections).toHaveLength(0)
 	})
 
-	it('hero section has dark background class', () => {
+	it('hero section uses background token class (light-first design)', () => {
 		const { container } = render(<HomePage />)
 		// The first section is the hero
 		const heroSection = container.querySelector('section')
 		expect(heroSection).not.toBeNull()
 
 		const cls = heroSection?.className ?? ''
-		const hasDarkBackground =
-			cls.includes('bg-background-dark') ||
-			cls.includes('bg-[var(--color-background-dark)]') ||
-			cls.includes('bg-[oklch')
-
-		expect(hasDarkBackground).toBe(true)
+		// Hero now uses light-first bg-background (no hardcoded dark background)
+		expect(cls).toContain('bg-background')
 	})
 
 	// ── HERO-04: Section rhythm ───────────────────────────────────────────────

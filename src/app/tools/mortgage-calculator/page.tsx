@@ -24,7 +24,7 @@ export default function MortgageCalculatorPage() {
 		<CalculatorLayout
 			title="Mortgage Calculator"
 			description="Calculate your monthly mortgage payment including principal, interest, property taxes, insurance, and PMI"
-			icon={<Home className="h-8 w-8 text-primary" />}
+			icon={<Home className="h-8 w-8 text-accent" />}
 		>
 			<MortgageCalculatorClient />
 		</CalculatorLayout>

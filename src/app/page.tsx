@@ -1,7 +1,9 @@
 import {
 	ArrowRight,
+	Award,
 	Calculator,
 	Check,
+	Clock,
 	Code2,
 	Rocket,
 	Settings,
@@ -82,38 +84,46 @@ const solutions = [
 
 const results = [
 	{
+		Icon: Rocket,
 		metric: '2–4 wks',
 		label: 'First delivery',
 		period: 'Typical project start'
 	},
-	{ metric: '40+', label: 'Projects delivered', period: 'Across 3 continents' },
 	{
+		Icon: TrendingUp,
+		metric: '40+',
+		label: 'Projects delivered',
+		period: 'Across 3 continents'
+	},
+	{
+		Icon: Award,
 		metric: '10+ yrs',
 		label: 'Combined experience',
 		period: 'Experienced developers'
 	},
-	{ metric: '24/7', label: 'Support available', period: 'When you need us' }
+	{
+		Icon: Clock,
+		metric: '24/7',
+		label: 'Support available',
+		period: 'When you need us'
+	}
 ]
 
 export default function HomePage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* ── HERO ──────────────────────────────────────────── */}
-			<section className="relative flex min-h-[90vh] items-center overflow-hidden bg-background-dark">
+			<section className="relative overflow-hidden bg-background">
 				<div
-					className="absolute inset-0 grid-pattern-dark pointer-events-none"
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
 					aria-hidden="true"
 				/>
 				<div
 					className="hero-spotlight absolute inset-0 pointer-events-none"
 					aria-hidden="true"
 				/>
-				<div
-					className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none"
-					aria-hidden="true"
-				/>
 
-				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 py-24">
+				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
@@ -151,12 +161,13 @@ export default function HomePage() {
 								</Button>
 								<Button
 									asChild
-									variant="ghost"
+									variant="outline"
 									size="xl"
 									trackConversion={true}
-									className="text-foreground border border-border/50 hover:bg-muted/20 hover:border-border"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
 									<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
+										<Calculator className="w-4 h-4" />
 										Calculate Your Savings
 									</Link>
 								</Button>
@@ -215,7 +226,7 @@ export default function HomePage() {
 										key={item.trigger}
 										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-center gap-3"
 									>
-										<Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+										<Check className="w-3.5 h-3.5 text-success-text shrink-0" />
 										<p className="text-sm leading-snug">
 											<span className="text-muted-foreground">
 												{item.trigger}
@@ -234,9 +245,12 @@ export default function HomePage() {
 			</section>
 
 			{/* ── SOLUTIONS ─────────────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							What We Build
+						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							One Partner. Three Phases. End to End.
 						</h2>
@@ -278,7 +292,7 @@ export default function HomePage() {
 									href={ROUTES.CONTACT}
 									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 								>
-									Get started
+									Get Started
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</div>
@@ -288,9 +302,12 @@ export default function HomePage() {
 			</section>
 
 			{/* ── RESULTS / METRICS ─────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Track Record
+						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							By the Numbers
 						</h2>
@@ -305,9 +322,13 @@ export default function HomePage() {
 						{results.map(result => (
 							<div
 								key={result.metric}
-								className="bg-background px-8 py-12 text-center"
+								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
-								<div className="text-4xl lg:text-5xl font-black text-foreground mb-2 font-mono tabular-nums">
+								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+								<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
+									<result.Icon className="w-5 h-5 text-accent" />
+								</div>
+								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-mono tabular-nums">
 									{result.metric}
 								</div>
 								<div className="text-sm font-semibold text-foreground mb-1">
@@ -323,9 +344,12 @@ export default function HomePage() {
 			</section>
 
 			{/* ── FREE TOOLS ──────────────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-16">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Try For Free
+						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							Free Business Tools
 						</h2>
@@ -426,7 +450,7 @@ export default function HomePage() {
 			{/* ── FINAL CTA ───────────────────────────────────────── */}
 			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-16 md:p-24 text-center">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
 						{/* Subtle amber glow from top */}
 						<div
 							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
@@ -463,12 +487,11 @@ export default function HomePage() {
 								</Button>
 								<Button
 									asChild
-									variant="ghost"
+									variant="outline"
 									size="xl"
 									trackConversion={true}
-									className="border border-border/50 hover:bg-muted/20 hover:border-border"
 								>
-									<Link href={ROUTES.PORTFOLIO}>See What We&apos;ve Built</Link>
+									<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
 								</Button>
 							</div>
 						</div>

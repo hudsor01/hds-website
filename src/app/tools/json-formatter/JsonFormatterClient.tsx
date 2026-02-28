@@ -144,7 +144,7 @@ export default function JsonFormatterClient() {
 		<CalculatorLayout
 			title="JSON Formatter"
 			description="Format, validate, and minify your JSON data with syntax highlighting"
-			icon={<Braces className="h-8 w-8 text-primary" />}
+			icon={<Braces className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-comfortable">
 				{/* Input Section */}
@@ -156,7 +156,7 @@ export default function JsonFormatterClient() {
 						<div className="flex gap-tight">
 							<button
 								onClick={loadSample}
-								className="text-xs text-primary hover:text-accent"
+								className="text-xs text-accent hover:text-accent/80"
 							>
 								Load Sample
 							</button>
@@ -175,7 +175,7 @@ export default function JsonFormatterClient() {
 							setIsValid(null)
 							setError(null)
 						}}
-						className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary ${
+						className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent ${
 							error
 								? 'border-destructive'
 								: isValid === true
@@ -189,13 +189,13 @@ export default function JsonFormatterClient() {
 
 					{/* Validation Status */}
 					{error && (
-						<div className="mt-2 flex items-start gap-tight text-destructive-dark dark:text-destructive-text">
+						<div className="mt-2 flex items-start gap-tight text-destructive-text">
 							<AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
 							<span className="text-sm">{error}</span>
 						</div>
 					)}
 					{isValid === true && !error && (
-						<div className="mt-2 flex items-center gap-tight text-success-dark dark:text-success-text">
+						<div className="mt-2 flex items-center gap-tight text-success-text">
 							<CheckCircle2 className="w-4 h-4" />
 							<span className="text-sm">Valid JSON</span>
 						</div>
@@ -223,21 +223,21 @@ export default function JsonFormatterClient() {
 					<button
 						onClick={formatJson}
 						disabled={!inputJson.trim()}
-						className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+						className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						Format
 					</button>
 					<button
 						onClick={minifyJson}
 						disabled={!inputJson.trim()}
-						className="rounded-md border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+						className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						Minify
 					</button>
 					<button
 						onClick={validateJson}
 						disabled={!inputJson.trim()}
-						className="rounded-md border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+						className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						Validate
 					</button>
@@ -252,7 +252,7 @@ export default function JsonFormatterClient() {
 							</label>
 							<button
 								onClick={copyToClipboard}
-								className="flex items-center gap-1 text-xs text-primary hover:text-accent"
+								className="flex items-center gap-1 text-xs text-accent hover:text-accent/80"
 							>
 								{copied ? (
 									<>
@@ -281,8 +281,8 @@ export default function JsonFormatterClient() {
 								<span
 									className={
 										outputJson.length < inputJson.length
-											? 'text-success-dark'
-											: 'text-warning-dark'
+											? 'text-success-text'
+											: 'text-warning-text'
 									}
 								>
 									{outputJson.length < inputJson.length
@@ -296,47 +296,45 @@ export default function JsonFormatterClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
-					JSON Tips
-				</h3>
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h3 className="text-lg font-semibold text-foreground">JSON Tips</h3>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Common Errors
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Missing quotes around keys, trailing commas, and single quotes
 							instead of double quotes are common JSON mistakes.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Data Types
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							JSON supports strings, numbers, booleans, null, arrays, and
 							objects. No undefined, functions, or dates.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Minification
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Minifying JSON removes whitespace to reduce file size, useful for
 							API responses and data transfer.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Formatting
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Pretty-printing JSON with indentation makes it human-readable for
 							debugging and configuration files.
 						</p>

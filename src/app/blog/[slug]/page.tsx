@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { AuthorCard } from '@/components/blog/AuthorCard'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { RelatedPosts } from '@/components/blog/RelatedPosts'
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getPostBySlug, getPosts, getPostsByTag } from '@/lib/blog'
 import { BUSINESS_INFO } from '@/lib/constants/business'
@@ -151,10 +151,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			<JsonLd data={breadcrumbSchema} />
 
 			{/* Back to Blog */}
-			<div className="container-wide py-8">
+			<div className="container-wide px-4 sm:px-6 py-8">
 				<Link
 					href="/blog"
-					className="inline-flex flex-center gap-tight text-accent hover:text-accent/80 transition-colors"
+					className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
 				>
 					<ArrowLeft className="w-5 h-5" />
 					Back to Blog
@@ -164,11 +164,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{/* Article Header */}
 			<article className="pb-16">
 				<header className="relative bg-background py-section-sm overflow-hidden">
-					<div className="absolute inset-0 opacity-10 pointer-events-none">
-						<div className="absolute inset-0 surface-overlay"></div>
-					</div>
-
-					<div className="relative container-narrow">
+					<div className="relative container-narrow px-4 sm:px-6">
 						{/* Tags */}
 						{tags.length > 0 && (
 							<div className="flex flex-wrap gap-tight mb-content-block">
@@ -186,7 +182,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 						)}
 
 						{/* Title */}
-						<h1 className="text-clamp-xl font-black text-foreground mb-content-block text-balance">
+						<h1 className="text-page-title text-foreground leading-tight text-balance mb-content-block">
 							{post.title}
 						</h1>
 
@@ -261,22 +257,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			{relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
 
 			{/* CTA Section */}
-			<section className="py-section-sm bg-primary">
-				<div className="container-narrow">
-					<Card variant="glass" size="lg" className="text-center">
-						<h2 className="text-3xl font-black text-foreground mb-heading text-balance">
-							Ready to Build Your Competitive Advantage?
-						</h2>
-						<p className="text-xl text-muted-foreground mb-comfortable text-pretty">
-							Let&apos;s engineer a digital solution that dominates your market.
-						</p>
-						<Link
-							href="/contact"
-							className="inline-block bg-success-text text-black font-semibold py-3 px-8 rounded-lg hover:bg-success transition-colors text-lg"
-						>
-							Get Started Today
-						</Link>
-					</Card>
+			<section className="py-section px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to Build Your Competitive Advantage?
+							</h2>
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								Let&apos;s build a digital solution that grows your business.
+							</p>
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
+								<Link href="/contact">Get Started Today</Link>
+							</Button>
+						</div>
+					</div>
 				</div>
 			</section>
 		</main>

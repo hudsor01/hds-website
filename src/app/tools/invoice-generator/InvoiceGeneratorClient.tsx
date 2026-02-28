@@ -307,7 +307,7 @@ export default function InvoiceGeneratorClient() {
 		<CalculatorLayout
 			title="Invoice Generator"
 			description="Create professional invoices and download them as PDF"
-			icon={<FileText className="h-8 w-8 text-primary" />}
+			icon={<FileText className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-sections">
 				{/* Your Company Info */}
@@ -499,7 +499,7 @@ export default function InvoiceGeneratorClient() {
 						<button
 							type="button"
 							onClick={addLineItem}
-							className="flex items-center gap-1 text-sm text-primary hover:text-accent"
+							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 						>
 							<Plus className="w-4 h-4" />
 							Add Item
@@ -663,7 +663,7 @@ export default function InvoiceGeneratorClient() {
 								<span className="text-lg font-semibold text-foreground">
 									Total
 								</span>
-								<span className="text-xl font-bold text-primary">
+								<span className="text-xl font-bold text-accent">
 									{formatCurrency(computedTotals.total)}
 								</span>
 							</div>
@@ -695,7 +695,7 @@ export default function InvoiceGeneratorClient() {
 					<button
 						type="button"
 						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
 					>
 						<Save className="w-4 h-4" />
 						Save Draft
@@ -705,7 +705,7 @@ export default function InvoiceGeneratorClient() {
 						<button
 							type="button"
 							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
 						>
 							<RotateCcw className="w-4 h-4" />
 							Clear Draft
@@ -718,7 +718,7 @@ export default function InvoiceGeneratorClient() {
 								<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />
 							}
 							fileName={`${invoiceData.invoiceNumber}.pdf`}
-							className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
+							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
 							onClick={() => {
 								trackEvent('invoice_downloaded', {
 									invoice_number: invoiceData.invoiceNumber,
@@ -749,47 +749,47 @@ export default function InvoiceGeneratorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h2 className="text-lg font-semibold text-foreground dark:text-foreground">
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h2 className="text-lg font-semibold text-foreground">
 					Invoice Best Practices
 				</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Clear Payment Terms
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Always specify payment terms upfront. Net 30 is standard, but
 							consider offering discounts for early payment.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Detailed Descriptions
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Include specific descriptions of services or products. This helps
 							prevent disputes and makes record-keeping easier.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Sequential Numbering
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Use a consistent invoice numbering system. This helps with
 							organization and is often required for tax purposes.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Keep Records
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Save copies of all invoices for at least 7 years for tax and legal
 							purposes.
 						</p>

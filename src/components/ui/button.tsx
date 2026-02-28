@@ -16,7 +16,7 @@ const buttonVariants = cva(
 				destructive:
 					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80 active:bg-destructive/75 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
 				success:
-					'bg-success text-success-foreground shadow-sm hover:bg-success-dark active:bg-success-dark/90',
+					'bg-success text-success-foreground shadow-sm hover:bg-success/90 active:bg-success/80',
 				accent:
 					'bg-accent text-accent-foreground shadow-sm hover:bg-accent/85 active:bg-accent/75',
 				outline:

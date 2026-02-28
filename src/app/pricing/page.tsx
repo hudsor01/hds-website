@@ -165,42 +165,29 @@ export default function PricingPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			<JsonLd data={faqPageSchema} />
+
 			{/* Hero Section */}
-			<section className="relative section-spacing">
-				<div className="container-wide">
-					<div className="text-center">
-						{/* Section Label */}
-						<div className="inline-block mb-comfortable">
-							<span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-medium">
-								Transparent Pricing
-							</span>
-						</div>
-
-						{/* Hero Heading */}
-						<h1 className="text-clamp-2xl font-black text-foreground leading-[1.1] mb-heading text-balance">
-							<span className="block">Development That</span>
-							<span className="block text-accent">Pays for Itself</span>
-							<span className="block text-responsive-lg font-bold text-muted-foreground mt-subheading">
-								ROI-Guaranteed Pricing
-							</span>
-						</h1>
-
-						<div className="typography">
-							<p className="text-lg text-muted-foreground leading-relaxed container-narrow text-pretty">
-								Stop paying for websites that sit on a shelf. Our pricing is
-								designed around ROI—if you don&apos;t see measurable results
-								within 90 days, we keep working for free. No hidden fees. No
-								surprises. Just revenue-driven results.
-							</p>
-						</div>
-					</div>
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Transparent Pricing
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
+						Development That Pays for Itself
+					</h1>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
+						Stop paying for websites that sit on a shelf. Our pricing is
+						designed around ROI—if you don&apos;t see measurable results within
+						90 days, we keep working for free. No hidden fees. No surprises.
+						Just revenue-driven results.
+					</p>
 				</div>
 			</section>
 
 			{/* Pricing Cards */}
-			<section className="section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="grid-3">
+					<div className="grid md:grid-cols-3 gap-6">
 						{pricingTiers.map(tier => (
 							<Card
 								key={tier.name}
@@ -221,79 +208,92 @@ export default function PricingPage() {
 			</section>
 
 			{/* FAQ Section */}
-			<section className="section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-content-block typography">
-						<h2 className="text-responsive-lg font-black text-foreground mb-heading">
-							Frequently Asked <span className="text-accent">Questions</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Common Questions
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Frequently Asked Questions
 						</h2>
-						<div className="typography">
-							<p className="text-lg text-muted-foreground">
-								Everything you need to know about our pricing and process
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Everything you need to know about our pricing and process
+						</p>
 					</div>
 
-					<div className="space-y-content">
+					<div className="space-y-4 max-w-4xl mx-auto">
 						{faqs.map((faq, index) => (
-							<Card
+							<div
 								key={index}
-								variant="glassLight"
-								size="md"
-								className="hover:border-accent/50"
+								className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors"
 							>
-								<h3 className="text-lg font-bold text-foreground mb-subheading text-balance">
+								<h3 className="text-h3 text-foreground mb-3 text-balance">
 									{faq.question}
 								</h3>
-								<div className="typography">
-									<p className="text-muted-foreground leading-relaxed text-pretty">
-										{faq.answer}
-									</p>
-								</div>
-							</Card>
+								<p className="text-sm text-muted-foreground leading-relaxed">
+									{faq.answer}
+								</p>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
 
 			{/* Final CTA */}
-			<section className="section-spacing page-padding-x">
-				<div className="container-wide text-center">
-					<Card variant="glassSection" size="md">
-						<h2 className="text-responsive-lg font-black text-foreground mb-heading">
-							Ready to Get More from Your Website?
-						</h2>
+			<section className="py-section px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to Get More from Your Website?
+							</h2>
 
-						<div className="typography">
-							<p className="text-lg text-muted-foreground mb-heading container-narrow">
+							<p className="text-lead text-muted-foreground mb-4 max-w-2xl mx-auto">
 								Get a free 30-minute strategy call showing exactly where your
 								website is losing customers—and how to bring more in.
 							</p>
-							<p className="text-accent font-semibold mb-content-block">
+							<p className="text-accent font-semibold mb-10">
 								No sales pitch. No commitment. Just a clear action plan you can
 								use immediately (even if you never hire us).
 							</p>
-						</div>
 
-						<div className="flex flex-col sm:flex-row gap-content justify-center">
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">Claim Your Free Strategy Call</Link>
-							</Button>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href="/contact">Claim Your Free Strategy Call</Link>
+								</Button>
 
-							<Button asChild variant="outline" size="xl">
-								<Link href="/showcase">See $3.7M+ in Proven Results</Link>
-							</Button>
-						</div>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href="/showcase">See $3.7M+ in Proven Results</Link>
+								</Button>
+							</div>
 
-						{/* Trust signals */}
-						<div className="mt-content-block pt-8 border-t border-white/10">
-							<div className="flex flex-col md:flex-row justify-center items-center gap-comfortable text-xs text-muted-foreground">
-								<div>90-day ROI guarantee</div>
-								<div>Response within 2 hours</div>
-								<div>50+ successful projects</div>
+							{/* Trust signals */}
+							<div className="mt-10 pt-8 border-t border-border/40">
+								<div className="flex flex-col md:flex-row justify-center items-center gap-6 text-xs text-muted-foreground">
+									<div>90-day ROI guarantee</div>
+									<div className="hidden md:block w-px h-4 bg-border" />
+									<div>Response within 2 hours</div>
+									<div className="hidden md:block w-px h-4 bg-border" />
+									<div>50+ successful projects</div>
+								</div>
 							</div>
 						</div>
-					</Card>
+					</div>
 				</div>
 			</section>
 		</main>

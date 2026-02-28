@@ -282,7 +282,7 @@ export default function TestimonialCollectorClient() {
 			<CalculatorLayout
 				title="Testimonial Collector"
 				description="Admin access required"
-				icon={<MessageSquare className="h-8 w-8 text-primary" />}
+				icon={<MessageSquare className="h-8 w-8 text-accent" />}
 			>
 				<div className="max-w-sm mx-auto space-y-content">
 					<p className="text-sm text-muted-foreground">
@@ -299,13 +299,13 @@ export default function TestimonialCollectorClient() {
 								}
 							}}
 							placeholder="Admin token"
-							className="flex-1 rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground"
+							className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
 							aria-label="Admin token"
 						/>
 						<button
 							onClick={handleSetToken}
 							disabled={!tokenInput.trim()}
-							className="px-4 py-2 bg-primary text-foreground rounded-md text-sm font-medium hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+							className="px-4 py-2 bg-accent text-foreground rounded-md text-sm font-medium hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
 						>
 							Enter
 						</button>
@@ -319,7 +319,7 @@ export default function TestimonialCollectorClient() {
 		<CalculatorLayout
 			title="Testimonial Collector"
 			description="Collect and manage client testimonials with private collection links"
-			icon={<MessageSquare className="h-8 w-8 text-primary" />}
+			icon={<MessageSquare className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-comfortable">
 				{/* Tabs */}
@@ -333,7 +333,7 @@ export default function TestimonialCollectorClient() {
 							}}
 							className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
 								activeTab === tab.id
-									? 'border-primary text-primary'
+									? 'border-accent text-accent'
 									: 'border-transparent text-muted-foreground hover:text-foreground'
 							}`}
 						>
@@ -346,7 +346,7 @@ export default function TestimonialCollectorClient() {
 				{error && (
 					<Card
 						size="sm"
-						className="rounded-lg bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm"
+						className="rounded-lg bg-destructive-light text-destructive-text text-sm"
 					>
 						{error}
 					</Card>
@@ -382,12 +382,12 @@ export default function TestimonialCollectorClient() {
 												</span>
 												{renderStars(testimonial.rating)}
 												{testimonial.featured && (
-													<span className="px-2 py-0.5 text-xs font-medium bg-warning-muted text-warning-darker rounded">
+													<span className="px-2 py-0.5 text-xs font-medium bg-warning-muted text-warning-texter rounded">
 														Featured
 													</span>
 												)}
 												{testimonial.approved ? (
-													<span className="px-2 py-0.5 text-xs font-medium bg-success-muted text-success-darker rounded">
+													<span className="px-2 py-0.5 text-xs font-medium bg-success-muted text-success-text rounded">
 														Approved
 													</span>
 												) : (
@@ -418,7 +418,7 @@ export default function TestimonialCollectorClient() {
 											href={testimonial.video_url}
 											target="_blank"
 											rel="noopener noreferrer"
-											className="inline-flex items-center gap-1 text-sm text-primary hover:text-accent"
+											className="inline-flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 										>
 											<ExternalLink className="w-3 h-3" />
 											View Video
@@ -433,7 +433,7 @@ export default function TestimonialCollectorClient() {
 											className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded ${
 												testimonial.approved
 													? 'bg-secondary text-foreground hover:bg-secondary'
-													: 'bg-success-muted text-success-darker hover:bg-success-muted'
+													: 'bg-success-muted text-success-text hover:bg-success-muted'
 											}`}
 										>
 											{testimonial.approved ? (
@@ -452,7 +452,7 @@ export default function TestimonialCollectorClient() {
 											}
 											className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded ${
 												testimonial.featured
-													? 'bg-warning-muted text-warning-darker hover:bg-warning-muted'
+													? 'bg-warning-muted text-warning-texter hover:bg-warning-muted'
 													: 'bg-secondary text-foreground hover:bg-secondary'
 											}`}
 										>
@@ -463,7 +463,7 @@ export default function TestimonialCollectorClient() {
 											onClick={() =>
 												handleDelete(testimonial.id, 'testimonial')
 											}
-											className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-darker hover:bg-destructive-muted"
+											className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-texter hover:bg-destructive-muted"
 										>
 											<Trash2 className="w-3 h-3" /> Delete
 										</button>
@@ -477,12 +477,9 @@ export default function TestimonialCollectorClient() {
 				{/* Requests Tab */}
 				{!isLoading && activeTab === 'requests' && (
 					<div className="space-y-content">
-						<Card
-							size="sm"
-							className="bg-accent/10 dark:bg-primary/20 text-sm text-accent dark:text-accent/80"
-						>
+						<Card size="sm" className="bg-accent/10 text-sm text-accent">
 							<strong>Public Link:</strong>{' '}
-							<code className="bg-card/50 dark:bg-background/20 px-2 py-0.5 rounded">
+							<code className="bg-background/50 px-2 py-0.5 rounded">
 								{typeof window !== 'undefined' &&
 									`${window.location.origin}/testimonials/submit`}
 							</code>
@@ -494,7 +491,7 @@ export default function TestimonialCollectorClient() {
 								<p>No private collection links created yet.</p>
 								<button
 									onClick={() => setActiveTab('create')}
-									className="mt-4 px-4 py-2 bg-primary text-foreground rounded-lg text-sm font-medium hover:bg-primary/80"
+									className="mt-4 px-4 py-2 bg-accent text-foreground rounded-lg text-sm font-medium hover:bg-accent/80"
 								>
 									Create Your First Link
 								</button>
@@ -509,7 +506,7 @@ export default function TestimonialCollectorClient() {
 											size="sm"
 											className={`${
 												req.submitted
-													? 'border-success-muted bg-success-light/50 dark:bg-success-bg-dark/10'
+													? 'border-success-muted bg-success-light/50'
 													: isExpired
 														? 'border-border bg-muted/50 opacity-60'
 														: 'border-border'
@@ -522,7 +519,7 @@ export default function TestimonialCollectorClient() {
 															{req.client_name}
 														</span>
 														{req.submitted ? (
-															<span className="px-2 py-0.5 text-xs font-medium bg-success-muted text-success-darker rounded">
+															<span className="px-2 py-0.5 text-xs font-medium bg-success-muted text-success-text rounded">
 																Submitted
 															</span>
 														) : isExpired ? (
@@ -530,7 +527,7 @@ export default function TestimonialCollectorClient() {
 																Expired
 															</span>
 														) : (
-															<span className="px-2 py-0.5 text-xs font-medium bg-info-muted text-info-darker rounded">
+															<span className="px-2 py-0.5 text-xs font-medium bg-info-muted text-info-texter rounded">
 																Pending
 															</span>
 														)}
@@ -575,7 +572,7 @@ export default function TestimonialCollectorClient() {
 											<div className="mt-3 flex gap-tight">
 												<button
 													onClick={() => handleDelete(req.id, 'request')}
-													className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-darker hover:bg-destructive-muted"
+													className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-texter hover:bg-destructive-muted"
 												>
 													<Trash2 className="w-3 h-3" /> Delete
 												</button>
@@ -593,15 +590,12 @@ export default function TestimonialCollectorClient() {
 					<div className="space-y-comfortable">
 						{createdLink ? (
 							<div className="space-y-content">
-								<Card
-									size="sm"
-									className="bg-success-light dark:bg-success-bg-dark/20"
-								>
-									<div className="flex items-center gap-tight text-success-darker dark:text-success-muted mb-subheading">
+								<Card size="sm" className="bg-success-light">
+									<div className="flex items-center gap-tight text-success-text mb-subheading">
 										<CheckCircle2 className="w-5 h-5" />
 										<span className="font-semibold">Link Created!</span>
 									</div>
-									<p className="text-sm text-success-dark dark:text-success-text mb-heading">
+									<p className="text-sm text-success-text mb-heading">
 										Share this link with your client to collect their
 										testimonial.
 									</p>
@@ -610,11 +604,11 @@ export default function TestimonialCollectorClient() {
 											type="text"
 											value={createdLink}
 											readOnly
-											className="flex-1 rounded-md border border-success-muted bg-card px-3 py-2 text-sm text-foreground"
+											className="flex-1 rounded-md border border-success-muted bg-background px-3 py-2 text-sm text-foreground"
 										/>
 										<button
 											onClick={copyLink}
-											className="flex items-center gap-tight px-4 py-2 bg-success-dark text-foreground rounded-md text-sm font-medium hover:bg-success-darker"
+											className="flex items-center gap-tight px-4 py-2 bg-success text-foreground rounded-md text-sm font-medium hover:bg-success/90"
 										>
 											{copiedLink ? (
 												<>
@@ -630,7 +624,7 @@ export default function TestimonialCollectorClient() {
 								</Card>
 								<button
 									onClick={() => setCreatedLink(null)}
-									className="flex items-center gap-tight text-primary hover:text-accent text-sm font-medium"
+									className="flex items-center gap-tight text-accent hover:text-accent/80 text-sm font-medium"
 								>
 									<Plus className="w-4 h-4" /> Create Another Link
 								</button>
@@ -681,7 +675,7 @@ export default function TestimonialCollectorClient() {
 								<button
 									type="submit"
 									disabled={!newRequest.clientName.trim() || isCreating}
-									className="w-full flex items-center justify-center gap-tight rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+									className="w-full flex items-center justify-center gap-tight rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									<Plus className="w-5 h-5" />
 									{isCreating ? 'Creating...' : 'Create Private Link'}
@@ -697,47 +691,47 @@ export default function TestimonialCollectorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h3 className="text-lg font-semibold text-foreground">
 					Testimonial Collection Tips
 				</h3>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Use Private Links
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Private links are personalized and can only be used once, ensuring
 							authentic testimonials from real clients.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Ask at the Right Time
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Request testimonials right after delivering successful results
 							when the positive experience is fresh.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Review Before Publishing
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							All testimonials require approval before appearing on your site.
 							Review for accuracy and appropriateness.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-subheading font-semibold text-foreground">
 							Feature Your Best
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Mark your strongest testimonials as featured to highlight them
 							prominently on your website.
 						</p>
