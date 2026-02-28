@@ -121,7 +121,7 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning className="dark scroll-smooth">
+		<html lang="en" suppressHydrationWarning className="scroll-smooth">
 			<head>
 				{/* Critical mobile-first meta tags */}
 				<meta name="mobile-web-app-capable" content="yes" />
