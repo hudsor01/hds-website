@@ -13,7 +13,7 @@ const footerLinks = {
 		{ name: 'Website Development', href: ROUTES.SERVICES },
 		{ name: 'Business Automation', href: ROUTES.SERVICES },
 		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
-		{ name: 'View Case Studies', href: ROUTES.PORTFOLIO }
+		{ name: 'View Case Studies', href: ROUTES.SHOWCASE }
 	],
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
@@ -80,7 +80,7 @@ export default function Footer() {
 
 	return (
 		<footer
-			className="relative mt-auto bg-background-dark"
+			className="relative mt-auto bg-surface-sunken"
 			role="contentinfo"
 			aria-label="Site footer"
 		>
@@ -88,8 +88,8 @@ export default function Footer() {
 			<div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
 			<div className="relative">
-				<div className="container-wide sm:px-6 lg:px-8 pt-16 pb-8">
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-sections mb-12">
+				<div className="container-wide sm:px-6 lg:px-8 pt-12 pb-6">
+					<div className="grid grid-cols-1 md:grid-cols-4 gap-sections mb-8">
 						{/* Brand Section */}
 						<div className="md:col-span-1">
 							<div className="mb-content-block">
@@ -201,7 +201,7 @@ export default function Footer() {
 
 					{/* Bottom Section */}
 					<div className="border-t border-white/10 pt-8">
-						<div className="flex flex-col md:flex-between gap-content">
+						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 gap-x-content">
 							{/* Copyright */}
 							<div className="small muted">
 								© {currentYear} Hudson Digital Solutions. All rights reserved.
