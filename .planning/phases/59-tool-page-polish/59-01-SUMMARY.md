@@ -102,6 +102,13 @@ None - no external service configuration required.
 - ToolPageLayout must export `ToolPageLayout` named export with props: `title`, `description`, `columns`, `formSlot`, `resultSlot`, `hasResult`, `resultPlaceholder`, `actions`
 - Result card container must have `glass-card-light` class; action bar must have `data-slot="action-bar"` attribute
 
+## Self-Check: PASSED
+
+- FOUND: tests/unit/tool-page-layout.test.tsx
+- FOUND: .planning/phases/59-tool-page-polish/59-01-SUMMARY.md
+- FOUND: commit 0d1cfdb (task commit)
+- FOUND: commit 313148e (metadata commit)
+
 ---
 *Phase: 59-tool-page-polish*
 *Completed: 2026-03-01*
