@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Retroactive Verification
 status: unknown
-last_updated: "2026-03-01T07:31:00.000Z"
+last_updated: "2026-03-01T20:06:05.385Z"
 progress:
   total_phases: 54
   completed_phases: 22
   total_plans: 47
-  completed_plans: 38
+  completed_plans: 39
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Phase: 59 (Tool Page Polish) — IN PROGRESS (2/4 plans done)
-Plan: 59-02 complete — ToolPageLayout GREEN phase (TOOL-01/03)
-Status: Phase 59 in progress — 408 tests pass, TypeScript + Biome clean
-Last activity: 2026-03-01 — 59-02 committed (commit: e2485ac)
+Phase: 59 (Tool Page Polish) — COMPLETE (4/4 plans done)
+Plan: 59-04 complete — Style-A tool migration + JSX bug fixes (TOOL-01/02/03/04)
+Status: Phase 59 complete — 408 tests pass, TypeScript + Biome clean, build succeeds
+Last activity: 2026-03-01 — 59-04 committed (commit: 87855ad)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -54,6 +54,7 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 | Phase 58-core-component-polish P03 | 7 | 2 tasks | 4 files |
 | Phase 59-tool-page-polish P01 | 10 | 1 tasks | 1 files |
 | Phase 59-tool-page-polish P02 | 8 | 2 tasks | 2 files |
+| Phase 59 P04 | 18 | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -108,6 +109,7 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - [Phase 59-tool-page-polish P02]: ReactElement return type used instead of JSX.Element — JSX namespace not available in this tsconfig without explicit React namespace import; ReactElement from 'react' is the correct strict-mode alternative
 - [Phase 59-tool-page-polish P02]: ToolPageLayout uses slot-based API (formSlot/resultSlot ReactNode props) — tools pass pre-built JSX, layout handles structure only
 - [Phase 59-tool-page-polish P02]: data-slot='action-bar' attribute on action bar div enables test targeting without exposing implementation details (CSS classes)
+- [Phase 59]: [Phase 59-tool-page-polish P04]: formSlot JSX must have single root element — spurious </div> before educational content causes TS1005 parse errors by prematurely closing the outer wrapper
 
 ### Pending Todos
 
@@ -120,6 +122,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-01
-Stopped at: Completed 59-02-PLAN.md (ToolPageLayout GREEN phase)
+Stopped at: Completed 59-04-PLAN.md (Phase 59 all plans complete)
 Resume file: N/A
-Next action: Phase 59 Plan 03 — tool page migrations using ToolPageLayout
+Next action: Phase 60 — next v4.0 UI phase
