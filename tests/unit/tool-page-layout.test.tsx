@@ -5,7 +5,6 @@
 import { afterEach, describe, expect, it } from 'bun:test'
 import { cleanup, render, screen } from '@testing-library/react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-// @ts-expect-error TS2307 — ToolPageLayout does not exist yet (Plan 02 creates it)
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 
 afterEach(() => {
