@@ -275,10 +275,16 @@ Plans:
 
 **Goal**: Give all 13 tool pages a consistent, professional layout — polished header section, form fields styled to design system, and dedicated output/result presentation.
 **Depends on**: Phase 58 (component styles established before applying to tool layouts)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (59-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: TOOL-01, TOOL-02, TOOL-03, TOOL-04
+
+Plans:
+- [ ] 59-01-PLAN.md — TDD RED scaffold: failing assertions for ToolPageLayout (TOOL-01/02/03)
+- [ ] 59-02-PLAN.md — Create ToolPageLayout shared component (TOOL-01/03)
+- [ ] 59-03-PLAN.md — Migrate 9 Style-B tool Client.tsx files to ToolPageLayout (TOOL-01/02/03)
+- [ ] 59-04-PLAN.md — Migrate 3 Style-A tools + TTL header + tools index card upgrade (TOOL-01/02/03/04)
 
 #### Phase 60: Content Page Polish
 
