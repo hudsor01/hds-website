@@ -5,8 +5,7 @@
 
 'use client'
 
-import { Banknote } from 'lucide-react'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { PaystubForm } from '@/components/paystub/PaystubForm'
 import { PaystubNavigation } from '@/components/paystub/PaystubNavigation'
 import { Card } from '@/components/ui/card'
@@ -16,12 +15,8 @@ import { formatCurrency } from '@/lib/utils'
 export default function PaystubCalculatorClient() {
 	const generator = usePaystubGenerator()
 
-	return (
-		<CalculatorLayout
-			title="Paystub Calculator"
-			description="Generate accurate payroll breakdowns with federal and state tax calculations for any pay period"
-			icon={<Banknote className="h-8 w-8 text-accent" />}
-		>
+	const formSlot = (
+		<div>
 			<PaystubForm
 				paystubData={generator.paystubData}
 				setPaystubData={generator.setPaystubData}
@@ -174,6 +169,15 @@ export default function PaystubCalculatorClient() {
 						</Card>
 					</div>
 				)}
-		</CalculatorLayout>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Paystub Calculator"
+			description="Generate accurate payroll breakdowns with federal and state tax calculations for any pay period"
+			columns="single"
+			formSlot={formSlot}
+		/>
 	)
 }

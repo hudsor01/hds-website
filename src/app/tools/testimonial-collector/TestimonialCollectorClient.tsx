@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
@@ -279,48 +279,45 @@ export default function TestimonialCollectorClient() {
 
 	if (!adminToken) {
 		return (
-			<CalculatorLayout
+			<ToolPageLayout
 				title="Testimonial Collector"
 				description="Admin access required"
-				icon={<MessageSquare className="h-8 w-8 text-accent" />}
-			>
-				<div className="max-w-sm mx-auto space-y-content">
-					<p className="text-sm text-muted-foreground">
-						Enter your admin token to continue.
-					</p>
-					<div className="flex gap-tight">
-						<input
-							type="password"
-							value={tokenInput}
-							onChange={e => setTokenInput(e.target.value)}
-							onKeyDown={e => {
-								if (e.key === 'Enter') {
-									handleSetToken()
-								}
-							}}
-							placeholder="Admin token"
-							className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-							aria-label="Admin token"
-						/>
-						<button
-							onClick={handleSetToken}
-							disabled={!tokenInput.trim()}
-							className="px-4 py-2 bg-accent text-foreground rounded-md text-sm font-medium hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
-						>
-							Enter
-						</button>
+				columns="single"
+				formSlot={
+					<div className="max-w-sm mx-auto space-y-content">
+						<p className="text-sm text-muted-foreground">
+							Enter your admin token to continue.
+						</p>
+						<div className="flex gap-tight">
+							<input
+								type="password"
+								value={tokenInput}
+								onChange={e => setTokenInput(e.target.value)}
+								onKeyDown={e => {
+									if (e.key === 'Enter') {
+										handleSetToken()
+									}
+								}}
+								placeholder="Admin token"
+								className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+								aria-label="Admin token"
+							/>
+							<button
+								onClick={handleSetToken}
+								disabled={!tokenInput.trim()}
+								className="px-4 py-2 bg-accent text-foreground rounded-md text-sm font-medium hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed"
+							>
+								Enter
+							</button>
+						</div>
 					</div>
-				</div>
-			</CalculatorLayout>
+				}
+			/>
 		)
 	}
 
-	return (
-		<CalculatorLayout
-			title="Testimonial Collector"
-			description="Collect and manage client testimonials with private collection links"
-			icon={<MessageSquare className="h-8 w-8 text-accent" />}
-		>
+	const formSlot = (
+		<div>
 			<div className="space-y-comfortable">
 				{/* Tabs */}
 				<div className="flex border-b border-border">
@@ -738,6 +735,15 @@ export default function TestimonialCollectorClient() {
 					</Card>
 				</div>
 			</div>
-		</CalculatorLayout>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Testimonial Collector"
+			description="Collect and manage client testimonials with private collection links"
+			columns="single"
+			formSlot={formSlot}
+		/>
 	)
 }
