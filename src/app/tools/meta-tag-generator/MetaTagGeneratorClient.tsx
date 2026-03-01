@@ -8,8 +8,8 @@
 import { Check, Code, Copy, Eye } from 'lucide-react'
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
@@ -179,9 +179,7 @@ export default function MetaTagGeneratorClient() {
 						id="pageDescription"
 						name="pageDescription"
 						value={inputs.pageDescription}
-						onChange={e =>
-							handleInputChange('pageDescription', e.target.value)
-						}
+						onChange={e => handleInputChange('pageDescription', e.target.value)}
 						className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
 						rows={3}
 						required
@@ -264,9 +262,7 @@ export default function MetaTagGeneratorClient() {
 						id="twitterHandle"
 						type="text"
 						value={inputs.twitterHandle}
-						onChange={e =>
-							handleInputChange('twitterHandle', e.target.value)
-						}
+						onChange={e => handleInputChange('twitterHandle', e.target.value)}
 						helpText="Include the @ symbol"
 						placeholder="@username"
 					/>
@@ -436,8 +432,7 @@ export default function MetaTagGeneratorClient() {
 							<Card size="sm" className="bg-surface-raised">
 								<div className="text-xs text-muted-foreground uppercase mb-1">
 									{inputs.siteName ||
-										new URL(inputs.pageUrl || 'https://example.com')
-											.hostname}
+										new URL(inputs.pageUrl || 'https://example.com').hostname}
 								</div>
 								<div className="font-semibold text-foreground truncate">
 									{inputs.pageTitle || 'Page Title'}

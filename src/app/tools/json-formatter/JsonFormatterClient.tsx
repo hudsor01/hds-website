@@ -7,8 +7,8 @@
 
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
-import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { trackEvent } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
