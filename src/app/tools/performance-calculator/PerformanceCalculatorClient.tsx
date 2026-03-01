@@ -7,8 +7,8 @@
 
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
@@ -187,222 +187,146 @@ export default function PerformanceCalculatorClient() {
 			]
 		: []
 
-	return (
-		<CalculatorLayout
-			title="Performance Savings Calculator"
-			description="Discover how much revenue you're losing due to slow website performance"
-			icon={
-				<svg
-					className="h-8 w-8 text-accent"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						strokeWidth={2}
-						d="M13 10V3L4 14h7v7l9-11h-7z"
-					/>
-				</svg>
-			}
-		>
-			{!showResults ? (
-				<form onSubmit={handleSubmit} className="space-y-comfortable">
+	const formSlot = (
+		<div className="space-y-comfortable">
+			<form onSubmit={handleSubmit} className="space-y-comfortable">
+				<CalculatorInput
+					label="Website URL"
+					id="websiteUrl"
+					type="url"
+					placeholder="https://example.com"
+					value={inputs.websiteUrl}
+					onChange={e =>
+						setInputs(prev => ({ ...prev, websiteUrl: e.target.value }))
+					}
+					helpText="Enter your website URL to analyze performance"
+					required
+				/>
+
+				<div className="grid gap-comfortable md:grid-cols-2">
 					<CalculatorInput
-						label="Website URL"
-						id="websiteUrl"
-						type="url"
-						placeholder="https://example.com"
-						value={inputs.websiteUrl}
+						label="Monthly Visitors"
+						id="monthlyVisitors"
+						type="number"
+						min="0"
+						step="1"
+						value={inputs.monthlyVisitors || ''}
 						onChange={e =>
-							setInputs(prev => ({ ...prev, websiteUrl: e.target.value }))
+							setInputs(prev => ({
+								...prev,
+								monthlyVisitors: parseInt(e.target.value, 10) || 0
+							}))
 						}
-						helpText="Enter your website URL to analyze performance"
+						helpText="Average monthly website visitors"
 						required
 					/>
 
-					<div className="grid gap-comfortable md:grid-cols-2">
-						<CalculatorInput
-							label="Monthly Visitors"
-							id="monthlyVisitors"
-							type="number"
-							min="0"
-							step="1"
-							value={inputs.monthlyVisitors || ''}
-							onChange={e =>
-								setInputs(prev => ({
-									...prev,
-									monthlyVisitors: parseInt(e.target.value, 10) || 0
-								}))
-							}
-							helpText="Average monthly website visitors"
-							required
-						/>
-
-						<CalculatorInput
-							label="Average Order Value"
-							id="averageOrderValue"
-							type="number"
-							min="0"
-							step="0.01"
-							prefix="$"
-							value={inputs.averageOrderValue || ''}
-							onChange={e =>
-								setInputs(prev => ({
-									...prev,
-									averageOrderValue: parseFloat(e.target.value) || 0
-								}))
-							}
-							helpText="Average value per conversion"
-							required
-						/>
-
-						<CalculatorInput
-							label="Current Conversion Rate"
-							id="currentConversionRate"
-							type="number"
-							min="0"
-							max="100"
-							step="0.1"
-							suffix="%"
-							value={inputs.currentConversionRate || ''}
-							onChange={e =>
-								setInputs(prev => ({
-									...prev,
-									currentConversionRate: parseFloat(e.target.value) || 0
-								}))
-							}
-							helpText="Percentage of visitors who convert"
-							required
-						/>
-					</div>
-
-					{error && (
-						<Card size="sm" className="bg-destructive-light">
-							<p className="text-sm text-destructive-text">{error}</p>
-						</Card>
-					)}
-
-					<button
-						type="submit"
-						disabled={isAnalyzing}
-						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-accent"
-					>
-						{isAnalyzing ? (
-							<span className="flex items-center justify-center">
-								<svg
-									className="animate-spin -ml-1 mr-3 h-5 w-5 text-foreground"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-								>
-									<circle
-										className="opacity-25"
-										cx="12"
-										cy="12"
-										r="10"
-										stroke="currentColor"
-										strokeWidth="4"
-									></circle>
-									<path
-										className="opacity-75"
-										fill="currentColor"
-										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-									></path>
-								</svg>
-								Analyzing Website...
-							</span>
-						) : (
-							'Analyze Performance'
-						)}
-					</button>
-
-					<Card size="sm" className="bg-info-light">
-						<div className="flex">
-							<div className="shrink-0">
-								<svg
-									className="h-5 w-5 text-info-text"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-								>
-									<path
-										fillRule="evenodd"
-										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-										clipRule="evenodd"
-									/>
-								</svg>
-							</div>
-							<div className="ml-3">
-								<p className="text-sm text-info-text">
-									<strong>Industry Data:</strong> A 1-second delay in page load
-									time can reduce conversions by 7%. Pages loading in under 2
-									seconds have the highest conversion rates.
-								</p>
-							</div>
-						</div>
-					</Card>
-				</form>
-			) : (
-				<div>
-					{/* Core Web Vitals Display */}
-					{metrics && (
-						<Card className="mb-content-block bg-muted">
-							<h3 className="mb-heading text-lg font-semibold text-foreground">
-								Core Web Vitals
-							</h3>
-							<div className="grid gap-content sm:grid-cols-3">
-								<div className="text-center">
-									<div className="text-sm text-muted-foreground">LCP</div>
-									<div className="text-xl font-bold text-foreground">
-										{metrics.lcp}
-									</div>
-									<div className="text-xs text-muted-foreground">
-										Largest Contentful Paint
-									</div>
-								</div>
-								<div className="text-center">
-									<div className="text-sm text-muted-foreground">FCP</div>
-									<div className="text-xl font-bold text-foreground">
-										{metrics.fcp}
-									</div>
-									<div className="text-xs text-muted-foreground">
-										First Contentful Paint
-									</div>
-								</div>
-								<div className="text-center">
-									<div className="text-sm text-muted-foreground">CLS</div>
-									<div className="text-xl font-bold text-foreground">
-										{metrics.cls}
-									</div>
-									<div className="text-xs text-muted-foreground">
-										Cumulative Layout Shift
-									</div>
-								</div>
-							</div>
-						</Card>
-					)}
-
-					<CalculatorResults
-						results={resultItems}
-						calculatorType="performance-calculator"
-						inputs={{ ...inputs, performanceScore: metrics?.performanceScore }}
+					<CalculatorInput
+						label="Average Order Value"
+						id="averageOrderValue"
+						type="number"
+						min="0"
+						step="0.01"
+						prefix="$"
+						value={inputs.averageOrderValue || ''}
+						onChange={e =>
+							setInputs(prev => ({
+								...prev,
+								averageOrderValue: parseFloat(e.target.value) || 0
+							}))
+						}
+						helpText="Average value per conversion"
+						required
 					/>
 
-					<button
-						onClick={() => {
-							setShowResults(false)
-							setMetrics(null)
-						}}
-						className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
-					>
-						← Analyze Another Site
-					</button>
+					<CalculatorInput
+						label="Current Conversion Rate"
+						id="currentConversionRate"
+						type="number"
+						min="0"
+						max="100"
+						step="0.1"
+						suffix="%"
+						value={inputs.currentConversionRate || ''}
+						onChange={e =>
+							setInputs(prev => ({
+								...prev,
+								currentConversionRate: parseFloat(e.target.value) || 0
+							}))
+						}
+						helpText="Percentage of visitors who convert"
+						required
+					/>
 				</div>
-			)}
+
+				{error && (
+					<Card size="sm" className="bg-destructive-light">
+						<p className="text-sm text-destructive-text">{error}</p>
+					</Card>
+				)}
+
+				<button
+					type="submit"
+					disabled={isAnalyzing}
+					className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-accent"
+				>
+					{isAnalyzing ? (
+						<span className="flex items-center justify-center">
+							<svg
+								className="animate-spin -ml-1 mr-3 h-5 w-5 text-foreground"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+							>
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								></circle>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+								></path>
+							</svg>
+							Analyzing Website...
+						</span>
+					) : (
+						'Analyze Performance'
+					)}
+				</button>
+
+				<Card size="sm" className="bg-info-light">
+					<div className="flex">
+						<div className="shrink-0">
+							<svg
+								className="h-5 w-5 text-info-text"
+								viewBox="0 0 20 20"
+								fill="currentColor"
+							>
+								<path
+									fillRule="evenodd"
+									d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+									clipRule="evenodd"
+								/>
+							</svg>
+						</div>
+						<div className="ml-3">
+							<p className="text-sm text-info-text">
+								<strong>Industry Data:</strong> A 1-second delay in page load
+								time can reduce conversions by 7%. Pages loading in under 2
+								seconds have the highest conversion rates.
+							</p>
+						</div>
+					</div>
+				</Card>
+			</form>
 
 			{/* Performance Tips */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
+			<div className="space-y-content border-t border-border pt-8">
 				<h3 className="text-lg font-semibold text-foreground">
 					How We Optimize Performance
 				</h3>
@@ -457,6 +381,76 @@ export default function PerformanceCalculatorClient() {
 					))}
 				</div>
 			</div>
-		</CalculatorLayout>
+		</div>
+	)
+
+	const resultSlot = (
+		<div>
+			{/* Core Web Vitals Display */}
+			{metrics && (
+				<Card className="mb-content-block bg-muted">
+					<h3 className="mb-heading text-lg font-semibold text-foreground">
+						Core Web Vitals
+					</h3>
+					<div className="grid gap-content sm:grid-cols-3">
+						<div className="text-center">
+							<div className="text-sm text-muted-foreground">LCP</div>
+							<div className="text-xl font-bold text-foreground">
+								{metrics.lcp}
+							</div>
+							<div className="text-xs text-muted-foreground">
+								Largest Contentful Paint
+							</div>
+						</div>
+						<div className="text-center">
+							<div className="text-sm text-muted-foreground">FCP</div>
+							<div className="text-xl font-bold text-foreground">
+								{metrics.fcp}
+							</div>
+							<div className="text-xs text-muted-foreground">
+								First Contentful Paint
+							</div>
+						</div>
+						<div className="text-center">
+							<div className="text-sm text-muted-foreground">CLS</div>
+							<div className="text-xl font-bold text-foreground">
+								{metrics.cls}
+							</div>
+							<div className="text-xs text-muted-foreground">
+								Cumulative Layout Shift
+							</div>
+						</div>
+					</div>
+				</Card>
+			)}
+
+			<CalculatorResults
+				results={resultItems}
+				calculatorType="performance-calculator"
+				inputs={{ ...inputs, performanceScore: metrics?.performanceScore }}
+			/>
+
+			<button
+				onClick={() => {
+					setShowResults(false)
+					setMetrics(null)
+				}}
+				className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
+			>
+				← Analyze Another Site
+			</button>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Performance Savings Calculator"
+			description="Discover how much revenue you're losing due to slow website performance"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={showResults}
+			resultPlaceholder="Enter your website URL and click Analyze to see results"
+		/>
 	)
 }
