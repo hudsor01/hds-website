@@ -5,11 +5,11 @@
 
 'use client'
 
-import { Download, FileCheck, RotateCcw, Save } from 'lucide-react'
+import { Download, RotateCcw, Save } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { trackEvent } from '@/lib/analytics'
@@ -243,340 +243,326 @@ export default function ContractGeneratorClient() {
 		return `${templateName}_${clientName}.pdf`
 	}
 
-	return (
-		<CalculatorLayout
-			title="Contract Generator"
-			description="Create professional contracts and download them as PDF"
-			icon={<FileCheck className="h-8 w-8 text-accent" />}
-		>
-			<div className="space-y-sections">
-				{/* Template Selection */}
-				<section className="space-y-content">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Select Contract Type
-					</h2>
-					<div className="grid gap-3 sm:grid-cols-3">
-						{TEMPLATES.map(template => (
-							<button
-								key={template.value}
-								type="button"
-								onClick={() => handleTemplateChange(template.value)}
-								className={`p-4 rounded-lg border text-left transition-colors ${
-									contractData.template === template.value
-										? 'border-accent bg-accent/10'
-										: 'border-border hover:border-accent hover:bg-muted/50'
-								}`}
-							>
-								<div className="font-semibold text-foreground">
-									{template.label}
-								</div>
-								<div className="text-xs text-muted-foreground mt-1">
-									{template.description}
-								</div>
-							</button>
-						))}
-					</div>
-				</section>
+	const formSlot = (
+		<div className="space-y-sections">
+			{/* Template Selection */}
+			<section className="space-y-content">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Select Contract Type
+				</h2>
+				<div className="grid gap-3 sm:grid-cols-3">
+					{TEMPLATES.map(template => (
+						<button
+							key={template.value}
+							type="button"
+							onClick={() => handleTemplateChange(template.value)}
+							className={`p-4 rounded-lg border text-left transition-colors ${
+								contractData.template === template.value
+									? 'border-accent bg-accent/10'
+									: 'border-border hover:border-accent hover:bg-muted/50'
+							}`}
+						>
+							<div className="font-semibold text-foreground">
+								{template.label}
+							</div>
+							<div className="text-xs text-muted-foreground mt-1">
+								{template.description}
+							</div>
+						</button>
+					))}
+				</div>
+			</section>
 
-				{/* Provider/Your Info */}
+			{/* Provider/Your Info */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					{contractData.template === 'nda'
+						? 'Party A (Disclosing Party)'
+						: 'Service Provider'}
+				</h2>
+				<div className="grid gap-content sm:grid-cols-2">
+					<CalculatorInput
+						label="Name / Company"
+						id="providerName"
+						type="text"
+						value={contractData.providerName}
+						onChange={e => handleInputChange('providerName', e.target.value)}
+						required
+					/>
+					<CalculatorInput
+						label="Email"
+						id="providerEmail"
+						type="email"
+						value={contractData.providerEmail}
+						onChange={e => handleInputChange('providerEmail', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Address"
+						id="providerAddress"
+						type="text"
+						value={contractData.providerAddress}
+						onChange={e => handleInputChange('providerAddress', e.target.value)}
+					/>
+					<div className="grid grid-cols-3 gap-tight">
+						<CalculatorInput
+							label="City"
+							id="providerCity"
+							type="text"
+							value={contractData.providerCity}
+							onChange={e => handleInputChange('providerCity', e.target.value)}
+						/>
+						<CalculatorInput
+							label="State"
+							id="providerState"
+							type="text"
+							value={contractData.providerState}
+							onChange={e => handleInputChange('providerState', e.target.value)}
+						/>
+						<CalculatorInput
+							label="ZIP"
+							id="providerZip"
+							type="text"
+							value={contractData.providerZip}
+							onChange={e => handleInputChange('providerZip', e.target.value)}
+						/>
+					</div>
+				</div>
+			</section>
+
+			{/* Client Info */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					{contractData.template === 'nda'
+						? 'Party B (Receiving Party)'
+						: 'Client'}
+				</h2>
+				<div className="grid gap-content sm:grid-cols-2">
+					<CalculatorInput
+						label="Contact Name"
+						id="clientName"
+						type="text"
+						value={contractData.clientName}
+						onChange={e => handleInputChange('clientName', e.target.value)}
+						helpText="Required"
+						required
+					/>
+					<CalculatorInput
+						label="Company Name (Optional)"
+						id="clientCompany"
+						type="text"
+						value={contractData.clientCompany}
+						onChange={e => handleInputChange('clientCompany', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Address"
+						id="clientAddress"
+						type="text"
+						value={contractData.clientAddress}
+						onChange={e => handleInputChange('clientAddress', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Email"
+						id="clientEmail"
+						type="email"
+						value={contractData.clientEmail}
+						onChange={e => handleInputChange('clientEmail', e.target.value)}
+					/>
+					<div className="grid grid-cols-3 gap-tight">
+						<CalculatorInput
+							label="City"
+							id="clientCity"
+							type="text"
+							value={contractData.clientCity}
+							onChange={e => handleInputChange('clientCity', e.target.value)}
+						/>
+						<CalculatorInput
+							label="State"
+							id="clientState"
+							type="text"
+							value={contractData.clientState}
+							onChange={e => handleInputChange('clientState', e.target.value)}
+						/>
+						<CalculatorInput
+							label="ZIP"
+							id="clientZip"
+							type="text"
+							value={contractData.clientZip}
+							onChange={e => handleInputChange('clientZip', e.target.value)}
+						/>
+					</div>
+				</div>
+			</section>
+
+			{/* Contract Details */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Contract Details
+				</h2>
+				<div className="grid gap-content sm:grid-cols-2">
+					<CalculatorInput
+						label="Effective Date"
+						id="effectiveDate"
+						type="date"
+						value={contractData.effectiveDate}
+						onChange={e => handleInputChange('effectiveDate', e.target.value)}
+					/>
+					<CalculatorInput
+						label="End Date (Optional)"
+						id="endDate"
+						type="date"
+						value={contractData.endDate}
+						onChange={e => handleInputChange('endDate', e.target.value)}
+						helpText="Leave blank for ongoing agreements"
+					/>
+				</div>
+			</section>
+
+			{/* Terms - Not shown for NDA */}
+			{contractData.template !== 'nda' && (
 				<section className="space-y-content border-t border-border pt-6">
 					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						{contractData.template === 'nda'
-							? 'Party A (Disclosing Party)'
-							: 'Service Provider'}
+						Terms
 					</h2>
-					<div className="grid gap-content sm:grid-cols-2">
-						<CalculatorInput
-							label="Name / Company"
-							id="providerName"
-							type="text"
-							value={contractData.providerName}
-							onChange={e => handleInputChange('providerName', e.target.value)}
-							required
-						/>
-						<CalculatorInput
-							label="Email"
-							id="providerEmail"
-							type="email"
-							value={contractData.providerEmail}
-							onChange={e => handleInputChange('providerEmail', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Address"
-							id="providerAddress"
-							type="text"
-							value={contractData.providerAddress}
-							onChange={e =>
-								handleInputChange('providerAddress', e.target.value)
-							}
-						/>
-						<div className="grid grid-cols-3 gap-tight">
-							<CalculatorInput
-								label="City"
-								id="providerCity"
-								type="text"
-								value={contractData.providerCity}
-								onChange={e =>
-									handleInputChange('providerCity', e.target.value)
-								}
-							/>
-							<CalculatorInput
-								label="State"
-								id="providerState"
-								type="text"
-								value={contractData.providerState}
-								onChange={e =>
-									handleInputChange('providerState', e.target.value)
-								}
-							/>
-							<CalculatorInput
-								label="ZIP"
-								id="providerZip"
-								type="text"
-								value={contractData.providerZip}
-								onChange={e => handleInputChange('providerZip', e.target.value)}
-							/>
-						</div>
-					</div>
-				</section>
-
-				{/* Client Info */}
-				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						{contractData.template === 'nda'
-							? 'Party B (Receiving Party)'
-							: 'Client'}
-					</h2>
-					<div className="grid gap-content sm:grid-cols-2">
-						<CalculatorInput
-							label="Contact Name"
-							id="clientName"
-							type="text"
-							value={contractData.clientName}
-							onChange={e => handleInputChange('clientName', e.target.value)}
-							helpText="Required"
-							required
-						/>
-						<CalculatorInput
-							label="Company Name (Optional)"
-							id="clientCompany"
-							type="text"
-							value={contractData.clientCompany}
-							onChange={e => handleInputChange('clientCompany', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Address"
-							id="clientAddress"
-							type="text"
-							value={contractData.clientAddress}
-							onChange={e => handleInputChange('clientAddress', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Email"
-							id="clientEmail"
-							type="email"
-							value={contractData.clientEmail}
-							onChange={e => handleInputChange('clientEmail', e.target.value)}
-						/>
-						<div className="grid grid-cols-3 gap-tight">
-							<CalculatorInput
-								label="City"
-								id="clientCity"
-								type="text"
-								value={contractData.clientCity}
-								onChange={e => handleInputChange('clientCity', e.target.value)}
-							/>
-							<CalculatorInput
-								label="State"
-								id="clientState"
-								type="text"
-								value={contractData.clientState}
-								onChange={e => handleInputChange('clientState', e.target.value)}
-							/>
-							<CalculatorInput
-								label="ZIP"
-								id="clientZip"
-								type="text"
-								value={contractData.clientZip}
-								onChange={e => handleInputChange('clientZip', e.target.value)}
-							/>
-						</div>
-					</div>
-				</section>
-
-				{/* Contract Details */}
-				<section className="space-y-content border-t border-border pt-6">
-					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Contract Details
-					</h2>
-					<div className="grid gap-content sm:grid-cols-2">
-						<CalculatorInput
-							label="Effective Date"
-							id="effectiveDate"
-							type="date"
-							value={contractData.effectiveDate}
-							onChange={e => handleInputChange('effectiveDate', e.target.value)}
-						/>
-						<CalculatorInput
-							label="End Date (Optional)"
-							id="endDate"
-							type="date"
-							value={contractData.endDate}
-							onChange={e => handleInputChange('endDate', e.target.value)}
-							helpText="Leave blank for ongoing agreements"
-						/>
-					</div>
-				</section>
-
-				{/* Terms - Not shown for NDA */}
-				{contractData.template !== 'nda' && (
-					<section className="space-y-content border-t border-border pt-6">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Terms
-						</h2>
-						<div className="space-y-content">
-							<div>
-								<label className="block text-sm font-medium text-foreground mb-1">
-									Scope of Work
-								</label>
-								<textarea
-									value={contractData.scopeOfWork}
-									onChange={e =>
-										handleInputChange('scopeOfWork', e.target.value)
-									}
-									rows={4}
-									className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-									placeholder="Describe the services to be provided..."
-								/>
-							</div>
-							<div className="grid gap-content sm:grid-cols-2">
-								<CalculatorInput
-									label="Payment Amount"
-									id="paymentAmount"
-									type="text"
-									value={contractData.paymentAmount}
-									onChange={e =>
-										handleInputChange('paymentAmount', e.target.value)
-									}
-									placeholder="e.g., $5,000 or $150/hour"
-								/>
-								<CalculatorInput
-									label="Payment Terms"
-									id="paymentTerms"
-									type="text"
-									value={contractData.paymentTerms}
-									onChange={e =>
-										handleInputChange('paymentTerms', e.target.value)
-									}
-									placeholder="e.g., 50% upfront, 50% on completion"
-								/>
-							</div>
-							<div>
-								<label className="block text-sm font-medium text-foreground mb-1">
-									Timeline / Milestones
-								</label>
-								<textarea
-									value={contractData.timeline}
-									onChange={e => handleInputChange('timeline', e.target.value)}
-									rows={3}
-									className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-									placeholder="Describe the project timeline and any key milestones..."
-								/>
-							</div>
-						</div>
-					</section>
-				)}
-
-				{/* Scope for NDA */}
-				{contractData.template === 'nda' && (
-					<section className="space-y-content border-t border-border pt-6">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Purpose of Disclosure
-						</h2>
+					<div className="space-y-content">
 						<div>
 							<label className="block text-sm font-medium text-foreground mb-1">
-								Purpose
+								Scope of Work
 							</label>
 							<textarea
 								value={contractData.scopeOfWork}
 								onChange={e => handleInputChange('scopeOfWork', e.target.value)}
-								rows={3}
+								rows={4}
 								className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-								placeholder="e.g., Evaluating a potential business partnership..."
+								placeholder="Describe the services to be provided..."
 							/>
 						</div>
-					</section>
-				)}
+						<div className="grid gap-content sm:grid-cols-2">
+							<CalculatorInput
+								label="Payment Amount"
+								id="paymentAmount"
+								type="text"
+								value={contractData.paymentAmount}
+								onChange={e =>
+									handleInputChange('paymentAmount', e.target.value)
+								}
+								placeholder="e.g., $5,000 or $150/hour"
+							/>
+							<CalculatorInput
+								label="Payment Terms"
+								id="paymentTerms"
+								type="text"
+								value={contractData.paymentTerms}
+								onChange={e =>
+									handleInputChange('paymentTerms', e.target.value)
+								}
+								placeholder="e.g., 50% upfront, 50% on completion"
+							/>
+						</div>
+						<div>
+							<label className="block text-sm font-medium text-foreground mb-1">
+								Timeline / Milestones
+							</label>
+							<textarea
+								value={contractData.timeline}
+								onChange={e => handleInputChange('timeline', e.target.value)}
+								rows={3}
+								className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+								placeholder="Describe the project timeline and any key milestones..."
+							/>
+						</div>
+					</div>
+				</section>
+			)}
 
-				{/* Custom Clauses */}
+			{/* Scope for NDA */}
+			{contractData.template === 'nda' && (
 				<section className="space-y-content border-t border-border pt-6">
 					<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Additional Terms (Optional)
+						Purpose of Disclosure
 					</h2>
-					<textarea
-						value={contractData.customClauses}
-						onChange={e => handleInputChange('customClauses', e.target.value)}
-						rows={4}
-						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-						placeholder="Add any custom clauses or special terms..."
-					/>
+					<div>
+						<label className="block text-sm font-medium text-foreground mb-1">
+							Purpose
+						</label>
+						<textarea
+							value={contractData.scopeOfWork}
+							onChange={e => handleInputChange('scopeOfWork', e.target.value)}
+							rows={3}
+							className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+							placeholder="e.g., Evaluating a potential business partnership..."
+						/>
+					</div>
 				</section>
+			)}
 
-				{/* Actions */}
-				<section className="flex flex-wrap gap-3 pt-4">
+			{/* Custom Clauses */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Additional Terms (Optional)
+				</h2>
+				<textarea
+					value={contractData.customClauses}
+					onChange={e => handleInputChange('customClauses', e.target.value)}
+					rows={4}
+					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+					placeholder="Add any custom clauses or special terms..."
+				/>
+			</section>
+
+			{/* Actions */}
+			<section className="flex flex-wrap gap-3 pt-4">
+				<button
+					type="button"
+					onClick={saveDraft}
+					className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
+				>
+					<Save className="w-4 h-4" />
+					Save Draft
+				</button>
+
+				{hasDraft && (
 					<button
 						type="button"
-						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
+						onClick={clearDraft}
+						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
 					>
-						<Save className="w-4 h-4" />
-						Save Draft
+						<RotateCcw className="w-4 h-4" />
+						Clear Draft
 					</button>
+				)}
 
-					{hasDraft && (
-						<button
-							type="button"
-							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
-						>
-							<RotateCcw className="w-4 h-4" />
-							Clear Draft
-						</button>
-					)}
+				{isHydrated && isValid && (
+					<PDFDownloadLink
+						document={<ContractDocument data={contractData} />}
+						fileName={getFileName()}
+						className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
+						onClick={() => {
+							trackEvent('contract_downloaded', {
+								template: contractData.template,
+								has_scope: !!contractData.scopeOfWork,
+								has_payment: !!contractData.paymentAmount
+							})
+						}}
+					>
+						{({ loading }) =>
+							loading ? (
+								'Generating PDF...'
+							) : (
+								<>
+									<Download className="w-4 h-4" />
+									Download PDF
+								</>
+							)
+						}
+					</PDFDownloadLink>
+				)}
 
-					{isHydrated && isValid && (
-						<PDFDownloadLink
-							document={<ContractDocument data={contractData} />}
-							fileName={getFileName()}
-							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
-							onClick={() => {
-								trackEvent('contract_downloaded', {
-									template: contractData.template,
-									has_scope: !!contractData.scopeOfWork,
-									has_payment: !!contractData.paymentAmount
-								})
-							}}
-						>
-							{({ loading }) =>
-								loading ? (
-									'Generating PDF...'
-								) : (
-									<>
-										<Download className="w-4 h-4" />
-										Download PDF
-									</>
-								)
-							}
-						</PDFDownloadLink>
-					)}
-
-					{!isValid && (
-						<p className="text-sm text-muted-foreground self-center">
-							Add provider name and client information to download PDF
-						</p>
-					)}
-				</section>
-			</div>
+				{!isValid && (
+					<p className="text-sm text-muted-foreground self-center">
+						Add provider name and client information to download PDF
+					</p>
+				)}
+			</section>
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">
@@ -632,6 +618,15 @@ export default function ContractGeneratorClient() {
 					</p>
 				</Card>
 			</div>
-		</CalculatorLayout>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Contract Generator"
+			description="Create professional contracts and download them as PDF"
+			columns="single"
+			formSlot={formSlot}
+		/>
 	)
 }

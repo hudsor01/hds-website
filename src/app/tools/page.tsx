@@ -22,6 +22,7 @@ import {
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 
 export const metadata: Metadata = {
@@ -231,9 +232,12 @@ export default function ToolsPage() {
 				<div className="container-wide">
 					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{tools.map(tool => (
-							<div
+							<Card
 								key={tool.href}
-								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
+								variant="glassLight"
+								size="lg"
+								hover={true}
+								className="group flex flex-col"
 							>
 								{/* Icon */}
 								<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
@@ -268,7 +272,7 @@ export default function ToolsPage() {
 									{tool.cta}
 									<ArrowRight className="h-4 w-4" />
 								</Link>
-							</div>
+							</Card>
 						))}
 					</div>
 				</div>
