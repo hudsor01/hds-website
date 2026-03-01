@@ -29,9 +29,9 @@
 
 ### TOOL — Tool Page Polish
 
-- [ ] **TOOL-01**: All tool pages have a consistent header treatment — tool title, description, and clear framing (not just a raw form)
-- [ ] **TOOL-02**: Tool form fields are styled to the design system — not generic browser defaults or unstyled shadcn components
-- [ ] **TOOL-03**: Tool output/results display has dedicated, polished presentation — result cards, data labels, print/download action styling
+- [x] **TOOL-01**: All tool pages have a consistent header treatment — tool title, description, and clear framing (not just a raw form)
+- [x] **TOOL-02**: Tool form fields are styled to the design system — not generic browser defaults or unstyled shadcn components
+- [x] **TOOL-03**: Tool output/results display has dedicated, polished presentation — result cards, data labels, print/download action styling
 - [ ] **TOOL-04**: Tools index page has a polished grid layout matching the design system card treatment
 
 ### PAGE — Content Page Polish
@@ -70,9 +70,9 @@ Which phases cover which requirements.
 | COMP-02 | Phase 58 | Complete |
 | COMP-03 | Phase 58 | Complete |
 | COMP-04 | Phase 58 | Complete |
-| TOOL-01 | Phase 59 | Pending |
-| TOOL-02 | Phase 59 | Pending |
-| TOOL-03 | Phase 59 | Pending |
+| TOOL-01 | Phase 59 | Complete |
+| TOOL-02 | Phase 59 | Complete |
+| TOOL-03 | Phase 59 | Complete |
 | TOOL-04 | Phase 59 | Pending |
 | PAGE-01 | Phase 60 | Pending |
 | PAGE-02 | Phase 60 | Pending |
