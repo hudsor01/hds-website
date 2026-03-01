@@ -5,20 +5,18 @@
 
 'use client'
 
-import { AlertCircle, Braces, Check, CheckCircle2, Copy } from 'lucide-react'
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
-import { Card } from '@/components/ui/card'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import type { ToolAction } from '@/components/layout/ToolPageLayout'
 import { trackEvent } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
 
 export default function JsonFormatterClient() {
 	const [inputJson, setInputJson] = useState('')
 	const [outputJson, setOutputJson] = useState('')
 	const [error, setError] = useState<string | null>(null)
-	const [copied, setCopied] = useState(false)
 	const [indentSize, setIndentSize] = useState(2)
 	const [isValid, setIsValid] = useState<boolean | null>(null)
 
@@ -91,8 +89,6 @@ export default function JsonFormatterClient() {
 	const copyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(outputJson)
-			setCopied(true)
-			setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK)
 		} catch (error) {
 			// Fallback for browsers without clipboard API
 			logger.debug('Clipboard API unavailable, using fallback', {
@@ -104,8 +100,6 @@ export default function JsonFormatterClient() {
 			textArea.select()
 			document.execCommand('copy')
 			document.body.removeChild(textArea)
-			setCopied(true)
-			setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK)
 		}
 	}
 
@@ -140,207 +134,151 @@ export default function JsonFormatterClient() {
 		setIsValid(null)
 	}
 
-	return (
-		<CalculatorLayout
-			title="JSON Formatter"
-			description="Format, validate, and minify your JSON data with syntax highlighting"
-			icon={<Braces className="h-8 w-8 text-accent" />}
-		>
-			<div className="space-y-comfortable">
-				{/* Input Section */}
-				<div>
-					<div className="flex items-center justify-between mb-subheading">
-						<label className="block text-sm font-medium text-foreground">
-							Input JSON
-						</label>
-						<div className="flex gap-tight">
-							<button
-								onClick={loadSample}
-								className="text-xs text-accent hover:text-accent/80"
-							>
-								Load Sample
-							</button>
-							<button
-								onClick={clearAll}
-								className="text-xs text-muted-foreground hover:text-foreground"
-							>
-								Clear
-							</button>
-						</div>
-					</div>
-					<textarea
-						value={inputJson}
-						onChange={e => {
-							setInputJson(e.target.value)
-							setIsValid(null)
-							setError(null)
-						}}
-						className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent ${
-							error
-								? 'border-destructive'
-								: isValid === true
-									? 'border-success'
-									: 'border-border'
-						}`}
-						rows={10}
-						placeholder='{"key": "value"}'
-						spellCheck={false}
-					/>
+	const hasResult = outputJson.length > 0
 
-					{/* Validation Status */}
-					{error && (
-						<div className="mt-2 flex items-start gap-tight text-destructive-text">
-							<AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-							<span className="text-sm">{error}</span>
-						</div>
-					)}
-					{isValid === true && !error && (
-						<div className="mt-2 flex items-center gap-tight text-success-text">
-							<CheckCircle2 className="w-4 h-4" />
-							<span className="text-sm">Valid JSON</span>
-						</div>
-					)}
-				</div>
+	const actions: ToolAction[] = [
+		{ type: 'copy', label: 'Copy', onClick: copyToClipboard }
+	]
 
-				{/* Options */}
-				<div className="flex flex-wrap items-center gap-content">
-					<div className="flex items-center gap-tight">
-						<label className="text-sm text-muted-foreground">Indent:</label>
-						<select
-							value={indentSize}
-							onChange={e => setIndentSize(Number(e.target.value))}
-							className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+	const formSlot = (
+		<div className="space-y-comfortable">
+			{/* Input Section */}
+			<div>
+				<div className="flex items-center justify-between mb-subheading">
+					<label className="block text-sm font-medium text-foreground">
+						Input JSON
+					</label>
+					<div className="flex gap-tight">
+						<button
+							onClick={loadSample}
+							className="text-xs text-accent hover:text-accent/80"
 						>
-							<option value={2}>2 spaces</option>
-							<option value={4}>4 spaces</option>
-							<option value={1}>1 tab</option>
-						</select>
+							Load Sample
+						</button>
+						<button
+							onClick={clearAll}
+							className="text-xs text-muted-foreground hover:text-foreground"
+						>
+							Clear
+						</button>
 					</div>
 				</div>
+				<textarea
+					value={inputJson}
+					onChange={e => {
+						setInputJson(e.target.value)
+						setIsValid(null)
+						setError(null)
+					}}
+					className={`w-full rounded-md border bg-background px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-accent ${
+						error
+							? 'border-destructive'
+							: isValid === true
+								? 'border-success'
+								: 'border-border'
+					}`}
+					rows={10}
+					placeholder='{"key": "value"}'
+					spellCheck={false}
+				/>
 
-				{/* Action Buttons */}
-				<div className="grid grid-cols-3 gap-3">
-					<button
-						onClick={formatJson}
-						disabled={!inputJson.trim()}
-						className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						Format
-					</button>
-					<button
-						onClick={minifyJson}
-						disabled={!inputJson.trim()}
-						className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						Minify
-					</button>
-					<button
-						onClick={validateJson}
-						disabled={!inputJson.trim()}
-						className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
-					>
-						Validate
-					</button>
-				</div>
-
-				{/* Output Section */}
-				{outputJson && (
-					<div>
-						<div className="flex items-center justify-between mb-subheading">
-							<label className="block text-sm font-medium text-foreground">
-								Output
-							</label>
-							<button
-								onClick={copyToClipboard}
-								className="flex items-center gap-1 text-xs text-accent hover:text-accent/80"
-							>
-								{copied ? (
-									<>
-										<Check className="w-3 h-3" />
-										Copied!
-									</>
-								) : (
-									<>
-										<Copy className="w-3 h-3" />
-										Copy
-									</>
-								)}
-							</button>
-						</div>
-						<pre className="w-full rounded-md border border-border bg-background p-4 overflow-x-auto">
-							<code className="text-sm text-foreground whitespace-pre-wrap break-all font-mono">
-								{outputJson}
-							</code>
-						</pre>
-
-						{/* Stats */}
-						<div className="mt-2 flex gap-content text-xs text-muted-foreground">
-							<span>Input: {inputJson.length} chars</span>
-							<span>Output: {outputJson.length} chars</span>
-							{inputJson.length !== outputJson.length && (
-								<span
-									className={
-										outputJson.length < inputJson.length
-											? 'text-success-text'
-											: 'text-warning-text'
-									}
-								>
-									{outputJson.length < inputJson.length
-										? `Reduced by ${((1 - outputJson.length / inputJson.length) * 100).toFixed(1)}%`
-										: `Increased by ${((outputJson.length / inputJson.length - 1) * 100).toFixed(1)}%`}
-								</span>
-							)}
-						</div>
+				{/* Validation Status */}
+				{error && (
+					<div className="mt-2 flex items-start gap-tight text-destructive-text">
+						<AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+						<span className="text-sm">{error}</span>
+					</div>
+				)}
+				{isValid === true && !error && (
+					<div className="mt-2 flex items-center gap-tight text-success-text">
+						<CheckCircle2 className="w-4 h-4" />
+						<span className="text-sm">Valid JSON</span>
 					</div>
 				)}
 			</div>
 
-			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
-				<h3 className="text-lg font-semibold text-foreground">JSON Tips</h3>
-
-				<div className="grid gap-content sm:grid-cols-2">
-					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
-							Common Errors
-						</h4>
-						<p className="text-sm text-muted-foreground">
-							Missing quotes around keys, trailing commas, and single quotes
-							instead of double quotes are common JSON mistakes.
-						</p>
-					</Card>
-
-					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
-							Data Types
-						</h4>
-						<p className="text-sm text-muted-foreground">
-							JSON supports strings, numbers, booleans, null, arrays, and
-							objects. No undefined, functions, or dates.
-						</p>
-					</Card>
-
-					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
-							Minification
-						</h4>
-						<p className="text-sm text-muted-foreground">
-							Minifying JSON removes whitespace to reduce file size, useful for
-							API responses and data transfer.
-						</p>
-					</Card>
-
-					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground">
-							Formatting
-						</h4>
-						<p className="text-sm text-muted-foreground">
-							Pretty-printing JSON with indentation makes it human-readable for
-							debugging and configuration files.
-						</p>
-					</Card>
+			{/* Options */}
+			<div className="flex flex-wrap items-center gap-content">
+				<div className="flex items-center gap-tight">
+					<label className="text-sm text-muted-foreground">Indent:</label>
+					<select
+						value={indentSize}
+						onChange={e => setIndentSize(Number(e.target.value))}
+						className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
+					>
+						<option value={2}>2 spaces</option>
+						<option value={4}>4 spaces</option>
+						<option value={1}>1 tab</option>
+					</select>
 				</div>
 			</div>
-		</CalculatorLayout>
+
+			{/* Action Buttons */}
+			<div className="grid grid-cols-3 gap-3">
+				<button
+					onClick={formatJson}
+					disabled={!inputJson.trim()}
+					className="rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					Format
+				</button>
+				<button
+					onClick={minifyJson}
+					disabled={!inputJson.trim()}
+					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					Minify
+				</button>
+				<button
+					onClick={validateJson}
+					disabled={!inputJson.trim()}
+					className="rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					Validate
+				</button>
+			</div>
+		</div>
+	)
+
+	const resultSlot = outputJson ? (
+		<div>
+			<pre className="w-full rounded-md border border-border bg-background p-4 overflow-x-auto">
+				<code className="text-sm text-foreground whitespace-pre-wrap break-all font-mono">
+					{outputJson}
+				</code>
+			</pre>
+
+			{/* Stats */}
+			<div className="mt-2 flex gap-content text-xs text-muted-foreground">
+				<span>Input: {inputJson.length} chars</span>
+				<span>Output: {outputJson.length} chars</span>
+				{inputJson.length !== outputJson.length && (
+					<span
+						className={
+							outputJson.length < inputJson.length
+								? 'text-success-text'
+								: 'text-warning-text'
+						}
+					>
+						{outputJson.length < inputJson.length
+							? `Reduced by ${((1 - outputJson.length / inputJson.length) * 100).toFixed(1)}%`
+							: `Increased by ${((outputJson.length / inputJson.length - 1) * 100).toFixed(1)}%`}
+					</span>
+				)}
+			</div>
+		</div>
+	) : undefined
+
+	return (
+		<ToolPageLayout
+			title="JSON Formatter"
+			description="Format, validate, and minify your JSON data with syntax highlighting"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={hasResult}
+			resultPlaceholder="Paste JSON on the left to see formatted output"
+			actions={actions}
+		/>
 	)
 }

@@ -9,6 +9,17 @@ import { parseAsFloat, parseAsInteger, useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
+import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select'
 import { trackEvent } from '@/lib/analytics'
 import { formatCurrency } from '@/lib/utils'
 
@@ -72,7 +83,6 @@ export function MortgageCalculatorClient() {
 	)
 
 	const [results, setResults] = useState<MortgageResults | null>(null)
-	const [showResults, setShowResults] = useState(false)
 	const [usePercent, setUsePercent] = useState(true)
 
 	const inputs: MortgageInputs = {
@@ -193,7 +203,6 @@ export function MortgageCalculatorClient() {
 		}
 
 		setResults(calculatedResults)
-		setShowResults(true)
 
 		trackEvent('calculator_used', {
 			calculator_type: 'mortgage-calculator',
@@ -207,6 +216,35 @@ export function MortgageCalculatorClient() {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		calculateMortgage()
+	}
+
+	const handleReset = () => {
+		setResults(null)
+		setHomePrice(350000)
+		setDownPayment(70000)
+		setDownPaymentPercent(20)
+		setInterestRate(6.5)
+		setLoanTerm(30)
+		setPropertyTax(3500)
+		setHomeInsurance(1200)
+		setPmi(0)
+		setHoaFees(0)
+	}
+
+	const handleCopy = () => {
+		if (!results) {
+			return
+		}
+		const text = [
+			'Mortgage Calculator Summary',
+			`Total Monthly Payment: ${results.totalMonthlyPayment}`,
+			`Principal & Interest: ${results.monthlyPrincipalInterest}`,
+			`Property Tax: ${results.monthlyPropertyTax}`,
+			`Home Insurance: ${results.monthlyInsurance}`,
+			`Loan Amount: ${results.loanAmount}`,
+			`Total Interest Paid: ${results.totalInterest}`
+		].join('\n')
+		navigator.clipboard.writeText(text).catch(() => undefined)
 	}
 
 	const resultItems = results
@@ -269,223 +307,221 @@ export function MortgageCalculatorClient() {
 			]
 		: []
 
-	return (
-		<>
-			{!showResults ? (
-				<form onSubmit={handleSubmit} className="space-y-comfortable">
-					{/* Home Price */}
+	const actions: ToolAction[] = [
+		{ type: 'copy', label: 'Copy Summary', onClick: handleCopy }
+	]
+
+	const formSlot = (
+		<form onSubmit={handleSubmit} className="space-y-comfortable">
+			{/* Home Price */}
+			<CalculatorInput
+				label="Home Price"
+				id="homePrice"
+				type="number"
+				min="0"
+				step="1000"
+				value={inputs.homePrice || ''}
+				onChange={e => handleInputChange('homePrice', e.target.value)}
+				prefix="$"
+				helpText="Purchase price of the home"
+				required
+			/>
+
+			{/* Down Payment */}
+			<div className="space-y-tight">
+				<div className="flex items-center justify-between">
+					<label className="text-sm font-medium text-foreground">
+						Down Payment
+					</label>
+					<div className="flex items-center gap-tight">
+						<button
+							type="button"
+							onClick={() => setUsePercent(true)}
+							className={`px-2 py-1 text-xs rounded ${
+								usePercent
+									? 'bg-accent text-accent-foreground'
+									: 'bg-muted text-muted-foreground'
+							}`}
+						>
+							%
+						</button>
+						<button
+							type="button"
+							onClick={() => setUsePercent(false)}
+							className={`px-2 py-1 text-xs rounded ${
+								!usePercent
+									? 'bg-accent text-accent-foreground'
+									: 'bg-muted text-muted-foreground'
+							}`}
+						>
+							$
+						</button>
+					</div>
+				</div>
+				{usePercent ? (
 					<CalculatorInput
-						label="Home Price"
-						id="homePrice"
+						label=""
+						id="downPaymentPercent"
+						type="number"
+						min="0"
+						max="100"
+						step="0.5"
+						value={inputs.downPaymentPercent || ''}
+						onChange={e =>
+							handleInputChange('downPaymentPercent', e.target.value)
+						}
+						suffix="%"
+						helpText={formatCurrency(inputs.downPayment)}
+						required
+					/>
+				) : (
+					<CalculatorInput
+						label=""
+						id="downPayment"
 						type="number"
 						min="0"
 						step="1000"
-						value={inputs.homePrice || ''}
-						onChange={e => handleInputChange('homePrice', e.target.value)}
+						value={inputs.downPayment || ''}
+						onChange={e => handleInputChange('downPayment', e.target.value)}
 						prefix="$"
-						helpText="Purchase price of the home"
+						helpText={`${inputs.downPaymentPercent}% of home price`}
 						required
 					/>
+				)}
+				{inputs.downPaymentPercent < 20 && (
+					<p className="text-xs text-warning-text">
+						PMI is typically required for down payments less than 20%
+					</p>
+				)}
+			</div>
 
-					{/* Down Payment */}
-					<div className="space-y-tight">
-						<div className="flex items-center justify-between">
-							<label className="text-sm font-medium text-foreground">
-								Down Payment
-							</label>
-							<div className="flex items-center gap-tight">
-								<button
-									type="button"
-									onClick={() => setUsePercent(true)}
-									className={`px-2 py-1 text-xs rounded ${
-										usePercent
-											? 'bg-accent text-accent-foreground'
-											: 'bg-muted text-muted-foreground'
-									}`}
-								>
-									%
-								</button>
-								<button
-									type="button"
-									onClick={() => setUsePercent(false)}
-									className={`px-2 py-1 text-xs rounded ${
-										!usePercent
-											? 'bg-accent text-accent-foreground'
-											: 'bg-muted text-muted-foreground'
-									}`}
-								>
-									$
-								</button>
-							</div>
-						</div>
-						{usePercent ? (
-							<CalculatorInput
-								label=""
-								id="downPaymentPercent"
-								type="number"
-								min="0"
-								max="100"
-								step="0.5"
-								value={inputs.downPaymentPercent || ''}
-								onChange={e =>
-									handleInputChange('downPaymentPercent', e.target.value)
-								}
-								suffix="%"
-								helpText={formatCurrency(inputs.downPayment)}
-								required
-							/>
-						) : (
-							<CalculatorInput
-								label=""
-								id="downPayment"
-								type="number"
-								min="0"
-								step="1000"
-								value={inputs.downPayment || ''}
-								onChange={e => handleInputChange('downPayment', e.target.value)}
-								prefix="$"
-								helpText={`${inputs.downPaymentPercent}% of home price`}
-								required
-							/>
-						)}
-						{inputs.downPaymentPercent < 20 && (
-							<p className="text-xs text-warning-text">
-								PMI is typically required for down payments less than 20%
-							</p>
-						)}
-					</div>
+			{/* Loan Details */}
+			<div className="grid gap-content md:grid-cols-2">
+				<CalculatorInput
+					label="Interest Rate"
+					id="interestRate"
+					type="number"
+					min="0"
+					max="30"
+					step="0.125"
+					value={inputs.interestRate || ''}
+					onChange={e => handleInputChange('interestRate', e.target.value)}
+					suffix="%"
+					helpText="Annual interest rate"
+					required
+				/>
 
-					{/* Loan Details */}
-					<div className="grid gap-content md:grid-cols-2">
-						<CalculatorInput
-							label="Interest Rate"
-							id="interestRate"
-							type="number"
-							min="0"
-							max="30"
-							step="0.125"
-							value={inputs.interestRate || ''}
-							onChange={e => handleInputChange('interestRate', e.target.value)}
-							suffix="%"
-							helpText="Annual interest rate"
-							required
-						/>
-
-						<div>
-							<label
-								htmlFor="loanTerm"
-								className="block text-sm font-medium text-foreground mb-1"
-							>
-								Loan Term
-							</label>
-							<select
-								id="loanTerm"
-								name="loanTerm"
-								value={inputs.loanTerm}
-								onChange={e => handleInputChange('loanTerm', e.target.value)}
-								className="w-full rounded-md border border-border bg-background px-4 py-2.5 text-foreground"
-							>
-								<option value={30}>30 years</option>
-								<option value={20}>20 years</option>
-								<option value={15}>15 years</option>
-								<option value={10}>10 years</option>
-							</select>
-						</div>
-					</div>
-
-					{/* Additional Costs */}
-					<div className="space-y-content border-t border-border pt-6">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Additional Costs (Optional)
-						</h2>
-
-						<div className="grid gap-content md:grid-cols-2">
-							<CalculatorInput
-								label="Annual Property Tax"
-								id="propertyTax"
-								type="number"
-								min="0"
-								step="100"
-								value={inputs.propertyTax || ''}
-								onChange={e => handleInputChange('propertyTax', e.target.value)}
-								prefix="$"
-								helpText="Yearly property tax"
-							/>
-
-							<CalculatorInput
-								label="Annual Home Insurance"
-								id="homeInsurance"
-								type="number"
-								min="0"
-								step="100"
-								value={inputs.homeInsurance || ''}
-								onChange={e =>
-									handleInputChange('homeInsurance', e.target.value)
-								}
-								prefix="$"
-								helpText="Yearly insurance premium"
-							/>
-
-							<CalculatorInput
-								label="Monthly PMI"
-								id="pmi"
-								type="number"
-								min="0"
-								step="10"
-								value={inputs.pmi || ''}
-								onChange={e => handleInputChange('pmi', e.target.value)}
-								prefix="$"
-								helpText="Private mortgage insurance"
-							/>
-
-							<CalculatorInput
-								label="Monthly HOA Fees"
-								id="hoaFees"
-								type="number"
-								min="0"
-								step="10"
-								value={inputs.hoaFees || ''}
-								onChange={e => handleInputChange('hoaFees', e.target.value)}
-								prefix="$"
-								helpText="Homeowners association dues"
-							/>
-						</div>
-					</div>
-
-					<button
-						type="submit"
-						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
+				<div className="space-y-tight">
+					<Label htmlFor="loanTerm">Loan Term</Label>
+					<Select
+						value={String(loanTerm)}
+						onValueChange={val => setLoanTerm(Number(val))}
 					>
-						Calculate Payment
-					</button>
-				</form>
-			) : (
-				<div>
-					<CalculatorResults
-						results={resultItems}
-						calculatorType="mortgage-calculator"
-						inputs={inputs}
+						<SelectTrigger id="loanTerm">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="30">30 years</SelectItem>
+							<SelectItem value="20">20 years</SelectItem>
+							<SelectItem value="15">15 years</SelectItem>
+							<SelectItem value="10">10 years</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+			</div>
+
+			{/* Additional Costs */}
+			<div className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Additional Costs (Optional)
+				</h2>
+
+				<div className="grid gap-content md:grid-cols-2">
+					<CalculatorInput
+						label="Annual Property Tax"
+						id="propertyTax"
+						type="number"
+						min="0"
+						step="100"
+						value={inputs.propertyTax || ''}
+						onChange={e => handleInputChange('propertyTax', e.target.value)}
+						prefix="$"
+						helpText="Yearly property tax"
 					/>
 
-					<button
-						onClick={() => {
-							setShowResults(false)
-							setHomePrice(350000)
-							setDownPayment(70000)
-							setDownPaymentPercent(20)
-							setInterestRate(6.5)
-							setLoanTerm(30)
-							setPropertyTax(3500)
-							setHomeInsurance(1200)
-							setPmi(0)
-							setHoaFees(0)
-						}}
-						className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
-					>
-						Recalculate
-					</button>
+					<CalculatorInput
+						label="Annual Home Insurance"
+						id="homeInsurance"
+						type="number"
+						min="0"
+						step="100"
+						value={inputs.homeInsurance || ''}
+						onChange={e => handleInputChange('homeInsurance', e.target.value)}
+						prefix="$"
+						helpText="Yearly insurance premium"
+					/>
+
+					<CalculatorInput
+						label="Monthly PMI"
+						id="pmi"
+						type="number"
+						min="0"
+						step="10"
+						value={inputs.pmi || ''}
+						onChange={e => handleInputChange('pmi', e.target.value)}
+						prefix="$"
+						helpText="Private mortgage insurance"
+					/>
+
+					<CalculatorInput
+						label="Monthly HOA Fees"
+						id="hoaFees"
+						type="number"
+						min="0"
+						step="10"
+						value={inputs.hoaFees || ''}
+						onChange={e => handleInputChange('hoaFees', e.target.value)}
+						prefix="$"
+						helpText="Homeowners association dues"
+					/>
 				</div>
+			</div>
+
+			<Button type="submit" variant="accent" className="w-full">
+				Calculate Payment
+			</Button>
+
+			{results !== null && (
+				<Button
+					type="button"
+					variant="outline"
+					onClick={handleReset}
+					className="w-full"
+				>
+					Recalculate
+				</Button>
 			)}
-		</>
+		</form>
+	)
+
+	const resultSlot = results ? (
+		<CalculatorResults
+			results={resultItems}
+			calculatorType="mortgage-calculator"
+			inputs={inputs}
+		/>
+	) : undefined
+
+	return (
+		<ToolPageLayout
+			title="Mortgage Calculator"
+			description="Calculate your monthly mortgage payment including principal, interest, property taxes, insurance, and PMI"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={results !== null}
+			resultPlaceholder="Enter loan details to calculate your payment"
+			actions={actions}
+		/>
 	)
 }

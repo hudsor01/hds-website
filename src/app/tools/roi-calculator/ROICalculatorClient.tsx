@@ -9,6 +9,8 @@ import { parseAsFloat, parseAsInteger, useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
+import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
@@ -50,7 +52,6 @@ export function ROICalculatorClient() {
 	)
 
 	const [results, setResults] = useState<CalculatorResultsType | null>(null)
-	const [showResults, setShowResults] = useState(false)
 
 	const inputs: CalculatorInputs = {
 		monthlyTraffic,
@@ -117,7 +118,6 @@ export function ROICalculatorClient() {
 		}
 
 		setResults(calculatedResults)
-		setShowResults(true)
 
 		// Track calculator usage
 		trackEvent('calculator_used', {
@@ -131,6 +131,29 @@ export function ROICalculatorClient() {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		calculateROI()
+	}
+
+	const handleReset = () => {
+		setResults(null)
+		setMonthlyTraffic(0)
+		setConversionRate(0)
+		setAverageOrderValue(0)
+		setImprovementPercentage(20)
+	}
+
+	const handleCopy = () => {
+		if (!results) {
+			return
+		}
+		const text = [
+			'ROI Calculator Results',
+			`Current Annual Revenue: ${results.currentAnnualRevenue}`,
+			`Projected Annual Revenue: ${results.projectedAnnualRevenue}`,
+			`Additional Monthly Revenue: ${results.monthlyIncrease}`,
+			`Additional Annual Revenue: ${results.annualIncrease}`,
+			`ROI Percentage: ${results.roiPercentage}`
+		].join('\n')
+		navigator.clipboard.writeText(text).catch(() => undefined)
 	}
 
 	const resultItems = results
@@ -166,126 +189,130 @@ export function ROICalculatorClient() {
 			]
 		: []
 
-	return (
-		<>
-			{!showResults ? (
-				<form onSubmit={handleSubmit} className="space-y-comfortable">
-					<div className="grid gap-comfortable md:grid-cols-2">
-						<CalculatorInput
-							label="Monthly Website Traffic"
-							id="monthlyTraffic"
-							type="number"
-							min="0"
-							step="1"
-							value={monthlyTraffic || ''}
-							onChange={e =>
-								handleInputChange('monthlyTraffic', e.target.value)
-							}
-							helpText="Average number of visitors per month"
-							required
-						/>
+	const actions: ToolAction[] = [
+		{ type: 'copy', label: 'Copy Results', onClick: handleCopy }
+	]
 
-						<CalculatorInput
-							label="Current Conversion Rate"
-							id="conversionRate"
-							type="number"
-							min="0"
-							max="100"
-							step="0.1"
-							value={conversionRate || ''}
-							onChange={e =>
-								handleInputChange('conversionRate', e.target.value)
-							}
-							suffix="%"
-							helpText="Percentage of visitors who convert"
-							required
-						/>
+	const formSlot = (
+		<form onSubmit={handleSubmit} className="space-y-comfortable">
+			<div className="grid gap-comfortable md:grid-cols-2">
+				<CalculatorInput
+					label="Monthly Website Traffic"
+					id="monthlyTraffic"
+					type="number"
+					min="0"
+					step="1"
+					value={monthlyTraffic || ''}
+					onChange={e => handleInputChange('monthlyTraffic', e.target.value)}
+					helpText="Average number of visitors per month"
+					required
+				/>
 
-						<CalculatorInput
-							label="Average Order Value"
-							id="averageOrderValue"
-							type="number"
-							min="0"
-							step="0.01"
-							value={averageOrderValue || ''}
-							onChange={e =>
-								handleInputChange('averageOrderValue', e.target.value)
-							}
-							prefix="$"
-							helpText="Average value per conversion/sale"
-							required
-						/>
+				<CalculatorInput
+					label="Current Conversion Rate"
+					id="conversionRate"
+					type="number"
+					min="0"
+					max="100"
+					step="0.1"
+					value={conversionRate || ''}
+					onChange={e => handleInputChange('conversionRate', e.target.value)}
+					suffix="%"
+					helpText="Percentage of visitors who convert"
+					required
+				/>
 
-						<CalculatorInput
-							label="Target Improvement"
-							id="improvementPercentage"
-							type="number"
-							min="1"
-							max="500"
-							step="1"
-							value={improvementPercentage}
-							onChange={e =>
-								handleInputChange('improvementPercentage', e.target.value)
-							}
-							suffix="%"
-							helpText="Expected conversion rate improvement"
-							required
-						/>
+				<CalculatorInput
+					label="Average Order Value"
+					id="averageOrderValue"
+					type="number"
+					min="0"
+					step="0.01"
+					value={averageOrderValue || ''}
+					onChange={e => handleInputChange('averageOrderValue', e.target.value)}
+					prefix="$"
+					helpText="Average value per conversion/sale"
+					required
+				/>
+
+				<CalculatorInput
+					label="Target Improvement"
+					id="improvementPercentage"
+					type="number"
+					min="1"
+					max="500"
+					step="1"
+					value={improvementPercentage}
+					onChange={e =>
+						handleInputChange('improvementPercentage', e.target.value)
+					}
+					suffix="%"
+					helpText="Expected conversion rate improvement"
+					required
+				/>
+			</div>
+
+			<Card size="sm" className="bg-info-light">
+				<div className="flex">
+					<div className="shrink-0">
+						<svg
+							className="h-5 w-5 text-info-text"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								fillRule="evenodd"
+								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+								clipRule="evenodd"
+							/>
+						</svg>
 					</div>
-
-					<Card size="sm" className="bg-info-light">
-						<div className="flex">
-							<div className="shrink-0">
-								<svg
-									className="h-5 w-5 text-info-text"
-									viewBox="0 0 20 20"
-									fill="currentColor"
-									aria-hidden="true"
-								>
-									<path
-										fillRule="evenodd"
-										d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-										clipRule="evenodd"
-									/>
-								</svg>
-							</div>
-							<div className="ml-3 flex-1">
-								<p className="text-sm text-info-text">
-									<strong>Industry Average:</strong> Most businesses see 15-50%
-									conversion rate improvements with professional website
-									optimization.
-								</p>
-							</div>
-						</div>
-					</Card>
-
-					<Button type="submit" variant="accent" className="w-full">
-						Calculate My ROI
-					</Button>
-				</form>
-			) : (
-				<div>
-					<CalculatorResults
-						results={resultItems}
-						calculatorType="roi-calculator"
-						inputs={inputs}
-					/>
-
-					<Button
-						variant="outline"
-						onClick={() => {
-							setShowResults(false)
-							setMonthlyTraffic(0)
-							setConversionRate(0)
-							setAverageOrderValue(0)
-							setImprovementPercentage(20)
-						}}
-						className="mt-content-block w-full"
-					>
-						Recalculate
-					</Button>
+					<div className="ml-3 flex-1">
+						<p className="text-sm text-info-text">
+							<strong>Industry Average:</strong> Most businesses see 15-50%
+							conversion rate improvements with professional website
+							optimization.
+						</p>
+					</div>
 				</div>
+			</Card>
+
+			<Button type="submit" variant="accent" className="w-full">
+				Calculate My ROI
+			</Button>
+
+			{results !== null && (
+				<Button
+					type="button"
+					variant="outline"
+					onClick={handleReset}
+					className="w-full"
+				>
+					Recalculate
+				</Button>
 			)}
-		</>
+		</form>
+	)
+
+	const resultSlot = results ? (
+		<CalculatorResults
+			results={resultItems}
+			calculatorType="roi-calculator"
+			inputs={inputs}
+		/>
+	) : undefined
+
+	return (
+		<ToolPageLayout
+			title="ROI Calculator"
+			description="Calculate how much additional revenue you could generate by improving your website's conversion rate"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={results !== null}
+			resultPlaceholder="Fill in the form to calculate your ROI"
+			actions={actions}
+		/>
 	)
 }
