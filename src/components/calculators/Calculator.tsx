@@ -1,6 +1,6 @@
 'use client'
 
-import { Car, Copy, Mail, Printer, Share2 } from 'lucide-react'
+import { Copy, Mail, Printer, Share2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator'
@@ -177,7 +177,7 @@ export function Calculator() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background py-8 px-4">
+		<main className="min-h-screen bg-background">
 			<JsonLd
 				data={{
 					'@context': 'https://schema.org',
@@ -194,14 +194,13 @@ export function Calculator() {
 					}
 				}}
 			/>
-			<div className="max-w-6xl mx-auto">
+			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
 				{/* Header */}
-				<div className="text-center mb-comfortable">
-					<div className="flex items-center justify-center gap-3 mb-3">
-						<Car className="w-10 h-10 text-accent" />
-						<h1 className="text-h1 text-foreground">Texas TTL Calculator</h1>
-					</div>
-					<p className="text-muted-foreground">
+				<div className="mb-10">
+					<h1 className="mb-3 text-h1 text-foreground leading-tight">
+						Texas TTL Calculator
+					</h1>
+					<p className="max-w-2xl text-lead text-muted-foreground">
 						Tax, Title, License & Payment Calculator for Texas Vehicles
 					</p>
 				</div>
@@ -347,6 +346,6 @@ export function Calculator() {
 					</div>
 				</div>
 			)}
-		</div>
+		</main>
 	)
 }

@@ -5,11 +5,11 @@
 
 'use client'
 
-import { Download, FileText, Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
+import { Download, Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { trackEvent } from '@/lib/analytics'
@@ -303,12 +303,8 @@ export default function InvoiceGeneratorClient() {
 			item => item.description.trim() !== '' && item.amount > 0
 		)
 
-	return (
-		<CalculatorLayout
-			title="Invoice Generator"
-			description="Create professional invoices and download them as PDF"
-			icon={<FileText className="h-8 w-8 text-accent" />}
-		>
+	const formSlot = (
+		<div>
 			<div className="space-y-sections">
 				{/* Your Company Info */}
 				<section className="space-y-content">
@@ -796,6 +792,15 @@ export default function InvoiceGeneratorClient() {
 					</Card>
 				</div>
 			</div>
-		</CalculatorLayout>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Invoice Generator"
+			description="Create professional invoices and download them as PDF"
+			columns="single"
+			formSlot={formSlot}
+		/>
 	)
 }

@@ -5,18 +5,11 @@
 
 'use client'
 
-import {
-	Download,
-	FileSpreadsheet,
-	Plus,
-	RotateCcw,
-	Save,
-	Trash2
-} from 'lucide-react'
+import { Download, Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { trackEvent } from '@/lib/analytics'
@@ -357,419 +350,405 @@ export default function ProposalGeneratorClient() {
 		return `proposal_${projectName}.pdf`
 	}
 
-	return (
-		<CalculatorLayout
-			title="Proposal Generator"
-			description="Create professional project proposals and download them as PDF"
-			icon={<FileSpreadsheet className="h-8 w-8 text-accent" />}
-		>
-			<div className="space-y-sections">
-				{/* Your Company Info */}
-				<section className="space-y-content">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Your Company Information
-					</h3>
-					<div className="grid gap-content sm:grid-cols-2">
-						<CalculatorInput
-							label="Company Name"
-							id="companyName"
-							type="text"
-							value={proposalData.companyName}
-							onChange={e => handleInputChange('companyName', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Email"
-							id="companyEmail"
-							type="email"
-							value={proposalData.companyEmail}
-							onChange={e => handleInputChange('companyEmail', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Phone"
-							id="companyPhone"
-							type="tel"
-							value={proposalData.companyPhone}
-							onChange={e => handleInputChange('companyPhone', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Address"
-							id="companyAddress"
-							type="text"
-							value={proposalData.companyAddress}
-							onChange={e =>
-								handleInputChange('companyAddress', e.target.value)
-							}
-						/>
-						<div className="grid grid-cols-3 gap-tight">
-							<CalculatorInput
-								label="City"
-								id="companyCity"
-								type="text"
-								value={proposalData.companyCity}
-								onChange={e => handleInputChange('companyCity', e.target.value)}
-							/>
-							<CalculatorInput
-								label="State"
-								id="companyState"
-								type="text"
-								value={proposalData.companyState}
-								onChange={e =>
-									handleInputChange('companyState', e.target.value)
-								}
-							/>
-							<CalculatorInput
-								label="ZIP"
-								id="companyZip"
-								type="text"
-								value={proposalData.companyZip}
-								onChange={e => handleInputChange('companyZip', e.target.value)}
-							/>
-						</div>
-					</div>
-					<div>
-						<label className="block text-sm font-medium text-foreground mb-1">
-							About Your Company
-						</label>
-						<textarea
-							value={proposalData.companyDescription}
-							onChange={e =>
-								handleInputChange('companyDescription', e.target.value)
-							}
-							rows={3}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-							placeholder="Brief description of your company..."
-						/>
-					</div>
-				</section>
-
-				{/* Client Info */}
-				<section className="space-y-content border-t border-border pt-6">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Client Information
-					</h3>
-					<div className="grid gap-content sm:grid-cols-3">
-						<CalculatorInput
-							label="Client Name"
-							id="clientName"
-							type="text"
-							value={proposalData.clientName}
-							onChange={e => handleInputChange('clientName', e.target.value)}
-							helpText="Required"
-							required
-						/>
-						<CalculatorInput
-							label="Company"
-							id="clientCompany"
-							type="text"
-							value={proposalData.clientCompany}
-							onChange={e => handleInputChange('clientCompany', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Email"
-							id="clientEmail"
-							type="email"
-							value={proposalData.clientEmail}
-							onChange={e => handleInputChange('clientEmail', e.target.value)}
-						/>
-					</div>
-				</section>
-
-				{/* Project Info */}
-				<section className="space-y-content border-t border-border pt-6">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Project Details
-					</h3>
-					<div className="grid gap-content sm:grid-cols-3">
-						<CalculatorInput
-							label="Project Name"
-							id="projectName"
-							type="text"
-							value={proposalData.projectName}
-							onChange={e => handleInputChange('projectName', e.target.value)}
-							helpText="Required"
-							required
-						/>
-						<CalculatorInput
-							label="Proposal Date"
-							id="projectDate"
-							type="date"
-							value={proposalData.projectDate}
-							onChange={e => handleInputChange('projectDate', e.target.value)}
-						/>
-						<CalculatorInput
-							label="Valid Until"
-							id="validUntil"
-							type="date"
-							value={proposalData.validUntil}
-							onChange={e => handleInputChange('validUntil', e.target.value)}
-						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium text-foreground mb-1">
-							Project Overview
-						</label>
-						<textarea
-							value={proposalData.overview}
-							onChange={e => handleInputChange('overview', e.target.value)}
-							rows={4}
-							className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-							placeholder="Describe the project goals, background, and objectives..."
-						/>
-					</div>
-				</section>
-
-				{/* Scope of Work */}
-				<section className="space-y-content border-t border-border pt-6">
-					<div className="flex items-center justify-between">
-						<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Scope of Work
-						</h3>
-						<button
-							type="button"
-							onClick={addScopeItem}
-							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
-						>
-							<Plus className="w-4 h-4" />
-							Add Item
-						</button>
-					</div>
-					{proposalData.scopeItems.map((item, index) => (
-						<div key={index} className="flex gap-tight">
-							<input
-								type="text"
-								value={item}
-								onChange={e => handleScopeItemChange(index, e.target.value)}
-								placeholder={`Scope item ${index + 1}...`}
-								className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
-							/>
-							<button
-								type="button"
-								onClick={() => removeScopeItem(index)}
-								disabled={proposalData.scopeItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-								aria-label="Remove scope item"
-							>
-								<Trash2 className="w-4 h-4" />
-							</button>
-						</div>
-					))}
-				</section>
-
-				{/* Timeline / Milestones */}
-				<section className="space-y-content border-t border-border pt-6">
-					<div className="flex items-center justify-between">
-						<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Timeline / Milestones
-						</h3>
-						<button
-							type="button"
-							onClick={addMilestone}
-							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
-						>
-							<Plus className="w-4 h-4" />
-							Add Phase
-						</button>
-					</div>
-					{proposalData.milestones.map(milestone => (
-						<div
-							key={milestone.id}
-							className="grid grid-cols-12 gap-tight items-start"
-						>
-							<input
-								type="text"
-								value={milestone.phase}
-								onChange={e =>
-									handleMilestoneChange(milestone.id, 'phase', e.target.value)
-								}
-								placeholder="Phase"
-								className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-							/>
-							<input
-								type="text"
-								value={milestone.description}
-								onChange={e =>
-									handleMilestoneChange(
-										milestone.id,
-										'description',
-										e.target.value
-									)
-								}
-								placeholder="Description of deliverables..."
-								className="col-span-7 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-							/>
-							<input
-								type="text"
-								value={milestone.duration}
-								onChange={e =>
-									handleMilestoneChange(
-										milestone.id,
-										'duration',
-										e.target.value
-									)
-								}
-								placeholder="Duration"
-								className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-							/>
-							<button
-								type="button"
-								onClick={() => removeMilestone(milestone.id)}
-								disabled={proposalData.milestones.length === 1}
-								className="col-span-1 p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-								aria-label="Remove milestone"
-							>
-								<Trash2 className="w-4 h-4" />
-							</button>
-						</div>
-					))}
-				</section>
-
-				{/* Pricing */}
-				<section className="space-y-content border-t border-border pt-6">
-					<div className="flex items-center justify-between">
-						<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Pricing
-						</h3>
-						<button
-							type="button"
-							onClick={addPricingItem}
-							className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
-						>
-							<Plus className="w-4 h-4" />
-							Add Item
-						</button>
-					</div>
-					{proposalData.pricingItems.map(item => (
-						<div key={item.id} className="flex gap-tight items-start">
-							<input
-								type="text"
-								value={item.description}
-								onChange={e =>
-									handlePricingChange(item.id, 'description', e.target.value)
-								}
-								placeholder="Service or deliverable..."
-								className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
-							/>
-							<input
-								type="number"
-								min="0"
-								step="0.01"
-								value={item.price || ''}
-								onChange={e =>
-									handlePricingChange(
-										item.id,
-										'price',
-										parseFloat(e.target.value) || 0
-									)
-								}
-								placeholder="0.00"
-								className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
-							/>
-							<button
-								type="button"
-								onClick={() => removePricingItem(item.id)}
-								disabled={proposalData.pricingItems.length === 1}
-								className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
-								aria-label="Remove pricing item"
-							>
-								<Trash2 className="w-4 h-4" />
-							</button>
-						</div>
-					))}
-					<div className="flex justify-end pt-4 border-t border-border">
-						<div className="text-right">
-							<span className="text-sm text-muted-foreground mr-4">Total:</span>
-							<span className="text-xl font-bold text-accent">
-								{formatCurrency(computedTotal)}
-							</span>
-						</div>
-					</div>
+	const formSlot = (
+		<div className="space-y-sections">
+			{/* Your Company Info */}
+			<section className="space-y-content">
+				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Your Company Information
+				</h3>
+				<div className="grid gap-content sm:grid-cols-2">
 					<CalculatorInput
-						label="Payment Terms"
-						id="paymentTerms"
+						label="Company Name"
+						id="companyName"
 						type="text"
-						value={proposalData.paymentTerms}
-						onChange={e => handleInputChange('paymentTerms', e.target.value)}
-						placeholder="e.g., 50% deposit, 50% upon completion"
+						value={proposalData.companyName}
+						onChange={e => handleInputChange('companyName', e.target.value)}
 					/>
-				</section>
-
-				{/* Terms */}
-				<section className="space-y-content border-t border-border pt-6">
-					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-						Terms & Conditions
-					</h3>
+					<CalculatorInput
+						label="Email"
+						id="companyEmail"
+						type="email"
+						value={proposalData.companyEmail}
+						onChange={e => handleInputChange('companyEmail', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Phone"
+						id="companyPhone"
+						type="tel"
+						value={proposalData.companyPhone}
+						onChange={e => handleInputChange('companyPhone', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Address"
+						id="companyAddress"
+						type="text"
+						value={proposalData.companyAddress}
+						onChange={e => handleInputChange('companyAddress', e.target.value)}
+					/>
+					<div className="grid grid-cols-3 gap-tight">
+						<CalculatorInput
+							label="City"
+							id="companyCity"
+							type="text"
+							value={proposalData.companyCity}
+							onChange={e => handleInputChange('companyCity', e.target.value)}
+						/>
+						<CalculatorInput
+							label="State"
+							id="companyState"
+							type="text"
+							value={proposalData.companyState}
+							onChange={e => handleInputChange('companyState', e.target.value)}
+						/>
+						<CalculatorInput
+							label="ZIP"
+							id="companyZip"
+							type="text"
+							value={proposalData.companyZip}
+							onChange={e => handleInputChange('companyZip', e.target.value)}
+						/>
+					</div>
+				</div>
+				<div>
+					<label className="block text-sm font-medium text-foreground mb-1">
+						About Your Company
+					</label>
 					<textarea
-						value={proposalData.terms}
-						onChange={e => handleInputChange('terms', e.target.value)}
+						value={proposalData.companyDescription}
+						onChange={e =>
+							handleInputChange('companyDescription', e.target.value)
+						}
+						rows={3}
+						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+						placeholder="Brief description of your company..."
+					/>
+				</div>
+			</section>
+
+			{/* Client Info */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Client Information
+				</h3>
+				<div className="grid gap-content sm:grid-cols-3">
+					<CalculatorInput
+						label="Client Name"
+						id="clientName"
+						type="text"
+						value={proposalData.clientName}
+						onChange={e => handleInputChange('clientName', e.target.value)}
+						helpText="Required"
+						required
+					/>
+					<CalculatorInput
+						label="Company"
+						id="clientCompany"
+						type="text"
+						value={proposalData.clientCompany}
+						onChange={e => handleInputChange('clientCompany', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Email"
+						id="clientEmail"
+						type="email"
+						value={proposalData.clientEmail}
+						onChange={e => handleInputChange('clientEmail', e.target.value)}
+					/>
+				</div>
+			</section>
+
+			{/* Project Info */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Project Details
+				</h3>
+				<div className="grid gap-content sm:grid-cols-3">
+					<CalculatorInput
+						label="Project Name"
+						id="projectName"
+						type="text"
+						value={proposalData.projectName}
+						onChange={e => handleInputChange('projectName', e.target.value)}
+						helpText="Required"
+						required
+					/>
+					<CalculatorInput
+						label="Proposal Date"
+						id="projectDate"
+						type="date"
+						value={proposalData.projectDate}
+						onChange={e => handleInputChange('projectDate', e.target.value)}
+					/>
+					<CalculatorInput
+						label="Valid Until"
+						id="validUntil"
+						type="date"
+						value={proposalData.validUntil}
+						onChange={e => handleInputChange('validUntil', e.target.value)}
+					/>
+				</div>
+				<div>
+					<label className="block text-sm font-medium text-foreground mb-1">
+						Project Overview
+					</label>
+					<textarea
+						value={proposalData.overview}
+						onChange={e => handleInputChange('overview', e.target.value)}
 						rows={4}
 						className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
-						placeholder="Terms and conditions..."
+						placeholder="Describe the project goals, background, and objectives..."
 					/>
-				</section>
+				</div>
+			</section>
 
-				{/* Actions */}
-				<section className="flex flex-wrap gap-3 pt-4">
+			{/* Scope of Work */}
+			<section className="space-y-content border-t border-border pt-6">
+				<div className="flex items-center justify-between">
+					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+						Scope of Work
+					</h3>
 					<button
 						type="button"
-						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
+						onClick={addScopeItem}
+						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
 					>
-						<Save className="w-4 h-4" />
-						Save Draft
+						<Plus className="w-4 h-4" />
+						Add Item
 					</button>
-
-					{hasDraft && (
+				</div>
+				{proposalData.scopeItems.map((item, index) => (
+					<div key={index} className="flex gap-tight">
+						<input
+							type="text"
+							value={item}
+							onChange={e => handleScopeItemChange(index, e.target.value)}
+							placeholder={`Scope item ${index + 1}...`}
+							className="flex-1 rounded-md border border-border bg-background px-4 py-2 text-sm text-foreground"
+						/>
 						<button
 							type="button"
-							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
+							onClick={() => removeScopeItem(index)}
+							disabled={proposalData.scopeItems.length === 1}
+							className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+							aria-label="Remove scope item"
 						>
-							<RotateCcw className="w-4 h-4" />
-							Clear Draft
+							<Trash2 className="w-4 h-4" />
 						</button>
-					)}
+					</div>
+				))}
+			</section>
 
-					{isHydrated && isValid && (
-						<PDFDownloadLink
-							document={
-								<ProposalDocument
-									data={{ ...proposalData, total: computedTotal }}
-								/>
+			{/* Timeline / Milestones */}
+			<section className="space-y-content border-t border-border pt-6">
+				<div className="flex items-center justify-between">
+					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+						Timeline / Milestones
+					</h3>
+					<button
+						type="button"
+						onClick={addMilestone}
+						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+					>
+						<Plus className="w-4 h-4" />
+						Add Phase
+					</button>
+				</div>
+				{proposalData.milestones.map(milestone => (
+					<div
+						key={milestone.id}
+						className="grid grid-cols-12 gap-tight items-start"
+					>
+						<input
+							type="text"
+							value={milestone.phase}
+							onChange={e =>
+								handleMilestoneChange(milestone.id, 'phase', e.target.value)
 							}
-							fileName={getFileName()}
-							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
-							onClick={() => {
-								trackEvent('proposal_downloaded', {
-									project_name: proposalData.projectName,
-									total: computedTotal,
-									scope_items: proposalData.scopeItems.filter(s => s.trim())
-										.length,
-									milestones: proposalData.milestones.filter(m =>
-										m.description.trim()
-									).length
-								})
-							}}
-						>
-							{({ loading }) =>
-								loading ? (
-									'Generating PDF...'
-								) : (
-									<>
-										<Download className="w-4 h-4" />
-										Download PDF
-									</>
+							placeholder="Phase"
+							className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+						/>
+						<input
+							type="text"
+							value={milestone.description}
+							onChange={e =>
+								handleMilestoneChange(
+									milestone.id,
+									'description',
+									e.target.value
 								)
 							}
-						</PDFDownloadLink>
-					)}
+							placeholder="Description of deliverables..."
+							className="col-span-7 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+						/>
+						<input
+							type="text"
+							value={milestone.duration}
+							onChange={e =>
+								handleMilestoneChange(milestone.id, 'duration', e.target.value)
+							}
+							placeholder="Duration"
+							className="col-span-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+						/>
+						<button
+							type="button"
+							onClick={() => removeMilestone(milestone.id)}
+							disabled={proposalData.milestones.length === 1}
+							className="col-span-1 p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+							aria-label="Remove milestone"
+						>
+							<Trash2 className="w-4 h-4" />
+						</button>
+					</div>
+				))}
+			</section>
 
-					{!isValid && (
-						<p className="text-sm text-muted-foreground self-center">
-							Add project name and client information to download PDF
-						</p>
-					)}
-				</section>
-			</div>
+			{/* Pricing */}
+			<section className="space-y-content border-t border-border pt-6">
+				<div className="flex items-center justify-between">
+					<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+						Pricing
+					</h3>
+					<button
+						type="button"
+						onClick={addPricingItem}
+						className="flex items-center gap-1 text-sm text-accent hover:text-accent/80"
+					>
+						<Plus className="w-4 h-4" />
+						Add Item
+					</button>
+				</div>
+				{proposalData.pricingItems.map(item => (
+					<div key={item.id} className="flex gap-tight items-start">
+						<input
+							type="text"
+							value={item.description}
+							onChange={e =>
+								handlePricingChange(item.id, 'description', e.target.value)
+							}
+							placeholder="Service or deliverable..."
+							className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground"
+						/>
+						<input
+							type="number"
+							min="0"
+							step="0.01"
+							value={item.price || ''}
+							onChange={e =>
+								handlePricingChange(
+									item.id,
+									'price',
+									parseFloat(e.target.value) || 0
+								)
+							}
+							placeholder="0.00"
+							className="w-32 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground text-right"
+						/>
+						<button
+							type="button"
+							onClick={() => removePricingItem(item.id)}
+							disabled={proposalData.pricingItems.length === 1}
+							className="p-2 text-muted-foreground hover:text-destructive disabled:opacity-30"
+							aria-label="Remove pricing item"
+						>
+							<Trash2 className="w-4 h-4" />
+						</button>
+					</div>
+				))}
+				<div className="flex justify-end pt-4 border-t border-border">
+					<div className="text-right">
+						<span className="text-sm text-muted-foreground mr-4">Total:</span>
+						<span className="text-xl font-bold text-accent">
+							{formatCurrency(computedTotal)}
+						</span>
+					</div>
+				</div>
+				<CalculatorInput
+					label="Payment Terms"
+					id="paymentTerms"
+					type="text"
+					value={proposalData.paymentTerms}
+					onChange={e => handleInputChange('paymentTerms', e.target.value)}
+					placeholder="e.g., 50% deposit, 50% upon completion"
+				/>
+			</section>
+
+			{/* Terms */}
+			<section className="space-y-content border-t border-border pt-6">
+				<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Terms & Conditions
+				</h3>
+				<textarea
+					value={proposalData.terms}
+					onChange={e => handleInputChange('terms', e.target.value)}
+					rows={4}
+					className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground"
+					placeholder="Terms and conditions..."
+				/>
+			</section>
+
+			{/* Actions */}
+			<section className="flex flex-wrap gap-3 pt-4">
+				<button
+					type="button"
+					onClick={saveDraft}
+					className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
+				>
+					<Save className="w-4 h-4" />
+					Save Draft
+				</button>
+
+				{hasDraft && (
+					<button
+						type="button"
+						onClick={clearDraft}
+						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
+					>
+						<RotateCcw className="w-4 h-4" />
+						Clear Draft
+					</button>
+				)}
+
+				{isHydrated && isValid && (
+					<PDFDownloadLink
+						document={
+							<ProposalDocument
+								data={{ ...proposalData, total: computedTotal }}
+							/>
+						}
+						fileName={getFileName()}
+						className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
+						onClick={() => {
+							trackEvent('proposal_downloaded', {
+								project_name: proposalData.projectName,
+								total: computedTotal,
+								scope_items: proposalData.scopeItems.filter(s => s.trim())
+									.length,
+								milestones: proposalData.milestones.filter(m =>
+									m.description.trim()
+								).length
+							})
+						}}
+					>
+						{({ loading }) =>
+							loading ? (
+								'Generating PDF...'
+							) : (
+								<>
+									<Download className="w-4 h-4" />
+									Download PDF
+								</>
+							)
+						}
+					</PDFDownloadLink>
+				)}
+
+				{!isValid && (
+					<p className="text-sm text-muted-foreground self-center">
+						Add project name and client information to download PDF
+					</p>
+				)}
+			</section>
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">
@@ -817,6 +796,15 @@ export default function ProposalGeneratorClient() {
 					</Card>
 				</div>
 			</div>
-		</CalculatorLayout>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Proposal Generator"
+			description="Create professional project proposals and download them as PDF"
+			columns="single"
+			formSlot={formSlot}
+		/>
 	)
 }
