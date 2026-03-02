@@ -5,7 +5,7 @@
 
 'use client'
 
-import { Download, Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
+import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
@@ -21,12 +21,6 @@ import type {
 	ProposalPricingItem
 } from '@/lib/pdf/proposal-template'
 import { formatCurrency } from '@/lib/utils'
-
-// Dynamic import for PDF to avoid SSR issues
-const PDFDownloadLink = dynamic(
-	() => import('@react-pdf/renderer').then(mod => mod.PDFDownloadLink),
-	{ ssr: false, loading: () => <span>Loading PDF...</span> }
-)
 
 const ProposalDocument = dynamic(
 	() => import('@/lib/pdf/proposal-template').then(mod => mod.ProposalDocument),
@@ -343,12 +337,71 @@ export default function ProposalGeneratorClient() {
 		(proposalData.clientName.trim() !== '' ||
 			proposalData.clientCompany.trim() !== '')
 
-	const getFileName = () => {
+	const getFileName = useCallback(() => {
 		const projectName = (proposalData.projectName || 'proposal')
 			.toLowerCase()
 			.replace(/\s+/g, '_')
 		return `proposal_${projectName}.pdf`
-	}
+	}, [proposalData.projectName])
+
+	const handleDownload = useCallback(async () => {
+		if (!isHydrated || !isValid) {
+			return
+		}
+		try {
+			const { pdf } = await import('@react-pdf/renderer')
+			const blob = await pdf(
+				<ProposalDocument data={{ ...proposalData, total: computedTotal }} />
+			).toBlob()
+			const url = URL.createObjectURL(blob)
+			const a = document.createElement('a')
+			a.href = url
+			a.download = getFileName()
+			a.click()
+			URL.revokeObjectURL(url)
+			trackEvent('proposal_downloaded', {
+				project_name: proposalData.projectName,
+				total: computedTotal,
+				scope_items: proposalData.scopeItems.filter(s => s.trim()).length,
+				milestones: proposalData.milestones.filter(m => m.description.trim())
+					.length
+			})
+		} catch (err) {
+			logger.error(
+				'Proposal PDF download failed',
+				err instanceof Error ? err : new Error(String(err))
+			)
+		}
+	}, [isHydrated, isValid, proposalData, computedTotal, getFileName])
+
+	const resultSlot =
+		isHydrated && isValid ? (
+			<div className="space-y-4">
+				<p className="text-sm text-muted-foreground">
+					Your proposal is ready to download.
+				</p>
+				<dl className="space-y-2 text-sm">
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Project</dt>
+						<dd className="font-medium text-foreground">
+							{proposalData.projectName}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Client</dt>
+						<dd className="font-medium text-foreground">
+							{proposalData.clientName || proposalData.clientCompany}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Total</dt>
+						<dd className="font-bold text-accent">
+							{formatCurrency(computedTotal)}
+						</dd>
+					</div>
+				</dl>
+			</div>
+		) : null
 
 	const formSlot = (
 		<div className="space-y-sections">
@@ -708,46 +761,6 @@ export default function ProposalGeneratorClient() {
 						Clear Draft
 					</button>
 				)}
-
-				{isHydrated && isValid && (
-					<PDFDownloadLink
-						document={
-							<ProposalDocument
-								data={{ ...proposalData, total: computedTotal }}
-							/>
-						}
-						fileName={getFileName()}
-						className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
-						onClick={() => {
-							trackEvent('proposal_downloaded', {
-								project_name: proposalData.projectName,
-								total: computedTotal,
-								scope_items: proposalData.scopeItems.filter(s => s.trim())
-									.length,
-								milestones: proposalData.milestones.filter(m =>
-									m.description.trim()
-								).length
-							})
-						}}
-					>
-						{({ loading }) =>
-							loading ? (
-								'Generating PDF...'
-							) : (
-								<>
-									<Download className="w-4 h-4" />
-									Download PDF
-								</>
-							)
-						}
-					</PDFDownloadLink>
-				)}
-
-				{!isValid && (
-					<p className="text-sm text-muted-foreground self-center">
-						Add project name and client information to download PDF
-					</p>
-				)}
 			</section>
 
 			{/* Educational Content */}
@@ -805,6 +818,15 @@ export default function ProposalGeneratorClient() {
 			description="Create professional project proposals and download them as PDF"
 			columns="single"
 			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={isHydrated && isValid}
+			actions={[
+				{
+					type: 'download',
+					label: 'Download PDF',
+					onClick: handleDownload
+				}
+			]}
 		/>
 	)
 }
