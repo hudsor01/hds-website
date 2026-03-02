@@ -3,9 +3,7 @@
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { trackError } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { logger } from '@/lib/logger'
 
 export default function Error({
 	error,
@@ -15,23 +13,14 @@ export default function Error({
 	reset: () => void
 }) {
 	useEffect(() => {
-		// Log structured error with context
-		logger.error('Application Error Caught', {
-			error: {
-				name: error.name,
-				message: error.message,
-				stack: error.stack,
-				digest: error.digest
-			},
-			page: 'error-page',
-			route:
-				typeof window !== 'undefined' ? window.location.pathname : 'unknown',
-			timestamp: new Date().toISOString(),
-			userAgent: typeof window !== 'undefined' ? navigator.userAgent : 'unknown'
+		// Use console.error — cannot import server-side logger or analytics here as
+		// error.tsx is a 'use client' component and importing them pulls in db.ts
+		// which accesses DATABASE_URL, crashing client hydration.
+		console.error('[Error] Application Error Caught', {
+			name: error.name,
+			message: error.message,
+			digest: error.digest
 		})
-
-		// Track error in analytics
-		trackError(error, true)
 	}, [error])
 
 	return (
