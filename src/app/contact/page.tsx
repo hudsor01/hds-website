@@ -20,6 +20,8 @@ const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
 	loading: () => <ContactFormSkeleton />
 })
 
+import { ServiceAreaMapWrapper } from '@/components/utilities/ServiceAreaMapWrapper'
+
 function ContactFormSkeleton() {
 	return (
 		<div className="space-y-4 animate-pulse">
@@ -193,27 +195,7 @@ export default function ContactPage() {
 						</p>
 					</div>
 
-					<div className="flex flex-wrap justify-center gap-3">
-						{[
-							'Dallas, TX',
-							'Fort Worth, TX',
-							'Houston, TX',
-							'Austin, TX',
-							'San Antonio, TX',
-							'Miami, FL',
-							'Orlando, FL',
-							'Atlanta, GA',
-							'Oklahoma City, OK',
-							'Tampa, FL'
-						].map(city => (
-							<span
-								key={city}
-								className="px-4 py-2 rounded-full text-sm font-medium bg-muted border border-border text-muted-foreground hover:border-accent/40 hover:text-foreground transition-colors"
-							>
-								{city}
-							</span>
-						))}
-					</div>
+					<ServiceAreaMapWrapper className="max-w-3xl mx-auto" />
 				</div>
 			</section>
 		</main>
