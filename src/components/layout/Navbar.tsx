@@ -19,7 +19,8 @@ const navigation: NavigationItem[] = [
 	{ name: 'Showcase', href: ROUTES.SHOWCASE },
 	{ name: 'Tools', href: TOOL_ROUTES.INDEX },
 	{ name: 'About', href: ROUTES.ABOUT },
-	{ name: 'Pricing', href: '/pricing' }
+	{ name: 'Pricing', href: '/pricing' },
+	{ name: 'Contact', href: ROUTES.CONTACT }
 ]
 
 const Navbar = memo(function Navbar() {
@@ -81,14 +82,6 @@ const Navbar = memo(function Navbar() {
 
 					{/* Right — CTAs */}
 					<div className="flex-1 flex items-center justify-end gap-2">
-						<Link
-							href={ROUTES.CONTACT}
-							className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-smooth"
-						>
-							Talk to Sales
-							<ArrowRight className="w-3.5 h-3.5" />
-						</Link>
-
 						<div className="hidden sm:flex items-center gap-2">
 							<ThemeToggle />
 							<Button
@@ -154,13 +147,6 @@ const Navbar = memo(function Navbar() {
 						))}
 
 						<div className="pt-3 space-y-1">
-							<Link
-								href={ROUTES.CONTACT}
-								onClick={handleNavClick}
-								className="block px-3 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-muted hover:text-foreground transition-smooth"
-							>
-								Talk to Sales
-							</Link>
 							<Button
 								asChild
 								variant="default"

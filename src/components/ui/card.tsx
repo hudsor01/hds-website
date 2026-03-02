@@ -500,12 +500,30 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 				</div>
 
 				{/* Client Info */}
-				<div className="border-t border-border pt-6">
-					<div className="font-semibold text-foreground">{name}</div>
-					<div className="text-xs text-muted-foreground">
-						{role} at {company}
+				<div className="border-t border-border pt-6 flex items-center gap-3">
+					<div
+						className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex-center shrink-0"
+						aria-hidden="true"
+					>
+						<span className="text-accent font-bold text-sm">
+							{name
+								.split(' ')
+								.filter(Boolean)
+								.slice(0, 2)
+								.map(w => w[0])
+								.join('')
+								.toUpperCase()}
+						</span>
 					</div>
-					{service && <div className="text-xs text-accent mt-2">{service}</div>}
+					<div>
+						<div className="font-semibold text-foreground">{name}</div>
+						<div className="text-xs text-muted-foreground">
+							{role} at {company}
+						</div>
+						{service && (
+							<div className="text-xs text-accent mt-2">{service}</div>
+						)}
+					</div>
 				</div>
 			</div>
 		)

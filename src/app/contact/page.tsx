@@ -20,14 +20,6 @@ const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
 	loading: () => <ContactFormSkeleton />
 })
 
-const GoogleMap = dynamic(() => import('@/components/utilities/GoogleMap'), {
-	loading: () => <MapSkeleton />
-})
-
-function MapSkeleton() {
-	return <div className="h-96 bg-muted rounded-lg animate-pulse"></div>
-}
-
 function ContactFormSkeleton() {
 	return (
 		<div className="space-y-4 animate-pulse">
@@ -85,24 +77,6 @@ export default function ContactPage() {
 							<Suspense fallback={<ContactFormSkeleton />}>
 								<ContactForm />
 							</Suspense>
-
-							{/* Trust badges */}
-							<div className="mt-6 pt-6 border-t border-border">
-								<div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs text-muted-foreground">
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-success-text rounded-full" />
-										<span>No sales pitch</span>
-									</div>
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-accent rounded-full" />
-										<span>2-hour response time</span>
-									</div>
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-info rounded-full" />
-										<span>Proven success stories</span>
-									</div>
-								</div>
-							</div>
 						</div>
 
 						{/* RIGHT: Contact Info + What Happens Next */}
@@ -203,26 +177,42 @@ export default function ContactPage() {
 				</div>
 			</section>
 
-			{/* Map Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			{/* Service Area Section */}
+			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised border-t border-border">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Location
+							Service Area
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Visit Our Office
+							We Serve Clients Nationwide
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Located in the heart of Florida&apos;s tech corridor, ready to
-							serve clients worldwide.
+							Primarily serving TX, FL, GA, OK and surrounding states — fully
+							remote for all projects.
 						</p>
 					</div>
 
-					<div className="rounded-xl border border-border bg-surface-raised overflow-hidden">
-						<Suspense fallback={<MapSkeleton />}>
-							<GoogleMap />
-						</Suspense>
+					<div className="flex flex-wrap justify-center gap-3">
+						{[
+							'Dallas, TX',
+							'Fort Worth, TX',
+							'Houston, TX',
+							'Austin, TX',
+							'San Antonio, TX',
+							'Miami, FL',
+							'Orlando, FL',
+							'Atlanta, GA',
+							'Oklahoma City, OK',
+							'Tampa, FL'
+						].map(city => (
+							<span
+								key={city}
+								className="px-4 py-2 rounded-full text-sm font-medium bg-muted border border-border text-muted-foreground hover:border-accent/40 hover:text-foreground transition-colors"
+							>
+								{city}
+							</span>
+						))}
 					</div>
 				</div>
 			</section>
