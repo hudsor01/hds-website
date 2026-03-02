@@ -123,15 +123,16 @@ describe('Contact Page (Server Component)', () => {
 		expect(roadmapSteps.length).toBeGreaterThan(0)
 	})
 
-	it('should render trust badges', async () => {
+	it('should render trust indicators', async () => {
 		const ContactPage = (await import('@/app/contact/page')).default
 		render(<ContactPage />)
 
-		// Check for trust indicators - use getAllByText since they may appear multiple times
+		// "No sales pitch" appears in the hero description text
 		const noSalesPitch = screen.getAllByText(/No sales pitch/i)
 		expect(noSalesPitch.length).toBeGreaterThan(0)
 
-		const responseTime = screen.getAllByText(/2-hour response/i)
+		// "within 2 hours" appears in the "What Happens Next" section
+		const responseTime = screen.getAllByText(/within 2 hours/i)
 		expect(responseTime.length).toBeGreaterThan(0)
 	})
 
