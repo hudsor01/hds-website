@@ -19,7 +19,6 @@ const navigation: NavigationItem[] = [
 	{ name: 'Showcase', href: ROUTES.SHOWCASE },
 	{ name: 'Tools', href: TOOL_ROUTES.INDEX },
 	{ name: 'About', href: ROUTES.ABOUT },
-	{ name: 'Pricing', href: '/pricing' },
 	{ name: 'Contact', href: ROUTES.CONTACT }
 ]
 

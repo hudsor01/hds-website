@@ -18,7 +18,6 @@ const footerLinks = {
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
 		{ name: 'Our Process', href: ROUTES.SERVICES },
-		{ name: 'Pricing', href: '/pricing' }, // Note: /pricing not in ROUTES yet
 		{ name: 'Contact', href: ROUTES.CONTACT }
 	]
 }

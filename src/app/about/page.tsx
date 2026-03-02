@@ -213,11 +213,7 @@ export default function AboutPage() {
 								<p className="text-sm text-muted-foreground leading-relaxed">
 									If your investment doesn&apos;t show measurable ROI within 90
 									days, we keep working for free until it does. Your success is
-									our only metric.{' '}
-									<Link href="/pricing" className="link-primary font-semibold">
-										View our pricing
-									</Link>
-									.
+									our only metric.
 								</p>
 							</div>
 						</div>
