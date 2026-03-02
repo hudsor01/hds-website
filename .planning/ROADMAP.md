@@ -292,10 +292,16 @@ Plans:
 
 **Goal**: Transform Services, About, Contact, and Location pages into premium landing page experiences — clear hierarchy, trust signals, and polished CTAs.
 **Depends on**: Phase 58 (component styles established before applying to pages)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (60-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
+
+Plans:
+- [ ] 60-01-PLAN.md — E2E scaffold + Services page fix (remove 'use client', add metadata + testimonials)
+- [ ] 60-02-PLAN.md — About hero overlays + testimonials; Contact hero overlays + column flip
+- [ ] 60-03-PLAN.md — Location slug hero overlays + testimonials; Location index hero overlays
+- [ ] 60-04-PLAN.md — Full verification suite + visual checkpoint
 
 ---
 
@@ -334,4 +340,4 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
 | 58. Core Component Polish | 3/4 | In Progress|  | - |
 | 59. Tool Page Polish | 6/6 | Complete    | 2026-03-02 | - |
-| 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |
+| 60. Content Page Polish | v4.0 | 0/4 | Planned | - |
