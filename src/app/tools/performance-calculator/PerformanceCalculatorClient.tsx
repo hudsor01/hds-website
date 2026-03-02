@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
@@ -148,6 +148,24 @@ export default function PerformanceCalculatorClient() {
 		e.preventDefault()
 		analyzeWebsite()
 	}
+
+	const handleCopy = useCallback(() => {
+		if (!showResults) {
+			return
+		}
+		const lines = [
+			`Performance Score: ${results.performanceScore ?? ''}`,
+			`Monthly Revenue Loss: ${results.monthlyLoss ?? ''}`,
+			`Annual Revenue Loss: ${results.annualLoss ?? ''}`,
+			`Conversion Impact: ${results.conversionImpact ?? ''}`,
+			`Potential Monthly Revenue: ${results.potentialRevenue ?? ''}`,
+			`Load Time Reduction Needed: ${results.loadTimeReduction ?? ''}`,
+			`Recommendation: ${results.recommendation ?? ''}`
+		].filter(line => !line.endsWith(': '))
+		navigator.clipboard.writeText(lines.join('\n')).catch((err: unknown) => {
+			logger.error('Copy report failed:', err as Error)
+		})
+	}, [showResults, results])
 
 	const resultItems = metrics
 		? [
@@ -451,6 +469,11 @@ export default function PerformanceCalculatorClient() {
 			resultSlot={resultSlot}
 			hasResult={showResults}
 			resultPlaceholder="Enter your website URL and click Analyze to see results"
+			actions={
+				showResults
+					? [{ type: 'copy', label: 'Copy Report', onClick: handleCopy }]
+					: undefined
+			}
 		/>
 	)
 }
