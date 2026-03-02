@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Retroactive Verification
 status: unknown
-last_updated: "2026-03-01T20:06:05.385Z"
+last_updated: "2026-03-02T05:26:28.283Z"
 progress:
   total_phases: 54
-  completed_phases: 22
-  total_plans: 47
-  completed_plans: 39
+  completed_phases: 23
+  total_plans: 49
+  completed_plans: 42
 ---
 
 # Project State
@@ -22,10 +22,10 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Phase: 59 (Tool Page Polish) — COMPLETE (4/4 plans done)
-Plan: 59-04 complete — Style-A tool migration + JSX bug fixes (TOOL-01/02/03/04)
-Status: Phase 59 complete — 408 tests pass, TypeScript + Biome clean, build succeeds
-Last activity: 2026-03-01 — 59-04 committed (commit: 87855ad)
+Phase: 59 (Tool Page Polish) — COMPLETE (6/6 plans done including gap closure)
+Plan: 59-06 complete — Gap closure: paystub print + performance copy action bars (TOOL-03)
+Status: Phase 59 fully complete — all 5 gap tools wired, 408 tests pass, TypeScript + Biome clean, build succeeds
+Last activity: 2026-03-02 — 59-06 committed (commits: 0ff3174, a6a1145)
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -55,6 +55,8 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 | Phase 59-tool-page-polish P01 | 10 | 1 tasks | 1 files |
 | Phase 59-tool-page-polish P02 | 8 | 2 tasks | 2 files |
 | Phase 59 P04 | 18 | 3 tasks | 11 files |
+| Phase 59-tool-page-polish P05 | 25 | 2 tasks | 3 files |
+| Phase 59-tool-page-polish P06 | 17 | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -110,6 +112,9 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - [Phase 59-tool-page-polish P02]: ToolPageLayout uses slot-based API (formSlot/resultSlot ReactNode props) — tools pass pre-built JSX, layout handles structure only
 - [Phase 59-tool-page-polish P02]: data-slot='action-bar' attribute on action bar div enables test targeting without exposing implementation details (CSS classes)
 - [Phase 59]: [Phase 59-tool-page-polish P04]: formSlot JSX must have single root element — spurious </div> before educational content causes TS1005 parse errors by prematurely closing the outer wrapper
+- [Phase 59-tool-page-polish]: Replaced PDFDownloadLink with programmatic pdf().toBlob() for ToolPageLayout actions compatibility on all 3 PDF generators
+- [Phase 59-tool-page-polish]: Paystub resultSlot split: PaystubForm stays in formSlot; results (nav + cards + totals) move to resultSlot so ResultCard action bar renders correctly
+- [Phase 59-tool-page-polish]: Performance copy: handleCopy serializes results to key:value text lines and writes to clipboard via navigator.clipboard.writeText
 
 ### Pending Todos
 
@@ -121,7 +126,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-01
-Stopped at: Completed 59-04-PLAN.md (Phase 59 all plans complete)
+Last session: 2026-03-02
+Stopped at: Completed 59-06-PLAN.md (all gap tools wired — paystub print + performance copy action bars)
 Resume file: N/A
 Next action: Phase 60 — next v4.0 UI phase
