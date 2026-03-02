@@ -5,7 +5,7 @@
 
 'use client'
 
-import { Download, Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
+import { Plus, RotateCcw, Save, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
@@ -17,12 +17,6 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
 import type { InvoiceData, InvoiceLineItem } from '@/lib/pdf/invoice-template'
 import { formatCurrency } from '@/lib/utils'
-
-// Dynamic import for PDF to avoid SSR issues
-const PDFDownloadLink = dynamic(
-	() => import('@react-pdf/renderer').then(mod => mod.PDFDownloadLink),
-	{ ssr: false, loading: () => <span>Loading PDF...</span> }
-)
 
 const InvoiceDocument = dynamic(
 	() => import('@/lib/pdf/invoice-template').then(mod => mod.InvoiceDocument),
@@ -302,6 +296,63 @@ export default function InvoiceGeneratorClient() {
 		invoiceData.lineItems.some(
 			item => item.description.trim() !== '' && item.amount > 0
 		)
+
+	const handleDownload = useCallback(async () => {
+		if (!isHydrated || !isValid) {
+			return
+		}
+		try {
+			const { pdf } = await import('@react-pdf/renderer')
+			const blob = await pdf(
+				<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />
+			).toBlob()
+			const url = URL.createObjectURL(blob)
+			const a = document.createElement('a')
+			a.href = url
+			a.download = `${invoiceData.invoiceNumber}.pdf`
+			a.click()
+			URL.revokeObjectURL(url)
+			trackEvent('invoice_downloaded', {
+				invoice_number: invoiceData.invoiceNumber,
+				total: computedTotals.total,
+				line_items: invoiceData.lineItems.length
+			})
+		} catch (err) {
+			logger.error(
+				'Invoice PDF download failed',
+				err instanceof Error ? err : new Error(String(err))
+			)
+		}
+	}, [isHydrated, isValid, invoiceData, computedTotals])
+
+	const resultSlot =
+		isHydrated && isValid ? (
+			<div className="space-y-4">
+				<p className="text-sm text-muted-foreground">
+					Your invoice is ready to download.
+				</p>
+				<dl className="space-y-2 text-sm">
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Invoice #</dt>
+						<dd className="font-medium text-foreground">
+							{invoiceData.invoiceNumber}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Client</dt>
+						<dd className="font-medium text-foreground">
+							{invoiceData.clientName}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Total</dt>
+						<dd className="font-bold text-accent">
+							{formatCurrency(computedTotals.total)}
+						</dd>
+					</div>
+				</dl>
+			</div>
+		) : null
 
 	const formSlot = (
 		<div>
@@ -707,40 +758,6 @@ export default function InvoiceGeneratorClient() {
 							Clear Draft
 						</button>
 					)}
-
-					{isHydrated && isValid && (
-						<PDFDownloadLink
-							document={
-								<InvoiceDocument data={{ ...invoiceData, ...computedTotals }} />
-							}
-							fileName={`${invoiceData.invoiceNumber}.pdf`}
-							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
-							onClick={() => {
-								trackEvent('invoice_downloaded', {
-									invoice_number: invoiceData.invoiceNumber,
-									total: computedTotals.total,
-									line_items: invoiceData.lineItems.length
-								})
-							}}
-						>
-							{({ loading }) =>
-								loading ? (
-									'Generating PDF...'
-								) : (
-									<>
-										<Download className="w-4 h-4" />
-										Download PDF
-									</>
-								)
-							}
-						</PDFDownloadLink>
-					)}
-
-					{!isValid && (
-						<p className="text-sm text-muted-foreground self-center">
-							Add client name and at least one line item to download PDF
-						</p>
-					)}
 				</section>
 			</div>
 
@@ -801,6 +818,15 @@ export default function InvoiceGeneratorClient() {
 			description="Create professional invoices and download them as PDF"
 			columns="single"
 			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={isHydrated && isValid}
+			actions={[
+				{
+					type: 'download',
+					label: 'Download PDF',
+					onClick: handleDownload
+				}
+			]}
 		/>
 	)
 }
