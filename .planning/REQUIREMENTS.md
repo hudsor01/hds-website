@@ -36,7 +36,7 @@
 
 ### PAGE — Content Page Polish
 
-- [ ] **PAGE-01**: Services page feels like a premium landing page — clear service sections, visual hierarchy, and CTAs
+- [x] **PAGE-01**: Services page feels like a premium landing page — clear service sections, visual hierarchy, and CTAs
 - [ ] **PAGE-02**: About page communicates trust and expertise — consistent with overall brand aesthetic
 - [ ] **PAGE-03**: Location page template is polished — local focus, service area, contact pathways
 - [ ] **PAGE-04**: Contact page has a balanced, professional layout — form + contact info clearly structured
@@ -74,7 +74,7 @@ Which phases cover which requirements.
 | TOOL-02 | Phase 59 | Complete |
 | TOOL-03 | Phase 59 | Complete |
 | TOOL-04 | Phase 59 | Complete |
-| PAGE-01 | Phase 60 | Pending |
+| PAGE-01 | Phase 60 | Complete |
 | PAGE-02 | Phase 60 | Pending |
 | PAGE-03 | Phase 60 | Pending |
 | PAGE-04 | Phase 60 | Pending |
