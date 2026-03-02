@@ -438,54 +438,40 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* ── FINAL CTA ───────────────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6">
+			{/* ── FINAL CTA ─────────────────────────────────────────────── */}
+			<section className="py-14 sm:py-20 px-4 sm:px-6 bg-foreground text-center">
 				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
-						{/* Subtle amber glow from top */}
-						<div
-							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
-							aria-hidden="true"
-						/>
+					<h2 className="text-section-title text-background mb-4 max-w-3xl mx-auto text-balance">
+						Ready to stop running your business manually?
+					</h2>
 
-						<div className="relative z-10">
-							<div className="w-16 h-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-8">
-								<Rocket className="w-8 h-8 text-accent" />
-							</div>
+					<p
+						className="text-lead mb-8 max-w-2xl mx-auto"
+						style={{
+							color: 'oklch(from var(--color-background) l c h / 0.65)'
+						}}
+					>
+						Every week without automation is another week of manual follow-ups,
+						missed leads, and time you won&apos;t get back. Let&apos;s map out
+						what your business looks like when the system runs itself.
+					</p>
 
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to stop running your business manually?
-							</h2>
-
-							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Every week without automation is another week of manual
-								follow-ups, missed leads, and time you won&apos;t get back.
-								Let&apos;s map out what your business looks like when the system
-								runs itself.
-							</p>
-
-							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
-									<Link href={ROUTES.CONTACT}>
-										Get a Free Strategy Call
-										<ArrowRight className="w-4 h-4" />
-									</Link>
-								</Button>
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									trackConversion={true}
-								>
-									<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
-								</Button>
-							</div>
-						</div>
+					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+						<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Link href={ROUTES.CONTACT}>
+								Get a Free Strategy Call
+								<ArrowRight className="w-4 h-4" />
+							</Link>
+						</Button>
+						<Link
+							href={ROUTES.SHOWCASE}
+							className="text-sm font-medium transition-colors"
+							style={{
+								color: 'oklch(from var(--color-background) l c h / 0.5)'
+							}}
+						>
+							See What We&apos;ve Built
+						</Link>
 					</div>
 				</div>
 			</section>
