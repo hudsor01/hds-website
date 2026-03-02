@@ -16,7 +16,8 @@
 			"!!playwright-report",
 			"!!test-results",
 			"!!.vercel",
-			"!!node_modules"
+			"!!node_modules",
+			"!!public/us-states.json"
 		]
 	},
 	"formatter": {
