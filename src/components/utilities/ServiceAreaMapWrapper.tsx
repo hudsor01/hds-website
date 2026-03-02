@@ -1,18 +1,27 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import { type ComponentType, useEffect, useState } from 'react'
 
-const USServiceAreaMap = dynamic(
-	() =>
-		import('@/components/utilities/USServiceAreaMap').then(
-			m => m.USServiceAreaMap
-		),
-	{
-		ssr: false,
-		loading: () => <div className="h-64 bg-muted rounded-lg animate-pulse" />
+interface MapProps {
+	className?: string
+}
+
+type MapComponent = ComponentType<MapProps>
+
+export function ServiceAreaMapWrapper({ className }: MapProps) {
+	const [Map, setMap] = useState<MapComponent | null>(null)
+
+	useEffect(() => {
+		import('./USServiceAreaMap').then(m => {
+			setMap(() => m.USServiceAreaMap)
+		})
+	}, [])
+
+	if (!Map) {
+		return (
+			<div className="aspect-[8/5] w-full bg-muted/30 rounded-xl animate-pulse" />
+		)
 	}
-)
 
-export function ServiceAreaMapWrapper({ className }: { className?: string }) {
-	return <USServiceAreaMap className={className} />
+	return <Map className={className} />
 }

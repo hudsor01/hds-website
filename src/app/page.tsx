@@ -127,15 +127,6 @@ export default function HomePage() {
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
-							{/* Availability badge */}
-							<div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/50 bg-muted/10 text-sm text-muted-foreground w-fit">
-								<span className="relative flex h-2 w-2 shrink-0">
-									<span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
-									<span className="relative flex h-2 w-2 rounded-full bg-accent" />
-								</span>
-								Limited availability — 3 project spots open for Q1 2026
-							</div>
-
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
 								Your Business Should Run Itself
 							</h1>
