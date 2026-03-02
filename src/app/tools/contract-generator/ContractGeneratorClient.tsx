@@ -5,7 +5,7 @@
 
 'use client'
 
-import { Download, RotateCcw, Save } from 'lucide-react'
+import { RotateCcw, Save } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
@@ -19,12 +19,6 @@ import type {
 	ContractData,
 	ContractTemplate
 } from '@/lib/pdf/contract-template'
-
-// Dynamic import for PDF to avoid SSR issues
-const PDFDownloadLink = dynamic(
-	() => import('@react-pdf/renderer').then(mod => mod.PDFDownloadLink),
-	{ ssr: false, loading: () => <span>Loading PDF...</span> }
-)
 
 const ContractDocument = dynamic(
 	() => import('@/lib/pdf/contract-template').then(mod => mod.ContractDocument),
@@ -231,7 +225,7 @@ export default function ContractGeneratorClient() {
 		(contractData.clientName.trim() !== '' ||
 			contractData.clientCompany.trim() !== '')
 
-	const getFileName = () => {
+	const getFileName = useCallback(() => {
 		const templateName = contractData.template.replace('-', '_')
 		const clientName = (
 			contractData.clientName ||
@@ -241,7 +235,68 @@ export default function ContractGeneratorClient() {
 			.toLowerCase()
 			.replace(/\s+/g, '_')
 		return `${templateName}_${clientName}.pdf`
-	}
+	}, [
+		contractData.template,
+		contractData.clientName,
+		contractData.clientCompany
+	])
+
+	const handleDownload = useCallback(async () => {
+		if (!isHydrated || !isValid) {
+			return
+		}
+		try {
+			const { pdf } = await import('@react-pdf/renderer')
+			const blob = await pdf(<ContractDocument data={contractData} />).toBlob()
+			const url = URL.createObjectURL(blob)
+			const a = document.createElement('a')
+			a.href = url
+			a.download = getFileName()
+			a.click()
+			URL.revokeObjectURL(url)
+			trackEvent('contract_downloaded', {
+				template: contractData.template,
+				has_scope: !!contractData.scopeOfWork,
+				has_payment: !!contractData.paymentAmount
+			})
+		} catch (err) {
+			logger.error(
+				'PDF download failed',
+				err instanceof Error ? err : new Error(String(err))
+			)
+		}
+	}, [isHydrated, isValid, contractData, getFileName])
+
+	const resultSlot =
+		isHydrated && isValid ? (
+			<div className="space-y-4">
+				<p className="text-sm text-muted-foreground">
+					Your contract is ready to download. Review the details on the left and
+					click &ldquo;Download PDF&rdquo; to save your document.
+				</p>
+				<dl className="space-y-2 text-sm">
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Template</dt>
+						<dd className="font-medium text-foreground">
+							{TEMPLATES.find(t => t.value === contractData.template)?.label ??
+								contractData.template}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Provider</dt>
+						<dd className="font-medium text-foreground">
+							{contractData.providerName}
+						</dd>
+					</div>
+					<div className="flex justify-between">
+						<dt className="text-muted-foreground">Client</dt>
+						<dd className="font-medium text-foreground">
+							{contractData.clientName || contractData.clientCompany}
+						</dd>
+					</div>
+				</dl>
+			</div>
+		) : null
 
 	const formSlot = (
 		<div className="space-y-sections">
@@ -530,38 +585,6 @@ export default function ContractGeneratorClient() {
 						Clear Draft
 					</button>
 				)}
-
-				{isHydrated && isValid && (
-					<PDFDownloadLink
-						document={<ContractDocument data={contractData} />}
-						fileName={getFileName()}
-						className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
-						onClick={() => {
-							trackEvent('contract_downloaded', {
-								template: contractData.template,
-								has_scope: !!contractData.scopeOfWork,
-								has_payment: !!contractData.paymentAmount
-							})
-						}}
-					>
-						{({ loading }) =>
-							loading ? (
-								'Generating PDF...'
-							) : (
-								<>
-									<Download className="w-4 h-4" />
-									Download PDF
-								</>
-							)
-						}
-					</PDFDownloadLink>
-				)}
-
-				{!isValid && (
-					<p className="text-sm text-muted-foreground self-center">
-						Add provider name and client information to download PDF
-					</p>
-				)}
 			</section>
 
 			{/* Educational Content */}
@@ -627,6 +650,15 @@ export default function ContractGeneratorClient() {
 			description="Create professional contracts and download them as PDF"
 			columns="single"
 			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={isHydrated && isValid}
+			actions={[
+				{
+					type: 'download',
+					label: 'Download PDF',
+					onClick: handleDownload
+				}
+			]}
 		/>
 	)
 }
