@@ -24,7 +24,7 @@ export default function ROICalculatorPage() {
 		<CalculatorLayout
 			title="ROI Calculator"
 			description="Calculate how much additional revenue you could generate by improving your website's conversion rate"
-			icon={<TrendingUp className="h-8 w-8 text-primary" />}
+			icon={<TrendingUp className="h-8 w-8 text-accent" />}
 		>
 			<ROICalculatorClient />
 		</CalculatorLayout>

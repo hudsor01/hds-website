@@ -84,9 +84,7 @@ export function CalculatorResults({
 		<div className="space-y-comfortable">
 			{/* Results Display */}
 			<div className="space-y-content">
-				<h3 className="text-h4 text-foreground dark:text-foreground">
-					Your Results
-				</h3>
+				<h3 className="text-h4 text-foreground">Your Results</h3>
 
 				<div className="space-y-3">
 					{results.map((result, index) => (
@@ -94,23 +92,17 @@ export function CalculatorResults({
 							key={index}
 							size="sm"
 							className={
-								result.highlight
-									? 'border-accent/40 bg-accent/10 dark:border-primary/50 dark:bg-primary/20'
-									: 'bg-muted dark:bg-muted'
+								result.highlight ? 'border-accent/40 bg-accent/10' : 'bg-muted'
 							}
 						>
 							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium text-muted-foreground dark:text-muted">
+								<span className="text-sm font-medium text-muted-foreground">
 									{result.label}
 								</span>
 								<span
 									className={`
                     text-2xl font-bold
-                    ${
-											result.highlight
-												? 'text-primary dark:text-accent'
-												: 'text-foreground dark:text-foreground'
-										}
+                    ${result.highlight ? 'text-accent' : 'text-foreground'}
                   `}
 								>
 									{result.value}
@@ -118,7 +110,7 @@ export function CalculatorResults({
 							</div>
 
 							{result.description && (
-								<p className="mt-2 text-sm text-muted-foreground dark:text-muted-foreground">
+								<p className="mt-2 text-sm text-muted-foreground">
 									{result.description}
 								</p>
 							)}
@@ -131,12 +123,12 @@ export function CalculatorResults({
 			{showEmailCapture && !emailSubmitted && (
 				<Card
 					size="none"
-					className="border-2 border-dashed border-accent/60 bg-accent/10 card-padding dark:border-primary/50 dark:bg-primary/10"
+					className="border-2 border-dashed border-accent/60 bg-accent/10 card-padding"
 				>
-					<h4 className="mb-subheading text-lg font-semibold text-foreground dark:text-foreground">
+					<h4 className="mb-subheading text-lg font-semibold text-foreground">
 						Get Your Detailed Report
 					</h4>
-					<p className="mb-heading text-sm text-muted-foreground dark:text-muted-foreground">
+					<p className="mb-heading text-sm text-muted-foreground">
 						Enter your email to receive a detailed breakdown and personalized
 						recommendations.
 					</p>
@@ -151,9 +143,7 @@ export function CalculatorResults({
 								required
 							/>
 							{error && (
-								<p className="text-xs text-destructive-dark dark:text-destructive-text">
-									{error}
-								</p>
+								<p className="text-xs text-destructive-text">{error}</p>
 							)}
 						</div>
 
@@ -171,11 +161,11 @@ export function CalculatorResults({
 			{/* Success Message */}
 			{emailSubmitted && (
 				<Alert className="border-success/50 bg-success/10">
-					<CheckCircle2 className="h-5 w-5 text-success-dark" />
-					<AlertTitle className="text-success-darker dark:text-success-light">
+					<CheckCircle2 className="h-5 w-5 text-success-text" />
+					<AlertTitle className="text-success-text dark:text-success-text">
 						Report sent successfully!
 					</AlertTitle>
-					<AlertDescription className="text-success-darker dark:text-success-muted">
+					<AlertDescription className="text-success-text dark:text-success-text">
 						Check your email for the detailed breakdown and next steps.
 					</AlertDescription>
 				</Alert>

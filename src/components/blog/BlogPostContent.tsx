@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import type { BlogPost } from '@/lib/blog'
 
 interface BlogPostContentProps {
@@ -18,6 +18,7 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
 	}
 
 	// Blog content comes from our trusted n8n pipeline, not user input.
+	// isomorphic-dompurify works in both Node.js (SSR) and browser environments.
 	const sanitizedContent = DOMPurify.sanitize(post.content, {
 		ALLOWED_TAGS: [
 			'p',

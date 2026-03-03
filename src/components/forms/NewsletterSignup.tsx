@@ -21,7 +21,7 @@ const variantConfig = {
 	inline: { size: 'md' as const, className: '' },
 	sidebar: {
 		size: 'md' as const,
-		className: 'bg-primary/10 dark:from-card dark:to-background'
+		className: 'bg-surface-raised'
 	},
 	modal: { size: 'lg' as const, className: 'shadow-xl' }
 } as const
@@ -30,7 +30,7 @@ const variantConfig = {
 function NewsletterSignupContent({
 	variant = 'inline',
 	title = 'Get Expert Insights',
-	description = 'Join 500+ tech leaders receiving our weekly newsletter on scaling engineering teams.'
+	description = 'Join 500+ business owners receiving our weekly newsletter on growing your business online.'
 }: Omit<NewsletterSignupProps, 'dynamic'>) {
 	const mutation = useNewsletterSubscription()
 
@@ -66,15 +66,13 @@ function NewsletterSignupContent({
 		>
 			<div className="flex items-start gap-3">
 				<div className="shrink-0">
-					<div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
-						<Mail className="h-5 w-5 text-primary dark:text-accent" />
+					<div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20">
+						<Mail className="h-5 w-5 text-accent" />
 					</div>
 				</div>
 
 				<div className="flex-1">
-					<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
-						{title}
-					</h3>
+					<h3 className="text-lg font-semibold text-foreground">{title}</h3>
 					<p className="mt-1 text-sm text-muted-foreground">{description}</p>
 
 					<form
@@ -153,12 +151,12 @@ function NewsletterSignupContent({
 						{/* Success message */}
 						{isSuccess && (
 							<p
-								className="text-sm text-success-dark dark:text-success-text flex items-center gap-2"
+								className="text-sm text-success-text flex items-center gap-2"
 								aria-live="polite"
 								role="status"
 							>
 								<Check className="h-4 w-4" />
-								Thank you! Check your email to confirm your subscription.
+								You&apos;re subscribed! Check your inbox for a welcome email.
 							</p>
 						)}
 

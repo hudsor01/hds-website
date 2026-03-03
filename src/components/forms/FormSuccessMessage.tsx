@@ -22,7 +22,7 @@ export function FormSuccessMessage({
 		>
 			<div className="h-full py-6 px-3">
 				<div className="mb-4 flex justify-center border rounded-full w-fit mx-auto p-2">
-					<CheckCircle2 className="size-8 text-success-dark" />
+					<CheckCircle2 className="size-8 text-success-text" />
 				</div>
 				<h2 className="text-center text-h3 text-pretty mb-2">{title}</h2>
 				<p className="text-center text-lg text-pretty text-muted-foreground mb-4">

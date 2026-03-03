@@ -13,7 +13,7 @@ export const ROUTES = {
 	HOME: '/',
 	ABOUT: '/about',
 	SERVICES: '/services',
-	PORTFOLIO: '/portfolio',
+	SHOWCASE: '/showcase',
 	CONTACT: '/contact',
 	PRIVACY: '/privacy',
 	TERMS: '/terms',
@@ -40,8 +40,8 @@ export const TOOL_ROUTES = {
 
 /** Dynamic routes with helper functions */
 export const DYNAMIC_ROUTES = {
-	/** Portfolio project detail page */
-	portfolioProject: (slug: string) => `/portfolio/${slug}` as const,
+	/** Showcase project detail page */
+	showcaseProject: (slug: string) => `/showcase/${slug}` as const,
 
 	/** Blog post detail page */
 	blogPost: (slug: string) => `/blog/${slug}` as const,

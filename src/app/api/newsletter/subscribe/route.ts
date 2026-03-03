@@ -51,7 +51,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 		}
 
 		if (existing && existing.status === 'active') {
-			return errorResponse('Email already subscribed', 400)
+			return successResponse(undefined, "You're already on our list!")
 		}
 
 		// Insert or update subscriber (upsert on email)
@@ -91,9 +91,9 @@ async function handleNewsletterSubscribe(request: NextRequest) {
             <p>Thank you for subscribing to Hudson Digital Solutions newsletter.</p>
             <p>You'll receive weekly insights on:</p>
             <ul>
-              <li>Scaling engineering teams</li>
-              <li>Technical leadership best practices</li>
-              <li>Development efficiency tips</li>
+              <li>Growing your business online</li>
+              <li>Website and marketing best practices</li>
+              <li>Business automation and efficiency tips</li>
               <li>Industry trends and case studies</li>
             </ul>
             <p>Stay tuned for our next edition!</p>

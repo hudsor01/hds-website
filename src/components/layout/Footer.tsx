@@ -1,7 +1,5 @@
 'use client'
 
-'use client'
-
 import { CheckCircle, Clock, Mail, Rocket } from 'lucide-react'
 import Link from 'next/link'
 import { useSyncExternalStore } from 'react'
@@ -12,10 +10,10 @@ import { cn } from '@/lib/utils'
 
 const footerLinks = {
 	solutions: [
-		{ name: 'Ship Features Faster', href: ROUTES.SERVICES },
-		{ name: 'Fix Revenue Leaks', href: ROUTES.SERVICES },
-		{ name: 'Scale Without Breaking', href: ROUTES.SERVICES },
-		{ name: 'View Case Studies', href: ROUTES.PORTFOLIO }
+		{ name: 'Website Development', href: ROUTES.SERVICES },
+		{ name: 'Business Automation', href: ROUTES.SERVICES },
+		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
+		{ name: 'View Case Studies', href: ROUTES.SHOWCASE }
 	],
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
@@ -82,20 +80,16 @@ export default function Footer() {
 
 	return (
 		<footer
-			className="relative mt-auto"
-			style={{ backgroundColor: 'hsl(222 47% 11%)' }}
+			className="relative mt-auto bg-surface-sunken"
 			role="contentinfo"
 			aria-label="Site footer"
 		>
-			{/* Dark background matching homepage */}
-			<div className="absolute inset-0 bg-(--color-nav-dark)" />
-
 			{/* Top border */}
 			<div className="absolute top-0 left-0 right-0 h-px bg-muted/50" />
 
 			<div className="relative">
-				<div className="container-wide sm:px-6 lg:px-8 pt-16 pb-8">
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-sections mb-12">
+				<div className="container-wide sm:px-6 lg:px-8 pt-12 pb-6">
+					<div className="grid grid-cols-1 md:grid-cols-4 gap-sections mb-8">
 						{/* Brand Section */}
 						<div className="md:col-span-1">
 							<div className="mb-content-block">
@@ -104,10 +98,11 @@ export default function Footer() {
 									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
 								<p className="text-accent small font-semibold mb-subheading">
-									Ship 3x Faster, 60% Cheaper
+									Automate. Integrate. Grow.
 								</p>
 								<p className="small muted">
-									We eliminate technical bottlenecks so you can focus on growth
+									We build your website, connect your tools, and automate the
+									work — so you can focus on growing.
 								</p>
 							</div>
 
@@ -175,11 +170,11 @@ export default function Footer() {
 						{/* CTA Section */}
 						<div className="md:col-span-1">
 							<h4 className="text-foreground font-semibold mb-heading">
-								Ready to Ship Faster?
+								Ready to Grow Faster?
 							</h4>
 							<p className="small muted mb-heading">
-								Get your free technical roadmap and see how we can help you ship
-								3x faster.
+								Book your free strategy call and see how we can help you launch
+								and run your business more efficiently.
 							</p>
 
 							<div className="space-y-3">
@@ -190,7 +185,7 @@ export default function Footer() {
 									trackConversion={true}
 									className="w-full"
 								>
-									<Link href={ROUTES.CONTACT}>Get Free Roadmap</Link>
+									<Link href={ROUTES.CONTACT}>Book a Free Strategy Call</Link>
 								</Button>
 
 								<a
@@ -206,7 +201,7 @@ export default function Footer() {
 
 					{/* Bottom Section */}
 					<div className="border-t border-white/10 pt-8">
-						<div className="flex flex-col md:flex-between gap-content">
+						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 gap-x-content">
 							{/* Copyright */}
 							<div className="small muted">
 								© {currentYear} Hudson Digital Solutions. All rights reserved.

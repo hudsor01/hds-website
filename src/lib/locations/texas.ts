@@ -8,9 +8,9 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Digital Solutions for the Big D',
 		description:
-			'From Deep Ellum startups to Uptown enterprises, we help Dallas businesses compete in the digital economy with custom web development and SaaS consulting.',
+			'From Deep Ellum to Uptown, we help Dallas businesses compete online with a professional website, connected tools, and business automation.',
 		metaDescription:
-			'Professional web development and SaaS consulting in Dallas, TX. Custom websites, web applications, and digital solutions for North Texas businesses.',
+			'Website development and business automation in Dallas, TX. We build your website, connect your tools, and automate the work for North Texas businesses.',
 		neighborhoods: [
 			'Downtown Dallas',
 			'Uptown',
@@ -33,14 +33,14 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 					'High-performance online stores built for the Dallas market, from local boutiques to regional retailers.'
 			},
 			{
-				title: 'Custom Web Applications',
+				title: 'Website Development',
 				description:
-					'Scalable web apps for Dallas enterprises, from internal tools to customer-facing platforms.'
+					'Fast, modern websites built to convert visitors into customers for Dallas businesses.'
 			},
 			{
-				title: 'SaaS Development',
+				title: 'Business Automation',
 				description:
-					'End-to-end SaaS consulting for Dallas tech startups and established companies.'
+					'Automate manual work — connect your CRM, booking, and email tools so your business runs itself.'
 			}
 		]
 	},
@@ -51,9 +51,9 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Space City Digital Excellence',
 		description:
-			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with cutting-edge web solutions and digital strategy.',
+			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with website development, tool integrations, and business automation.',
 		metaDescription:
-			'Expert web development and digital solutions in Houston, TX. Custom websites, SaaS applications, and digital marketing for Houston businesses.',
+			'Website development and business automation in Houston, TX. We build your website, connect your tools, and automate the work for Houston businesses.',
 		neighborhoods: [
 			'Downtown Houston',
 			'The Heights',
@@ -94,9 +94,9 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Keep Austin Weird, Make Your Website Great',
 		description:
-			'In the heart of Silicon Hills, we partner with Austin tech companies and creative businesses to build innovative digital experiences.',
+			'In the heart of Silicon Hills, we help Austin businesses get online, connect their tools, and automate the work — so they can focus on growing.',
 		metaDescription:
-			'Austin web development and SaaS consulting. Custom websites, web applications, and digital solutions for Texas tech companies and startups.',
+			'Website development and business automation in Austin, TX. We build your website, connect your tools, and automate the work for Austin businesses.',
 		neighborhoods: [
 			'Downtown Austin',
 			'South Congress',
@@ -114,14 +114,14 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Startup MVP Development',
+				title: 'Website Launch Packages',
 				description:
-					'Rapid MVP development for Austin startups looking to validate ideas and secure funding.'
+					'Get a professional website live fast — design, copy, and setup handled end to end.'
 			},
 			{
-				title: 'Tech Company Scale-Up',
+				title: 'Business Growth Systems',
 				description:
-					'Scalable architecture and development for growing Austin tech companies.'
+					'Automate operations, connect your tools, and build the systems that let you grow without hiring.'
 			},
 			{
 				title: 'Creative Agency Sites',
@@ -223,7 +223,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		stateCode: 'TX',
 		tagline: 'Sun City Digital Solutions',
 		description:
-			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City enterprises.',
+			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City businesses.',
 		metaDescription:
 			'Web development and digital solutions in El Paso, TX. Custom websites and bilingual web applications for Sun City and Borderland businesses.',
 		neighborhoods: [

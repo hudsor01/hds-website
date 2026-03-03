@@ -246,27 +246,45 @@ Plans:
 **Goal**: Transform the homepage into a compelling, premium landing experience — distinctive hero background treatment, strong headline hierarchy, polished CTAs, and intentional vertical rhythm throughout.
 **Depends on**: Phase 56 (design tokens must be established first)
 **Research**: Unlikely
-**Plans**: TBD
+**Plans**: 4 plans
 
 Requirements covered: HERO-01, HERO-02, HERO-03, HERO-04
+
+Plans:
+- [ ] 57-01-PLAN.md — Homepage unit test scaffold (HERO-01 through HERO-04 assertions)
+- [ ] 57-02-PLAN.md — Hero section rewrite + BentoGrid animation removal
+- [ ] 57-03-PLAN.md — Solutions BentoGrid + section rhythm + anti-pattern removal
+- [ ] 57-04-PLAN.md — Visual verification checkpoint
 
 #### Phase 58: Core Component Polish
 
 **Goal**: Polish all shared UI components away from generic shadcn defaults — buttons (all variants/states), form inputs, card component, navbar backdrop and link treatment, footer, badges.
 **Depends on**: Phase 56 (design tokens established)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (58-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: COMP-01, COMP-02, COMP-03, COMP-04
+
+Plans:
+- [x] 58-01-PLAN.md — TDD scaffold: failing assertions for COMP-01 through COMP-04
+- [x] 58-02-PLAN.md — Button + Input/Textarea/Label polish (COMP-01, COMP-02)
+- [x] 58-03-PLAN.md — Card + Navbar + Footer polish (COMP-03, COMP-04)
+- [x] 58-04-PLAN.md — Automated verification + visual checkpoint + showcase redesign + light theme
 
 #### Phase 59: Tool Page Polish
 
 **Goal**: Give all 13 tool pages a consistent, professional layout — polished header section, form fields styled to design system, and dedicated output/result presentation.
 **Depends on**: Phase 58 (component styles established before applying to tool layouts)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (59-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: TOOL-01, TOOL-02, TOOL-03, TOOL-04
+
+Plans:
+- [ ] 59-01-PLAN.md — TDD RED scaffold: failing assertions for ToolPageLayout (TOOL-01/02/03)
+- [ ] 59-02-PLAN.md — Create ToolPageLayout shared component (TOOL-01/03)
+- [ ] 59-03-PLAN.md — Migrate 9 Style-B tool Client.tsx files to ToolPageLayout (TOOL-01/02/03)
+- [ ] 59-04-PLAN.md — Migrate 3 Style-A tools + TTL header + tools index card upgrade (TOOL-01/02/03/04)
 
 #### Phase 60: Content Page Polish
 
@@ -310,8 +328,8 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 53. Biome Install & Configuration | v3.1 | 1/1 | Complete | 2026-02-24 |
 | 54. Format Sweep & Workflow Integration | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
-| 56. Design System Foundation | 2/2 | Complete    | 2026-02-25 | - |
-| 57. Homepage & Hero Redesign | v4.0 | 0/TBD | Pending | - |
-| 58. Core Component Polish | v4.0 | 0/TBD | Pending | - |
+| 56. Design System Foundation | v4.0 | 0/2 | Planned | - |
+| 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
+| 58. Core Component Polish | 3/4 | In Progress|  | - |
 | 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
 | 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |

@@ -247,7 +247,7 @@ export default function ContractGeneratorClient() {
 		<CalculatorLayout
 			title="Contract Generator"
 			description="Create professional contracts and download them as PDF"
-			icon={<FileCheck className="h-8 w-8 text-primary" />}
+			icon={<FileCheck className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-sections">
 				{/* Template Selection */}
@@ -263,7 +263,7 @@ export default function ContractGeneratorClient() {
 								onClick={() => handleTemplateChange(template.value)}
 								className={`p-4 rounded-lg border text-left transition-colors ${
 									contractData.template === template.value
-										? 'border-primary bg-accent/10 dark:bg-primary/20'
+										? 'border-accent bg-accent/10'
 										: 'border-border hover:border-accent hover:bg-muted/50'
 								}`}
 							>
@@ -527,7 +527,7 @@ export default function ContractGeneratorClient() {
 					<button
 						type="button"
 						onClick={saveDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
 					>
 						<Save className="w-4 h-4" />
 						Save Draft
@@ -537,7 +537,7 @@ export default function ContractGeneratorClient() {
 						<button
 							type="button"
 							onClick={clearDraft}
-							className="flex items-center gap-tight rounded-md border border-border bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted dark:bg-muted dark:hover:bg-muted-foreground"
+							className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
 						>
 							<RotateCcw className="w-4 h-4" />
 							Clear Draft
@@ -548,7 +548,7 @@ export default function ContractGeneratorClient() {
 						<PDFDownloadLink
 							document={<ContractDocument data={contractData} />}
 							fileName={getFileName()}
-							className="flex items-center gap-tight rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-primary/80"
+							className="flex items-center gap-tight rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-foreground shadow-xs hover:bg-accent/80"
 							onClick={() => {
 								trackEvent('contract_downloaded', {
 									template: contractData.template,
@@ -579,54 +579,52 @@ export default function ContractGeneratorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h2 className="text-lg font-semibold text-foreground dark:text-foreground">
-					Contract Tips
-				</h2>
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h2 className="text-lg font-semibold text-foreground">Contract Tips</h2>
 
 				<div className="grid gap-content sm:grid-cols-2">
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Be Specific
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Clearly define the scope of work, deliverables, and timelines to
 							avoid misunderstandings.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Payment Terms
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Include specific payment amounts, due dates, and any late payment
 							penalties.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Legal Review
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							For significant contracts, have an attorney review the terms
 							before signing.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h3 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h3 className="mb-subheading font-semibold text-foreground">
 							Keep Copies
 						</h3>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							Both parties should sign and keep copies of the executed contract.
 						</p>
 					</Card>
 				</div>
 
-				<Card size="sm" className="bg-warning-light dark:bg-warning-bg-dark/20">
-					<p className="text-sm text-warning-darker dark:text-warning-muted">
+				<Card size="sm" className="bg-warning-light">
+					<p className="text-sm text-warning-text">
 						<strong>Disclaimer:</strong> These contract templates are provided
 						for informational purposes only and do not constitute legal advice.
 						Consult with a qualified attorney for legal matters specific to your

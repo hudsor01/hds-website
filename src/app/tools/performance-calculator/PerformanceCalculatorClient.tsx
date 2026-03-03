@@ -193,7 +193,7 @@ export default function PerformanceCalculatorClient() {
 			description="Discover how much revenue you're losing due to slow website performance"
 			icon={
 				<svg
-					className="h-8 w-8 text-primary"
+					className="h-8 w-8 text-accent"
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -279,20 +279,15 @@ export default function PerformanceCalculatorClient() {
 					</div>
 
 					{error && (
-						<Card
-							size="sm"
-							className="bg-destructive-light dark:bg-destructive-bg-dark/20"
-						>
-							<p className="text-sm text-destructive-dark dark:text-destructive-text">
-								{error}
-							</p>
+						<Card size="sm" className="bg-destructive-light">
+							<p className="text-sm text-destructive-text">{error}</p>
 						</Card>
 					)}
 
 					<button
 						type="submit"
 						disabled={isAnalyzing}
-						className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-primary"
+						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-xs hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus:ring-2 focus:ring-accent"
 					>
 						{isAnalyzing ? (
 							<span className="flex items-center justify-center">
@@ -323,7 +318,7 @@ export default function PerformanceCalculatorClient() {
 						)}
 					</button>
 
-					<Card size="sm" className="bg-info-light dark:bg-info-bg-dark/20">
+					<Card size="sm" className="bg-info-light">
 						<div className="flex">
 							<div className="shrink-0">
 								<svg
@@ -339,7 +334,7 @@ export default function PerformanceCalculatorClient() {
 								</svg>
 							</div>
 							<div className="ml-3">
-								<p className="text-sm text-info-darker dark:text-info-muted">
+								<p className="text-sm text-info-text">
 									<strong>Industry Data:</strong> A 1-second delay in page load
 									time can reduce conversions by 7%. Pages loading in under 2
 									seconds have the highest conversion rates.
@@ -352,16 +347,14 @@ export default function PerformanceCalculatorClient() {
 				<div>
 					{/* Core Web Vitals Display */}
 					{metrics && (
-						<Card className="mb-content-block bg-muted dark:bg-muted">
-							<h3 className="mb-heading text-lg font-semibold text-foreground dark:text-foreground">
+						<Card className="mb-content-block bg-muted">
+							<h3 className="mb-heading text-lg font-semibold text-foreground">
 								Core Web Vitals
 							</h3>
 							<div className="grid gap-content sm:grid-cols-3">
 								<div className="text-center">
-									<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-										LCP
-									</div>
-									<div className="text-xl font-bold text-foreground dark:text-foreground">
+									<div className="text-sm text-muted-foreground">LCP</div>
+									<div className="text-xl font-bold text-foreground">
 										{metrics.lcp}
 									</div>
 									<div className="text-xs text-muted-foreground">
@@ -369,10 +362,8 @@ export default function PerformanceCalculatorClient() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-										FCP
-									</div>
-									<div className="text-xl font-bold text-foreground dark:text-foreground">
+									<div className="text-sm text-muted-foreground">FCP</div>
+									<div className="text-xl font-bold text-foreground">
 										{metrics.fcp}
 									</div>
 									<div className="text-xs text-muted-foreground">
@@ -380,10 +371,8 @@ export default function PerformanceCalculatorClient() {
 									</div>
 								</div>
 								<div className="text-center">
-									<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-										CLS
-									</div>
-									<div className="text-xl font-bold text-foreground dark:text-foreground">
+									<div className="text-sm text-muted-foreground">CLS</div>
+									<div className="text-xl font-bold text-foreground">
 										{metrics.cls}
 									</div>
 									<div className="text-xs text-muted-foreground">
@@ -405,7 +394,7 @@ export default function PerformanceCalculatorClient() {
 							setShowResults(false)
 							setMetrics(null)
 						}}
-						className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:text-muted dark:hover:bg-muted-foreground"
+						className="mt-content-block w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
 					>
 						← Analyze Another Site
 					</button>
@@ -413,8 +402,8 @@ export default function PerformanceCalculatorClient() {
 			)}
 
 			{/* Performance Tips */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
+			<div className="mt-heading space-y-content border-t border-border pt-8">
+				<h3 className="text-lg font-semibold text-foreground">
 					How We Optimize Performance
 				</h3>
 
@@ -447,10 +436,10 @@ export default function PerformanceCalculatorClient() {
 					].map((tip, index) => (
 						<div
 							key={index}
-							className="flex items-start gap-3 rounded-lg border border-border p-3 dark:border-border"
+							className="flex items-start gap-3 rounded-lg border border-border p-3"
 						>
 							<svg
-								className="h-5 w-5 shrink-0 text-primary dark:text-accent"
+								className="h-5 w-5 shrink-0 text-accent"
 								fill="currentColor"
 								viewBox="0 0 20 20"
 							>
@@ -461,12 +450,8 @@ export default function PerformanceCalculatorClient() {
 								/>
 							</svg>
 							<div>
-								<div className="font-medium text-foreground dark:text-foreground">
-									{tip.title}
-								</div>
-								<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-									{tip.desc}
-								</div>
+								<div className="font-medium text-foreground">{tip.title}</div>
+								<div className="text-sm text-muted-foreground">{tip.desc}</div>
 							</div>
 						</div>
 					))}

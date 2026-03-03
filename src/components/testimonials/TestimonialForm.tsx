@@ -271,7 +271,7 @@ export function TestimonialForm({
 			{error && (
 				<Card
 					size="sm"
-					className="bg-destructive-light dark:bg-destructive-bg-dark/20 text-destructive-dark dark:text-destructive-text text-sm"
+					className="bg-destructive-light text-destructive-text text-sm"
 				>
 					{error}
 				</Card>

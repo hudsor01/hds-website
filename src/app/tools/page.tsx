@@ -4,6 +4,7 @@
  */
 
 import {
+	ArrowRight,
 	Briefcase,
 	Calculator,
 	Car,
@@ -20,7 +21,7 @@ import {
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ const tools = [
 		description:
 			'Calculate how much additional revenue you could generate by improving your website conversion rate.',
 		href: TOOL_ROUTES.ROI_CALCULATOR,
-		icon: <TrendingUp className="h-8 w-8" />,
+		Icon: TrendingUp,
 		benefits: [
 			'See potential revenue increase',
 			'Understand conversion impact',
@@ -53,7 +54,7 @@ const tools = [
 		description:
 			'Get an instant estimate for your website project based on your specific requirements and features.',
 		href: TOOL_ROUTES.COST_ESTIMATOR,
-		icon: <Calculator className="h-8 w-8" />,
+		Icon: Calculator,
 		benefits: [
 			'Transparent pricing breakdown',
 			'Timeline estimates',
@@ -66,7 +67,7 @@ const tools = [
 		description:
 			'Discover how much revenue you are losing due to slow website performance with real PageSpeed analysis.',
 		href: TOOL_ROUTES.PERFORMANCE_CALCULATOR,
-		icon: <Zap className="h-8 w-8" />,
+		Icon: Zap,
 		benefits: [
 			'Real performance analysis',
 			'Revenue impact calculation',
@@ -79,7 +80,7 @@ const tools = [
 		description:
 			'Calculate tax, title, and license fees plus monthly payment estimates for vehicle purchases in Texas.',
 		href: TOOL_ROUTES.TTL_CALCULATOR,
-		icon: <Car className="h-8 w-8" />,
+		Icon: Car,
 		benefits: [
 			'Tax, title, and license fees',
 			'Monthly payment estimates',
@@ -92,7 +93,7 @@ const tools = [
 		description:
 			'Calculate your monthly mortgage payment including principal, interest, taxes, insurance, and PMI.',
 		href: TOOL_ROUTES.MORTGAGE_CALCULATOR,
-		icon: <Home className="h-8 w-8" />,
+		Icon: Home,
 		benefits: [
 			'Principal and interest breakdown',
 			'Includes taxes and insurance',
@@ -105,7 +106,7 @@ const tools = [
 		description:
 			'Calculate tip amounts and split the bill fairly among multiple people for any dining occasion.',
 		href: TOOL_ROUTES.TIP_CALCULATOR,
-		icon: <Receipt className="h-8 w-8" />,
+		Icon: Receipt,
 		benefits: [
 			'Split bills fairly',
 			'Custom tip percentages',
@@ -118,7 +119,7 @@ const tools = [
 		description:
 			'Generate detailed payroll breakdowns with federal and state tax calculations and net pay.',
 		href: TOOL_ROUTES.PAYSTUB_CALCULATOR,
-		icon: <DollarSign className="h-8 w-8" />,
+		Icon: DollarSign,
 		benefits: [
 			'Federal and state tax withholding',
 			'Detailed deduction breakdown',
@@ -131,7 +132,7 @@ const tools = [
 		description:
 			'Create professional contracts ready for signature with customizable terms and PDF download.',
 		href: TOOL_ROUTES.CONTRACT_GENERATOR,
-		icon: <FileSignature className="h-8 w-8" />,
+		Icon: FileSignature,
 		benefits: [
 			'Professional contract templates',
 			'Downloadable PDF output',
@@ -144,7 +145,7 @@ const tools = [
 		description:
 			'Create professional invoices with line items, totals, and tax — ready to download as PDF.',
 		href: TOOL_ROUTES.INVOICE_GENERATOR,
-		icon: <FileText className="h-8 w-8" />,
+		Icon: FileText,
 		benefits: [
 			'Professional invoice layout',
 			'Line item support',
@@ -157,7 +158,7 @@ const tools = [
 		description:
 			'Create professional project proposals for clients with scope, timeline, and pricing — PDF included.',
 		href: TOOL_ROUTES.PROPOSAL_GENERATOR,
-		icon: <Briefcase className="h-8 w-8" />,
+		Icon: Briefcase,
 		benefits: [
 			'Client-ready proposals',
 			'Project scope templates',
@@ -170,7 +171,7 @@ const tools = [
 		description:
 			'Format, validate, and minify JSON data online with syntax error detection and instant feedback.',
 		href: TOOL_ROUTES.JSON_FORMATTER,
-		icon: <Code2 className="h-8 w-8" />,
+		Icon: Code2,
 		benefits: [
 			'Format and validate JSON',
 			'Minify for production',
@@ -183,7 +184,7 @@ const tools = [
 		description:
 			'Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your web pages.',
 		href: TOOL_ROUTES.META_TAG_GENERATOR,
-		icon: <Tags className="h-8 w-8" />,
+		Icon: Tags,
 		benefits: [
 			'Open Graph markup',
 			'Twitter Card support',
@@ -196,7 +197,7 @@ const tools = [
 		description:
 			'Generate private collection links to gather client testimonials and manage feedback in one place.',
 		href: TOOL_ROUTES.TESTIMONIAL_COLLECTOR,
-		icon: <MessageSquare className="h-8 w-8" />,
+		Icon: MessageSquare,
 		benefits: [
 			'Private collection links',
 			'Manage client feedback',
@@ -208,14 +209,17 @@ const tools = [
 
 export default function ToolsPage() {
 	return (
-		<main className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
+		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative overflow-hidden px-4 py-section sm:px-6 lg:px-8">
-				<div className="mx-auto max-w-4xl text-center">
-					<h1 className="mb-heading text-4xl font-bold tracking-tight text-foreground dark:text-foreground sm:text-5xl">
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Try For Free
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
 						Free Business Tools
 					</h1>
-					<p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
 						Make data-driven decisions about your website with our free
 						interactive calculators. No credit card required, no signup needed.
 					</p>
@@ -223,46 +227,34 @@ export default function ToolsPage() {
 			</section>
 
 			{/* Tools Grid */}
-			<section className="px-4 py-section-sm sm:px-6 lg:px-8">
-				<div className="mx-auto max-w-6xl">
-					<div className="grid gap-sections md:grid-cols-2 lg:grid-cols-3">
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{tools.map(tool => (
-							<Card
+							<div
 								key={tool.href}
-								className="group relative flex flex-col shadow-xs transition-all hover:shadow-lg dark:bg-muted"
+								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
 							>
 								{/* Icon */}
-								<div className="mb-heading inline-flex h-16 w-16 items-center justify-center rounded-lg bg-accent/20 text-primary dark:bg-secondary dark:text-accent">
-									{tool.icon}
+								<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
+									<tool.Icon className="h-5 w-5 text-accent" />
 								</div>
 
 								{/* Content */}
-								<h3 className="mb-subheading text-h4 text-foreground dark:text-foreground">
-									{tool.title}
-								</h3>
+								<h3 className="text-h3 text-foreground mb-3">{tool.title}</h3>
 
-								<p className="mb-heading flex-1 text-sm text-muted-foreground dark:text-muted-foreground">
+								<p className="text-sm text-muted-foreground leading-relaxed mb-4 flex-1">
 									{tool.description}
 								</p>
 
 								{/* Benefits */}
-								<ul className="mb-content-block space-y-tight">
+								<ul className="mb-6 space-y-2">
 									{tool.benefits.map((benefit, index) => (
 										<li
 											key={index}
-											className="flex items-start gap-tight text-sm text-muted-foreground dark:text-muted-foreground"
+											className="flex items-start gap-2 text-sm text-muted-foreground"
 										>
-											<svg
-												className="mt-0.5 h-4 w-4 shrink-0 text-primary dark:text-accent"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fillRule="evenodd"
-													d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-													clipRule="evenodd"
-												/>
-											</svg>
+											<div className="mt-1 h-3 w-3 shrink-0 rounded-full bg-accent/30 border border-accent/50" />
 											{benefit}
 										</li>
 									))}
@@ -271,89 +263,83 @@ export default function ToolsPage() {
 								{/* CTA */}
 								<Link
 									href={tool.href}
-									className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
+									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 								>
 									{tool.cta}
-									<svg
-										className="ml-2 h-4 w-4"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+									<ArrowRight className="h-4 w-4" />
 								</Link>
-							</Card>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
 
-			{/* CTA Section */}
-			<section className="px-4 py-section-sm sm:px-6 lg:px-8">
-				<div className="mx-auto max-w-4xl">
-					<Card
-						size="lg"
-						className="bg-primary/10 text-center shadow-xl sm:p-12"
-					>
-						<h2 className="mb-heading text-h2 text-foreground">
-							Ready to Take Action?
-						</h2>
-						<p className="mb-comfortable text-lg text-accent/30">
-							These calculators show the potential. Let&apos;s make it reality.
-							Schedule a free consultation to discuss your project.
-						</p>
-						<div className="flex flex-col gap-content sm:flex-row sm:justify-center">
-							<Link
-								href="/contact"
-								className="inline-flex items-center justify-center rounded-md bg-card px-6 py-3 text-base font-semibold text-primary shadow-xs hover:bg-muted"
-							>
-								Schedule Consultation
-							</Link>
-							<Link
-								href="/services"
-								className="inline-flex items-center justify-center rounded-md border-2 border-white px-6 py-3 text-base font-semibold text-foreground hover:bg-card/10"
-							>
-								View Services
-							</Link>
-						</div>
-					</Card>
-				</div>
-			</section>
-
 			{/* Trust Signals */}
-			<section className="border-t border-border px-4 py-12 dark:border-border">
-				<div className="mx-auto max-w-6xl">
-					<div className="grid gap-sections sm:grid-cols-3">
-						<div className="text-center">
-							<div className="mb-subheading text-h2 text-primary dark:text-accent">
+			<section className="py-section-sm px-4 sm:px-6 border-t border-border">
+				<div className="container-wide">
+					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								Growing
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+							<div className="text-sm text-muted-foreground">
 								Calculations Performed
 							</div>
 						</div>
 
-						<div className="text-center">
-							<div className="mb-subheading text-h2 text-primary dark:text-accent">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								98%
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-								Accuracy Rate
-							</div>
+							<div className="text-sm text-muted-foreground">Accuracy Rate</div>
 						</div>
 
-						<div className="text-center">
-							<div className="mb-subheading text-h2 text-primary dark:text-accent">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								100%
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-								Free Forever
+							<div className="text-sm text-muted-foreground">Free Forever</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* CTA Section */}
+			<section className="py-section px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to Take Action?
+							</h2>
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								These calculators show the potential. Let&apos;s make it
+								reality. Schedule a free consultation to discuss your project.
+							</p>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href="/contact">Schedule Consultation</Link>
+								</Button>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href="/services">View Services</Link>
+								</Button>
 							</div>
 						</div>
 					</div>

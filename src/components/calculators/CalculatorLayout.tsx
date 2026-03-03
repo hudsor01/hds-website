@@ -5,9 +5,9 @@
  * Provides consistent layout and structure for all calculator tools
  */
 
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { Card } from '@/components/ui/card'
 
 interface CalculatorLayoutProps {
 	title: string
@@ -25,74 +25,85 @@ export function CalculatorLayout({
 	showBackLink = true
 }: CalculatorLayoutProps) {
 	return (
-		<div className="min-h-screen bg-primary/10 dark:from-background dark:to-card">
-			<div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+		<main className="min-h-screen bg-background">
+			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-4xl mx-auto">
 				{/* Header */}
-				<div className="mb-comfortable text-center">
+				<div className="mb-10 text-center">
 					{icon && (
-						<div className="mx-auto mb-heading flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 dark:bg-secondary">
+						<div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-accent/10 border border-accent/20">
 							{icon}
 						</div>
 					)}
 
-					<h1 className="mb-3 text-h1 text-foreground dark:text-foreground">
+					<h1 className="mb-3 text-page-title text-foreground leading-tight">
 						{title}
 					</h1>
 
-					<p className="mx-auto max-w-2xl text-lg text-muted-foreground dark:text-muted">
+					<p className="mx-auto max-w-2xl text-lead text-muted-foreground">
 						{description}
 					</p>
 				</div>
 
 				{/* Calculator Content */}
-				<Card size="none" className="card-padding sm:card-padding-lg">
+				<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 					{children}
-				</Card>
+				</div>
 
 				{/* Back Link */}
 				{showBackLink && (
-					<div className="mt-heading text-center">
+					<div className="mt-6 text-center">
 						<Link
-							href="/services"
-							className="text-sm text-primary hover:text-accent dark:text-accent dark:hover:text-accent/80"
+							href="/tools"
+							className="inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent/80 transition-colors"
 						>
-							← Back to Services
+							← Back to Tools
 						</Link>
 					</div>
 				)}
 
 				{/* Trust Signals */}
-				<div className="mt-12 border-t border-border pt-8 dark:border-border">
-					<div className="grid gap-comfortable sm:grid-cols-3">
-						<div className="text-center">
-							<div className="text-2xl font-bold text-primary dark:text-accent">
+				<div className="mt-12 border-t border-border pt-8">
+					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
+						<div className="bg-background px-8 py-8 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-2xl font-bold text-accent mb-1 tabular-nums">
 								Growing
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+							<div className="text-sm text-muted-foreground">
 								Calculations Performed
 							</div>
 						</div>
 
-						<div className="text-center">
-							<div className="text-2xl font-bold text-primary dark:text-accent">
+						<div className="bg-background px-8 py-8 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-2xl font-bold text-accent mb-1 tabular-nums">
 								98%
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
-								Accuracy Rate
-							</div>
+							<div className="text-sm text-muted-foreground">Accuracy Rate</div>
 						</div>
 
-						<div className="text-center">
-							<div className="text-2xl font-bold text-primary dark:text-accent">
+						<div className="bg-background px-8 py-8 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-2xl font-bold text-accent mb-1 tabular-nums">
 								Free
 							</div>
-							<div className="text-sm text-muted-foreground dark:text-muted-foreground">
+							<div className="text-sm text-muted-foreground">
 								No Credit Card Required
 							</div>
 						</div>
 					</div>
+
+					<div className="text-center mt-6">
+						<Link
+							href="/contact"
+							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+						>
+							Ready to act on these numbers? Get a free strategy call
+							<ArrowRight className="w-4 h-4" />
+						</Link>
+					</div>
 				</div>
 			</div>
-		</div>
+		</main>
 	)
 }
