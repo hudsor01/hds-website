@@ -11,7 +11,7 @@ import { useNewsletterSubscription } from '@/hooks/use-newsletter-subscription'
 import { newsletterSchema } from '@/lib/schemas/contact'
 
 interface NewsletterSignupProps {
-	variant?: 'inline' | 'sidebar' | 'modal'
+	variant?: 'inline' | 'sidebar' | 'modal' | 'section'
 	title?: string
 	description?: string
 	dynamic?: boolean
@@ -23,7 +23,8 @@ const variantConfig = {
 		size: 'md' as const,
 		className: 'bg-surface-raised'
 	},
-	modal: { size: 'lg' as const, className: 'shadow-xl' }
+	modal: { size: 'lg' as const, className: 'shadow-xl' },
+	section: { size: 'md' as const, className: '' }
 } as const
 
 // Internal implementation
@@ -58,6 +59,110 @@ function NewsletterSignupContent({
 	const isSuccess = mutation.isSuccess
 	const isError = mutation.isError
 	const errorMessage = mutation.error?.message
+
+	if (variant === 'section') {
+		return (
+			<div className="text-center">
+				<h2 className="text-2xl font-bold tracking-tight text-foreground mb-3">
+					{title}
+				</h2>
+				<p className="text-muted-foreground mb-6 max-w-xl mx-auto leading-relaxed">
+					{description}
+				</p>
+
+				<form
+					onSubmit={e => {
+						e.preventDefault()
+						e.stopPropagation()
+						form.handleSubmit()
+					}}
+				>
+					<div className="flex max-w-md mx-auto gap-2">
+						<form.Field name="email">
+							{field => (
+								<Field
+									data-invalid={field.state.meta.errors.length > 0}
+									className="flex-1"
+								>
+									<Input
+										id="newsletter-email-section"
+										name="email"
+										type="email"
+										value={field.state.value}
+										onChange={e => field.handleChange(e.target.value)}
+										onBlur={field.handleBlur}
+										placeholder="your@email.com"
+										aria-label="Email address"
+										aria-invalid={field.state.meta.errors.length > 0}
+										disabled={isLoading || isSuccess}
+									/>
+								</Field>
+							)}
+						</form.Field>
+						<Button type="submit" disabled={isLoading || isSuccess}>
+							{isLoading ? (
+								'Subscribing...'
+							) : isSuccess ? (
+								<>
+									<Check className="h-4 w-4" />
+									Subscribed
+								</>
+							) : (
+								'Subscribe'
+							)}
+						</Button>
+					</div>
+
+					<form.Subscribe selector={state => state.errors}>
+						{errors =>
+							errors.length > 0 && (
+								<FieldError errors={errors} className="mt-2 text-center" />
+							)
+						}
+					</form.Subscribe>
+
+					<form.Field name="email">
+						{field =>
+							field.state.meta.errors.length > 0 && (
+								<FieldError
+									errors={field.state.meta.errors}
+									className="mt-2 text-center"
+								/>
+							)
+						}
+					</form.Field>
+
+					{isError && (
+						<div aria-live="assertive" role="alert" className="mt-2">
+							<FieldError
+								errors={[
+									{
+										message:
+											errorMessage || 'Something went wrong. Please try again.'
+									}
+								]}
+							/>
+						</div>
+					)}
+
+					{isSuccess && (
+						<p
+							className="mt-3 text-sm text-success-text flex items-center justify-center gap-2"
+							aria-live="polite"
+							role="status"
+						>
+							<Check className="h-4 w-4" />
+							You&apos;re subscribed! Check your inbox for a welcome email.
+						</p>
+					)}
+
+					<p className="mt-3 text-xs text-muted-foreground">
+						No spam. Unsubscribe anytime. We respect your privacy.
+					</p>
+				</form>
+			</div>
+		)
+	}
 
 	return (
 		<Card

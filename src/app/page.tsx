@@ -427,13 +427,13 @@ export default function HomePage() {
 			</section>
 
 			{/* ── NEWSLETTER ──────────────────────────────────────── */}
-			<section className="py-section-sm px-4">
-				<div className="container-wide max-w-4xl mx-auto">
+			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised border-y border-border">
+				<div className="container-wide">
 					<NewsletterSignup
 						dynamic
-						variant="inline"
+						variant="section"
 						title="Get Weekly Business Insights"
-						description="Get weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation. No spam, unsubscribe anytime."
+						description="Weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation."
 					/>
 				</div>
 			</section>
