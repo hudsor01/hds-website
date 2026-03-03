@@ -84,6 +84,7 @@ interface ProjectCardProps extends Omit<BaseCardProps, 'variant'> {
 	featured?: boolean
 	stats?: Record<string, string>
 	tech_stack: string[]
+	externalLink?: string | null
 }
 
 // Testimonial Card props
@@ -106,23 +107,6 @@ export type CardProps =
 	| PricingCardProps
 	| ProjectCardProps
 	| TestimonialCardProps
-
-// ── Project card color identity ─────────────────────────────────────────────
-const PROJECT_COLORS: Record<string, { header: string; text: string }> = {
-	'tattoo studio': { header: 'bg-amber-800', text: 'text-amber-50' },
-	'property management saas': { header: 'bg-blue-900', text: 'text-blue-50' },
-	'personal brand': { header: 'bg-teal-800', text: 'text-teal-50' }
-}
-const DEFAULT_PROJECT_COLOR = { header: 'bg-slate-800', text: 'text-slate-50' }
-
-export function getProjectColors(
-	industry: string | null | undefined,
-	category: string | null | undefined
-): { header: string; text: string } {
-	const key = (industry ?? category ?? '').toLowerCase()
-	return PROJECT_COLORS[key] ?? DEFAULT_PROJECT_COLOR
-}
-// ────────────────────────────────────────────────────────────────────────────
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 	const { className, variant, size, hover, ...rest } = props as BaseCardProps
@@ -298,7 +282,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 		)
 	}
 
-	// Project Card
+	// Project Card — content-first layout with accent bar
 	if ('variant' in props && props.variant === 'project') {
 		const {
 			id: _id,
@@ -306,93 +290,69 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 			title,
 			description,
 			category,
-			industry,
 			showcaseType,
 			featured = false,
 			stats = {},
-			tech_stack
+			tech_stack,
+			externalLink
 		} = props as ProjectCardProps
 
-		const colors = getProjectColors(industry, category)
 		const metricEntries = Object.entries(stats).slice(0, 3)
+		const href = externalLink ?? `/showcase/${slug}`
+		const isExternal = Boolean(externalLink)
 
 		return (
 			<div
 				ref={ref}
 				className={cn('group relative', featured && 'md:col-span-2', className)}
 			>
-				<Link href={`/showcase/${slug}`} aria-label={`View project: ${title}`}>
+				<a
+					href={href}
+					aria-label={`View project: ${title}`}
+					{...(isExternal
+						? { target: '_blank', rel: 'noopener noreferrer' }
+						: {})}
+				>
 					<div
 						className={cn(
 							cardVariants({ variant: 'glass', size: 'none', hover: true }),
 							'h-full overflow-hidden'
 						)}
 					>
-						{/* Project Header — color identity panel */}
-						<div
-							data-testid="card-header"
-							className={cn(
-								'relative overflow-hidden border-b border-border',
-								featured ? 'h-80' : 'h-64',
-								colors.header
-							)}
-						>
-							<div className="relative z-10 card-padding-lg h-full flex flex-col justify-between py-6">
-								{/* Top: eyebrow + optional featured badge */}
-								<div className="flex items-center justify-between gap-2">
-									<p
+						{/* Top accent bar */}
+						<div className="h-1 bg-accent" />
+
+						{/* Content */}
+						<div className="card-padding-lg flex flex-col gap-4">
+							{/* Category row: badges + featured tag */}
+							<div className="flex items-center gap-2 flex-wrap">
+								<span className="text-xs font-semibold uppercase tracking-widest text-accent">
+									{category}
+								</span>
+								{showcaseType && (
+									<span
 										className={cn(
-											'text-xs font-semibold uppercase tracking-widest opacity-60',
-											colors.text
+											'px-2 py-0.5 rounded-full text-xs font-semibold border',
+											showcaseType === 'detailed'
+												? 'bg-accent/10 text-accent border-accent/20'
+												: 'bg-muted text-muted-foreground border-border'
 										)}
 									>
-										{category}
-									</p>
-									{featured && (
-										<span className="px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
-											Featured Project
-										</span>
-									)}
-								</div>
-
-								{/* Mid: title */}
-								<h3
-									className={cn(
-										'text-2xl lg:text-3xl font-black leading-tight',
-										colors.text
-									)}
-								>
-									{title}
-								</h3>
-
-								{/* Bottom: type badge */}
-								{showcaseType && (
-									<div>
-										<span
-											className={cn(
-												'inline-block px-3 py-1 rounded-full text-xs font-semibold border',
-												showcaseType === 'detailed'
-													? 'bg-accent/20 text-accent border-accent/30'
-													: 'bg-white/10 border-white/20 text-white/70'
-											)}
-										>
-											{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
-										</span>
-									</div>
+										{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+									</span>
+								)}
+								{featured && (
+									<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
+										Featured
+									</span>
 								)}
 							</div>
 
-							{/* Hover overlay */}
-							<div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-center z-20">
-								<span className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground font-semibold text-sm pointer-events-none">
-									View Project
-									<ExternalLink className="w-5 h-5" aria-hidden="true" />
-								</span>
-							</div>
-						</div>
+							{/* Title */}
+							<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
+								{title}
+							</h3>
 
-						{/* Project Details */}
-						<div className="card-padding-lg flex flex-col gap-4">
 							{/* Description — 2-line clamp */}
 							<p className="text-muted-foreground leading-relaxed line-clamp-2">
 								{description}
@@ -427,9 +387,15 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 									))}
 								</div>
 							)}
+
+							{/* View link hint — visible on hover */}
+							<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+								View Project
+								<ExternalLink className="w-4 h-4" aria-hidden="true" />
+							</div>
 						</div>
 					</div>
-				</Link>
+				</a>
 			</div>
 		)
 	}

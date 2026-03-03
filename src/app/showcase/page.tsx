@@ -30,9 +30,9 @@ async function ShowcaseProjects() {
 	return (
 		<>
 			{/* Stats Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			<section className="pt-12 px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden mb-10">
+					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
 							{ value: '100%', label: 'Client Satisfaction' },
@@ -88,6 +88,7 @@ async function ShowcaseProjects() {
 								featured={item.featured}
 								stats={item.metrics}
 								tech_stack={item.technologies}
+								externalLink={item.externalLink}
 							/>
 						))}
 					</div>
