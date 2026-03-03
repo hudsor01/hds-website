@@ -40,12 +40,12 @@ describe('ProjectCard', () => {
 
 	test('renders featured badge when featured is true', () => {
 		const { container } = render(<Card {...defaultProps} featured={true} />)
-		expect(within(container).getByText('Featured Project')).toBeTruthy()
+		expect(within(container).getByText('Featured')).toBeTruthy()
 	})
 
 	test('does not render featured badge when featured is false', () => {
 		const { container } = render(<Card {...defaultProps} featured={false} />)
-		expect(within(container).queryByText('Featured Project')).toBeFalsy()
+		expect(within(container).queryByText('Featured')).toBeFalsy()
 	})
 
 	test('renders stats when provided', () => {
@@ -122,16 +122,10 @@ describe('ProjectCard', () => {
 		expect(within(container).getByText('View Project')).toBeTruthy()
 	})
 
-	test('applies different header height when featured', () => {
-		const { container } = render(<Card {...defaultProps} featured={true} />)
-		const header = container.querySelector('.h-80')
-		expect(header).toBeTruthy()
-	})
-
-	test('applies default header height when not featured', () => {
-		const { container } = render(<Card {...defaultProps} featured={false} />)
-		const header = container.querySelector('.h-64')
-		expect(header).toBeTruthy()
+	test('renders accent bar at top of card', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		const accentBar = container.querySelector('.h-1.bg-accent')
+		expect(accentBar).toBeTruthy()
 	})
 
 	test('renders Case Study badge when showcaseType is detailed', () => {
@@ -154,51 +148,20 @@ describe('ProjectCard', () => {
 		expect(container.textContent).not.toContain('Portfolio')
 	})
 
-	test('card header uses amber color class for Tattoo Studio industry', () => {
+	test('renders external link with target _blank when externalLink provided', () => {
 		const { container } = render(
-			<Card
-				{...defaultProps}
-				industry="Tattoo Studio"
-				showcaseType={'detailed' as const}
-			/>
+			<Card {...defaultProps} externalLink="https://example.com" />
 		)
-		const header = container.querySelector('[data-testid="card-header"]')
-		expect(header?.className).toContain('bg-amber-800')
+		const link = within(container).getByRole('link')
+		expect(link.getAttribute('href')).toBe('https://example.com')
+		expect(link.getAttribute('target')).toBe('_blank')
+		expect(link.getAttribute('rel')).toBe('noopener noreferrer')
 	})
 
-	test('card header uses blue color class for Property Management SaaS industry', () => {
-		const { container } = render(
-			<Card
-				{...defaultProps}
-				industry="Property Management SaaS"
-				showcaseType={'detailed' as const}
-			/>
-		)
-		const header = container.querySelector('[data-testid="card-header"]')
-		expect(header?.className).toContain('bg-blue-900')
-	})
-
-	test('card header uses teal color class for Personal Brand industry', () => {
-		const { container } = render(
-			<Card
-				{...defaultProps}
-				industry="Personal Brand"
-				showcaseType={'quick' as const}
-			/>
-		)
-		const header = container.querySelector('[data-testid="card-header"]')
-		expect(header?.className).toContain('bg-teal-800')
-	})
-
-	test('card header uses slate fallback color for unknown industry', () => {
-		const { container } = render(
-			<Card
-				{...defaultProps}
-				industry="Unknown Industry"
-				showcaseType={'quick' as const}
-			/>
-		)
-		const header = container.querySelector('[data-testid="card-header"]')
-		expect(header?.className).toContain('bg-slate-800')
+	test('renders internal link without target _blank when no externalLink', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		const link = within(container).getByRole('link')
+		expect(link.getAttribute('href')).toBe('/showcase/test-project')
+		expect(link.getAttribute('target')).toBeNull()
 	})
 })
