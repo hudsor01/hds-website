@@ -18,7 +18,6 @@ const footerLinks = {
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
 		{ name: 'Our Process', href: ROUTES.SERVICES },
-		{ name: 'Pricing', href: '/pricing' }, // Note: /pricing not in ROUTES yet
 		{ name: 'Contact', href: ROUTES.CONTACT }
 	]
 }
@@ -189,7 +188,7 @@ export default function Footer() {
 								</Button>
 
 								<a
-									href="mailto:{BUSINESS_INFO.email}"
+									href={`mailto:${BUSINESS_INFO.email}`}
 									className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
 								>
 									<Mail className="h-4 w-4" />
@@ -243,7 +242,7 @@ export default function Footer() {
 								>
 									Privacy Policy
 								</Link>
-								<span className="text-muted-foreground">·</span>
+								<span className="text-muted-foreground/50 text-xs">/</span>
 								<Link
 									href={ROUTES.TERMS}
 									className="link-hover focus-ring rounded px-1"

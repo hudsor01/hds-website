@@ -8,7 +8,8 @@
 import { Check, Code, Copy, Eye } from 'lucide-react'
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
+import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
@@ -134,284 +135,159 @@ export default function MetaTagGeneratorClient() {
 	const descriptionOptimal =
 		descriptionLength >= 150 && descriptionLength <= 160
 
-	return (
-		<CalculatorLayout
-			title="Meta Tag Generator"
-			description="Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your website"
-			icon={<Code className="h-8 w-8 text-accent" />}
-		>
-			{!showResults ? (
-				<form onSubmit={handleSubmit} className="space-y-comfortable">
-					{/* Required Fields */}
-					<div className="space-y-content">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Required Information
-						</h2>
+	const actions: ToolAction[] = showResults
+		? [{ type: 'copy', label: 'Copy All', onClick: copyToClipboard }]
+		: []
 
-						<div>
-							<CalculatorInput
-								label="Page Title"
-								id="pageTitle"
-								type="text"
-								value={inputs.pageTitle}
-								onChange={e => handleInputChange('pageTitle', e.target.value)}
-								helpText={`${titleLength}/60 characters ${titleOptimal ? '(optimal)' : titleLength > 60 ? '(too long)' : '(add more)'}`}
-								required
-								maxLength={70}
-							/>
-							<div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
-								<div
-									className={`h-full transition-all ${titleOptimal ? 'bg-success' : titleLength > 60 ? 'bg-destructive' : 'bg-warning'}`}
-									style={{
-										width: `${Math.min((titleLength / 60) * 100, 100)}%`
-									}}
-								/>
-							</div>
-						</div>
+	const formSlot = (
+		<form onSubmit={handleSubmit} className="space-y-comfortable">
+			{/* Required Fields */}
+			<div className="space-y-content">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Required Information
+				</h2>
 
-						<div>
-							<label
-								htmlFor="pageDescription"
-								className="block text-sm font-medium text-foreground mb-1"
-							>
-								Page Description <span className="text-destructive">*</span>
-							</label>
-							<textarea
-								id="pageDescription"
-								name="pageDescription"
-								value={inputs.pageDescription}
-								onChange={e =>
-									handleInputChange('pageDescription', e.target.value)
-								}
-								className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
-								rows={3}
-								required
-								maxLength={170}
-								placeholder="A compelling description of your page (150-160 characters)"
-							/>
-							<div className="flex justify-between items-center mt-1">
-								<span
-									className={`text-xs ${descriptionOptimal ? 'text-success-text' : descriptionLength > 160 ? 'text-destructive-text' : 'text-warning-text'}`}
-								>
-									{descriptionLength}/160 characters{' '}
-									{descriptionOptimal
-										? '(optimal)'
-										: descriptionLength > 160
-											? '(too long)'
-											: '(add more)'}
-								</span>
-							</div>
-							<div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
-								<div
-									className={`h-full transition-all ${descriptionOptimal ? 'bg-success' : descriptionLength > 160 ? 'bg-destructive' : 'bg-warning'}`}
-									style={{
-										width: `${Math.min((descriptionLength / 160) * 100, 100)}%`
-									}}
-								/>
-							</div>
-						</div>
-
-						<CalculatorInput
-							label="Page URL"
-							id="pageUrl"
-							type="url"
-							value={inputs.pageUrl}
-							onChange={e => handleInputChange('pageUrl', e.target.value)}
-							helpText="Full URL including https://"
-							required
-							placeholder="https://example.com/page"
+				<div>
+					<CalculatorInput
+						label="Page Title"
+						id="pageTitle"
+						type="text"
+						value={inputs.pageTitle}
+						onChange={e => handleInputChange('pageTitle', e.target.value)}
+						helpText={`${titleLength}/60 characters ${titleOptimal ? '(optimal)' : titleLength > 60 ? '(too long)' : '(add more)'}`}
+						required
+						maxLength={70}
+					/>
+					<div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
+						<div
+							className={`h-full transition-all ${titleOptimal ? 'bg-success' : titleLength > 60 ? 'bg-destructive' : 'bg-warning'}`}
+							style={{
+								width: `${Math.min((titleLength / 60) * 100, 100)}%`
+							}}
 						/>
 					</div>
-
-					{/* Optional Fields */}
-					<div className="space-y-content border-t border-border pt-6">
-						<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-							Optional Information
-						</h2>
-
-						<div className="grid gap-content md:grid-cols-2">
-							<CalculatorInput
-								label="Keywords"
-								id="keywords"
-								type="text"
-								value={inputs.keywords}
-								onChange={e => handleInputChange('keywords', e.target.value)}
-								helpText="Comma-separated keywords"
-								placeholder="seo, marketing, web design"
-							/>
-
-							<CalculatorInput
-								label="Site Name"
-								id="siteName"
-								type="text"
-								value={inputs.siteName}
-								onChange={e => handleInputChange('siteName', e.target.value)}
-								helpText="Your website or brand name"
-								placeholder="Hudson Digital Solutions"
-							/>
-
-							<CalculatorInput
-								label="Image URL"
-								id="imageUrl"
-								type="url"
-								value={inputs.imageUrl}
-								onChange={e => handleInputChange('imageUrl', e.target.value)}
-								helpText="1200x630px recommended for social"
-								placeholder="https://example.com/og-image.jpg"
-							/>
-
-							<CalculatorInput
-								label="Twitter Handle"
-								id="twitterHandle"
-								type="text"
-								value={inputs.twitterHandle}
-								onChange={e =>
-									handleInputChange('twitterHandle', e.target.value)
-								}
-								helpText="Include the @ symbol"
-								placeholder="@username"
-							/>
-
-							<CalculatorInput
-								label="Author"
-								id="author"
-								type="text"
-								value={inputs.author}
-								onChange={e => handleInputChange('author', e.target.value)}
-								helpText="Content author name"
-								placeholder="John Doe"
-							/>
-						</div>
-					</div>
-
-					<button
-						type="submit"
-						className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
-					>
-						Generate Meta Tags
-					</button>
-				</form>
-			) : (
-				<div className="space-y-comfortable">
-					{/* Tabs */}
-					<div className="flex border-b border-border">
-						<button
-							onClick={() => setActiveTab('code')}
-							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-								activeTab === 'code'
-									? 'border-accent text-accent'
-									: 'border-transparent text-muted-foreground hover:text-foreground'
-							}`}
-						>
-							<Code className="w-4 h-4" />
-							HTML Code
-						</button>
-						<button
-							onClick={() => setActiveTab('preview')}
-							className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-								activeTab === 'preview'
-									? 'border-accent text-accent'
-									: 'border-transparent text-muted-foreground hover:text-foreground'
-							}`}
-						>
-							<Eye className="w-4 h-4" />
-							Preview
-						</button>
-					</div>
-
-					{activeTab === 'code' ? (
-						<div className="relative">
-							<button
-								onClick={copyToClipboard}
-								className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors"
-							>
-								{copied ? (
-									<>
-										<Check className="w-3 h-3" />
-										Copied!
-									</>
-								) : (
-									<>
-										<Copy className="w-3 h-3" />
-										Copy Code
-									</>
-								)}
-							</button>
-							<pre className="rounded-lg bg-background p-4 pt-12 overflow-x-auto">
-								<code className="text-sm text-foreground whitespace-pre-wrap break-all">
-									{generatedCode}
-								</code>
-							</pre>
-						</div>
-					) : (
-						<div className="space-y-comfortable">
-							{/* Google Preview */}
-							<div>
-								<h3 className="text-sm font-semibold text-muted-foreground mb-3">
-									Google Search Preview
-								</h3>
-								<Card size="sm">
-									<div className="text-info-text text-lg hover:underline cursor-pointer truncate">
-										{inputs.pageTitle || 'Page Title'}
-									</div>
-									<div className="text-success-text text-sm truncate">
-										{inputs.pageUrl || 'https://example.com'}
-									</div>
-									<div className="text-muted-foreground text-sm mt-1 line-clamp-2">
-										{inputs.pageDescription ||
-											'Page description will appear here...'}
-									</div>
-								</Card>
-							</div>
-
-							{/* Social Preview */}
-							<div>
-								<h3 className="text-sm font-semibold text-muted-foreground mb-3">
-									Social Media Preview
-								</h3>
-								<div className="rounded-lg border border-border overflow-hidden max-w-md">
-									{inputs.imageUrl ? (
-										<div className="h-48 bg-surface-raised flex items-center justify-center">
-											<span className="text-muted-foreground text-sm">
-												Image: {inputs.imageUrl}
-											</span>
-										</div>
-									) : (
-										<div className="h-48 bg-muted flex items-center justify-center">
-											<span className="text-foreground text-lg font-bold">
-												{inputs.siteName || inputs.pageTitle || 'Your Site'}
-											</span>
-										</div>
-									)}
-									<Card size="sm" className="bg-surface-raised">
-										<div className="text-xs text-muted-foreground uppercase mb-1">
-											{inputs.siteName ||
-												new URL(inputs.pageUrl || 'https://example.com')
-													.hostname}
-										</div>
-										<div className="font-semibold text-foreground truncate">
-											{inputs.pageTitle || 'Page Title'}
-										</div>
-										<div className="text-sm text-muted-foreground mt-1 line-clamp-2">
-											{inputs.pageDescription || 'Page description...'}
-										</div>
-									</Card>
-								</div>
-							</div>
-						</div>
-					)}
-
-					<button
-						onClick={() => setShowResults(false)}
-						className="w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
-					>
-						← Edit Information
-					</button>
 				</div>
-			)}
+
+				<div>
+					<label
+						htmlFor="pageDescription"
+						className="block text-sm font-medium text-foreground mb-1"
+					>
+						Page Description <span className="text-destructive">*</span>
+					</label>
+					<textarea
+						id="pageDescription"
+						name="pageDescription"
+						value={inputs.pageDescription}
+						onChange={e => handleInputChange('pageDescription', e.target.value)}
+						className="w-full rounded-md border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-hidden focus:ring-1 focus:ring-accent"
+						rows={3}
+						required
+						maxLength={170}
+						placeholder="A compelling description of your page (150-160 characters)"
+					/>
+					<div className="flex justify-between items-center mt-1">
+						<span
+							className={`text-xs ${descriptionOptimal ? 'text-success-text' : descriptionLength > 160 ? 'text-destructive-text' : 'text-warning-text'}`}
+						>
+							{descriptionLength}/160 characters{' '}
+							{descriptionOptimal
+								? '(optimal)'
+								: descriptionLength > 160
+									? '(too long)'
+									: '(add more)'}
+						</span>
+					</div>
+					<div className="mt-1 h-1 rounded-full bg-muted overflow-hidden">
+						<div
+							className={`h-full transition-all ${descriptionOptimal ? 'bg-success' : descriptionLength > 160 ? 'bg-destructive' : 'bg-warning'}`}
+							style={{
+								width: `${Math.min((descriptionLength / 160) * 100, 100)}%`
+							}}
+						/>
+					</div>
+				</div>
+
+				<CalculatorInput
+					label="Page URL"
+					id="pageUrl"
+					type="url"
+					value={inputs.pageUrl}
+					onChange={e => handleInputChange('pageUrl', e.target.value)}
+					helpText="Full URL including https://"
+					required
+					placeholder="https://example.com/page"
+				/>
+			</div>
+
+			{/* Optional Fields */}
+			<div className="space-y-content border-t border-border pt-6">
+				<h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+					Optional Information
+				</h2>
+
+				<div className="grid gap-content md:grid-cols-2">
+					<CalculatorInput
+						label="Keywords"
+						id="keywords"
+						type="text"
+						value={inputs.keywords}
+						onChange={e => handleInputChange('keywords', e.target.value)}
+						helpText="Comma-separated keywords"
+						placeholder="seo, marketing, web design"
+					/>
+
+					<CalculatorInput
+						label="Site Name"
+						id="siteName"
+						type="text"
+						value={inputs.siteName}
+						onChange={e => handleInputChange('siteName', e.target.value)}
+						helpText="Your website or brand name"
+						placeholder="Hudson Digital Solutions"
+					/>
+
+					<CalculatorInput
+						label="Image URL"
+						id="imageUrl"
+						type="url"
+						value={inputs.imageUrl}
+						onChange={e => handleInputChange('imageUrl', e.target.value)}
+						helpText="1200x630px recommended for social"
+						placeholder="https://example.com/og-image.jpg"
+					/>
+
+					<CalculatorInput
+						label="Twitter Handle"
+						id="twitterHandle"
+						type="text"
+						value={inputs.twitterHandle}
+						onChange={e => handleInputChange('twitterHandle', e.target.value)}
+						helpText="Include the @ symbol"
+						placeholder="@username"
+					/>
+
+					<CalculatorInput
+						label="Author"
+						id="author"
+						type="text"
+						value={inputs.author}
+						onChange={e => handleInputChange('author', e.target.value)}
+						helpText="Content author name"
+						placeholder="John Doe"
+					/>
+				</div>
+			</div>
+
+			<button
+				type="submit"
+				className="w-full rounded-md bg-accent px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-accent/80 focus:outline-hidden focus:ring-2 focus:ring-accent"
+			>
+				Generate Meta Tags
+			</button>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t border-border pt-8">
+			<div className="space-y-content border-t border-border pt-8">
 				<h2 className="text-lg font-semibold text-foreground">
 					Meta Tag Best Practices
 				</h2>
@@ -458,6 +334,137 @@ export default function MetaTagGeneratorClient() {
 					</Card>
 				</div>
 			</div>
-		</CalculatorLayout>
+		</form>
+	)
+
+	const resultSlot = (
+		<div className="space-y-comfortable">
+			{/* Tabs */}
+			<div className="flex border-b border-border">
+				<button
+					onClick={() => setActiveTab('code')}
+					className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+						activeTab === 'code'
+							? 'border-accent text-accent'
+							: 'border-transparent text-muted-foreground hover:text-foreground'
+					}`}
+				>
+					<Code className="w-4 h-4" />
+					HTML Code
+				</button>
+				<button
+					onClick={() => setActiveTab('preview')}
+					className={`flex items-center gap-tight px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+						activeTab === 'preview'
+							? 'border-accent text-accent'
+							: 'border-transparent text-muted-foreground hover:text-foreground'
+					}`}
+				>
+					<Eye className="w-4 h-4" />
+					Preview
+				</button>
+			</div>
+
+			{activeTab === 'code' ? (
+				<div className="relative">
+					<button
+						onClick={copyToClipboard}
+						className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent/80 transition-colors"
+					>
+						{copied ? (
+							<>
+								<Check className="w-3 h-3" />
+								Copied!
+							</>
+						) : (
+							<>
+								<Copy className="w-3 h-3" />
+								Copy Code
+							</>
+						)}
+					</button>
+					<pre className="rounded-lg bg-background p-4 pt-12 overflow-x-auto">
+						<code className="text-sm text-foreground whitespace-pre-wrap break-all">
+							{generatedCode}
+						</code>
+					</pre>
+				</div>
+			) : (
+				<div className="space-y-comfortable">
+					{/* Google Preview */}
+					<div>
+						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+							Google Search Preview
+						</h3>
+						<Card size="sm">
+							<div className="text-info-text text-lg hover:underline cursor-pointer truncate">
+								{inputs.pageTitle || 'Page Title'}
+							</div>
+							<div className="text-success-text text-sm truncate">
+								{inputs.pageUrl || 'https://example.com'}
+							</div>
+							<div className="text-muted-foreground text-sm mt-1 line-clamp-2">
+								{inputs.pageDescription ||
+									'Page description will appear here...'}
+							</div>
+						</Card>
+					</div>
+
+					{/* Social Preview */}
+					<div>
+						<h3 className="text-sm font-semibold text-muted-foreground mb-3">
+							Social Media Preview
+						</h3>
+						<div className="rounded-lg border border-border overflow-hidden max-w-md">
+							{inputs.imageUrl ? (
+								<div className="h-48 bg-surface-raised flex items-center justify-center">
+									<span className="text-muted-foreground text-sm">
+										Image: {inputs.imageUrl}
+									</span>
+								</div>
+							) : (
+								<div className="h-48 bg-muted flex items-center justify-center">
+									<span className="text-foreground text-lg font-bold">
+										{inputs.siteName || inputs.pageTitle || 'Your Site'}
+									</span>
+								</div>
+							)}
+							<Card size="sm" className="bg-surface-raised">
+								<div className="text-xs text-muted-foreground uppercase mb-1">
+									{inputs.siteName ||
+										new URL(inputs.pageUrl || 'https://example.com').hostname}
+								</div>
+								<div className="font-semibold text-foreground truncate">
+									{inputs.pageTitle || 'Page Title'}
+								</div>
+								<div className="text-sm text-muted-foreground mt-1 line-clamp-2">
+									{inputs.pageDescription || 'Page description...'}
+								</div>
+							</Card>
+						</div>
+					</div>
+				</div>
+			)}
+
+			<button
+				onClick={() => setShowResults(false)}
+				className="w-full rounded-md border border-border bg-surface-raised px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted"
+			>
+				← Edit Information
+			</button>
+		</div>
+	)
+
+	return (
+		<ToolPageLayout
+			title="Meta Tag Generator"
+			description="Generate SEO-optimized meta tags, Open Graph, and Twitter Card markup for your website"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={showResults}
+			resultPlaceholder="Fill in the form to generate meta tags"
+			actions={actions}
+		/>
 	)
 }

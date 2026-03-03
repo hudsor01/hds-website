@@ -12,6 +12,7 @@ import {
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { SEO_CONFIG } from '@/utils/seo'
 
@@ -50,6 +51,40 @@ export const metadata: Metadata = {
 	}
 }
 
+const testimonials = [
+	{
+		testimonialId: 1 as const,
+		name: 'Sarah Mitchell',
+		company: 'Bright Spark Consulting',
+		role: 'Founder',
+		content:
+			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+		rating: 5 as const,
+		service: 'Website Development + Automation',
+		highlight: '2x lead volume'
+	},
+	{
+		testimonialId: 2 as const,
+		name: 'Marcus Holt',
+		company: 'Gulf Coast Roofing',
+		role: 'Operations Manager',
+		content:
+			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+		rating: 5 as const,
+		service: 'Business Automation',
+		highlight: 'Zero manual follow-ups'
+	}
+] satisfies Array<{
+	testimonialId: number
+	name: string
+	company: string
+	role: string
+	content: string
+	rating: number
+	service: string
+	highlight: string
+}>
+
 export default function AboutPage() {
 	return (
 		<main className="min-h-screen bg-background">
@@ -61,7 +96,15 @@ export default function AboutPage() {
 
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 						About Us
 					</p>
@@ -170,11 +213,7 @@ export default function AboutPage() {
 								<p className="text-sm text-muted-foreground leading-relaxed">
 									If your investment doesn&apos;t show measurable ROI within 90
 									days, we keep working for free until it does. Your success is
-									our only metric.{' '}
-									<Link href="/pricing" className="link-primary font-semibold">
-										View our pricing
-									</Link>
-									.
+									our only metric.
 								</p>
 							</div>
 						</div>
@@ -409,6 +448,39 @@ export default function AboutPage() {
 								business — no expensive rebuilds when you scale.
 							</p>
 						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Testimonials Section */}
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Client Results
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							What Our Clients Say
+						</h2>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Real businesses. Real results.
+						</p>
+					</div>
+					<div className="grid md:grid-cols-2 gap-6">
+						{testimonials.map(t => (
+							<Card
+								key={t.testimonialId}
+								variant="testimonial"
+								testimonialId={t.testimonialId}
+								name={t.name}
+								company={t.company}
+								role={t.role}
+								content={t.content}
+								rating={t.rating}
+								service={t.service}
+								highlight={t.highlight}
+							/>
+						))}
 					</div>
 				</div>
 			</section>

@@ -39,21 +39,6 @@ describe('ServiceCard', () => {
 		expect(svgs?.length).toBeGreaterThanOrEqual(3)
 	})
 
-	test('renders pricing when provided', () => {
-		const { container } = render(
-			<Card {...defaultProps} pricing="Starting at $5,000" />
-		)
-		expect(within(container).getByText('Starting at $5,000')).toBeTruthy()
-	})
-
-	test('does not render pricing section when not provided', () => {
-		const { container } = render(<Card {...defaultProps} />)
-		const pricingText = container.querySelector(
-			'.text-lg.font-semibold.text-accent'
-		)
-		expect(pricingText).toBeFalsy()
-	})
-
 	test('applies custom className', () => {
 		const { container } = render(
 			<Card {...defaultProps} className="custom-class" />

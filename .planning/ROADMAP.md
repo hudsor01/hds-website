@@ -276,7 +276,7 @@ Plans:
 **Goal**: Give all 13 tool pages a consistent, professional layout — polished header section, form fields styled to design system, and dedicated output/result presentation.
 **Depends on**: Phase 58 (component styles established before applying to tool layouts)
 **Research**: Complete (59-RESEARCH.md)
-**Plans**: 4 plans
+**Plans**: 6 plans (4 core + 2 gap closure)
 
 Requirements covered: TOOL-01, TOOL-02, TOOL-03, TOOL-04
 
@@ -285,15 +285,23 @@ Plans:
 - [ ] 59-02-PLAN.md — Create ToolPageLayout shared component (TOOL-01/03)
 - [ ] 59-03-PLAN.md — Migrate 9 Style-B tool Client.tsx files to ToolPageLayout (TOOL-01/02/03)
 - [ ] 59-04-PLAN.md — Migrate 3 Style-A tools + TTL header + tools index card upgrade (TOOL-01/02/03/04)
+- [ ] 59-05-PLAN.md — Gap closure: PDF tool programmatic download + ToolPageLayout actions prop (TOOL-03)
+- [ ] 59-06-PLAN.md — Gap closure: Paystub print action + Performance Calculator copy action (TOOL-03)
 
 #### Phase 60: Content Page Polish
 
 **Goal**: Transform Services, About, Contact, and Location pages into premium landing page experiences — clear hierarchy, trust signals, and polished CTAs.
 **Depends on**: Phase 58 (component styles established before applying to pages)
-**Research**: Unlikely
-**Plans**: TBD
+**Research**: Complete (60-RESEARCH.md)
+**Plans**: 4 plans
 
 Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
+
+Plans:
+- [ ] 60-01-PLAN.md — E2E scaffold + Services page fix (remove 'use client', add metadata + testimonials)
+- [ ] 60-02-PLAN.md — About hero overlays + testimonials; Contact hero overlays + column flip
+- [ ] 60-03-PLAN.md — Location slug hero overlays + testimonials; Location index hero overlays
+- [ ] 60-04-PLAN.md — Full verification suite + visual checkpoint
 
 ---
 
@@ -331,5 +339,5 @@ Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 | 56. Design System Foundation | v4.0 | 0/2 | Planned | - |
 | 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
 | 58. Core Component Polish | 3/4 | In Progress|  | - |
-| 59. Tool Page Polish | v4.0 | 0/TBD | Pending | - |
-| 60. Content Page Polish | v4.0 | 0/TBD | Pending | - |
+| 59. Tool Page Polish | 6/6 | Complete    | 2026-03-02 | - |
+| 60. Content Page Polish | 4/4 | Complete    | 2026-03-03 | - |

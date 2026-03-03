@@ -1,75 +1,41 @@
-'use client'
-
-import {
-	ArrowRight,
-	BarChart3,
-	ClipboardList,
-	Code2,
-	Rocket,
-	Search,
-	Settings,
-	Zap
-} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { ProcessSteps } from '@/components/ui/ProcessSteps'
+import { ServicesGrid } from '@/components/ui/ServicesGrid'
+import { SEO_CONFIG } from '@/utils/seo'
 
-interface Service {
-	title: string
-	description: string
-	features: string[]
-	pricing: string
-	icon: React.ComponentType<{ className?: string }>
-	gradient: string
-}
-
-const services: Service[] = [
-	{
-		title: 'Website Development',
+export const metadata: Metadata = {
+	title:
+		SEO_CONFIG.services?.title || 'Our Services | Hudson Digital Solutions',
+	description:
+		SEO_CONFIG.services?.description ||
+		'Custom web development, integrations, and business automation for growing businesses.',
+	keywords: SEO_CONFIG.services?.keywords || [],
+	openGraph: {
+		title:
+			SEO_CONFIG.services?.ogTitle ??
+			SEO_CONFIG.services?.title ??
+			'Our Services | Hudson Digital Solutions',
 		description:
-			'Build your digital front door. Custom websites with admin panels so you control your content, mobile-ready and built to convert visitors into customers.',
-		features: [
-			'Custom Design & Build',
-			'Admin Panel So You Control Content',
-			'Works With Your Data',
-			'Fast-Loading, Every Time',
-			'Always Reliable, Always Available'
-		],
-		pricing: 'Starting at $5,000',
-		icon: Code2,
-		gradient: 'bg-muted'
+			SEO_CONFIG.services?.ogDescription ??
+			SEO_CONFIG.services?.description ??
+			'Website development, tool integrations, and workflow automation.',
+		url: SEO_CONFIG.services?.canonical || ''
 	},
-	{
-		title: 'Integrations & Connections',
-		description:
-			'We link your website to every tool your business runs on — CRM, payments, calendar, email. Data flows automatically, nothing falls through the cracks.',
-		features: [
-			'HubSpot CRM Connection',
-			'Stripe Payment Setup',
-			'Calendar & Booking Systems',
-			'Email Platform Sync',
-			'Outdated Systems Upgraded'
-		],
-		pricing: 'Starting at $8,000',
-		icon: Settings,
-		gradient: 'bg-info/20'
+	alternates: {
+		canonical: SEO_CONFIG.services?.canonical || ''
 	},
-	{
-		title: 'Business Automation',
-		description:
-			'Follow-up emails, onboarding sequences, appointment reminders, invoice chasing. We automate the workflows that eat your time so your business runs without you.',
-		features: [
-			'HubSpot Workflow Automation',
-			'Zapier & n8n Integrations',
-			'Automated Follow-Up Sequences',
-			'Appointment & Reminder Flows',
-			'Invoice & Payment Chasing'
-		],
-		pricing: 'Starting at $2,000',
-		icon: BarChart3,
-		gradient: 'bg-muted'
+	robots: {
+		index: true,
+		follow: true,
+		'max-snippet': -1,
+		'max-image-preview': 'large',
+		'max-video-preview': -1
 	}
-]
+}
 
 interface Stat {
 	value: string
@@ -83,43 +49,39 @@ const stats: Stat[] = [
 	{ value: '24/7', label: 'Support Available' }
 ]
 
-interface ProcessStep {
-	step: string
-	title: string
-	description: string
-	icon: React.ComponentType<{ className?: string }>
-}
-
-const process: ProcessStep[] = [
+const testimonials = [
 	{
-		step: '01',
-		title: 'Discovery',
-		description:
-			'We learn how your business works today — what you do manually, what tools you use, and where time is being lost.',
-		icon: Search
+		testimonialId: 1 as const,
+		name: 'Sarah Mitchell',
+		company: 'Bright Spark Consulting',
+		role: 'Founder',
+		content:
+			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+		rating: 5 as const,
+		service: 'Website Development + Automation',
+		highlight: '2x lead volume'
 	},
 	{
-		step: '02',
-		title: 'Strategy',
-		description:
-			'We map out exactly what to build, connect, or automate — with clear timelines and a plain-English plan you can follow.',
-		icon: ClipboardList
-	},
-	{
-		step: '03',
-		title: 'Development',
-		description:
-			'We build your solution quickly and reliably so you can launch with confidence.',
-		icon: Zap
-	},
-	{
-		step: '04',
-		title: 'Launch',
-		description:
-			'We go live, make sure everything works, and stay available so nothing catches you off guard.',
-		icon: Rocket
+		testimonialId: 2 as const,
+		name: 'Marcus Holt',
+		company: 'Gulf Coast Roofing',
+		role: 'Operations Manager',
+		content:
+			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+		rating: 5 as const,
+		service: 'Business Automation',
+		highlight: 'Zero manual follow-ups'
 	}
-]
+] satisfies Array<{
+	testimonialId: number
+	name: string
+	company: string
+	role: string
+	content: string
+	rating: number
+	service: string
+	highlight: string
+}>
 
 export default function ServicesPage() {
 	return (
@@ -178,21 +140,7 @@ export default function ServicesPage() {
 							We handle the tech. You focus on running your business.
 						</p>
 					</div>
-
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-						{services.map((service, index) => (
-							<Card
-								key={index}
-								variant="service"
-								title={service.title}
-								description={service.description}
-								features={service.features}
-								icon={service.icon}
-								gradient={service.gradient}
-								pricing={service.pricing}
-							/>
-						))}
-					</div>
+					<ServicesGrid />
 				</div>
 			</section>
 
@@ -246,28 +194,38 @@ export default function ServicesPage() {
 							no technical jargon required.
 						</p>
 					</div>
+					<ProcessSteps />
+				</div>
+			</section>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-						{process.map((step, index) => (
-							<div
-								key={index}
-								className="group rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors text-center"
-							>
-								<div className="mb-4 flex justify-center">
-									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-										<step.icon className="w-5 h-5 text-accent" />
-									</div>
-								</div>
-								<div className="text-accent font-bold text-sm mb-2 uppercase tracking-widest">
-									{step.step}
-								</div>
-								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
-									{step.title}
-								</h3>
-								<p className="text-sm text-muted-foreground leading-relaxed">
-									{step.description}
-								</p>
-							</div>
+			{/* Testimonials Section */}
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Client Results
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							What Our Clients Say
+						</h2>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Real businesses. Real results.
+						</p>
+					</div>
+					<div className="grid md:grid-cols-2 gap-6">
+						{testimonials.map(t => (
+							<Card
+								key={t.testimonialId}
+								variant="testimonial"
+								testimonialId={t.testimonialId}
+								name={t.name}
+								company={t.company}
+								role={t.role}
+								content={t.content}
+								rating={t.rating}
+								service={t.service}
+								highlight={t.highlight}
+							/>
 						))}
 					</div>
 				</div>

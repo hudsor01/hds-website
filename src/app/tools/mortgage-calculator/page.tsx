@@ -3,9 +3,7 @@
  * Calculate monthly mortgage payments with taxes, insurance, and PMI
  */
 
-import { Home } from 'lucide-react'
 import type { Metadata } from 'next'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
 import { MortgageCalculatorClient } from './MortgageCalculatorClient'
 
 export const metadata: Metadata = {
@@ -20,13 +18,5 @@ export const metadata: Metadata = {
 }
 
 export default function MortgageCalculatorPage() {
-	return (
-		<CalculatorLayout
-			title="Mortgage Calculator"
-			description="Calculate your monthly mortgage payment including principal, interest, property taxes, insurance, and PMI"
-			icon={<Home className="h-8 w-8 text-accent" />}
-		>
-			<MortgageCalculatorClient />
-		</CalculatorLayout>
-	)
+	return <MortgageCalculatorClient />
 }

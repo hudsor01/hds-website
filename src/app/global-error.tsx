@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { createServerLogger } from '@/lib/logger'
 
 export default function GlobalError({
 	error,
@@ -12,67 +11,14 @@ export default function GlobalError({
 	reset: () => void
 }) {
 	useEffect(() => {
-		// Create logger instance for critical error
-		const logger = createServerLogger('global-error')
-
-		// Log critical global error with comprehensive context
-		logger.error('CRITICAL: Global Application Error', {
-			error: {
-				name: error.name,
-				message: error.message,
-				stack: error.stack,
-				digest: error.digest
-			},
-			level: 'critical',
-			component: 'global-error-boundary',
-			timestamp: new Date().toISOString(),
-			url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-			userAgent:
-				typeof window !== 'undefined' ? navigator.userAgent : 'unknown',
-			sessionStorage:
-				typeof window !== 'undefined'
-					? {
-							hasSessionData: Boolean(window.sessionStorage.length),
-							sessionLength: window.sessionStorage.length
-						}
-					: null,
-			localStorage:
-				typeof window !== 'undefined'
-					? {
-							hasLocalData: Boolean(window.localStorage.length),
-							localLength: window.localStorage.length
-						}
-					: null
+		// Use console.error — cannot import server-side logger here as
+		// global-error.tsx is a 'use client' component and importing logger.ts
+		// pulls in db.ts which accesses DATABASE_URL, crashing client hydration.
+		console.error('[GlobalError] CRITICAL: Global Application Error', {
+			name: error.name,
+			message: error.message,
+			digest: error.digest
 		})
-
-		// Try to send to our analytics system without third-party dependencies
-		try {
-			if (
-				typeof window !== 'undefined' &&
-				window &&
-				'analytics' in window &&
-				window.analytics
-			) {
-				const analytics = window.analytics as {
-					track: (event: string, properties: Record<string, unknown>) => void
-				}
-				analytics.track('global_error', {
-					error_name: error.name,
-					error_message: error.message,
-					error_digest: error.digest,
-					critical: true,
-					url: window.location.href,
-					userAgent: navigator.userAgent
-				})
-			}
-		} catch (trackingError) {
-			logger.warn('Failed to track global error in analytics', {
-				error:
-					trackingError instanceof Error
-						? trackingError.message
-						: String(trackingError)
-			})
-		}
 	}, [error])
 
 	return (

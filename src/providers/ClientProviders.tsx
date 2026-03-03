@@ -1,6 +1,5 @@
 'use client'
 
-import { ThemeProvider } from 'next-themes'
 import { type ReactNode, useEffect } from 'react'
 import { QueryProvider } from '@/providers/QueryProvider'
 import {
@@ -24,9 +23,5 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
 		}
 	}, [])
 
-	return (
-		<ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-			<QueryProvider>{children}</QueryProvider>
-		</ThemeProvider>
-	)
+	return <QueryProvider>{children}</QueryProvider>
 }

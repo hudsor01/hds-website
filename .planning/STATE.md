@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: Retroactive Verification
+milestone: v4.0
+milestone_name: UI Redesign
 status: unknown
-last_updated: "2026-02-27T00:33:12.598Z"
+last_updated: "2026-03-03T02:10:54.714Z"
 progress:
-  total_phases: 53
-  completed_phases: 21
-  total_plans: 43
-  completed_plans: 33
+  total_phases: 55
+  completed_phases: 24
+  total_plans: 53
+  completed_plans: 46
 ---
 
 # Project State
@@ -18,14 +18,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v4.0 UI Redesign — Phase 59 Tool Page Polish
+**Current focus:** v4.0 UI Redesign — Phase 60 Content Page Polish
 
 ## Current Position
 
-Phase: 58 (Core Component Polish) — COMPLETE (4/4 plans done)
-Plan: 58-04 complete — verification + showcase editorial mosaic + light-default theme + footer compact
-Status: Phase 58 closed — 394 tests pass, TypeScript + Biome clean, build green
-Last activity: 2026-02-27 — 58-04 committed (commits: b7a219a, 9986104, 1978f5e, c3c6eb2 + showcase commits)
+Phase: 60 (Content Page Polish) — In Progress (1/4 plans done)
+Plan: 60-01 complete — E2E scaffold + Services Server Component with metadata + testimonials (PAGE-01)
+Status: 60-01 committed (commits: 761e303, 0b1016e) — TypeScript + Biome clean, build succeeds, /services is static SSG
+Last activity: 2026-03-02 — 60-01 committed
 
 Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 🚧
 
@@ -52,6 +52,12 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 | Phase 58-core-component-polish P01 | 11 | 2 tasks | 2 files |
 | Phase 58-core-component-polish P02 | 10 | 2 tasks | 3 files |
 | Phase 58-core-component-polish P03 | 7 | 2 tasks | 4 files |
+| Phase 59-tool-page-polish P01 | 10 | 1 tasks | 1 files |
+| Phase 59-tool-page-polish P02 | 8 | 2 tasks | 2 files |
+| Phase 59 P04 | 18 | 3 tasks | 11 files |
+| Phase 59-tool-page-polish P05 | 25 | 2 tasks | 3 files |
+| Phase 59-tool-page-polish P06 | 17 | 3 tasks | 2 files |
+| Phase 60-content-page-polish P01 | 45 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -101,6 +107,16 @@ Progress: v1.0 ✅ | v1.1 partial ✅ | v2.0 ✅ | v3.0 ✅ | v3.1 ✅ | v4.0 �
 - [Phase 58-core-component-polish P02]: aria-invalid error classes placed in inputVariants base string so all variants (default and currency) inherit error state automatically
 - [Phase 58-core-component-polish P03]: bg-nav-dark was used in test but never defined as a token; bg-background-dark is the correct Phase 56 token for footer dark background
 - [Phase 58-core-component-polish P03]: Footer overlay div (absolute inset-0 bg-(--color-nav-dark)) removed alongside inline style — bg-background-dark on footer element handles background directly
+- [Phase 59-tool-page-polish]: Used @ts-expect-error TS2307 on ToolPageLayout import to suppress TypeScript missing module error in RED phase, allowing pre-commit typecheck hook to pass while tests remain red
+- [Phase 59-tool-page-polish]: RED-phase TDD pattern for TypeScript strict mode: suppress missing-module errors with @ts-expect-error TS2307, not by disabling typecheck
+- [Phase 59-tool-page-polish P02]: ReactElement return type used instead of JSX.Element — JSX namespace not available in this tsconfig without explicit React namespace import; ReactElement from 'react' is the correct strict-mode alternative
+- [Phase 59-tool-page-polish P02]: ToolPageLayout uses slot-based API (formSlot/resultSlot ReactNode props) — tools pass pre-built JSX, layout handles structure only
+- [Phase 59-tool-page-polish P02]: data-slot='action-bar' attribute on action bar div enables test targeting without exposing implementation details (CSS classes)
+- [Phase 59]: [Phase 59-tool-page-polish P04]: formSlot JSX must have single root element — spurious </div> before educational content causes TS1005 parse errors by prematurely closing the outer wrapper
+- [Phase 59-tool-page-polish]: Replaced PDFDownloadLink with programmatic pdf().toBlob() for ToolPageLayout actions compatibility on all 3 PDF generators
+- [Phase 59-tool-page-polish]: Paystub resultSlot split: PaystubForm stays in formSlot; results (nav + cards + totals) move to resultSlot so ResultCard action bar renders correctly
+- [Phase 59-tool-page-polish]: Performance copy: handleCopy serializes results to key:value text lines and writes to clipboard via navigator.clipboard.writeText
+- [Phase 60-content-page-polish]: ServicesGrid and ProcessSteps extracted as client components: Services page passes icon functions (React.ComponentType) to Card children; Next.js cannot serialize functions across server-client boundary, so icon references must stay on the client side
 
 ### Pending Todos
 
@@ -112,7 +128,7 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-27
-Stopped at: Completed Phase 58 (all 4 plans done — COMP-01/02/03/04 verified, showcase redesigned, light theme wired)
+Last session: 2026-03-02
+Stopped at: Completed 60-01-PLAN.md (E2E scaffold + Services Server Component with metadata + testimonials)
 Resume file: N/A
-Next action: Phase 59 (Tool Page Polish) — /gsd:plan-phase 59
+Next action: Phase 60 Plan 02 — next content page polish plan
