@@ -311,7 +311,7 @@ export default function InvoiceGeneratorClient() {
 			a.href = url
 			a.download = `${invoiceData.invoiceNumber}.pdf`
 			a.click()
-			URL.revokeObjectURL(url)
+			setTimeout(() => URL.revokeObjectURL(url), 10_000)
 			trackEvent('invoice_downloaded', {
 				invoice_number: invoiceData.invoiceNumber,
 				total: computedTotals.total,

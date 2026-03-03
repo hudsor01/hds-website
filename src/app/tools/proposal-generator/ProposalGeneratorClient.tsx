@@ -358,7 +358,7 @@ export default function ProposalGeneratorClient() {
 			a.href = url
 			a.download = getFileName()
 			a.click()
-			URL.revokeObjectURL(url)
+			setTimeout(() => URL.revokeObjectURL(url), 10_000)
 			trackEvent('proposal_downloaded', {
 				project_name: proposalData.projectName,
 				total: computedTotal,
