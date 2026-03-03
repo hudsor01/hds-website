@@ -242,7 +242,7 @@ export default function Footer() {
 								>
 									Privacy Policy
 								</Link>
-								<span className="text-muted-foreground">·</span>
+								<span className="text-muted-foreground/50 text-xs">/</span>
 								<Link
 									href={ROUTES.TERMS}
 									className="link-hover focus-ring rounded px-1"
