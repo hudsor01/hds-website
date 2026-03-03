@@ -1,5 +1,30 @@
 # Project Milestones: Hudson Digital Solutions Website
 
+## v4.0 UI Redesign (Shipped: 2026-03-03)
+
+**Delivered:** Transformed the site from generic shadcn defaults to a premium, distinctive UI — through OKLCH design tokens, component polish, unified tool page layouts, and premium content page treatment.
+
+**Phases completed:** 56-60 (5 phases, 20 plans)
+
+**Key accomplishments:**
+- Complete OKLCH design token system in globals.css: brand colors, neutral grays, typography scale, spacing, shadows, and surface elevation tokens consumed by all downstream phases
+- Premium homepage hero: distinctive grid-pattern + spotlight background, strong headline hierarchy, polished CTAs, deliberate section rhythm with BentoGrid feature cards
+- Polished core components: Button (all CVA variants/states), Input/Textarea (error states, surface-sunken), Card (glass/testimonial variants), Navbar (backdrop), Footer (token-driven background)
+- Unified ToolPageLayout shared component applied to 12/13 tools with slot-based API (formSlot/resultSlot) and action bars (download PDF, print, copy)
+- Content pages premium treatment: Services (Server Component with metadata + testimonials), About/Contact (hero overlays + layout flip), Locations (hero overlays + trust signals)
+
+**Stats:**
+- 113 source files changed, +6,652 / -5,792 (net +860 lines)
+- 5 phases, 20 plans, 61 source commits
+- 6 days from start to ship (2026-02-25 to 2026-03-02)
+- 408 unit tests passing, 144 static pages, 0 TypeScript errors, 0 Biome violations
+
+**Git range:** `370df92` (Phase 56 start) -> PR #136 merged
+
+**What's next:** TBD
+
+---
+
 ## v3.0 Growth & Content (Shipped: 2026-02-18)
 
 **Delivered:** Surfaced all features to users, automated blog content pipeline, expanded location coverage to 75 cities nationwide, added E2E test coverage, and validated performance infrastructure — ready for marketing push.
