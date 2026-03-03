@@ -71,7 +71,7 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
 				</p>
 			</div>
 
-			<div className="border-t border-border pt-6">
+			<div className="mt-auto pt-4">
 				<div className="font-semibold text-foreground">{name}</div>
 				<div className="text-xs text-muted-foreground">
 					{role} at {company}

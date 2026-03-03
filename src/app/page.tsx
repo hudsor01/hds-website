@@ -426,52 +426,40 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* ── NEWSLETTER ──────────────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised border-y border-border">
-				<div className="container-wide">
-					<NewsletterSignup
-						dynamic
-						variant="section"
-						title="Get Weekly Business Insights"
-						description="Weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation."
-					/>
-				</div>
-			</section>
-
-			{/* ── FINAL CTA ─────────────────────────────────────────────── */}
-			<section className="py-14 sm:py-20 px-4 sm:px-6 bg-foreground text-center">
-				<div className="container-wide">
-					<h2 className="text-section-title text-background mb-4 max-w-3xl mx-auto text-balance">
+			{/* ── CLOSING CTA ────────────────────────────────────── */}
+			<section className="py-section px-4 sm:px-6 bg-surface-raised">
+				<div className="container-wide text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Let&apos;s talk
+					</p>
+					<h2 className="text-section-title text-foreground mb-comfortable max-w-3xl mx-auto text-balance">
 						Ready to stop running your business manually?
 					</h2>
 
-					<p
-						className="text-lead mb-8 max-w-2xl mx-auto"
-						style={{
-							color: 'oklch(from var(--color-background) l c h / 0.65)'
-						}}
-					>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 						Every week without automation is another week of manual follow-ups,
-						missed leads, and time you won&apos;t get back. Let&apos;s map out
-						what your business looks like when the system runs itself.
+						missed leads, and time you won&apos;t get back.
 					</p>
 
-					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+					<div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
 						<Button asChild variant="accent" size="xl" trackConversion={true}>
 							<Link href={ROUTES.CONTACT}>
 								Get a Free Strategy Call
 								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</Button>
-						<Link
-							href={ROUTES.SHOWCASE}
-							className="text-sm font-medium transition-colors"
-							style={{
-								color: 'oklch(from var(--color-background) l c h / 0.5)'
-							}}
+						<Button
+							asChild
+							variant="outline"
+							size="xl"
+							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 						>
-							See What We&apos;ve Built
-						</Link>
+							<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
+						</Button>
+					</div>
+
+					<div className="mt-12">
+						<NewsletterSignup dynamic variant="compact" />
 					</div>
 				</div>
 			</section>

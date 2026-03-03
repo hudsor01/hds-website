@@ -23,7 +23,6 @@ const SERVICES = [
 			'Fast-Loading, Every Time',
 			'Always Reliable, Always Available'
 		],
-		pricing: 'Starting at $5,000',
 		icon: Code2,
 		gradient: 'bg-muted'
 	},
@@ -38,7 +37,6 @@ const SERVICES = [
 			'Email Platform Sync',
 			'Outdated Systems Upgraded'
 		],
-		pricing: 'Starting at $8,000',
 		icon: Settings,
 		gradient: 'bg-info/20'
 	},
@@ -53,7 +51,6 @@ const SERVICES = [
 			'Appointment & Reminder Flows',
 			'Invoice & Payment Chasing'
 		],
-		pricing: 'Starting at $2,000',
 		icon: BarChart3,
 		gradient: 'bg-muted'
 	}
@@ -71,7 +68,6 @@ export function ServicesGrid() {
 					features={service.features}
 					icon={service.icon}
 					gradient={service.gradient}
-					pricing={service.pricing}
 				/>
 			))}
 		</div>
