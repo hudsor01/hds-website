@@ -176,7 +176,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
 				)
 
 				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: email,
 					subject: `Your ${getCalculatorName(calculator_type)} Results`,
 					html: emailContent
@@ -186,6 +186,38 @@ async function handleCalculatorSubmit(request: NextRequest) {
 			} catch (emailError) {
 				logger.error('Failed to send results email', castError(emailError))
 				// Don't fail the request if email fails
+			}
+
+			try {
+				const inputName = typeof inputs.name === 'string' ? inputs.name : ''
+				const company = typeof inputs.company === 'string' ? inputs.company : ''
+
+				await getResendClient().emails.send({
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+					to: BUSINESS_INFO.email,
+					subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
+					html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #0891b2;">New Calculator Lead</h1>
+              <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Calculator:</strong> ${getCalculatorName(calculator_type)}</p>
+                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                ${inputName ? `<p><strong>Name:</strong> ${inputName}</p>` : ''}
+                ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+                <p><strong>Lead Score:</strong> ${leadScore}/100 (${leadQuality.toUpperCase()})</p>
+                <p><strong>Submitted at:</strong> ${new Date().toLocaleString()}</p>
+              </div>
+            </div>
+          `
+				})
+
+				logger.info('Admin notification sent', { email, calculator_type })
+			} catch (adminEmailError) {
+				logger.error(
+					'Failed to send admin notification',
+					castError(adminEmailError)
+				)
+				// Don't fail the request if admin email fails
 			}
 		}
 
