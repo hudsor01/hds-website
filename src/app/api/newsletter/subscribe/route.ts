@@ -78,11 +78,11 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 			return errorResponse('Failed to subscribe', 500)
 		}
 
-		// Send welcome email
-		try {
-			if (isResendConfigured()) {
+		// Send welcome email and admin notification
+		if (isResendConfigured()) {
+			try {
 				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <${BUSINESS_INFO.email}>`,
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: email,
 					subject: 'Welcome to Hudson Digital Solutions Newsletter',
 					html: `
@@ -105,10 +105,34 @@ async function handleNewsletterSubscribe(request: NextRequest) {
           </div>
         `
 				})
+			} catch (emailError) {
+				logger.error('Failed to send welcome email:', castError(emailError))
+				// Don't fail the request if email fails
 			}
-		} catch (emailError) {
-			logger.error('Failed to send welcome email:', castError(emailError))
-			// Don't fail the request if email fails
+
+			try {
+				await getResendClient().emails.send({
+					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+					to: BUSINESS_INFO.email,
+					subject: '[Notification] New Newsletter Subscriber',
+					html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h1 style="color: #0891b2;">New Newsletter Subscriber</h1>
+            <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Source:</strong> ${source || 'website'}</p>
+              <p><strong>Subscribed at:</strong> ${new Date().toLocaleString()}</p>
+            </div>
+          </div>
+        `
+				})
+			} catch (adminEmailError) {
+				logger.error(
+					'Failed to send admin notification:',
+					castError(adminEmailError)
+				)
+				// Don't fail the request if admin email fails
+			}
 		}
 
 		return successResponse(undefined, 'Successfully subscribed!')
