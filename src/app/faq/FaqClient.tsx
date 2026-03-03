@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 
 const faqs = [
 	{
-		category: 'Services & Pricing',
+		category: 'Services',
 		questions: [
 			{
 				question: 'What web development services do you offer?',
@@ -24,12 +24,12 @@ const faqs = [
 			{
 				question: 'How much does it cost to build a website?',
 				answer:
-					'Website costs vary based on complexity. A simple business website starts at $5,000-$10,000. E-commerce sites range from $15,000-$50,000. Custom web applications start at $50,000+. Use our free Cost Estimator tool for a personalized quote based on your specific requirements.'
+					'Every project is scoped to your specific needs, so costs vary based on complexity, integrations, and timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a strategy call — we will walk you through options that fit your budget.'
 			},
 			{
 				question: 'Do you offer monthly retainer packages?',
 				answer:
-					'Yes. We offer ongoing maintenance and support retainers starting at $2,500/month. This includes regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house.'
+					'Yes. We offer ongoing maintenance and support retainers that include regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house. Contact us to discuss a package that fits your needs.'
 			},
 			{
 				question: 'What is your typical project timeline?',
@@ -141,7 +141,15 @@ export default function FaqClient() {
 		<main className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 						FAQ
 					</p>

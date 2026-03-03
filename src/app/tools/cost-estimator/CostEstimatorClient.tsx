@@ -15,6 +15,8 @@ import {
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
+import type { ToolAction } from '@/components/layout/ToolPageLayout'
+import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -192,6 +194,30 @@ export function CostEstimatorClient() {
 		calculateCost()
 	}
 
+	const handleReset = () => {
+		setShowResults(false)
+		setWebsiteType('')
+		setNumberOfPages(5)
+		setFeatures([])
+		setDesignComplexity('standard')
+		setTimeline('normal')
+		setMaintenanceNeeded(false)
+	}
+
+	const handleCopy = () => {
+		if (!showResults) {
+			return
+		}
+		const text = [
+			'Website Cost Estimate',
+			`Estimated Cost Range: ${results.estimatedCost}`,
+			`Average Estimate: ${results.averageCost}`,
+			`Estimated Timeline: ${results.timeline}`,
+			`Monthly Maintenance: ${results.monthlyMaintenance}`
+		].join('\n')
+		navigator.clipboard.writeText(text).catch(() => undefined)
+	}
+
 	const resultItems = [
 		{
 			label: 'Estimated Cost Range',
@@ -216,171 +242,169 @@ export function CostEstimatorClient() {
 		}
 	]
 
-	return (
-		<>
-			{!showResults ? (
-				<form onSubmit={handleSubmit} className="space-y-comfortable">
-					{/* Website Type */}
-					<div className="space-y-tight">
-						<Label htmlFor="websiteType">Website Type *</Label>
-						<Select
-							name="websiteType"
-							value={websiteType}
-							onValueChange={setWebsiteType}
-							required
+	const actions: ToolAction[] = [
+		{ type: 'copy', label: 'Copy Estimate', onClick: handleCopy }
+	]
+
+	const formSlot = (
+		<form onSubmit={handleSubmit} className="space-y-comfortable">
+			{/* Website Type */}
+			<div className="space-y-tight">
+				<Label htmlFor="websiteType">Website Type *</Label>
+				<Select
+					name="websiteType"
+					value={websiteType}
+					onValueChange={setWebsiteType}
+					required
+				>
+					<SelectTrigger id="websiteType">
+						<SelectValue placeholder="Select a type..." />
+					</SelectTrigger>
+					<SelectContent>
+						{websiteTypes.map(type => (
+							<SelectItem key={type.value} value={type.value}>
+								{type.label} (from {formatCurrency(type.basePrice)})
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			</div>
+
+			{/* Number of Pages */}
+			<CalculatorInput
+				label="Number of Pages"
+				id="numberOfPages"
+				type="number"
+				min="1"
+				max="100"
+				step="1"
+				value={numberOfPages || ''}
+				onChange={e => setNumberOfPages(parseInt(e.target.value, 10) || 1)}
+				helpText="Estimated number of unique pages"
+				required
+			/>
+
+			{/* Features */}
+			<div className="space-y-tight">
+				<Label>Additional Features</Label>
+				<div className="grid gap-3 sm:grid-cols-2">
+					{availableFeatures.map(feature => (
+						<label
+							key={feature.value}
+							className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
 						>
-							<SelectTrigger id="websiteType">
-								<SelectValue placeholder="Select a type..." />
-							</SelectTrigger>
-							<SelectContent>
-								{websiteTypes.map(type => (
-									<SelectItem key={type.value} value={type.value}>
-										{type.label} (from {formatCurrency(type.basePrice)})
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
-
-					{/* Number of Pages */}
-					<CalculatorInput
-						label="Number of Pages"
-						id="numberOfPages"
-						type="number"
-						min="1"
-						max="100"
-						step="1"
-						value={numberOfPages || ''}
-						onChange={e => setNumberOfPages(parseInt(e.target.value, 10) || 1)}
-						helpText="Estimated number of unique pages"
-						required
-					/>
-
-					{/* Features */}
-					<div className="space-y-tight">
-						<Label>Additional Features</Label>
-						<div className="grid gap-3 sm:grid-cols-2">
-							{availableFeatures.map(feature => (
-								<label
-									key={feature.value}
-									className="relative flex cursor-pointer items-start rounded-lg border border-border p-4 hover:bg-muted"
-								>
-									<div className="flex h-5 items-center">
-										<Checkbox
-											checked={inputs.features.includes(feature.value)}
-											onCheckedChange={() => handleFeatureToggle(feature.value)}
-										/>
-									</div>
-									<div className="ml-3 text-sm">
-										<div className="font-medium text-foreground">
-											{feature.label}
-										</div>
-										<div className="text-muted-foreground">
-											+{formatCurrency(feature.price)}
-										</div>
-									</div>
-								</label>
-							))}
-						</div>
-					</div>
-
-					{/* Design Complexity */}
-					<div className="space-y-tight">
-						<Label htmlFor="designComplexity">Design Complexity</Label>
-						<Select
-							name="designComplexity"
-							value={designComplexity}
-							onValueChange={setDesignComplexity}
-						>
-							<SelectTrigger id="designComplexity">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="basic">Basic Template (-20%)</SelectItem>
-								<SelectItem value="standard">Standard Custom Design</SelectItem>
-								<SelectItem value="custom">
-									Fully Custom Design (+30%)
-								</SelectItem>
-								<SelectItem value="premium">
-									Premium/Luxury Design (+60%)
-								</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-
-					{/* Timeline */}
-					<div className="space-y-tight">
-						<Label htmlFor="timeline">Project Timeline</Label>
-						<Select
-							name="timeline"
-							value={timeline}
-							onValueChange={setTimeline}
-						>
-							<SelectTrigger id="timeline">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="flexible">Flexible (Best Price)</SelectItem>
-								<SelectItem value="normal">Normal (4-12 weeks)</SelectItem>
-								<SelectItem value="urgent">Urgent (+25% Rush Fee)</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-
-					{/* Maintenance */}
-					<div className="flex items-start gap-3">
-						<Checkbox
-							id="maintenance"
-							checked={maintenanceNeeded}
-							onCheckedChange={value => {
-								if (typeof value === 'boolean') {
-									setMaintenanceNeeded(value)
-								}
-							}}
-						/>
-						<div className="text-sm">
-							<Label htmlFor="maintenance" className="font-medium">
-								Include Maintenance Package
-							</Label>
-							<p className="text-muted-foreground">
-								Ongoing updates, security patches, and technical support
-							</p>
-						</div>
-					</div>
-
-					<Button
-						type="submit"
-						disabled={!inputs.websiteType}
-						className="w-full"
-					>
-						Calculate Estimate
-					</Button>
-				</form>
-			) : (
-				<div>
-					<CalculatorResults
-						results={resultItems}
-						calculatorType="cost-estimator"
-						inputs={inputs}
-					/>
-
-					<Button
-						variant="outline"
-						onClick={() => {
-							setShowResults(false)
-							setWebsiteType('')
-							setNumberOfPages(5)
-							setFeatures([])
-							setDesignComplexity('standard')
-							setTimeline('normal')
-							setMaintenanceNeeded(false)
-						}}
-						className="mt-content-block w-full"
-					>
-						Modify Estimate
-					</Button>
+							<div className="flex h-5 items-center">
+								<Checkbox
+									checked={inputs.features.includes(feature.value)}
+									onCheckedChange={() => handleFeatureToggle(feature.value)}
+								/>
+							</div>
+							<div className="ml-3 text-sm">
+								<div className="font-medium text-foreground">
+									{feature.label}
+								</div>
+								<div className="text-muted-foreground">
+									+{formatCurrency(feature.price)}
+								</div>
+							</div>
+						</label>
+					))}
 				</div>
+			</div>
+
+			{/* Design Complexity */}
+			<div className="space-y-tight">
+				<Label htmlFor="designComplexity">Design Complexity</Label>
+				<Select
+					name="designComplexity"
+					value={designComplexity}
+					onValueChange={setDesignComplexity}
+				>
+					<SelectTrigger id="designComplexity">
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="basic">Basic Template (-20%)</SelectItem>
+						<SelectItem value="standard">Standard Custom Design</SelectItem>
+						<SelectItem value="custom">Fully Custom Design (+30%)</SelectItem>
+						<SelectItem value="premium">
+							Premium/Luxury Design (+60%)
+						</SelectItem>
+					</SelectContent>
+				</Select>
+			</div>
+
+			{/* Timeline */}
+			<div className="space-y-tight">
+				<Label htmlFor="timeline">Project Timeline</Label>
+				<Select name="timeline" value={timeline} onValueChange={setTimeline}>
+					<SelectTrigger id="timeline">
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="flexible">Flexible (Best Price)</SelectItem>
+						<SelectItem value="normal">Normal (4-12 weeks)</SelectItem>
+						<SelectItem value="urgent">Urgent (+25% Rush Fee)</SelectItem>
+					</SelectContent>
+				</Select>
+			</div>
+
+			{/* Maintenance */}
+			<div className="flex items-start gap-3">
+				<Checkbox
+					id="maintenance"
+					checked={maintenanceNeeded}
+					onCheckedChange={value => {
+						if (typeof value === 'boolean') {
+							setMaintenanceNeeded(value)
+						}
+					}}
+				/>
+				<div className="text-sm">
+					<Label htmlFor="maintenance" className="font-medium">
+						Include Maintenance Package
+					</Label>
+					<p className="text-muted-foreground">
+						Ongoing updates, security patches, and technical support
+					</p>
+				</div>
+			</div>
+
+			<Button type="submit" disabled={!inputs.websiteType} className="w-full">
+				Calculate Estimate
+			</Button>
+
+			{showResults && (
+				<Button
+					type="button"
+					variant="outline"
+					onClick={handleReset}
+					className="w-full"
+				>
+					Modify Estimate
+				</Button>
 			)}
-		</>
+		</form>
+	)
+
+	const resultSlot = showResults ? (
+		<CalculatorResults
+			results={resultItems}
+			calculatorType="cost-estimator"
+			inputs={inputs}
+		/>
+	) : undefined
+
+	return (
+		<ToolPageLayout
+			title="Website Cost Estimator"
+			description="Get an instant estimate for your website project based on your specific requirements and features"
+			columns="two"
+			formSlot={formSlot}
+			resultSlot={resultSlot}
+			hasResult={showResults}
+			resultPlaceholder="Configure your project to see an estimate"
+			actions={actions}
+		/>
 	)
 }

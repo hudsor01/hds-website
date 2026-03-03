@@ -1,7 +1,8 @@
-import { Clock } from 'lucide-react'
+import { Clock, Mail } from 'lucide-react'
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
+import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export const metadata: Metadata = {
 	title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
@@ -19,13 +20,7 @@ const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
 	loading: () => <ContactFormSkeleton />
 })
 
-const GoogleMap = dynamic(() => import('@/components/utilities/GoogleMap'), {
-	loading: () => <MapSkeleton />
-})
-
-function MapSkeleton() {
-	return <div className="h-96 bg-muted rounded-lg animate-pulse"></div>
-}
+import { ServiceAreaMapWrapper } from '@/components/utilities/ServiceAreaMapWrapper'
 
 function ContactFormSkeleton() {
 	return (
@@ -56,25 +51,38 @@ export default function ContactPage() {
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-						{/* Left Column - Hero Content */}
-						<div className="space-y-8">
-							<div>
+						{/* LEFT: Form */}
+						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+							<div className="mb-8">
 								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 									Free Strategy Call
 								</p>
 								<h1 className="text-page-title text-foreground leading-tight text-balance">
-									Book Your Free Strategy Call in 30 Minutes
+									Book Your Free Strategy Call
 								</h1>
+								<p className="mt-4 text-lead text-muted-foreground">
+									See exactly where your website is losing customers — and how
+									to fix it. No sales pitch. No commitment.
+								</p>
 							</div>
 
-							<p className="text-lead text-muted-foreground">
-								See exactly where your website is losing customers—and how to
-								fix it. No sales pitch. No commitment. Just actionable insights
-								you can use immediately.
-							</p>
+							<Suspense fallback={<ContactFormSkeleton />}>
+								<ContactForm />
+							</Suspense>
+						</div>
 
+						{/* RIGHT: Contact Info + What Happens Next */}
+						<div className="space-y-8">
 							{/* What Happens Next card */}
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
 								<h3 className="text-h3 text-foreground">What Happens Next?</h3>
@@ -122,58 +130,47 @@ export default function ContactPage() {
 								</div>
 							</div>
 
-							<div className="flex items-center gap-4 px-4 py-3 rounded-lg border border-border bg-surface-raised">
-								<Clock className="w-5 h-5 text-accent shrink-0" />
-								<div>
-									<p className="font-semibold text-foreground text-sm">
-										Guaranteed Response
-									</p>
-									<p className="text-xs text-muted-foreground">
-										Within 2 hours during business hours
-									</p>
-								</div>
-							</div>
-
-							<div className="px-4 py-3 rounded-lg border border-accent/20 bg-accent/5">
-								<p className="text-xs text-accent font-semibold mb-1">
-									Join growing businesses
-								</p>
-								<p className="text-xs text-muted-foreground">
-									Proven ROI results
-								</p>
-							</div>
-						</div>
-
-						{/* Right Column - Contact Form */}
-						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
-							<div className="text-center mb-8">
-								<h2 className="text-h3 text-foreground mb-3 text-balance">
-									Claim Your Free Strategy Call
-								</h2>
-								<p className="text-sm text-muted-foreground leading-relaxed">
-									Tell us about your business and we&apos;ll show you exactly
-									where you&apos;re losing revenue—and how to fix it.
-								</p>
-							</div>
-
-							<Suspense fallback={<ContactFormSkeleton />}>
-								<ContactForm />
-							</Suspense>
-
-							{/* Trust badges */}
-							<div className="mt-6 pt-6 border-t border-border">
-								<div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs text-muted-foreground">
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-success-text rounded-full"></div>
-										<span>No sales pitch</span>
+							{/* Contact Info */}
+							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors space-y-6">
+								<h3 className="text-h3 text-foreground">Get in Touch</h3>
+								<div className="space-y-4">
+									<div className="flex items-start gap-4">
+										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+											<Mail
+												className="w-4 h-4 text-accent"
+												aria-hidden="true"
+											/>
+										</div>
+										<div>
+											<p className="font-semibold text-foreground text-sm">
+												Email
+											</p>
+											<a
+												href={`mailto:${BUSINESS_INFO.email}`}
+												className="text-xs text-muted-foreground hover:text-accent transition-colors"
+											>
+												{BUSINESS_INFO.email}
+											</a>
+										</div>
 									</div>
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-accent rounded-full"></div>
-										<span>2-hour response time</span>
-									</div>
-									<div className="flex items-center gap-2">
-										<div className="w-3 h-3 bg-info rounded-full"></div>
-										<span>Proven success stories</span>
+									<div className="flex items-start gap-4">
+										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+											<Clock
+												className="w-4 h-4 text-accent"
+												aria-hidden="true"
+											/>
+										</div>
+										<div>
+											<p className="font-semibold text-foreground text-sm">
+												Business Hours
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Monday – Friday, 9am – 6pm CT
+											</p>
+											<p className="text-xs text-muted-foreground">
+												Response within 2 hours
+											</p>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -182,27 +179,23 @@ export default function ContactPage() {
 				</div>
 			</section>
 
-			{/* Map Section */}
-			<section className="py-section-sm px-4 sm:px-6">
+			{/* Service Area Section */}
+			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Location
+							Service Area
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Visit Our Office
+							We Serve Clients Nationwide
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Located in the heart of Florida&apos;s tech corridor, ready to
-							serve clients worldwide.
+							Primarily serving TX, FL, GA, OK and surrounding states — fully
+							remote for all projects.
 						</p>
 					</div>
 
-					<div className="rounded-xl border border-border bg-surface-raised overflow-hidden">
-						<Suspense fallback={<MapSkeleton />}>
-							<GoogleMap />
-						</Suspense>
-					</div>
+					<ServiceAreaMapWrapper className="max-w-3xl mx-auto" />
 				</div>
 			</section>
 		</main>

@@ -6,9 +6,6 @@ export const STORAGE_KEYS = {
 	/** TTL calculator saved calculations */
 	TTL_SAVED_CALCULATIONS: 'savedCalculations',
 
-	/** User theme preference */
-	THEME: 'theme',
-
 	/** Tool usage analytics */
 	TOOL_USAGE: 'toolUsage',
 

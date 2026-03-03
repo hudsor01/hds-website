@@ -8,6 +8,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	generateLocalBusinessSchema,
@@ -18,6 +19,40 @@ import {
 interface LocationPageProps {
 	params: Promise<{ slug: string }>
 }
+
+const locationTestimonials = [
+	{
+		testimonialId: 1 as const,
+		name: 'Sarah Mitchell',
+		company: 'Bright Spark Consulting',
+		role: 'Founder',
+		content:
+			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+		rating: 5 as const,
+		service: 'Website Development + Automation',
+		highlight: '2x lead volume'
+	},
+	{
+		testimonialId: 2 as const,
+		name: 'Marcus Holt',
+		company: 'Gulf Coast Roofing',
+		role: 'Operations Manager',
+		content:
+			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+		rating: 5 as const,
+		service: 'Business Automation',
+		highlight: 'Zero manual follow-ups'
+	}
+] satisfies Array<{
+	testimonialId: number
+	name: string
+	company: string
+	role: string
+	content: string
+	rating: number
+	service: string
+	highlight: string
+}>
 
 export function generateStaticParams() {
 	return getAllLocationSlugs().map(slug => ({ slug }))
@@ -88,7 +123,15 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center max-w-4xl mx-auto">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center max-w-4xl mx-auto">
 					<div className="flex items-center justify-center gap-2 mb-4 text-accent">
 						<MapPin className="h-4 w-4" aria-hidden="true" />
 						<span className="text-xs font-semibold uppercase tracking-widest">
@@ -105,7 +148,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Stats */}
-			<section className="py-section-sm px-4 sm:px-6 border-b border-border">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-4xl mx-auto">
 					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
@@ -163,6 +206,36 @@ export default async function LocationPage({ params }: LocationPageProps) {
 									{feature.description}
 								</p>
 							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
+			{/* Testimonials Section */}
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide max-w-4xl mx-auto">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Client Results
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							What Our Clients Say
+						</h2>
+					</div>
+					<div className="grid md:grid-cols-2 gap-6">
+						{locationTestimonials.map(t => (
+							<Card
+								key={t.testimonialId}
+								variant="testimonial"
+								testimonialId={t.testimonialId}
+								name={t.name}
+								company={t.company}
+								role={t.role}
+								content={t.content}
+								rating={t.rating}
+								service={t.service}
+								highlight={t.highlight}
+							/>
 						))}
 					</div>
 				</div>

@@ -127,15 +127,6 @@ export default function HomePage() {
 					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
-							{/* Availability badge */}
-							<div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/50 bg-muted/10 text-sm text-muted-foreground w-fit">
-								<span className="relative flex h-2 w-2 shrink-0">
-									<span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
-									<span className="relative flex h-2 w-2 rounded-full bg-accent" />
-								</span>
-								Limited availability — 3 project spots open for Q1 2026
-							</div>
-
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
 								Your Business Should Run Itself
 							</h1>
@@ -435,66 +426,40 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* ── NEWSLETTER ──────────────────────────────────────── */}
-			<section className="py-section-sm px-4">
-				<div className="container-wide max-w-4xl mx-auto">
-					<NewsletterSignup
-						dynamic
-						variant="inline"
-						title="Get Weekly Business Insights"
-						description="Get weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation. No spam, unsubscribe anytime."
-					/>
-				</div>
-			</section>
+			{/* ── CLOSING CTA ────────────────────────────────────── */}
+			<section className="py-section px-4 sm:px-6 bg-surface-raised">
+				<div className="container-wide text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Let&apos;s talk
+					</p>
+					<h2 className="text-section-title text-foreground mb-comfortable max-w-3xl mx-auto text-balance">
+						Ready to stop running your business manually?
+					</h2>
 
-			{/* ── FINAL CTA ───────────────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
-						{/* Subtle amber glow from top */}
-						<div
-							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
-							aria-hidden="true"
-						/>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+						Every week without automation is another week of manual follow-ups,
+						missed leads, and time you won&apos;t get back.
+					</p>
 
-						<div className="relative z-10">
-							<div className="w-16 h-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-8">
-								<Rocket className="w-8 h-8 text-accent" />
-							</div>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
+						<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Link href={ROUTES.CONTACT}>
+								Get a Free Strategy Call
+								<ArrowRight className="w-4 h-4" />
+							</Link>
+						</Button>
+						<Button
+							asChild
+							variant="outline"
+							size="xl"
+							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+						>
+							<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
+						</Button>
+					</div>
 
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to stop running your business manually?
-							</h2>
-
-							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Every week without automation is another week of manual
-								follow-ups, missed leads, and time you won&apos;t get back.
-								Let&apos;s map out what your business looks like when the system
-								runs itself.
-							</p>
-
-							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
-									<Link href={ROUTES.CONTACT}>
-										Get a Free Strategy Call
-										<ArrowRight className="w-4 h-4" />
-									</Link>
-								</Button>
-								<Button
-									asChild
-									variant="outline"
-									size="xl"
-									trackConversion={true}
-								>
-									<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
-								</Button>
-							</div>
-						</div>
+					<div className="mt-12">
+						<NewsletterSignup dynamic variant="compact" />
 					</div>
 				</div>
 			</section>

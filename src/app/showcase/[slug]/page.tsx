@@ -131,7 +131,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 
 			{/* Metrics Showcase */}
 			{metrics.length > 0 && (
-				<section className="py-section-sm px-4 sm:px-6 border-b border-border">
+				<section className="py-section-sm px-4 sm:px-6">
 					<div className="container-wide">
 						<div className="grid gap-px md:grid-cols-4 bg-border/30 rounded-2xl overflow-hidden">
 							{metrics.map((metric, i) => (

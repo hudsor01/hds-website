@@ -39,10 +39,16 @@ describe('Services Page (Server Component)', () => {
 		const ServicesPage = (await import('@/app/services/page')).default
 		render(<ServicesPage />)
 
-		// Check for service titles
-		expect(screen.getByText('Website Development')).toBeInTheDocument()
-		expect(screen.getByText('Integrations & Connections')).toBeInTheDocument()
-		expect(screen.getByText('Business Automation')).toBeInTheDocument()
+		// Check for service card headings (use heading role to avoid matching testimonial labels)
+		expect(
+			screen.getByRole('heading', { name: 'Website Development' })
+		).toBeInTheDocument()
+		expect(
+			screen.getByRole('heading', { name: 'Integrations & Connections' })
+		).toBeInTheDocument()
+		expect(
+			screen.getByRole('heading', { name: 'Business Automation' })
+		).toBeInTheDocument()
 	})
 
 	it('should render process steps', async () => {
@@ -117,15 +123,16 @@ describe('Contact Page (Server Component)', () => {
 		expect(roadmapSteps.length).toBeGreaterThan(0)
 	})
 
-	it('should render trust badges', async () => {
+	it('should render trust indicators', async () => {
 		const ContactPage = (await import('@/app/contact/page')).default
 		render(<ContactPage />)
 
-		// Check for trust indicators - use getAllByText since they may appear multiple times
+		// "No sales pitch" appears in the hero description text
 		const noSalesPitch = screen.getAllByText(/No sales pitch/i)
 		expect(noSalesPitch.length).toBeGreaterThan(0)
 
-		const responseTime = screen.getAllByText(/2-hour response/i)
+		// "within 2 hours" appears in the "What Happens Next" section
+		const responseTime = screen.getAllByText(/within 2 hours/i)
 		expect(responseTime.length).toBeGreaterThan(0)
 	})
 
@@ -159,15 +166,18 @@ describe('Contact Page (Server Component)', () => {
 // ================================
 
 describe('Server Component Best Practices', () => {
-	it('services page is a client component (renders icons in Card)', async () => {
-		// Services page needs 'use client' to pass icon components to Card
+	it('services page is a Server Component with metadata export', async () => {
+		// Services page is a Server Component — icon props isolated in ServicesGrid/ProcessSteps client wrappers
 		const fs = await import('node:fs/promises')
 		const path = await import('node:path')
 		const filePath = path.resolve(process.cwd(), 'src/app/services/page.tsx')
 		const content = await fs.readFile(filePath, 'utf-8')
 
-		// Verify it's a client component (required for passing React components as props)
-		expect(content.startsWith("'use client'")).toBe(true)
+		// Verify it's a Server Component (no 'use client' at top)
+		expect(content.startsWith("'use client'")).toBe(false)
+		expect(content.startsWith('"use client"')).toBe(false)
+		// Verify metadata is exported directly on the page
+		expect(content).toContain('export const metadata')
 	})
 
 	it('contact page should not contain use client directive', async () => {

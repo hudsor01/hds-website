@@ -3,9 +3,7 @@
  * Calculate potential revenue increase from website optimization
  */
 
-import { TrendingUp } from 'lucide-react'
 import type { Metadata } from 'next'
-import { CalculatorLayout } from '@/components/calculators/CalculatorLayout'
 import { ROICalculatorClient } from './ROICalculatorClient'
 
 export const metadata: Metadata = {
@@ -20,13 +18,5 @@ export const metadata: Metadata = {
 }
 
 export default function ROICalculatorPage() {
-	return (
-		<CalculatorLayout
-			title="ROI Calculator"
-			description="Calculate how much additional revenue you could generate by improving your website's conversion rate"
-			icon={<TrendingUp className="h-8 w-8 text-accent" />}
-		>
-			<ROICalculatorClient />
-		</CalculatorLayout>
-	)
+	return <ROICalculatorClient />
 }

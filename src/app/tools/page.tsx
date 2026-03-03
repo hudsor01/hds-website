@@ -22,6 +22,7 @@ import {
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 
 export const metadata: Metadata = {
@@ -212,7 +213,15 @@ export default function ToolsPage() {
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
-				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 						Try For Free
 					</p>
@@ -231,9 +240,12 @@ export default function ToolsPage() {
 				<div className="container-wide">
 					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{tools.map(tool => (
-							<div
+							<Card
 								key={tool.href}
-								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
+								variant="glassLight"
+								size="lg"
+								hover={true}
+								className="group flex flex-col"
 							>
 								{/* Icon */}
 								<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-6">
@@ -268,14 +280,14 @@ export default function ToolsPage() {
 									{tool.cta}
 									<ArrowRight className="h-4 w-4" />
 								</Link>
-							</div>
+							</Card>
 						))}
 					</div>
 				</div>
 			</section>
 
 			{/* Trust Signals */}
-			<section className="py-section-sm px-4 sm:px-6 border-t border-border">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
