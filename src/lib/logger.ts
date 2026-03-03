@@ -4,7 +4,6 @@
  */
 
 import { env } from '@/env'
-import { db } from '@/lib/db'
 import { errorLogs } from '@/lib/schemas/system'
 import type {
 	ErrorContext,
@@ -96,6 +95,9 @@ function generateFingerprint(
  */
 async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
 	try {
+		// Dynamic import — db.ts accesses POSTGRES_URL at module eval time,
+		// which crashes the client. Deferring to call time keeps logger client-safe.
+		const { db } = await import('@/lib/db')
 		await db.insert(errorLogs).values({
 			fingerprint: payload.fingerprint,
 			errorType: payload.error_type,
