@@ -8,9 +8,9 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		stateCode: 'NC',
 		tagline: 'Queen City Digital Growth',
 		description:
-			'As the second-largest financial hub in the US, Charlotte businesses demand top-tier digital solutions. We deliver enterprise-grade web development for the Queen City.',
+			'As the second-largest financial hub in the US, Charlotte businesses demand top-tier digital solutions. We deliver website development, tool integrations, and business automation for the Queen City.',
 		metaDescription:
-			'Web development and SaaS consulting in Charlotte, NC. Custom websites, fintech solutions, and digital platforms for Queen City businesses.',
+			'Website development and business automation in Charlotte, NC. We build your website, connect your tools, and automate the work for Queen City businesses.',
 		neighborhoods: [
 			'Uptown',
 			'South End',
@@ -30,17 +30,17 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Fintech & Banking',
 				description:
-					'Secure web platforms for Charlotte financial institutions, fintech startups, and banking services.'
+					'Secure web platforms for Charlotte financial institutions, banks, and financial service businesses.'
 			},
 			{
-				title: 'Corporate Web Solutions',
+				title: 'Website & Business Systems',
 				description:
-					'Enterprise websites and intranets for Fortune 500 companies in the Charlotte metro.'
+					'Professional websites and connected systems for Charlotte businesses of every size.'
 			},
 			{
-				title: 'Startup Acceleration',
+				title: 'Business Automation',
 				description:
-					'MVP development and digital strategy for Charlotte startups and emerging businesses.'
+					'Automate manual work — connect your CRM, booking, and tools so your Charlotte business runs itself.'
 			}
 		]
 	},
@@ -53,7 +53,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		description:
 			"North Carolina's capital and anchor of the Research Triangle, Raleigh is a powerhouse of tech, biotech, and education. We build digital solutions for the Triangle market.",
 		metaDescription:
-			'Web development in Raleigh, NC. Custom websites, tech startup platforms, and digital solutions for Research Triangle businesses.',
+			'Website development and business automation in Raleigh, NC. We build your website, connect your tools, and automate the work for Research Triangle businesses.',
 		neighborhoods: [
 			'Downtown',
 			'North Hills',
@@ -71,9 +71,9 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech & SaaS',
+				title: 'Website & Automation',
 				description:
-					'Custom web applications and SaaS platforms for Raleigh tech companies and Research Triangle startups.'
+					'Modern websites and automation tools for Raleigh businesses — connect your tools and save hours every week.'
 			},
 			{
 				title: 'Biotech & Life Sciences',
@@ -137,7 +137,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		stateCode: 'NC',
 		tagline: 'Bull City Digital Innovation',
 		description:
-			'Durham is the innovation engine of the Research Triangle with Duke University, a thriving startup scene, and world-class healthcare. We build digital solutions for the Bull City.',
+			'Durham is the innovation engine of the Research Triangle with Duke University, a thriving business community, and world-class healthcare. We build digital solutions for the Bull City.',
 		metaDescription:
 			'Web development in Durham, NC. Custom websites, biotech platforms, and digital solutions for Research Triangle businesses and Duke community.',
 		neighborhoods: [
@@ -167,9 +167,9 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 					'HIPAA-compliant web solutions for Duke Health partners and Durham healthcare technology companies.'
 			},
 			{
-				title: 'Startup & Innovation',
+				title: 'Business Automation',
 				description:
-					'MVP development for Durham startups, American Underground companies, and Triangle tech ventures.'
+					'Automate manual work — connect your CRM, booking, and tools so your Durham business runs itself.'
 			}
 		]
 	},

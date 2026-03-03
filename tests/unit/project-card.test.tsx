@@ -1,134 +1,204 @@
-import { describe, test, expect } from 'bun:test';
-import { render, within } from '@testing-library/react';
-import { Card } from '@/components/ui/card';
+import { describe, expect, test } from 'bun:test'
+import { render, within } from '@testing-library/react'
+import { Card } from '@/components/ui/card'
 
 describe('ProjectCard', () => {
-  const defaultProps = {
-    variant: 'project' as const,
-    id: '1',
-    slug: 'test-project',
-    title: 'Test Project',
-    description: 'A test project description',
-    category: 'Web Development',
-    tech_stack: ['React', 'TypeScript', 'Next.js'],
-  };
+	const defaultProps = {
+		variant: 'project' as const,
+		id: '1',
+		slug: 'test-project',
+		title: 'Test Project',
+		description: 'A test project description',
+		category: 'Web Development',
+		tech_stack: ['React', 'TypeScript', 'Next.js']
+	}
 
-  test('renders title', () => {
-    const { container } = render(<Card {...defaultProps} />);
-    expect(within(container).getByText('Test Project')).toBeTruthy();
-  });
+	test('renders title', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		expect(within(container).getByText('Test Project')).toBeTruthy()
+	})
 
-  test('renders description', () => {
-    const { container } = render(<Card {...defaultProps} />);
-    expect(container.textContent?.includes('A test project description')).toBeTruthy();
-  });
+	test('renders description', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		expect(
+			container.textContent?.includes('A test project description')
+		).toBeTruthy()
+	})
 
-  test('renders category badge', () => {
-    const { container } = render(<Card {...defaultProps} />);
-    expect(within(container).getByText('Web Development')).toBeTruthy();
-  });
+	test('renders category badge', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		expect(within(container).getByText('Web Development')).toBeTruthy()
+	})
 
-  test('renders all tech stack badges', () => {
-    const { container } = render(<Card {...defaultProps} />);
+	test('renders all tech stack badges', () => {
+		const { container } = render(<Card {...defaultProps} />)
 
-    expect(within(container).getByText('React')).toBeTruthy();
-    expect(within(container).getByText('TypeScript')).toBeTruthy();
-    expect(within(container).getByText('Next.js')).toBeTruthy();
-  });
+		expect(within(container).getByText('React')).toBeTruthy()
+		expect(within(container).getByText('TypeScript')).toBeTruthy()
+		expect(within(container).getByText('Next.js')).toBeTruthy()
+	})
 
-  test('renders featured badge when featured is true', () => {
-    const { container } = render(<Card {...defaultProps} featured={true} />);
-    expect(within(container).getByText('Featured Project')).toBeTruthy();
-  });
+	test('renders featured badge when featured is true', () => {
+		const { container } = render(<Card {...defaultProps} featured={true} />)
+		expect(within(container).getByText('Featured Project')).toBeTruthy()
+	})
 
-  test('does not render featured badge when featured is false', () => {
-    const { container } = render(<Card {...defaultProps} featured={false} />);
-    expect(within(container).queryByText('Featured Project')).toBeFalsy();
-  });
+	test('does not render featured badge when featured is false', () => {
+		const { container } = render(<Card {...defaultProps} featured={false} />)
+		expect(within(container).queryByText('Featured Project')).toBeFalsy()
+	})
 
-  test('renders stats when provided', () => {
-    const stats = {
-      users: '10K+',
-      revenue: '$50K',
-      conversion: '25%',
-    };
-    const { container } = render(<Card {...defaultProps} stats={stats} />);
+	test('renders stats when provided', () => {
+		const stats = {
+			users: '10K+',
+			revenue: '$50K',
+			conversion: '25%'
+		}
+		const { container } = render(<Card {...defaultProps} stats={stats} />)
 
-    expect(within(container).getByText('10K+')).toBeTruthy();
-    expect(within(container).getByText('$50K')).toBeTruthy();
-    expect(within(container).getByText('25%')).toBeTruthy();
-  });
+		expect(within(container).getByText('10K+')).toBeTruthy()
+		expect(within(container).getByText('$50K')).toBeTruthy()
+		expect(within(container).getByText('25%')).toBeTruthy()
+	})
 
-  test('formats stat keys with spaces', () => {
-    const stats = { activeUsers: '5K' };
-    const { container } = render(<Card {...defaultProps} stats={stats} />);
+	test('formats stat keys with spaces', () => {
+		const stats = { activeUsers: '5K' }
+		const { container } = render(<Card {...defaultProps} stats={stats} />)
 
-    expect(within(container).getByText('active Users')).toBeTruthy();
-  });
+		expect(within(container).getByText('active Users')).toBeTruthy()
+	})
 
-  test('does not render stats grid when no stats provided', () => {
-    const { container } = render(<Card {...defaultProps} stats={{}} />);
-    const statsGrid = container.querySelector('.grid.grid-cols-3');
-    expect(statsGrid).toBeFalsy();
-  });
+	test('does not render stats grid when no stats provided', () => {
+		const { container } = render(<Card {...defaultProps} stats={{}} />)
+		const statsGrid = container.querySelector('.grid.grid-cols-3')
+		expect(statsGrid).toBeFalsy()
+	})
 
-  test('applies featured class when featured is true', () => {
-    const { container } = render(<Card {...defaultProps} featured={true} />);
+	test('applies featured class when featured is true', () => {
+		const { container } = render(<Card {...defaultProps} featured={true} />)
 
-    const wrapper = container.querySelector('.md\\:col-span-2');
-    expect(wrapper).toBeTruthy();
-  });
+		const wrapper = container.querySelector('.md\\:col-span-2')
+		expect(wrapper).toBeTruthy()
+	})
 
-  test('does not apply featured class when featured is false', () => {
-    const { container } = render(<Card {...defaultProps} featured={false} />);
+	test('does not apply featured class when featured is false', () => {
+		const { container } = render(<Card {...defaultProps} featured={false} />)
 
-    const wrapper = container.querySelector('.md\\:col-span-2');
-    expect(wrapper).toBeFalsy();
-  });
+		const wrapper = container.querySelector('.md\\:col-span-2')
+		expect(wrapper).toBeFalsy()
+	})
 
-  test('applies custom className to wrapper', () => {
-    const { container } = render(
-      <Card {...defaultProps} className="custom-project" />
-    );
+	test('applies custom className to wrapper', () => {
+		const { container } = render(
+			<Card {...defaultProps} className="custom-project" />
+		)
 
-    expect(container.querySelector('.custom-project')).toBeTruthy();
-  });
+		expect(container.querySelector('.custom-project')).toBeTruthy()
+	})
 
-  test('renders link with correct href', () => {
-    const { container } = render(<Card {...defaultProps} slug="my-project" />);
+	test('renders link with correct href', () => {
+		const { container } = render(<Card {...defaultProps} slug="my-project" />)
 
-    const link = within(container).getByRole('link');
-    expect(link.getAttribute('href')).toBe('/portfolio/my-project');
-  });
+		const link = within(container).getByRole('link')
+		expect(link.getAttribute('href')).toBe('/showcase/my-project')
+	})
 
-  test('applies glass card styling', () => {
-    const { container } = render(<Card {...defaultProps} />);
+	test('applies glass card styling', () => {
+		const { container } = render(<Card {...defaultProps} />)
 
-    const glassCard = container.querySelector('.glass-card');
-    expect(glassCard).toBeTruthy();
-  });
+		const glassCard = container.querySelector('.glass-card')
+		expect(glassCard).toBeTruthy()
+	})
 
-  test('applies hover effect', () => {
-    const { container } = render(<Card {...defaultProps} />);
+	test('applies hover effect', () => {
+		const { container } = render(<Card {...defaultProps} />)
 
-    const hoverElement = container.querySelector('.card-hover-glow');
-    expect(hoverElement).toBeTruthy();
-  });
+		const hoverElement = container.querySelector('.card-hover-glow')
+		expect(hoverElement).toBeTruthy()
+	})
 
-  test('renders View Project button in hover overlay', () => {
-    const { container } = render(<Card {...defaultProps} />);
-    expect(within(container).getByText('View Project')).toBeTruthy();
-  });
+	test('renders View Project button in hover overlay', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		expect(within(container).getByText('View Project')).toBeTruthy()
+	})
 
-  test('applies different header height when featured', () => {
-    const { container } = render(<Card {...defaultProps} featured={true} />);
-    const header = container.querySelector('.h-80');
-    expect(header).toBeTruthy();
-  });
+	test('applies different header height when featured', () => {
+		const { container } = render(<Card {...defaultProps} featured={true} />)
+		const header = container.querySelector('.h-80')
+		expect(header).toBeTruthy()
+	})
 
-  test('applies default header height when not featured', () => {
-    const { container } = render(<Card {...defaultProps} featured={false} />);
-    const header = container.querySelector('.h-64');
-    expect(header).toBeTruthy();
-  });
-});
+	test('applies default header height when not featured', () => {
+		const { container } = render(<Card {...defaultProps} featured={false} />)
+		const header = container.querySelector('.h-64')
+		expect(header).toBeTruthy()
+	})
+
+	test('renders Case Study badge when showcaseType is detailed', () => {
+		const { container } = render(
+			<Card {...defaultProps} showcaseType={'detailed' as const} />
+		)
+		expect(container.textContent).toContain('Case Study')
+	})
+
+	test('renders Portfolio badge when showcaseType is quick', () => {
+		const { container } = render(
+			<Card {...defaultProps} showcaseType={'quick' as const} />
+		)
+		expect(container.textContent).toContain('Portfolio')
+	})
+
+	test('does not render type badge when showcaseType is not provided', () => {
+		const { container } = render(<Card {...defaultProps} />)
+		expect(container.textContent).not.toContain('Case Study')
+		expect(container.textContent).not.toContain('Portfolio')
+	})
+
+	test('card header uses amber color class for Tattoo Studio industry', () => {
+		const { container } = render(
+			<Card
+				{...defaultProps}
+				industry="Tattoo Studio"
+				showcaseType={'detailed' as const}
+			/>
+		)
+		const header = container.querySelector('[data-testid="card-header"]')
+		expect(header?.className).toContain('bg-amber-800')
+	})
+
+	test('card header uses blue color class for Property Management SaaS industry', () => {
+		const { container } = render(
+			<Card
+				{...defaultProps}
+				industry="Property Management SaaS"
+				showcaseType={'detailed' as const}
+			/>
+		)
+		const header = container.querySelector('[data-testid="card-header"]')
+		expect(header?.className).toContain('bg-blue-900')
+	})
+
+	test('card header uses teal color class for Personal Brand industry', () => {
+		const { container } = render(
+			<Card
+				{...defaultProps}
+				industry="Personal Brand"
+				showcaseType={'quick' as const}
+			/>
+		)
+		const header = container.querySelector('[data-testid="card-header"]')
+		expect(header?.className).toContain('bg-teal-800')
+	})
+
+	test('card header uses slate fallback color for unknown industry', () => {
+		const { container } = render(
+			<Card
+				{...defaultProps}
+				industry="Unknown Industry"
+				showcaseType={'quick' as const}
+			/>
+		)
+		const header = container.querySelector('[data-testid="card-header"]')
+		expect(header?.className).toContain('bg-slate-800')
+	})
+})

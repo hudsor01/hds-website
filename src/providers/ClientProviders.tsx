@@ -25,7 +25,7 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
 	}, [])
 
 	return (
-		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+		<ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
 			<QueryProvider>{children}</QueryProvider>
 		</ThemeProvider>
 	)

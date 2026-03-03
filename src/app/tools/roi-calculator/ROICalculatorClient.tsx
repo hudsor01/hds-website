@@ -9,6 +9,7 @@ import { parseAsFloat, parseAsInteger, useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { CalculatorResults } from '@/components/calculators/CalculatorResults'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
 import { formatCurrency } from '@/lib/utils'
@@ -232,13 +233,14 @@ export function ROICalculatorClient() {
 						/>
 					</div>
 
-					<Card size="sm" className="bg-info-light dark:bg-info-bg-dark/20">
+					<Card size="sm" className="bg-info-light">
 						<div className="flex">
 							<div className="shrink-0">
 								<svg
 									className="h-5 w-5 text-info-text"
 									viewBox="0 0 20 20"
 									fill="currentColor"
+									aria-hidden="true"
 								>
 									<path
 										fillRule="evenodd"
@@ -248,7 +250,7 @@ export function ROICalculatorClient() {
 								</svg>
 							</div>
 							<div className="ml-3 flex-1">
-								<p className="text-sm text-info-darker dark:text-info-muted">
+								<p className="text-sm text-info-text">
 									<strong>Industry Average:</strong> Most businesses see 15-50%
 									conversion rate improvements with professional website
 									optimization.
@@ -257,12 +259,9 @@ export function ROICalculatorClient() {
 						</div>
 					</Card>
 
-					<button
-						type="submit"
-						className="w-full rounded-md bg-primary px-6 py-3 text-base font-semibold text-foreground shadow-xs hover:bg-primary/80 focus:outline-hidden focus:ring-2 focus:ring-primary"
-					>
+					<Button type="submit" variant="accent" className="w-full">
 						Calculate My ROI
-					</button>
+					</Button>
 				</form>
 			) : (
 				<div>
@@ -272,7 +271,8 @@ export function ROICalculatorClient() {
 						inputs={inputs}
 					/>
 
-					<button
+					<Button
+						variant="outline"
 						onClick={() => {
 							setShowResults(false)
 							setMonthlyTraffic(0)
@@ -280,10 +280,10 @@ export function ROICalculatorClient() {
 							setAverageOrderValue(0)
 							setImprovementPercentage(20)
 						}}
-						className="mt-content-block w-full rounded-md border border-border bg-card px-6 py-3 text-base font-semibold text-muted-foreground shadow-xs hover:bg-muted dark:border-border dark:bg-muted dark:text-muted dark:hover:bg-muted-foreground"
+						className="mt-content-block w-full"
 					>
 						Recalculate
-					</button>
+					</Button>
 				</div>
 			)}
 		</>

@@ -137,9 +137,9 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		stateCode: 'FL',
 		tagline: 'Tampa Bay Digital Innovation',
 		description:
-			"Tampa Bay is Florida's tech coast with a booming startup scene, major port, and world-class healthcare. We build digital solutions for the Tampa Bay market.",
+			"Tampa Bay is Florida's tech coast with a booming business community, major port, and world-class healthcare. We build digital solutions for the Tampa Bay market.",
 		metaDescription:
-			'Web development in Tampa, FL. Custom websites, startup platforms, and digital solutions for Tampa Bay businesses and tech companies.',
+			'Website development and business automation in Tampa, FL. We build your website, connect your tools, and automate the work for Tampa Bay businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Ybor City',
@@ -159,7 +159,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Tech & Cybersecurity',
 				description:
-					'Web platforms for Tampa tech companies, SOCOM-adjacent cybersecurity firms, and SaaS startups.'
+					'Website development and automation for Tampa businesses — from service companies to local retailers.'
 			},
 			{
 				title: 'Healthcare & BioScience',
@@ -212,7 +212,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Tech & Innovation',
 				description:
-					'Web platforms for Lake Nona tech companies, UCF startups, and Orlando innovation district businesses.'
+					'Web platforms for Lake Nona tech companies, UCF-area businesses, and Orlando innovation district companies.'
 			}
 		]
 	},
@@ -255,7 +255,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Data & Analytics',
 				description:
-					'Web platforms for St. Petersburg data analytics firms, fintech startups, and innovation corridor companies.'
+					'Web platforms for St. Petersburg data analytics firms, fintech companies, and innovation corridor businesses.'
 			}
 		]
 	},

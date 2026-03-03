@@ -1,20 +1,19 @@
 import {
 	ArrowRight,
-	BarChart3,
+	Award,
 	Calculator,
+	Check,
 	Clock,
 	Code2,
 	Rocket,
 	Settings,
 	TrendingUp,
-	Users,
 	Zap
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { SEO_CONFIG } from '@/utils/seo'
 
@@ -48,630 +47,455 @@ export const metadata: Metadata = {
 	}
 }
 
+const automationItems = [
+	{ trigger: 'Lead submits a form', outcome: 'lands in your CRM instantly' },
+	{ trigger: 'New client signs on', outcome: 'onboarding sequence fires' },
+	{ trigger: 'Booking confirmed', outcome: 'calendar syncs + texts sent' },
+	{ trigger: 'Invoice goes overdue', outcome: 'reminder sequence starts' },
+	{ trigger: 'Every Monday morning', outcome: 'digest report hits your inbox' }
+]
+
+const solutions = [
+	{
+		Icon: Code2,
+		title: 'A Website That Works For You',
+		description:
+			'Your digital front door, built to capture leads and represent your business professionally. Mobile-ready, fast, and with an admin panel so you can update it without calling a developer.',
+		stat: '2–4 wks',
+		statLabel: 'to launch'
+	},
+	{
+		Icon: Zap,
+		title: 'All Your Tools, Connected',
+		description:
+			'We link your site to your CRM, payment processor, calendar, and email so data flows automatically. No more copy-pasting between apps or losing leads in the gaps.',
+		stat: '20+',
+		statLabel: 'tools we connect'
+	},
+	{
+		Icon: Settings,
+		title: 'Workflows That Run Themselves',
+		description:
+			'Follow-up emails, client onboarding, appointment reminders, invoice chasing — all automated. Your business keeps moving even when you step away.',
+		stat: '10+ hrs',
+		statLabel: 'saved per week'
+	}
+]
+
+const results = [
+	{
+		Icon: Rocket,
+		metric: '2–4 wks',
+		label: 'First delivery',
+		period: 'Typical project start'
+	},
+	{
+		Icon: TrendingUp,
+		metric: '40+',
+		label: 'Projects delivered',
+		period: 'Across 3 continents'
+	},
+	{
+		Icon: Award,
+		metric: '10+ yrs',
+		label: 'Combined experience',
+		period: 'Experienced developers'
+	},
+	{
+		Icon: Clock,
+		metric: '24/7',
+		label: 'Support available',
+		period: 'When you need us'
+	}
+]
+
 export default function HomePage() {
-	const solutions = [
-		{
-			icon: Code2,
-			title: 'Ship Features Faster',
-			description:
-				'Launch new features in days, not months. We handle the entire technical stack.',
-			features: [
-				'React/Next.js Development',
-				'API & Database Architecture',
-				'99.9% Uptime Guaranteed'
-			]
-		},
-		{
-			icon: Settings,
-			title: 'Fix Revenue Leaks',
-			description:
-				'Stop losing 30% of leads to broken processes. Automate everything that slows you down.',
-			features: [
-				'CRM Integration',
-				'Lead Scoring Automation',
-				'Real-time Analytics'
-			]
-		},
-		{
-			icon: BarChart3,
-			title: 'Scale Without Breaking',
-			description:
-				'Handle 10x growth without rebuilding. We future-proof your tech from day one.',
-			features: [
-				'Performance Audits',
-				'Infrastructure Planning',
-				'Cost Optimization'
-			]
-		}
-	]
-
-	const results = [
-		{ metric: 'Fast', label: 'Delivery Timeline', period: '2-4 weeks typical' },
-		{ metric: 'Proven', label: 'Track Record', period: 'Real client results' },
-		{
-			metric: 'Expert',
-			label: 'Development Team',
-			period: '10+ years experience'
-		},
-		{ metric: '24/7', label: 'Support Available', period: 'When you need us' }
-	]
-
 	return (
 		<main className="min-h-screen bg-background">
-			{/* Hero Section - Seamless Layout */}
-			<section className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-						{/* Left Side - Content */}
-						<div className="lg:pr-8">
-							<div className="space-y-sections">
-								<div>
-									<h1 className="text-page-title text-foreground leading-tight mb-comfortable text-balance">
-										<span className="block mb-subheading">
-											Stop Losing Revenue to
-										</span>
-										<span className="block text-accent">
-											Technical Bottlenecks
-										</span>
-									</h1>
-									<p className="text-hero-subtitle text-accent mb-content-block">
-										Ship 3x Faster, 60% Cheaper
-									</p>
-								</div>
+			{/* ── HERO ──────────────────────────────────────────── */}
+			<section className="relative overflow-hidden bg-background">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
 
-								<p className="text-lead text-muted-foreground max-w-xl">
-									We build and scale your technical operations in weeks, not
-									months. No hiring delays. No training costs. Just proven
-									senior talent ready to execute.
-								</p>
-
-								<div className="space-y-3">
-									<div className="flex flex-col sm:flex-row gap-comfortable">
-										<Button
-											asChild
-											variant="default"
-											size="lg"
-											trackConversion={true}
-										>
-											<Link href={ROUTES.CONTACT}>
-												See Your ROI in 30 Days
-												<ArrowRight className="w-4 h-4" />
-											</Link>
-										</Button>
-										<Button
-											asChild
-											variant="outline"
-											size="lg"
-											trackConversion={true}
-										>
-											<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
-												Calculate Your Savings
-												<ArrowRight className="w-4 h-4" />
-											</Link>
-										</Button>
-									</div>
-									<p className="text-sm text-muted-foreground text-center sm:text-left">
-										Free consultation, no commitment required
-									</p>
-								</div>
-
-								{/* Trust Indicators */}
-								<div className="flex flex-wrap gap-sections pt-6">
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
-											<Clock className="w-5 h-5 text-success-text" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											Proven ROI Results
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
-											<Users className="w-5 h-5 text-info-text" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											Zero onboarding time
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-											<Rocket className="w-5 h-5 text-accent" />
-										</div>
-										<span className="text-sm font-medium text-muted-foreground">
-											100+ Projects Delivered
-										</span>
-									</div>
-								</div>
+				<div className="relative z-10 container-wide px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
+					<div className="grid lg:grid-cols-5 gap-12 xl:gap-16 items-center">
+						{/* Left — headline + CTAs */}
+						<div className="lg:col-span-3 flex flex-col gap-8">
+							{/* Availability badge */}
+							<div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-border/50 bg-muted/10 text-sm text-muted-foreground w-fit">
+								<span className="relative flex h-2 w-2 shrink-0">
+									<span className="animate-ping absolute h-full w-full rounded-full bg-accent opacity-75" />
+									<span className="relative flex h-2 w-2 rounded-full bg-accent" />
+								</span>
+								Limited availability — 3 project spots open for Q1 2026
 							</div>
-						</div>
 
-						{/* Right Side - Terminal Display */}
-						<div className="mt-16 lg:mt-0">
-							<div className="relative">
-								{/* Animated Background Elements */}
-								<div className="absolute inset-0 bg-primary/20 rounded-3xl blur-3xl opacity-50" />
-								<div className="absolute top-4 right-4 w-32 h-32 bg-info/20 rounded-full blur-2xl" />
+							<h1 className="text-page-title text-foreground leading-tight text-balance">
+								Your Business Should Run Itself
+							</h1>
 
-								{/* Terminal Window */}
-								<Card
-									variant="glassLight"
-									size="none"
-									className="relative overflow-hidden"
+							<p className="text-lead text-muted-foreground max-w-lg text-balance">
+								Most businesses have a website. Few have a system behind it. We
+								build your site, connect your tools, and automate the workflows
+								that eat your time — from first lead to closed deal. One
+								partner, end to end.
+							</p>
+
+							<div className="flex flex-col sm:flex-row gap-3">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
 								>
-									{/* Terminal Header */}
-									<div className="bg-card/80 border-b border-border px-4 py-3 flex-between">
-										<div className="flex-center gap-tight">
-											<div className="w-3 h-3 rounded-full bg-destructive" />
-											<div className="w-3 h-3 rounded-full bg-warning" />
-											<div className="w-3 h-3 rounded-full bg-success" />
-										</div>
-										<div className="text-xs text-muted-foreground font-mono">
-											hudson-deploy.sh
-										</div>
-										<div className="w-3 h-3 bg-success-text rounded-full" />
+									<Link href={ROUTES.CONTACT}>
+										Get a Free Strategy Call
+										<ArrowRight className="w-4 h-4" />
+									</Link>
+								</Button>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									trackConversion={true}
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
+										<Calculator className="w-4 h-4" />
+										Calculate Your Savings
+									</Link>
+								</Button>
+							</div>
+
+							{/* Stats */}
+							<div className="flex items-center gap-6">
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										2–4 wks
 									</div>
-
-									{/* Terminal Content */}
-									<div
-										className="p-6 font-mono text-sm space-y-tight"
-										role="log"
-									>
-										<div className="text-accent">
-											$ npm run deploy --production
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Build completed in 1.8s
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Tests passed (147/147)
-										</div>
-										<div className="text-muted-foreground">
-											[OK] Security scan clean
-										</div>
-										<div className="text-info">
-											&gt; Deploying to production...
-										</div>
-										<div className="text-success">
-											[OK] Deployment successful
-										</div>
-										<div className="text-warning">
-											[LIVE] at https://client-app.com
-										</div>
-
-										<div className="pt-2 space-y-1">
-											<div className="text-accent/80">Performance: 100/100</div>
-											<div className="text-accent/80">
-												Accessibility: 100/100
-											</div>
-											<div className="text-accent/80">SEO: 98/100</div>
-										</div>
-
-										<div className="text-accent mt-4">
-											<span className="inline-block">$</span>
-											<span className="inline-block w-2 h-4 bg-accent ml-1" />
-										</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										First delivery
 									</div>
-								</Card>
+								</div>
+								<div className="w-px h-8 bg-border/40" />
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										40+
+									</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										Projects delivered
+									</div>
+								</div>
+								<div className="w-px h-8 bg-border/40" />
+								<div>
+									<div className="text-xl font-black text-foreground tabular-nums">
+										10+ yrs
+									</div>
+									<div className="text-xs text-muted-foreground mt-0.5">
+										Experience
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</section>
 
-			{/* Solutions Grid */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
-							How We Solve Your Biggest Problems
-						</h2>
-						<p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-							Three ways we help SaaS companies go from struggling to scaling
-						</p>
-					</div>
-
-					<div className="grid lg:grid-cols-3 gap-sections">
-						{solutions.map((solution, index) => (
-							<Card
-								key={index}
-								variant="glassLight"
-								size="lg"
-								hover
-								className="group relative transform-gpu"
-							>
-								<div className="space-y-comfortable">
-									<div className="flex-center space-x-4">
-										<div className="p-3 rounded-xl bg-background/20 border border-primary/30 hover-lift will-change-transform transition-smooth">
-											<solution.icon className="h-6 w-6 text-accent" />
-										</div>
-										<h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-smooth">
-											{solution.title}
-										</h3>
+						{/* Right — automation feed */}
+						<div className="lg:col-span-2">
+							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
+								{/* Header */}
+								<div className="px-5 py-4 border-b border-border/60">
+									<div className="flex items-center gap-2 mb-1">
+										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
+										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
+											What Gets Automated
+										</span>
 									</div>
+									<p className="text-xs text-muted-foreground">
+										After we wire up your stack
+									</p>
+								</div>
 
-									<div className="typography">
-										<p className="muted leading-relaxed">
-											{solution.description}
+								{/* Automation rows */}
+								{automationItems.map(item => (
+									<div
+										key={item.trigger}
+										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-center gap-3"
+									>
+										<Check className="w-3.5 h-3.5 text-success-text shrink-0" />
+										<p className="text-sm leading-snug">
+											<span className="text-muted-foreground">
+												{item.trigger}
+											</span>
+											<span className="text-muted-foreground/40 mx-1.5">→</span>
+											<span className="text-foreground font-medium">
+												{item.outcome}
+											</span>
 										</p>
 									</div>
-
-									<div className="space-y-3">
-										{solution.features.map((feature, featureIndex) => (
-											<div key={featureIndex} className="flex-center space-x-3">
-												<div className="w-2 h-2 rounded-full bg-muted" />
-												<span className="text-responsive-sm text-muted-foreground">
-													{feature}
-												</span>
-											</div>
-										))}
-									</div>
-								</div>
-							</Card>
-						))}
+								))}
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
 
-			{/* Results Section - Enhanced */}
-			<section className="relative py-section px-4 sm:px-6 bg-muted overflow-hidden">
-				{/* Background Elements */}
-				<div className="absolute inset-0 bg-primary/5" />
-				<div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-				<div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-info-text/5 rounded-full blur-3xl" />
-
-				<div className="container-wide relative">
-					<div className="text-center mb-24">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
-							<span className="text-accent relative inline-block">
-								Proven Impact
-								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
-							</span>
+			{/* ── SOLUTIONS ─────────────────────────────────────── */}
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							What We Build
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							One Partner. Three Phases. End to End.
 						</h2>
-
-						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
-							Numbers don&apos;t lie - our clients see{' '}
-							<span className="text-accent font-semibold">
-								measurable results
-							</span>{' '}
-							that transform their businesses
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Most businesses have a website. Few have the system behind it. We
+							handle all three layers so nothing falls through the cracks.
 						</p>
 					</div>
 
-					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-sections lg:gap-10">
-						{results.map((result, index) => (
+					<div className="grid md:grid-cols-3 gap-6">
+						{solutions.map(solution => (
 							<div
-								key={index}
-								className="text-center group relative"
-								style={{ animationDelay: `${index * 100}ms` }}
+								key={solution.title}
+								className="group flex flex-col p-8 rounded-xl bg-surface-raised border border-border hover:border-border-strong transition-colors"
 							>
-								{/* Card with enhanced styling */}
-								<Card
-									variant="glassLight"
-									size="lg"
-									hover
-									className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 group-hover:transform group-hover:scale-105 lg:p-10"
-								>
-									{/* Top accent line */}
-									<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
-									{/* Metric with enhanced styling */}
-									<div className="relative mb-heading">
-										<div className="text-4xl lg:text-5xl font-black text-foreground mb-subheading group-hover:text-accent transition-all duration-300 font-mono">
-											{result.metric}
+								{/* Icon + stat row */}
+								<div className="flex items-start justify-between mb-6">
+									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+										<solution.Icon className="w-5 h-5 text-accent" />
+									</div>
+									<div className="text-right">
+										<div className="text-2xl font-black text-foreground tabular-nums">
+											{solution.stat}
 										</div>
-										<div className="absolute -inset-4 bg-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-sticky"></div>
+										<div className="text-xs text-muted-foreground">
+											{solution.statLabel}
+										</div>
 									</div>
+								</div>
 
-									{/* Label with enhanced typography */}
-									<div className="text-lg font-bold text-muted-foreground mb-3 group-hover:text-foreground transition-colors duration-300">
-										{result.label}
-									</div>
+								<h3 className="text-h3 text-foreground mb-3">
+									{solution.title}
+								</h3>
+								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
+									{solution.description}
+								</p>
 
-									{/* Period with accent styling */}
-									<div className="text-sm text-muted-foreground font-medium px-3 py-1 bg-muted/50 rounded-full border border-border/50">
-										{result.period}
-									</div>
-
-									{/* Subtle glow effect */}
-									<div className="absolute inset-0 bg-accent/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-								</Card>
-
-								{/* Connecting dots for visual flow */}
-								{index < results.length - 1 && (
-									<div className="hidden lg:block absolute top-1/2 -right-5 transform -translate-y-1/2">
-										<div className="w-3 h-0.5 bg-accent/50"></div>
-									</div>
-								)}
+								<Link
+									href={ROUTES.CONTACT}
+									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
+								>
+									Get Started
+									<ArrowRight className="w-4 h-4" />
+								</Link>
 							</div>
 						))}
 					</div>
+				</div>
+			</section>
 
-					{/* Bottom accent section */}
-					<div className="text-center mt-16 pt-8 border-t border-border/30">
-						<p className="text-muted-foreground text-sm font-medium">
-							Join{' '}
-							<span className="text-accent font-semibold">
-								growing businesses
-							</span>{' '}
-							who transformed with Hudson Digital Solutions
+			{/* ── RESULTS / METRICS ─────────────────────────────── */}
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Track Record
 						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							By the Numbers
+						</h2>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Real timelines, real experience, real availability — no agency
+							fluff.
+						</p>
+					</div>
+
+					{/* Metric grid — gap-px trick creates 1px dividers */}
+					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
+						{results.map(result => (
+							<div
+								key={result.metric}
+								className="bg-background px-8 py-10 text-center relative overflow-hidden"
+							>
+								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+								<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
+									<result.Icon className="w-5 h-5 text-accent" />
+								</div>
+								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-mono tabular-nums">
+									{result.metric}
+								</div>
+								<div className="text-sm font-semibold text-foreground mb-1">
+									{result.label}
+								</div>
+								<div className="text-xs text-muted-foreground">
+									{result.period}
+								</div>
+							</div>
+						))}
 					</div>
 				</div>
 			</section>
 
-			{/* Free Tools Section */}
-			<section className="py-section px-4 sm:px-6 bg-background">
+			{/* ── FREE TOOLS ──────────────────────────────────────── */}
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-20">
-						<h2 className="text-responsive-2xl text-foreground mb-content-block text-balance">
-							<span className="text-accent relative inline-block">
-								Free Business Tools
-								<span className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-accent rounded-full"></span>
-							</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Try For Free
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Free Business Tools
 						</h2>
-
-						<p className="text-lead text-muted-foreground max-w-3xl mx-auto mt-heading">
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Calculate your potential in 60 seconds. No signup required.
 						</p>
 					</div>
 
-					<div className="grid md:grid-cols-3 gap-sections">
+					<div className="grid md:grid-cols-3 gap-6">
 						{/* ROI Calculator */}
 						<Link href={TOOL_ROUTES.ROI_CALCULATOR} className="group block">
-							<Card
-								variant="glassLight"
-								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
-							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
-								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
-										<TrendingUp className="w-8 h-8 text-accent" />
-									</div>
-									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
-										ROI Calculator
-									</h3>
-									<p className="text-muted-foreground text-sm mb-heading">
-										See how much revenue you&apos;re leaving on the table with
-										poor conversion rates
-									</p>
+							<div className="h-full flex flex-col p-8 rounded-xl border border-border hover:border-accent/40 transition-colors">
+								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+									<TrendingUp className="w-7 h-7 text-accent" />
 								</div>
-
-								<ul className="space-y-tight mb-content-block">
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Calculate potential revenue increase
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Understand conversion impact
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Make data-driven decisions
-									</li>
-								</ul>
-
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
-									<span>Try Calculator</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+									ROI Calculator
+								</h3>
+								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
+									See how much business you&apos;re leaving on the table with a
+									website that doesn&apos;t convert visitors into customers.
+								</p>
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+									Try Calculator
+									<ArrowRight className="w-4 h-4" />
 								</div>
-							</Card>
+							</div>
 						</Link>
 
 						{/* Cost Estimator */}
 						<Link href={TOOL_ROUTES.COST_ESTIMATOR} className="group block">
-							<Card
-								variant="glassLight"
-								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
-							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
-								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
-										<Calculator className="w-8 h-8 text-accent" />
-									</div>
-									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
-										Cost Estimator
-									</h3>
-									<p className="text-muted-foreground text-sm mb-heading">
-										Get instant pricing for your website project based on
-										features and complexity
-									</p>
+							<div className="h-full flex flex-col p-8 rounded-xl border border-border hover:border-accent/40 transition-colors">
+								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+									<Calculator className="w-7 h-7 text-accent" />
 								</div>
-
-								<ul className="space-y-tight mb-content-block">
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Transparent pricing breakdown
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Timeline estimates included
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Feature-based pricing
-									</li>
-								</ul>
-
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
-									<span>Get Estimate</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+									Cost Estimator
+								</h3>
+								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
+									Get instant transparent pricing for your project based on
+									features, scope, and complexity.
+								</p>
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+									Get Estimate
+									<ArrowRight className="w-4 h-4" />
 								</div>
-							</Card>
+							</div>
 						</Link>
 
-						{/* Performance Calculator */}
+						{/* Performance Analyzer */}
 						<Link
 							href={TOOL_ROUTES.PERFORMANCE_CALCULATOR}
 							className="group block"
 						>
-							<Card
-								variant="glassLight"
-								size="lg"
-								hover
-								className="relative border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:transform hover:scale-105 transform-gpu"
-							>
-								<div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-accent rounded-b-full"></div>
-
-								<div className="mb-content-block">
-									<div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-heading group-hover:bg-primary/20 transition-colors">
-										<Zap className="w-8 h-8 text-accent" />
-									</div>
-									<h3 className="text-h3 text-foreground mb-subheading group-hover:text-accent transition-colors">
-										Performance Analyzer
-									</h3>
-									<p className="text-muted-foreground text-sm mb-heading">
-										Discover how much revenue slow performance is costing you
-										every month
-									</p>
+							<div className="h-full flex flex-col p-8 rounded-xl border border-border hover:border-accent/40 transition-colors">
+								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+									<Zap className="w-7 h-7 text-accent" />
 								</div>
-
-								<ul className="space-y-tight mb-content-block">
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Real PageSpeed analysis
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Revenue impact calculation
-									</li>
-									<li className="flex items-center gap-tight text-sm text-secondary-foreground">
-										<div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-										Core Web Vitals insights
-									</li>
-								</ul>
-
-								<div className="flex items-center text-accent font-semibold group-hover:gap-tight transition-all">
-									<span>Analyze Site</span>
-									<svg
-										className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
+								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+									Performance Analyzer
+								</h3>
+								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
+									Discover how much revenue slow load times are costing you
+									every single month.
+								</p>
+								<div className="flex items-center gap-1.5 text-sm font-semibold text-accent">
+									Analyze Site
+									<ArrowRight className="w-4 h-4" />
 								</div>
-							</Card>
+							</div>
 						</Link>
 					</div>
 
-					<div className="text-center mt-12">
+					<div className="text-center mt-10">
 						<Link
 							href="/tools"
-							className="inline-flex items-center gap-tight text-accent hover:text-info font-semibold transition-colors"
+							className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 						>
-							View All Tools
-							<svg
-								className="w-5 h-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M9 5l7 7-7 7"
-								/>
-							</svg>
+							View all tools
+							<ArrowRight className="w-4 h-4" />
 						</Link>
 					</div>
 				</div>
 			</section>
 
-			{/* Newsletter Signup */}
+			{/* ── NEWSLETTER ──────────────────────────────────────── */}
 			<section className="py-section-sm px-4">
 				<div className="container-wide max-w-4xl mx-auto">
 					<NewsletterSignup
 						dynamic
 						variant="inline"
-						title="Get Weekly Tech Insights"
-						description="Get weekly insights on scaling engineering teams, technical leadership, and development efficiency. No spam, unsubscribe anytime."
+						title="Get Weekly Business Insights"
+						description="Get weekly tips on growing your business online, building a stronger web presence, and saving time with smart automation. No spam, unsubscribe anytime."
 					/>
 				</div>
 			</section>
 
-			{/* Final CTA */}
+			{/* ── FINAL CTA ───────────────────────────────────────── */}
 			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide text-center">
-					<Card variant="glassSection" size="none" className="p-12 md:p-20">
-						<div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-comfortable">
-							<Rocket className="w-10 h-10 text-accent" />
+				<div className="container-wide">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						{/* Subtle amber glow from top */}
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+
+						<div className="relative z-10">
+							<div className="w-16 h-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-8">
+								<Rocket className="w-8 h-8 text-accent" />
+							</div>
+
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to stop running your business manually?
+							</h2>
+
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								Every week without automation is another week of manual
+								follow-ups, missed leads, and time you won&apos;t get back.
+								Let&apos;s map out what your business looks like when the system
+								runs itself.
+							</p>
+
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href={ROUTES.CONTACT}>
+										Get a Free Strategy Call
+										<ArrowRight className="w-4 h-4" />
+									</Link>
+								</Button>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
+								</Button>
+							</div>
 						</div>
-
-						<h2 className="text-responsive-2xl text-foreground mb-content-block max-w-4xl mx-auto text-balance">
-							Your competitors ship faster.
-							<span className="block text-accent mt-4">
-								Why don&apos;t you?
-							</span>
-						</h2>
-
-						<p className="text-lead text-muted-foreground mb-12 max-w-3xl mx-auto">
-							Every day you wait is revenue lost. Get a custom roadmap to 10x
-							your technical velocity in our free 30-minute strategy call.
-						</p>
-
-						<div className="flex flex-col sm:flex-row gap-comfortable justify-center">
-							<Button
-								asChild
-								variant="default"
-								size="lg"
-								trackConversion={true}
-							>
-								<Link href={ROUTES.CONTACT}>
-									Get Your Free Roadmap
-									<ArrowRight className="w-4 h-4" />
-								</Link>
-							</Button>
-							<Button
-								asChild
-								variant="outline"
-								size="lg"
-								trackConversion={true}
-							>
-								<Link href={ROUTES.PORTFOLIO}>
-									See Proven Results First
-									<ArrowRight className="w-4 h-4" />
-								</Link>
-							</Button>
-						</div>
-					</Card>
+					</div>
 				</div>
 			</section>
 		</main>

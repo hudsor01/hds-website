@@ -78,7 +78,7 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'University & Research',
 				description:
-					'Web platforms for University of Arizona research programs, biotech startups, and education technology.'
+					'Web platforms for University of Arizona research programs, biotech companies, and education technology.'
 			},
 			{
 				title: 'Tourism & Hospitality',
@@ -180,9 +180,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Silicon Desert Digital Hub',
 		description:
-			"Home to Intel and a growing tech corridor, Chandler is Arizona's Silicon Desert. We build cutting-edge digital solutions for Chandler tech companies and businesses.",
+			"Home to Intel and a growing tech corridor, Chandler is Arizona's Silicon Desert. We build websites, tool integrations, and automation for Chandler businesses.",
 		metaDescription:
-			'Web development in Chandler, AZ. Custom websites, tech startup platforms, and digital solutions for Silicon Desert businesses.',
+			'Website development and business automation in Chandler, AZ. We build your website, connect your tools, and automate the work for Silicon Desert businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Ocotillo',
@@ -200,19 +200,19 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech Company Solutions',
+				title: 'Local Business Websites',
 				description:
-					'Web applications and platforms for Chandler tech companies, semiconductor firms, and data centers.'
+					'Modern, fast websites for Arizona businesses — designed to convert visitors into customers.'
 			},
 			{
-				title: 'Startup MVP Development',
+				title: 'Website Launch Packages',
 				description:
-					'Rapid prototyping and MVP development for Chandler and East Valley tech startups.'
+					'Get your business online fast — professional website, setup, and launch handled end to end.'
 			},
 			{
-				title: 'Corporate Web Solutions',
+				title: 'Business Website Solutions',
 				description:
-					'Enterprise websites and intranets for Chandler corporate campuses and Fortune 500 offices.'
+					'Professional websites and business systems for Chandler businesses of every size.'
 			}
 		]
 	},
@@ -266,9 +266,9 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		stateCode: 'AZ',
 		tagline: 'Sun Devil Innovation Hub',
 		description:
-			'Home to Arizona State University and a thriving startup ecosystem, Tempe is the innovation engine of the Valley. We build digital solutions for the Tempe tech community.',
+			'Home to Arizona State University and a thriving business community, Tempe is a center of commerce in the Valley. We help Tempe businesses get online, connect their tools, and grow.',
 		metaDescription:
-			'Web development in Tempe, AZ. Custom websites, startup MVPs, and digital solutions for ASU area businesses and tech companies.',
+			'Website development and business automation in Tempe, AZ. We build your website, connect your tools, and automate the work for ASU area businesses.',
 		neighborhoods: [
 			'Downtown Tempe',
 			'Mill Avenue',
@@ -286,14 +286,14 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Startup Incubation',
+				title: 'Business Automation',
 				description:
-					'MVP development and digital platforms for ASU-affiliated startups and Tempe incubator companies.'
+					'Automate manual work — connect your CRM, booking, and tools so your Tempe business runs itself.'
 			},
 			{
 				title: 'EdTech Solutions',
 				description:
-					'Education technology platforms for ASU programs, online learning companies, and education startups.'
+					'Education technology platforms for ASU programs, online learning companies, and EdTech businesses.'
 			},
 			{
 				title: 'Nightlife & Entertainment',

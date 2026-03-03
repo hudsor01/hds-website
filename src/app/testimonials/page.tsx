@@ -1,7 +1,7 @@
 import { ArrowRight, MessageCircle, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
 	title: 'Client Testimonials | Hudson Digital Solutions',
@@ -15,13 +15,13 @@ const testimonials = [
 	{
 		id: 1,
 		name: 'Michael Chen',
-		company: 'TechStart Inc.',
-		role: 'CTO',
+		company: 'Riverside Plumbing Co.',
+		role: 'Owner',
 		content:
-			'Hudson Digital Solutions delivered beyond our expectations. They transformed our MVP into a scalable platform that handles 100K+ users.',
+			'Hudson Digital Solutions delivered beyond our expectations. They built us a website and booking system that doubled our inbound leads within 60 days.',
 		rating: 5,
-		service: 'SaaS Development',
-		highlight: '10x Performance'
+		service: 'Business Website',
+		highlight: '2x More Leads'
 	},
 	{
 		id: 2,
@@ -82,11 +82,11 @@ const testimonials = [
 
 const StarRating = ({ rating }: { rating: number }) => {
 	return (
-		<div className="flex gap-tight">
+		<div className="flex gap-1">
 			{[...Array(5)].map((_, i) => (
 				<Star
 					key={i}
-					className={`w-5 h-5 ${i < rating ? 'text-accent fill-cyan-400' : 'text-muted-foreground'}`}
+					className={`w-5 h-5 ${i < rating ? 'text-accent fill-accent' : 'text-muted-foreground'}`}
 				/>
 			))}
 		</div>
@@ -95,173 +95,176 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function TestimonialsPage() {
 	return (
-		<div className="min-h-screen bg-background">
+		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative pt-32 section-spacing page-padding-x">
-				<div className="absolute inset-0 overflow-hidden">
-					<div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 blur-3xl rounded-full"></div>
-					<div className="absolute bottom-20 right-1/4 w-96 h-96 bg-info/10 blur-3xl rounded-full"></div>
-				</div>
-
-				<div className="relative z-sticky container-wide">
-					<div className="text-center space-y-comfortable">
-						<div>
-							<span className="px-4 py-2 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-medium inline-block">
-								Client Success Stories
-							</span>
-						</div>
-
-						<div>
-							<h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-none tracking-tight text-balance">
-								<span className="inline-block">Real</span>
-								<span className="inline-block mx-4 text-accent">Results</span>
-								<span className="inline-block">Real Clients</span>
-							</h1>
-						</div>
-
-						<div className="typography">
-							<p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
-								Don&apos;t just take our word for it. See what businesses are
-								achieving with our revenue-focused engineering solutions.
-							</p>
-						</div>
-					</div>
+			<section className="relative overflow-hidden bg-background">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Client Success Stories
+					</p>
+					<h1 className="text-page-title text-foreground leading-tight text-balance">
+						Real Results. Real Clients.
+					</h1>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
+						Don&apos;t just take our word for it. See what businesses are
+						achieving with our revenue-focused engineering solutions.
+					</p>
 				</div>
 			</section>
 
 			{/* Stats Bar */}
-			<section className="py-12 page-padding-x border-y border-border">
+			<section className="py-section-sm px-4 sm:px-6 border-b border-border">
 				<div className="container-wide">
-					<div className="grid-4 gap-comfortable">
-						<div className="text-center">
-							<div className="text-responsive-lg font-black text-accent">
+					<div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								100%
 							</div>
-							<div className="text-xs text-muted-foreground mt-1">
+							<div className="text-xs text-muted-foreground">
 								Client Satisfaction
 							</div>
 						</div>
-						<div className="text-center">
-							<div className="text-responsive-lg font-black text-accent">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								Growing
 							</div>
-							<div className="text-xs text-muted-foreground mt-1">
+							<div className="text-xs text-muted-foreground">
 								Projects Delivered
 							</div>
 						</div>
-						<div className="text-center">
-							<div className="text-responsive-lg font-black text-accent">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								3.5x
 							</div>
-							<div className="text-xs text-muted-foreground mt-1">
-								Average ROI
-							</div>
+							<div className="text-xs text-muted-foreground">Average ROI</div>
 						</div>
-						<div className="text-center">
-							<div className="text-responsive-lg font-black text-accent">
+						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
+							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
 								24hr
 							</div>
-							<div className="text-xs text-muted-foreground mt-1">
-								Response Time
-							</div>
+							<div className="text-xs text-muted-foreground">Response Time</div>
 						</div>
 					</div>
 				</div>
 			</section>
 
 			{/* Testimonials Grid */}
-			<section className="section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-content-block">
-						<h2 className="text-clamp-xl font-black text-foreground mb-heading">
-							<span className="text-accent">What Our Clients Say</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Testimonials
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							What Our Clients Say
 						</h2>
-						<p className="text-lg text-muted-foreground container-narrow">
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Every testimonial represents a business that chose excellence over
 							mediocrity
 						</p>
 					</div>
 
-					<div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-comfortable scrollbar-hide">
+					<div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none md:grid-cols-2 lg:grid-cols-3 gap-6 scrollbar-hide">
 						{testimonials.map(testimonial => (
-							<Card
+							<div
 								key={testimonial.id}
-								variant="glassLight"
-								className="card-hover-glow transition-smooth snap-center shrink-0 w-[90vw] md:w-auto"
+								className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors snap-center shrink-0 w-[90vw] md:w-auto"
 							>
 								{/* Rating */}
-								<div className="mb-subheading">
+								<div className="mb-4">
 									<StarRating rating={testimonial.rating} />
 								</div>
 
 								{/* Highlight Label */}
-								<div className="mb-card-content">
-									<span className="px-4 py-2 rounded-full bg-accent/10 text-accent text-xs font-semibold">
+								<div className="mb-6">
+									<span className="px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold">
 										{testimonial.highlight}
 									</span>
 								</div>
 
 								{/* Quote */}
-								<div className="mb-content-block">
+								<div className="mb-6">
 									<MessageCircle className="w-8 h-8 text-accent/30 mb-3" />
-									<p className="text-muted-foreground leading-relaxed">
+									<p className="text-sm text-muted-foreground leading-relaxed">
 										&ldquo;{testimonial.content}&rdquo;
 									</p>
 								</div>
 
 								{/* Client Info */}
 								<div className="border-t border-border pt-6">
-									<div className="font-semibold text-foreground">
+									<div className="font-semibold text-foreground text-sm">
 										{testimonial.name}
 									</div>
-									<div className="text-xs text-muted-foreground">
+									<div className="text-xs text-muted-foreground mt-0.5">
 										{testimonial.role} at {testimonial.company}
 									</div>
 									<div className="text-xs text-accent mt-2">
 										{testimonial.service}
 									</div>
 								</div>
-							</Card>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
 
 			{/* CTA Section */}
-			<section className="section-spacing page-padding-x">
+			<section className="py-section px-4 sm:px-6">
 				<div className="container-wide">
-					<Card variant="glassSection" className="text-center">
-						<h2 className="text-clamp-xl font-black text-foreground mb-heading">
-							Ready to be our next
-							<span className="block text-accent mt-2">success story?</span>
-						</h2>
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to be our next{' '}
+								<span className="text-accent">success story?</span>
+							</h2>
 
-						<div className="typography">
-							<p className="text-lg text-muted-foreground container-narrow mb-content-block">
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								Join the growing list of businesses that have transformed their
 								technical capabilities with Hudson Digital Solutions.
 							</p>
-						</div>
 
-						<div className="flex flex-col sm:flex-row gap-content justify-center">
-							<Link
-								href="/contact"
-								className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-black bg-secondary rounded-lg"
-							>
-								Start Your Transformation
-								<ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-							</Link>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href="/contact">
+										Start Your Transformation
+										<ArrowRight className="w-5 h-5" />
+									</Link>
+								</Button>
 
-							<Link
-								href="/showcase"
-								className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-foreground border-2 border-border rounded-lg hover:border-accent/50 hover:bg-background/50 transition-smooth"
-							>
-								View Portfolio
-							</Link>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href="/showcase">View Portfolio</Link>
+								</Button>
+							</div>
 						</div>
-					</Card>
+					</div>
 				</div>
 			</section>
-		</div>
+		</main>
 	)
 }

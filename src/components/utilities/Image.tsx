@@ -13,12 +13,12 @@ const ASPECT_RATIOS = {
 } as const
 
 const BASE_CONTAINER_CLASSES = 'relative overflow-hidden rounded-lg'
-const ERROR_CONTAINER_CLASSES = 'flex-center bg-bg-tertiary-dark/30 rounded-lg'
+const ERROR_CONTAINER_CLASSES = 'flex-center bg-muted/30 rounded-lg'
 const ERROR_CONTENT_CLASSES = 'text-center text-muted-foreground'
 const ERROR_ICON_CLASSES = 'w-12 h-12 mx-auto mb-subheading opacity-50'
 const ERROR_TEXT_CLASSES = 'text-sm'
 const LOADING_OVERLAY_CLASSES =
-	'absolute inset-0 bg-bg-tertiary-dark/30 animate-pulse flex-center'
+	'absolute inset-0 bg-muted/30 animate-pulse flex-center'
 const LOADING_TEXT_CLASSES = 'text-muted-foreground text-sm'
 const IMAGE_BASE_CLASSES = 'object-cover transition-opacity duration-300'
 

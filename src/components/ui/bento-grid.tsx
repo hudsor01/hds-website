@@ -1,5 +1,3 @@
-'use client'
-
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
@@ -58,19 +56,13 @@ const BentoCard = ({
 	>
 		<div>{background}</div>
 		<div className="card-padding-sm">
-			<div className="pointer-events-none z-sticky flex transform-gpu flex-col gap-1 transition-all duration-300 lg:group-hover:-translate-y-10">
-				<Icon className="h-12 w-12 origin-left transform-gpu text-foreground transition-all duration-300 ease-in-out group-hover:scale-75 will-change-transform" />
-				<h3 className="text-h4 text-foreground dark:text-muted-foreground">
-					{name}
-				</h3>
+			<div className="pointer-events-none z-sticky flex transform-gpu flex-col gap-1 mb-comfortable">
+				<Icon className="h-12 w-12 origin-left transform-gpu text-foreground" />
+				<h3 className="text-h4 text-foreground">{name}</h3>
 				<p className="max-w-lg text-muted-foreground">{description}</p>
 			</div>
 
-			<div
-				className={cn(
-					'lg:hidden pointer-events-none flex w-full translate-y-0 transform-gpu flex-row items-center transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
-				)}
-			>
+			<div className="pointer-events-auto flex w-full flex-row items-center">
 				<Button
 					variant="link"
 					asChild
@@ -85,25 +77,7 @@ const BentoCard = ({
 			</div>
 		</div>
 
-		<div
-			className={cn(
-				'hidden lg:flex pointer-events-none absolute bottom-0 w-full translate-y-10 transform-gpu flex-row items-center card-padding-sm opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100'
-			)}
-		>
-			<Button
-				variant="link"
-				asChild
-				size="sm"
-				className="pointer-events-auto p-0"
-			>
-				<a href={href}>
-					{cta}
-					<ArrowRightIcon className="ms-2 h-4 w-4 rtl:rotate-180" />
-				</a>
-			</Button>
-		</div>
-
-		<div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-background/[.03] group-hover:dark:bg-card/10" />
+		<div className="pointer-events-none absolute inset-0" />
 	</div>
 )
 

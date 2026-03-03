@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { trackError } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
@@ -36,15 +35,16 @@ export default function Error({
 	}, [error])
 
 	return (
-		<div className="min-h-screen flex-center px-6">
+		<main className="min-h-screen bg-background flex items-center justify-center px-6">
 			<div className="max-w-md w-full text-center">
-				<div className="mb-comfortable">
-					<div className="inline-flex flex-center w-16 h-16 bg-destructive-muted dark:bg-destructive-bg-dark/20 rounded-full mb-heading">
+				<div className="mb-8">
+					<div className="inline-flex items-center justify-center w-16 h-16 bg-destructive/10 rounded-full mb-6">
 						<svg
-							className="w-8 h-8 text-destructive-dark dark:text-destructive-text"
+							className="w-8 h-8 text-destructive"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
+							aria-hidden="true"
 						>
 							<path
 								strokeLinecap="round"
@@ -54,21 +54,19 @@ export default function Error({
 							/>
 						</svg>
 					</div>
-					<h1 className="text-h3 text-foreground dark:text-foreground mb-subheading">
-						Something went wrong
-					</h1>
-					<p className="text-muted-foreground dark:text-muted-foreground mb-content-block">
+					<h1 className="text-h3 text-foreground mb-3">Something went wrong</h1>
+					<p className="text-sm text-muted-foreground leading-relaxed mb-4">
 						We encountered an unexpected error. Our team has been notified.
 					</p>
 					{error.digest && (
-						<p className="text-xs text-muted-foreground dark:text-muted-foreground mb-content-block font-mono">
+						<p className="text-xs text-muted-foreground mb-4 font-mono">
 							Error ID: {error.digest}
 						</p>
 					)}
 				</div>
 
-				<div className="flex flex-col sm:flex-row gap-3 justify-center">
-					<Button variant="default" size="default" onClick={reset}>
+				<div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+					<Button variant="accent" size="default" onClick={reset}>
 						Try again
 					</Button>
 					<Button asChild variant="outline" size="default">
@@ -76,18 +74,15 @@ export default function Error({
 					</Button>
 				</div>
 
-				<Card
-					size="sm"
-					className="mt-heading bg-muted dark:bg-muted rounded-lg"
-				>
-					<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+				<div className="rounded-xl border border-border bg-surface-raised p-4">
+					<p className="text-sm text-muted-foreground">
 						Need immediate assistance?{' '}
 						<a href={`mailto:${BUSINESS_INFO.email}`} className="link-primary">
 							Contact support
 						</a>
 					</p>
-				</Card>
+				</div>
 			</div>
-		</div>
+		</main>
 	)
 }

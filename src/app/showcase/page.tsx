@@ -1,4 +1,4 @@
-import { ExternalLink, Rocket, Sparkles } from 'lucide-react'
+import { ExternalLink, Rocket } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -13,11 +13,11 @@ export const revalidate = 3600
 export const metadata: Metadata = {
 	title: 'Showcase - Our Work | Hudson Digital Solutions',
 	description:
-		'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+		'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
 	openGraph: {
 		title: 'Showcase - Our Work | Hudson Digital Solutions',
 		description:
-			'Real projects delivering measurable results. From SaaS platforms to business websites, see how we transform ideas into success stories.',
+			'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
 		type: 'website'
 	}
 }
@@ -29,49 +29,50 @@ async function ShowcaseProjects() {
 	return (
 		<>
 			{/* Stats Section */}
-			<section className="relative section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="grid-4 mb-content-block">
+					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden mb-10">
 						{[
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
 							{ value: '100%', label: 'Client Satisfaction' },
 							{ value: 'Proven', label: 'ROI Results' },
 							{ value: '24/7', label: 'Support Available' }
 						].map((stat, index) => (
-							<Card
+							<div
 								key={index}
-								variant="glass"
-								size="md"
-								hover
-								className="relative text-center"
+								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
-								<div className="text-page-title font-bold text-foreground mb-subheading">
+								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
+								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-mono tabular-nums">
 									{stat.value}
 								</div>
-								<div className="text-muted-foreground">{stat.label}</div>
-							</Card>
+								<div className="text-sm text-muted-foreground">
+									{stat.label}
+								</div>
+							</div>
 						))}
 					</div>
 				</div>
 			</section>
 
 			{/* Showcase Projects */}
-			<section className="relative section-spacing page-padding-x">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
-					<div className="text-center mb-content-block">
-						<h2 className="text-clamp-xl font-black text-foreground mb-heading">
-							<span className="text-accent">Featured Projects</span>
+					<div className="text-center mb-10">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Our Work
+						</p>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Featured Projects
 						</h2>
-						<div className="typography">
-							<p className="text-lg text-muted-foreground container-narrow">
-								Real projects delivering measurable results for clients across
-								industries.
-							</p>
-						</div>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Real projects delivering measurable results for clients across
+							industries.
+						</p>
 					</div>
 
 					{/* Desktop Grid / Mobile Horizontal Scroll */}
-					<div className="md:grid md:grid-cols-2 md:gap-sections mb-16 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0 space-x-4 md:space-x-0">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
 						{items.map(item => (
 							<Card
 								key={item.id}
@@ -81,6 +82,8 @@ async function ShowcaseProjects() {
 								title={item.title}
 								description={item.description}
 								category={item.category ?? item.industry ?? 'Project'}
+								industry={item.industry ?? undefined}
+								showcaseType={item.showcaseType}
 								featured={item.featured}
 								stats={item.metrics}
 								tech_stack={item.technologies}
@@ -97,70 +100,49 @@ export default function ShowcasePage() {
 	return (
 		<>
 			<Analytics />
-			<main className="min-h-screen bg-background text-foreground">
-				{/* Animated background */}
-				<div className="fixed inset-0 overflow-hidden pointer-events-none">
-					<div className="absolute -top-40 -right-40 w-80 h-80 bg-info rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-					<div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-				</div>
-
+			<main className="min-h-screen bg-background">
 				{/* Hero Section */}
-				<section className="relative min-h-screen flex-center overflow-hidden">
-					{/* Background Elements */}
-					<div className="absolute inset-0 pointer-events-none">
-						<div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-						<div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-info/20 rounded-full blur-3xl" />
-						<div className="absolute inset-0 grid-pattern" />
-					</div>
+				<section className="relative overflow-hidden bg-background">
+					<div
+						className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+						aria-hidden="true"
+					/>
+					<div
+						className="hero-spotlight absolute inset-0 pointer-events-none"
+						aria-hidden="true"
+					/>
 
-					<div className="relative z-sticky container-wide text-center">
-						<div className="space-y-comfortable">
-							<div>
-								<span className="inline-flex items-center gap-tight px-4 py-2 rounded-full border border-accent/30 bg-accent/10 text-accent font-semibold text-sm backdrop-blur-sm">
-									<Sparkles className="w-4 h-4" />
-									Award-Winning Projects
-								</span>
-							</div>
+					<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+							Our Showcase
+						</p>
+						<h1 className="text-page-title text-foreground leading-tight text-balance">
+							Real Projects. Real Results.
+						</h1>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
+							From small local businesses to growing e-commerce shops, see how
+							we help businesses get online and grow.
+						</p>
 
-							<div>
-								<h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-foreground leading-none tracking-tight text-balance">
-									<span className="inline-block mr-4">Our</span>
-									<span className="inline-block mr-4 text-accent">
-										Showcase
-									</span>
-								</h1>
-							</div>
+						<div className="flex flex-col sm:flex-row gap-3 justify-center">
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
+								<Link href="/contact">
+									Start Your Project
+									<Rocket className="w-5 h-5" />
+								</Link>
+							</Button>
 
-							<div className="typography">
-								<p className="text-lg text-muted-foreground container-wide leading-relaxed text-pretty">
-									Real projects delivering measurable results. From SaaS
-									platforms to business websites, see how we transform ideas
-									into success stories.
-								</p>
-							</div>
-
-							<div>
-								<div className="flex flex-col sm:flex-row flex-center gap-content mt-content-block">
-									<Button
-										asChild
-										variant="accent"
-										size="lg"
-										trackConversion={true}
-									>
-										<Link href="/contact">
-											Start Your Project
-											<Rocket className="w-5 h-5" />
-										</Link>
-									</Button>
-
-									<Button asChild variant="outline" size="lg">
-										<Link href="/services">
-											View Services
-											<ExternalLink className="w-5 h-5" />
-										</Link>
-									</Button>
-								</div>
-							</div>
+							<Button
+								asChild
+								variant="outline"
+								size="xl"
+								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+							>
+								<Link href="/services">
+									View Services
+									<ExternalLink className="w-5 h-5" />
+								</Link>
+							</Button>
 						</div>
 					</div>
 				</section>
@@ -168,9 +150,9 @@ export default function ShowcasePage() {
 				{/* Dynamic content with Suspense */}
 				<Suspense
 					fallback={
-						<div className="container-wide py-section text-center">
-							<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-cyan-500" />
-							<p className="text-muted-foreground text-lg mt-4">
+						<div className="container-wide py-section-sm px-4 text-center">
+							<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
+							<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
 								Loading projects...
 							</p>
 						</div>
@@ -180,47 +162,52 @@ export default function ShowcasePage() {
 				</Suspense>
 
 				{/* CTA Section */}
-				<section className="relative section-spacing page-padding-x">
+				<section className="py-section px-4 sm:px-6">
 					<div className="container-wide">
-						<Card
-							variant="glassSection"
-							size="md"
-							className="relative z-sticky text-center"
-						>
-							<h2 className="text-clamp-xl font-black text-foreground mb-heading">
-								Ready to create your
-								<span className="text-accent"> success story?</span>
-							</h2>
+						<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+							<div
+								className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+								aria-hidden="true"
+							/>
+							<div className="relative z-10">
+								<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+									Ready to create your{' '}
+									<span className="text-accent">success story?</span>
+								</h2>
 
-							<div className="typography">
-								<p className="text-lg text-muted-foreground container-narrow mb-content-block">
-									Join these industry leaders in transforming your digital
-									presence into a competitive advantage. Let&apos;s build
-									something amazing together.
+								<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+									Join these businesses in transforming your digital presence
+									into a competitive advantage. Let&apos;s build something
+									together.
 								</p>
-							</div>
 
-							<div className="flex flex-col sm:flex-row flex-center gap-content">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
-									<Link href="/contact">
-										Start Your Project
-										<Rocket className="w-5 h-5" />
-									</Link>
-								</Button>
+								<div className="flex flex-col sm:flex-row gap-3 justify-center">
+									<Button
+										asChild
+										variant="accent"
+										size="xl"
+										trackConversion={true}
+									>
+										<Link href="/contact">
+											Start Your Project
+											<Rocket className="w-5 h-5" />
+										</Link>
+									</Button>
 
-								<Button asChild variant="outline" size="xl">
-									<Link href="/services">
-										View Services
-										<ExternalLink className="w-5 h-5" />
-									</Link>
-								</Button>
+									<Button
+										asChild
+										variant="outline"
+										size="xl"
+										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									>
+										<Link href="/services">
+											View Services
+											<ExternalLink className="w-5 h-5" />
+										</Link>
+									</Button>
+								</div>
 							</div>
-						</Card>
+						</div>
 					</div>
 				</section>
 			</main>

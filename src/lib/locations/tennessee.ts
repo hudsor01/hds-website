@@ -126,7 +126,7 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 			{
 				title: 'University & Research',
 				description:
-					'Web platforms for UT research programs, startups, and Knoxville education technology companies.'
+					'Web platforms for UT research programs and Knoxville education technology companies.'
 			}
 		]
 	},
@@ -137,9 +137,9 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		stateCode: 'TN',
 		tagline: 'Gig City Digital Excellence',
 		description:
-			'Chattanooga pioneered municipal gigabit internet and has become a magnet for tech startups. We build digital solutions for the Scenic City and its thriving tech scene.',
+			'Chattanooga pioneered municipal gigabit internet and has become a hub for small businesses and remote workers. We build digital solutions for the Scenic City.',
 		metaDescription:
-			'Web development in Chattanooga, TN. Custom websites, startup platforms, and digital solutions for Gig City businesses and tech companies.',
+			'Website development and business automation in Chattanooga, TN. We build your website, connect your tools, and automate the work for Gig City businesses.',
 		neighborhoods: [
 			'Downtown',
 			'North Shore',
@@ -157,9 +157,9 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech & Startups',
+				title: 'Website & Automation',
 				description:
-					'MVP development and web platforms for Chattanooga tech startups leveraging Gig City infrastructure.'
+					'Modern websites and automation tools for Chattanooga businesses — take full advantage of Gig City infrastructure.'
 			},
 			{
 				title: 'Outdoor Adventure',

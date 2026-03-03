@@ -33,7 +33,7 @@ export function InputPanel({
 		<Card>
 			<CardHeader>
 				<div className="flex items-center gap-tight">
-					<Calculator className="w-5 h-5 text-primary" />
+					<Calculator className="w-5 h-5 text-accent" />
 					<CardTitle>Vehicle Information</CardTitle>
 				</div>
 			</CardHeader>

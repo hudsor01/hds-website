@@ -232,6 +232,23 @@
 	/* Semantic border tokens (dark) */
 	--color-border-subtle: oklch(0.22 0.015 260);
 	--color-border-strong: oklch(0.38 0.025 260);
+
+	/* Status color overrides (dark) — light/muted become dark tints, text becomes bright */
+	--color-destructive-light: oklch(0.22 0.06 25);
+	--color-destructive-muted: oklch(0.2 0.05 25);
+	--color-destructive-text: oklch(0.72 0.16 25);
+
+	--color-success-light: oklch(0.22 0.07 150);
+	--color-success-muted: oklch(0.2 0.06 150);
+	--color-success-text: oklch(0.68 0.14 150);
+
+	--color-warning-light: oklch(0.26 0.07 80);
+	--color-warning-muted: oklch(0.23 0.06 80);
+	--color-warning-text: oklch(0.76 0.13 80);
+
+	--color-info-light: oklch(0.22 0.06 245);
+	--color-info-muted: oklch(0.2 0.05 245);
+	--color-info-text: oklch(0.68 0.13 245);
 }
 
 /* Base styles */
@@ -352,6 +369,30 @@ a,
 				transparent 1px
 			);
 		background-size: 64px 64px;
+	}
+
+	/* Dark-mode optimised grid — 18% opacity so lines are visible on dark bg */
+	.grid-pattern-dark {
+		background-image:
+			linear-gradient(
+				oklch(from var(--color-border) l c h / 0.18) 1px,
+				transparent 1px
+			),
+			linear-gradient(
+				90deg,
+				oklch(from var(--color-border) l c h / 0.18) 1px,
+				transparent 1px
+			);
+		background-size: 52px 52px;
+	}
+
+	/* Radial amber spotlight — for hero and CTA dark sections */
+	.hero-spotlight {
+		background: radial-gradient(
+			ellipse 80% 55% at 50% 0%,
+			oklch(from var(--color-accent) l c h / 0.1),
+			transparent 65%
+		);
 	}
 
 	.container-narrow {

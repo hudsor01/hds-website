@@ -11,16 +11,20 @@ const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+				default:
+					'bg-primary text-primary-foreground shadow-sm hover:bg-primary/80 active:bg-primary/70 focus-visible:ring-primary/30',
 				destructive:
-					'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-				success: 'bg-success text-success-foreground hover:bg-success-dark',
-				accent: 'bg-accent text-accent-foreground hover:bg-accent/90',
+					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/80 active:bg-destructive/75 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+				success:
+					'bg-success text-success-foreground shadow-sm hover:bg-success/90 active:bg-success/80',
+				accent:
+					'bg-accent text-accent-foreground shadow-sm hover:bg-accent/85 active:bg-accent/75',
 				outline:
-					'border border-border bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
+					'border border-border bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground active:bg-accent/15 dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
 				secondary:
-					'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				muted: 'bg-muted text-muted-foreground hover:bg-muted/80',
+					'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 active:bg-secondary/70',
+				muted:
+					'bg-muted text-muted-foreground hover:bg-muted/80 active:bg-muted/70',
 				ghost: 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
 				link: 'text-primary underline-offset-4 hover:underline'
 			},

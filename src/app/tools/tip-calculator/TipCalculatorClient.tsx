@@ -74,6 +74,7 @@ export default function TipCalculatorClient() {
 			effectiveTipPercent
 		}
 	}, [inputs, useCustomTip])
+
 	// Track when user interacts
 	const trackUsage = () => {
 		if (inputs.billAmount > 0) {
@@ -90,7 +91,7 @@ export default function TipCalculatorClient() {
 		<CalculatorLayout
 			title="Tip Calculator"
 			description="Calculate the perfect tip and easily split bills among friends"
-			icon={<Receipt className="h-8 w-8 text-primary" />}
+			icon={<Receipt className="h-8 w-8 text-accent" />}
 		>
 			<div className="space-y-comfortable">
 				{/* Bill Amount */}
@@ -114,7 +115,7 @@ export default function TipCalculatorClient() {
 						Select Tip Percentage
 					</label>
 
-					<div className="grid grid-cols-5 gap-tight">
+					<div className="grid grid-cols-5 gap-2">
 						{TIP_PRESETS.map(preset => (
 							<button
 								key={preset.value}
@@ -122,7 +123,7 @@ export default function TipCalculatorClient() {
 								onClick={() => selectTipPreset(preset.value)}
 								className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
 									!useCustomTip && inputs.tipPercent === preset.value
-										? 'bg-primary text-foreground'
+										? 'bg-accent text-accent-foreground'
 										: 'bg-muted text-muted-foreground hover:bg-muted/80'
 								}`}
 							>
@@ -134,7 +135,7 @@ export default function TipCalculatorClient() {
 							onClick={enableCustomTip}
 							className={`py-3 px-2 rounded-lg text-sm font-semibold transition-colors ${
 								useCustomTip
-									? 'bg-primary text-foreground'
+									? 'bg-accent text-accent-foreground'
 									: 'bg-muted text-muted-foreground hover:bg-muted/80'
 							}`}
 						>
@@ -160,12 +161,12 @@ export default function TipCalculatorClient() {
 
 				{/* Split Bill */}
 				<div className="space-y-3">
-					<label className="flex items-center gap-tight text-sm font-medium text-foreground">
+					<label className="flex items-center gap-2 text-sm font-medium text-foreground">
 						<Users className="w-4 h-4" />
 						Split Bill
 					</label>
 
-					<div className="flex items-center gap-content">
+					<div className="flex items-center gap-4">
 						<button
 							type="button"
 							onClick={() =>
@@ -174,7 +175,7 @@ export default function TipCalculatorClient() {
 									splitCount: Math.max(1, prev.splitCount - 1)
 								}))
 							}
-							className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold"
+							className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold transition-colors"
 							disabled={inputs.splitCount <= 1}
 						>
 							-
@@ -195,7 +196,7 @@ export default function TipCalculatorClient() {
 									splitCount: Math.min(20, prev.splitCount + 1)
 								}))
 							}
-							className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold"
+							className="w-12 h-12 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xl font-bold transition-colors"
 							disabled={inputs.splitCount >= 20}
 						>
 							+
@@ -205,14 +206,14 @@ export default function TipCalculatorClient() {
 
 				{/* Results */}
 				{hasCalculated && inputs.billAmount > 0 && (
-					<div className="space-y-content border-t border-border pt-6">
+					<div className="space-y-4 border-t border-border pt-6">
 						{/* Per Person (if splitting) */}
 						{inputs.splitCount > 1 && (
-							<Card className="bg-accent/10 dark:bg-primary/20">
-								<h4 className="text-sm font-medium text-accent dark:text-accent/80 mb-heading">
+							<Card className="bg-accent/10 border-accent/20">
+								<h4 className="text-sm font-medium text-accent mb-4">
 									Per Person ({inputs.splitCount} people)
 								</h4>
-								<div className="grid grid-cols-3 gap-content">
+								<div className="grid grid-cols-3 gap-4">
 									<div className="text-center">
 										<div className="text-sm text-muted-foreground mb-1">
 											Bill
@@ -233,7 +234,7 @@ export default function TipCalculatorClient() {
 										<div className="text-sm text-muted-foreground mb-1">
 											Total
 										</div>
-										<div className="text-xl font-bold text-primary">
+										<div className="text-xl font-bold text-accent">
 											{formatCurrency(results.perPersonTotal)}
 										</div>
 									</div>
@@ -243,28 +244,30 @@ export default function TipCalculatorClient() {
 
 						{/* Total Summary */}
 						<Card>
-							<h4 className="text-sm font-medium text-muted-foreground mb-heading">
+							<h4 className="text-sm font-medium text-muted-foreground mb-4">
 								Total Summary
 							</h4>
 							<div className="space-y-3">
 								<div className="flex justify-between items-center">
-									<span className="text-muted-foreground">Bill Amount</span>
-									<span className="font-medium text-foreground">
+									<span className="text-sm text-muted-foreground">
+										Bill Amount
+									</span>
+									<span className="text-sm font-medium text-foreground">
 										{formatCurrency(inputs.billAmount)}
 									</span>
 								</div>
 								<div className="flex justify-between items-center">
-									<span className="text-muted-foreground flex items-center gap-1">
+									<span className="text-sm text-muted-foreground flex items-center gap-1">
 										Tip ({results.effectiveTipPercent}%)
 										<Percent className="w-3 h-3" />
 									</span>
-									<span className="font-medium text-foreground">
+									<span className="text-sm font-medium text-foreground">
 										{formatCurrency(results.tipAmount)}
 									</span>
 								</div>
 								<div className="border-t border-border pt-3 flex justify-between items-center">
 									<span className="font-semibold text-foreground">Total</span>
-									<span className="text-2xl font-bold text-primary">
+									<span className="text-2xl font-bold text-accent">
 										{formatCurrency(results.totalAmount)}
 									</span>
 								</div>
@@ -272,11 +275,11 @@ export default function TipCalculatorClient() {
 						</Card>
 
 						{/* Quick Reference */}
-						<Card size="sm" className="bg-muted/50">
+						<Card size="sm" className="bg-muted/30">
 							<h4 className="text-sm font-medium text-muted-foreground mb-3">
 								Quick Reference for {formatCurrency(inputs.billAmount)}
 							</h4>
-							<div className="grid grid-cols-4 gap-tight text-center">
+							<div className="grid grid-cols-4 gap-2 text-center">
 								{TIP_PRESETS.map(preset => {
 									const tip = inputs.billAmount * (preset.value / 100)
 									return (
@@ -297,45 +300,43 @@ export default function TipCalculatorClient() {
 			</div>
 
 			{/* Educational Content */}
-			<div className="mt-heading space-y-content border-t pt-8 dark:border-border">
-				<h3 className="text-lg font-semibold text-foreground dark:text-foreground">
-					Tipping Guide
-				</h3>
+			<div className="mt-8 space-y-4 border-t border-border pt-8">
+				<h3 className="text-lg font-semibold text-foreground">Tipping Guide</h3>
 
-				<div className="grid gap-content sm:grid-cols-2">
+				<div className="grid gap-4 sm:grid-cols-2">
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-2 font-semibold text-foreground text-sm">
 							Restaurant Service
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground leading-relaxed">
 							15-20% is standard. 20%+ for excellent service. Tip on pre-tax
 							amount.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-2 font-semibold text-foreground text-sm">
 							Delivery & Takeout
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground leading-relaxed">
 							15-20% for delivery. 10-15% for takeout if they prepared it well.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-2 font-semibold text-foreground text-sm">
 							Bar Service
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground leading-relaxed">
 							$1-2 per drink or 15-20% of tab. More for complex cocktails.
 						</p>
 					</Card>
 
 					<Card size="sm">
-						<h4 className="mb-subheading font-semibold text-foreground dark:text-foreground">
+						<h4 className="mb-2 font-semibold text-foreground text-sm">
 							Large Parties
 						</h4>
-						<p className="text-sm text-muted-foreground dark:text-muted-foreground">
+						<p className="text-sm text-muted-foreground leading-relaxed">
 							Many places add 18-20% gratuity for groups of 6+. Check your bill!
 						</p>
 					</Card>

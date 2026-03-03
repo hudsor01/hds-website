@@ -51,9 +51,9 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		stateCode: 'OK',
 		tagline: 'Oil Capital Goes Digital',
 		description:
-			'Tulsa is reinventing itself as a tech hub with the Tulsa Remote program and a growing startup scene. We help Tulsa businesses build their digital future.',
+			'Tulsa is reinventing itself with the Tulsa Remote program and a growing business community. We help Tulsa businesses get online, connect their tools, and grow.',
 		metaDescription:
-			'Web development in Tulsa, OK. Custom websites, startup MVPs, and digital solutions for Tulsa businesses and tech companies.',
+			'Website development and business automation in Tulsa, OK. We build your website, connect your tools, and automate the work for Tulsa businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Cherry Street',
@@ -71,9 +71,9 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Startup Development',
+				title: 'Business Automation',
 				description:
-					'MVP and product development for Tulsa tech startups and Tulsa Remote program participants.'
+					'Automate manual work — connect your CRM, booking, and tools so your Tulsa business runs itself.'
 			},
 			{
 				title: 'Energy Industry Tech',
@@ -96,7 +96,7 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		description:
 			'Home to the University of Oklahoma, Norman is a center for education, research, and weather science. We build digital solutions for the Norman and south OKC metro.',
 		metaDescription:
-			'Web development in Norman, OK. Custom websites and digital solutions for University of Oklahoma area businesses and startups.',
+			'Website development and business automation in Norman, OK. We build your website, connect your tools, and automate the work for Norman and OU-area businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Campus Corner',
@@ -182,7 +182,7 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		description:
 			"Edmond is one of Oklahoma's most affluent and educated communities, with a strong local business culture and proximity to OKC. We deliver premium digital solutions for Edmond.",
 		metaDescription:
-			'Web development in Edmond, OK. Custom websites and digital solutions for Edmond businesses, startups, and professional services.',
+			'Website development and business automation in Edmond, OK. We build your website, connect your tools, and automate the work for Edmond businesses.',
 		neighborhoods: [
 			'Downtown Edmond',
 			'UCO Area',

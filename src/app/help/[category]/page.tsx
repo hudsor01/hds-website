@@ -24,7 +24,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import {
 	getAllCategorySlugs,
 	getArticlesByCategory,
@@ -77,87 +77,88 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 	const articles = await getArticlesByCategory(category)
 
 	return (
-		<div className="min-h-screen bg-muted/30">
-			{/* Header */}
-			<div className="bg-(--primary) text-(--primary-foreground)">
-				<div className="container-narrow py-12 md:py-section-sm">
+		<main className="min-h-screen bg-background">
+			{/* Hero */}
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20">
 					{/* Breadcrumb */}
-					<Breadcrumb className="mb-content-block">
+					<Breadcrumb className="mb-8">
 						<BreadcrumbList>
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
 									<Link
 										href="/help"
-										className="text-(--primary-foreground)/70 hover:text-(--primary-foreground)"
+										className="text-muted-foreground hover:text-foreground transition-colors"
 									>
 										Help Center
 									</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
-							<BreadcrumbSeparator className="text-(--primary-foreground)/50" />
+							<BreadcrumbSeparator />
 							<BreadcrumbItem>
-								<BreadcrumbPage className="text-(--primary-foreground)">
+								<BreadcrumbPage className="text-foreground">
 									{categoryInfo.name}
 								</BreadcrumbPage>
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
 
-					<div className="flex items-center gap-content">
-						<div className="size-16 rounded-xl bg-(--primary-foreground)/10 flex items-center justify-center">
+					<div className="flex items-center gap-6">
+						<div className="size-16 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
 							{ICON_MAP[categoryInfo.icon] || <HelpCircle className="size-8" />}
 						</div>
 						<div>
-							<h1 className="text-2xl md:text-3xl font-bold">
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+								Help Center
+							</p>
+							<h1 className="text-page-title text-foreground leading-tight text-balance">
 								{categoryInfo.name}
 							</h1>
-							<p className="text-(--primary-foreground)/80 mt-1">
+							<p className="text-lead text-muted-foreground mt-2">
 								{categoryInfo.description}
 							</p>
 						</div>
 					</div>
 				</div>
-			</div>
+			</section>
 
 			{/* Articles List */}
-			<div className="container-narrow py-12">
-				<Link
-					href="/help"
-					className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground mb-content-block transition-colors"
-				>
-					<ChevronLeft className="size-4" />
-					Back to Help Center
-				</Link>
+			<section className="py-section-sm px-4 sm:px-6">
+				<div className="container-wide max-w-4xl mx-auto">
+					<Link
+						href="/help"
+						className="inline-flex items-center gap-tight text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
+					>
+						<ChevronLeft className="size-4" />
+						Back to Help Center
+					</Link>
 
-				{articles.length === 0 ? (
-					<Card>
-						<CardContent className="card-padding-lg text-center">
+					{articles.length === 0 ? (
+						<div className="rounded-xl border border-border bg-surface-raised p-10 text-center">
 							<HelpCircle className="size-12 mx-auto text-muted-foreground mb-heading" />
 							<h2 className="text-h4 text-foreground mb-subheading">
 								No articles yet
 							</h2>
-							<p className="text-muted-foreground">
+							<p className="text-sm text-muted-foreground">
 								We&apos;re working on adding content to this category. Check
 								back soon!
 							</p>
-						</CardContent>
-					</Card>
-				) : (
-					<div className="space-y-content">
-						{articles.map(article => (
-							<Link
-								key={article.slug}
-								href={`/help/${category}/${article.slug}`}
-								className="block group"
-							>
-								<Card className="hover:border-(--primary) hover:shadow-md transition-all">
-									<CardContent className="card-padding">
-										<div className="flex items-start gap-content">
-											<div className="size-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+						</div>
+					) : (
+						<div className="space-y-3">
+							{articles.map(article => (
+								<Link
+									key={article.slug}
+									href={`/help/${category}/${article.slug}`}
+									className="block group"
+								>
+									<div className="rounded-xl border border-border bg-surface-raised p-6 hover:border-border-strong transition-colors">
+										<div className="flex items-start gap-4">
+											<div className="size-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shrink-0">
 												<FileText className="size-5" />
 											</div>
 											<div className="flex-1 min-w-0">
-												<h2 className="font-semibold text-foreground group-hover:text-(--primary) transition-colors flex items-center gap-tight">
+												<h2 className="font-semibold text-foreground group-hover:text-accent transition-colors flex items-center gap-tight">
 													{article.title}
 													<ArrowRight className="size-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
 												</h2>
@@ -168,29 +169,26 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 												)}
 											</div>
 										</div>
-									</CardContent>
-								</Card>
-							</Link>
-						))}
-					</div>
-				)}
+									</div>
+								</Link>
+							))}
+						</div>
+					)}
 
-				{/* Contact CTA */}
-				<Card className="mt-heading">
-					<CardContent className="card-padding text-center">
-						<p className="text-muted-foreground mb-heading">
+					{/* Contact CTA */}
+					<div className="mt-10 rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
+						<p className="text-sm text-muted-foreground mb-4">
 							Need more help with {categoryInfo.name.toLowerCase()}?
 						</p>
-						<Link
-							href="/contact"
-							className="inline-flex items-center gap-tight px-4 py-2 bg-(--primary) text-(--primary-foreground) rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
-						>
-							Contact Support
-							<ArrowRight className="size-4" />
-						</Link>
-					</CardContent>
-				</Card>
-			</div>
-		</div>
+						<Button asChild variant="accent" trackConversion={true}>
+							<Link href="/contact">
+								Contact Support
+								<ArrowRight className="size-4" />
+							</Link>
+						</Button>
+					</div>
+				</div>
+			</section>
+		</main>
 	)
 }
