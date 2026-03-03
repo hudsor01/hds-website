@@ -44,7 +44,7 @@ export async function downloadPDF(
 		window.document.body.appendChild(link)
 		link.click()
 		window.document.body.removeChild(link)
-		URL.revokeObjectURL(url)
+		setTimeout(() => URL.revokeObjectURL(url), 10_000)
 	} catch (error) {
 		logger.error('Failed to download PDF:', error)
 		throw error

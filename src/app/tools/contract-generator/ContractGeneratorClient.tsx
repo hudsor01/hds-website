@@ -253,7 +253,7 @@ export default function ContractGeneratorClient() {
 			a.href = url
 			a.download = getFileName()
 			a.click()
-			URL.revokeObjectURL(url)
+			setTimeout(() => URL.revokeObjectURL(url), 10_000)
 			trackEvent('contract_downloaded', {
 				template: contractData.template,
 				has_scope: !!contractData.scopeOfWork,
