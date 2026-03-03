@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A production Next.js 15+ business website with 13 tool generators (paystub, invoice, contract, proposal, ROI calculator, cost estimator, mortgage calculator, TTL calculator, tip calculator, performance calculator, JSON formatter, meta tag generator, testimonial collector), 75 location SEO pages across 11 states, automated blog pipeline (n8n → Neon), contact forms, and comprehensive testing. v3.0 surfaced all features, loaded real content, added E2E test coverage, and validated performance infrastructure.
+A production Next.js 15+ business website with a premium, token-driven design system, 13 tool generators with unified ToolPageLayout, 75 location SEO pages across 11 states, automated blog pipeline (n8n → Neon), contact forms, and comprehensive testing. v4.0 transformed the UI from generic shadcn defaults to a distinctive, polished experience.
 
 ## Core Value
 
@@ -44,14 +44,16 @@ Working tools and contact form stay functional while the codebase achieves produ
 - Developer workflow fully Biome-native: scripts, lefthook, CI, VSCode format-on-save — v3.1
 - Zero ESLint/Prettier dependency surface: all packages and config files removed — v3.1
 - 360 passing unit tests + 139 static pages with 0 TS errors, 0 Biome violations — v3.1
+- OKLCH design token system: brand colors, typography, spacing, shadows, surface elevation — v4.0
+- Premium homepage hero with grid-pattern + spotlight, strong headline hierarchy, polished CTAs — v4.0
+- Core components polished: Button CVA variants, Input error states, Card glass/testimonial, Navbar/Footer — v4.0
+- ToolPageLayout unified 12/13 tool pages with slot-based API and action bars (download/print/copy) — v4.0
+- Content pages premium treatment: Services Server Component, About/Contact hero overlays, Location trust signals — v4.0
+- 408 passing unit tests + 144 static pages with 0 TS errors, 0 Biome violations — v4.0
 
 ### Active
 
-- [ ] Design system tokens overhauled: type scale, color palette, spacing rhythm, surface/card treatment — v4.0
-- [ ] Homepage hero compelling: distinctive background, strong headline hierarchy, polished CTAs — v4.0
-- [ ] Core components polished: buttons, inputs, cards, navbar — not generic shadcn defaults — v4.0
-- [ ] Tool pages have focused, professional layout with polished form/output presentation — v4.0
-- [ ] Services, About, and Location pages feel like premium landing pages — v4.0
+(None — next milestone requirements TBD)
 
 ### Out of Scope
 
@@ -64,29 +66,21 @@ Working tools and contact form stay functional while the codebase achieves produ
 
 ## Context
 
-**Current Codebase State (post Phase 55 — v3.1 complete):**
-- ~60 npm dependencies (ESLint/Prettier and all transitive deps removed)
-- 360 passing unit tests + 18 E2E tests (Playwright)
-- 0 TypeScript errors, 0 Biome errors, 0 Biome warnings, 0 Biome infos
-- biome.json at project root — full lint, format, CSS, React/Next.js domain config
-- `bun run lint` → `biome check src/`; `bun run format` → `biome format --write src/`
-- lefthook pre-commit: Biome staged-files check (block on error, no auto-fix)
-- `.github/workflows/ci.yml`: "Run Biome" step
-- `.vscode/settings.json`: biomejs.biome formatter for JS/TS/JSON/CSS; markdown formatter null + formatOnSave:false
-- All ESLint config files deleted (eslint.config.mjs) — no residual config surface
-- All Prettier config files deleted (.prettierrc.json, .prettierignore) — no residual config surface
-- 4 empty catch blocks in testimonials.ts annotated with intent comment
-- CLAUDE.md development commands updated to Biome/bun:test
-- 13 tool pages, all server+client pattern with metadata
-- 75 location pages across 11 states with LocalBusiness JSON-LD
-- Automated blog pipeline (n8n auto-publishes to Neon on every generation)
-- Production build generates 139 static pages cleanly
-- Performance infrastructure validated: lazy-loading, WebP images, Core Web Vitals monitoring
-- All Tailwind class names valid — no silent failures
-- WCAG AA compliant: navbar, dark mode, mobile navigation
+**Current Codebase State (post v4.0 — UI Redesign complete):**
+- 408 passing unit tests + E2E scaffold (Playwright)
+- 144 static pages generating cleanly
+- 0 TypeScript errors, 0 Biome violations
+- OKLCH design token system in globals.css consumed by all pages and components
+- ToolPageLayout shared component: 12/13 tools unified with slot-based API
+- Premium hero overlays on Homepage, Services, About, Contact, Location pages
+- Biome 2.4.4 sole linter/formatter; lefthook pre-commit
+- 75 location pages, automated blog pipeline, 13 tool generators
 
 **Technical Debt:**
-- @react-pdf/renderer incompatible with Turbopack (pre-existing, all branches)
+- @react-pdf/renderer incompatible with Turbopack (pre-existing)
+- TTL Calculator on legacy Calculator component (not ToolPageLayout)
+- Tip Calculator results inside formSlot (no action bar)
+- Phase 58 missing VERIFICATION.md (evidence in 58-04-SUMMARY.md)
 
 ## Constraints
 
@@ -124,18 +118,23 @@ Working tools and contact form stay functional while the codebase achieves produ
 | Prettier removed entirely (not kept for markdown) | v3.1 goal was zero ESLint/Prettier surface — partial removal would leave residual surface | ✓ Good — biomejs.biome handles all file types |
 | VSCode markdown formatter set to null | Prevents "formatter not found" error after Prettier removal; markdown has no biome formatter | ✓ Correct — no false extension errors in editor |
 | All ESLint transitive deps removed | Full removal (eslint, eslint-config-next, @typescript-eslint/*, @rushstack/*, eslint-plugin-react-hooks) | ✓ Good — zero npm audit surface from linting deps |
+| OKLCH color space for design tokens | More perceptually uniform than HSL | ✓ Good — consistent brand palette across light/dark |
+| Stay with Tailwind + shadcn for redesign | CSS tokens and overrides, no library swap | ✓ Good — minimal dependency change, maximum visual impact |
+| ToolPageLayout slot-based API | formSlot/resultSlot ReactNode props | ✓ Good — tools pass JSX, layout handles structure |
+| Programmatic pdf().toBlob() for downloads | Replaced PDFDownloadLink for ToolPageLayout compatibility | ✓ Good — works with action bar pattern |
+| ServicesGrid/ProcessSteps as client components | Icon functions can't serialize across server-client boundary | ✓ Correct — Next.js SSG limitation |
 
-## Completed Milestone: v3.1 Biome Migration — COMPLETE
+## Completed Milestone: v4.0 UI Redesign — COMPLETE
 
-**Goal:** Replace ESLint + Prettier with Biome — single Rust binary, zero npm vulnerability surface, full TypeScript/React rule parity.
+**Goal:** Transform the site from generic shadcn defaults to a premium, distinctive UI.
 
 **Delivered:**
-- Biome 2.4.4 installed, configured with full lint/format/CSS/React/Next.js domain rules
-- All ESLint and Prettier packages removed (and transitive deps)
-- All config files deleted: eslint.config.mjs, .prettierrc.json, .prettierignore
-- lefthook pre-commit migrated to Biome; CI renamed from ESLint to Biome
-- VSCode format-on-save configured for all file types via biomejs.biome extension
-- 360 unit tests passing, 139 static pages building, 0 TS errors, 0 Biome violations
+- OKLCH design token system (brand colors, typography, spacing, shadows, surfaces)
+- Premium homepage hero with grid-pattern + spotlight overlays
+- Polished core components (Button, Input, Card, Navbar, Footer)
+- ToolPageLayout unified 12/13 tool pages with action bars
+- Content pages (Services, About, Contact, Locations) with premium treatment
+- 408 unit tests, 144 static pages, 0 errors
 
 ---
-*Last updated: 2026-02-25 starting v4.0 UI Redesign milestone*
+*Last updated: 2026-03-03 after v4.0 UI Redesign milestone*
