@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { TypewriterText } from '@/components/ui/TypewriterText'
 import { Analytics } from '@/components/utilities/Analytics'
 import { getShowcaseItems } from '@/lib/showcase'
 
@@ -116,8 +117,8 @@ export default function ShowcasePage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 							Our Showcase
 						</p>
-						<h1 className="text-page-title text-foreground leading-tight text-balance">
-							Real Projects. Real Results.
+						<h1 className="text-page-title text-foreground leading-tight">
+							<TypewriterText />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 							From small local businesses to growing e-commerce shops, see how
