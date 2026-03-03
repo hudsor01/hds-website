@@ -298,104 +298,115 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 		} = props as ProjectCardProps
 
 		const metricEntries = Object.entries(stats).slice(0, 3)
-		const href = externalLink ?? `/showcase/${slug}`
 		const isExternal = Boolean(externalLink)
+
+		const cardContent = (
+			<div
+				className={cn(
+					cardVariants({ variant: 'glass', size: 'none', hover: true }),
+					'h-full overflow-hidden'
+				)}
+			>
+				{/* Top accent bar */}
+				<div className="h-1 bg-accent" />
+
+				{/* Content */}
+				<div className="card-padding-lg flex flex-col gap-4">
+					{/* Category row: badges + featured tag */}
+					<div className="flex items-center gap-2 flex-wrap">
+						<span className="text-xs font-semibold uppercase tracking-widest text-accent">
+							{category}
+						</span>
+						{showcaseType && (
+							<span
+								className={cn(
+									'px-2 py-0.5 rounded-full text-xs font-semibold border',
+									showcaseType === 'detailed'
+										? 'bg-accent/10 text-accent border-accent/20'
+										: 'bg-muted text-muted-foreground border-border'
+								)}
+							>
+								{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+							</span>
+						)}
+						{featured && (
+							<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
+								Featured
+							</span>
+						)}
+					</div>
+
+					{/* Title */}
+					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
+						{title}
+					</h3>
+
+					{/* Description — 2-line clamp */}
+					<p className="text-muted-foreground leading-relaxed line-clamp-2">
+						{description}
+					</p>
+
+					{/* Inline metrics — max 3 */}
+					{metricEntries.length > 0 && (
+						<div className="flex items-start gap-6 flex-wrap">
+							{metricEntries.map(([key, value]) => (
+								<div key={key}>
+									<div className="text-xl font-black text-foreground">
+										{value}
+									</div>
+									<div className="text-xs text-muted-foreground capitalize">
+										{key.replace(/([A-Z])/g, ' $1').trim()}
+									</div>
+								</div>
+							))}
+						</div>
+					)}
+
+					{/* Tech stack — max 5 chips */}
+					{tech_stack.length > 0 && (
+						<div className="flex flex-wrap gap-1.5">
+							{tech_stack.slice(0, 5).map(tech => (
+								<span
+									key={tech}
+									className="px-2.5 py-0.5 bg-muted border border-border rounded-full text-xs text-muted-foreground"
+								>
+									{tech}
+								</span>
+							))}
+						</div>
+					)}
+
+					{/* View link hint — visible on hover */}
+					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+						View Project
+						<ExternalLink className="w-4 h-4" aria-hidden="true" />
+					</div>
+				</div>
+			</div>
+		)
 
 		return (
 			<div
 				ref={ref}
 				className={cn('group relative', featured && 'md:col-span-2', className)}
 			>
-				<a
-					href={href}
-					aria-label={`View project: ${title}`}
-					{...(isExternal
-						? { target: '_blank', rel: 'noopener noreferrer' }
-						: {})}
-				>
-					<div
-						className={cn(
-							cardVariants({ variant: 'glass', size: 'none', hover: true }),
-							'h-full overflow-hidden'
-						)}
+				{isExternal ? (
+					<a
+						href={externalLink as string}
+						aria-label={`View project: ${title}`}
+						target="_blank"
+						rel="noopener noreferrer"
 					>
-						{/* Top accent bar */}
-						<div className="h-1 bg-accent" />
-
-						{/* Content */}
-						<div className="card-padding-lg flex flex-col gap-4">
-							{/* Category row: badges + featured tag */}
-							<div className="flex items-center gap-2 flex-wrap">
-								<span className="text-xs font-semibold uppercase tracking-widest text-accent">
-									{category}
-								</span>
-								{showcaseType && (
-									<span
-										className={cn(
-											'px-2 py-0.5 rounded-full text-xs font-semibold border',
-											showcaseType === 'detailed'
-												? 'bg-accent/10 text-accent border-accent/20'
-												: 'bg-muted text-muted-foreground border-border'
-										)}
-									>
-										{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
-									</span>
-								)}
-								{featured && (
-									<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
-										Featured
-									</span>
-								)}
-							</div>
-
-							{/* Title */}
-							<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
-								{title}
-							</h3>
-
-							{/* Description — 2-line clamp */}
-							<p className="text-muted-foreground leading-relaxed line-clamp-2">
-								{description}
-							</p>
-
-							{/* Inline metrics — max 3 */}
-							{metricEntries.length > 0 && (
-								<div className="flex items-start gap-6 flex-wrap">
-									{metricEntries.map(([key, value]) => (
-										<div key={key}>
-											<div className="text-xl font-black text-foreground">
-												{value}
-											</div>
-											<div className="text-xs text-muted-foreground capitalize">
-												{key.replace(/([A-Z])/g, ' $1').trim()}
-											</div>
-										</div>
-									))}
-								</div>
-							)}
-
-							{/* Tech stack — max 5 chips */}
-							{tech_stack.length > 0 && (
-								<div className="flex flex-wrap gap-1.5">
-									{tech_stack.slice(0, 5).map(tech => (
-										<span
-											key={tech}
-											className="px-2.5 py-0.5 bg-muted border border-border rounded-full text-xs text-muted-foreground"
-										>
-											{tech}
-										</span>
-									))}
-								</div>
-							)}
-
-							{/* View link hint — visible on hover */}
-							<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
-								View Project
-								<ExternalLink className="w-4 h-4" aria-hidden="true" />
-							</div>
-						</div>
-					</div>
-				</a>
+						{cardContent}
+					</a>
+				) : (
+					<Link
+						href={`/showcase/${slug}`}
+						aria-label={`View project: ${title}`}
+					>
+						{cardContent}
+					</Link>
+				)}
 			</div>
 		)
 	}
