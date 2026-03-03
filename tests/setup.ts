@@ -91,6 +91,18 @@ function setupLoggerMock() {
 
 setupLoggerMock()
 
+// Mock react-simple-maps wrapper — the library triggers async SVG path
+// calculations that crash in JSDOM and cause act() warnings
+mock.module('@/components/utilities/ServiceAreaMapWrapper', () => ({
+	ServiceAreaMapWrapper: ({ className }: { className?: string }) => {
+		const React = require('react')
+		return React.createElement('div', {
+			'data-testid': 'service-area-map',
+			className
+		})
+	}
+}))
+
 // CRITICAL: Prevent Playwright globals from interfering with Bun test
 // Playwright's @playwright/test package exports globals that conflict with bun:test
 // We must ensure these are NOT loaded when running Bun tests
