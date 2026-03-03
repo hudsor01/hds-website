@@ -15,7 +15,7 @@ None
 - [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) -- SHIPPED 2026-02-17
 - [v3.0 Growth & Content](milestones/v3.0-ROADMAP.md) (Phases 46-52) -- SHIPPED 2026-02-18, gap closure in progress
 - ✅ [v3.1 Biome Migration](milestones/v3.1-ROADMAP.md) (Phases 53-55) -- SHIPPED 2026-02-25
-- 🚧 **v4.0 UI Redesign** (Phases 56-60) — IN PROGRESS
+- **v4.0 UI Redesign** (Phases 56-60) — SHIPPED 2026-03-02
 
 ## Completed Milestones
 
@@ -222,7 +222,7 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 
 </details>
 
-## Active: v4.0 UI Redesign (Phases 56-60)
+## Complete: v4.0 UI Redesign (Phases 56-60)
 
 **Milestone Goal:** Transform the site from generic shadcn defaults to a premium, distinctive UI inspired by Resend, Linear, and Clerk — through design system tokens, component polish, and page-level redesign.
 
@@ -238,8 +238,8 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 Requirements covered: DSYS-01, DSYS-02, DSYS-03, DSYS-04, DSYS-05
 
 Plans:
-- [ ] 56-01-PLAN.md — Dark mode wiring (.dark {} block) + brand palette refinement + surface elevation tokens
-- [ ] 56-02-PLAN.md — Type scale tokens + shadow scale tokens + font fix + semantic class updates
+- [x] 56-01-PLAN.md — Dark mode wiring (.dark {} block) + brand palette refinement + surface elevation tokens
+- [x] 56-02-PLAN.md — Type scale tokens + shadow scale tokens + font fix + semantic class updates
 
 #### Phase 57: Homepage & Hero Redesign
 
@@ -251,10 +251,10 @@ Plans:
 Requirements covered: HERO-01, HERO-02, HERO-03, HERO-04
 
 Plans:
-- [ ] 57-01-PLAN.md — Homepage unit test scaffold (HERO-01 through HERO-04 assertions)
-- [ ] 57-02-PLAN.md — Hero section rewrite + BentoGrid animation removal
-- [ ] 57-03-PLAN.md — Solutions BentoGrid + section rhythm + anti-pattern removal
-- [ ] 57-04-PLAN.md — Visual verification checkpoint
+- [x] 57-01-PLAN.md — Homepage unit test scaffold (HERO-01 through HERO-04 assertions)
+- [x] 57-02-PLAN.md — Hero section rewrite + BentoGrid animation removal
+- [x] 57-03-PLAN.md — Solutions BentoGrid + section rhythm + anti-pattern removal
+- [x] 57-04-PLAN.md — Visual verification checkpoint
 
 #### Phase 58: Core Component Polish
 
@@ -281,12 +281,12 @@ Plans:
 Requirements covered: TOOL-01, TOOL-02, TOOL-03, TOOL-04
 
 Plans:
-- [ ] 59-01-PLAN.md — TDD RED scaffold: failing assertions for ToolPageLayout (TOOL-01/02/03)
-- [ ] 59-02-PLAN.md — Create ToolPageLayout shared component (TOOL-01/03)
-- [ ] 59-03-PLAN.md — Migrate 9 Style-B tool Client.tsx files to ToolPageLayout (TOOL-01/02/03)
-- [ ] 59-04-PLAN.md — Migrate 3 Style-A tools + TTL header + tools index card upgrade (TOOL-01/02/03/04)
-- [ ] 59-05-PLAN.md — Gap closure: PDF tool programmatic download + ToolPageLayout actions prop (TOOL-03)
-- [ ] 59-06-PLAN.md — Gap closure: Paystub print action + Performance Calculator copy action (TOOL-03)
+- [x] 59-01-PLAN.md — TDD RED scaffold: failing assertions for ToolPageLayout (TOOL-01/02/03)
+- [x] 59-02-PLAN.md — Create ToolPageLayout shared component (TOOL-01/03)
+- [x] 59-03-PLAN.md — Migrate 9 Style-B tool Client.tsx files to ToolPageLayout (TOOL-01/02/03)
+- [x] 59-04-PLAN.md — Migrate 3 Style-A tools + TTL header + tools index card upgrade (TOOL-01/02/03/04)
+- [x] 59-05-PLAN.md — Gap closure: PDF tool programmatic download + ToolPageLayout actions prop (TOOL-03)
+- [x] 59-06-PLAN.md — Gap closure: Paystub print action + Performance Calculator copy action (TOOL-03)
 
 #### Phase 60: Content Page Polish
 
@@ -298,10 +298,10 @@ Plans:
 Requirements covered: PAGE-01, PAGE-02, PAGE-03, PAGE-04
 
 Plans:
-- [ ] 60-01-PLAN.md — E2E scaffold + Services page fix (remove 'use client', add metadata + testimonials)
-- [ ] 60-02-PLAN.md — About hero overlays + testimonials; Contact hero overlays + column flip
-- [ ] 60-03-PLAN.md — Location slug hero overlays + testimonials; Location index hero overlays
-- [ ] 60-04-PLAN.md — Full verification suite + visual checkpoint
+- [x] 60-01-PLAN.md — E2E scaffold + Services page fix (remove 'use client', add metadata + testimonials)
+- [x] 60-02-PLAN.md — About hero overlays + testimonials; Contact hero overlays + column flip
+- [x] 60-03-PLAN.md — Location slug hero overlays + testimonials; Location index hero overlays
+- [x] 60-04-PLAN.md — Full verification suite + visual checkpoint
 
 ---
 
@@ -336,8 +336,8 @@ Plans:
 | 53. Biome Install & Configuration | v3.1 | 1/1 | Complete | 2026-02-24 |
 | 54. Format Sweep & Workflow Integration | v3.1 | 1/1 | Complete | 2026-02-25 |
 | 55. Old Tooling Removal & Verification | v3.1 | 1/1 | Complete | 2026-02-25 |
-| 56. Design System Foundation | v4.0 | 0/2 | Planned | - |
+| 56. Design System Foundation | v4.0 | 2/2 | Complete | 2026-02-26 |
 | 57. Homepage & Hero Redesign | v4.0 | 4/4 | Complete | 2026-02-26 |
-| 58. Core Component Polish | 3/4 | In Progress|  | - |
-| 59. Tool Page Polish | 6/6 | Complete    | 2026-03-02 | - |
-| 60. Content Page Polish | 4/4 | Complete    | 2026-03-03 | - |
+| 58. Core Component Polish | v4.0 | 4/4 | Complete | 2026-02-27 |
+| 59. Tool Page Polish | v4.0 | 6/6 | Complete | 2026-03-02 |
+| 60. Content Page Polish | v4.0 | 4/4 | Complete | 2026-03-02 |
