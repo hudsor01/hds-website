@@ -10,10 +10,8 @@ import {
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { trackError } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
-import { castError, logger } from '@/lib/logger'
 
 // Error handling is now managed by React Query for API calls
 
@@ -49,7 +47,7 @@ function DefaultErrorFallback({
 			setCopied(true)
 			setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK)
 		} catch (err) {
-			logger.error('Failed to copy error details to clipboard', castError(err))
+			console.error('[ErrorBoundary] Failed to copy error details', err)
 			// Fallback to a textarea method if clipboard API fails
 			const textArea = document.createElement('textarea')
 			textArea.value = errorDetails
@@ -85,12 +83,12 @@ function DefaultErrorFallback({
 			//   body: JSON.stringify(errorReport)
 			// });
 
-			logger.info('Error report prepared for submission', errorReport)
+			console.warn('[ErrorBoundary] Error report prepared', errorReport)
 			alert(
 				'Error report has been prepared. Please contact support with the error details.'
 			)
 		} catch (err) {
-			logger.error('Failed to report error', castError(err))
+			console.error('[ErrorBoundary] Failed to report error', err)
 		}
 	}
 
@@ -193,38 +191,17 @@ export function ErrorBoundary({
 	const handleError = (error: unknown, errorInfo: ReactErrorInfo) => {
 		const errorObj = error instanceof Error ? error : new Error(String(error))
 
-		// Track error in analytics
-		trackError(errorObj, true)
-
 		// Call custom error handler if provided
 		onError?.(error, errorInfo)
 
-		// Log error with structured context
-		logger.error('Error Boundary Caught', {
-			error: {
-				name: errorObj.name,
-				message: errorObj.message,
-				stack: errorObj.stack,
-				cause: errorObj.cause
-			},
-			componentStack: errorInfo.componentStack,
-			errorBoundary: 'React Error Boundary',
-			timestamp: new Date().toISOString(),
-			url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-			userAgent:
-				typeof window !== 'undefined' ? navigator.userAgent : 'unknown',
-			platform:
-				typeof navigator !== 'undefined' ? navigator.platform : 'unknown',
-			language:
-				typeof navigator !== 'undefined' ? navigator.language : 'unknown',
-			cookieEnabled:
-				typeof navigator !== 'undefined' ? navigator.cookieEnabled : 'unknown',
-			online: typeof navigator !== 'undefined' ? navigator.onLine : 'unknown'
+		console.error('[ErrorBoundary] Error Boundary Caught', {
+			name: errorObj.name,
+			message: errorObj.message,
+			componentStack: errorInfo.componentStack
 		})
 	}
 
 	const handleReset = () => {
-		trackError('Error boundary manually reset', false)
 		onReset?.()
 	}
 

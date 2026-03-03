@@ -7,7 +7,6 @@
 
 import { useReportWebVitals } from 'next/web-vitals'
 import { env } from '@/env'
-import { logger } from '@/lib/logger'
 
 export function WebVitalsReporting() {
 	useReportWebVitals(metric => {
@@ -22,7 +21,7 @@ export function WebVitalsReporting() {
 					: metric.rating === 'needs-improvement'
 						? '[WARN]'
 						: '[GOOD]'
-			logger.info(
+			console.warn(
 				`${rating} ${metric.name}: ${metric.value} (${metric.rating})`
 			)
 		}
@@ -61,6 +60,6 @@ async function storeWebVital(metric: WebVitalMetric) {
 		})
 	} catch (error) {
 		// Silently fail - don't disrupt user experience
-		logger.error('Failed to store web vital:', error as Error)
+		console.error('[WebVitals] Failed to store web vital:', error)
 	}
 }
