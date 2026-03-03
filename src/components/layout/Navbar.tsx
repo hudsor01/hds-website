@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo, useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
 
@@ -82,7 +81,6 @@ const Navbar = memo(function Navbar() {
 					{/* Right — CTAs */}
 					<div className="flex-1 flex items-center justify-end gap-2">
 						<div className="hidden sm:flex items-center gap-2">
-							<ThemeToggle />
 							<Button
 								asChild
 								variant="default"
@@ -156,9 +154,6 @@ const Navbar = memo(function Navbar() {
 							>
 								<Link href={ROUTES.CONTACT}>Book Free Call</Link>
 							</Button>
-						</div>
-						<div className="pt-2 flex justify-end">
-							<ThemeToggle />
 						</div>
 					</div>
 				</div>

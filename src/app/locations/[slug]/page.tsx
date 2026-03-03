@@ -148,7 +148,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 			</section>
 
 			{/* Stats */}
-			<section className="py-section-sm px-4 sm:px-6 border-b border-border">
+			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide max-w-4xl mx-auto">
 					<div className="grid gap-px sm:grid-cols-3 bg-border/30 rounded-2xl overflow-hidden">
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">

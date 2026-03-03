@@ -55,7 +55,6 @@ interface ServiceCardProps extends Omit<BaseCardProps, 'variant'> {
 	features: string[]
 	icon: ComponentType<SVGProps<SVGSVGElement>>
 	gradient?: string
-	pricing?: string
 }
 
 // Pricing Card props
@@ -135,8 +134,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 			description,
 			features,
 			icon,
-			gradient = 'bg-muted',
-			pricing
+			gradient = 'bg-muted'
 		} = props as ServiceCardProps
 
 		return (
@@ -185,13 +183,6 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 							</li>
 						))}
 					</ul>
-
-					{/* Pricing */}
-					{pricing && (
-						<div className="pt-4 border-t border-border">
-							<p className="text-lg font-semibold text-accent">{pricing}</p>
-						</div>
-					)}
 				</div>
 			</div>
 		)

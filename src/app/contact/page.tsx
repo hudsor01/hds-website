@@ -180,7 +180,7 @@ export default function ContactPage() {
 			</section>
 
 			{/* Service Area Section */}
-			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised border-t border-border">
+			<section className="py-section-sm px-4 sm:px-6 bg-surface-raised">
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">

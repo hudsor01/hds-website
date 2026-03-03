@@ -8,8 +8,6 @@ import {
 } from 'react-simple-maps'
 import { cn } from '@/lib/utils'
 
-console.warn('[Map] USServiceAreaMap module loaded')
-
 const GEO_URL = '/us-states.json'
 const PRIMARY_STATES = new Set(['48', '12', '13', '40']) // TX, FL, GA, OK
 const DFW_COORDS: [number, number] = [-97.0641, 32.7767]
@@ -26,8 +24,6 @@ const FILL_DEFAULT_HOVER = 'oklch(from var(--color-muted) l c h / 1)'
 const STROKE = 'var(--color-border)'
 
 export function USServiceAreaMap({ className }: USServiceAreaMapProps) {
-	console.warn('[Map] USServiceAreaMap rendering, GEO_URL:', GEO_URL)
-
 	return (
 		<div className={cn('w-full', className)}>
 			<ComposableMap
@@ -39,12 +35,8 @@ export function USServiceAreaMap({ className }: USServiceAreaMapProps) {
 				aria-label="US service area map highlighting Texas, Florida, Georgia, and Oklahoma"
 			>
 				<Geographies geography={GEO_URL}>
-					{({ geographies }) => {
-						console.warn(
-							'[Map] Geographies render-prop fired, count:',
-							geographies.length
-						)
-						return geographies.map(geo => {
+					{({ geographies }) =>
+						geographies.map(geo => {
 							const isPrimary = PRIMARY_STATES.has(String(geo.id))
 							return (
 								<Geography
@@ -71,7 +63,7 @@ export function USServiceAreaMap({ className }: USServiceAreaMapProps) {
 								/>
 							)
 						})
-					}}
+					}
 				</Geographies>
 
 				<Marker coordinates={DFW_COORDS}>
