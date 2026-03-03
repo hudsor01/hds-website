@@ -188,7 +188,7 @@ export default function Footer() {
 								</Button>
 
 								<a
-									href="mailto:{BUSINESS_INFO.email}"
+									href={`mailto:${BUSINESS_INFO.email}`}
 									className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
 								>
 									<Mail className="h-4 w-4" />
