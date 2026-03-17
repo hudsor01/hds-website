@@ -163,7 +163,7 @@ The project's current ESLint config allows `console.warn` and `console.error` bu
 
 ## Open Questions
 
-1. **Empty catch blocks in the codebase** — The project uses empty catch blocks in the `setAll` pattern (Supabase auth boilerplate and form handling). Biome's `noEmptyBlockStatements` will flag these. Need to verify: how many occurrences exist, and whether adding a comment (`/* intentional */`) or using `// biome-ignore` is the right approach. A pre-migration `grep -r "catch {}" src/` will scope the work.
+1. **Empty catch blocks in the codebase** — The project uses empty catch blocks in form handling code. Biome's `noEmptyBlockStatements` will flag these. Need to verify: how many occurrences exist, and whether adding a comment (`/* intentional */`) or using `// biome-ignore` is the right approach. A pre-migration `grep -r "catch {}" src/` will scope the work.
 
 2. **`@ts-nocheck` / `@ts-check` in the codebase** — The current ESLint config bans both. Biome only covers `@ts-ignore`. Run `grep -r "@ts-nocheck\|@ts-check" src/` before migration. If none exist, the gap is theoretical. If any exist, they need to be addressed manually (convert to `@ts-expect-error` or remove).
 

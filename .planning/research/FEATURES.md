@@ -247,7 +247,7 @@ grep -r "@ts-nocheck\|@ts-check" src/
 
 **Current config:** `'no-empty': ['error', { allowEmptyCatch: true }]` — empty catch blocks allowed.
 
-**Biome behavior:** `noEmptyBlockStatements` in recommended ruleset flags empty blocks. Biome does allow empty catch blocks if they contain a comment. The project uses empty catch blocks in server components (the `setAll` pattern from Supabase auth boilerplate and form handling).
+**Biome behavior:** `noEmptyBlockStatements` in recommended ruleset flags empty blocks. Biome does allow empty catch blocks if they contain a comment. The project uses empty catch blocks in server components (form handling patterns).
 
 **Mitigation:** Add a comment inside empty catch blocks: `catch { /* intentionally empty */ }`. Biome respects this pattern. Alternatively, suppress with `// biome-ignore lint/correctness/noEmptyBlockStatements: intentional`.
 
