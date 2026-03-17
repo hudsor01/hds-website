@@ -51,11 +51,11 @@
 - Files: `src/app/api/contact/route.ts` (should use rate limiter)
 - Recommendations: Apply rate limiting to all public endpoints and form submissions
 
-**Client-side data access patterns:**
-- Risk: Direct Supabase queries from client components bypass RLS if not configured
-- Current mitigation: RLS policies assumed configured in Supabase dashboard
-- Files: Components using `src/utils/supabase/client.ts`
-- Recommendations: Prefer Server Actions for mutations, document RLS policies
+**Data access patterns:**
+- Risk: Direct database queries from client components would bypass server-side validation
+- Current mitigation: All database access goes through Server Actions and server-side Drizzle queries
+- Files: `src/lib/db.ts`, `src/app/actions/`
+- Recommendations: Keep all mutations in Server Actions, validate inputs with Zod
 
 ## Performance Bottlenecks
 
@@ -81,10 +81,10 @@
 ## Fragile Areas
 
 **Middleware execution order:**
-- File: `src/middleware.ts`, `src/lib/supabase/middleware.ts`
-- Why fragile: Auth session refresh must happen before route handlers
-- Common failures: Stale sessions if middleware doesn't run, redirect loops
-- Safe modification: Test auth flows after any middleware changes
+- File: `src/middleware.ts`
+- Why fragile: Request handling must happen before route handlers
+- Common failures: Redirect loops if misconfigured
+- Safe modification: Test page loads after any middleware changes
 - Test coverage: No dedicated middleware tests (E2E tests cover indirectly)
 
 **Environment variable validation:**
@@ -95,7 +95,7 @@
 - Test coverage: No unit tests for env validation (relies on Zod runtime checks)
 
 **Third-party API integrations:**
-- Files: `src/lib/email/` (Resend), Supabase clients
+- Files: `src/lib/email/` (Resend), `src/lib/db.ts` (Neon)
 - Why fragile: External service downtime breaks features
 - Common failures: Email sending fails, database queries timeout
 - Safe modification: Always wrap in try/catch, return user-friendly errors
@@ -109,11 +109,11 @@
 - Symptoms at limit: 504 timeouts, 429 rate limits from platform
 - Scaling path: Upgrade to Pro plan ($20/mo), optimize bundle size
 
-**Supabase Free Tier:**
-- Current capacity: Database size, storage, bandwidth limits
-- Limit: 500MB database, 1GB file storage, 2GB bandwidth/month (estimates)
-- Symptoms at limit: Database writes fail, file uploads rejected
-- Scaling path: Upgrade to Supabase Pro ($25/mo)
+**Neon Free Tier:**
+- Current capacity: Database size, compute limits
+- Limit: 0.5 GiB storage, 191.9 compute hours/month
+- Symptoms at limit: Compute suspended, queries fail
+- Scaling path: Upgrade to Neon Launch ($19/mo)
 
 **Client-side state management:**
 - Current capacity: Simple useState and useActionState patterns
@@ -173,7 +173,7 @@
 - What's not tested: Error handling in Server Actions
 - Risk: Uncaught errors, poor error messages to users
 - Priority: High
-- Difficulty to test: Medium (need to mock Supabase, Resend failures)
+- Difficulty to test: Medium (need to mock Drizzle DB, Resend failures)
 
 **Middleware edge cases:**
 - What's not tested: Auth refresh failures, redirect logic, session expiry

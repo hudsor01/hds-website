@@ -58,14 +58,14 @@ Source: CODE_REVIEW.md -- 20 items audited, 5 already resolved by v1.0, 15 remai
 **Supersedes:** v1.1 phases 12-16 (test coverage, error handling, security, performance, architecture) -- these concerns are incorporated into v2.0 phases.
 
 #### Phase 37: Environment & Configuration Hygiene
-**Goal**: Add all bypassed env vars to env.ts validation, update .env.example from Supabase to Neon/Drizzle references, fix CSP reports empty string bug
+**Goal**: Add all bypassed env vars to env.ts validation, update .env.example to Neon/Drizzle references, fix CSP reports empty string bug
 **Depends on**: v1.1 Phase 17 complete
 **Research**: Unlikely (internal patterns, @t3-oss/env-nextjs already configured)
 **Plans**: TBD
 
 Audit findings addressed:
 - POSTGRES_URL, NEON_AUTH_BASE_URL, NEON_AUTH_COOKIE_SECRET, STIRLING_PDF_URL bypass env.ts
-- .env.example still references Supabase variables
+- .env.example had stale variable references
 - CSP reports route has empty string in EXPECTED_CSP_FIELDS array
 
 Plans:

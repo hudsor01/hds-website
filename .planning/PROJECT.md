@@ -62,7 +62,7 @@ Working tools and contact form stay functional while the codebase achieves produ
 - Adding JSDoc to unchanged code — contradicts CLAUDE.md
 - Creating architecture documentation proactively — contradicts CLAUDE.md
 - Mobile app or native — web-first
-- Auth system — customer-facing website, not SaaS
+- Auth system — customer-facing website, not SaaS (all dead auth code removed)
 
 ## Context
 
@@ -96,11 +96,11 @@ Working tools and contact form stay functional while the codebase achieves produ
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Aggressive dependency pruning | 130+ packages, many unused | ✓ Good — 72 packages, zero regressions |
-| Remove Supabase auth middleware | Not actively used | ✓ Good — simplified codebase |
+| Remove unused auth middleware | Not actively used | ✓ Good — simplified codebase |
 | Standardize TanStack ecosystem | Consistent data/form handling | ✓ Good — Query + Form + nuqs |
 | Keep database.ts as-is | Auto-generated, splitting impractical | ✓ Practical — avoid maintenance burden |
 | Skip JSDoc/architecture docs | Contradicts CLAUDE.md guidelines | ✓ Intentional — respect project standards |
-| Migrated from Supabase to Drizzle ORM + Neon | Better control, no vendor lock-in | ✓ Good — clean schema, type-safe queries |
+| Drizzle ORM + Neon PostgreSQL for data layer | Full control, type-safe queries, no vendor lock-in | ✓ Good — clean schema, Drizzle query builder |
 | No auth system | Customer-facing website, not SaaS | ✓ Correct — removed all dead auth code |
 | Database-backed blog via Drizzle | Same API surface as static array | ✓ Good — real content, structured data |
 | Seed data via Neon MCP run_sql | No production credentials in codebase | ✓ Good — clean security boundary |
