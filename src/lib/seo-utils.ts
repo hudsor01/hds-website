@@ -89,6 +89,8 @@ export function generateOrganizationSchema() {
 		foundingDate: '2020',
 		address: {
 			'@type': 'PostalAddress',
+			addressLocality: 'Dallas',
+			addressRegion: 'TX',
 			addressCountry: 'US'
 		},
 		contactPoint: {
@@ -116,15 +118,17 @@ export function generateLocalBusinessSchema() {
 		description: 'Web development and custom software solutions',
 		address: {
 			'@type': 'PostalAddress',
+			addressLocality: 'Dallas',
+			addressRegion: 'TX',
 			addressCountry: 'US'
 		},
 		geo: {
 			'@type': 'GeoCoordinates',
-			latitude: '39.8283',
-			longitude: '-98.5795'
+			latitude: '32.7767',
+			longitude: '-96.7970'
 		},
 		openingHours: 'Mo-Fr 09:00-17:00',
-		telephone: 'Contact via website',
+		telephone: BUSINESS_INFO.phone ?? undefined,
 		email: BUSINESS_INFO.email
 	}
 }

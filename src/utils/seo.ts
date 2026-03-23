@@ -63,7 +63,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 				'@type': 'Offer',
 				priceCurrency: 'USD',
 				price: '5000',
-				priceValidUntil: '2025-12-31'
+				priceValidUntil: '2026-12-31'
 			}
 		}
 	},
@@ -86,6 +86,26 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			name: 'About Hudson Digital Solutions',
 			description:
 				'Learn about our expert web development team and our mission to transform businesses through technology'
+		}
+	},
+
+	pricing: {
+		title:
+			'Transparent Website Pricing for Small Businesses | Hudson Digital Solutions',
+		description:
+			'Clear, upfront pricing for professional websites and business automation. Three packages starting at $497. No hidden fees, no hourly billing surprises. See exactly what you get.',
+		keywords:
+			'website pricing, web design cost, small business website price, affordable web design dallas, website packages, web development pricing, DFW web design cost',
+		ogTitle: 'Website Pricing - From $497 | Hudson Digital Solutions',
+		ogDescription:
+			'Three clear packages for small business websites. Starter $497, Professional $997, Premium $1,997. No hidden fees.',
+		canonical: 'https://hudsondigitalsolutions.com/pricing',
+		structuredData: {
+			'@context': 'https://schema.org',
+			'@type': 'WebPage',
+			name: 'Pricing - Hudson Digital Solutions',
+			description:
+				'Transparent pricing for professional website development and business automation services'
 		}
 	},
 
