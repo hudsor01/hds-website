@@ -15,6 +15,8 @@ export const ROUTES = {
 	SERVICES: '/services',
 	SHOWCASE: '/showcase',
 	CONTACT: '/contact',
+	PRICING: '/pricing',
+	WEBSITE_MIGRATION: '/website-migration',
 	PRIVACY: '/privacy',
 	TERMS: '/terms',
 	BLOG: '/blog'
