@@ -265,7 +265,7 @@ export async function sendAdminNotification(
 		}
 		return true
 	} catch (error) {
-		logger.error('Failed to send admin notification', castError(error))
+		logger.error('Failed to send admin notification', error)
 		return false
 	}
 }
@@ -320,7 +320,7 @@ export async function sendWelcomeEmail(
 		}
 		return true
 	} catch (error) {
-		logger.error('Failed to send welcome email', castError(error))
+		logger.error('Failed to send welcome email', error)
 		return false
 	}
 }
@@ -355,7 +355,7 @@ export async function sendLeadNotifications(
 			source: 'Contact Form'
 		})
 	} catch (error) {
-		logger.error('Failed to send lead notifications', castError(error))
+		logger.error('Failed to send lead notifications', error)
 	}
 }
 

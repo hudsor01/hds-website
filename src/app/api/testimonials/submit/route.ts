@@ -11,7 +11,7 @@ import {
 	validationErrorResponse
 } from '@/lib/api/responses'
 import { BUSINESS_INFO } from '@/lib/constants/business'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { testimonialSubmitSchema } from '@/lib/schemas/query-params'
 import {
@@ -115,7 +115,7 @@ async function handleTestimonialSubmit(request: NextRequest) {
 			} catch (adminEmailError) {
 				logger.error(
 					'Failed to send admin notification for testimonial',
-					castError(adminEmailError)
+					adminEmailError
 				)
 			}
 		}

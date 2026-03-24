@@ -6,7 +6,7 @@
 
 import { NextResponse } from 'next/server'
 import { getPosts } from '@/lib/blog'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const FEED_TITLE = 'Hudson Digital Solutions Blog'
@@ -50,7 +50,7 @@ export async function GET() {
 			}
 		})
 	} catch (error) {
-		logger.error('RSS feed generation failed', castError(error))
+		logger.error('RSS feed generation failed', error)
 		return NextResponse.json({ error: 'Feed unavailable' }, { status: 500 })
 	}
 }

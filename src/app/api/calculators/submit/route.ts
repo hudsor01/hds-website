@@ -13,7 +13,7 @@ import {
 } from '@/lib/api/responses'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { db } from '@/lib/db'
-import { castError, createServerLogger } from '@/lib/logger'
+import { createServerLogger } from '@/lib/logger'
 import { notifyHighValueLead } from '@/lib/notifications'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmail } from '@/lib/scheduled-emails'
@@ -184,7 +184,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
 
 				logger.info('Results email sent', { email, calculator_type })
 			} catch (emailError) {
-				logger.error('Failed to send results email', castError(emailError))
+				logger.error('Failed to send results email', emailError)
 				// Don't fail the request if email fails
 			}
 
@@ -213,10 +213,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
 
 				logger.info('Admin notification sent', { email, calculator_type })
 			} catch (adminEmailError) {
-				logger.error(
-					'Failed to send admin notification',
-					castError(adminEmailError)
-				)
+				logger.error('Failed to send admin notification', adminEmailError)
 				// Don't fail the request if admin email fails
 			}
 		}
@@ -244,10 +241,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
 			})
 		} catch (notificationError) {
 			// Log but don't fail the submission if notifications fail
-			logger.error(
-				'Failed to send lead notifications',
-				castError(notificationError)
-			)
+			logger.error('Failed to send lead notifications', notificationError)
 		}
 
 		// Schedule follow-up emails based on lead quality
@@ -269,7 +263,7 @@ async function handleCalculatorSubmit(request: NextRequest) {
 
 			logger.info('Follow-up email scheduled', { email, sequenceId })
 		} catch (scheduleError) {
-			logger.error('Failed to schedule follow-up', castError(scheduleError))
+			logger.error('Failed to schedule follow-up', scheduleError)
 		}
 
 		return successResponse({
