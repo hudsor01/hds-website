@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation'
 import { ROUTES } from '@/lib/constants/routes'
 
 /**
@@ -6,5 +6,5 @@ import { ROUTES } from '@/lib/constants/routes'
  * Keep this file until the old URL is no longer indexed.
  */
 export default function SwitchFromThryvRedirect() {
-	redirect(ROUTES.WEBSITE_MIGRATION)
+	permanentRedirect(ROUTES.WEBSITE_MIGRATION)
 }
