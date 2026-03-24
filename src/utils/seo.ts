@@ -102,10 +102,47 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 		canonical: 'https://hudsondigitalsolutions.com/pricing',
 		structuredData: {
 			'@context': 'https://schema.org',
-			'@type': 'WebPage',
-			name: 'Pricing - Hudson Digital Solutions',
-			description:
-				'Transparent pricing for professional website development and business automation services'
+			'@type': 'Service',
+			name: 'Website Development & Business Automation',
+			provider: {
+				'@type': 'LocalBusiness',
+				name: 'Hudson Digital Solutions',
+				url: 'https://hudsondigitalsolutions.com'
+			},
+			areaServed: {
+				'@type': 'Place',
+				name: 'Dallas-Fort Worth, TX'
+			},
+			hasOfferCatalog: {
+				'@type': 'OfferCatalog',
+				name: 'Website Packages',
+				itemListElement: [
+					{
+						'@type': 'Offer',
+						name: 'Starter',
+						price: '497',
+						priceCurrency: 'USD',
+						description:
+							'Professional single-page website with SEO and contact form'
+					},
+					{
+						'@type': 'Offer',
+						name: 'Professional',
+						price: '997',
+						priceCurrency: 'USD',
+						description:
+							'Multi-page website with lead capture, local SEO, and CRM integration'
+					},
+					{
+						'@type': 'Offer',
+						name: 'Premium',
+						price: '1997',
+						priceCurrency: 'USD',
+						description:
+							'Full business system with automation, integrations, and admin dashboard'
+					}
+				]
+			}
 		}
 	},
 
