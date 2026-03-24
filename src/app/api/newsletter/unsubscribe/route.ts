@@ -8,7 +8,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { newsletterSubscribers } from '@/lib/schemas/emails'
 
 const unsubscribeSchema = z.object({
@@ -34,7 +34,7 @@ async function handleUnsubscribe(request: NextRequest) {
 		logger.info('Newsletter unsubscribe', { email: parsed.data.email })
 		return NextResponse.json({ success: true })
 	} catch (error) {
-		logger.error('Newsletter unsubscribe failed', castError(error))
+		logger.error('Newsletter unsubscribe failed', error)
 		return NextResponse.json({ error: 'Unsubscribe failed' }, { status: 500 })
 	}
 }

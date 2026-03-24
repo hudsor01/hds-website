@@ -14,7 +14,7 @@ import {
 } from '@/lib/api/responses'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { newsletterSubscribers } from '@/lib/schemas/emails'
 
@@ -43,10 +43,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 				.where(eq(newsletterSubscribers.email, email))
 			existing = results[0] ?? null
 		} catch (queryError) {
-			logger.error(
-				'Failed to check existing subscriber:',
-				castError(queryError)
-			)
+			logger.error('Failed to check existing subscriber:', queryError)
 			return errorResponse('Unable to process subscription', 500)
 		}
 
@@ -74,7 +71,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 					}
 				})
 		} catch (dbError) {
-			logger.error('Failed to save subscriber:', castError(dbError))
+			logger.error('Failed to save subscriber:', dbError)
 			return errorResponse('Failed to subscribe', 500)
 		}
 
@@ -106,7 +103,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
         `
 				})
 			} catch (emailError) {
-				logger.error('Failed to send welcome email:', castError(emailError))
+				logger.error('Failed to send welcome email:', emailError)
 				// Don't fail the request if email fails
 			}
 
@@ -127,17 +124,14 @@ async function handleNewsletterSubscribe(request: NextRequest) {
         `
 				})
 			} catch (adminEmailError) {
-				logger.error(
-					'Failed to send admin notification:',
-					castError(adminEmailError)
-				)
+				logger.error('Failed to send admin notification:', adminEmailError)
 				// Don't fail the request if admin email fails
 			}
 		}
 
 		return successResponse(undefined, 'Successfully subscribed!')
 	} catch (error) {
-		logger.error('Newsletter subscription error:', castError(error))
+		logger.error('Newsletter subscription error:', error)
 		return errorResponse('Internal server error', 500)
 	}
 }

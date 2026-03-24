@@ -103,9 +103,9 @@ const results = [
 	},
 	{
 		Icon: Clock,
-		metric: '24/7',
-		label: 'Support available',
-		period: 'When you need us'
+		metric: '<24hr',
+		label: 'Response time',
+		period: 'Monday through Friday'
 	}
 ]
 
@@ -128,7 +128,8 @@ export default function HomePage() {
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
-								Your Business Should Run Itself
+								Web Design &amp; Business Automation for Dallas-Fort Worth Small
+								Businesses
 							</h1>
 
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">

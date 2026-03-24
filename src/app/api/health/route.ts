@@ -6,7 +6,7 @@
 import { sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
 	const start = Date.now()
@@ -23,7 +23,7 @@ export async function GET() {
 			version: process.env.npm_package_version ?? 'unknown'
 		})
 	} catch (error) {
-		logger.error('Health check failed', castError(error))
+		logger.error('Health check failed', error)
 		return NextResponse.json(
 			{
 				status: 'error',
