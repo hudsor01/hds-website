@@ -2,6 +2,7 @@ import { ArrowRight, Check, HelpCircle, Phone, Zap } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
 import { SEO_CONFIG } from '@/utils/seo'
@@ -169,8 +170,28 @@ const faqs: FAQ[] = [
 ]
 
 export default function PricingPage() {
+	const faqSchema = {
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map(faq => ({
+			'@type': 'Question',
+			name: faq.question,
+			acceptedAnswer: {
+				'@type': 'Answer',
+				text: faq.answer
+			}
+		}))
+	}
+
 	return (
 		<main className="min-h-screen bg-background">
+			{SEO_CONFIG.pricing?.structuredData && (
+				<JsonLd
+					data={SEO_CONFIG.pricing.structuredData as Record<string, unknown>}
+				/>
+			)}
+			<JsonLd data={faqSchema} />
+
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
