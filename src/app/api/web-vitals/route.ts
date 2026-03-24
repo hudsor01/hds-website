@@ -12,7 +12,7 @@ import {
 	validationErrorResponse
 } from '@/lib/api/responses'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { webVitals } from '@/lib/schemas/analytics'
 
 const WebVitalSchema = z.object({
@@ -51,13 +51,13 @@ async function handleWebVitals(request: NextRequest) {
 				userAgent: userAgent || null
 			})
 		} catch (dbError) {
-			logger.error('Failed to store web vital:', castError(dbError))
+			logger.error('Failed to store web vital:', dbError)
 			// Don't return error to client - fail silently
 		}
 
 		return successResponse()
 	} catch (error) {
-		logger.error('Web vitals error:', castError(error))
+		logger.error('Web vitals error:', error)
 		return errorResponse('Internal server error', 500)
 	}
 }

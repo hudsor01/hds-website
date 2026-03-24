@@ -43,10 +43,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-	{ value: 'Fast', label: 'Delivery Timeline' },
+	{ value: '2-4 wks', label: 'Typical Delivery' },
 	{ value: 'Expert', label: 'Development Team' },
 	{ value: 'Proven', label: 'ROI Results' },
-	{ value: '24/7', label: 'Support Available' }
+	{ value: '<24hr', label: 'Response Time' }
 ]
 
 const testimonials = [

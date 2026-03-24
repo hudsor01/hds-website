@@ -12,6 +12,9 @@ export const BUSINESS_INFO = {
 	/** Primary contact email */
 	email: 'hello@hudsondigitalsolutions.com',
 
+	/** Business phone number */
+	phone: '(214) 843-0779',
+
 	/** Business location */
 	location: {
 		city: 'Dallas',

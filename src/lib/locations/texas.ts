@@ -6,7 +6,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Dallas',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Digital Solutions for the Big D',
+		tagline: 'Web Design & Business Automation in Dallas, TX',
 		description:
 			'From Deep Ellum to Uptown, we help Dallas businesses compete online with a professional website, connected tools, and business automation.',
 		metaDescription:
@@ -49,7 +49,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Houston',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Space City Digital Excellence',
+		tagline: 'Web Design & Business Automation in Houston, TX',
 		description:
 			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with website development, tool integrations, and business automation.',
 		metaDescription:
@@ -92,7 +92,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Austin',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Keep Austin Weird, Make Your Website Great',
+		tagline: 'Web Design & Business Automation in Austin, TX',
 		description:
 			'In the heart of Silicon Hills, we help Austin businesses get online, connect their tools, and automate the work — so they can focus on growing.',
 		metaDescription:
@@ -135,7 +135,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'San Antonio',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Alamo City Digital Innovation',
+		tagline: 'Web Design & Business Automation in San Antonio, TX',
 		description:
 			'From the River Walk to military contractors, we deliver modern web solutions to San Antonio businesses across every industry.',
 		metaDescription:
@@ -178,7 +178,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Fort Worth',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Where the West Meets Web',
+		tagline: 'Web Design & Business Automation in Fort Worth, TX',
 		description:
 			'Combining Fort Worth traditional business values with modern digital solutions. We help Tarrant County businesses thrive online.',
 		metaDescription:
@@ -221,7 +221,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'El Paso',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Sun City Digital Solutions',
+		tagline: 'Web Design & Business Automation in El Paso, TX',
 		description:
 			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City businesses.',
 		metaDescription:
@@ -264,7 +264,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Arlington',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Entertainment Capital Meets Digital Innovation',
+		tagline: 'Web Design & Business Automation in Arlington, TX',
 		description:
 			'Home to AT&T Stadium and Globe Life Field, Arlington is a hub for entertainment and mid-cities businesses that need powerful digital solutions.',
 		metaDescription:
@@ -307,7 +307,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Corpus Christi',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Coastal City, Digital Horizons',
+		tagline: 'Web Design & Business Automation in Corpus Christi, TX',
 		description:
 			'From the Sparkling City by the Sea to the Coastal Bend region, we help Corpus Christi businesses establish a commanding digital presence.',
 		metaDescription:
