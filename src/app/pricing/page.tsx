@@ -80,7 +80,7 @@ const tiers: PricingTier[] = [
 			'3 rounds of revisions',
 			'Delivered in 2-3 weeks'
 		],
-		cta: 'Most Popular',
+		cta: 'Get Started',
 		popular: true
 	},
 	{

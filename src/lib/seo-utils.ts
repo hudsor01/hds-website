@@ -124,8 +124,8 @@ export function generateLocalBusinessSchema() {
 		},
 		geo: {
 			'@type': 'GeoCoordinates',
-			latitude: '32.7767',
-			longitude: '-96.7970'
+			latitude: 32.7767,
+			longitude: -96.797
 		},
 		openingHours: 'Mo-Fr 09:00-17:00',
 		telephone: BUSINESS_INFO.phone ?? undefined,

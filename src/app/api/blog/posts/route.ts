@@ -6,11 +6,11 @@
  * Posts default to published: false (draft) so they can be reviewed.
  */
 
-import { eq } from 'drizzle-orm'
+import { eq, inArray } from 'drizzle-orm'
 import { type NextRequest, NextResponse } from 'next/server'
 import { env } from '@/env'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { createBlogPostSchema } from '@/lib/schemas/blog-api'
 import {
 	blogAuthors,
@@ -98,19 +98,16 @@ export async function POST(request: NextRequest) {
 
 		// Attach tags if provided
 		if (tagSlugs.length > 0) {
-			const resolvedTags: Array<{ id: string; slug: string }> = []
-			for (const slug of tagSlugs) {
-				const rows = await db
-					.select({ id: blogTags.id, slug: blogTags.slug })
-					.from(blogTags)
-					.where(eq(blogTags.slug, slug))
-					.limit(1)
+			const resolvedTags = await db
+				.select({ id: blogTags.id, slug: blogTags.slug })
+				.from(blogTags)
+				.where(inArray(blogTags.slug, tagSlugs))
 
-				if (rows[0]) {
-					resolvedTags.push(rows[0])
-				} else {
-					logger.info('Tag not found, skipping', { tagSlug: slug })
-				}
+			const missingSlugs = tagSlugs.filter(
+				slug => !resolvedTags.some(tag => tag.slug === slug)
+			)
+			for (const slug of missingSlugs) {
+				logger.info('Tag not found, skipping', { tagSlug: slug })
 			}
 
 			if (resolvedTags.length > 0) {
@@ -141,8 +138,7 @@ export async function POST(request: NextRequest) {
 			{ status: 201 }
 		)
 	} catch (error) {
-		const err = castError(error)
-		logger.error('Blog post creation failed', err)
+		logger.error('Blog post creation failed', error)
 		return NextResponse.json(
 			{ error: 'Internal server error' },
 			{ status: 500 }
