@@ -82,7 +82,7 @@ export async function checkStirlingPDFHealth(): Promise<boolean> {
 		})
 		return response.ok
 	} catch (error) {
-		logger.error('Stirling PDF health check failed', castError(error))
+		logger.error('Stirling PDF health check failed', error)
 		return false
 	}
 }

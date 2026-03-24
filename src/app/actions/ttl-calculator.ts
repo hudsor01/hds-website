@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { env } from '@/env'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { db } from '@/lib/db'
-import { castError, logger } from '@/lib/logger'
+import { logger } from '@/lib/logger'
 import { getResendClient } from '@/lib/resend-client'
 import { ttlCalculations } from '@/lib/schemas/ttl'
 import { formatCurrency } from '@/lib/utils'
@@ -154,7 +154,7 @@ export async function saveCalculation(
 		logger.info('TTL calculation saved', { shareCode, county: inputs.county })
 		return { success: true, shareCode }
 	} catch (error) {
-		logger.error('Error saving TTL calculation', castError(error))
+		logger.error('Error saving TTL calculation', error)
 		return { success: false, error: 'An unexpected error occurred' }
 	}
 }
@@ -234,7 +234,7 @@ export async function loadCalculation(shareCode: string): Promise<{
 			}
 		}
 	} catch (error) {
-		logger.error('Error loading TTL calculation', castError(error))
+		logger.error('Error loading TTL calculation', error)
 		return { success: false, error: 'An unexpected error occurred' }
 	}
 }
@@ -412,14 +412,14 @@ export async function emailResults(
 		})
 
 		if (emailError) {
-			logger.error('Failed to send TTL results email', castError(emailError))
+			logger.error('Failed to send TTL results email', emailError)
 			return { success: false, error: 'Failed to send email' }
 		}
 
 		logger.info('TTL results email sent', { shareCode, email })
 		return { success: true }
 	} catch (error) {
-		logger.error('Error emailing TTL results', castError(error))
+		logger.error('Error emailing TTL results', error)
 		return { success: false, error: 'An unexpected error occurred' }
 	}
 }
@@ -493,7 +493,7 @@ export async function getCalculatorAnalytics(): Promise<{
 			recentCalculations
 		}
 	} catch (error) {
-		logger.error('Error fetching calculator analytics', castError(error))
+		logger.error('Error fetching calculator analytics', error)
 		return {
 			totalCalculations: 0,
 			topCounties: [],
