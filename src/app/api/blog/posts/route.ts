@@ -8,7 +8,7 @@
 
 import { eq, inArray } from 'drizzle-orm'
 import { type NextRequest, NextResponse } from 'next/server'
-import { env } from '@/env'
+import { validateAdminAuth } from '@/lib/auth/admin'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { createBlogPostSchema } from '@/lib/schemas/blog-api'
@@ -19,17 +19,10 @@ import {
 	blogTags
 } from '@/lib/schemas/schema'
 
-function authenticateRequest(request: NextRequest): boolean {
-	if (!env.ADMIN_SECRET) {
-		return false
-	}
-	const authHeader = request.headers.get('authorization')
-	return authHeader === `Bearer ${env.ADMIN_SECRET}`
-}
-
 export async function POST(request: NextRequest) {
-	if (!authenticateRequest(request)) {
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+	const authError = validateAdminAuth(request)
+	if (authError) {
+		return authError
 	}
 
 	try {
