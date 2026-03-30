@@ -169,20 +169,20 @@ const faqs: FAQ[] = [
 	}
 ]
 
-export default function PricingPage() {
-	const faqSchema = {
-		'@context': 'https://schema.org',
-		'@type': 'FAQPage',
-		mainEntity: faqs.map(faq => ({
-			'@type': 'Question',
-			name: faq.question,
-			acceptedAnswer: {
-				'@type': 'Answer',
-				text: faq.answer
-			}
-		}))
-	}
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map(faq => ({
+		'@type': 'Question',
+		name: faq.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: faq.answer
+		}
+	}))
+}
 
+export default function PricingPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{SEO_CONFIG.pricing?.structuredData && (
