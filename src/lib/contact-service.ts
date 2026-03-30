@@ -15,7 +15,7 @@ import {
 	LEAD_QUALITY_THRESHOLDS
 } from '@/lib/constants/lead-scoring'
 import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils'
-import { castError, type Logger } from '@/lib/logger'
+import type { Logger } from '@/lib/logger'
 import { notifyHighValueLead } from '@/lib/notifications'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmailSequence } from '@/lib/scheduled-emails'
@@ -377,10 +377,8 @@ export async function scheduleFollowUpEmails(
 			emailVariables
 		)
 	} catch (error) {
-		logger.error('Failed to schedule email sequence', {
-			error: castError(error),
-			email: data.email,
-			sequenceId
+		logger.error('Failed to schedule email sequence', error, {
+			metadata: { email: data.email, sequenceId }
 		})
 	}
 }
