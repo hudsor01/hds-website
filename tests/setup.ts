@@ -91,6 +91,24 @@ function setupLoggerMock() {
 
 setupLoggerMock()
 
+// Persistent Next.js navigation mock — survives mock.restore() cycles.
+// Without this, components using usePathname/useRouter throw outside the Next.js runtime.
+// Bun 1.3.8 has unreliable mock.module re-application after mock.restore(),
+// so this must be re-applied alongside env and logger mocks.
+function setupNextNavigationMock() {
+	mock.module('next/navigation', () => ({
+		useRouter: () => ({
+			push: mock(),
+			replace: mock(),
+			prefetch: mock()
+		}),
+		usePathname: () => '/',
+		useSearchParams: () => new URLSearchParams()
+	}))
+}
+
+setupNextNavigationMock()
+
 // Mock react-simple-maps wrapper — the library triggers async SVG path
 // calculations that crash in JSDOM and cause act() warnings
 mock.module('@/components/utilities/ServiceAreaMapWrapper', () => ({
@@ -178,6 +196,7 @@ beforeEach(() => {
 	// Re-apply critical mocks that must persist across tests
 	setupEnvMock()
 	setupLoggerMock()
+	setupNextNavigationMock()
 	// Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
 	disableJestFakeTimerDetection()
 })
