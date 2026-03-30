@@ -7,9 +7,12 @@ function validateBearerToken(
 	secret: string
 ): NextResponse | null {
 	const authHeader = request.headers.get('authorization')
-	const token = authHeader?.replace('Bearer ', '')
+	if (!authHeader?.toLowerCase().startsWith('bearer ')) {
+		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+	}
+	const token = authHeader.slice(7)
 	const encoder = new TextEncoder()
-	const a = encoder.encode(token ?? '')
+	const a = encoder.encode(token)
 	const b = encoder.encode(secret)
 	if (a.length !== b.length || !timingSafeEqual(a, b)) {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
