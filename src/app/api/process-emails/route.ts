@@ -5,20 +5,14 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
-import { env } from '@/env'
+import { validateCronAuth } from '@/lib/auth/admin'
 import { logger } from '@/lib/logger'
 import { processEmailsEndpoint } from '@/lib/scheduled-emails'
 
 export async function POST(request: NextRequest) {
-	if (!env.CRON_SECRET) {
-		return NextResponse.json(
-			{ error: 'Cron authentication not configured' },
-			{ status: 503 }
-		)
-	}
-	const authHeader = request.headers.get('authorization')
-	if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+	const authError = validateCronAuth(request)
+	if (authError) {
+		return authError
 	}
 
 	try {

@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:1.3-alpine AS base
 
 # Dependencies
 FROM base AS deps
@@ -15,7 +15,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
 # Production — use node for running (Next.js standalone outputs node server.js)
-FROM node:22-alpine AS runner
+FROM node:22-alpine3.21 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
