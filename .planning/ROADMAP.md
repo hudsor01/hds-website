@@ -419,5 +419,5 @@ Plans:
 | 61. Brand SoT via Codegen + Cleanup | v4.1 | 0/2 | Pending | - |
 | 62. React-PDF Migration + Dead HTML Cleanup | v4.1 | 0/2 | Pending | - |
 | 63. React Email v6 Migration | v4.1 | 0/3 | Pending | - |
-| 64. Cache Components Adoption | v4.1 | 0/2 | Pending | - |
-| 65. Streaming + after() Adoption | v4.1 | 0/1 | Pending | - |
+| 64. Cache Components Adoption | v4.1 | 2/2 | Complete | 2026-04-26 |
+| 65. Streaming + after() Adoption | v4.1 | 1/1 | Complete | 2026-04-26 |

@@ -2,15 +2,13 @@
 gsd_state_version: 1.0
 milestone: v4.1
 milestone_name: Next.js 16 Modernization & Brand Consistency
-status: shipped (phase 64 deferred to v4.2)
+status: shipped
 last_updated: "2026-04-26"
 progress:
   total_phases: 65
-  completed_phases: 64
-  deferred_phases: 1
+  completed_phases: 65
   total_plans: 30
-  completed_plans: 26
-  deferred_plans: 2
+  completed_plans: 30
 ---
 
 # Project State
@@ -24,11 +22,11 @@ See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 ## Current Position
 
-Milestone: v4.1 Next.js 16 Modernization & Brand Consistency — SHIPPED (4/5 phases; phase 64 deferred to v4.2)
-Status: Phases 61, 62, 63, 65 complete. Phase 64 (Cache Components) deferred — `cacheComponents: true` cascades far beyond data layer (Suspense wraps for every dynamic data access; generateStaticParams empty-result fallbacks; build-time DB connectivity issues). Documented in `.planning/phases/64-cache-components/64-DEFERRED.md` with restoration steps.
-Last activity: 2026-04-26 — autonomous execution of v4.1 complete. 4 commits: phase 61 (codegen + cleanup), phase 62 (PDF), phase 63 (React Email v6), phase 65 (after)
+Milestone: v4.1 Next.js 16 Modernization & Brand Consistency — FULLY SHIPPED (5/5 phases)
+Status: All 5 phases complete. Phase 64 (Cache Components) recovered after initial deferral — full migration: cacheComponents flag enabled, 'use cache' on every data layer read, page-level revalidate/force-dynamic removed, generateStaticParams empty-result guards added, dynamic data wrapped in Suspense, DOMPurify Date access resolved by making BlogPostContent a cached async component. Test infrastructure updated to mock next/cache for bun:test.
+Last activity: 2026-04-26 — autonomous execution of v4.1 complete. 5 commits: phase 61, 62, 63, 65, then phase 64 finalizer.
 
-Progress: v1.0 done | v1.1 partial done | v2.0 done | v3.0 done | v3.1 done | v4.0 done | v4.1 SHIPPED (4/5)
+Progress: v1.0 done | v1.1 partial done | v2.0 done | v3.0 done | v3.1 done | v4.0 done | v4.1 SHIPPED (5/5)
 
 ## Milestone v4.1 Scope
 
