@@ -135,7 +135,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 					<div className="flex items-center space-x-4">
 						<div
 							className={cn(
-								'p-3 rounded-xl bg-opacity-20 border border-current border-opacity-30',
+								'p-3 rounded-xl border border-current/30',
 								'hover-lift transition-smooth will-change-transform',
 								gradient
 							)}
