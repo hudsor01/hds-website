@@ -15,7 +15,8 @@ None
 - [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) -- SHIPPED 2026-02-17
 - [v3.0 Growth & Content](milestones/v3.0-ROADMAP.md) (Phases 46-52) -- SHIPPED 2026-02-18, gap closure in progress
 - ✅ [v3.1 Biome Migration](milestones/v3.1-ROADMAP.md) (Phases 53-55) -- SHIPPED 2026-02-25
-- **v4.0 UI Redesign** (Phases 56-60) — SHIPPED 2026-03-02
+- ✅ **v4.0 UI Redesign** (Phases 56-60) — SHIPPED 2026-03-02
+- **v4.1 Next.js 16 Modernization & Brand Consistency** (Phases 61-65) — IN PROGRESS
 
 ## Completed Milestones
 
@@ -23,6 +24,7 @@ None
 - ✅ [v2.0 Audit Remediation & Feature Completion](milestones/v2.0-ROADMAP.md) (Phases 37-45) — SHIPPED 2026-02-17
 - ✅ [v3.0 Growth & Content](milestones/v3.0-ROADMAP.md) (Phases 46-52) — SHIPPED 2026-02-18
 - ✅ [v3.1 Biome Migration](milestones/v3.1-ROADMAP.md) (Phases 53-55) — SHIPPED 2026-02-25
+- ✅ v4.0 UI Redesign (Phases 56-60) — SHIPPED 2026-03-02
 
 <details>
 <summary>v1.1 Code Review Remediation (Phases 11-17) -- PARTIAL</summary>
@@ -222,6 +224,79 @@ See [milestones/v3.1-ROADMAP.md](milestones/v3.1-ROADMAP.md) for full details.
 
 </details>
 
+## Active: v4.1 Next.js 16 Modernization & Brand Consistency (Phases 61-65)
+
+**Milestone Goal:** Two parallel tracks. (a) Eliminate brand-color drift by making `src/app/globals.css` the literal single source of truth via a build-time codegen pipeline; migrate React-PDF templates (`@react-pdf/renderer`) and emails (upgrade to React Email v6 unified package, raw HTML → JSX) to consume the generated tokens. (b) Adopt the Next.js 16 caching/streaming primitives the codebase isn't yet using — `'use cache'` + `cacheLife()` + `cacheTag()` for the data layer, `after()` for fire-and-forget side effects.
+
+**Approach:** Phase 61 (codegen + error/meta) is the foundation — phases 62 (PDF) and 63 (React Email) depend on the BRAND export from `src/lib/_generated/brand.ts`. Phases 64 (cache) and 65 (after) are independent of the brand track. Done when (a) zero brand-cyan hex remains in src/, every email is a React Email v6 component, every PDF template imports BRAND, and (b) every page-level `export const revalidate` is replaced by data-layer `'use cache'` with explicit tags + every fire-and-forget side effect uses `after()`.
+
+#### Phase 61: Brand SoT via Codegen + Error/Meta/Manifest Cleanup
+
+**Goal**: Build a Bun script that parses `src/app/globals.css` and emits `src/lib/_generated/brand.ts` (typed hex export, OKLCH→sRGB via hand-rolled math, no runtime dep). Wire pre-commit + prepare hooks. Migrate `global-error.tsx` / `global-not-found.tsx` to import globals.css + Tailwind. Update layout meta tags to consume `BRAND`, update manifest.json hand-mirror, remove dead `selection-cyan` class.
+**Depends on**: None (foundation)
+**Research**: Complete (61-RESEARCH.md — OKLCH→sRGB math, parsing, lefthook integration, biome exclusion)
+**Plans**: 2 plans
+
+Requirements covered: BRAND-CODEGEN-01, BRAND-CLEANUP-01
+
+Plans:
+- [ ] 61-01-PLAN.md — Build codegen script + emit brand.ts + unit test + package.json/lefthook/biome wiring
+- [ ] 61-02-PLAN.md — Migrate global-error/global-not-found to globals.css + Tailwind, update layout meta + manifest.json, remove dead selection-cyan class
+
+#### Phase 62: React-PDF Template Migration + Dead HTML Template Cleanup
+
+**Goal**: Delete two dead `.ts` HTML PDF templates (zero importers — leftover from a prior Puppeteer approach). Migrate the active React-PDF `.tsx` templates (contract, proposal, invoice, audit paystub) to import `BRAND` from the generated module. React-PDF only accepts hex/rgb in its StyleSheet API — phase 61's codegen is the only correct mechanism.
+**Depends on**: Phase 61 (BRAND export)
+**Research**: Unlikely — pattern is import-and-substitute
+**Plans**: 2 plans
+
+Requirements covered: PDF-CLEANUP-01, PDF-MIGRATE-01
+
+Plans:
+- [ ] 62-01-PLAN.md — Delete `src/lib/pdf/contract-html-template.ts` and `src/lib/pdf/invoice-html-template.ts` (dead code, verified zero importers)
+- [ ] 62-02-PLAN.md — Migrate 3 React-PDF .tsx templates (contract, proposal, invoice) to import BRAND, audit paystub-template + client-pdf + stirling-client, visual smoke test for 4 PDF types
+
+#### Phase 63: React Email v6 Migration
+
+**Goal**: Upgrade from `@react-email/render@2.0.4` (installed but unused) to the unified `react-email@latest` package released 2026-04-17. Author React Email JSX components for every transactional email currently sent as raw HTML strings (newsletter welcome, 4 admin notifications, 2 results emails, 1 scheduled drip — 8 templates total). Each component sources colors from BRAND. Resend's `react:` prop replaces every `html:` send call.
+**Depends on**: Phase 61 (BRAND export)
+**Research**: Complete (63-RESEARCH.md — v6 unified API, upgrade sequence, Resend integration, component patterns)
+**Plans**: 3 plans
+
+Requirements covered: REMAIL-DEPS-01, REMAIL-POC-01, REMAIL-ADMIN-01, REMAIL-COMPLEX-01
+
+Plans:
+- [ ] 63-01-PLAN.md — Dependency swap (bun remove @react-email/render && bun add react-email@latest), scaffold src/emails/_components/ (BrandLayout/Heading/Button/Footer), build NewsletterWelcome as proof-of-concept, wire into newsletter subscribe route, real-email smoke test
+- [ ] 63-02-PLAN.md — Migrate 4 simple admin notifications (contact, testimonial, calculator, newsletter)
+- [ ] 63-03-PLAN.md — Migrate 3 complex emails (calculator results, TTL calculator results, scheduled drip campaign)
+
+#### Phase 64: Cache Components Adoption
+
+**Goal**: Adopt Next.js 16 function-level Cache Components (`'use cache'`, `cacheLife()`, `cacheTag()`, `updateTag()`) across the data layer. Strip page-level `export const revalidate` and `export const dynamic` directives in favour of granular, tag-based invalidation.
+**Depends on**: None (independent of brand track)
+**Research**: Complete (64-RESEARCH.md — Cache Components API + Drizzle integration notes)
+**Plans**: 2 plans
+
+Requirements covered: CACHE-01, CACHE-02, CACHE-03
+
+Plans:
+- [ ] 64-01-PLAN.md — Migrate src/lib/blog.ts to 'use cache' + cacheTag, wire updateTag into n8n auto-publish webhook (if present)
+- [ ] 64-02-PLAN.md — Migrate src/lib/showcase.ts and src/lib/help-articles.ts; remove page-level revalidate from portfolio/[slug], showcase, help/[category]/[slug]
+
+#### Phase 65: Streaming + after() Adoption
+
+**Goal**: Move fire-and-forget side effects (admin notifications, audit logs, analytics writes) off the response critical path using `after()` from `next/server`. Faster API/server-action responses with no behavioural change.
+**Depends on**: None (recommended after phase 63 so the deferred email sends use the new React Email components, but not strictly blocked)
+**Research**: Unlikely — `after()` API is small and well-documented
+**Plans**: 1 plan
+
+Requirements covered: AFTER-01
+
+Plans:
+- [ ] 65-01-PLAN.md — Wrap deferrable work in 7 API routes (web-vitals, contact, testimonials submit, 3 testimonials/requests CRUD endpoints, plus quick checks on testimonials list/health/rss) and 1 server action (ttl-calculator)
+
+---
+
 ## Complete: v4.0 UI Redesign (Phases 56-60)
 
 **Milestone Goal:** Transform the site from generic shadcn defaults to a premium, distinctive UI inspired by Resend, Linear, and Clerk — through design system tokens, component polish, and page-level redesign.
@@ -341,3 +416,8 @@ Plans:
 | 58. Core Component Polish | v4.0 | 4/4 | Complete | 2026-02-27 |
 | 59. Tool Page Polish | v4.0 | 6/6 | Complete | 2026-03-02 |
 | 60. Content Page Polish | v4.0 | 4/4 | Complete | 2026-03-02 |
+| 61. Brand SoT via Codegen + Cleanup | v4.1 | 0/2 | Pending | - |
+| 62. React-PDF Migration + Dead HTML Cleanup | v4.1 | 0/2 | Pending | - |
+| 63. React Email v6 Migration | v4.1 | 0/3 | Pending | - |
+| 64. Cache Components Adoption | v4.1 | 0/2 | Pending | - |
+| 65. Streaming + after() Adoption | v4.1 | 0/1 | Pending | - |
