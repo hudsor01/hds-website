@@ -73,7 +73,9 @@ function mapShowcase(row: Showcase): ShowcaseItem {
 		imageUrl: row.imageUrl,
 		ogImageUrl: row.ogImageUrl,
 		galleryImages: row.galleryImages as string[] | null,
-		gradientClass: row.gradientClass ?? 'from-cyan-500 to-blue-600',
+		// Fallback gradient uses brand tokens (primary → foreground); legacy
+		// rows had cyan-500 → blue-600 from the v3 cyan palette.
+		gradientClass: row.gradientClass ?? 'from-primary to-foreground',
 		externalLink: row.externalLink,
 		githubLink: row.githubLink,
 		testimonialText: row.testimonialText,

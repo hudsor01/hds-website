@@ -75,13 +75,21 @@ async function handleTestimonialSubmit(request: NextRequest) {
 
 		// Mark the request as submitted if token was used.
 		// Invalidate the cached token lookup so subsequent requests see the
-		// updated `submitted: true` state (otherwise the cacheLife('minutes')
-		// staleness window allows a second submission to slip past the
-		// "already submitted" guard above). Profile must match the cacheLife
-		// used in getTestimonialRequestByToken.
+		// updated `submitted: true` state. The 'max' profile triggers an
+		// immediate hard purge — using 'minutes' here would be a soft
+		// stale-while-revalidate that lets the prior cached entry continue
+		// to serve concurrent requests within the revalidation window,
+		// defeating the "already submitted" guard.
 		if (body.token) {
-			await markRequestSubmitted(body.token)
-			revalidateTag(`testimonial-token:${body.token}`, 'minutes')
+			const marked = await markRequestSubmitted(body.token)
+			if (!marked) {
+				logger.error(
+					'Failed to mark testimonial request as submitted; cache not invalidated',
+					{ token: body.token, testimonialId: testimonial.id }
+				)
+				return errorResponse('Failed to finalize submission', 500)
+			}
+			revalidateTag(`testimonial-token:${body.token}`, 'max')
 		}
 
 		logger.info('Testimonial submitted', {
