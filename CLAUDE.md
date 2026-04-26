@@ -71,14 +71,14 @@
 - Call `toast.success(...)`, `toast.error(...)` directly — no custom provider
 
 **Error Handling:**
-- `castError` helper at `src/lib/errors.ts` (also re-exported from `src/lib/logger.ts`)
+- Two independent `castError` helpers exist: `src/lib/errors.ts` returns `Error`, `src/lib/logger.ts` returns `ErrorLogData`. Pick the one whose return type matches the call site.
 - Wrap async ops in try/catch
 - Log via `logger.error` — never `console.*`
 - Return user-friendly messages; never expose internals
 
 **Tailwind v4 / Styling:**
 - Defined in `src/app/globals.css` via `@utility` blocks and class rules
-- Available: `.glass-card`, `.glass-card-light`, `.hover-lift`, `.transition-smooth`, `section-spacing`, `card-padding` (sm/lg variants)
+- Available: `.glass-card`, `.glass-card-light`, `.hover-lift`, `.transition-smooth`, `.section-spacing`, `.card-padding` (`-sm` / `-lg` variants)
 - Focus styling is native via `:focus-visible` in globals.css — there is no `.focus-ring` class
 - Use CSS custom properties, not hard-coded values
 
@@ -141,7 +141,7 @@
 
 **Semantic HTML:**
 - Landmarks: `main`, `nav`, `section`, `article`
-- `<main id="main-content">` is the skip-link target (in `src/app/layout.tsx`)
+- Skip-link target is `<div id="main-content">` in `src/app/layout.tsx` — note: a `<main>` landmark is not currently emitted; prefer adding one when touching the layout
 - Heading hierarchy without skips
 
 **ARIA:**
@@ -158,8 +158,8 @@
 ## INTEGRATIONS
 
 **Neon + Drizzle:**
-- Client `@/lib/db` (lazy-init; mock when `POSTGRES_URL` is unset)
-- Schema barrel `@/lib/schemas/schema`
+- Client `src/lib/db.ts` (lazy-init; mock when `POSTGRES_URL` is unset). Imports use the `@/` alias (`@/lib/db` -> `src/lib/db.ts`).
+- Schema barrel `src/lib/schemas/schema.ts`
 - Drizzle config `drizzle.config.ts` (dialect `postgresql`, `schemaFilter: ['public']`)
 - `DATABASE_URL_UNPOOLED` is used by drizzle-kit for migrations
 - pg_cron runs weekly VACUUM ANALYZE; see `.planning/` for details
