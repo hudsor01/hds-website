@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+import { after } from 'next/server'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
 	errorResponse,
@@ -71,30 +72,35 @@ async function handleContactPost(request: NextRequest) {
 		const sequenceId = leadScoring.sequenceType
 		const emailVariables = prepareEmailVariables(data)
 
-		// Step 5: Send emails and notifications
+		// Step 5: Defer all email sends + lead notifications + follow-up
+		// scheduling — these are fire-and-forget. The user-facing response
+		// returns immediately; failures are logged but don't gate the response.
 		if (isResendConfigured()) {
-			try {
-				await sendAdminNotification(data, leadScore, sequenceId, logger)
-				await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
-				await sendLeadNotifications(data, leadScore, logger)
+			after(async () => {
+				try {
+					await sendAdminNotification(data, leadScore, sequenceId, logger)
+					await sendWelcomeEmail(data, sequenceId, emailVariables, logger)
+					await sendLeadNotifications(data, leadScore, logger)
+					await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
 
-				await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
+					logger.info('Contact form post-response side effects complete', {
+						...logContext,
+						email: data.email,
+						leadScore,
+						sequenceId
+					})
+				} catch (emailError) {
+					logger.error(
+						'Failed to send email or schedule follow-ups',
+						emailError
+					)
+				}
+			})
 
-				logger.info('Contact form submission successful', {
-					...logContext,
-					email: data.email,
-					leadScore,
-					sequenceId
-				})
-
-				return successResponse(
-					undefined,
-					'Thank you! Your message has been sent successfully.'
-				)
-			} catch (emailError) {
-				logger.error('Failed to send email', emailError)
-				return errorResponse('Failed to send message. Please try again.', 500)
-			}
+			return successResponse(
+				undefined,
+				'Thank you! Your message has been sent successfully.'
+			)
 		} else {
 			// Test mode: schedule emails without email service
 			await scheduleFollowUpEmails(data, sequenceId, emailVariables, logger)
