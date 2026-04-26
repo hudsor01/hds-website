@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+import { after } from 'next/server'
 import { TestimonialAdminNotification } from '@/emails/testimonial-admin-notification'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
@@ -84,31 +85,34 @@ async function handleTestimonialSubmit(request: NextRequest) {
 			isPrivateLink: !!body.token
 		})
 
-		// Send admin notification and submitter confirmation
+		// Defer admin notification — fire-and-forget; failure logged but
+		// doesn't gate the response.
 		if (isResendConfigured()) {
-			try {
-				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-					to: BUSINESS_INFO.email,
-					subject: `[Notification] New Testimonial Submitted - ${body.client_name}`,
-					react: (
-						<TestimonialAdminNotification
-							clientName={body.client_name}
-							company={body.company}
-							role={body.role}
-							rating={body.rating}
-							serviceType={body.service_type}
-							content={body.content}
-							isPrivateLink={!!body.token}
-						/>
+			after(async () => {
+				try {
+					await getResendClient().emails.send({
+						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+						to: BUSINESS_INFO.email,
+						subject: `[Notification] New Testimonial Submitted - ${body.client_name}`,
+						react: (
+							<TestimonialAdminNotification
+								clientName={body.client_name}
+								company={body.company}
+								role={body.role}
+								rating={body.rating}
+								serviceType={body.service_type}
+								content={body.content}
+								isPrivateLink={!!body.token}
+							/>
+						)
+					})
+				} catch (adminEmailError) {
+					logger.error(
+						'Failed to send admin notification for testimonial',
+						adminEmailError
 					)
-				})
-			} catch (adminEmailError) {
-				logger.error(
-					'Failed to send admin notification for testimonial',
-					adminEmailError
-				)
-			}
+				}
+			})
 		}
 
 		return successResponse(undefined, 'Testimonial submitted successfully')

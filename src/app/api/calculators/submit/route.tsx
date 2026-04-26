@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+import { after } from 'next/server'
 import { z } from 'zod'
 import { CalculatorAdminNotification } from '@/emails/calculator-admin-notification'
 import { CalculatorResults } from '@/emails/calculator-results'
@@ -168,101 +169,94 @@ async function handleCalculatorSubmit(request: NextRequest) {
 			return errorResponse('Failed to store submission', 500)
 		}
 
-		// Send immediate email with results
-		if (isResendConfigured()) {
-			try {
-				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-					to: email,
-					subject: `Your ${getCalculatorName(calculator_type)} Results`,
-					react: (
-						<CalculatorResults
-							calculatorName={getCalculatorName(calculator_type)}
-							results={results || {}}
-						/>
-					)
-				})
-
-				logger.info('Results email sent', { email, calculator_type })
-			} catch (emailError) {
-				logger.error('Failed to send results email', emailError)
-				// Don't fail the request if email fails
-			}
-
-			try {
-				const inputName = typeof inputs.name === 'string' ? inputs.name : ''
-				const company = typeof inputs.company === 'string' ? inputs.company : ''
-
-				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-					to: BUSINESS_INFO.email,
-					subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
-					react: (
-						<CalculatorAdminNotification
-							calculatorName={getCalculatorName(calculator_type)}
-							email={email}
-							name={inputName || undefined}
-							company={company || undefined}
-							leadScore={leadScore}
-							leadQuality={leadQuality}
-						/>
-					)
-				})
-
-				logger.info('Admin notification sent', { email, calculator_type })
-			} catch (adminEmailError) {
-				logger.error('Failed to send admin notification', adminEmailError)
-				// Don't fail the request if admin email fails
-			}
-		}
-
-		// Extract name for notifications
+		// Defer all side effects (results email + admin email + Slack/Discord
+		// notifications + follow-up scheduling) until after the response is
+		// sent. The user gets an immediate ack with their lead score; the
+		// asynchronous work runs after.
 		const inputName = typeof inputs.name === 'string' ? inputs.name : ''
+		const inputCompany =
+			typeof inputs.company === 'string' ? inputs.company : ''
 		const nameParts = inputName.split(' ')
 		const firstName = nameParts[0] || email.split('@')[0] || ''
 		const lastName = nameParts.slice(1).join(' ') || ''
-
-		// Send high-value lead notifications to Slack/Discord
-		try {
-			await notifyHighValueLead({
-				leadId: calculatorLead.id,
-				firstName,
-				lastName,
-				email,
-				phone: typeof inputs.phone === 'string' ? inputs.phone : undefined,
-				company:
-					typeof inputs.company === 'string' ? inputs.company : undefined,
-				leadScore: leadScore,
-				leadQuality: leadQuality,
-				source: `Calculator - ${getCalculatorName(calculator_type)}`,
-				calculatorType: calculator_type
-			})
-		} catch (notificationError) {
-			// Log but don't fail the submission if notifications fail
-			logger.error('Failed to send lead notifications', notificationError)
-		}
-
-		// Schedule follow-up emails based on lead quality
 		const sequenceId =
 			leadQuality === 'hot' ? 'calculator-hot-lead' : 'calculator-follow-up'
 
-		try {
-			await scheduleEmail({
-				recipientEmail: email,
-				recipientName: inputName || email.split('@')[0] || 'there',
-				sequenceId,
-				stepId: 'followup-1',
-				scheduledFor: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days
-				variables: {
-					calculator_type: getCalculatorName(calculator_type),
-					lead_score: leadScore.toString()
+		after(async () => {
+			if (isResendConfigured()) {
+				try {
+					await getResendClient().emails.send({
+						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+						to: email,
+						subject: `Your ${getCalculatorName(calculator_type)} Results`,
+						react: (
+							<CalculatorResults
+								calculatorName={getCalculatorName(calculator_type)}
+								results={results || {}}
+							/>
+						)
+					})
+					logger.info('Results email sent', { email, calculator_type })
+				} catch (emailError) {
+					logger.error('Failed to send results email', emailError)
 				}
-			})
 
-			logger.info('Follow-up email scheduled', { email, sequenceId })
-		} catch (scheduleError) {
-			logger.error('Failed to schedule follow-up', scheduleError)
-		}
+				try {
+					await getResendClient().emails.send({
+						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+						to: BUSINESS_INFO.email,
+						subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
+						react: (
+							<CalculatorAdminNotification
+								calculatorName={getCalculatorName(calculator_type)}
+								email={email}
+								name={inputName || undefined}
+								company={inputCompany || undefined}
+								leadScore={leadScore}
+								leadQuality={leadQuality}
+							/>
+						)
+					})
+					logger.info('Admin notification sent', { email, calculator_type })
+				} catch (adminEmailError) {
+					logger.error('Failed to send admin notification', adminEmailError)
+				}
+			}
+
+			try {
+				await notifyHighValueLead({
+					leadId: calculatorLead.id,
+					firstName,
+					lastName,
+					email,
+					phone: typeof inputs.phone === 'string' ? inputs.phone : undefined,
+					company: inputCompany || undefined,
+					leadScore: leadScore,
+					leadQuality: leadQuality,
+					source: `Calculator - ${getCalculatorName(calculator_type)}`,
+					calculatorType: calculator_type
+				})
+			} catch (notificationError) {
+				logger.error('Failed to send lead notifications', notificationError)
+			}
+
+			try {
+				await scheduleEmail({
+					recipientEmail: email,
+					recipientName: inputName || email.split('@')[0] || 'there',
+					sequenceId,
+					stepId: 'followup-1',
+					scheduledFor: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+					variables: {
+						calculator_type: getCalculatorName(calculator_type),
+						lead_score: leadScore.toString()
+					}
+				})
+				logger.info('Follow-up email scheduled', { email, sequenceId })
+			} catch (scheduleError) {
+				logger.error('Failed to schedule follow-up', scheduleError)
+			}
+		})
 
 		return successResponse({
 			lead_id: calculatorLead.id,
