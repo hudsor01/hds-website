@@ -1,4 +1,5 @@
 import DOMPurify from 'isomorphic-dompurify'
+import { cacheLife, cacheTag } from 'next/cache'
 import type { BlogPost } from '@/lib/blog'
 
 interface BlogPostContentProps {
@@ -7,6 +8,8 @@ interface BlogPostContentProps {
 
 export async function BlogPostContent({ post }: BlogPostContentProps) {
 	'use cache'
+	cacheLife('days')
+	cacheTag('blog-posts', `blog-post:${post.id}`)
 
 	if (!post.content) {
 		return (

@@ -3,6 +3,7 @@
  * POST /api/testimonials/submit
  */
 
+import { revalidateTag } from 'next/cache'
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
 import { TestimonialAdminNotification } from '@/emails/testimonial-admin-notification'
@@ -72,9 +73,15 @@ async function handleTestimonialSubmit(request: NextRequest) {
 			throw new Error('Failed to save testimonial')
 		}
 
-		// Mark the request as submitted if token was used
+		// Mark the request as submitted if token was used.
+		// Invalidate the cached token lookup so subsequent requests see the
+		// updated `submitted: true` state (otherwise the cacheLife('minutes')
+		// staleness window allows a second submission to slip past the
+		// "already submitted" guard above). Profile must match the cacheLife
+		// used in getTestimonialRequestByToken.
 		if (body.token) {
 			await markRequestSubmitted(body.token)
+			revalidateTag(`testimonial-token:${body.token}`, 'minutes')
 		}
 
 		logger.info('Testimonial submitted', {

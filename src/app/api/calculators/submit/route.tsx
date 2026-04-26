@@ -279,7 +279,8 @@ function getCalculatorName(type: string): string {
 	const names: Record<string, string> = {
 		'roi-calculator': 'ROI Calculator',
 		'cost-estimator': 'Website Cost Estimator',
-		'performance-calculator': 'Performance Savings Calculator'
+		'performance-calculator': 'Performance Savings Calculator',
+		'texas-ttl-calculator': 'Texas TTL Calculator'
 	}
 	return names[type] || 'Calculator'
 }
