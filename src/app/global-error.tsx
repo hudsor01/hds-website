@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { BUSINESS_INFO } from '@/lib/constants/business'
+import './globals.css'
 
 export default function GlobalError({
 	error,
@@ -22,154 +23,72 @@ export default function GlobalError({
 	}, [error])
 
 	return (
-		<html>
-			<body>
-				<div
-					style={{
-						minHeight: '100vh',
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						padding: '24px',
-						fontFamily: 'system-ui, -apple-system, sans-serif'
-					}}
-				>
-					<div
-						style={{
-							maxWidth: '400px',
-							width: '100%',
-							textAlign: 'center'
-						}}
-					>
-						<div
-							style={{
-								width: '64px',
-								height: '64px',
-								margin: '0 auto 24px',
-								backgroundColor: '#fee2e2',
-								borderRadius: '50%',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center'
-							}}
+		<html lang="en">
+			<body className="min-h-screen flex items-center justify-center p-6 font-sans bg-background text-foreground">
+				<div className="max-w-md w-full text-center">
+					<div className="w-16 h-16 mx-auto mb-6 bg-destructive-light rounded-full flex items-center justify-center">
+						<svg
+							width="32"
+							height="32"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							className="text-destructive"
+							aria-hidden="true"
 						>
-							<svg
-								width="32"
-								height="32"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="#dc2626"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-								<line x1="12" y1="9" x2="12" y2="13" />
-								<line x1="12" y1="17" x2="12.01" y2="17" />
-							</svg>
-						</div>
+							<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+							<line x1="12" y1="9" x2="12" y2="13" />
+							<line x1="12" y1="17" x2="12.01" y2="17" />
+						</svg>
+					</div>
 
-						<h1
-							style={{
-								fontSize: '24px',
-								fontWeight: 'bold',
-								marginBottom: '12px',
-								color: '#111827'
-							}}
-						>
-							Application Error
-						</h1>
+					<h1 className="text-2xl font-bold mb-3 text-foreground">
+						Application Error
+					</h1>
 
-						<p
-							style={{
-								color: '#6b7280',
-								marginBottom: '24px',
-								lineHeight: '1.5'
-							}}
-						>
-							A critical error occurred and the application could not recover.
-							Please refresh the page or try again later.
+					<p className="text-muted-foreground mb-6 leading-snug">
+						A critical error occurred and the application could not recover.
+						Please refresh the page or try again later.
+					</p>
+
+					{error.digest && (
+						<p className="text-xs text-muted-foreground mb-6 font-mono">
+							Error ID: {error.digest}
 						</p>
+					)}
 
-						{error.digest && (
-							<p
-								style={{
-									fontSize: '12px',
-									color: '#9ca3af',
-									marginBottom: '24px',
-									fontFamily: 'monospace'
-								}}
-							>
-								Error ID: {error.digest}
-							</p>
-						)}
-
-						<div
-							style={{
-								display: 'flex',
-								gap: '12px',
-								justifyContent: 'center',
-								flexWrap: 'wrap'
-							}}
+					<div className="flex gap-3 justify-center flex-wrap">
+						<button
+							type="button"
+							onClick={reset}
+							className="px-6 py-3 bg-primary text-primary-foreground rounded-lg text-base font-medium cursor-pointer border-0"
 						>
-							<button
-								onClick={reset}
-								style={{
-									padding: '12px 24px',
-									backgroundColor: '#06b6d4',
-									color: 'white',
-									border: 'none',
-									borderRadius: '8px',
-									fontSize: '16px',
-									fontWeight: '500',
-									cursor: 'pointer'
-								}}
-							>
-								Try again
-							</button>
-							<button
-								onClick={() => (window.location.href = '/')}
-								style={{
-									padding: '12px 24px',
-									backgroundColor: '#e5e7eb',
-									color: '#111827',
-									border: 'none',
-									borderRadius: '8px',
-									fontSize: '16px',
-									fontWeight: '500',
-									cursor: 'pointer'
-								}}
-							>
-								Go home
-							</button>
-						</div>
-
-						<div
-							style={{
-								marginTop: '32px',
-								padding: '16px',
-								backgroundColor: '#f9fafb',
-								borderRadius: '8px'
+							Try again
+						</button>
+						<button
+							type="button"
+							onClick={() => {
+								window.location.href = '/'
 							}}
+							className="px-6 py-3 bg-border text-foreground rounded-lg text-base font-medium cursor-pointer border-0"
 						>
-							<p
-								style={{
-									fontSize: '14px',
-									color: '#6b7280'
-								}}
+							Go home
+						</button>
+					</div>
+
+					<div className="mt-8 p-4 bg-muted rounded-lg">
+						<p className="text-sm text-muted-foreground">
+							If this issue persists, please contact{' '}
+							<a
+								href={`mailto:${BUSINESS_INFO.email}`}
+								className="text-primary underline"
 							>
-								If this issue persists, please contact{' '}
-								<a
-									href={`mailto:${BUSINESS_INFO.email}`}
-									style={{
-										color: '#06b6d4',
-										textDecoration: 'underline'
-									}}
-								>
-									support
-								</a>
-							</p>
-						</div>
+								support
+							</a>
+						</p>
 					</div>
 				</div>
 			</body>

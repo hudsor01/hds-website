@@ -11,6 +11,7 @@ import { JsonLd } from '@/components/utilities/JsonLd'
 import ScrollToTop from '@/components/utilities/ScrollToTop'
 import { WebVitalsReporting } from '@/components/utilities/WebVitalsReporting'
 import { env } from '@/env'
+import { BRAND } from '@/lib/_generated/brand'
 import {
 	generateLocalBusinessSchema,
 	generateOrganizationSchema,
@@ -166,9 +167,10 @@ export default function RootLayout({
 				{/* Manifest for PWA */}
 				<link rel="manifest" href="/manifest.json" />
 
-				{/* Theme color for mobile browsers */}
-				<meta name="theme-color" content="#0891b2" />
-				<meta name="msapplication-TileColor" content="#0891b2" />
+				{/* Theme color for mobile browsers — sourced from BRAND.primary
+				    (mechanically derived from --color-primary in globals.css). */}
+				<meta name="theme-color" content={BRAND.primary} />
+				<meta name="msapplication-TileColor" content={BRAND.primary} />
 				<meta name="msapplication-TileImage" content="/HDS-Logo.webp" />
 
 				{/* Mobile-specific optimizations (format-detection in Metadata API) */}
@@ -176,7 +178,7 @@ export default function RootLayout({
 				<meta name="MobileOptimized" content="320" />
 			</head>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased selection-cyan`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				suppressHydrationWarning
 			>
 				<a

@@ -14,7 +14,7 @@ import {
 import type { BlogAuthor, BlogPost, BlogTag } from '@/types/blog'
 
 // Re-export types for convenience
-export type { BlogPost, BlogTag, BlogAuthor }
+export type { BlogAuthor, BlogPost, BlogTag }
 
 /** Map a database author row to the BlogAuthor interface */
 function mapAuthor(row: typeof blogAuthors.$inferSelect): BlogAuthor {
