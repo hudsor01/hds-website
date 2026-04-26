@@ -5,7 +5,9 @@ interface BlogPostContentProps {
 	post: BlogPost
 }
 
-export function BlogPostContent({ post }: BlogPostContentProps) {
+export async function BlogPostContent({ post }: BlogPostContentProps) {
+	'use cache'
+
 	if (!post.content) {
 		return (
 			<div className="prose prose-invert prose-cyan max-w-none">

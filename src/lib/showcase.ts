@@ -4,7 +4,7 @@
  */
 
 import { and, asc, desc, eq } from 'drizzle-orm'
-import { cache } from 'react'
+import { cacheLife, cacheTag } from 'next/cache'
 import { db } from './db'
 import { createServerLogger } from './logger'
 import { type Showcase, showcase } from './schemas/schema'
@@ -53,26 +53,6 @@ export interface ShowcaseItem {
 	updatedAt: Date | null
 }
 
-const sanitizeSurfaceClass = (value?: string | null) => {
-	if (!value) {
-		return 'surface-overlay'
-	}
-
-	const normalized = value.toLowerCase()
-	if (
-		normalized.includes('gradient') ||
-		normalized.includes('from-') ||
-		normalized.includes('to-')
-	) {
-		return 'surface-overlay'
-	}
-
-	return value
-}
-
-/**
- * Map database row to ShowcaseItem
- */
 function mapShowcase(row: Showcase): ShowcaseItem {
 	return {
 		id: row.id,
@@ -80,7 +60,7 @@ function mapShowcase(row: Showcase): ShowcaseItem {
 		title: row.title,
 		description: row.description,
 		longDescription: row.longDescription,
-		showcaseType: (row.showcaseType as ShowcaseType) ?? 'quick',
+		showcaseType: (row.showcaseType ?? 'quick') as ShowcaseType,
 		clientName: row.clientName,
 		industry: row.industry,
 		projectType: row.projectType,
@@ -88,12 +68,12 @@ function mapShowcase(row: Showcase): ShowcaseItem {
 		challenge: row.challenge,
 		solution: row.solution,
 		results: row.results,
-		technologies: (row.technologies as string[]) ?? [],
-		metrics: (row.metrics as Record<string, string>) ?? {},
+		technologies: (row.technologies as string[] | null) ?? [],
+		metrics: (row.metrics as Record<string, string> | null) ?? {},
 		imageUrl: row.imageUrl,
 		ogImageUrl: row.ogImageUrl,
 		galleryImages: row.galleryImages as string[] | null,
-		gradientClass: sanitizeSurfaceClass(row.gradientClass),
+		gradientClass: row.gradientClass ?? 'from-cyan-500 to-blue-600',
 		externalLink: row.externalLink,
 		githubLink: row.githubLink,
 		testimonialText: row.testimonialText,
@@ -115,7 +95,11 @@ function mapShowcase(row: Showcase): ShowcaseItem {
 /**
  * Get all published showcase items
  */
-export const getShowcaseItems = cache(async (): Promise<ShowcaseItem[]> => {
+export async function getShowcaseItems(): Promise<ShowcaseItem[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('showcase-list')
+
 	try {
 		const rows = await db
 			.select()
@@ -130,35 +114,43 @@ export const getShowcaseItems = cache(async (): Promise<ShowcaseItem[]> => {
 		})
 		return []
 	}
-})
+}
 
 /**
  * Get showcase item by slug
  */
-export const getShowcaseBySlug = cache(
-	async (slug: string): Promise<ShowcaseItem | null> => {
-		try {
-			const [row] = await db
-				.select()
-				.from(showcase)
-				.where(and(eq(showcase.slug, slug), eq(showcase.published, true)))
-				.limit(1)
+export async function getShowcaseBySlug(
+	slug: string
+): Promise<ShowcaseItem | null> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('showcase-list', `showcase:${slug}`)
 
-			return row ? mapShowcase(row) : null
-		} catch (error) {
-			logger.error('Failed to fetch showcase item', {
-				slug,
-				error: error instanceof Error ? error.message : String(error)
-			})
-			return null
-		}
+	try {
+		const [row] = await db
+			.select()
+			.from(showcase)
+			.where(and(eq(showcase.slug, slug), eq(showcase.published, true)))
+			.limit(1)
+
+		return row ? mapShowcase(row) : null
+	} catch (error) {
+		logger.error('Failed to fetch showcase item', {
+			slug,
+			error: error instanceof Error ? error.message : String(error)
+		})
+		return null
 	}
-)
+}
 
 /**
  * Get all showcase slugs (for static generation)
  */
-export const getAllShowcaseSlugs = cache(async (): Promise<string[]> => {
+export async function getAllShowcaseSlugs(): Promise<string[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('showcase-list')
+
 	try {
 		const rows = await db
 			.select({ slug: showcase.slug })
@@ -172,69 +164,73 @@ export const getAllShowcaseSlugs = cache(async (): Promise<string[]> => {
 		})
 		return []
 	}
-})
+}
 
 /**
  * Get featured showcase items
  */
-export const getFeaturedShowcase = cache(
-	async (limit = 6): Promise<ShowcaseItem[]> => {
-		try {
-			const rows = await db
-				.select()
-				.from(showcase)
-				.where(and(eq(showcase.published, true), eq(showcase.featured, true)))
-				.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
-				.limit(limit)
+export async function getFeaturedShowcase(limit = 6): Promise<ShowcaseItem[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('showcase-list')
 
-			return rows.map(mapShowcase)
-		} catch (error) {
-			logger.error('Failed to fetch featured showcase', {
-				error: error instanceof Error ? error.message : String(error)
-			})
-			return []
-		}
+	try {
+		const rows = await db
+			.select()
+			.from(showcase)
+			.where(and(eq(showcase.published, true), eq(showcase.featured, true)))
+			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
+			.limit(limit)
+
+		return rows.map(mapShowcase)
+	} catch (error) {
+		logger.error('Failed to fetch featured showcase', {
+			error: error instanceof Error ? error.message : String(error)
+		})
+		return []
 	}
-)
+}
 
 /**
  * Get showcase items by type (quick = portfolio, detailed = case study)
  */
-export const getShowcaseByType = cache(
-	async (type: ShowcaseType): Promise<ShowcaseItem[]> => {
-		try {
-			const rows = await db
-				.select()
-				.from(showcase)
-				.where(
-					and(eq(showcase.published, true), eq(showcase.showcaseType, type))
-				)
-				.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
+export async function getShowcaseByType(
+	type: ShowcaseType
+): Promise<ShowcaseItem[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('showcase-list', `showcase-type:${type}`)
 
-			return rows.map(mapShowcase)
-		} catch (error) {
-			logger.error('Failed to fetch showcase by type', {
-				type,
-				error: error instanceof Error ? error.message : String(error)
-			})
-			return []
-		}
+	try {
+		const rows = await db
+			.select()
+			.from(showcase)
+			.where(and(eq(showcase.published, true), eq(showcase.showcaseType, type)))
+			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
+
+		return rows.map(mapShowcase)
+	} catch (error) {
+		logger.error('Failed to fetch showcase by type', {
+			type,
+			error: error instanceof Error ? error.message : String(error)
+		})
+		return []
 	}
-)
+}
 
 /**
  * Get quick portfolio items (showcaseType = 'quick')
  */
-export const getPortfolioItems = cache(async (): Promise<ShowcaseItem[]> => {
+export async function getPortfolioItems(): Promise<ShowcaseItem[]> {
 	return getShowcaseByType('quick')
-})
+}
 
 /**
  * Get detailed case studies (showcaseType = 'detailed')
  */
-export const getCaseStudies = cache(async (): Promise<ShowcaseItem[]> => {
+export async function getCaseStudies(): Promise<ShowcaseItem[]> {
 	return getShowcaseByType('detailed')
-})
+}
 
 /**
  * Check if a showcase item is a detailed case study
@@ -244,7 +240,7 @@ export function isDetailedShowcase(item: ShowcaseItem): boolean {
 }
 
 /**
- * Check if a showcase item is a quick portfolio item
+ * Check if a showcase item is a quick portfolio piece
  */
 export function isQuickShowcase(item: ShowcaseItem): boolean {
 	return item.showcaseType === 'quick'

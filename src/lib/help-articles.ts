@@ -4,6 +4,7 @@
  */
 
 import { and, asc, eq, ilike, or } from 'drizzle-orm'
+import { cacheLife, cacheTag } from 'next/cache'
 import { db } from './db'
 import {
 	type HelpArticle as HelpArticleRow,
@@ -81,6 +82,10 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
  * Get all published articles
  */
 export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('help-articles')
+
 	const data = await db
 		.select()
 		.from(helpArticles)
@@ -96,6 +101,10 @@ export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
 export async function getArticlesByCategory(
 	category: string
 ): Promise<HelpArticle[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('help-articles', `help-category:${category}`)
+
 	const data = await db
 		.select()
 		.from(helpArticles)
@@ -113,6 +122,10 @@ export async function getArticlesByCategory(
 export async function getArticleBySlug(
 	slug: string
 ): Promise<HelpArticle | null> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('help-articles', `help-article:${slug}`)
+
 	const [data] = await db
 		.select()
 		.from(helpArticles)

@@ -27,12 +27,11 @@ interface PageProps {
 	params: Promise<{ category: string; slug: string }>
 }
 
-// Force dynamic rendering since articles come from database
-export const dynamic = 'force-dynamic'
-
 export async function generateStaticParams() {
-	// Return empty array - pages will be generated on-demand
-	return []
+	// Cache Components requires at least one entry; help articles are
+	// content-managed so use a placeholder. Pages render on-demand from
+	// the cached help-articles data layer.
+	return [{ category: '__placeholder__', slug: '__placeholder__' }]
 }
 
 export async function generateMetadata({
