@@ -1,8 +1,9 @@
-import { Section, Text } from 'react-email'
+import { Link, Section, Text } from 'react-email'
 import { BRAND } from '@/lib/_generated/brand'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { BrandFooter } from './_components/brand-footer'
 import { BrandLayout } from './_components/brand-layout'
+import { parseContent } from './_components/scheduled-drip-parser'
 
 interface ScheduledDripProps {
 	subject: string
@@ -39,36 +40,6 @@ const SIGNATURE_STYLE = {
 	lineHeight: 1.6
 }
 
-interface ContentBlock {
-	type: 'heading' | 'list' | 'paragraph'
-	value: string | string[]
-}
-
-function parseContent(content: string): ContentBlock[] {
-	const blocks: ContentBlock[] = []
-	// Real newlines (U+000A), not escaped string literals — emails templated
-	// with markdown-like content use actual line breaks. The pre-react-email
-	// version of this in scheduled-emails.ts had the bug where '\\n\\n' was
-	// passed to split, which never matched, collapsing every email into one
-	// paragraph with inline `•` characters. Fixed.
-	for (const paragraph of content.split('\n\n')) {
-		if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-			blocks.push({ type: 'heading', value: paragraph.slice(2, -2) })
-		} else if (paragraph.startsWith('• ')) {
-			blocks.push({ type: 'list', value: [paragraph.slice(2)] })
-		} else if (paragraph.includes('• ')) {
-			const items = paragraph
-				.split('\n')
-				.filter(line => line.startsWith('• '))
-				.map(line => line.slice(2))
-			blocks.push({ type: 'list', value: items })
-		} else {
-			blocks.push({ type: 'paragraph', value: paragraph })
-		}
-	}
-	return blocks
-}
-
 export function ScheduledDrip({
 	subject,
 	content,
@@ -83,16 +54,15 @@ export function ScheduledDrip({
 				if (block.type === 'heading') {
 					return (
 						<Text key={`b-${idx}`} style={HEADING_STYLE}>
-							{block.value as string}
+							{block.value}
 						</Text>
 					)
 				}
 				if (block.type === 'list') {
-					const items = block.value as string[]
 					return (
 						<Section key={`b-${idx}`}>
 							<ul style={LIST_STYLE}>
-								{items.map((item, i) => (
+								{block.value.map((item, i) => (
 									<li key={`i-${i}`} style={{ margin: '8px 0' }}>
 										{item}
 									</li>
@@ -103,7 +73,7 @@ export function ScheduledDrip({
 				}
 				return (
 					<Text key={`b-${idx}`} style={PARAGRAPH_STYLE}>
-						{block.value as string}
+						{block.value}
 					</Text>
 				)
 			})}
@@ -114,12 +84,12 @@ export function ScheduledDrip({
 					<br />
 					Hudson Digital Solutions
 					<br />
-					<a
+					<Link
 						href={`mailto:${BUSINESS_INFO.email}`}
 						style={{ color: BRAND.primary, textDecoration: 'underline' }}
 					>
 						{BUSINESS_INFO.email}
-					</a>
+					</Link>
 				</Text>
 			</Section>
 
