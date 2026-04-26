@@ -6,6 +6,8 @@
 import { eq } from 'drizzle-orm'
 import type { NextRequest } from 'next/server'
 import { z } from 'zod'
+import { NewsletterAdminNotification } from '@/emails/newsletter-admin-notification'
+import { NewsletterWelcome } from '@/emails/newsletter-welcome'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
 	errorResponse,
@@ -82,25 +84,7 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: email,
 					subject: 'Welcome to Hudson Digital Solutions Newsletter',
-					html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #0891b2;">Welcome to Our Newsletter!</h1>
-            <p>Thank you for subscribing to Hudson Digital Solutions newsletter.</p>
-            <p>You'll receive weekly insights on:</p>
-            <ul>
-              <li>Growing your business online</li>
-              <li>Website and marketing best practices</li>
-              <li>Business automation and efficiency tips</li>
-              <li>Industry trends and case studies</li>
-            </ul>
-            <p>Stay tuned for our next edition!</p>
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
-            <p style="font-size: 12px; color: #6b7280;">
-              You're receiving this because you subscribed to our newsletter.
-              <a href="https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(email)}" style="color: #0891b2;">Unsubscribe</a>
-            </p>
-          </div>
-        `
+					react: <NewsletterWelcome email={email} />
 				})
 			} catch (emailError) {
 				logger.error('Failed to send welcome email:', emailError)
@@ -112,16 +96,12 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: BUSINESS_INFO.email,
 					subject: '[Notification] New Newsletter Subscriber',
-					html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #0891b2;">New Newsletter Subscriber</h1>
-            <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-              <p><strong>Source:</strong> ${source || 'website'}</p>
-              <p><strong>Subscribed at:</strong> ${new Date().toLocaleString()}</p>
-            </div>
-          </div>
-        `
+					react: (
+						<NewsletterAdminNotification
+							email={email}
+							source={source || 'website'}
+						/>
+					)
 				})
 			} catch (adminEmailError) {
 				logger.error('Failed to send admin notification:', adminEmailError)

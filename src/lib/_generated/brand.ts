@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-04-26T06:26:56.179Z
+// Last generated: 2026-04-26T06:50:27.404Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -13,6 +13,7 @@ export const BRAND = {
 	popover: '#fefdfd', // --color-popover
 	popoverForeground: '#070a10', // --color-popover-foreground
 	primary: '#064180', // --color-primary
+	primaryDeep: '#002561', // --color-primary-deep
 	primaryForeground: '#fafaf9', // --color-primary-foreground
 	secondary: '#e7ecf2', // --color-secondary
 	secondaryForeground: '#102239', // --color-secondary-foreground

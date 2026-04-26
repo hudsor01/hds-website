@@ -5,6 +5,8 @@
 
 import type { NextRequest } from 'next/server'
 import { z } from 'zod'
+import { CalculatorAdminNotification } from '@/emails/calculator-admin-notification'
+import { CalculatorResults } from '@/emails/calculator-results'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
 	errorResponse,
@@ -169,17 +171,16 @@ async function handleCalculatorSubmit(request: NextRequest) {
 		// Send immediate email with results
 		if (isResendConfigured()) {
 			try {
-				const emailContent = generateResultsEmail(
-					calculator_type,
-					inputs,
-					results
-				)
-
 				await getResendClient().emails.send({
 					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: email,
 					subject: `Your ${getCalculatorName(calculator_type)} Results`,
-					html: emailContent
+					react: (
+						<CalculatorResults
+							calculatorName={getCalculatorName(calculator_type)}
+							results={results || {}}
+						/>
+					)
 				})
 
 				logger.info('Results email sent', { email, calculator_type })
@@ -196,19 +197,16 @@ async function handleCalculatorSubmit(request: NextRequest) {
 					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: BUSINESS_INFO.email,
 					subject: `[Notification] New ${getCalculatorName(calculator_type)} Submission (${leadQuality.toUpperCase()})`,
-					html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <h1 style="color: #0891b2;">New Calculator Lead</h1>
-              <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-                <p><strong>Calculator:</strong> ${getCalculatorName(calculator_type)}</p>
-                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-                ${inputName ? `<p><strong>Name:</strong> ${inputName}</p>` : ''}
-                ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
-                <p><strong>Lead Score:</strong> ${leadScore}/100 (${leadQuality.toUpperCase()})</p>
-                <p><strong>Submitted at:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-            </div>
-          `
+					react: (
+						<CalculatorAdminNotification
+							calculatorName={getCalculatorName(calculator_type)}
+							email={email}
+							name={inputName || undefined}
+							company={company || undefined}
+							leadScore={leadScore}
+							leadQuality={leadQuality}
+						/>
+					)
 				})
 
 				logger.info('Admin notification sent', { email, calculator_type })
@@ -290,65 +288,4 @@ function getCalculatorName(type: string): string {
 		'performance-calculator': 'Performance Savings Calculator'
 	}
 	return names[type] || 'Calculator'
-}
-
-function generateResultsEmail(
-	calculatorType: string,
-	_inputs: Record<string, unknown>,
-	results: Record<string, unknown>
-): string {
-	const calculatorName = getCalculatorName(calculatorType)
-
-	return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background: linear-gradient(to right, #06b6d4, #0891b2); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 24px;">Your ${calculatorName} Results</h1>
-        </div>
-
-        <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
-          <p style="font-size: 16px; margin-bottom: 20px;">
-            Thank you for using our ${calculatorName}! Here's a summary of your results:
-          </p>
-
-          <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            ${Object.entries(results)
-							.map(
-								([key, value]) => `
-              <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
-                <div style="font-size: 14px; color: #6b7280; margin-bottom: 5px;">${key}</div>
-                <div style="font-size: 20px; font-weight: bold; color: #06b6d4;">${value}</div>
-              </div>
-            `
-							)
-							.join('')}
-          </div>
-
-          <div style="background: #ecfeff; border-left: 4px solid #06b6d4; padding: 15px; margin-bottom: 20px;">
-            <p style="margin: 0; font-size: 14px;">
-              <strong>Next Steps:</strong> Our team will review your results and send you personalized recommendations within 24 hours.
-            </p>
-          </div>
-
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="https://hudsondigitalsolutions.com/contact" style="display: inline-block; background: #06b6d4; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-              Schedule Free Consultation
-            </a>
-          </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 30px; padding: 20px; color: #6b7280; font-size: 12px;">
-          <p>© ${new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.</p>
-          <p>
-            <a href="https://hudsondigitalsolutions.com/privacy" style="color: #06b6d4; text-decoration: none;">Privacy Policy</a>
-          </p>
-        </div>
-      </body>
-    </html>
-  `
 }

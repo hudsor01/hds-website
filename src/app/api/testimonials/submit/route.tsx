@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+import { TestimonialAdminNotification } from '@/emails/testimonial-admin-notification'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
 	errorResponse,
@@ -90,27 +91,17 @@ async function handleTestimonialSubmit(request: NextRequest) {
 					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 					to: BUSINESS_INFO.email,
 					subject: `[Notification] New Testimonial Submitted - ${body.client_name}`,
-					html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <h1 style="color: #0891b2;">New Testimonial Received</h1>
-              <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-                <p><strong>Name:</strong> ${body.client_name}</p>
-                ${body.company ? `<p><strong>Company:</strong> ${body.company}</p>` : ''}
-                ${body.role ? `<p><strong>Role:</strong> ${body.role}</p>` : ''}
-                <p><strong>Rating:</strong> ${body.rating}/5</p>
-                ${body.service_type ? `<p><strong>Service:</strong> ${body.service_type}</p>` : ''}
-                <p><strong>Submitted via:</strong> ${body.token ? 'Private link' : 'Public form'}</p>
-                <p><strong>Submitted at:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-              <div style="background: #f1f5f9; padding: 20px; border-radius: 8px;">
-                <h2 style="margin-top: 0;">Testimonial Content</h2>
-                <p style="white-space: pre-wrap;">${body.content}</p>
-              </div>
-              <p style="margin-top: 20px; color: #64748b; font-size: 12px;">
-                This testimonial is pending review. Log in to approve or reject it.
-              </p>
-            </div>
-          `
+					react: (
+						<TestimonialAdminNotification
+							clientName={body.client_name}
+							company={body.company}
+							role={body.role}
+							rating={body.rating}
+							serviceType={body.service_type}
+							content={body.content}
+							isPrivateLink={!!body.token}
+						/>
+					)
 				})
 			} catch (adminEmailError) {
 				logger.error(
