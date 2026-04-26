@@ -4,6 +4,7 @@
  */
 
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { BRAND } from '@/lib/_generated/brand'
 import type { ContractData, ContractTemplate } from '@/types/pdf-templates'
 
 // Re-export types for convenience
@@ -21,12 +22,12 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
 		paddingBottom: 20,
 		borderBottomWidth: 2,
-		borderBottomColor: '#0891b2'
+		borderBottomColor: BRAND.primary
 	},
 	title: {
 		fontSize: 24,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		textAlign: 'center',
 		marginBottom: 10
 	},
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
 	sectionTitle: {
 		fontSize: 13,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 10,
 		paddingBottom: 5,
 		borderBottomWidth: 1,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
 	partyLabel: {
 		fontSize: 9,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 5,
 		letterSpacing: 1
 	},

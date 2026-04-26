@@ -4,6 +4,7 @@
  */
 
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { BRAND } from '@/lib/_generated/brand'
 import type { InvoiceData, InvoiceLineItem } from '@/types/pdf-templates'
 
 // Re-export types for convenience
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
 		paddingBottom: 20,
 		borderBottomWidth: 2,
-		borderBottomColor: '#0891b2' // cyan-600
+		borderBottomColor: BRAND.primary
 	},
 	companyInfo: {
 		flex: 1
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
 	companyName: {
 		fontSize: 20,
 		fontWeight: 'bold',
-		color: '#0891b2', // cyan-600
+		color: BRAND.primary,
 		marginBottom: 4
 	},
 	companyDetails: {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
 	addressLabel: {
 		fontSize: 8,
 		fontWeight: 'bold',
-		color: '#0891b2', // cyan-600
+		color: BRAND.primary,
 		marginBottom: 6,
 		letterSpacing: 1
 	},
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
 	},
 	tableHeader: {
 		flexDirection: 'row',
-		backgroundColor: '#0891b2', // cyan-600
+		backgroundColor: BRAND.primary,
 		paddingVertical: 10,
 		paddingHorizontal: 8
 	},
@@ -158,21 +159,21 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		width: 250,
 		borderTopWidth: 2,
-		borderTopColor: '#0891b2',
+		borderTopColor: BRAND.primary,
 		marginTop: 6
 	},
 	grandTotalLabel: {
 		flex: 1,
 		fontSize: 12,
 		fontWeight: 'bold',
-		color: '#0891b2'
+		color: BRAND.primary
 	},
 	grandTotalValue: {
 		width: 100,
 		fontSize: 14,
 		fontWeight: 'bold',
 		textAlign: 'right',
-		color: '#0891b2'
+		color: BRAND.primary
 	},
 	notesSection: {
 		marginTop: 20,
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
 	notesLabel: {
 		fontSize: 9,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 6,
 		letterSpacing: 0.5
 	},
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
 	},
 	footerLink: {
 		fontSize: 8,
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginTop: 2
 	}
 })

@@ -4,6 +4,7 @@
  */
 
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { BRAND } from '@/lib/_generated/brand'
 import type {
 	ProposalData,
 	ProposalMilestone,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 	coverTitle: {
 		fontSize: 36,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 20,
 		textAlign: 'center'
 	},
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 	coverCompanyName: {
 		fontSize: 14,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 4
 	},
 	coverCompanyDetails: {
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		paddingBottom: 10,
 		borderBottomWidth: 2,
-		borderBottomColor: '#0891b2',
+		borderBottomColor: BRAND.primary,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center'
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
 	headerCompany: {
 		fontSize: 12,
 		fontWeight: 'bold',
-		color: '#0891b2'
+		color: BRAND.primary
 	},
 	headerProject: {
 		fontSize: 10,
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
 	sectionTitle: {
 		fontSize: 14,
 		fontWeight: 'bold',
-		color: '#0891b2',
+		color: BRAND.primary,
 		marginBottom: 12,
 		paddingBottom: 6,
 		borderBottomWidth: 1,
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
 	},
 	scopeBullet: {
 		marginRight: 10,
-		color: '#0891b2'
+		color: BRAND.primary
 	},
 	scopeText: {
 		flex: 1
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
 	},
 	pricingHeader: {
 		flexDirection: 'row',
-		backgroundColor: '#0891b2',
+		backgroundColor: BRAND.primary,
 		paddingVertical: 10,
 		paddingHorizontal: 8
 	},
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		paddingVertical: 12,
 		paddingHorizontal: 8,
-		backgroundColor: '#0891b2',
+		backgroundColor: BRAND.primary,
 		marginTop: 2
 	},
 	totalLabel: {
