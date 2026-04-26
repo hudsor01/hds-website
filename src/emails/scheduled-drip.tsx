@@ -46,14 +46,19 @@ interface ContentBlock {
 
 function parseContent(content: string): ContentBlock[] {
 	const blocks: ContentBlock[] = []
-	for (const paragraph of content.split('\\n\\n')) {
+	// Real newlines (U+000A), not escaped string literals — emails templated
+	// with markdown-like content use actual line breaks. The pre-react-email
+	// version of this in scheduled-emails.ts had the bug where '\\n\\n' was
+	// passed to split, which never matched, collapsing every email into one
+	// paragraph with inline `•` characters. Fixed.
+	for (const paragraph of content.split('\n\n')) {
 		if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
 			blocks.push({ type: 'heading', value: paragraph.slice(2, -2) })
 		} else if (paragraph.startsWith('• ')) {
 			blocks.push({ type: 'list', value: [paragraph.slice(2)] })
 		} else if (paragraph.includes('• ')) {
 			const items = paragraph
-				.split('\\n')
+				.split('\n')
 				.filter(line => line.startsWith('• '))
 				.map(line => line.slice(2))
 			blocks.push({ type: 'list', value: items })
