@@ -4,6 +4,7 @@
  */
 
 import type { NextRequest } from 'next/server'
+import { after } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import {
@@ -39,21 +40,23 @@ async function handleWebVitals(request: NextRequest) {
 		const userAgent = request.headers.get('user-agent') || 'unknown'
 		const referer = request.headers.get('referer') || request.url
 
-		// Store web vitals data
-		try {
-			await db.insert(webVitals).values({
-				name: validatedData.name,
-				value: String(validatedData.value),
-				rating: validatedData.rating || null,
-				delta: String(validatedData.delta),
-				navigationType: validatedData.navigation_type,
-				url: referer,
-				userAgent: userAgent || null
-			})
-		} catch (dbError) {
-			logger.error('Failed to store web vital:', dbError)
-			// Don't return error to client - fail silently
-		}
+		// Defer the analytics write until after the response is sent — beacons
+		// don't need a guaranteed ack and the client doesn't read the body.
+		after(async () => {
+			try {
+				await db.insert(webVitals).values({
+					name: validatedData.name,
+					value: String(validatedData.value),
+					rating: validatedData.rating || null,
+					delta: String(validatedData.delta),
+					navigationType: validatedData.navigation_type,
+					url: referer,
+					userAgent: userAgent || null
+				})
+			} catch (dbError) {
+				logger.error('Failed to store web vital:', dbError)
+			}
+		})
 
 		return successResponse()
 	} catch (error) {

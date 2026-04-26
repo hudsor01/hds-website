@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -17,7 +17,8 @@
 			"!!test-results",
 			"!!.vercel",
 			"!!node_modules",
-			"!!public/us-states.json"
+			"!!public/us-states.json",
+			"!!src/lib/_generated"
 		]
 	},
 	"formatter": {

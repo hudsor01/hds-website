@@ -91,20 +91,6 @@ export const NOTIFICATION_PRIORITY_THRESHOLDS = {
 export const NOTIFICATION_MINIMUM_THRESHOLD = 70
 
 /**
- * Display category thresholds for email presentation
- * Used in admin notification emails to visually categorize leads
- */
-export const DISPLAY_CATEGORY_THRESHOLDS = {
-	/** Display as "HIGH PRIORITY" with green styling (>= 70) */
-	HIGH_PRIORITY: 70,
-
-	/** Display as "QUALIFIED" with yellow styling (>= 40) */
-	QUALIFIED: 40
-
-	/** Below 40 = "NURTURE" with red styling (no dedicated threshold) */
-} as const
-
-/**
  * Type-safe keys for all threshold configurations
  */
 export type LeadScorePointsKey = keyof typeof LEAD_SCORE_POINTS
@@ -112,5 +98,3 @@ export type LeadCategoryThresholdKey = keyof typeof LEAD_CATEGORY_THRESHOLDS
 export type LeadQualityThresholdKey = keyof typeof LEAD_QUALITY_THRESHOLDS
 export type NotificationPriorityThresholdKey =
 	keyof typeof NOTIFICATION_PRIORITY_THRESHOLDS
-export type DisplayCategoryThresholdKey =
-	keyof typeof DISPLAY_CATEGORY_THRESHOLDS

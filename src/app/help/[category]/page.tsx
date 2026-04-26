@@ -45,7 +45,14 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 
 export async function generateStaticParams() {
 	const slugs = getAllCategorySlugs()
-	return slugs.map(category => ({ category }))
+	const results = slugs.map(category => ({ category }))
+
+	// Cache Components requires at least one entry
+	if (results.length === 0) {
+		return [{ category: '__placeholder__' }]
+	}
+
+	return results
 }
 
 export async function generateMetadata({

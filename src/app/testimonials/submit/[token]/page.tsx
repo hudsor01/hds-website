@@ -7,11 +7,19 @@ import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { TestimonialForm } from '@/components/testimonials/TestimonialForm'
 import { getTestimonialRequestByToken } from '@/lib/testimonials'
 
 interface PageProps {
 	params: Promise<{ token: string }>
+}
+
+export async function generateStaticParams() {
+	// Cache Components requires at least one entry. Tokens are randomly
+	// generated and stored per-request; rendered on-demand from the cached
+	// getTestimonialRequestByToken lookup.
+	return [{ token: '__placeholder__' }]
 }
 
 export async function generateMetadata({
@@ -32,8 +40,22 @@ export async function generateMetadata({
 	}
 }
 
-export default async function PrivateTestimonialPage({ params }: PageProps) {
-	const { token } = await params
+function LoadingFallback() {
+	return (
+		<main className="min-h-screen bg-background">
+			<section className="relative overflow-hidden bg-background">
+				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
+					<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+						Loading…
+					</p>
+				</div>
+			</section>
+		</main>
+	)
+}
+
+async function TokenContent({ token }: { token: string }) {
 	const request = await getTestimonialRequestByToken(token)
 
 	// Invalid token
@@ -41,10 +63,7 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 		notFound()
 	}
 
-	// Check if expired
-	const isExpired = new Date(request.expires_at) < new Date()
-
-	// Check if already submitted
+	// Already submitted
 	if (request.submitted) {
 		return (
 			<main className="min-h-screen bg-background">
@@ -66,7 +85,8 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 		)
 	}
 
-	// Check if expired
+	// Expired
+	const isExpired = new Date(request.expires_at) < new Date()
 	if (isExpired) {
 		return (
 			<main className="min-h-screen bg-background">
@@ -135,5 +155,15 @@ export default async function PrivateTestimonialPage({ params }: PageProps) {
 				</div>
 			</section>
 		</main>
+	)
+}
+
+export default async function PrivateTestimonialPage({ params }: PageProps) {
+	const { token } = await params
+
+	return (
+		<Suspense fallback={<LoadingFallback />}>
+			<TokenContent token={token} />
+		</Suspense>
 	)
 }

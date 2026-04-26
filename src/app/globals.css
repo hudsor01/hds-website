@@ -19,6 +19,7 @@
 
 	/* Primary - Slate Blue */
 	--color-primary: oklch(0.38 0.12 255);
+	--color-primary-deep: oklch(0.28 0.12 255);
 	--color-primary-foreground: oklch(0.985 0.002 90);
 
 	/* Secondary */

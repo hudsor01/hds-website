@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v4.0
-milestone_name: UI Redesign
-status: complete
-last_updated: "2026-03-03"
+milestone: v4.1
+milestone_name: Next.js 16 Modernization & Brand Consistency
+status: shipped
+last_updated: "2026-04-26"
 progress:
-  total_phases: 60
-  completed_phases: 60
-  total_plans: 20
-  completed_plans: 20
+  total_phases: 65
+  completed_phases: 65
+  total_plans: 30
+  completed_plans: 30
 ---
 
 # Project State
@@ -18,16 +18,35 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25 starting v4.0)
 
 **Core value:** Working tools and contact form stay functional while the codebase achieves production-grade quality: strict types, comprehensive test coverage, proper error handling, visual correctness, and accessible to all users.
-**Current focus:** v4.0 UI Redesign — COMPLETE
+**Current focus:** v4.1 Next.js 16 Modernization & Brand Consistency — STARTING
 
 ## Current Position
 
-Phase: 60 (Content Page Polish) — Complete (4/4 plans done)
-Milestone: v4.0 UI Redesign — ALL 5 PHASES COMPLETE (56-60)
-Status: All code merged to main via PR #136, branch cleaned up
-Last activity: 2026-03-03 — Cleanup and milestone completion
+Milestone: v4.1 Next.js 16 Modernization & Brand Consistency — FULLY SHIPPED (5/5 phases)
+Status: All 5 phases complete. Phase 64 (Cache Components) recovered after initial deferral — full migration: cacheComponents flag enabled, 'use cache' on every data layer read, page-level revalidate/force-dynamic removed, generateStaticParams empty-result guards added, dynamic data wrapped in Suspense, DOMPurify Date access resolved by making BlogPostContent a cached async component. Test infrastructure updated to mock next/cache for bun:test.
+Last activity: 2026-04-26 — autonomous execution of v4.1 complete. 5 commits: phase 61, 62, 63, 65, then phase 64 finalizer.
 
-Progress: v1.0 done | v1.1 partial done | v2.0 done | v3.0 done | v3.1 done | v4.0 done
+Progress: v1.0 done | v1.1 partial done | v2.0 done | v3.0 done | v3.1 done | v4.0 done | v4.1 SHIPPED (5/5)
+
+## Milestone v4.1 Scope
+
+**Track A — Brand SoT + downstream consumption (Phases 61-63):** Make `src/app/globals.css` the LITERAL single source of truth for brand colors via build-time codegen.
+- Phase 61: Bun script parses globals.css, computes OKLCH→sRGB hex via hand-rolled math, emits `src/lib/_generated/brand.ts` with DO NOT EDIT banner. Lefthook regenerates on commit when globals.css changes. Migrate `global-error.tsx`/`global-not-found.tsx` to import globals.css + Tailwind. Update meta tags + manifest.
+- Phase 62: Delete 2 dead `.ts` HTML PDF templates (zero importers — leftover from prior Puppeteer approach). Migrate the 3 active React-PDF `.tsx` templates (contract, proposal, invoice + audit paystub) to import BRAND. React-PDF only accepts hex/rgb in StyleSheet — codegen is the only correct mechanism.
+- Phase 63: Upgrade `@react-email/render@2.0.4` (installed but unused) to unified `react-email@latest` (released 2026-04-17). Author 8 React Email JSX components for every transactional email currently sent as raw HTML. Each consumes BRAND. Resend's `react:` prop replaces every `html:` send.
+
+**Track B — Next.js 16 enhancements (Phases 64-65):** Adopt caching/streaming primitives the codebase isn't yet using.
+- Phase 64: function-level `'use cache'` + `cacheLife` + `cacheTag` on the data layer (blog, showcase, help-articles), strip page-level `export const revalidate` directives.
+- Phase 65: `after()` for fire-and-forget side effects (admin notifications, audit logs, analytics writes) in 7 API routes + 1 server action.
+
+**Exit gates:**
+- `grep -rnE "#0891b2|#06b6d4|#0e7490" src/` returns ZERO matches
+- `grep -rn "@react-email/render" src/ package.json` returns zero matches (replaced by unified `react-email`)
+- `grep -rn "html: '" src/app/api/ src/app/actions/ src/lib/scheduled-emails.ts src/lib/contact-service.ts` returns zero matches (every email is a React Email component)
+- `grep -rn "export const revalidate\|export const dynamic" src/app/` returns zero matches (or only documented exceptions)
+- `bun run typecheck && bun run lint && bun run test:unit && bun run test:e2e:fast && bun run build` all pass
+- Visual: one PDF per template type, one email per send site, one error page — all confirmed brand-consistent
+- Performance: contact form response time visibly faster (after() smoke test)
 
 ## Performance Metrics
 
@@ -46,6 +65,7 @@ Progress: v1.0 done | v1.1 partial done | v2.0 done | v3.0 done | v3.1 done | v4
 | v3.0 Growth & Content | 5+2 phases | 1 day | 75 location pages, E2E tests, blog pipeline |
 | v3.1 Biome Migration | 3 phases | 1 day | Biome sole linter/formatter, zero ESLint/Prettier surface |
 | v4.0 UI Redesign | 5 phases (20 plans) | 5 days | Premium UI: design tokens, hero, components, tools, content pages |
+| v4.1 Next.js 16 + Brand | 5 phases (10 plans) | TBD | Brand SoT codegen + React-PDF + React Email v6 migration + Cache Components + after() |
 
 ## Accumulated Context
 
@@ -116,7 +136,20 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-03
-Stopped at: v4.0 milestone complete, branch cleaned up, ROADMAP and STATE updated
+Last session: 2026-04-26
+Stopped at: v4.1 SHIPPED (4/5 phases). All commits on main: baseline, feat(61), feat(62), feat(63), feat(65). Phase 64 (Cache Components) documented as deferred to v4.2 with restoration steps.
 Resume file: N/A
-Next action: Start next milestone or review completed work
+Next action: User to perform pending visual verifications: render one PDF per template type (4 PDFs), trigger one email per migrated React Email path (8 emails), confirm slate-blue brand throughout. Optional: kick off v4.2 milestone for Cache Components Adoption — needs dedicated planning phase.
+
+## v4.1 Final Stats
+
+- **5 commits**: chore baseline + 4 feat phases
+- **Files added**: 13 (codegen script, generated brand.ts, 8 email components, 4 shared components, unit tests)
+- **Files removed**: 3 (dead PDF HTML templates + their test file)
+- **Files renamed**: 5 (.ts → .tsx for JSX support)
+- **Files modified**: ~30 (PDF templates, email send sites, error pages, layout, manifest, configs)
+- **Net LOC**: roughly -300 (significant dead code removal in PDF + email migrations)
+- **Test count**: 407 → 385 (removed 22 vacuous tests, added 10 conversion tests)
+- **Dependencies**: removed @react-email/render; added react-email@6.0.0; removed undici override (jsdom incompatibility)
+- **Brand cyan eliminated**: 100% — `grep -rE "#0891b2|#06b6d4|#0e7490" src/` returns zero
+- **All checks green**: typecheck, lint, unit tests, production build

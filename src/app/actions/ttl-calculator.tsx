@@ -2,6 +2,7 @@
 
 import { count, eq, isNotNull, sql } from 'drizzle-orm'
 import { z } from 'zod'
+import { TtlCalculatorResults } from '@/emails/ttl-calculator-results'
 import { env } from '@/env'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { db } from '@/lib/db'
@@ -290,125 +291,31 @@ export async function emailResults(
 		}
 		const payment = results.paymentResults || { monthlyPayment: 0 }
 
-		// Send beautiful HTML email
+		// Send React Email
 		const { error: emailError } = await getResendClient().emails.send({
 			from: `${BUSINESS_INFO.name} <${BUSINESS_INFO.email}>`,
 			to: email,
 			subject: `Your Texas TTL Calculator Results - ${formatCurrency(inputs.purchasePrice)}`,
-			html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Texas TTL Calculator Results</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-            <!-- Header -->
-            <tr>
-              <td style="padding: 32px 24px; background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); text-align: center;">
-                <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">Texas TTL Calculator</h1>
-                <p style="margin: 8px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Your calculation results</p>
-              </td>
-            </tr>
-
-            <!-- Vehicle Summary -->
-            <tr>
-              <td style="padding: 24px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; border-radius: 8px; padding: 16px;">
-                  <tr>
-                    <td>
-                      <h2 style="margin: 0 0 12px; color: #1e293b; font-size: 18px;">Vehicle Details</h2>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Purchase Price:</strong> ${formatCurrency(inputs.purchasePrice)}</p>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>County:</strong> ${inputs.county}</p>
-                      <p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Down Payment:</strong> ${formatCurrency(inputs.downPayment || 0)}</p>
-                      ${inputs.tradeInValue ? `<p style="margin: 4px 0; color: #64748b; font-size: 14px;"><strong>Trade-In:</strong> ${formatCurrency(inputs.tradeInValue)}</p>` : ''}
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-
-            <!-- TTL Breakdown -->
-            <tr>
-              <td style="padding: 0 24px 24px;">
-                <h2 style="margin: 0 0 12px; color: #1e293b; font-size: 18px;">TTL Breakdown</h2>
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                      <span style="color: #64748b;">Sales Tax (6.25%)</span>
-                    </td>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.salesTax)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                      <span style="color: #64748b;">Title & Fees</span>
-                    </td>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.titleFee)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                      <span style="color: #64748b;">Registration</span>
-                    </td>
-                    <td style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; text-align: right;">
-                      <span style="color: #1e293b; font-weight: 500;">${formatCurrency(ttl.registrationFees)}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 12px 0;">
-                      <span style="color: #0891b2; font-weight: 600; font-size: 16px;">Total TTL</span>
-                    </td>
-                    <td style="padding: 12px 0; text-align: right;">
-                      <span style="color: #0891b2; font-weight: 700; font-size: 20px;">${formatCurrency(ttl.totalTTL)}</span>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-
-            <!-- Monthly Payment -->
-            <tr>
-              <td style="padding: 0 24px 24px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0891b2; border-radius: 8px; padding: 20px;">
-                  <tr>
-                    <td style="text-align: center;">
-                      <p style="margin: 0 0 4px; color: rgba(255,255,255,0.8); font-size: 14px;">Estimated Monthly Payment</p>
-                      <p style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">${formatCurrency(payment.monthlyPayment)}</p>
-                      <p style="margin: 8px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">${inputs.loanTermMonths || 60} months @ ${inputs.interestRate || 6.5}% APR</p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-
-            <!-- CTA Button -->
-            <tr>
-              <td style="padding: 0 24px 32px; text-align: center;">
-                <a href="${shareUrl}" style="display: inline-block; padding: 12px 32px; background-color: #0891b2; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">View Full Results</a>
-                <p style="margin: 12px 0 0; color: #94a3b8; font-size: 12px;">This link will work for 90 days</p>
-              </td>
-            </tr>
-
-            <!-- Footer -->
-            <tr>
-              <td style="padding: 24px; background-color: #f8fafc; text-align: center; border-top: 1px solid #e2e8f0;">
-                <p style="margin: 0 0 8px; color: #64748b; font-size: 12px;">
-                  <strong>Disclaimer:</strong> This calculator provides estimates only. Actual fees may vary by county.
-                </p>
-                <p style="margin: 0; color: #94a3b8; font-size: 12px;">
-                  Powered by <a href="https://hudsondigitalsolutions.com" style="color: #0891b2; text-decoration: none;">Hudson Digital Solutions</a>
-                </p>
-              </td>
-            </tr>
-          </table>
-        </body>
-        </html>
-      `
+			react: (
+				<TtlCalculatorResults
+					purchasePrice={formatCurrency(inputs.purchasePrice)}
+					county={inputs.county}
+					downPayment={formatCurrency(inputs.downPayment || 0)}
+					tradeInValue={
+						inputs.tradeInValue
+							? formatCurrency(inputs.tradeInValue)
+							: undefined
+					}
+					salesTax={formatCurrency(ttl.salesTax)}
+					titleFee={formatCurrency(ttl.titleFee)}
+					registrationFees={formatCurrency(ttl.registrationFees)}
+					totalTTL={formatCurrency(ttl.totalTTL)}
+					monthlyPayment={formatCurrency(payment.monthlyPayment)}
+					loanTermMonths={inputs.loanTermMonths || 60}
+					interestRate={inputs.interestRate || 6.5}
+					shareUrl={shareUrl}
+				/>
+			)
 		})
 
 		if (emailError) {
