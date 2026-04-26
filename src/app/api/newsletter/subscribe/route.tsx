@@ -5,6 +5,7 @@
 
 import { eq } from 'drizzle-orm'
 import type { NextRequest } from 'next/server'
+import { after } from 'next/server'
 import { z } from 'zod'
 import { NewsletterAdminNotification } from '@/emails/newsletter-admin-notification'
 import { NewsletterWelcome } from '@/emails/newsletter-welcome'
@@ -77,36 +78,38 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 			return errorResponse('Failed to subscribe', 500)
 		}
 
-		// Send welcome email and admin notification
+		// Defer welcome + admin sends — fire-and-forget, consistent with the
+		// other v4.1 routes (contact, testimonials/submit, calculators/submit).
+		// User gets immediate ack; emails arrive a beat later.
 		if (isResendConfigured()) {
-			try {
-				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-					to: email,
-					subject: 'Welcome to Hudson Digital Solutions Newsletter',
-					react: <NewsletterWelcome email={email} />
-				})
-			} catch (emailError) {
-				logger.error('Failed to send welcome email:', emailError)
-				// Don't fail the request if email fails
-			}
+			after(async () => {
+				try {
+					await getResendClient().emails.send({
+						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+						to: email,
+						subject: 'Welcome to Hudson Digital Solutions Newsletter',
+						react: <NewsletterWelcome email={email} />
+					})
+				} catch (emailError) {
+					logger.error('Failed to send welcome email:', emailError)
+				}
 
-			try {
-				await getResendClient().emails.send({
-					from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
-					to: BUSINESS_INFO.email,
-					subject: '[Notification] New Newsletter Subscriber',
-					react: (
-						<NewsletterAdminNotification
-							email={email}
-							source={source || 'website'}
-						/>
-					)
-				})
-			} catch (adminEmailError) {
-				logger.error('Failed to send admin notification:', adminEmailError)
-				// Don't fail the request if admin email fails
-			}
+				try {
+					await getResendClient().emails.send({
+						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
+						to: BUSINESS_INFO.email,
+						subject: '[Notification] New Newsletter Subscriber',
+						react: (
+							<NewsletterAdminNotification
+								email={email}
+								source={source || 'website'}
+							/>
+						)
+					})
+				} catch (adminEmailError) {
+					logger.error('Failed to send admin notification:', adminEmailError)
+				}
+			})
 		}
 
 		return successResponse(undefined, 'Successfully subscribed!')

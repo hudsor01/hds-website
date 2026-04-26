@@ -55,8 +55,23 @@ export function oklchToHex({ l, c, h }: OklchInput): string {
 	return `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`
 }
 
-function parseOklchValue(raw: string): OklchInput {
-	const parts = raw.trim().split(/\s+/)
+function parseOklchValue(raw: string, tokenName?: string): OklchInput {
+	// Drop alpha channel if present (oklch(L C H / A) form). The downstream
+	// consumers (PDF, email, manifest, meta tags) cannot represent alpha in
+	// hex anyway, so we silently strip it but warn so a future maintainer
+	// understands why an opaque value was emitted for an alpha-bearing token.
+	const slashIdx = raw.indexOf('/')
+	const lchPart = slashIdx === -1 ? raw : raw.slice(0, slashIdx)
+	if (slashIdx !== -1) {
+		const alphaPart = raw.slice(slashIdx + 1).trim()
+		const label = tokenName ? ` (${tokenName})` : ''
+		process.stderr.write(
+			`warn${label}: alpha channel /${alphaPart} dropped from "${raw.trim()}" — ` +
+				'consumers (PDF/email/meta) emit opaque hex only.\n'
+		)
+	}
+
+	const parts = lchPart.trim().split(/\s+/)
 	const [lRaw, cRaw, hRaw] = parts
 	if (lRaw === undefined || cRaw === undefined || hRaw === undefined) {
 		throw new Error(`Expected "L C H" oklch arguments, got: ${raw}`)
@@ -121,7 +136,7 @@ function parseThemeBlock(
 			continue
 		}
 		try {
-			const oklch = parseOklchValue(oklchArgs)
+			const oklch = parseOklchValue(oklchArgs, cssName)
 			const hex = oklchToHex(oklch)
 			const jsName = kebabToCamel(cssName.replace(/^--color-/, ''))
 			tokens.push({ cssName, jsName, hex })

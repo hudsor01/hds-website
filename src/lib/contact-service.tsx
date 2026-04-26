@@ -10,6 +10,7 @@
  */
 
 import { ContactAdminNotification } from '@/emails/contact-admin-notification'
+import { ContactWelcome } from '@/emails/contact-welcome'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring'
 import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils'
@@ -19,7 +20,7 @@ import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmailSequence } from '@/lib/scheduled-emails'
 import type { ContactFormData, LeadScoring } from '@/lib/schemas/contact'
 import { resendEmailResponseSchema } from '@/lib/schemas/external'
-import { detectInjectionAttempt, escapeHtml } from '@/lib/utils'
+import { detectInjectionAttempt } from '@/lib/utils'
 
 const EMAIL_CONFIG = {
 	FROM_ADMIN: `${BUSINESS_INFO.displayName} <noreply@hudsondigitalsolutions.com>`,
@@ -151,12 +152,9 @@ export async function sendWelcomeEmail(
 			from: EMAIL_CONFIG.FROM_PERSONAL,
 			to: [data.email],
 			subject: processedSubject,
-			html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6;">
-        ${processedContent
-					.split('\n')
-					.map(line => `<p>${escapeHtml(line)}</p>`)
-					.join('')}
-      </div>`
+			react: (
+				<ContactWelcome subject={processedSubject} content={processedContent} />
+			)
 		})
 
 		const validation = resendEmailResponseSchema.safeParse(response.data)

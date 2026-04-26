@@ -95,16 +95,31 @@ function mapPost(
 
 // ─── API Functions ──────────────────────────────────────────────────────────
 
+/**
+ * Public list-fetch wrapper. Normalises optional args BEFORE the cached
+ * implementation so callers using `getPosts()`, `getPosts({})`, and
+ * `getPosts({ limit: 10 })` all hit the same cache entry — `'use cache'`
+ * keys on serialised arguments, so unstable shapes here would create
+ * duplicate entries with identical results.
+ */
 export async function getPosts(options?: {
 	limit?: number
 	page?: number
 }): Promise<{ posts: BlogPost[]; total: number }> {
+	const limit = options?.limit ?? 10
+	const page = options?.page ?? 1
+	return getPostsCached(limit, page)
+}
+
+async function getPostsCached(
+	limit: number,
+	page: number
+): Promise<{ posts: BlogPost[]; total: number }> {
 	'use cache'
 	cacheLife('hours')
 	cacheTag('blog-posts')
 
-	const limit = options?.limit ?? 10
-	const offset = ((options?.page ?? 1) - 1) * limit
+	const offset = (page - 1) * limit
 
 	const rows = await db
 		.select()

@@ -1,4 +1,4 @@
-import { Section, Text } from 'react-email'
+import { Column, Row, Section, Text } from 'react-email'
 import { BRAND } from '@/lib/_generated/brand'
 import { BrandButton } from './_components/brand-button'
 import { BrandLayout } from './_components/brand-layout'
@@ -18,9 +18,12 @@ interface TtlCalculatorResultsProps {
 	shareUrl: string
 }
 
+// Outlook desktop ignores linear-gradient; the solid backgroundColor is
+// the fallback every client respects. Modern clients render the gradient.
 const HEADER_STYLE = {
 	padding: '32px 24px',
-	background: `linear-gradient(135deg, ${BRAND.primary} 0%, ${BRAND.primaryDeep} 100%)`,
+	backgroundColor: BRAND.primary,
+	backgroundImage: `linear-gradient(135deg, ${BRAND.primary} 0%, ${BRAND.primaryDeep} 100%)`,
 	textAlign: 'center' as const,
 	borderRadius: '8px 8px 0 0'
 }
@@ -58,22 +61,41 @@ const DETAIL_LINE_STYLE = {
 	fontSize: '14px'
 }
 
-const BREAKDOWN_ROW_STYLE = {
-	display: 'flex',
-	justifyContent: 'space-between',
-	padding: '8px 0',
-	borderBottom: `1px solid ${BRAND.border}`,
+// Outlook desktop ignores `display: flex`. Row + Column render as table
+// cells in the email markup, which every client respects.
+const BREAKDOWN_LABEL_STYLE = {
 	color: BRAND.mutedForeground,
-	fontSize: '14px'
+	fontSize: '14px',
+	margin: 0,
+	padding: '8px 0',
+	borderBottom: `1px solid ${BRAND.border}`
 }
 
-const TOTAL_ROW_STYLE = {
-	display: 'flex',
-	justifyContent: 'space-between',
-	padding: '12px 0',
+const BREAKDOWN_VALUE_STYLE = {
+	color: BRAND.foreground,
+	fontWeight: 500,
+	fontSize: '14px',
+	margin: 0,
+	padding: '8px 0',
+	borderBottom: `1px solid ${BRAND.border}`,
+	textAlign: 'right' as const
+}
+
+const TOTAL_LABEL_STYLE = {
 	color: BRAND.primary,
 	fontWeight: 600,
-	fontSize: '16px'
+	fontSize: '16px',
+	margin: 0,
+	padding: '12px 0'
+}
+
+const TOTAL_VALUE_STYLE = {
+	color: BRAND.primary,
+	fontWeight: 700,
+	fontSize: '20px',
+	margin: 0,
+	padding: '12px 0',
+	textAlign: 'right' as const
 }
 
 const PAYMENT_BOX_STYLE = {
@@ -163,28 +185,38 @@ export function TtlCalculatorResults({
 
 			<Section style={{ padding: '0 0 24px' }}>
 				<Text style={SECTION_HEADING_STYLE}>TTL Breakdown</Text>
-				<Text style={BREAKDOWN_ROW_STYLE}>
-					<span>Sales Tax (6.25%)</span>
-					<span style={{ color: BRAND.foreground, fontWeight: 500 }}>
-						{salesTax}
-					</span>
-				</Text>
-				<Text style={BREAKDOWN_ROW_STYLE}>
-					<span>Title &amp; Fees</span>
-					<span style={{ color: BRAND.foreground, fontWeight: 500 }}>
-						{titleFee}
-					</span>
-				</Text>
-				<Text style={BREAKDOWN_ROW_STYLE}>
-					<span>Registration</span>
-					<span style={{ color: BRAND.foreground, fontWeight: 500 }}>
-						{registrationFees}
-					</span>
-				</Text>
-				<Text style={TOTAL_ROW_STYLE}>
-					<span>Total TTL</span>
-					<span style={{ fontSize: '20px', fontWeight: 700 }}>{totalTTL}</span>
-				</Text>
+				<Row>
+					<Column style={{ width: '70%' }}>
+						<Text style={BREAKDOWN_LABEL_STYLE}>Sales Tax (6.25%)</Text>
+					</Column>
+					<Column style={{ width: '30%' }}>
+						<Text style={BREAKDOWN_VALUE_STYLE}>{salesTax}</Text>
+					</Column>
+				</Row>
+				<Row>
+					<Column style={{ width: '70%' }}>
+						<Text style={BREAKDOWN_LABEL_STYLE}>Title &amp; Fees</Text>
+					</Column>
+					<Column style={{ width: '30%' }}>
+						<Text style={BREAKDOWN_VALUE_STYLE}>{titleFee}</Text>
+					</Column>
+				</Row>
+				<Row>
+					<Column style={{ width: '70%' }}>
+						<Text style={BREAKDOWN_LABEL_STYLE}>Registration</Text>
+					</Column>
+					<Column style={{ width: '30%' }}>
+						<Text style={BREAKDOWN_VALUE_STYLE}>{registrationFees}</Text>
+					</Column>
+				</Row>
+				<Row>
+					<Column style={{ width: '70%' }}>
+						<Text style={TOTAL_LABEL_STYLE}>Total TTL</Text>
+					</Column>
+					<Column style={{ width: '30%' }}>
+						<Text style={TOTAL_VALUE_STYLE}>{totalTTL}</Text>
+					</Column>
+				</Row>
 			</Section>
 
 			<Section style={PAYMENT_BOX_STYLE}>
@@ -214,13 +246,7 @@ export function TtlCalculatorResults({
 					Actual fees may vary by county.
 				</Text>
 				<Text style={FOOTER_TEXT_STYLE}>
-					Powered by{' '}
-					<a
-						href="https://hudsondigitalsolutions.com"
-						style={{ color: BRAND.primary, textDecoration: 'none' }}
-					>
-						Hudson Digital Solutions
-					</a>
+					Powered by Hudson Digital Solutions
 				</Text>
 			</Section>
 		</BrandLayout>

@@ -39,6 +39,20 @@ function setupNextCacheMock() {
 
 setupNextCacheMock()
 
+// Mock next/server's `after()` — needs a Next.js request context. In bun:test
+// the route handlers are called directly without one, so after() throws and
+// the outer catch returns 500. No-op the callback in tests; route handlers
+// still test their critical-path logic.
+function setupNextServerMock() {
+	const actual = require('next/server')
+	mock.module('next/server', () => ({
+		...actual,
+		after: () => {}
+	}))
+}
+
+setupNextServerMock()
+
 // Setup logger mock to ensure all methods are available
 function setupLoggerMock() {
 	const mockLoggerInstance = {
@@ -194,6 +208,7 @@ beforeEach(() => {
 	setupEnvMock()
 	setupLoggerMock()
 	setupNextCacheMock()
+	setupNextServerMock()
 	// Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
 	disableJestFakeTimerDetection()
 })

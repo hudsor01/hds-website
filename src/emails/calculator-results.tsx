@@ -9,8 +9,12 @@ interface CalculatorResultsProps {
 	results: Record<string, unknown>
 }
 
+// Outlook desktop (Word rendering engine) ignores linear-gradient. The
+// solid backgroundColor is the fallback every client respects; modern
+// clients additionally honor backgroundImage and render the gradient.
 const HEADER_STYLE = {
-	background: `linear-gradient(to right, ${BRAND.primary}, ${BRAND.primaryDeep})`,
+	backgroundColor: BRAND.primary,
+	backgroundImage: `linear-gradient(to right, ${BRAND.primary}, ${BRAND.primaryDeep})`,
 	padding: '30px',
 	textAlign: 'center' as const,
 	borderRadius: '8px 8px 0 0'
@@ -45,13 +49,15 @@ const RESULT_ROW_STYLE = {
 const RESULT_LABEL_STYLE = {
 	fontSize: '14px',
 	color: BRAND.mutedForeground,
-	marginBottom: '5px'
+	marginBottom: '5px',
+	margin: 0
 }
 
 const RESULT_VALUE_STYLE = {
 	fontSize: '20px',
 	fontWeight: 700,
-	color: BRAND.primary
+	color: BRAND.primary,
+	margin: 0
 }
 
 const NEXT_STEPS_BOX_STYLE = {
@@ -71,6 +77,7 @@ export function CalculatorResults({
 	results
 }: CalculatorResultsProps) {
 	const entries = Object.entries(results)
+	const lastIndex = entries.length - 1
 
 	return (
 		<BrandLayout preview={`Your ${calculatorName} results are ready`}>
@@ -86,17 +93,17 @@ export function CalculatorResults({
 
 				<Section style={RESULTS_BOX_STYLE}>
 					{entries.map(([key, value], index) => (
-						<div
+						<Section
 							key={key}
 							style={
-								index === entries.length - 1
+								index === lastIndex
 									? { ...RESULT_ROW_STYLE, borderBottom: 'none' }
 									: RESULT_ROW_STYLE
 							}
 						>
-							<div style={RESULT_LABEL_STYLE}>{key}</div>
-							<div style={RESULT_VALUE_STYLE}>{String(value)}</div>
-						</div>
+							<Text style={RESULT_LABEL_STYLE}>{key}</Text>
+							<Text style={RESULT_VALUE_STYLE}>{String(value)}</Text>
+						</Section>
 					))}
 				</Section>
 
