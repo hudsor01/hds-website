@@ -5,6 +5,7 @@
  */
 
 import { and, asc, eq, lt, lte } from 'drizzle-orm'
+import { ScheduledDrip } from '@/emails/scheduled-drip'
 import { env } from '@/env'
 import { db } from '@/lib/db'
 import { createServerLogger } from '@/lib/logger'
@@ -20,7 +21,7 @@ import { resendEmailResponseSchema } from '@/lib/schemas/external'
 import type { EmailProcessResult, EmailQueueStats } from '@/types/utils'
 import { BUSINESS_INFO } from './constants/business'
 import { getEmailSequences, processEmailTemplate } from './email-utils'
-import { escapeHtml, sanitizeEmailHeader } from './utils'
+import { sanitizeEmailHeader } from './utils'
 
 // Create logger instance for email operations
 const emailLogger = createServerLogger()
@@ -245,57 +246,17 @@ async function sendScheduledEmail(
 	const processedContent = processEmailTemplate(sequence.content, variables)
 
 	try {
-		// Convert plain text to HTML
-		const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333;">
-        ${processedContent
-					.split('\\n\\n')
-					.map(paragraph =>
-						paragraph.startsWith('**') && paragraph.endsWith('**')
-							? `<h3 style="color: #0891b2; margin: 25px 0 15px 0;">${escapeHtml(
-									paragraph.slice(2, -2)
-								)}</h3>`
-							: paragraph.startsWith('• ')
-								? `<li style="margin: 8px 0;">${escapeHtml(
-										paragraph.slice(2)
-									)}</li>`
-								: paragraph.includes('• ')
-									? `<ul style="margin: 15px 0; padding-left: 20px;">${paragraph
-											.split('\\n')
-											.filter(line => line.startsWith('• '))
-											.map(
-												item =>
-													`<li style="margin: 8px 0;">${escapeHtml(
-														item.slice(2)
-													)}</li>`
-											)
-											.join('')}</ul>`
-									: `<p style="margin: 15px 0;">${escapeHtml(paragraph)}</p>`
-					)
-					.join('')}
-
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b;">
-          <p style="margin: 0;">
-            Richard Hudson<br>
-            Hudson Digital Solutions<br>
-            <a href="mailto:${BUSINESS_INFO.email}" style="color: #0891b2;">${BUSINESS_INFO.email}</a><br>
-            <a href="https://hudsondigitalsolutions.com" style="color: #0891b2;">hudsondigitalsolutions.com</a>
-          </p>
-          <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">
-            You received this email because you requested information from Hudson Digital Solutions.
-            <a href="https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(
-							scheduledEmail.recipientEmail
-						)}" style="color: #0891b2;">Unsubscribe</a>
-          </p>
-        </div>
-      </div>
-    `
-
 		const emailResponse = await getResendClient().emails.send({
 			from: `Richard Hudson <${BUSINESS_INFO.email}>`,
 			to: [scheduledEmail.recipientEmail],
 			subject: sanitizeEmailHeader(processedSubject),
-			html: htmlContent
+			react: (
+				<ScheduledDrip
+					subject={processedSubject}
+					content={processedContent}
+					recipientEmail={scheduledEmail.recipientEmail}
+				/>
+			)
 		})
 
 		// Validate Resend response
