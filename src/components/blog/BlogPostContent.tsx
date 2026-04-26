@@ -9,11 +9,16 @@ interface BlogPostContentProps {
 export async function BlogPostContent({ post }: BlogPostContentProps) {
 	'use cache'
 	cacheLife('days')
-	cacheTag('blog-posts', `blog-post:${post.id}`)
+	// Tag key matches getPostBySlug in src/lib/blog.ts which uses
+	// `blog-post:${slug}` — keep them aligned so a single
+	// revalidateTag('blog-post:my-post-slug') invalidates BOTH the data
+	// fetch and this render cache. Using post.id here would create a
+	// silent mismatch that breaks per-post targeted invalidation.
+	cacheTag('blog-posts', `blog-post:${post.slug}`)
 
 	if (!post.content) {
 		return (
-			<div className="prose prose-invert prose-cyan max-w-none">
+			<div className="prose prose-invert max-w-none">
 				<p className="text-muted-foreground">
 					This post content is coming soon. Check back later for the full
 					article.
@@ -52,7 +57,7 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 
 	return (
 		<div
-			className="prose prose-invert prose-cyan max-w-none"
+			className="prose prose-invert max-w-none"
 			dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 		/>
 	)
