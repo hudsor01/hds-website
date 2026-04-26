@@ -16,6 +16,12 @@ interface ContactWelcomeProps {
 	content: string
 }
 
+// `whiteSpace: pre-wrap` preserves soft `\n` line breaks within a single
+// paragraph. No current sequence template in src/data/email-templates.json
+// uses intra-paragraph newlines (paragraphs are separated by `\n\n`), so
+// this is a no-op today. Kept for future templates that may need it; some
+// email clients (notably Outlook desktop) normalize whitespace and may
+// ignore this property — do not rely on it for critical layout.
 const PARAGRAPH_STYLE = {
 	fontSize: '14px',
 	lineHeight: 1.6,
