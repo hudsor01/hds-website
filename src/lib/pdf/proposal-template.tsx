@@ -11,7 +11,7 @@ import type {
 } from '@/types/pdf-templates'
 
 // Re-export types for convenience
-export type { ProposalPricingItem, ProposalMilestone, ProposalData }
+export type { ProposalData, ProposalMilestone, ProposalPricingItem }
 
 const styles = StyleSheet.create({
 	page: {

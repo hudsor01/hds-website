@@ -7,7 +7,7 @@ import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import type { ContractData, ContractTemplate } from '@/types/pdf-templates'
 
 // Re-export types for convenience
-export type { ContractTemplate, ContractData }
+export type { ContractData, ContractTemplate }
 
 const styles = StyleSheet.create({
 	page: {

@@ -7,7 +7,7 @@ import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import type { InvoiceData, InvoiceLineItem } from '@/types/pdf-templates'
 
 // Re-export types for convenience
-export type { InvoiceLineItem, InvoiceData }
+export type { InvoiceData, InvoiceLineItem }
 
 // Styles for the PDF document
 const styles = StyleSheet.create({
