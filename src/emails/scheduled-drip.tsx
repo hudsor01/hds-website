@@ -59,16 +59,17 @@ export function ScheduledDrip({
 					)
 				}
 				if (block.type === 'list') {
+					// `<ul>` rendered at the top level (not nested inside <Section>,
+					// which react-email outputs as a <table> — invalid HTML to put
+					// <ul> inside <table>; Outlook's Word renderer may strip it).
 					return (
-						<Section key={`b-${idx}`}>
-							<ul style={LIST_STYLE}>
-								{block.value.map((item, i) => (
-									<li key={`i-${i}`} style={{ margin: '8px 0' }}>
-										{item}
-									</li>
-								))}
-							</ul>
-						</Section>
+						<ul key={`b-${idx}`} style={LIST_STYLE}>
+							{block.value.map((item, i) => (
+								<li key={`i-${i}`} style={{ margin: '8px 0' }}>
+									{item}
+								</li>
+							))}
+						</ul>
 					)
 				}
 				return (
