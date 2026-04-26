@@ -38,7 +38,7 @@
 - `src/components/forms/` - `ContactForm`, `NewsletterSignup`, `FormField`, `FormSuccessMessage`
 - `src/components/ui/` - Base primitives (button, card, input, label)
 - `src/components/utilities/` - Cross-cutting components (`Icon`/`IconButton`, `Analytics`, `JsonLd`, `ScrollProgress`)
-- `src/lib/` - Core utilities (`db`, `logger`, `errors`, `analytics`, `seo-utils`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`)
+- `src/lib/` - Core utilities (partial: `db`, `logger`, `errors`, `analytics`, `seo-utils`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
 - `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron endpoints (no user auth in this app)
 - `src/lib/schemas/` - Drizzle table schemas + Zod schemas; barrel at `schema.ts`
 - `src/lib/constants/` - Domain constants (`business.ts` etc.)
@@ -175,8 +175,9 @@
 
 **Env vars:**
 - All env access goes through `src/env.ts` (T3 env). Never read `process.env.X` directly.
-- Required in production: `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`
-- Optional / feature-gated: `RESEND_API_KEY`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`
+- Server, required in production: `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`
+- Server, optional / feature-gated: `RESEND_API_KEY`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `BASE_URL`
+- Client (`NEXT_PUBLIC_*`): `NEXT_PUBLIC_BASE_URL` (defaults to `http://localhost:3000`), `NEXT_PUBLIC_SITE_URL` (optional)
 
 ## DEVELOPMENT COMMANDS
 
