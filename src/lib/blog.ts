@@ -4,6 +4,7 @@
  */
 
 import { and, desc, eq, inArray } from 'drizzle-orm'
+import { cacheLife, cacheTag } from 'next/cache'
 import { db } from '@/lib/db'
 import {
 	blogAuthors,
@@ -14,7 +15,7 @@ import {
 import type { BlogAuthor, BlogPost, BlogTag } from '@/types/blog'
 
 // Re-export types for convenience
-export type { BlogPost, BlogTag, BlogAuthor }
+export type { BlogAuthor, BlogPost, BlogTag }
 
 /** Map a database author row to the BlogAuthor interface */
 function mapAuthor(row: typeof blogAuthors.$inferSelect): BlogAuthor {
@@ -94,12 +95,31 @@ function mapPost(
 
 // ─── API Functions ──────────────────────────────────────────────────────────
 
+/**
+ * Public list-fetch wrapper. Normalises optional args BEFORE the cached
+ * implementation so callers using `getPosts()`, `getPosts({})`, and
+ * `getPosts({ limit: 10 })` all hit the same cache entry — `'use cache'`
+ * keys on serialised arguments, so unstable shapes here would create
+ * duplicate entries with identical results.
+ */
 export async function getPosts(options?: {
 	limit?: number
 	page?: number
 }): Promise<{ posts: BlogPost[]; total: number }> {
 	const limit = options?.limit ?? 10
-	const offset = ((options?.page ?? 1) - 1) * limit
+	const page = options?.page ?? 1
+	return getPostsCached(limit, page)
+}
+
+async function getPostsCached(
+	limit: number,
+	page: number
+): Promise<{ posts: BlogPost[]; total: number }> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('blog-posts')
+
+	const offset = (page - 1) * limit
 
 	const rows = await db
 		.select()
@@ -127,6 +147,10 @@ export async function getPosts(options?: {
 }
 
 export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('blog-posts')
+
 	const rows = await db
 		.select()
 		.from(blogPosts)
@@ -144,6 +168,10 @@ export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-posts', `blog-post:${slug}`)
+
 	const rows = await db
 		.select()
 		.from(blogPosts)
@@ -166,11 +194,19 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 }
 
 export async function getTags(): Promise<BlogTag[]> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-tags')
+
 	const rows = await db.select().from(blogTags).orderBy(blogTags.name)
 	return rows.map(mapTag)
 }
 
 export async function getTagBySlug(slug: string): Promise<BlogTag | null> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-tags', `blog-tag:${slug}`)
+
 	const rows = await db
 		.select()
 		.from(blogTags)
@@ -182,6 +218,10 @@ export async function getTagBySlug(slug: string): Promise<BlogTag | null> {
 }
 
 export async function getPostsByTag(tagSlug: string): Promise<BlogPost[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('blog-posts', `blog-tag:${tagSlug}`)
+
 	const tag = await getTagBySlug(tagSlug)
 	if (!tag) {
 		return []
@@ -212,6 +252,10 @@ export async function getPostsByTag(tagSlug: string): Promise<BlogPost[]> {
 }
 
 export async function getAuthors(): Promise<BlogAuthor[]> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-authors')
+
 	const rows = await db.select().from(blogAuthors).orderBy(blogAuthors.name)
 	return rows.map(mapAuthor)
 }
@@ -219,6 +263,10 @@ export async function getAuthors(): Promise<BlogAuthor[]> {
 export async function getAuthorBySlug(
 	slug: string
 ): Promise<BlogAuthor | null> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-authors', `blog-author:${slug}`)
+
 	const rows = await db
 		.select()
 		.from(blogAuthors)
@@ -232,6 +280,10 @@ export async function getAuthorBySlug(
 export async function getPostsByAuthor(
 	authorSlug: string
 ): Promise<BlogPost[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('blog-posts', `blog-author:${authorSlug}`)
+
 	const author = await getAuthorBySlug(authorSlug)
 	if (!author) {
 		return []

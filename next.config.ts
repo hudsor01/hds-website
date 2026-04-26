@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	trailingSlash: false,
 
+	// Next.js 16 Cache Components — enables 'use cache' directive in data layer.
+	// Cascading constraints: every dynamic data access must be in a <Suspense>
+	// boundary, generateStaticParams must return at least one entry, page-level
+	// `revalidate` and `force-dynamic` are replaced by function-level caching.
+	cacheComponents: true,
+
 	images: {
 		formats: ['image/webp'],
 		deviceSizes: [640, 750, 828, 1080, 1200, 1920],

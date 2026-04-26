@@ -24,6 +24,35 @@ function setupEnvMock() {
 // Apply env mock immediately on setup
 setupEnvMock()
 
+// Mock next/cache — `cacheLife()` and `cacheTag()` throw outside the Next.js
+// bundler context (they rely on __NEXT_USE_CACHE which only the bundler sets).
+// In bun:test we just no-op them; the data layer functions still work.
+function setupNextCacheMock() {
+	mock.module('next/cache', () => ({
+		cacheLife: () => {},
+		cacheTag: () => {},
+		updateTag: () => {},
+		revalidateTag: () => {},
+		revalidatePath: () => {}
+	}))
+}
+
+setupNextCacheMock()
+
+// Mock next/server's `after()` — needs a Next.js request context. In bun:test
+// the route handlers are called directly without one, so after() throws and
+// the outer catch returns 500. No-op the callback in tests; route handlers
+// still test their critical-path logic.
+function setupNextServerMock() {
+	const actual = require('next/server')
+	mock.module('next/server', () => ({
+		...actual,
+		after: () => {}
+	}))
+}
+
+setupNextServerMock()
+
 // Setup logger mock to ensure all methods are available
 function setupLoggerMock() {
 	const mockLoggerInstance = {
@@ -178,6 +207,8 @@ beforeEach(() => {
 	// Re-apply critical mocks that must persist across tests
 	setupEnvMock()
 	setupLoggerMock()
+	setupNextCacheMock()
+	setupNextServerMock()
 	// Ensure RTL doesn't detect fake timers (Bun doesn't have Jest's timer infrastructure)
 	disableJestFakeTimerDetection()
 })

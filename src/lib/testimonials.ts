@@ -6,6 +6,7 @@
 
 import { randomBytes } from 'node:crypto'
 import { desc, eq } from 'drizzle-orm'
+import { cacheLife, cacheTag } from 'next/cache'
 import type {
 	ServiceType,
 	Testimonial,
@@ -77,6 +78,10 @@ function generateToken(): string {
 export async function getTestimonialRequestByToken(
 	token: string
 ): Promise<TestimonialRequest | null> {
+	'use cache'
+	cacheLife('minutes')
+	cacheTag(`testimonial-token:${token}`)
+
 	const [data] = await db
 		.select()
 		.from(testimonialRequests)
@@ -117,6 +122,10 @@ export async function createTestimonialRequest(
  * Get all testimonial requests
  */
 export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
+	'use cache'
+	cacheLife('minutes')
+	cacheTag('testimonial-requests')
+
 	const data = await db
 		.select()
 		.from(testimonialRequests)
@@ -179,6 +188,10 @@ export async function submitTestimonial(testimonial: {
  * Get all testimonials (for admin)
  */
 export async function getAllTestimonials(): Promise<Testimonial[]> {
+	'use cache'
+	cacheLife('minutes')
+	cacheTag('testimonials-all')
+
 	const data = await db
 		.select()
 		.from(testimonials)
@@ -191,6 +204,10 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
  * Get approved testimonials (for public display)
  */
 export async function getApprovedTestimonials(): Promise<Testimonial[]> {
+	'use cache'
+	cacheLife('hours')
+	cacheTag('testimonials-approved')
+
 	const data = await db
 		.select()
 		.from(testimonials)

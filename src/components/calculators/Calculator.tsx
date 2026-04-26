@@ -62,7 +62,7 @@ export function Calculator() {
 			return
 		}
 
-		if (!emailInput || !emailInput.includes('@')) {
+		if (!emailInput?.includes('@')) {
 			toast.error('Please enter a valid email address')
 			return
 		}
