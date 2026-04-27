@@ -1,0 +1,180 @@
+import { describe, expect, test } from 'bun:test'
+import { stripMarkdown } from '@/lib/strip-markdown'
+
+describe('stripMarkdown', () => {
+	test('returns empty string for empty input', () => {
+		expect(stripMarkdown('')).toBe('')
+	})
+
+	test('strips bold (**text**)', () => {
+		expect(
+			stripMarkdown('Many businesses approach **web development** today')
+		).toBe('Many businesses approach web development today')
+	})
+
+	test('strips bold (__text__)', () => {
+		expect(stripMarkdown('use __strong__ words')).toBe('use strong words')
+	})
+
+	test('strips italic (*text*) without breaking list-like punctuation', () => {
+		expect(stripMarkdown('an *italicised* phrase')).toBe('an italicised phrase')
+	})
+
+	test('strips italic (_text_)', () => {
+		expect(stripMarkdown('an _italicised_ phrase')).toBe('an italicised phrase')
+	})
+
+	test('strips strikethrough', () => {
+		expect(stripMarkdown('this is ~~wrong~~ corrected')).toBe(
+			'this is wrong corrected'
+		)
+	})
+
+	test('strips inline code', () => {
+		expect(stripMarkdown('use `npm install` to install')).toBe(
+			'use npm install to install'
+		)
+	})
+
+	test('strips code fences while keeping content', () => {
+		expect(stripMarkdown('Run:\n```\nnpm test\n```')).toBe('Run: npm test')
+	})
+
+	test('strips heading markers at line start', () => {
+		expect(stripMarkdown('### Hidden Dangers\nbody text')).toBe(
+			'Hidden Dangers body text'
+		)
+	})
+
+	test('strips list-leading bullet (line start)', () => {
+		expect(stripMarkdown('* one\n* two\n* three')).toBe('one two three')
+		expect(stripMarkdown('- one\n- two')).toBe('one two')
+		expect(stripMarkdown('+ one\n+ two')).toBe('one two')
+	})
+
+	test('strips inline list markers (n8n excerpt pattern)', () => {
+		// This is the actual real-world excerpt shape that broke the UI:
+		// `... :  *   **Item:** desc *   **Other:** more`
+		const input =
+			'leads to similar crashes:  *   **Undefined User Journeys:** Visitors arrive *   **Undefined Performance:** Slow load times'
+		expect(stripMarkdown(input)).toBe(
+			'leads to similar crashes: Undefined User Journeys: Visitors arrive Undefined Performance: Slow load times'
+		)
+	})
+
+	test('strips numbered list markers', () => {
+		expect(stripMarkdown('1. First step\n2. Second step')).toBe(
+			'First step Second step'
+		)
+	})
+
+	test('strips block quote markers', () => {
+		expect(stripMarkdown('> a quoted line\nbody')).toBe('a quoted line body')
+	})
+
+	test('keeps link text and drops URL', () => {
+		expect(
+			stripMarkdown('see [our pricing](https://example.com/pricing) page')
+		).toBe('see our pricing page')
+	})
+
+	test('drops images entirely', () => {
+		expect(stripMarkdown('before ![alt text](https://x.com/y.png) after')).toBe(
+			'before after'
+		)
+	})
+
+	test('does NOT eat asterisks that are not formatting markers', () => {
+		// e.g. multiplication-style asterisk inside a sentence with no closing pair
+		expect(stripMarkdown('the formula a * b = c is simple')).toBe(
+			'the formula a * b = c is simple'
+		)
+	})
+
+	test('strips bold-italic (***word***)', () => {
+		expect(stripMarkdown('this is ***very emphatic*** prose')).toBe(
+			'this is very emphatic prose'
+		)
+	})
+
+	test('strips bold-italic (___word___)', () => {
+		expect(stripMarkdown('this is ___very emphatic___ prose')).toBe(
+			'this is very emphatic prose'
+		)
+	})
+
+	test('strips italic adjacent to comma (asymmetric boundary fix)', () => {
+		expect(stripMarkdown('clear,*italicised*, follows')).toBe(
+			'clear,italicised, follows'
+		)
+		expect(stripMarkdown('first;*italicised*; next')).toBe(
+			'first;italicised; next'
+		)
+	})
+
+	test('strips italic adjacent to colon (key:*value* pattern)', () => {
+		expect(stripMarkdown('Status:*pending*, retry later')).toBe(
+			'Status:pending, retry later'
+		)
+	})
+
+	test('passes through interleaved bold/italic verbatim (documented gap)', () => {
+		// `**a*b*c*d**` — the bold regex `[^*]+` stops at the first inner `*`,
+		// so neither bold nor italic match. Documented in strip-markdown.ts.
+		// n8n excerpts have not been observed emitting this shape.
+		expect(stripMarkdown('keep **a*b*c*d** verbatim')).toBe(
+			'keep **a*b*c*d** verbatim'
+		)
+	})
+
+	test('strips four-asterisks via cascade (****word**** → word)', () => {
+		// `***` matches starting at index 1 → leaves `*word*` → italic strips.
+		expect(stripMarkdown('keep ****word**** clean')).toBe('keep word clean')
+	})
+
+	test('is idempotent on already-clean prose (mapPost title path)', () => {
+		const clean = 'How to Build a Modern Business Website in 2025'
+		expect(stripMarkdown(clean)).toBe(clean)
+		expect(stripMarkdown(stripMarkdown(clean))).toBe(clean)
+	})
+
+	test('strips markdown from a title-shaped input (defense-in-depth coverage)', () => {
+		expect(
+			stripMarkdown('Why **Custom CRM** Integration Beats Off-the-Shelf')
+		).toBe('Why Custom CRM Integration Beats Off-the-Shelf')
+	})
+
+	test('strips orphan triple-backticks from truncated code fences', () => {
+		expect(stripMarkdown('Run this:\n```\nnpm test')).toBe('Run this: npm test')
+	})
+
+	test('preserves visible chars in escaped markdown (\\*not italic\\*)', () => {
+		// Authors who escape `*` to keep literal asterisks should see them.
+		expect(stripMarkdown('keep \\*literal asterisks\\* visible')).toBe(
+			'keep *literal asterisks* visible'
+		)
+		expect(stripMarkdown('escaped \\_underscore\\_ stays')).toBe(
+			'escaped _underscore_ stays'
+		)
+		expect(stripMarkdown('hash \\# not heading')).toBe('hash # not heading')
+	})
+
+	test('returns empty string for whitespace-only input', () => {
+		expect(stripMarkdown('   \n\t   ')).toBe('')
+	})
+
+	test('returns empty string for HR-only input (***)', () => {
+		// `***` matches the HR regex and collapses to nothing. mapPost
+		// wraps this with a slug-based fallback so the UI never sees ''.
+		expect(stripMarkdown('***')).toBe('')
+		expect(stripMarkdown('-----')).toBe('')
+	})
+
+	test('handles a real excerpt end-to-end', () => {
+		const input =
+			"The primary argument for adopting Kubernetes is **scalability**. In a traditional setup, handling a sudden spike in traffic often means manually provisioning new servers, waiting for configuration, and hoping your infrastructure doesn't buckle."
+		expect(stripMarkdown(input)).toBe(
+			"The primary argument for adopting Kubernetes is scalability. In a traditional setup, handling a sudden spike in traffic often means manually provisioning new servers, waiting for configuration, and hoping your infrastructure doesn't buckle."
+		)
+	})
+})

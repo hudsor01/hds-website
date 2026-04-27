@@ -12,6 +12,7 @@ import {
 	blogPostTags,
 	blogTags
 } from '@/lib/schemas/schema'
+import { stripMarkdown } from '@/lib/strip-markdown'
 import type { BlogAuthor, BlogPost, BlogTag } from '@/types/blog'
 
 // Re-export types for convenience
@@ -72,17 +73,50 @@ async function loadTagsForPosts(
 	return tagsByPost
 }
 
+/**
+ * Convert a slug like `how-to-build-a-website` to `How To Build A Website`.
+ * Used as a last-resort title fallback when the stored title strips down
+ * to empty — e.g. an upstream pipeline glitch sends `***` or `   ` and
+ * the strip leaves nothing renderable. The DB CHECK constraint added in
+ * scripts/sql/2026-04-26-blog-content-constraints.sql makes this a
+ * defense-in-depth guard, not a routine code path.
+ *
+ * If the slug itself is empty or all-dashes (also blocked at DB level
+ * by the NOT NULL + UNIQUE on slug, but defended in depth) we fall
+ * back to "Untitled Post" so the UI never renders an empty <h1>.
+ */
+function humanizeSlug(slug: string): string {
+	const humanized = slug
+		.split('-')
+		.filter(Boolean)
+		.map(w => w.charAt(0).toUpperCase() + w.slice(1))
+		.join(' ')
+	return humanized || 'Untitled Post'
+}
+
 /** Map a post + author row to BlogPost, attaching tags */
 function mapPost(
 	post: typeof blogPosts.$inferSelect,
 	author: typeof blogAuthors.$inferSelect | null,
 	tags: BlogTag[]
 ): BlogPost {
+	// The n8n ingest pipeline copies the first paragraphs of the (HTML)
+	// article body into excerpt verbatim, retaining stray markdown
+	// markers like `**bold**` and `*   item`. Strip them here so cards
+	// and post headers render as clean prose instead of leaking syntax.
+	// Also strip from title as defense in depth — current titles are
+	// clean but the pipeline could drift.
+	const strippedTitle = stripMarkdown(post.title)
+	const strippedExcerpt = stripMarkdown(post.excerpt)
+
 	return {
 		id: post.id,
 		slug: post.slug,
-		title: post.title,
-		excerpt: post.excerpt,
+		// Fallback to humanized slug if the strip empties the title (e.g.
+		// a malformed upstream value like `***`). Prevents an empty <h1>
+		// in the UI and an empty <title> in feeds/meta tags.
+		title: strippedTitle || humanizeSlug(post.slug),
+		excerpt: strippedExcerpt,
 		content: post.content,
 		feature_image: post.featureImage,
 		published_at: post.publishedAt?.toISOString() ?? new Date().toISOString(),

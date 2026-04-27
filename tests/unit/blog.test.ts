@@ -317,6 +317,64 @@ describe('Blog Data Layer', () => {
 			const post = await getPostBySlug('nonexistent')
 			expect(post).toBeNull()
 		})
+
+		test('strips markdown from title', async () => {
+			const postWithMarkdownTitle = {
+				...MOCK_POST_ROW,
+				title: 'Why **Custom CRM** Beats Off-the-Shelf'
+			}
+			resetMockDb([makeJoinedRow(postWithMarkdownTitle)], [])
+
+			const post = await getPostBySlug('test-post')
+
+			expect(post?.title).toBe('Why Custom CRM Beats Off-the-Shelf')
+		})
+
+		test('strips markdown from excerpt (n8n inline-bullet pattern)', async () => {
+			const postWithMarkdownExcerpt = {
+				...MOCK_POST_ROW,
+				excerpt:
+					'Crashes:  *   **Broken Journeys:** lost users *   **Slow Performance:** abandoned carts'
+			}
+			resetMockDb([makeJoinedRow(postWithMarkdownExcerpt)], [])
+
+			const post = await getPostBySlug('test-post')
+
+			expect(post?.excerpt).toBe(
+				'Crashes: Broken Journeys: lost users Slow Performance: abandoned carts'
+			)
+		})
+
+		test('falls back to humanized slug when title strips to empty', async () => {
+			// Defense-in-depth: matches the runtime guard in mapPost. The DB
+			// CHECK constraint blocks empty titles at write time, but a
+			// legacy/pre-constraint row or a `***`-style title would otherwise
+			// render an empty <h1>. The fallback prevents that.
+			const postWithEmptyableTitle = {
+				...MOCK_POST_ROW,
+				slug: 'how-to-build-a-website',
+				title: '***'
+			}
+			resetMockDb([makeJoinedRow(postWithEmptyableTitle)], [])
+
+			const post = await getPostBySlug('how-to-build-a-website')
+
+			expect(post?.title).toBe('How To Build A Website')
+		})
+
+		test('humanized-slug fallback handles dash-only and empty slug edges', async () => {
+			// Both `''` and `'-'` would otherwise produce empty humanized
+			// strings; the inner OR fallback in humanizeSlug returns the
+			// "Untitled Post" sentinel so the UI never renders an empty <h1>.
+			// Slug nonempty is also enforced at DB level via
+			// blog_posts_slug_nonempty, so this branch is two-layer defense.
+			const dashSlug = { ...MOCK_POST_ROW, slug: '-', title: '   ' }
+			resetMockDb([makeJoinedRow(dashSlug)], [])
+
+			const post = await getPostBySlug('-')
+
+			expect(post?.title).toBe('Untitled Post')
+		})
 	})
 
 	describe('getPosts', () => {
