@@ -80,13 +80,18 @@ async function loadTagsForPosts(
  * the strip leaves nothing renderable. The DB CHECK constraint added in
  * scripts/sql/2026-04-26-blog-content-constraints.sql makes this a
  * defense-in-depth guard, not a routine code path.
+ *
+ * If the slug itself is empty or all-dashes (also blocked at DB level
+ * by the NOT NULL + UNIQUE on slug, but defended in depth) we fall
+ * back to "Untitled Post" so the UI never renders an empty <h1>.
  */
 function humanizeSlug(slug: string): string {
-	return slug
+	const humanized = slug
 		.split('-')
 		.filter(Boolean)
 		.map(w => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(' ')
+	return humanized || 'Untitled Post'
 }
 
 /** Map a post + author row to BlogPost, attaching tags */

@@ -35,11 +35,26 @@ BEGIN
       ADD CONSTRAINT blog_posts_excerpt_nonempty
       CHECK (length(trim(excerpt)) > 0);
   END IF;
+
+  -- Slug already has UNIQUE + NOT NULL but Postgres NOT NULL allows
+  -- empty strings, and `''` would route /blog/ to the listing page
+  -- rather than a 404. Reject empty/whitespace-only slugs at write time.
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'blog_posts_slug_nonempty'
+  ) THEN
+    ALTER TABLE blog_posts
+      ADD CONSTRAINT blog_posts_slug_nonempty
+      CHECK (length(trim(slug)) > 0);
+  END IF;
 END
 $$;
 
 -- Verification:
 -- SELECT conname FROM pg_constraint
 --   WHERE conrelid = 'blog_posts'::regclass
---     AND conname IN ('blog_posts_title_nonempty', 'blog_posts_excerpt_nonempty');
--- Should return 2 rows.
+--     AND conname IN (
+--       'blog_posts_title_nonempty',
+--       'blog_posts_excerpt_nonempty',
+--       'blog_posts_slug_nonempty'
+--     );
+-- Should return 3 rows.
