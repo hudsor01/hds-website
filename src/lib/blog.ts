@@ -12,6 +12,7 @@ import {
 	blogPostTags,
 	blogTags
 } from '@/lib/schemas/schema'
+import { stripMarkdown } from '@/lib/strip-markdown'
 import type { BlogAuthor, BlogPost, BlogTag } from '@/types/blog'
 
 // Re-export types for convenience
@@ -82,7 +83,11 @@ function mapPost(
 		id: post.id,
 		slug: post.slug,
 		title: post.title,
-		excerpt: post.excerpt,
+		// The n8n ingest pipeline copies the first paragraphs of the (HTML)
+		// article body into excerpt verbatim, retaining stray markdown
+		// markers like `**bold**` and `*   item`. Strip them here so cards
+		// and post headers render as clean prose instead of leaking syntax.
+		excerpt: stripMarkdown(post.excerpt),
 		content: post.content,
 		feature_image: post.featureImage,
 		published_at: post.publishedAt?.toISOString() ?? new Date().toISOString(),
