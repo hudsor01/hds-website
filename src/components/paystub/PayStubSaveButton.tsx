@@ -1,7 +1,6 @@
 'use client'
 
 import { FileText } from 'lucide-react'
-import type React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -9,9 +8,7 @@ interface PayStubSaveButtonProps {
 	onSave: () => void
 }
 
-export const PayStubSaveButton: React.FC<PayStubSaveButtonProps> = ({
-	onSave
-}) => {
+export function PayStubSaveButton({ onSave }: PayStubSaveButtonProps) {
 	return (
 		<div className="no-print absolute -top-16 right-0 z-modal">
 			<Button

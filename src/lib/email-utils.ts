@@ -1,5 +1,3 @@
-// Native email utilities - logic only, no template bloat
-
 import emailTemplates from '@/data/email-templates.json'
 
 interface EmailData {
@@ -44,7 +42,11 @@ export function generateEmail(
 }
 
 /**
- * Get all email sequences (legacy compatibility)
+ * Get all email sequences keyed by both legacy sequence names
+ * (`standard-welcome`, `high-value-consultation`, etc.) and the
+ * canonical template names. Both contact-service and scheduled-emails
+ * look up sequences by these aliases when picking which template to
+ * send for a given lead.
  */
 export function getEmailSequences() {
 	return {
@@ -54,14 +56,4 @@ export function getEmailSequences() {
 		'enterprise-nurture': emailTemplates['follow-up'],
 		...emailTemplates
 	}
-}
-
-/**
- * Process email template (legacy compatibility)
- */
-export function processEmailTemplate(
-	template: string,
-	data: EmailData
-): string {
-	return replaceTemplateVariables(template, data)
 }

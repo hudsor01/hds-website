@@ -10,7 +10,7 @@ interface ContactWelcomeProps {
 	 * lines (`\n\n`); each paragraph becomes one `<Text>` block. Single
 	 * `\n` within a paragraph stays as a soft line break. Content is plain
 	 * text with sequence variables already substituted by
-	 * processEmailTemplate; React Email auto-escapes children, so no
+	 * replaceTemplateVariables; React Email auto-escapes children, so no
 	 * manual HTML escaping is needed.
 	 */
 	content: string

@@ -1,7 +1,6 @@
 'use client'
 
 import { FileText } from 'lucide-react'
-import type React from 'react'
 import { getCurrentTaxData } from '@/lib/paystub-calculator/paystub-utils'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { PaystubData } from '@/types/paystub'
@@ -10,9 +9,7 @@ interface AnnualWageSummaryProps {
 	employeeData: PaystubData
 }
 
-export const AnnualWageSummary: React.FC<AnnualWageSummaryProps> = ({
-	employeeData
-}) => {
+export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 	const handleSaveAsPDF = () => {
 		if (typeof window !== 'undefined') {
 			window.print()

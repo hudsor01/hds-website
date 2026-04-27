@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import * as React from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -27,19 +27,26 @@ const glassCardVariants = cva('transition-smooth', {
 })
 
 export interface GlassCardProps
-	extends React.HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof glassCardVariants> {}
+	extends HTMLAttributes<HTMLDivElement>,
+		VariantProps<typeof glassCardVariants> {
+	ref?: Ref<HTMLDivElement>
+}
 
-const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
-	({ className, variant, padding, hover, ...props }, ref) => (
+function GlassCard({
+	className,
+	variant,
+	padding,
+	hover,
+	ref,
+	...props
+}: GlassCardProps) {
+	return (
 		<div
 			ref={ref}
 			className={cn(glassCardVariants({ variant, padding, hover }), className)}
 			{...props}
 		/>
 	)
-)
-
-GlassCard.displayName = 'GlassCard'
+}
 
 export { GlassCard, glassCardVariants }

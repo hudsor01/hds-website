@@ -1,7 +1,5 @@
 'use client'
 
-import type React from 'react'
-
 interface PayStubEmployeeInfoProps {
 	employeeName: string
 	employeeId?: string
@@ -10,13 +8,13 @@ interface PayStubEmployeeInfoProps {
 	taxYear: number
 }
 
-export const PayStubEmployeeInfo: React.FC<PayStubEmployeeInfoProps> = ({
+export function PayStubEmployeeInfo({
 	employeeName,
 	employeeId,
 	period,
 	totalPeriods,
 	taxYear
-}) => {
+}: PayStubEmployeeInfoProps) {
 	return (
 		<div className="flex-between mb-5">
 			<div>

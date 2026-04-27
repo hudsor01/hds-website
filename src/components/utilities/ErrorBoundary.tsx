@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
+import { logger } from '@/lib/logger'
 
 // Error handling is now managed by React Query for API calls
 
@@ -47,7 +48,7 @@ function DefaultErrorFallback({
 			setCopied(true)
 			setTimeout(() => setCopied(false), TIMEOUTS.COPY_FEEDBACK)
 		} catch (err) {
-			console.error('[ErrorBoundary] Failed to copy error details', err)
+			logger.error('[ErrorBoundary] Failed to copy error details', err)
 			// Fallback to a textarea method if clipboard API fails
 			const textArea = document.createElement('textarea')
 			textArea.value = errorDetails
@@ -83,12 +84,12 @@ function DefaultErrorFallback({
 			//   body: JSON.stringify(errorReport)
 			// });
 
-			console.warn('[ErrorBoundary] Error report prepared', errorReport)
+			logger.warn('[ErrorBoundary] Error report prepared', errorReport)
 			alert(
 				'Error report has been prepared. Please contact support with the error details.'
 			)
 		} catch (err) {
-			console.error('[ErrorBoundary] Failed to report error', err)
+			logger.error('[ErrorBoundary] Failed to report error', err)
 		}
 	}
 
@@ -194,7 +195,7 @@ export function ErrorBoundary({
 		// Call custom error handler if provided
 		onError?.(error, errorInfo)
 
-		console.error('[ErrorBoundary] Error Boundary Caught', {
+		logger.error('[ErrorBoundary] Error Boundary Caught', {
 			name: errorObj.name,
 			message: errorObj.message,
 			componentStack: errorInfo.componentStack
@@ -216,9 +217,6 @@ export function ErrorBoundary({
 		</ReactErrorBoundary>
 	)
 }
-
-// Export default for backwards compatibility
-export default ErrorBoundary
 
 // Component-specific error boundary with minimal UI
 export function ComponentErrorBoundary({

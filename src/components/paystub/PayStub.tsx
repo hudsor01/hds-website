@@ -1,6 +1,5 @@
 'use client'
 
-import type React from 'react'
 import { Card } from '@/components/ui/card'
 import { logger } from '@/lib/logger'
 import { downloadPDF } from '@/lib/pdf/client-pdf'
@@ -26,11 +25,7 @@ interface PayStubProps {
 	}
 }
 
-export const PayStub: React.FC<PayStubProps> = ({
-	payPeriod,
-	employeeData,
-	ytdTotals
-}) => {
+export function PayStub({ payPeriod, employeeData, ytdTotals }: PayStubProps) {
 	const handleSaveAsPDF = async () => {
 		try {
 			const filename = `paystub-${employeeData.employeeName || 'employee'}-${payPeriod.payDate}.pdf`

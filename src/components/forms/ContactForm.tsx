@@ -1,12 +1,19 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
 import { FieldGroup } from '@/components/ui/field'
 import formOptions from '@/data/form-options.json'
 import { useAppForm } from '@/hooks/form-hook'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import type { ContactFormData } from '@/lib/schemas/contact'
+
+// Module-level constants — these arrays are deserialized once at import
+// time from the static JSON. No need to wrap in useMemo per render.
+const serviceOptions = formOptions.services
+const budgetOptions = formOptions.budget
+const timelineOptions = formOptions.timeline
+const contactTimeOptions = formOptions.contactTime
 
 export default function ContactForm({
 	className = ''
@@ -15,11 +22,6 @@ export default function ContactForm({
 }) {
 	const mutation = useContactFormSubmit()
 	const [showSuccess, setShowSuccess] = useState(false)
-
-	const serviceOptions = useMemo(() => formOptions.services, [])
-	const budgetOptions = useMemo(() => formOptions.budget, [])
-	const timelineOptions = useMemo(() => formOptions.timeline, [])
-	const contactTimeOptions = useMemo(() => formOptions.contactTime, [])
 
 	const form = useAppForm({
 		defaultValues: {
