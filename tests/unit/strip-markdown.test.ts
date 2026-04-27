@@ -159,6 +159,17 @@ describe('stripMarkdown', () => {
 		expect(stripMarkdown('hash \\# not heading')).toBe('hash # not heading')
 	})
 
+	test('returns empty string for whitespace-only input', () => {
+		expect(stripMarkdown('   \n\t   ')).toBe('')
+	})
+
+	test('returns empty string for HR-only input (***)', () => {
+		// `***` matches the HR regex and collapses to nothing. mapPost
+		// wraps this with a slug-based fallback so the UI never sees ''.
+		expect(stripMarkdown('***')).toBe('')
+		expect(stripMarkdown('-----')).toBe('')
+	})
+
 	test('handles a real excerpt end-to-end', () => {
 		const input =
 			"The primary argument for adopting Kubernetes is **scalability**. In a traditional setup, handling a sudden spike in traffic often means manually provisioning new servers, waiting for configuration, and hoping your infrastructure doesn't buckle."
