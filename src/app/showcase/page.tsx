@@ -8,9 +8,8 @@ import { TypewriterText } from '@/components/ui/TypewriterText'
 import { Analytics } from '@/components/utilities/Analytics'
 import { getShowcaseItems } from '@/lib/showcase'
 
-// Enable ISR with 1-hour revalidation
-export const revalidate = 3600
-
+// Caching handled at data-layer level (src/lib/showcase.ts uses 'use cache'
+// + cacheLife). Page-level revalidate is incompatible with cacheComponents.
 export const metadata: Metadata = {
 	title: 'Showcase - Our Work | Hudson Digital Solutions',
 	description:
