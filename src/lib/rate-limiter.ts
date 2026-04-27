@@ -211,15 +211,3 @@ export function getUnifiedRateLimiter(): UnifiedRateLimiter {
 	}
 	return _unifiedRateLimiter
 }
-
-// Legacy export for backwards compatibility (lazy initialized)
-export const unifiedRateLimiter = {
-	checkLimit: (identifier: string, limitType?: RateLimitType) =>
-		getUnifiedRateLimiter().checkLimit(identifier, limitType),
-	getLimitInfo: (identifier: string, limitType?: RateLimitType) =>
-		getUnifiedRateLimiter().getLimitInfo(identifier, limitType),
-	destroy: () => getUnifiedRateLimiter().destroy()
-}
-
-// Re-export getClientIp from centralized location for backwards compatibility
-export { getClientIp } from './request'

@@ -12,6 +12,7 @@ import type { NextRequest } from 'next/server'
 // Import types for use in tests (type-only imports don't load modules)
 import type * as CsrfTypes from '@/lib/csrf'
 import type * as RateLimiterTypes from '@/lib/rate-limiter'
+import type * as RequestTypes from '@/lib/request'
 
 // ================================
 // CSRF Token Tests
@@ -178,10 +179,12 @@ describe('CSRF Token Utilities', () => {
 
 describe('Rate Limiter', () => {
 	let rateLimiterModule: typeof RateLimiterTypes
+	let requestModule: typeof RequestTypes
 
 	beforeEach(async () => {
 		// Dynamic import to get the module (mocked or real depending on execution order)
 		rateLimiterModule = await import('@/lib/rate-limiter')
+		requestModule = await import('@/lib/request')
 	})
 
 	afterEach(() => {
@@ -280,7 +283,7 @@ describe('Rate Limiter', () => {
 				}
 			} as unknown as NextRequest
 
-			const ip = rateLimiterModule.getClientIp(mockRequest)
+			const ip = requestModule.getClientIp(mockRequest)
 			expect(ip).toBe('192.168.1.1')
 		})
 
@@ -296,7 +299,7 @@ describe('Rate Limiter', () => {
 				}
 			} as unknown as NextRequest
 
-			const ip = rateLimiterModule.getClientIp(mockRequest)
+			const ip = requestModule.getClientIp(mockRequest)
 			expect(ip).toBe('192.168.1.2')
 		})
 
@@ -307,7 +310,7 @@ describe('Rate Limiter', () => {
 				}
 			} as unknown as NextRequest
 
-			const ip = rateLimiterModule.getClientIp(mockRequest)
+			const ip = requestModule.getClientIp(mockRequest)
 			expect(ip).toBe('127.0.0.1')
 		})
 
@@ -323,7 +326,7 @@ describe('Rate Limiter', () => {
 				}
 			} as unknown as NextRequest
 
-			const ip = rateLimiterModule.getClientIp(mockRequest)
+			const ip = requestModule.getClientIp(mockRequest)
 			expect(ip).toBe('127.0.0.1')
 		})
 	})

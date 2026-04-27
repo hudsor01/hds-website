@@ -19,12 +19,8 @@ import {
 	getIncomeTaxStates,
 	getNoIncomeTaxStates
 } from '@/lib/paystub-calculator/states-utils'
-import type {
-	FilingStatus,
-	FormErrors,
-	PayFrequency,
-	PaystubData
-} from '@/types/paystub'
+import type { FormErrors } from '@/types/common'
+import type { FilingStatus, PayFrequency, PaystubData } from '@/types/paystub'
 
 interface PaystubFormProps {
 	paystubData: PaystubData

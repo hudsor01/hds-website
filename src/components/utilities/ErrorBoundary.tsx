@@ -218,9 +218,6 @@ export function ErrorBoundary({
 	)
 }
 
-// Export default for backwards compatibility
-export default ErrorBoundary
-
 // Component-specific error boundary with minimal UI
 export function ComponentErrorBoundary({
 	children,
