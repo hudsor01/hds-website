@@ -62,7 +62,7 @@
 		"isomorphic-dompurify": "3.10.0",
 		"lucide-react": "1.11.0",
 		"nuqs": "2.8.9",
-		"postcss": "8.5.10",
+		"postcss": "8.5.12",
 		"puppeteer": "24.42.0",
 		"radix-themes-tw": "1.1.0",
 		"react-email": "6.0.0",
