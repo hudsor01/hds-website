@@ -361,6 +361,20 @@ describe('Blog Data Layer', () => {
 
 			expect(post?.title).toBe('How To Build A Website')
 		})
+
+		test('humanized-slug fallback handles dash-only and empty slug edges', async () => {
+			// Both `''` and `'-'` would otherwise produce empty humanized
+			// strings; the inner OR fallback in humanizeSlug returns the
+			// "Untitled Post" sentinel so the UI never renders an empty <h1>.
+			// Slug nonempty is also enforced at DB level via
+			// blog_posts_slug_nonempty, so this branch is two-layer defense.
+			const dashSlug = { ...MOCK_POST_ROW, slug: '-', title: '   ' }
+			resetMockDb([makeJoinedRow(dashSlug)], [])
+
+			const post = await getPostBySlug('-')
+
+			expect(post?.title).toBe('Untitled Post')
+		})
 	})
 
 	describe('getPosts', () => {
