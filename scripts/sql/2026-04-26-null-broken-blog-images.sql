@@ -20,5 +20,6 @@ SET feature_image = NULL
 WHERE feature_image LIKE '/images/blog/%';
 
 -- Verification:
--- SELECT slug, feature_image FROM blog_posts WHERE feature_image IS NOT NULL;
--- Should return 0 rows until the n8n pipeline (or a manual upload) sets new paths.
+-- SELECT slug, feature_image FROM blog_posts WHERE feature_image LIKE '/images/blog/%';
+-- Should return 0 rows. (Posts with feature_image set to other paths
+-- — e.g. future uploads to /portfolio/* or a CDN — are unaffected.)
