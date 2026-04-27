@@ -1,6 +1,5 @@
 'use client'
 
-import type React from 'react'
 import { formatCurrency } from '@/lib/utils'
 
 interface PayStubEarningsProps {
@@ -9,11 +8,11 @@ interface PayStubEarningsProps {
 	grossPay: number
 }
 
-export const PayStubEarnings: React.FC<PayStubEarningsProps> = ({
+export function PayStubEarnings({
 	hourlyRate,
 	hours,
 	grossPay
-}) => {
+}: PayStubEarningsProps) {
 	return (
 		<div className="mb-5">
 			<h3 className="m-0 mb-subheading.5 text-sm border-b border-black pb-1.5">

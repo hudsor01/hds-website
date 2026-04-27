@@ -1,6 +1,5 @@
 'use client'
 
-import type React from 'react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 interface PayStubHeaderProps {
@@ -10,12 +9,12 @@ interface PayStubHeaderProps {
 	netPay: number
 }
 
-export const PayStubHeader: React.FC<PayStubHeaderProps> = ({
+export function PayStubHeader({
 	employerName,
 	payDate,
 	checkNumber,
 	netPay
-}) => {
+}: PayStubHeaderProps) {
 	const payDateObj = new Date(payDate)
 	return (
 		<div className="border-b-2 border-black pb-5 mb-5">

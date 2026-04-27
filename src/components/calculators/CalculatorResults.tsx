@@ -6,6 +6,7 @@
 'use client'
 
 import { CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -180,7 +181,7 @@ export function CalculatorResults({
 					Let&apos;s discuss how we can help you achieve better results.
 				</p>
 				<Button asChild>
-					<a href="/contact">Schedule Free Consultation</a>
+					<Link href="/contact">Schedule Free Consultation</Link>
 				</Button>
 			</Card>
 		</div>

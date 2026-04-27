@@ -6,6 +6,7 @@
 'use client'
 
 import { useReportWebVitals } from 'next/web-vitals'
+import { logger } from '@/lib/logger'
 
 export function WebVitalsReporting() {
 	useReportWebVitals(metric => {
@@ -14,14 +15,13 @@ export function WebVitalsReporting() {
 
 		// Log performance issues in development
 		if (process.env.NODE_ENV === 'development') {
-			const rating =
-				metric.rating === 'poor'
-					? '[POOR]'
-					: metric.rating === 'needs-improvement'
-						? '[WARN]'
-						: '[GOOD]'
-			console.warn(
-				`${rating} ${metric.name}: ${metric.value} (${metric.rating})`
+			logger.warn(
+				`[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`,
+				{
+					name: metric.name,
+					value: metric.value,
+					rating: metric.rating
+				}
 			)
 		}
 	})
@@ -59,6 +59,6 @@ async function storeWebVital(metric: WebVitalMetric) {
 		})
 	} catch (error) {
 		// Silently fail - don't disrupt user experience
-		console.error('[WebVitals] Failed to store web vital:', error)
+		logger.error('[WebVitals] Failed to store web vital', error)
 	}
 }

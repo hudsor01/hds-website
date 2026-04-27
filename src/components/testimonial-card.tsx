@@ -1,11 +1,10 @@
 import { MessageCircle, Star } from 'lucide-react'
-import * as React from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 import { GlassCard } from '@/components/glass-card'
 import { cn } from '@/lib/utils'
 
-export interface TestimonialCardProps
-	extends React.HTMLAttributes<HTMLDivElement> {
+export interface TestimonialCardProps extends HTMLAttributes<HTMLDivElement> {
 	testimonialId?: number | string
 	name: string
 	company: string
@@ -14,23 +13,22 @@ export interface TestimonialCardProps
 	rating: number
 	service?: string
 	highlight?: string
+	ref?: Ref<HTMLDivElement>
 }
 
-const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
-	(
-		{
-			className,
-			name,
-			company,
-			role,
-			content,
-			rating,
-			service,
-			highlight,
-			...props
-		},
-		ref
-	) => (
+function TestimonialCard({
+	className,
+	name,
+	company,
+	role,
+	content,
+	rating,
+	service,
+	highlight,
+	ref,
+	...props
+}: TestimonialCardProps) {
+	return (
 		<GlassCard
 			ref={ref}
 			variant="light"
@@ -80,8 +78,6 @@ const TestimonialCard = React.forwardRef<HTMLDivElement, TestimonialCardProps>(
 			</div>
 		</GlassCard>
 	)
-)
-
-TestimonialCard.displayName = 'TestimonialCard'
+}
 
 export { TestimonialCard }

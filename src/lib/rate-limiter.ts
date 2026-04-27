@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import type { RateLimitEntry } from '@/types/api'
 import { logger } from './logger'
 
@@ -67,9 +68,7 @@ export class UnifiedRateLimiter {
 
 	constructor() {
 		// Use KV when env vars are present (production/preview), fall back to in-memory
-		this.useKv = !!(
-			process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-		)
+		this.useKv = !!(env.KV_REST_API_URL && env.KV_REST_API_TOKEN)
 		if (!this.useKv) {
 			this.initializeInMemory()
 		} else {

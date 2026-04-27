@@ -1,5 +1,3 @@
-// Native email utilities - logic only, no template bloat
-
 import emailTemplates from '@/data/email-templates.json'
 
 interface EmailData {
