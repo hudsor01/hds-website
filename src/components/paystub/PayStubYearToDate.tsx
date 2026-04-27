@@ -1,6 +1,5 @@
 'use client'
 
-import type React from 'react'
 import { formatCurrency } from '@/lib/utils'
 
 interface PayStubYearToDateProps {
@@ -11,13 +10,13 @@ interface PayStubYearToDateProps {
 	netPay: number
 }
 
-export const PayStubYearToDate: React.FC<PayStubYearToDateProps> = ({
+export function PayStubYearToDate({
 	grossPay,
 	federalTax,
 	socialSecurity,
 	medicare,
 	netPay
-}) => {
+}: PayStubYearToDateProps) {
 	return (
 		<div className="border-t border-black pt-4">
 			<h3 className="m-0 mb-subheading.5 text-sm">YEAR-TO-DATE TOTALS</h3>
