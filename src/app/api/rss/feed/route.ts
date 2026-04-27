@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server'
 import { getPosts } from '@/lib/blog'
 import { logger } from '@/lib/logger'
+import { escapeCdata } from '@/lib/xml-escape'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const FEED_TITLE = 'Hudson Digital Solutions Blog'
@@ -22,10 +23,10 @@ export async function GET() {
 			.map(
 				post => `
     <item>
-      <title><![CDATA[${post.title}]]></title>
+      <title><![CDATA[${escapeCdata(post.title)}]]></title>
       <link>${SITE_URL}/blog/${post.slug}</link>
       <guid isPermaLink="true">${SITE_URL}/blog/${post.slug}</guid>
-      <description><![CDATA[${post.excerpt ?? ''}]]></description>
+      <description><![CDATA[${escapeCdata(post.excerpt ?? '')}]]></description>
       <pubDate>${new Date(post.published_at).toUTCString()}</pubDate>
     </item>`
 			)
