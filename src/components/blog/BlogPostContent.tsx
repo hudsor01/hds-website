@@ -1,9 +1,43 @@
-import DOMPurify from 'isomorphic-dompurify'
 import { cacheLife, cacheTag } from 'next/cache'
+import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/lib/blog'
 
 interface BlogPostContentProps {
 	post: BlogPost
+}
+
+// sanitize-html uses htmlparser2 (no jsdom) so it builds cleanly under
+// Bun on Vercel. The previous isomorphic-dompurify dep pulled in jsdom
+// which references the Node `MIMEType` global — not exposed in Vercel's
+// build runtime, breaking /blog/[slug] page collection.
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+	allowedTags: [
+		'p',
+		'h1',
+		'h2',
+		'h3',
+		'h4',
+		'h5',
+		'h6',
+		'strong',
+		'em',
+		'u',
+		'a',
+		'ul',
+		'ol',
+		'li',
+		'blockquote',
+		'code',
+		'pre',
+		'br',
+		'img'
+	],
+	allowedAttributes: {
+		a: ['href', 'title', 'target', 'rel', 'class'],
+		img: ['src', 'alt', 'title', 'class']
+	},
+	allowedSchemes: ['http', 'https', 'mailto'],
+	allowedSchemesByTag: { img: ['http', 'https', 'data'] }
 }
 
 export async function BlogPostContent({ post }: BlogPostContentProps) {
@@ -27,33 +61,9 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 		)
 	}
 
-	// Blog content comes from our trusted n8n pipeline, not user input.
-	// isomorphic-dompurify works in both Node.js (SSR) and browser environments.
-	const sanitizedContent = DOMPurify.sanitize(post.content, {
-		ALLOWED_TAGS: [
-			'p',
-			'h1',
-			'h2',
-			'h3',
-			'h4',
-			'h5',
-			'h6',
-			'strong',
-			'em',
-			'u',
-			'a',
-			'ul',
-			'ol',
-			'li',
-			'blockquote',
-			'code',
-			'pre',
-			'br',
-			'img'
-		],
-		ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'target', 'rel'],
-		ALLOW_DATA_ATTR: false
-	})
+	// Blog content comes from our trusted n8n pipeline; sanitization is
+	// defense in depth.
+	const sanitizedContent = sanitizeHtml(post.content, SANITIZE_OPTIONS)
 
 	return (
 		<div
