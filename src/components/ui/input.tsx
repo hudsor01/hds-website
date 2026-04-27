@@ -1,7 +1,7 @@
 'use client'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import * as React from 'react'
+import type { InputHTMLAttributes, Ref } from 'react'
 import { cn } from '@/lib/utils'
 
 const inputVariants = cva(
@@ -19,28 +19,27 @@ const inputVariants = cva(
 	}
 )
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
-	VariantProps<typeof inputVariants>
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-	({ className, variant, type, ...props }, ref) => {
-		return (
-			<div className="relative">
-				{variant === 'currency' && (
-					<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-						$
-					</span>
-				)}
-				<input
-					type={type}
-					className={cn(inputVariants({ variant }), className)}
-					ref={ref}
-					{...props}
-				/>
-			</div>
-		)
+export type InputProps = InputHTMLAttributes<HTMLInputElement> &
+	VariantProps<typeof inputVariants> & {
+		ref?: Ref<HTMLInputElement>
 	}
-)
-Input.displayName = 'Input'
+
+function Input({ className, variant, type, ref, ...props }: InputProps) {
+	return (
+		<div className="relative">
+			{variant === 'currency' && (
+				<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+					$
+				</span>
+			)}
+			<input
+				type={type}
+				className={cn(inputVariants({ variant }), className)}
+				ref={ref}
+				{...props}
+			/>
+		</div>
+	)
+}
 
 export { Input, inputVariants }

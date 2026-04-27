@@ -1,6 +1,5 @@
 'use client'
 
-import type React from 'react'
 import { formatCurrency } from '@/lib/utils'
 
 interface PayStubDeductionsProps {
@@ -12,14 +11,14 @@ interface PayStubDeductionsProps {
 	ytdMedicare: number
 }
 
-export const PayStubDeductions: React.FC<PayStubDeductionsProps> = ({
+export function PayStubDeductions({
 	federalTax,
 	socialSecurity,
 	medicare,
 	ytdFederalTax,
 	ytdSocialSecurity,
 	ytdMedicare
-}) => {
+}: PayStubDeductionsProps) {
 	const totalDeductions = federalTax + socialSecurity + medicare
 
 	return (

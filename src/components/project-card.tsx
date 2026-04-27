@@ -1,12 +1,12 @@
 import { Code2, ExternalLink, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-import * as React from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 import { GlassCard } from '@/components/glass-card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export interface ProjectCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ProjectCardProps extends HTMLAttributes<HTMLDivElement> {
 	id?: string
 	slug: string
 	title: string
@@ -15,23 +15,22 @@ export interface ProjectCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	featured?: boolean
 	stats?: Record<string, string>
 	tech_stack: string[]
+	ref?: Ref<HTMLDivElement>
 }
 
-const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
-	(
-		{
-			className,
-			slug,
-			title,
-			description,
-			category,
-			featured = false,
-			stats = {},
-			tech_stack,
-			...props
-		},
-		ref
-	) => (
+function ProjectCard({
+	className,
+	slug,
+	title,
+	description,
+	category,
+	featured = false,
+	stats = {},
+	tech_stack,
+	ref,
+	...props
+}: ProjectCardProps) {
+	return (
 		<div
 			ref={ref}
 			className={cn(
@@ -121,8 +120,6 @@ const ProjectCard = React.forwardRef<HTMLDivElement, ProjectCardProps>(
 			</Link>
 		</div>
 	)
-)
-
-ProjectCard.displayName = 'ProjectCard'
+}
 
 export { ProjectCard }

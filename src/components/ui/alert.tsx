@@ -1,7 +1,7 @@
 'use client'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import * as React from 'react'
+import type { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 const alertVariants = cva(
@@ -20,41 +20,42 @@ const alertVariants = cva(
 	}
 )
 
-const Alert = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
-	<div
-		ref={ref}
-		role="alert"
-		className={cn(alertVariants({ variant }), className)}
-		{...props}
-	/>
-))
-Alert.displayName = 'Alert'
+function Alert({
+	className,
+	variant,
+	...props
+}: HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>) {
+	return (
+		<div
+			role="alert"
+			className={cn(alertVariants({ variant }), className)}
+			{...props}
+		/>
+	)
+}
 
-const AlertTitle = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-	<h5
-		ref={ref}
-		className={cn('mb-1 font-medium leading-none tracking-tight', className)}
-		{...props}
-	/>
-))
-AlertTitle.displayName = 'AlertTitle'
+function AlertTitle({
+	className,
+	...props
+}: HTMLAttributes<HTMLHeadingElement>) {
+	return (
+		<h5
+			className={cn('mb-1 font-medium leading-none tracking-tight', className)}
+			{...props}
+		/>
+	)
+}
 
-const AlertDescription = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn('text-sm [&_p]:leading-relaxed', className)}
-		{...props}
-	/>
-))
-AlertDescription.displayName = 'AlertDescription'
+function AlertDescription({
+	className,
+	...props
+}: HTMLAttributes<HTMLParagraphElement>) {
+	return (
+		<div
+			className={cn('text-sm [&_p]:leading-relaxed', className)}
+			{...props}
+		/>
+	)
+}
 
 export { Alert, AlertDescription, AlertTitle }

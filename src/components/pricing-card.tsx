@@ -1,12 +1,12 @@
 import { X } from 'lucide-react'
 import Link from 'next/link'
-import * as React from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 import { GlassCard } from '@/components/glass-card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PricingCardProps extends HTMLAttributes<HTMLDivElement> {
 	name: string
 	price: string
 	description: string
@@ -16,25 +16,24 @@ export interface PricingCardProps extends React.HTMLAttributes<HTMLDivElement> {
 	cta: string
 	href: string
 	roi?: string
+	ref?: Ref<HTMLDivElement>
 }
 
-const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
-	(
-		{
-			className,
-			name,
-			price,
-			description,
-			features,
-			notIncluded = [],
-			popular = false,
-			cta,
-			href,
-			roi,
-			...props
-		},
-		ref
-	) => (
+function PricingCard({
+	className,
+	name,
+	price,
+	description,
+	features,
+	notIncluded = [],
+	popular = false,
+	cta,
+	href,
+	roi,
+	ref,
+	...props
+}: PricingCardProps) {
+	return (
 		<div ref={ref} className={cn('relative', className)} {...props}>
 			{popular && (
 				<div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
@@ -122,8 +121,6 @@ const PricingCard = React.forwardRef<HTMLDivElement, PricingCardProps>(
 			</GlassCard>
 		</div>
 	)
-)
-
-PricingCard.displayName = 'PricingCard'
+}
 
 export { PricingCard }

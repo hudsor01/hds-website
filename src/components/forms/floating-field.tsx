@@ -1,6 +1,7 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import type { ChangeEvent, Ref } from 'react'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -39,7 +40,7 @@ const useFloatingLabelStyles = (
 interface FloatingInputProps {
 	name: string
 	value: string
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+	onChange: (e: ChangeEvent<HTMLInputElement>) => void
 	onBlur?: () => void
 	placeholder: string
 	type?: 'text' | 'email' | 'tel'
@@ -48,74 +49,69 @@ interface FloatingInputProps {
 	disabled?: boolean
 	className?: string
 	id?: string
+	ref?: Ref<HTMLInputElement>
 }
 
-export const FloatingInput = forwardRef<HTMLInputElement, FloatingInputProps>(
-	(
-		{
-			name,
-			value,
-			onChange,
-			onBlur,
-			placeholder,
-			type = 'text',
-			autoComplete,
-			required = false,
-			disabled = false,
-			className = '',
-			id,
-			...props
-		},
-		ref
-	) => {
-		const [isFocused, setIsFocused] = useState(false)
-		const { getLabelClasses, isActive } = useFloatingLabelStyles(
-			value,
-			isFocused,
-			disabled
-		)
+export function FloatingInput({
+	name,
+	value,
+	onChange,
+	onBlur,
+	placeholder,
+	type = 'text',
+	autoComplete,
+	required = false,
+	disabled = false,
+	className = '',
+	id,
+	ref,
+	...props
+}: FloatingInputProps) {
+	const [isFocused, setIsFocused] = useState(false)
+	const { getLabelClasses, isActive } = useFloatingLabelStyles(
+		value,
+		isFocused,
+		disabled
+	)
 
-		const handleFocus = () => setIsFocused(true)
-		const handleBlur = () => {
-			setIsFocused(false)
-			onBlur?.()
-		}
-
-		return (
-			<div className="relative">
-				<Input
-					ref={ref}
-					name={name}
-					value={value}
-					onChange={onChange}
-					onFocus={handleFocus}
-					onBlur={handleBlur}
-					type={type}
-					autoComplete={autoComplete}
-					required={required}
-					disabled={disabled}
-					id={id || name}
-					placeholder=" "
-					className={cn('pt-4 pb-2', isActive && 'border-accent', className)}
-					{...props}
-				/>
-
-				<Label htmlFor={id || name} className={getLabelClasses()}>
-					{placeholder}
-					{required && <span className="text-destructive ml-1">*</span>}
-				</Label>
-			</div>
-		)
+	const handleFocus = () => setIsFocused(true)
+	const handleBlur = () => {
+		setIsFocused(false)
+		onBlur?.()
 	}
-)
 
-FloatingInput.displayName = 'FloatingInput'
+	return (
+		<div className="relative">
+			<Input
+				ref={ref}
+				name={name}
+				value={value}
+				onChange={onChange}
+				onFocus={handleFocus}
+				onBlur={handleBlur}
+				type={type}
+				autoComplete={autoComplete}
+				required={required}
+				disabled={disabled}
+				id={id || name}
+				placeholder=" "
+				className={cn('pt-4 pb-2', isActive && 'border-accent', className)}
+				{...props}
+			/>
+
+			<Label htmlFor={id || name} className={getLabelClasses()}>
+				{placeholder}
+				{required && <span className="text-destructive ml-1">*</span>}
+			</Label>
+		</div>
+	)
+}
 
 // Floating Textarea Component
 interface FloatingTextareaProps {
 	name: string
 	value: string
-	onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+	onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
 	onBlur?: () => void
 	placeholder: string
 	rows?: number
@@ -123,73 +119,65 @@ interface FloatingTextareaProps {
 	disabled?: boolean
 	className?: string
 	id?: string
+	ref?: Ref<HTMLTextAreaElement>
 }
 
-export const FloatingTextarea = forwardRef<
-	HTMLTextAreaElement,
-	FloatingTextareaProps
->(
-	(
-		{
-			name,
-			value,
-			onChange,
-			onBlur,
-			placeholder,
-			rows = 4,
-			required = false,
-			disabled = false,
-			className = '',
-			id,
-			...props
-		},
-		ref
-	) => {
-		const [isFocused, setIsFocused] = useState(false)
-		const { getLabelClasses, isActive } = useFloatingLabelStyles(
-			value,
-			isFocused,
-			disabled
-		)
+export function FloatingTextarea({
+	name,
+	value,
+	onChange,
+	onBlur,
+	placeholder,
+	rows = 4,
+	required = false,
+	disabled = false,
+	className = '',
+	id,
+	ref,
+	...props
+}: FloatingTextareaProps) {
+	const [isFocused, setIsFocused] = useState(false)
+	const { getLabelClasses, isActive } = useFloatingLabelStyles(
+		value,
+		isFocused,
+		disabled
+	)
 
-		const handleFocus = () => setIsFocused(true)
-		const handleBlur = () => {
-			setIsFocused(false)
-			onBlur?.()
-		}
-
-		return (
-			<div className="relative">
-				<Textarea
-					ref={ref}
-					name={name}
-					value={value}
-					onChange={onChange}
-					onFocus={handleFocus}
-					onBlur={handleBlur}
-					rows={rows}
-					required={required}
-					disabled={disabled}
-					id={id || name}
-					placeholder=" "
-					className={cn(
-						'pt-6 pb-2 resize-none',
-						isActive && 'border-accent',
-						className
-					)}
-					{...props}
-				/>
-
-				<Label htmlFor={id || name} className={getLabelClasses()}>
-					{placeholder}
-					{required && <span className="text-destructive ml-1">*</span>}
-				</Label>
-			</div>
-		)
+	const handleFocus = () => setIsFocused(true)
+	const handleBlur = () => {
+		setIsFocused(false)
+		onBlur?.()
 	}
-)
 
-FloatingTextarea.displayName = 'FloatingTextarea'
+	return (
+		<div className="relative">
+			<Textarea
+				ref={ref}
+				name={name}
+				value={value}
+				onChange={onChange}
+				onFocus={handleFocus}
+				onBlur={handleBlur}
+				rows={rows}
+				required={required}
+				disabled={disabled}
+				id={id || name}
+				placeholder=" "
+				className={cn(
+					'pt-6 pb-2 resize-none',
+					isActive && 'border-accent',
+					className
+				)}
+				{...props}
+			/>
+
+			<Label htmlFor={id || name} className={getLabelClasses()}>
+				{placeholder}
+				{required && <span className="text-destructive ml-1">*</span>}
+			</Label>
+		</div>
+	)
+}
 
 // Default export for backward compatibility
 export default FloatingInput
