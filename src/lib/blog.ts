@@ -82,11 +82,13 @@ function mapPost(
 	return {
 		id: post.id,
 		slug: post.slug,
-		title: post.title,
 		// The n8n ingest pipeline copies the first paragraphs of the (HTML)
 		// article body into excerpt verbatim, retaining stray markdown
 		// markers like `**bold**` and `*   item`. Strip them here so cards
 		// and post headers render as clean prose instead of leaking syntax.
+		// Also strip from title as defense in depth — current titles are
+		// clean but the pipeline could drift.
+		title: stripMarkdown(post.title),
 		excerpt: stripMarkdown(post.excerpt),
 		content: post.content,
 		feature_image: post.featureImage,

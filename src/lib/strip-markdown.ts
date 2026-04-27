@@ -16,8 +16,11 @@ export function stripMarkdown(input: string): string {
 
 	let out = input
 
-	// Code fences and inline code: keep contents
+	// Code fences (closed). Lazy match preserves any text between fences.
 	out = out.replace(/```[\s\S]*?```/g, m => m.replace(/```/g, ''))
+	// Orphan triple-backticks from truncated/unclosed fences in n8n excerpts
+	out = out.replace(/```/g, '')
+	// Inline code
 	out = out.replace(/`([^`]+)`/g, '$1')
 
 	// Images ![alt](url) — drop entirely (alt text rarely useful in excerpts)
@@ -26,12 +29,17 @@ export function stripMarkdown(input: string): string {
 	// Links [text](url) → text
 	out = out.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
 
-	// Bold/italic markers (**, __, *, _, ~~). Run multi-char first.
+	// Bold/italic markers. Run multi-char (and bold-italic ***word***) first.
+	// `***word***` collapses via the bold pass leaving `*word*` for italic.
+	out = out.replace(/\*\*\*([^*]+)\*\*\*/g, '$1')
+	out = out.replace(/___([^_]+)___/g, '$1')
 	out = out.replace(/\*\*([^*]+)\*\*/g, '$1')
 	out = out.replace(/__([^_]+)__/g, '$1')
 	out = out.replace(/~~([^~]+)~~/g, '$1')
-	out = out.replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, '$1$2')
-	out = out.replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1$2')
+	// Single-char italic: open boundary mirrors the close boundary so
+	// patterns like `text,*italic*` (comma adjacent) strip symmetrically.
+	out = out.replace(/(^|[\s(,;:])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, '$1$2')
+	out = out.replace(/(^|[\s(,;:])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1$2')
 
 	// Heading markers at line start (### , ## , # )
 	out = out.replace(/^\s*#{1,6}\s+/gm, '')
@@ -39,14 +47,20 @@ export function stripMarkdown(input: string): string {
 	// Blockquote markers at line start
 	out = out.replace(/^\s*>\s+/gm, '')
 
-	// List markers — both line-leading and the inline `  *   ` style the
-	// n8n pipeline produces when it flattens lists into excerpt prose
+	// List markers — line-leading bullet/dash/plus, the inline `  *   `
+	// style the n8n pipeline produces when flattening lists into prose,
+	// and ordered-list `1. ` markers
 	out = out.replace(/^\s*[*+-]\s+/gm, '')
 	out = out.replace(/\s+[*+-]\s{2,}/g, ' ')
 	out = out.replace(/^\s*\d+\.\s+/gm, '')
 
 	// Horizontal rules
 	out = out.replace(/^\s*[-*_]{3,}\s*$/gm, '')
+
+	// Backslash escapes — last, so the formatting passes above don't see
+	// `\*foo\*` as a literal pair (the open `\` isn't a valid open boundary).
+	// `\*` becomes `*` so the visible text the author intended is preserved.
+	out = out.replace(/\\([\\`*_{}[\]()#+\-.!>])/g, '$1')
 
 	// Collapse internal whitespace runs and trim
 	out = out.replace(/\s+/g, ' ').trim()

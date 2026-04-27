@@ -91,6 +91,42 @@ describe('stripMarkdown', () => {
 		)
 	})
 
+	test('strips bold-italic (***word***)', () => {
+		expect(stripMarkdown('this is ***very emphatic*** prose')).toBe(
+			'this is very emphatic prose'
+		)
+	})
+
+	test('strips bold-italic (___word___)', () => {
+		expect(stripMarkdown('this is ___very emphatic___ prose')).toBe(
+			'this is very emphatic prose'
+		)
+	})
+
+	test('strips italic adjacent to comma (asymmetric boundary fix)', () => {
+		expect(stripMarkdown('clear,*italicised*, follows')).toBe(
+			'clear,italicised, follows'
+		)
+		expect(stripMarkdown('first;*italicised*; next')).toBe(
+			'first;italicised; next'
+		)
+	})
+
+	test('strips orphan triple-backticks from truncated code fences', () => {
+		expect(stripMarkdown('Run this:\n```\nnpm test')).toBe('Run this: npm test')
+	})
+
+	test('preserves visible chars in escaped markdown (\\*not italic\\*)', () => {
+		// Authors who escape `*` to keep literal asterisks should see them.
+		expect(stripMarkdown('keep \\*literal asterisks\\* visible')).toBe(
+			'keep *literal asterisks* visible'
+		)
+		expect(stripMarkdown('escaped \\_underscore\\_ stays')).toBe(
+			'escaped _underscore_ stays'
+		)
+		expect(stripMarkdown('hash \\# not heading')).toBe('hash # not heading')
+	})
+
 	test('handles a real excerpt end-to-end', () => {
 		const input =
 			"The primary argument for adopting Kubernetes is **scalability**. In a traditional setup, handling a sudden spike in traffic often means manually provisioning new servers, waiting for configuration, and hoping your infrastructure doesn't buckle."
