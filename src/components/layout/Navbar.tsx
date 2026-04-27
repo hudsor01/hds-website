@@ -64,18 +64,17 @@ const Navbar = memo(function Navbar() {
 						</Link>
 					</div>
 
-					{/* Center — Nav links */}
-					<div
-						className="hidden md:flex items-center gap-1"
-						role="menubar"
-						aria-label="Main navigation"
-					>
+					{/* Center — Nav links. The outer <nav> already provides
+					    the navigation landmark; explicit menubar/menuitem ARIA
+					    roles are intentionally omitted because they require
+					    arrow-key traversal which we don't implement. Plain
+					    links inside <nav> is the spec-correct pattern. */}
+					<div className="hidden md:flex items-center gap-1">
 						{navigation.map(item => (
 							<Link
 								key={item.name}
 								href={item.href}
 								className={linkClass(item.href)}
-								role="menuitem"
 								aria-current={pathname === item.href ? 'page' : undefined}
 							>
 								{item.name}
@@ -125,11 +124,7 @@ const Navbar = memo(function Navbar() {
 			{/* Mobile menu */}
 			{mobileMenuOpen && (
 				<div className="md:hidden border-t border-border/40" id="mobile-menu">
-					<div
-						className="px-4 py-3 space-y-1"
-						role="menu"
-						aria-label="Mobile navigation"
-					>
+					<div className="px-4 py-3 space-y-1">
 						{navigation.map(item => (
 							<Link
 								key={item.name}
@@ -141,7 +136,6 @@ const Navbar = memo(function Navbar() {
 										? 'bg-accent/10 text-accent'
 										: 'text-muted-foreground hover:bg-muted hover:text-foreground'
 								)}
-								role="menuitem"
 								aria-current={pathname === item.href ? 'page' : undefined}
 							>
 								{item.name}

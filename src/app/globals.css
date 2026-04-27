@@ -528,6 +528,19 @@ a,
 	.surface-overlay {
 		background-color: oklch(from var(--foreground) l c h / 0.04);
 	}
+
+	/* Explicit focus marker for elements that opt into focus-ring styling.
+	 * Globally `*:focus-visible` (above) gives every focusable element an
+	 * outline; this class re-asserts that contract for components that
+	 * want to declare their focus intent in the markup, and adds a
+	 * background/transition so the focus state is visible against the
+	 * navbar's blurred backdrop. Used by Navbar logo, Footer links,
+	 * mobile hamburger button, custom Select trigger. */
+	.focus-ring:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+		border-radius: 0.375rem;
+	}
 }
 
 /* Spacing utilities */
