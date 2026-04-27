@@ -19,7 +19,6 @@ export async function GET() {
 		const { posts } = await getPosts({ limit: 20 })
 
 		const items = posts
-			.slice(0, 20)
 			.map(
 				post => `
     <item>
