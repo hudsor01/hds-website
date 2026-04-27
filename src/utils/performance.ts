@@ -1,6 +1,6 @@
 // Performance optimization utilities
 
-import analytics from '@/lib/analytics'
+import { trackEvent } from '@/lib/analytics'
 import { logger } from '@/lib/logger'
 import type { CLSEntry } from '@/types/performance'
 
@@ -104,8 +104,8 @@ export function trackWebVitals() {
 			})
 
 			// Send to analytics for performance tracking
-			if (typeof window !== 'undefined' && analytics) {
-				analytics.trackEvent('web_vitals_cls', {
+			if (typeof window !== 'undefined') {
+				trackEvent('web_vitals_cls', {
 					cls_value: _clsValue,
 					performance_rating:
 						_clsValue > 0.1

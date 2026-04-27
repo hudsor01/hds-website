@@ -13,7 +13,7 @@ import { ContactAdminNotification } from '@/emails/contact-admin-notification'
 import { ContactWelcome } from '@/emails/contact-welcome'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { LEAD_QUALITY_THRESHOLDS } from '@/lib/constants/lead-scoring'
-import { getEmailSequences, processEmailTemplate } from '@/lib/email-utils'
+import { getEmailSequences, replaceTemplateVariables } from '@/lib/email-utils'
 import type { Logger } from '@/lib/logger'
 import { notifyHighValueLead } from '@/lib/notifications'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
@@ -139,11 +139,11 @@ export async function sendWelcomeEmail(
 	}
 
 	try {
-		const processedContent = processEmailTemplate(
+		const processedContent = replaceTemplateVariables(
 			sequence.content,
 			emailVariables
 		)
-		const processedSubject = processEmailTemplate(
+		const processedSubject = replaceTemplateVariables(
 			sequence.subject,
 			emailVariables
 		)

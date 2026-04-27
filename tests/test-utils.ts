@@ -265,10 +265,11 @@ export function setupContactFormMocks() {
 	// Complete rate-limiter mock with all exports
 	mock.module('@/lib/rate-limiter', () => ({
 		UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
-		unifiedRateLimiter: mockRateLimiter,
 		getUnifiedRateLimiter: () => mockRateLimiter,
-		getClientIp: createMockGetClientIp(),
 		RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS
+	}))
+	mock.module('@/lib/request', () => ({
+		getClientIp: createMockGetClientIp()
 	}))
 
 	mock.module('@/lib/metrics', () => ({

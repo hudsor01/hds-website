@@ -17,9 +17,6 @@ export interface PaystubValidationResult {
 	message?: string
 }
 
-// Re-export from common.ts to maintain backwards compatibility
-export type { FormErrors } from './common'
-
 // Paystub core types
 export type FilingStatus =
 	| 'single'

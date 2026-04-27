@@ -20,7 +20,7 @@ import { type ScheduledEmail, scheduledEmails } from '@/lib/schemas/emails'
 import { resendEmailResponseSchema } from '@/lib/schemas/external'
 import type { EmailProcessResult, EmailQueueStats } from '@/types/utils'
 import { BUSINESS_INFO } from './constants/business'
-import { getEmailSequences, processEmailTemplate } from './email-utils'
+import { getEmailSequences, replaceTemplateVariables } from './email-utils'
 import { sanitizeEmailHeader } from './utils'
 
 // Create logger instance for email operations
@@ -242,8 +242,8 @@ async function sendScheduledEmail(
 
 	// Process template variables
 	const variables = (scheduledEmail.variables as Record<string, string>) || {}
-	const processedSubject = processEmailTemplate(sequence.subject, variables)
-	const processedContent = processEmailTemplate(sequence.content, variables)
+	const processedSubject = replaceTemplateVariables(sequence.subject, variables)
+	const processedContent = replaceTemplateVariables(sequence.content, variables)
 
 	try {
 		const emailResponse = await getResendClient().emails.send({
@@ -424,23 +424,5 @@ export async function processEmailsEndpoint(): Promise<EmailProcessResult> {
 			processed: 0,
 			errors: 1
 		}
-	}
-}
-
-// Export queue stats for backwards compatibility
-export async function getScheduledEmailsQueue() {
-	try {
-		const data = await db
-			.select()
-			.from(scheduledEmails)
-			.where(eq(scheduledEmails.status, 'pending'))
-			.orderBy(asc(scheduledEmails.scheduledFor))
-
-		return data
-	} catch (error) {
-		emailLogger.error('Exception fetching scheduled emails queue', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-		return []
 	}
 }

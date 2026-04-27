@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'bun:test'
 import type { NextRequest } from 'next/server'
 import {
-	getClientIp,
 	RATE_LIMIT_CONFIGS,
 	type RateLimitType,
 	UnifiedRateLimiter
 } from '@/lib/rate-limiter'
+import { getClientIp } from '@/lib/request'
 
 describe('UnifiedRateLimiter', () => {
 	let limiter: UnifiedRateLimiter

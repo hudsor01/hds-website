@@ -130,7 +130,8 @@ function GenericField({
 }
 
 // =============================================================================
-// Field Components (for backward compatibility)
+// Field Components — bound to TanStack Form via createFormHook below.
+// Consumed as form.AppField → field.TextField, field.SelectField, etc.
 // =============================================================================
 
 interface TextFieldProps {

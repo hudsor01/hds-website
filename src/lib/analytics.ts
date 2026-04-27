@@ -91,16 +91,3 @@ export function trackError(error: Error | string, fatal = false): void {
 		logger.warn('Failed to track error:', err)
 	}
 }
-
-/**
- * Analytics object for backwards compatibility
- * Provides both direct exports and default object with methods
- */
-const analytics = {
-	trackEvent,
-	identify,
-	trackConversion,
-	trackError
-}
-
-export default analytics

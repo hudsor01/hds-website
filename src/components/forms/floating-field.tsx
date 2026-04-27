@@ -178,6 +178,3 @@ export function FloatingTextarea({
 		</div>
 	)
 }
-
-// Default export for backward compatibility
-export default FloatingInput

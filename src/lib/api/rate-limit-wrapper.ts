@@ -6,7 +6,8 @@
 import type { NextRequest } from 'next/server'
 import { errorResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
-import { getClientIp, unifiedRateLimiter } from '@/lib/rate-limiter'
+import { getUnifiedRateLimiter } from '@/lib/rate-limiter'
+import { getClientIp } from '@/lib/request'
 
 /**
  * Rate limit keys corresponding to different rate limiting tiers
@@ -56,7 +57,10 @@ export function withRateLimit(
 
 	return async (request: NextRequest): Promise<Response> => {
 		const clientIp = getClientIp(request)
-		const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey)
+		const isAllowed = await getUnifiedRateLimiter().checkLimit(
+			clientIp,
+			limitKey
+		)
 
 		if (!isAllowed) {
 			logger.warn(`Rate limit exceeded for ${limitKey}`, {
@@ -86,7 +90,10 @@ export function withRateLimitParams<T>(
 
 	return async (request: NextRequest, context: T): Promise<Response> => {
 		const clientIp = getClientIp(request)
-		const isAllowed = await unifiedRateLimiter.checkLimit(clientIp, limitKey)
+		const isAllowed = await getUnifiedRateLimiter().checkLimit(
+			clientIp,
+			limitKey
+		)
 
 		if (!isAllowed) {
 			logger.warn(`Rate limit exceeded for ${limitKey}`, {

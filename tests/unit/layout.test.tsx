@@ -19,7 +19,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should render children when there is no error', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 
@@ -33,7 +33,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should catch and display errors', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 
@@ -57,7 +57,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should have a reset mechanism', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 
@@ -86,7 +86,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should log errors to console or analytics', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 		// Note: Bun doesn't have built-in spy support, just verify error UI renders
@@ -116,7 +116,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should handle copy error details functionality', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 
@@ -140,7 +140,7 @@ describe('ErrorBoundary Component', () => {
 	})
 
 	it('should handle report error functionality', async () => {
-		const { default: ErrorBoundary } = await import(
+		const { ErrorBoundary } = await import(
 			'@/components/utilities/ErrorBoundary'
 		)
 

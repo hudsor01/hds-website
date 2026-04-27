@@ -205,12 +205,11 @@ describe('Newsletter Subscribe API', () => {
 
 describe('API Route Security', () => {
 	it('should apply rate limiting to all critical endpoints', async () => {
-		const { unifiedRateLimiter, getClientIp } = await import(
-			'@/lib/rate-limiter'
-		)
+		const { getUnifiedRateLimiter } = await import('@/lib/rate-limiter')
+		const { getClientIp } = await import('@/lib/request')
 
 		// Verify rate limiter is being called
-		expect(unifiedRateLimiter.checkLimit).toBeDefined()
+		expect(getUnifiedRateLimiter().checkLimit).toBeDefined()
 		expect(getClientIp).toBeDefined()
 	})
 
