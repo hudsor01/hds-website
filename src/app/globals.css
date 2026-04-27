@@ -531,13 +531,12 @@ a,
 
 	/* Explicit focus marker for elements that opt into focus-ring styling.
 	 * Globally `*:focus-visible` (above) gives every focusable element an
-	 * outline; this class re-asserts that contract for components that
-	 * want to declare their focus intent in the markup, and adds a
-	 * background/transition so the focus state is visible against the
-	 * navbar's blurred backdrop. Used by Navbar logo, Footer links,
-	 * mobile hamburger button, custom Select trigger. */
+	 * outline; this class re-asserts that contract in markup so the focus
+	 * intent is visible at the call site. Uses var(--primary) to match
+	 * the global rule's colour exactly — keeps the focus visual uniform
+	 * across opt-in and default elements. */
 	.focus-ring:focus-visible {
-		outline: 2px solid var(--ring);
+		outline: 2px solid var(--primary);
 		outline-offset: 2px;
 		border-radius: 0.375rem;
 	}

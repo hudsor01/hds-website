@@ -45,7 +45,6 @@ const Navbar = memo(function Navbar() {
 	return (
 		<nav
 			className="fixed top-0 left-0 right-0 z-modal bg-background/95 backdrop-blur-xl border-b border-border/40"
-			role="navigation"
 			aria-label="Main navigation"
 		>
 			<div className="container-wide sm:px-6 lg:px-8">
