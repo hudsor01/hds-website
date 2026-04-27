@@ -13,11 +13,10 @@ import {
 } from '@/lib/showcase'
 import { formatDate } from '@/lib/utils'
 
-// Enable ISR with 1-hour revalidation for database data
-// React cache() handles request deduplication at data layer
-export const revalidate = 3600
-
-// Generate static params for all projects
+// Generate static params for all projects. Caching is handled at the
+// data-layer level (`'use cache'` + `cacheLife()` in src/lib/showcase.ts);
+// page-level `export const revalidate` is incompatible with
+// nextConfig.cacheComponents = true.
 export async function generateStaticParams() {
 	const slugs = await getAllShowcaseSlugs()
 	const results = slugs.map(slug => ({ slug }))
