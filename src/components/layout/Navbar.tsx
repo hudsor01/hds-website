@@ -13,13 +13,17 @@ interface NavigationItem {
 	href: string
 }
 
+// Contact is intentionally absent — the "Get Started" CTA button on the
+// right side of the navbar is the dedicated conversion path to /contact.
+// A duplicate plain link plus the active-state amber highlight made the
+// nav feel cluttered when on /contact. Blog added for content discovery.
 const navigation: NavigationItem[] = [
 	{ name: 'Services', href: ROUTES.SERVICES },
 	{ name: 'Pricing', href: ROUTES.PRICING },
 	{ name: 'Showcase', href: ROUTES.SHOWCASE },
 	{ name: 'Tools', href: TOOL_ROUTES.INDEX },
-	{ name: 'About', href: ROUTES.ABOUT },
-	{ name: 'Contact', href: ROUTES.CONTACT }
+	{ name: 'Blog', href: ROUTES.BLOG },
+	{ name: 'About', href: ROUTES.ABOUT }
 ]
 
 const Navbar = memo(function Navbar() {
