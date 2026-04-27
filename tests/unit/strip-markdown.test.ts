@@ -112,6 +112,38 @@ describe('stripMarkdown', () => {
 		)
 	})
 
+	test('strips italic adjacent to colon (key:*value* pattern)', () => {
+		expect(stripMarkdown('Status:*pending*, retry later')).toBe(
+			'Status:pending, retry later'
+		)
+	})
+
+	test('passes through interleaved bold/italic verbatim (documented gap)', () => {
+		// `**a*b*c*d**` — the bold regex `[^*]+` stops at the first inner `*`,
+		// so neither bold nor italic match. Documented in strip-markdown.ts.
+		// n8n excerpts have not been observed emitting this shape.
+		expect(stripMarkdown('keep **a*b*c*d** verbatim')).toBe(
+			'keep **a*b*c*d** verbatim'
+		)
+	})
+
+	test('strips four-asterisks via cascade (****word**** → word)', () => {
+		// `***` matches starting at index 1 → leaves `*word*` → italic strips.
+		expect(stripMarkdown('keep ****word**** clean')).toBe('keep word clean')
+	})
+
+	test('is idempotent on already-clean prose (mapPost title path)', () => {
+		const clean = 'How to Build a Modern Business Website in 2025'
+		expect(stripMarkdown(clean)).toBe(clean)
+		expect(stripMarkdown(stripMarkdown(clean))).toBe(clean)
+	})
+
+	test('strips markdown from a title-shaped input (defense-in-depth coverage)', () => {
+		expect(
+			stripMarkdown('Why **Custom CRM** Integration Beats Off-the-Shelf')
+		).toBe('Why Custom CRM Integration Beats Off-the-Shelf')
+	})
+
 	test('strips orphan triple-backticks from truncated code fences', () => {
 		expect(stripMarkdown('Run this:\n```\nnpm test')).toBe('Run this: npm test')
 	})

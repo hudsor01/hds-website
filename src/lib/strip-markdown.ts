@@ -29,15 +29,21 @@ export function stripMarkdown(input: string): string {
 	// Links [text](url) → text
 	out = out.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
 
-	// Bold/italic markers. Run multi-char (and bold-italic ***word***) first.
-	// `***word***` collapses via the bold pass leaving `*word*` for italic.
+	// Bold/italic markers. Run multi-char first.
+	// Cascade for stacked stars: `***word***` matches the *** pass.
+	// `****word****` doesn't match the *** pass at index 0 (next char is `*`)
+	// but matches starting at index 1, leaving `*word*` for the italic pass.
+	// Interleaved patterns like `**a*b*c**` (mixed bold + inline italic with
+	// no nesting) are intentionally NOT handled — `[^*]+` stops at the first
+	// inner `*` so the bold regex bails. n8n excerpts have not been observed
+	// emitting that shape; if they start to, add a greedy fallback here.
 	out = out.replace(/\*\*\*([^*]+)\*\*\*/g, '$1')
 	out = out.replace(/___([^_]+)___/g, '$1')
 	out = out.replace(/\*\*([^*]+)\*\*/g, '$1')
 	out = out.replace(/__([^_]+)__/g, '$1')
 	out = out.replace(/~~([^~]+)~~/g, '$1')
 	// Single-char italic: open boundary mirrors the close boundary so
-	// patterns like `text,*italic*` (comma adjacent) strip symmetrically.
+	// patterns like `text,*italic*` and `key:*value*` strip symmetrically.
 	out = out.replace(/(^|[\s(,;:])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, '$1$2')
 	out = out.replace(/(^|[\s(,;:])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1$2')
 
@@ -57,9 +63,13 @@ export function stripMarkdown(input: string): string {
 	// Horizontal rules
 	out = out.replace(/^\s*[-*_]{3,}\s*$/gm, '')
 
-	// Backslash escapes — last, so the formatting passes above don't see
-	// `\*foo\*` as a literal pair (the open `\` isn't a valid open boundary).
-	// `\*` becomes `*` so the visible text the author intended is preserved.
+	// Backslash escapes — runs LAST so the formatting passes above never see
+	// `\*foo\*` as a valid pair: the italic regex requires the open `*` to
+	// be preceded by a member of `[\s(,;:]` (or start-of-string with the
+	// `*` at position 0). The `\` is none of those, and `\*` at index 0
+	// puts a `\` not a `*` at index 0, so the regex fails either way.
+	// Replacing here yields the literal char the author meant (e.g. `\*`
+	// → `*`), preserving the visible asterisk in the rendered text.
 	out = out.replace(/\\([\\`*_{}[\]()#+\-.!>])/g, '$1')
 
 	// Collapse internal whitespace runs and trim
