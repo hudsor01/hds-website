@@ -7,6 +7,7 @@
 import 'server-only'
 
 import { randomBytes } from 'node:crypto'
+import * as Sentry from '@sentry/nextjs'
 import { desc, eq } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import type {
@@ -95,6 +96,9 @@ export async function getTestimonialRequestByToken(
 		return data ? mapTestimonialRequest(data) : null
 	} catch (error) {
 		logger.error('Failed to fetch testimonial request by token', error)
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'getTestimonialRequestByToken' }
+		})
 		return null
 	}
 }
@@ -129,6 +133,9 @@ export async function createTestimonialRequest(
 		logger.error('Failed to create testimonial request', error, {
 			metadata: { clientName, projectName }
 		})
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'createTestimonialRequest' }
+		})
 		return null
 	}
 }
@@ -150,6 +157,9 @@ export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
 		return data.map(mapTestimonialRequest)
 	} catch (error) {
 		logger.error('Failed to fetch testimonial requests', error)
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'getTestimonialRequests' }
+		})
 		return []
 	}
 }
@@ -170,6 +180,9 @@ export async function markRequestSubmitted(token: string): Promise<boolean> {
 	} catch (error) {
 		logger.error('Failed to mark testimonial request submitted', error, {
 			metadata: { token: `${token.slice(0, 8)}...` }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'markRequestSubmitted' }
 		})
 		return false
 	}
@@ -207,6 +220,9 @@ export async function submitTestimonial(testimonial: {
 		return data ? mapTestimonial(data) : null
 	} catch (error) {
 		logger.error('Failed to submit testimonial', error)
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'submitTestimonial' }
+		})
 		return null
 	}
 }
@@ -228,6 +244,9 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
 		return data.map(mapTestimonial)
 	} catch (error) {
 		logger.error('Failed to fetch all testimonials', error)
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'getAllTestimonials' }
+		})
 		return []
 	}
 }
@@ -250,6 +269,9 @@ export async function getApprovedTestimonials(): Promise<Testimonial[]> {
 		return data.map(mapTestimonial)
 	} catch (error) {
 		logger.error('Failed to fetch approved testimonials', error)
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'getApprovedTestimonials' }
+		})
 		return []
 	}
 }
@@ -275,6 +297,9 @@ export async function updateTestimonialStatus(
 		logger.error('Failed to update testimonial status', error, {
 			metadata: { id }
 		})
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'updateTestimonialStatus' }
+		})
 		return false
 	}
 }
@@ -290,6 +315,9 @@ export async function deleteTestimonial(id: string): Promise<boolean> {
 		logger.error('Failed to delete testimonial', error, {
 			metadata: { id }
 		})
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'deleteTestimonial' }
+		})
 		return false
 	}
 }
@@ -304,6 +332,9 @@ export async function deleteTestimonialRequest(id: string): Promise<boolean> {
 	} catch (error) {
 		logger.error('Failed to delete testimonial request', error, {
 			metadata: { id }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'testimonials', op: 'deleteTestimonialRequest' }
 		})
 		return false
 	}
