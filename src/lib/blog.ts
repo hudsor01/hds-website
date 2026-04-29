@@ -6,6 +6,8 @@
 import { and, desc, eq, inArray } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from '@/lib/db'
+import { reportError } from '@/lib/error-tracking'
+import { logger } from '@/lib/logger'
 import {
 	blogAuthors,
 	blogPosts,
@@ -153,31 +155,39 @@ async function getPostsCached(
 	cacheLife('hours')
 	cacheTag('blog-posts')
 
-	const offset = (page - 1) * limit
+	try {
+		const offset = (page - 1) * limit
 
-	const rows = await db
-		.select()
-		.from(blogPosts)
-		.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-		.where(eq(blogPosts.published, true))
-		.orderBy(desc(blogPosts.publishedAt))
-		.limit(limit)
-		.offset(offset)
+		const rows = await db
+			.select()
+			.from(blogPosts)
+			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
+			.where(eq(blogPosts.published, true))
+			.orderBy(desc(blogPosts.publishedAt))
+			.limit(limit)
+			.offset(offset)
 
-	const postIds = rows.map(r => r.blog_posts.id)
-	const tagsByPost = await loadTagsForPosts(postIds)
+		const postIds = rows.map(r => r.blog_posts.id)
+		const tagsByPost = await loadTagsForPosts(postIds)
 
-	const posts = rows.map(r =>
-		mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
-	)
+		const posts = rows.map(r =>
+			mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
+		)
 
-	// Count total published posts
-	const allPublished = await db
-		.select({ id: blogPosts.id })
-		.from(blogPosts)
-		.where(eq(blogPosts.published, true))
+		// Count total published posts
+		const allPublished = await db
+			.select({ id: blogPosts.id })
+			.from(blogPosts)
+			.where(eq(blogPosts.published, true))
 
-	return { posts, total: allPublished.length }
+		return { posts, total: allPublished.length }
+	} catch (error) {
+		logger.error('Failed to fetch blog posts', error, {
+			metadata: { limit, page }
+		})
+		reportError(error, { module: 'blog', op: 'getPosts' })
+		return { posts: [], total: 0 }
+	}
 }
 
 export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
@@ -185,20 +195,31 @@ export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
 	cacheLife('hours')
 	cacheTag('blog-posts')
 
-	const rows = await db
-		.select()
-		.from(blogPosts)
-		.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-		.where(and(eq(blogPosts.published, true), eq(blogPosts.featured, true)))
-		.orderBy(desc(blogPosts.publishedAt))
-		.limit(limit)
+	try {
+		const rows = await db
+			.select()
+			.from(blogPosts)
+			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
+			.where(and(eq(blogPosts.published, true), eq(blogPosts.featured, true)))
+			.orderBy(desc(blogPosts.publishedAt))
+			.limit(limit)
 
-	const postIds = rows.map(r => r.blog_posts.id)
-	const tagsByPost = await loadTagsForPosts(postIds)
+		const postIds = rows.map(r => r.blog_posts.id)
+		const tagsByPost = await loadTagsForPosts(postIds)
 
-	return rows.map(r =>
-		mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
-	)
+		return rows.map(r =>
+			mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
+		)
+	} catch (error) {
+		logger.error('Failed to fetch featured posts', error, {
+			metadata: { limit }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getFeaturedPosts'
+		})
+		return []
+	}
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
@@ -206,25 +227,36 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 	cacheLife('days')
 	cacheTag('blog-posts', `blog-post:${slug}`)
 
-	const rows = await db
-		.select()
-		.from(blogPosts)
-		.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-		.where(and(eq(blogPosts.slug, slug), eq(blogPosts.published, true)))
-		.limit(1)
+	try {
+		const rows = await db
+			.select()
+			.from(blogPosts)
+			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
+			.where(and(eq(blogPosts.slug, slug), eq(blogPosts.published, true)))
+			.limit(1)
 
-	const row = rows[0]
-	if (!row) {
+		const row = rows[0]
+		if (!row) {
+			return null
+		}
+
+		const tagsByPost = await loadTagsForPosts([row.blog_posts.id])
+
+		return mapPost(
+			row.blog_posts,
+			row.blog_authors,
+			tagsByPost[row.blog_posts.id] ?? []
+		)
+	} catch (error) {
+		logger.error('Failed to fetch blog post by slug', error, {
+			metadata: { slug }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getPostBySlug'
+		})
 		return null
 	}
-
-	const tagsByPost = await loadTagsForPosts([row.blog_posts.id])
-
-	return mapPost(
-		row.blog_posts,
-		row.blog_authors,
-		tagsByPost[row.blog_posts.id] ?? []
-	)
 }
 
 export async function getTags(): Promise<BlogTag[]> {
@@ -232,8 +264,14 @@ export async function getTags(): Promise<BlogTag[]> {
 	cacheLife('days')
 	cacheTag('blog-tags')
 
-	const rows = await db.select().from(blogTags).orderBy(blogTags.name)
-	return rows.map(mapTag)
+	try {
+		const rows = await db.select().from(blogTags).orderBy(blogTags.name)
+		return rows.map(mapTag)
+	} catch (error) {
+		logger.error('Failed to fetch blog tags', error)
+		reportError(error, { module: 'blog', op: 'getTags' })
+		return []
+	}
 }
 
 export async function getTagBySlug(slug: string): Promise<BlogTag | null> {
@@ -241,14 +279,25 @@ export async function getTagBySlug(slug: string): Promise<BlogTag | null> {
 	cacheLife('days')
 	cacheTag('blog-tags', `blog-tag:${slug}`)
 
-	const rows = await db
-		.select()
-		.from(blogTags)
-		.where(eq(blogTags.slug, slug))
-		.limit(1)
+	try {
+		const rows = await db
+			.select()
+			.from(blogTags)
+			.where(eq(blogTags.slug, slug))
+			.limit(1)
 
-	const row = rows[0]
-	return row ? mapTag(row) : null
+		const row = rows[0]
+		return row ? mapTag(row) : null
+	} catch (error) {
+		logger.error('Failed to fetch blog tag by slug', error, {
+			metadata: { slug }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getTagBySlug'
+		})
+		return null
+	}
 }
 
 export async function getPostsByTag(tagSlug: string): Promise<BlogPost[]> {
@@ -256,33 +305,44 @@ export async function getPostsByTag(tagSlug: string): Promise<BlogPost[]> {
 	cacheLife('hours')
 	cacheTag('blog-posts', `blog-tag:${tagSlug}`)
 
-	const tag = await getTagBySlug(tagSlug)
-	if (!tag) {
+	try {
+		const tag = await getTagBySlug(tagSlug)
+		if (!tag) {
+			return []
+		}
+
+		const postTagRows = await db
+			.select({ postId: blogPostTags.postId })
+			.from(blogPostTags)
+			.where(eq(blogPostTags.tagId, tag.id))
+
+		const postIds = postTagRows.map(r => r.postId)
+		if (postIds.length === 0) {
+			return []
+		}
+
+		const rows = await db
+			.select()
+			.from(blogPosts)
+			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
+			.where(and(eq(blogPosts.published, true), inArray(blogPosts.id, postIds)))
+			.orderBy(desc(blogPosts.publishedAt))
+
+		const tagsByPost = await loadTagsForPosts(rows.map(r => r.blog_posts.id))
+
+		return rows.map(r =>
+			mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
+		)
+	} catch (error) {
+		logger.error('Failed to fetch posts by tag', error, {
+			metadata: { tagSlug }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getPostsByTag'
+		})
 		return []
 	}
-
-	const postTagRows = await db
-		.select({ postId: blogPostTags.postId })
-		.from(blogPostTags)
-		.where(eq(blogPostTags.tagId, tag.id))
-
-	const postIds = postTagRows.map(r => r.postId)
-	if (postIds.length === 0) {
-		return []
-	}
-
-	const rows = await db
-		.select()
-		.from(blogPosts)
-		.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-		.where(and(eq(blogPosts.published, true), inArray(blogPosts.id, postIds)))
-		.orderBy(desc(blogPosts.publishedAt))
-
-	const tagsByPost = await loadTagsForPosts(rows.map(r => r.blog_posts.id))
-
-	return rows.map(r =>
-		mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
-	)
 }
 
 export async function getAuthors(): Promise<BlogAuthor[]> {
@@ -290,8 +350,17 @@ export async function getAuthors(): Promise<BlogAuthor[]> {
 	cacheLife('days')
 	cacheTag('blog-authors')
 
-	const rows = await db.select().from(blogAuthors).orderBy(blogAuthors.name)
-	return rows.map(mapAuthor)
+	try {
+		const rows = await db.select().from(blogAuthors).orderBy(blogAuthors.name)
+		return rows.map(mapAuthor)
+	} catch (error) {
+		logger.error('Failed to fetch blog authors', error)
+		reportError(error, {
+			module: 'blog',
+			op: 'getAuthors'
+		})
+		return []
+	}
 }
 
 export async function getAuthorBySlug(
@@ -301,14 +370,25 @@ export async function getAuthorBySlug(
 	cacheLife('days')
 	cacheTag('blog-authors', `blog-author:${slug}`)
 
-	const rows = await db
-		.select()
-		.from(blogAuthors)
-		.where(eq(blogAuthors.slug, slug))
-		.limit(1)
+	try {
+		const rows = await db
+			.select()
+			.from(blogAuthors)
+			.where(eq(blogAuthors.slug, slug))
+			.limit(1)
 
-	const row = rows[0]
-	return row ? mapAuthor(row) : null
+		const row = rows[0]
+		return row ? mapAuthor(row) : null
+	} catch (error) {
+		logger.error('Failed to fetch blog author by slug', error, {
+			metadata: { slug }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getAuthorBySlug'
+		})
+		return null
+	}
 }
 
 export async function getPostsByAuthor(
@@ -318,23 +398,34 @@ export async function getPostsByAuthor(
 	cacheLife('hours')
 	cacheTag('blog-posts', `blog-author:${authorSlug}`)
 
-	const author = await getAuthorBySlug(authorSlug)
-	if (!author) {
+	try {
+		const author = await getAuthorBySlug(authorSlug)
+		if (!author) {
+			return []
+		}
+
+		const rows = await db
+			.select()
+			.from(blogPosts)
+			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
+			.where(
+				and(eq(blogPosts.published, true), eq(blogPosts.authorId, author.id))
+			)
+			.orderBy(desc(blogPosts.publishedAt))
+
+		const tagsByPost = await loadTagsForPosts(rows.map(r => r.blog_posts.id))
+
+		return rows.map(r =>
+			mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
+		)
+	} catch (error) {
+		logger.error('Failed to fetch posts by author', error, {
+			metadata: { authorSlug }
+		})
+		reportError(error, {
+			module: 'blog',
+			op: 'getPostsByAuthor'
+		})
 		return []
 	}
-
-	const rows = await db
-		.select()
-		.from(blogPosts)
-		.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-		.where(
-			and(eq(blogPosts.published, true), eq(blogPosts.authorId, author.id))
-		)
-		.orderBy(desc(blogPosts.publishedAt))
-
-	const tagsByPost = await loadTagsForPosts(rows.map(r => r.blog_posts.id))
-
-	return rows.map(r =>
-		mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
-	)
 }

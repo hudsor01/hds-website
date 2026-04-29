@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
@@ -52,4 +53,22 @@ const nextConfig: NextConfig = {
 	}
 }
 
-export default nextConfig
+// withSentryConfig adds webpack instrumentation that calls
+// crypto.randomUUID() during prerender, which Next.js 16 Cache
+// Components forbids inside 'use cache' functions. CI builds and any
+// deploy without SENTRY_DSN skip the wrap; production deploys with
+// the DSN set get full source-map upload + tunnelRoute.
+export default process.env.SENTRY_DSN
+	? withSentryConfig(nextConfig, {
+			silent: !process.env.CI,
+			org: process.env.SENTRY_ORG,
+			project: process.env.SENTRY_PROJECT,
+			authToken: process.env.SENTRY_AUTH_TOKEN,
+			widenClientFileUpload: true,
+			tunnelRoute: '/monitoring',
+			webpack: {
+				treeshake: { removeDebugLogging: true },
+				automaticVercelMonitors: true
+			}
+		})
+	: nextConfig

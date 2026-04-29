@@ -6,6 +6,8 @@
 import { and, asc, eq, ilike, or } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from './db'
+import { reportError } from './error-tracking'
+import { logger } from './logger'
 import {
 	type HelpArticle as HelpArticleRow,
 	helpArticles
@@ -86,13 +88,22 @@ export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
 	cacheLife('hours')
 	cacheTag('help-articles')
 
-	const data = await db
-		.select()
-		.from(helpArticles)
-		.where(eq(helpArticles.published, true))
-		.orderBy(asc(helpArticles.category), asc(helpArticles.createdAt))
+	try {
+		const data = await db
+			.select()
+			.from(helpArticles)
+			.where(eq(helpArticles.published, true))
+			.orderBy(asc(helpArticles.category), asc(helpArticles.createdAt))
 
-	return data.map(mapHelpArticle)
+		return data.map(mapHelpArticle)
+	} catch (error) {
+		logger.error('Failed to fetch help articles', error)
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getAllPublishedArticles'
+		})
+		return []
+	}
 }
 
 /**
@@ -105,15 +116,29 @@ export async function getArticlesByCategory(
 	cacheLife('hours')
 	cacheTag('help-articles', `help-category:${category}`)
 
-	const data = await db
-		.select()
-		.from(helpArticles)
-		.where(
-			and(eq(helpArticles.category, category), eq(helpArticles.published, true))
-		)
-		.orderBy(asc(helpArticles.createdAt))
+	try {
+		const data = await db
+			.select()
+			.from(helpArticles)
+			.where(
+				and(
+					eq(helpArticles.category, category),
+					eq(helpArticles.published, true)
+				)
+			)
+			.orderBy(asc(helpArticles.createdAt))
 
-	return data.map(mapHelpArticle)
+		return data.map(mapHelpArticle)
+	} catch (error) {
+		logger.error('Failed to fetch help articles by category', error, {
+			metadata: { category }
+		})
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getArticlesByCategory'
+		})
+		return []
+	}
 }
 
 /**
@@ -126,13 +151,24 @@ export async function getArticleBySlug(
 	cacheLife('days')
 	cacheTag('help-articles', `help-article:${slug}`)
 
-	const [data] = await db
-		.select()
-		.from(helpArticles)
-		.where(and(eq(helpArticles.slug, slug), eq(helpArticles.published, true)))
-		.limit(1)
+	try {
+		const [data] = await db
+			.select()
+			.from(helpArticles)
+			.where(and(eq(helpArticles.slug, slug), eq(helpArticles.published, true)))
+			.limit(1)
 
-	return data ? mapHelpArticle(data) : null
+		return data ? mapHelpArticle(data) : null
+	} catch (error) {
+		logger.error('Failed to fetch help article by slug', error, {
+			metadata: { slug }
+		})
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getArticleBySlug'
+		})
+		return null
+	}
 }
 
 /**
@@ -198,23 +234,34 @@ export async function searchArticles(query: string): Promise<HelpArticle[]> {
 
 	const searchPattern = `%${searchTerms}%`
 
-	const data = await db
-		.select()
-		.from(helpArticles)
-		.where(
-			and(
-				eq(helpArticles.published, true),
-				or(
-					ilike(helpArticles.title, searchPattern),
-					ilike(helpArticles.content, searchPattern),
-					ilike(helpArticles.excerpt, searchPattern)
+	try {
+		const data = await db
+			.select()
+			.from(helpArticles)
+			.where(
+				and(
+					eq(helpArticles.published, true),
+					or(
+						ilike(helpArticles.title, searchPattern),
+						ilike(helpArticles.content, searchPattern),
+						ilike(helpArticles.excerpt, searchPattern)
+					)
 				)
 			)
-		)
-		.orderBy(asc(helpArticles.createdAt))
-		.limit(20)
+			.orderBy(asc(helpArticles.createdAt))
+			.limit(20)
 
-	return data.map(mapHelpArticle)
+		return data.map(mapHelpArticle)
+	} catch (error) {
+		logger.error('Failed to search help articles', error, {
+			metadata: { query: searchTerms }
+		})
+		reportError(error, {
+			module: 'help-articles',
+			op: 'searchArticles'
+		})
+		return []
+	}
 }
 
 /**
