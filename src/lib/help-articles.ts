@@ -3,10 +3,10 @@
  * Functions for managing help center content with Drizzle ORM
  */
 
-import * as Sentry from '@sentry/nextjs'
 import { and, asc, eq, ilike, or } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from './db'
+import { reportError } from './error-tracking'
 import { logger } from './logger'
 import {
 	type HelpArticle as HelpArticleRow,
@@ -98,8 +98,9 @@ export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
 		return data.map(mapHelpArticle)
 	} catch (error) {
 		logger.error('Failed to fetch help articles', error)
-		Sentry.captureException(error, {
-			tags: { module: 'help-articles', op: 'getAllPublishedArticles' }
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getAllPublishedArticles'
 		})
 		return []
 	}
@@ -132,8 +133,9 @@ export async function getArticlesByCategory(
 		logger.error('Failed to fetch help articles by category', error, {
 			metadata: { category }
 		})
-		Sentry.captureException(error, {
-			tags: { module: 'help-articles', op: 'getArticlesByCategory' }
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getArticlesByCategory'
 		})
 		return []
 	}
@@ -161,8 +163,9 @@ export async function getArticleBySlug(
 		logger.error('Failed to fetch help article by slug', error, {
 			metadata: { slug }
 		})
-		Sentry.captureException(error, {
-			tags: { module: 'help-articles', op: 'getArticleBySlug' }
+		reportError(error, {
+			module: 'help-articles',
+			op: 'getArticleBySlug'
 		})
 		return null
 	}
@@ -253,8 +256,9 @@ export async function searchArticles(query: string): Promise<HelpArticle[]> {
 		logger.error('Failed to search help articles', error, {
 			metadata: { query: searchTerms }
 		})
-		Sentry.captureException(error, {
-			tags: { module: 'help-articles', op: 'searchArticles' }
+		reportError(error, {
+			module: 'help-articles',
+			op: 'searchArticles'
 		})
 		return []
 	}
