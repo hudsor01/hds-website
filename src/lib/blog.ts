@@ -3,6 +3,7 @@
  * Database-backed blog using Drizzle ORM + Neon PostgreSQL
  */
 
+import * as Sentry from '@sentry/nextjs'
 import { and, desc, eq, inArray } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from '@/lib/db'
@@ -184,6 +185,7 @@ async function getPostsCached(
 		logger.error('Failed to fetch blog posts', error, {
 			metadata: { limit, page }
 		})
+		Sentry.captureException(error, { tags: { module: 'blog', op: 'getPosts' } })
 		return { posts: [], total: 0 }
 	}
 }
@@ -211,6 +213,9 @@ export async function getFeaturedPosts(limit = 3): Promise<BlogPost[]> {
 	} catch (error) {
 		logger.error('Failed to fetch featured posts', error, {
 			metadata: { limit }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getFeaturedPosts' }
 		})
 		return []
 	}
@@ -245,6 +250,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 		logger.error('Failed to fetch blog post by slug', error, {
 			metadata: { slug }
 		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getPostBySlug' }
+		})
 		return null
 	}
 }
@@ -259,6 +267,7 @@ export async function getTags(): Promise<BlogTag[]> {
 		return rows.map(mapTag)
 	} catch (error) {
 		logger.error('Failed to fetch blog tags', error)
+		Sentry.captureException(error, { tags: { module: 'blog', op: 'getTags' } })
 		return []
 	}
 }
@@ -280,6 +289,9 @@ export async function getTagBySlug(slug: string): Promise<BlogTag | null> {
 	} catch (error) {
 		logger.error('Failed to fetch blog tag by slug', error, {
 			metadata: { slug }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getTagBySlug' }
 		})
 		return null
 	}
@@ -322,6 +334,9 @@ export async function getPostsByTag(tagSlug: string): Promise<BlogPost[]> {
 		logger.error('Failed to fetch posts by tag', error, {
 			metadata: { tagSlug }
 		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getPostsByTag' }
+		})
 		return []
 	}
 }
@@ -336,6 +351,9 @@ export async function getAuthors(): Promise<BlogAuthor[]> {
 		return rows.map(mapAuthor)
 	} catch (error) {
 		logger.error('Failed to fetch blog authors', error)
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getAuthors' }
+		})
 		return []
 	}
 }
@@ -359,6 +377,9 @@ export async function getAuthorBySlug(
 	} catch (error) {
 		logger.error('Failed to fetch blog author by slug', error, {
 			metadata: { slug }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getAuthorBySlug' }
 		})
 		return null
 	}
@@ -394,6 +415,9 @@ export async function getPostsByAuthor(
 	} catch (error) {
 		logger.error('Failed to fetch posts by author', error, {
 			metadata: { authorSlug }
+		})
+		Sentry.captureException(error, {
+			tags: { module: 'blog', op: 'getPostsByAuthor' }
 		})
 		return []
 	}
