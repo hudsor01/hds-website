@@ -86,7 +86,7 @@ const testimonials = [
 
 export default function AboutPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{SEO_CONFIG.about?.structuredData && (
 				<JsonLd
 					data={SEO_CONFIG.about.structuredData as Record<string, unknown>}
@@ -530,6 +530,6 @@ export default function AboutPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

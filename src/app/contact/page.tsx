@@ -60,7 +60,7 @@ const ServiceAreaMapWrapper = dynamic(
 
 export default function ContactPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -208,6 +208,6 @@ export default function ContactPage() {
 					<ServiceAreaMapWrapper className="max-w-3xl mx-auto" />
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

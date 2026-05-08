@@ -20,7 +20,7 @@ export default async function UnsubscribePage({
 	const decodedToken = decodeURIComponent(token)
 
 	return (
-		<main className="min-h-screen bg-background flex items-center justify-center px-4">
+		<div className="min-h-screen bg-background flex items-center justify-center px-4">
 			<div className="w-full max-w-md">
 				<div className="text-center mb-8">
 					<h1 className="text-h3 text-foreground mb-3">Unsubscribe</h1>
@@ -32,6 +32,6 @@ export default async function UnsubscribePage({
 
 				<UnsubscribeForm email={decodedEmail} token={decodedToken} />
 			</div>
-		</main>
+		</div>
 	)
 }

@@ -160,7 +160,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
@@ -292,6 +292,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

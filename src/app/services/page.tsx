@@ -84,7 +84,7 @@ const testimonials = [
 
 export default function ServicesPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -276,6 +276,6 @@ export default function ServicesPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

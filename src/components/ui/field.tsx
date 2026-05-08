@@ -1,7 +1,5 @@
 'use client'
 
-'use client'
-
 import { cva, type VariantProps } from 'class-variance-authority'
 import { useMemo } from 'react'
 import { Label } from '@/components/ui/label'
@@ -84,9 +82,12 @@ function Field({
 	orientation = 'vertical',
 	...props
 }: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
+	// Previously had role="group" without an accessible name — ARIA group
+	// requires an aria-label/labelledby, and a single-field wrapper has no
+	// reason to be a group anyway. Plain <div> is the right semantics; the
+	// label/input pair already conveys the relationship.
 	return (
 		<div
-			role="group"
 			data-slot="field"
 			data-orientation={orientation}
 			className={cn(fieldVariants({ orientation }), className)}
@@ -188,6 +189,7 @@ function FieldError({
 	className,
 	children,
 	errors,
+	id,
 	...props
 }: React.ComponentProps<'div'> & {
 	errors?: Array<{ message?: string } | string | undefined>
@@ -240,6 +242,7 @@ function FieldError({
 	return (
 		<div
 			role="alert"
+			id={id}
 			data-slot="field-error"
 			className={cn('text-destructive text-sm font-normal', className)}
 			{...props}

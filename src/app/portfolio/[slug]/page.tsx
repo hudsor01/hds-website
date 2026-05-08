@@ -346,7 +346,7 @@ export default async function ProjectPage({
 	const { slug } = await params
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<Analytics />
 
 			{/* Back Button - Static, prerendered */}
@@ -373,6 +373,6 @@ export default async function ProjectPage({
 			>
 				<ProjectContent slug={slug} />
 			</Suspense>
-		</main>
+		</div>
 	)
 }

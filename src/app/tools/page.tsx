@@ -210,7 +210,7 @@ const tools = [
 
 export default function ToolsPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -357,6 +357,6 @@ export default function ToolsPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

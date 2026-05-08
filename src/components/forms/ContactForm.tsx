@@ -85,6 +85,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 								label="First Name"
 								placeholder="Enter your first name"
 								autoComplete="given-name"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -98,6 +99,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 								label="Last Name"
 								placeholder="Enter your last name"
 								autoComplete="family-name"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -110,6 +112,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 							<field.EmailField
 								label="Email Address"
 								placeholder="Enter your email address"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -200,6 +203,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 								label="Message"
 								placeholder="Tell us about your project..."
 								rows={6}
+								required
 							/>
 						)}
 					</form.AppField>

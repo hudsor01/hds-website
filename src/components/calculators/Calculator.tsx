@@ -285,16 +285,20 @@ export function Calculator() {
 
 						{/* Email Results */}
 						<div className="mb-6">
-							<label className="block text-sm font-medium text-muted-foreground mb-2">
+							<label
+								htmlFor="ttl-email-results"
+								className="block text-sm font-medium text-muted-foreground mb-2"
+							>
 								Email Results
 							</label>
 							<div className="flex gap-2">
 								<input
+									id="ttl-email-results"
 									type="email"
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-accent/50"
+									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
 								/>
 								<button
 									onClick={handleEmailResults}

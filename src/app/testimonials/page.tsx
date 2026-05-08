@@ -93,7 +93,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function TestimonialsPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -263,6 +263,6 @@ export default function TestimonialsPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

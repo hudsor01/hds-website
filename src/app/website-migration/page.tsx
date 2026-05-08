@@ -163,7 +163,7 @@ export default function WebsiteMigrationPage() {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={faqSchema} />
 
 			{/* Hero */}
@@ -463,6 +463,6 @@ export default function WebsiteMigrationPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }
