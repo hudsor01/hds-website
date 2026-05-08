@@ -1,7 +1,5 @@
 'use client'
 
-'use client'
-
 import { Star, User } from 'lucide-react'
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
 import { cn } from '@/lib/utils'

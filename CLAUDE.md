@@ -31,6 +31,7 @@
 
 ## FILE ORGANIZATION
 
+- `proxy.ts` (project root) - Edge proxy (Next.js 16 rename of middleware.ts). Owns security headers, HTTPS redirect, UA blocklist, cache-control, CORS. NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Don't recreate `middleware.ts`.
 - `src/app/` - App Router pages, layouts, API route handlers
 - `src/app/actions/` - Server Actions (currently: `ttl-calculator.tsx`)
 - `src/app/api/` - API routes (blog, calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)

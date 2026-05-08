@@ -1,171 +1,85 @@
 /**
  * Next.js 16 Proxy (formerly Middleware)
- * Renamed from middleware.ts to proxy.ts per Next.js 16 deprecation
- * Official docs: https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  *
- * Handles:
- * - Neon Auth session management
- * - Security headers
- * - Rate limiting
- * - CSRF protection
+ * Application-wide request layer. Owns:
+ *  - Security headers (CSP, HSTS, frame-options, etc.)
+ *  - HTTPS redirect in production
+ *  - User-agent blocklist for known scanners
+ *  - Cache-Control and CORS for /api/*
+ *  - Performance timing header
+ *
+ * Does NOT do CSRF / rate-limit / origin checks any more — those moved to
+ * `src/lib/api/guards.ts::withMutationGuards` so they can be opted-in
+ * per-route. Browser beacons (`/api/web-vitals`, `/api/csp-reports`)
+ * legitimately can't carry a CSRF token, so a blanket proxy-level CSRF
+ * gate would have killed them. The proxy used to also rate-limit with
+ * a different counter shape than the route wrapper, leading to a real
+ * double-decrement; that's gone.
+ *
+ * Edge runtime by default; matcher excludes static assets.
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
 import { env } from '@/env'
-import { validateCsrfForMutation } from '@/lib/csrf'
-import {
-	getUnifiedRateLimiter,
-	RATE_LIMIT_CONFIGS,
-	type RateLimitType
-} from '@/lib/rate-limiter'
-import { getClientIp } from '@/lib/request'
 import { applySecurityHeaders } from '@/lib/security-headers'
 
-// Run on Edge Runtime for minimal overhead
 export const config = {
 	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico (favicon file)
-		 * - public folder
-		 */
 		'/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
 	]
 }
 
-export async function proxy(request: NextRequest) {
-	const response = NextResponse.next({ request })
+// User-agent fragments associated with vulnerability scanners. Defense
+// in depth — sophisticated attackers spoof UAs trivially, but this
+// catches the noisy crawl traffic.
+const SUSPICIOUS_UA = [
+	/sqlmap/i,
+	/nikto/i,
+	/nessus/i,
+	/masscan/i,
+	/zmap/i,
+	/nmap/i,
+	/gobuster/i,
+	/dirb/i
+]
+
+export function proxy(request: NextRequest) {
 	const url = request.nextUrl
-	const clientIp = getClientIp(request)
+	const start = Date.now()
+	const response = NextResponse.next()
 
-	// Note: Neon Auth session management is handled by the SDK automatically
-	// via cookies. The SDK refreshes tokens transparently when needed.
-	// No manual session refresh is required in middleware.
-
-	// Add centralized security headers (CSP no longer uses a nonce — see
-	// src/lib/security-headers.ts for the rationale).
 	applySecurityHeaders(response)
 
-	// Add performance headers
-	response.headers.set('X-Request-Time', Date.now().toString())
-
-	// Force HTTPS in production
+	// Force HTTPS in production.
 	if (
 		env.NODE_ENV === 'production' &&
 		request.headers.get('x-forwarded-proto') === 'http'
 	) {
 		return NextResponse.redirect(
-			`https://${request.headers.get('host')}${request.nextUrl.pathname}${request.nextUrl.search}`,
+			`https://${request.headers.get('host')}${url.pathname}${url.search}`,
 			{ status: 301 }
 		)
 	}
 
-	// Security: Block common attack patterns
-	const userAgent = request.headers.get('user-agent') || ''
-	const suspiciousPatterns = [
-		/sqlmap/i,
-		/nikto/i,
-		/nessus/i,
-		/masscan/i,
-		/zmap/i,
-		/nmap/i,
-		/gobuster/i,
-		/dirb/i
-	]
-
-	if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
+	// Block obvious scanner traffic at the edge.
+	const userAgent = request.headers.get('user-agent') ?? ''
+	if (SUSPICIOUS_UA.some(pattern => pattern.test(userAgent))) {
 		return new NextResponse('Blocked', { status: 403 })
 	}
 
-	// CSRF Protection
-	if (!(await validateCsrfForMutation(request))) {
-		return new NextResponse('Invalid CSRF token', { status: 403 })
-	}
-
-	// Rate limiting for API endpoints
-	const pathname = url.pathname
-	if (pathname.startsWith('/api/')) {
-		// Determine rate limit type based on endpoint
-		let limitType: RateLimitType = 'api'
-
-		if (pathname.startsWith('/api/contact')) {
-			limitType = 'contactFormApi'
-		} else if (pathname.startsWith('/api/newsletter')) {
-			limitType = 'newsletter'
-		} else if (
-			pathname.startsWith('/api/testimonials') ||
-			pathname.startsWith('/api/portfolio')
-		) {
-			limitType = 'readOnlyApi'
-		}
-
-		// Create rate limit identifier
-		const identifier = `${limitType}:${clientIp}:${pathname.split('/').slice(0, 3).join('/')}`
-
-		// Check rate limit
-		const isAllowed = await getUnifiedRateLimiter().checkLimit(
-			identifier,
-			limitType
-		)
-
-		if (!isAllowed) {
-			const limitInfo = await getUnifiedRateLimiter().getLimitInfo(
-				identifier,
-				limitType
-			)
-			return new NextResponse('Too Many Requests', {
-				status: 429,
-				headers: {
-					'Retry-After': '60',
-					'X-RateLimit-Limit':
-						RATE_LIMIT_CONFIGS[limitType].maxRequests.toString(),
-					'X-RateLimit-Remaining': '0',
-					'X-RateLimit-Reset': new Date(limitInfo.resetTime).toISOString()
-				}
-			})
-		}
-
-		// Add rate limiting headers for monitoring
-		const limitInfo = await getUnifiedRateLimiter().getLimitInfo(
-			identifier,
-			limitType
-		)
-		response.headers.set(
-			'X-RateLimit-Limit',
-			RATE_LIMIT_CONFIGS[limitType].maxRequests.toString()
-		)
-		response.headers.set(
-			'X-RateLimit-Remaining',
-			limitInfo.remaining.toString()
-		)
-		response.headers.set('X-Client-IP', clientIp)
-	}
-
-	// Remove preload headers since fonts are from Google and CSS paths are dynamic
-
-	// Implement stale-while-revalidate for static pages
+	// Cache-Control for top-level static-ish pages.
 	if (url.pathname.match(/^\/(about|services|pricing|privacy)$/)) {
 		response.headers.set(
 			'Cache-Control',
 			'public, s-maxage=3600, stale-while-revalidate=86400'
 		)
-	}
-
-	// Blog pages - longer cache with stale-while-revalidate
-	if (url.pathname.startsWith('/blog')) {
+	} else if (url.pathname.startsWith('/blog')) {
 		response.headers.set(
 			'Cache-Control',
 			'public, s-maxage=7200, stale-while-revalidate=604800'
 		)
-	}
-
-	// API routes - no cache by default
-	if (url.pathname.startsWith('/api')) {
+	} else if (url.pathname.startsWith('/api')) {
 		response.headers.set('Cache-Control', 'no-store, max-age=0')
-
-		// Add CORS headers for API routes
 		response.headers.set(
 			'Access-Control-Allow-Origin',
 			env.NODE_ENV === 'production' ? 'https://hudsondigitalsolutions.com' : '*'
@@ -180,11 +94,6 @@ export async function proxy(request: NextRequest) {
 		)
 	}
 
-	// Add timing header for performance monitoring
-	response.headers.set(
-		'Server-Timing',
-		`proxy;dur=${Date.now() - parseInt(response.headers.get('X-Request-Time') || '0', 10)}`
-	)
-
+	response.headers.set('Server-Timing', `proxy;dur=${Date.now() - start}`)
 	return response
 }

@@ -37,17 +37,21 @@ self.addEventListener('install', event => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', event => {
+	// Both cache-eviction and clients.claim() must be inside the same
+	// waitUntil so the activate event doesn't resolve until both finish.
+	// Otherwise a navigation between cleanup and claim could briefly fall
+	// back to a partially-evicted v1 cache.
 	event.waitUntil(
-		caches.keys().then(cacheNames => {
-			return Promise.all(
+		(async () => {
+			const cacheNames = await caches.keys()
+			await Promise.all(
 				cacheNames
 					.filter(cacheName => cacheName !== CACHE_NAME)
 					.map(cacheName => caches.delete(cacheName))
 			)
-		})
+			await self.clients.claim()
+		})()
 	)
-	// Take control of all pages immediately
-	self.clients.claim()
 })
 
 // Fetch event - serve from cache when possible
@@ -149,14 +153,11 @@ self.addEventListener('sync', event => {
 		event.waitUntil(syncContactForms())
 	}
 
-	// Pre-warm functions when connection is restored
+	// Pre-warm contact serverless function when connection is restored.
+	// Previously also fetched /api/warm, which never existed and 404'd
+	// silently every cycle.
 	if (event.tag === 'warm-functions') {
-		event.waitUntil(
-			Promise.all([
-				fetch('/api/warm'),
-				fetch('/api/contact', { method: 'HEAD' })
-			])
-		)
+		event.waitUntil(fetch('/api/contact', { method: 'HEAD' }))
 	}
 })
 
