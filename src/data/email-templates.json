@@ -1,7 +1,7 @@
 {
 	"welcome": {
 		"subject": "Thanks for reaching out, {{firstName}}",
-		"content": "Hi {{firstName}},\n\nThanks for contacting Hudson Digital Solutions about {{service}}. I'm Richard, and I'll be personally handling your inquiry.\n\nI've reviewed your message and I'm excited about the potential to help {{company}} achieve its goals.\n\nYou can expect a detailed response from me within the next 24 hours. In the meantime, I'd love to learn more about your specific needs.\n\nWhat's the biggest challenge you're facing right now with {{service}}?\n\nBest regards,\nRichard Hudson\nFounder, Hudson Digital Solutions\n\nP.S. - If your project is urgent, you can book a same-day call here: https://hudsondigitalsolutions.com/contact"
+		"content": "Hi {{firstName}},\n\nThanks for contacting Hudson Digital Solutions about {{service}}. I'm Richard, and I'll be personally handling your inquiry.\n\nI've reviewed your message and I'm excited about the potential to help {{company}} achieve its goals.\n\nYou can expect a detailed response from me within 2 hours during business hours. In the meantime, I'd love to learn more about your specific needs.\n\nWhat's the biggest challenge you're facing right now with {{service}}?\n\nBest regards,\nRichard Hudson\nFounder, Hudson Digital Solutions\n\nP.S. - If your project is urgent, you can book a same-day call here: https://hudsondigitalsolutions.com/contact"
 	},
 	"consultation": {
 		"subject": "{{firstName}}, let's discuss your {{service}} project",
