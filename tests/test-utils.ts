@@ -35,7 +35,7 @@ export function createMockRateLimiter() {
 export function createMockUnifiedRateLimiterClass() {
 	return class MockUnifiedRateLimiter {
 		store = new Map<string, { count: number; resetTime: number }>()
-		cleanupInterval: NodeJS.Timeout | null = null
+		cleanupInterval: ReturnType<typeof setInterval> | null = null
 
 		private buildKey(
 			identifier: string,

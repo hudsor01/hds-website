@@ -63,7 +63,11 @@ async function checkWithKv(
  */
 export class UnifiedRateLimiter {
 	private store: Map<string, RateLimitEntry> = new Map()
-	private cleanupInterval: NodeJS.Timeout | null = null
+	// `ReturnType<typeof setInterval>` is portable across DOM/Node/Edge
+	// — the previous `NodeJS.Timeout` only resolved correctly because
+	// @types/node was implicitly in scope. Edge runtime would have
+	// surfaced this as `any` without that implicit include.
+	private cleanupInterval: ReturnType<typeof setInterval> | null = null
 	private useKv: boolean
 
 	constructor() {
