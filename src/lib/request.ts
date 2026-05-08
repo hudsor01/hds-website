@@ -1,85 +1,112 @@
 /**
  * Request Utilities
- * Centralized utilities for extracting information from Next.js requests
+ * Centralized utilities for extracting trustworthy info from Next.js requests.
+ *
+ * On Vercel, the client IP is delivered via two headers:
+ *  - `x-real-ip` — set unilaterally by Vercel's edge to the connecting peer
+ *  - `x-forwarded-for` — comma-separated chain ending in the Vercel hop
+ *
+ * The LEFTMOST `x-forwarded-for` entry is attacker-controlled (a client can
+ * pre-set the header before it ever hits Vercel; Vercel appends rather than
+ * strips). The RIGHTMOST entry is the trusted hop. Prefer `x-real-ip` and
+ * fall back to the rightmost `x-forwarded-for` value.
  */
 
 import type { NextRequest } from 'next/server'
+import { env } from '@/env'
 
-/**
- * Extract client IP address from Next.js request headers
- *
- * Checks headers in priority order:
- * 1. x-forwarded-for (standard proxy header)
- * 2. x-real-ip (alternative proxy header)
- * 3. Falls back to localhost
- *
- * @param request - Next.js request object
- * @returns Client IP address
- *
- * @example
- * ```ts
- * export async function POST(request: NextRequest) {
- *   const clientIp = getClientIp(request);
- *   console.log('Request from:', clientIp);
- * }
- * ```
- */
-export function getClientIp(request: NextRequest): string {
-	// Check x-forwarded-for header (standard for proxies/load balancers)
-	const forwardedFor = request.headers.get('x-forwarded-for')
+const LOCALHOST = '127.0.0.1'
+
+function readClientIp(headers: Headers): string {
+	const realIp = headers.get('x-real-ip')?.trim()
+	if (realIp) {
+		return realIp
+	}
+
+	const forwardedFor = headers.get('x-forwarded-for')
 	if (forwardedFor) {
-		// x-forwarded-for can contain multiple IPs (client, proxy1, proxy2, ...)
-		// The first IP is the original client
-		const firstIp = forwardedFor.split(',')[0]?.trim()
-		if (firstIp) {
-			return firstIp
+		// Take the rightmost entry — that's the trusted upstream hop.
+		const parts = forwardedFor
+			.split(',')
+			.map(p => p.trim())
+			.filter(Boolean)
+		const lastIp = parts.at(-1)
+		if (lastIp) {
+			return lastIp
 		}
 	}
 
-	// Check x-real-ip header (alternative used by some proxies)
-	const realIp = request.headers.get('x-real-ip')
-	if (realIp?.trim()) {
-		return realIp.trim()
-	}
-
-	// Fallback to localhost (development/testing)
-	return '127.0.0.1'
+	return LOCALHOST
 }
 
 /**
- * Extract client IP from raw headers object
- * Used in Server Actions where NextRequest is not available
- *
- * @param headers - Headers object (from next/headers)
- * @returns Client IP address
+ * Extract client IP from a NextRequest.
+ */
+export function getClientIp(request: NextRequest): string {
+	return readClientIp(request.headers)
+}
+
+/**
+ * Extract client IP from a raw Headers object (Server Actions).
  *
  * @example
- * ```ts
  * 'use server'
- * import { headers } from 'next/headers';
+ * import { headers } from 'next/headers'
+ * import { getClientIpFromHeaders } from '@/lib/request'
  *
  * export async function submitForm() {
- *   const headersList = await headers();
- *   const clientIp = getClientIpFromHeaders(headersList);
+ *   const headersList = await headers()
+ *   const ip = getClientIpFromHeaders(headersList)
  * }
- * ```
  */
 export function getClientIpFromHeaders(headers: Headers): string {
-	// Check x-forwarded-for header
-	const forwardedFor = headers.get('x-forwarded-for')
-	if (forwardedFor) {
-		const firstIp = forwardedFor.split(',')[0]?.trim()
-		if (firstIp) {
-			return firstIp
+	return readClientIp(headers)
+}
+
+/**
+ * Verify the request originated from this site (or an explicitly allowed
+ * origin). Defends against cross-origin form-encoded POSTs that bypass
+ * SameSite cookies and CORS preflight.
+ *
+ * Returns true when:
+ *  - method is safe (GET/HEAD/OPTIONS), OR
+ *  - Origin/Referer matches the configured BASE_URL host
+ */
+export function isSameOriginRequest(request: Request): boolean {
+	if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+		return true
+	}
+
+	const allowedHost = (() => {
+		try {
+			return new URL(env.BASE_URL).host
+		} catch {
+			return null
+		}
+	})()
+	if (!allowedHost) {
+		return false
+	}
+
+	const origin = request.headers.get('origin')
+	if (origin) {
+		try {
+			return new URL(origin).host === allowedHost
+		} catch {
+			return false
 		}
 	}
 
-	// Check x-real-ip header
-	const realIp = headers.get('x-real-ip')
-	if (realIp?.trim()) {
-		return realIp.trim()
+	// Some browsers/clients omit Origin on same-origin POSTs and only send
+	// Referer. Accept that as a fallback.
+	const referer = request.headers.get('referer')
+	if (referer) {
+		try {
+			return new URL(referer).host === allowedHost
+		} catch {
+			return false
+		}
 	}
 
-	// Fallback to localhost
-	return '127.0.0.1'
+	return false
 }

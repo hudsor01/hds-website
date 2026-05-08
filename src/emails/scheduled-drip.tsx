@@ -8,7 +8,7 @@ import { parseContent } from './_components/scheduled-drip-parser'
 interface ScheduledDripProps {
 	subject: string
 	content: string
-	recipientEmail: string
+	unsubscribeUrl: string
 }
 
 const PARAGRAPH_STYLE = {
@@ -43,9 +43,8 @@ const SIGNATURE_STYLE = {
 export function ScheduledDrip({
 	subject,
 	content,
-	recipientEmail
+	unsubscribeUrl
 }: ScheduledDripProps) {
-	const unsubscribeUrl = `https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(recipientEmail)}`
 	const blocks = parseContent(content)
 
 	return (

@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
 	successResponse,
@@ -126,4 +126,6 @@ async function handleContactPost(request: NextRequest) {
 	}
 }
 
-export const POST = withRateLimit(handleContactPost, 'contactForm')
+export const POST = withMutationGuards(handleContactPost, {
+	rateLimit: 'contactForm'
+})

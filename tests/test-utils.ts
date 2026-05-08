@@ -124,24 +124,29 @@ export const MOCK_RATE_LIMIT_CONFIGS = {
 } as const
 
 /**
- * Create a mock getClientIp function that implements real IP parsing logic
- * This mirrors the real implementation to support tests that verify IP extraction
+ * Create a mock getClientIp function that mirrors the real implementation
+ * (src/lib/request.ts). Trusts x-real-ip first, then the rightmost
+ * x-forwarded-for entry — leftmost is attacker-controlled on Vercel.
  */
 export function createMockGetClientIp() {
 	return (request: {
 		headers: { get: (name: string) => string | null }
 	}): string => {
-		const xff = request.headers.get('x-forwarded-for')
-		if (xff) {
-			const ip = xff.split(',')[0]?.trim()
-			if (ip) {
-				return ip
-			}
-		}
-
 		const realIp = request.headers.get('x-real-ip')
 		if (realIp?.trim()) {
 			return realIp.trim()
+		}
+
+		const xff = request.headers.get('x-forwarded-for')
+		if (xff) {
+			const parts = xff
+				.split(',')
+				.map(p => p.trim())
+				.filter(Boolean)
+			const lastIp = parts.at(-1)
+			if (lastIp) {
+				return lastIp
+			}
 		}
 
 		return '127.0.0.1'
@@ -196,6 +201,21 @@ export function setupApiMocks() {
 
 	mock.module('@/lib/security-headers', () => ({
 		applySecurityHeaders: (response: Response) => response
+	}))
+
+	// Bypass mutation guards (origin + CSRF + rate limit) in unit tests so
+	// handler-level behavior can be exercised without staging a CSRF token
+	// and a same-origin request envelope.
+	mock.module('@/lib/api/guards', () => ({
+		withMutationGuards: (
+			handler: (req: import('next/server').NextRequest) => Promise<Response>
+		) => handler,
+		withMutationGuardsParams: <T>(
+			handler: (
+				req: import('next/server').NextRequest,
+				ctx: T
+			) => Promise<Response>
+		) => handler
 	}))
 
 	// Mock database client for all API tests

@@ -119,16 +119,38 @@ const optionalUrl = () =>
 		z.string().url().optional()
 	)
 
-// Helper: optional token with min length
-const optionalToken = () =>
-	z.preprocess(
-		val => (typeof val === 'string' && val.trim() === '' ? undefined : val),
-		z.string().min(1).max(100).optional()
-	)
+/**
+ * Admin-issued: create a new testimonial request that produces a token.
+ * Used by POST /api/testimonials/requests.
+ */
+export const createTestimonialRequestSchema = z.object({
+	clientName: z
+		.string()
+		.min(1, 'Client name is required')
+		.max(200, 'Client name too long')
+		.trim(),
+	clientEmail: z
+		.string()
+		.email('Invalid email address')
+		.max(254)
+		.optional()
+		.or(z.literal('').transform(() => undefined)),
+	projectName: z
+		.string()
+		.max(200, 'Project name too long')
+		.optional()
+		.or(z.literal('').transform(() => undefined))
+})
+export type CreateTestimonialRequestBody = z.infer<
+	typeof createTestimonialRequestSchema
+>
 
 export const testimonialSubmitSchema = z.object({
-	request_id: z.string().uuid().optional(),
-	token: optionalToken(),
+	// Token is required: every public submission must originate from a
+	// signed request link issued by the admin. The token proves the
+	// submitter received an invite — without it, anyone could POST a
+	// testimonial directly into the moderation queue.
+	token: z.string().min(1, 'Submission token is required'),
 	client_name: z
 		.string()
 		.min(2, 'Name must be at least 2 characters')
