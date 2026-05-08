@@ -15,12 +15,17 @@ export const BUSINESS_INFO = {
 	/** Business phone number */
 	phone: '(214) 843-0779',
 
-	/** Business location */
+	/** Business location — used for NAP consistency in schema and email footers */
 	location: {
-		city: 'Dallas',
+		streetAddress: '1301 Cherry Hill Ln',
+		city: 'Lewisville',
 		state: 'Texas',
 		stateCode: 'TX',
-		country: 'United States'
+		postalCode: '75067',
+		country: 'United States',
+		/** Approximate coords for Lewisville, TX 75067 */
+		latitude: 33.0462,
+		longitude: -96.9942
 	},
 
 	/** Social media and web presence */

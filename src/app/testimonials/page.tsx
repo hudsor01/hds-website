@@ -6,9 +6,7 @@ import { Button } from '@/components/ui/button'
 export const metadata: Metadata = {
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
-		'Real client results with proven ROI and high satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from growing companies.',
-	keywords:
-		'client testimonials, customer reviews, success stories, client feedback, case studies, ROI results, business transformation'
+		'Real client results with proven ROI and high satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from growing companies.'
 }
 
 const testimonials = [
@@ -95,7 +93,7 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 export default function TestimonialsPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -265,6 +263,6 @@ export default function TestimonialsPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

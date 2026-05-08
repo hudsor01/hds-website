@@ -5,7 +5,7 @@
 
 export default function PortfolioLoading() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Back button skeleton */}
 			<div className="container-wide px-4 sm:px-6 pt-24 pb-8 animate-pulse">
 				<div className="h-4 bg-muted rounded w-32" />
@@ -48,6 +48,6 @@ export default function PortfolioLoading() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

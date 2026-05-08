@@ -117,7 +117,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={generateLocalBusinessSchema(location)} />
 			<JsonLd data={breadcrumbSchema} />
 
@@ -295,6 +295,6 @@ export default async function LocationPage({ params }: LocationPageProps) {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

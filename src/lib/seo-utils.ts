@@ -3,6 +3,9 @@
 import seoKeywords from '@/data/seo-keywords.json'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
+const SITE_URL = 'https://hudsondigitalsolutions.com'
+const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
+
 /**
  * Generate meta title with company branding
  */
@@ -35,8 +38,7 @@ export function generateSlug(text: string): string {
  * Generate canonical URL
  */
 export function generateCanonicalUrl(path: string): string {
-	const baseUrl = 'https://hudsondigitalsolutions.com'
-	return path.startsWith('/') ? `${baseUrl}${path}` : `${baseUrl}/${path}`
+	return path.startsWith('/') ? `${SITE_URL}${path}` : `${SITE_URL}/${path}`
 }
 
 /**
@@ -59,18 +61,9 @@ export function generateWebsiteSchema() {
 		'@context': 'https://schema.org',
 		'@type': 'WebSite',
 		name: 'Hudson Digital Solutions',
-		url: 'https://hudsondigitalsolutions.com',
+		url: SITE_URL,
 		description:
-			'Professional website development and business automation for small businesses.',
-		potentialAction: {
-			'@type': 'SearchAction',
-			target: {
-				'@type': 'EntryPoint',
-				urlTemplate:
-					'https://hudsondigitalsolutions.com/search?q={search_term_string}'
-			},
-			'query-input': 'required name=search_term_string'
-		}
+			'Professional website development and business automation for small businesses.'
 	}
 }
 
@@ -82,53 +75,73 @@ export function generateOrganizationSchema() {
 		'@context': 'https://schema.org',
 		'@type': 'Organization',
 		name: 'Hudson Digital Solutions',
-		url: 'https://hudsondigitalsolutions.com',
-		logo: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
+		url: SITE_URL,
+		logo: LOGO_URL,
+		image: LOGO_URL,
 		description:
 			'Professional website development and business automation for small businesses.',
 		foundingDate: '2020',
 		address: {
 			'@type': 'PostalAddress',
-			addressLocality: 'Dallas',
-			addressRegion: 'TX',
+			streetAddress: BUSINESS_INFO.location.streetAddress,
+			addressLocality: BUSINESS_INFO.location.city,
+			addressRegion: BUSINESS_INFO.location.stateCode,
+			postalCode: BUSINESS_INFO.location.postalCode,
 			addressCountry: 'US'
 		},
 		contactPoint: {
 			'@type': 'ContactPoint',
 			contactType: 'Customer Service',
 			email: BUSINESS_INFO.email,
-			url: 'https://hudsondigitalsolutions.com/contact'
+			telephone: BUSINESS_INFO.phone,
+			url: `${SITE_URL}/contact`,
+			availableLanguage: ['English']
 		},
-		sameAs: [
-			'https://github.com/hudsor01',
-			'https://linkedin.com/company/hudson-digital-solutions'
-		]
+		sameAs: ['https://github.com/hudsor01']
 	}
 }
 
 /**
- * Generate local business schema
+ * Generate local business schema. Render only on routes that represent the
+ * primary business entity (home, about, contact, services). Per-location
+ * pages emit their own LocalBusiness via @/lib/locations.
  */
 export function generateLocalBusinessSchema() {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'LocalBusiness',
+		'@id': `${SITE_URL}/#localbusiness`,
 		name: 'Hudson Digital Solutions',
-		url: 'https://hudsondigitalsolutions.com',
-		description: 'Web development and custom software solutions',
+		url: SITE_URL,
+		image: LOGO_URL,
+		description: 'Web development and business automation for small businesses',
+		priceRange: '$497 - $5000+',
 		address: {
 			'@type': 'PostalAddress',
-			addressLocality: 'Dallas',
-			addressRegion: 'TX',
+			streetAddress: BUSINESS_INFO.location.streetAddress,
+			addressLocality: BUSINESS_INFO.location.city,
+			addressRegion: BUSINESS_INFO.location.stateCode,
+			postalCode: BUSINESS_INFO.location.postalCode,
 			addressCountry: 'US'
 		},
 		geo: {
 			'@type': 'GeoCoordinates',
-			latitude: 32.7767,
-			longitude: -96.797
+			latitude: BUSINESS_INFO.location.latitude,
+			longitude: BUSINESS_INFO.location.longitude
 		},
-		openingHours: 'Mo-Fr 09:00-17:00',
-		telephone: BUSINESS_INFO.phone ?? undefined,
-		email: BUSINESS_INFO.email
+		openingHoursSpecification: [
+			{
+				'@type': 'OpeningHoursSpecification',
+				dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+				opens: '09:00',
+				closes: '17:00'
+			}
+		],
+		telephone: BUSINESS_INFO.phone,
+		email: BUSINESS_INFO.email,
+		areaServed: {
+			'@type': 'AdministrativeArea',
+			name: 'Dallas-Fort Worth Metroplex'
+		}
 	}
 }

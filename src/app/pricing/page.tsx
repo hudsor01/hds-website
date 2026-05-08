@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
 	title:
@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 	description:
 		SEO_CONFIG.pricing?.description ||
 		'Clear, upfront pricing for professional websites and business automation.',
-	keywords: SEO_CONFIG.pricing?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.pricing?.ogTitle ??
@@ -184,7 +183,7 @@ const faqSchema = {
 
 export default function PricingPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{SEO_CONFIG.pricing?.structuredData && (
 				<JsonLd
 					data={SEO_CONFIG.pricing.structuredData as Record<string, unknown>}
@@ -414,6 +413,6 @@ export default function PricingPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

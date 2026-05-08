@@ -36,8 +36,11 @@ const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
 		a: ['href', 'title', 'target', 'rel', 'class'],
 		img: ['src', 'alt', 'title', 'class']
 	},
-	allowedSchemes: ['http', 'https', 'mailto'],
-	allowedSchemesByTag: { img: ['http', 'https', 'data'] }
+	allowedSchemes: ['http', 'https', 'mailto']
+	// Intentionally NOT allowing data: URIs on <img>: blog content can be
+	// edited by humans (or pipelines) and data: images can carry tracking
+	// pixels or, in legacy browsers, exfiltration vectors. n8n ingest
+	// rewrites image hosts before they reach this component.
 }
 
 export async function BlogPostContent({ post }: BlogPostContentProps) {

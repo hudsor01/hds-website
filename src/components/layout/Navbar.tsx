@@ -3,7 +3,7 @@
 import { ArrowRight, Menu, Rocket, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
@@ -33,6 +33,22 @@ const Navbar = memo(function Navbar() {
 	const handleNavClick = useCallback(() => {
 		setMobileMenuOpen(false)
 	}, [])
+
+	// Esc closes the mobile menu — matches Radix Dialog / native <dialog>
+	// behavior and gives keyboard users a way out without tabbing through
+	// every link.
+	useEffect(() => {
+		if (!mobileMenuOpen) {
+			return
+		}
+		const handler = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				setMobileMenuOpen(false)
+			}
+		}
+		window.addEventListener('keydown', handler)
+		return () => window.removeEventListener('keydown', handler)
+	}, [mobileMenuOpen])
 
 	const linkClass = (href: string) =>
 		cn(

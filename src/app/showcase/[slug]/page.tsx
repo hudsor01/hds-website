@@ -50,7 +50,6 @@ export async function generateMetadata({
 	return {
 		title: pageTitle,
 		description: item.description,
-		keywords: `${typeLabel.toLowerCase()}, ${item.industry ?? ''}, ${item.projectType ?? ''}, ${item.technologies?.join(', ') || ''}`,
 		openGraph: {
 			title: pageTitle,
 			description: item.description,
@@ -398,7 +397,7 @@ export default async function ShowcaseDetailPage({
 	const { slug } = await params
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Back Button */}
 			<div className="py-8 px-4 sm:px-6">
 				<div className="container-wide">
@@ -425,6 +424,6 @@ export default async function ShowcaseDetailPage({
 			>
 				<ShowcaseContent slug={slug} />
 			</Suspense>
-		</main>
+		</div>
 	)
 }

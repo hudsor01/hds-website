@@ -5,6 +5,7 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { trackEvent } from '@/lib/analytics'
+import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { API_ENDPOINTS } from '@/lib/constants/api-endpoints'
 import { logger } from '@/lib/logger'
 
@@ -22,7 +23,7 @@ interface NewsletterResponse {
 async function subscribeToNewsletter(
 	data: NewsletterData
 ): Promise<NewsletterResponse> {
-	const response = await fetch(API_ENDPOINTS.NEWSLETTER_SUBSCRIBE, {
+	const response = await csrfFetch(API_ENDPOINTS.NEWSLETTER_SUBSCRIBE, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(data)

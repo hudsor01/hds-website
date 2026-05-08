@@ -42,16 +42,36 @@ export function ComparisonView({
 				<table className="w-full">
 					<thead>
 						<tr className="border-b border-border">
-							<th className="text-left py-2 px-3">Vehicle</th>
-							<th className="text-right py-2 px-3">Purchase Price</th>
-							<th className="text-right py-2 px-3">Down Payment</th>
-							<th className="text-right py-2 px-3">Trade-In</th>
-							<th className="text-right py-2 px-3">Sales Tax</th>
-							<th className="text-right py-2 px-3">Title Fee</th>
-							<th className="text-right py-2 px-3">Registration</th>
-							<th className="text-right py-2 px-3">Total TTL</th>
-							<th className="text-right py-2 px-3">Monthly Payment</th>
-							<th className="text-right py-2 px-3">Actions</th>
+							<th scope="col" className="text-left py-2 px-3">
+								Vehicle
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Purchase Price
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Down Payment
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Trade-In
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Sales Tax
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Title Fee
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Registration
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Total TTL
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Monthly Payment
+							</th>
+							<th scope="col" className="text-right py-2 px-3">
+								Actions
+							</th>
 						</tr>
 					</thead>
 					<tbody>

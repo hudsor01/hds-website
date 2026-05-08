@@ -7,6 +7,7 @@ import formOptions from '@/data/form-options.json'
 import { useAppForm } from '@/hooks/form-hook'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import type { ContactFormData } from '@/lib/schemas/contact'
+import QueryProvider from '@/providers/QueryProvider'
 
 // Module-level constants — these arrays are deserialized once at import
 // time from the static JSON. No need to wrap in useMemo per render.
@@ -15,11 +16,18 @@ const budgetOptions = formOptions.budget
 const timelineOptions = formOptions.timeline
 const contactTimeOptions = formOptions.contactTime
 
-export default function ContactForm({
-	className = ''
-}: {
-	className?: string
-}) {
+export default function ContactForm(props: { className?: string }) {
+	// Each consumer-form gets its own QueryClient instance. Previously the
+	// app-wide ClientProviders wrapped every page in QueryClientProvider
+	// just to support this single useMutation site. See PERF-4.
+	return (
+		<QueryProvider>
+			<ContactFormInner {...props} />
+		</QueryProvider>
+	)
+}
+
+function ContactFormInner({ className = '' }: { className?: string }) {
 	const mutation = useContactFormSubmit()
 	const [showSuccess, setShowSuccess] = useState(false)
 
@@ -77,6 +85,7 @@ export default function ContactForm({
 								label="First Name"
 								placeholder="Enter your first name"
 								autoComplete="given-name"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -90,6 +99,7 @@ export default function ContactForm({
 								label="Last Name"
 								placeholder="Enter your last name"
 								autoComplete="family-name"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -102,6 +112,7 @@ export default function ContactForm({
 							<field.EmailField
 								label="Email Address"
 								placeholder="Enter your email address"
+								required
 							/>
 						)}
 					</form.AppField>
@@ -192,6 +203,7 @@ export default function ContactForm({
 								label="Message"
 								placeholder="Tell us about your project..."
 								rows={6}
+								required
 							/>
 						)}
 					</form.AppField>

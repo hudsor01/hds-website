@@ -1,6 +1,18 @@
 /**
  * Rate Limiting Wrapper for API Routes
- * Higher-order function that wraps route handlers with rate limiting
+ *
+ * Use this wrapper for:
+ *  - GET endpoints (no CSRF token possible, origin check handled at the
+ *    proxy/CORS layer)
+ *  - Routes guarded by a Bearer token via validateAdminAuth or
+ *    validateCronAuth — the Bearer is the trust signal, browser CSRF
+ *    isn't applicable
+ *
+ * For mutating routes that accept browser POST/PATCH/DELETE, prefer
+ * `src/lib/api/guards.ts::withMutationGuards`. That wrapper composes
+ * same-origin + CSRF token + rate-limit, with per-route opt-out for
+ * beacons (web-vitals, csp-reports) that legitimately can't carry a
+ * CSRF token.
  */
 
 import type { NextRequest } from 'next/server'

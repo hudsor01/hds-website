@@ -46,8 +46,8 @@ describe('Services Page (Server Component)', () => {
 		expect(links.length).toBeGreaterThan(0)
 	})
 
-	it('should have metadata defined in layout for SEO', async () => {
-		const { metadata } = await import('@/app/services/layout')
+	it('should have metadata defined in page for SEO', async () => {
+		const { metadata } = await import('@/app/services/page')
 
 		expect(metadata).toBeDefined()
 		expect(metadata.title).toBeDefined()
@@ -61,13 +61,14 @@ describe('Services Page (Server Component)', () => {
 // ================================
 
 describe('Contact Page (Server Component)', () => {
-	it('should render with heading and main content', async () => {
+	it('should render with heading and content sections', async () => {
 		const ContactPage = (await import('@/app/contact/page')).default
 		const { container } = render(<ContactPage />)
 
+		// The <main> landmark is now owned by app/layout.tsx (a single
+		// landmark per page), so the page itself just emits sections of
+		// content. Verify the page renders an h1 + at least one section.
 		expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
-		const main = container.querySelector('main')
-		expect(main).toBeTruthy()
 		expect(container.querySelectorAll('section').length).toBeGreaterThan(0)
 	})
 
@@ -109,17 +110,6 @@ describe('Server Component Best Practices', () => {
 
 		expect(content.startsWith("'use client'")).toBe(false)
 		expect(content.startsWith('"use client"')).toBe(false)
-		expect(content).toContain('export const metadata')
-	})
-
-	it('services layout should export metadata', async () => {
-		const fs = await import('node:fs/promises')
-		const path = await import('node:path')
-		const content = await fs.readFile(
-			path.resolve(process.cwd(), 'src/app/services/layout.tsx'),
-			'utf-8'
-		)
-
 		expect(content).toContain('export const metadata')
 	})
 })

@@ -31,6 +31,11 @@ export async function GET() {
 			)
 			.join('')
 
+		const latestPost = posts[0]
+		const lastBuildDate = latestPost
+			? new Date(latestPost.published_at).toUTCString()
+			: new Date().toUTCString()
+
 		const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -38,6 +43,14 @@ export async function GET() {
     <link>${SITE_URL}</link>
     <description>${FEED_DESCRIPTION}</description>
     <language>en-us</language>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    <pubDate>${lastBuildDate}</pubDate>
+    <ttl>60</ttl>
+    <image>
+      <url>${SITE_URL}/HDS-Logo.webp</url>
+      <title>${FEED_TITLE}</title>
+      <link>${SITE_URL}</link>
+    </image>
     <atom:link href="${SITE_URL}/rss" rel="self" type="application/rss+xml"/>
     ${items}
   </channel>

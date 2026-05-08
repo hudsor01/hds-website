@@ -1,27 +1,28 @@
 'use client'
 
 import { type ReactNode, useEffect } from 'react'
-import { QueryProvider } from '@/providers/QueryProvider'
-import {
-	cleanupAccessibilityFeatures,
-	initAccessibilityFeatures
-} from '@/utils/accessibility'
 
 interface ClientProvidersProps {
 	children: ReactNode
 }
 
+/**
+ * Adds an `a11y-ready` class to the document root on mount so CSS can
+ * style focus/contrast rules that should only apply once JS has hydrated.
+ * Removed on unmount per MDN cleanup guidance.
+ *
+ * QueryClientProvider used to live here, but it was scoped down — only
+ * ContactForm and NewsletterSignup actually use TanStack Query, and each
+ * now wraps itself in its own QueryProvider. This shaves the bootstrap
+ * cost + dehydrated-state hydration off every page that doesn't need it.
+ */
 export default function ClientProviders({ children }: ClientProvidersProps) {
-	// Initialize accessibility features on mount and cleanup on unmount
-	// Per MDN: Proper cleanup prevents memory leaks in SPAs
-	// Reference: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#memory_concerns
 	useEffect(() => {
-		initAccessibilityFeatures()
-
+		document.documentElement.classList.add('a11y-ready')
 		return () => {
-			cleanupAccessibilityFeatures()
+			document.documentElement.classList.remove('a11y-ready')
 		}
 	}, [])
 
-	return <QueryProvider>{children}</QueryProvider>
+	return <>{children}</>
 }

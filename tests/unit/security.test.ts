@@ -271,7 +271,9 @@ describe('Rate Limiter', () => {
 	})
 
 	describe('getClientIp', () => {
-		it('should extract IP from x-forwarded-for header', () => {
+		it('should extract IP from x-forwarded-for header (rightmost trusted hop)', () => {
+			// On Vercel the rightmost X-Forwarded-For is the trusted edge IP;
+			// the leftmost is whatever the client sent and is attacker-controlled.
 			const mockRequest = {
 				headers: {
 					get: mock((name: string) => {
@@ -284,7 +286,7 @@ describe('Rate Limiter', () => {
 			} as unknown as NextRequest
 
 			const ip = requestModule.getClientIp(mockRequest)
-			expect(ip).toBe('192.168.1.1')
+			expect(ip).toBe('10.0.0.1')
 		})
 
 		it('should extract IP from x-real-ip header', () => {

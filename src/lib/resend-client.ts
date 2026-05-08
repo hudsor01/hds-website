@@ -6,6 +6,8 @@
  * and provides clear error messages when email sending is attempted
  */
 
+import 'server-only'
+
 import { Resend } from 'resend'
 import { env } from '@/env'
 

@@ -3,6 +3,10 @@
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { SEOMetaData } from '@/types/seo'
 
+const SITE_URL = 'https://hudsondigitalsolutions.com'
+const OG_IMAGE = `${SITE_URL}/HDS-Logo.webp`
+const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
+
 /**
  * SEO_CONFIG provides static metadata and structured data for each route.
  * Use this in your page's generateMetadata and Head exports.
@@ -13,27 +17,19 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Professional Websites & Business Automation for Small Businesses | Hudson Digital Solutions',
 		description:
 			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
-		keywords:
-			'professional web development, small business websites, website development, business automation, tool integrations, e-commerce website, local business website, Next.js development, React development, website design',
-		ogImage: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg',
-		canonical: 'https://hudsondigitalsolutions.com/',
+		ogImage: OG_IMAGE,
+		canonical: SITE_URL,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'WebSite',
 			name: 'Hudson Digital Solutions',
-			url: 'https://hudsondigitalsolutions.com',
+			url: SITE_URL,
 			description:
 				'Professional website development and business automation for small businesses',
 			publisher: {
 				'@type': 'Organization',
 				name: 'Hudson Digital Solutions',
-				logo: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg'
-			},
-			potentialAction: {
-				'@type': 'SearchAction',
-				target:
-					'https://hudsondigitalsolutions.com/contact?q={search_term_string}',
-				'query-input': 'required name=search_term_string'
+				logo: LOGO_URL
 			}
 		}
 	},
@@ -43,13 +39,11 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Website Development, Integrations & Business Automation | Hudson Digital Solutions',
 		description:
 			'Professional websites, tool integrations, and business automation for small businesses. Get online, connect your systems, and automate manual work. Experienced developers who understand your business — results in 30-90 days.',
-		keywords:
-			'professional web development, conversion-optimized websites, business process automation, workflow automation, web application development, custom web applications, small business websites, performance optimization, CRM integration, marketing automation',
 		ogTitle:
 			'Website Development & Business Automation for Small Businesses | Hudson Digital',
 		ogDescription:
 			'Professional websites, tool integrations, and business automation. Get online, connect your tools, and automate manual work. Results in 30-90 days.',
-		canonical: 'https://hudsondigitalsolutions.com/services',
+		canonical: `${SITE_URL}/services`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'Service',
@@ -73,13 +67,11 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Experienced Developers Who Understand Your Business | Hudson Digital Solutions',
 		description:
 			'Experienced web developers who understand business, not just code. We build websites, connect your tools, and automate your work — so you can focus on your customers.',
-		keywords:
-			'web development team, experienced developers, business automation specialists, website development agency, small business web experts, custom web development, workflow automation, business operations',
 		ogTitle:
 			'Experienced Developers Who Understand Your Business | Hudson Digital',
 		ogDescription:
 			'Experienced developers with a business background. We build websites and automation that actually move the needle for small businesses.',
-		canonical: 'https://hudsondigitalsolutions.com/about',
+		canonical: `${SITE_URL}/about`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'AboutPage',
@@ -94,12 +86,10 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Transparent Website Pricing for Small Businesses | Hudson Digital Solutions',
 		description:
 			'Clear, upfront pricing for professional websites and business automation. Three packages starting at $497. No hidden fees, no hourly billing surprises. See exactly what you get.',
-		keywords:
-			'website pricing, web design cost, small business website price, affordable web design dallas, website packages, web development pricing, DFW web design cost',
 		ogTitle: 'Website Pricing - From $497 | Hudson Digital Solutions',
 		ogDescription:
 			'Three clear packages for small business websites. Starter $497, Professional $997, Premium $1,997. No hidden fees.',
-		canonical: 'https://hudsondigitalsolutions.com/pricing',
+		canonical: `${SITE_URL}/pricing`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'Service',
@@ -107,7 +97,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			provider: {
 				'@type': 'LocalBusiness',
 				name: 'Hudson Digital Solutions',
-				url: 'https://hudsondigitalsolutions.com'
+				url: SITE_URL
 			},
 			areaServed: {
 				'@type': 'Place',
@@ -149,13 +139,11 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	contact: {
 		title: 'Book a Free Strategy Call | Hudson Digital Solutions',
 		description: `See exactly where your website is losing customers—and how to fix it. Free 30-minute strategy call with a clear action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Email: ${BUSINESS_INFO.email}`,
-		keywords:
-			'free website strategy, website consultation, web development consultation, conversion optimization audit, website performance audit, free strategy session, business website assessment, small business consulting, development consultation, website improvement',
 		ogTitle:
 			'Free Strategy Call - Improve Your Website in 30 Minutes | Hudson Digital',
 		ogDescription:
 			'Free 30-minute strategy call showing exactly where your website is losing customers. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
-		canonical: 'https://hudsondigitalsolutions.com/contact',
+		canonical: `${SITE_URL}/contact`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'ContactPage',

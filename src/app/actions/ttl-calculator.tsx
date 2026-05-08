@@ -1,6 +1,6 @@
 'use server'
 
-import { count, eq, isNotNull, sql } from 'drizzle-orm'
+import { count, eq, gte, isNotNull, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { TtlCalculatorResults } from '@/emails/ttl-calculator-results'
 import { env } from '@/env'
@@ -390,7 +390,7 @@ export async function getCalculatorAnalytics(): Promise<{
 		const recentResult = await db
 			.select({ count: count() })
 			.from(ttlCalculations)
-			.where(sql`${ttlCalculations.createdAt} >= ${sevenDaysAgo.toISOString()}`)
+			.where(gte(ttlCalculations.createdAt, sevenDaysAgo))
 		const recentCalculations = recentResult[0]?.count ?? 0
 
 		return {

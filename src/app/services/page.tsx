@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ProcessSteps } from '@/components/ui/ProcessSteps'
 import { ServicesGrid } from '@/components/ui/ServicesGrid'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
 	title:
@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 	description:
 		SEO_CONFIG.services?.description ||
 		'Custom web development, integrations, and business automation for growing businesses.',
-	keywords: SEO_CONFIG.services?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.services?.ogTitle ??
@@ -85,7 +84,7 @@ const testimonials = [
 
 export default function ServicesPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -277,6 +276,6 @@ export default function ServicesPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

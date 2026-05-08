@@ -69,7 +69,18 @@ function setupCommonMocks(dbMock: Record<string, unknown>) {
 	mock.module('@/lib/constants/business', () => ({
 		BUSINESS_INFO: {
 			name: 'Hudson Digital Solutions',
-			email: 'hello@hudsondigitalsolutions.com'
+			email: 'hello@hudsondigitalsolutions.com',
+			phone: '(214) 843-0779',
+			location: {
+				streetAddress: '1301 Cherry Hill Ln',
+				city: 'Lewisville',
+				state: 'Texas',
+				stateCode: 'TX',
+				postalCode: '75067',
+				country: 'United States',
+				latitude: 33.0462,
+				longitude: -96.9942
+			}
 		}
 	}))
 
