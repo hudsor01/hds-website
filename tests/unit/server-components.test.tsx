@@ -46,8 +46,8 @@ describe('Services Page (Server Component)', () => {
 		expect(links.length).toBeGreaterThan(0)
 	})
 
-	it('should have metadata defined in layout for SEO', async () => {
-		const { metadata } = await import('@/app/services/layout')
+	it('should have metadata defined in page for SEO', async () => {
+		const { metadata } = await import('@/app/services/page')
 
 		expect(metadata).toBeDefined()
 		expect(metadata.title).toBeDefined()
@@ -109,17 +109,6 @@ describe('Server Component Best Practices', () => {
 
 		expect(content.startsWith("'use client'")).toBe(false)
 		expect(content.startsWith('"use client"')).toBe(false)
-		expect(content).toContain('export const metadata')
-	})
-
-	it('services layout should export metadata', async () => {
-		const fs = await import('node:fs/promises')
-		const path = await import('node:path')
-		const content = await fs.readFile(
-			path.resolve(process.cwd(), 'src/app/services/layout.tsx'),
-			'utf-8'
-		)
-
 		expect(content).toContain('export const metadata')
 	})
 })

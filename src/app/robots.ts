@@ -15,47 +15,7 @@ export default function robots(): MetadataRoute.Robots {
 					'/private/',
 					'/temp/',
 					'/backup/'
-				],
-				crawlDelay: 1
-			},
-			// Special rules for search engine bots
-			{
-				userAgent: 'Googlebot',
-				allow: '/',
-				disallow: ['/api/', '/admin/'],
-				crawlDelay: 1
-			},
-			{
-				userAgent: 'Bingbot',
-				allow: '/',
-				disallow: ['/api/', '/admin/'],
-				crawlDelay: 1
-			},
-			// Block aggressive crawlers
-			{
-				userAgent: 'AhrefsBot',
-				disallow: '/'
-			},
-			{
-				userAgent: 'MJ12bot',
-				disallow: '/'
-			},
-			{
-				userAgent: 'DotBot',
-				disallow: '/'
-			},
-			// Allow social media crawlers
-			{
-				userAgent: 'facebookexternalhit',
-				allow: '/'
-			},
-			{
-				userAgent: 'Twitterbot',
-				allow: '/'
-			},
-			{
-				userAgent: 'LinkedInBot',
-				allow: '/'
+				]
 			}
 		],
 		sitemap: `${baseUrl}/sitemap.xml`,

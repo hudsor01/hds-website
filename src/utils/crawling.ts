@@ -35,7 +35,7 @@ function addWebsiteSchema() {
 			url: 'https://hudsondigitalsolutions.com',
 			logo: {
 				'@type': 'ImageObject',
-				url: 'https://hudsondigitalsolutions.com/HDS-Logo.jpeg'
+				url: 'https://hudsondigitalsolutions.com/HDS-Logo.webp'
 			}
 		}
 	}

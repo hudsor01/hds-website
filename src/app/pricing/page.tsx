@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 	description:
 		SEO_CONFIG.pricing?.description ||
 		'Clear, upfront pricing for professional websites and business automation.',
-	keywords: SEO_CONFIG.pricing?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.pricing?.ogTitle ??

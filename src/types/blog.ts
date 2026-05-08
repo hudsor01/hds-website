@@ -35,6 +35,7 @@ export interface BlogPost {
 	content: string
 	feature_image: string | null
 	published_at: string
+	updated_at: string | null
 	reading_time: number
 	featured: boolean
 	tags: BlogTag[]

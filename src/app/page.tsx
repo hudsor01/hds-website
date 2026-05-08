@@ -14,7 +14,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
 import { Button } from '@/components/ui/button'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
+import { generateLocalBusinessSchema } from '@/lib/seo-utils'
 import { SEO_CONFIG } from '@/utils/seo'
 
 export const metadata: Metadata = {
@@ -22,24 +24,19 @@ export const metadata: Metadata = {
 	description:
 		SEO_CONFIG.home?.description ??
 		'Custom web development with proven ROI results.',
-	keywords: SEO_CONFIG.home?.keywords,
 	openGraph: {
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
 			'Custom web development with proven ROI results.',
-		url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com',
-		images: SEO_CONFIG.home?.ogImage
-			? [{ url: SEO_CONFIG.home.ogImage, alt: SEO_CONFIG.home.title }]
-			: []
+		url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
 	},
 	twitter: {
 		card: 'summary_large_image',
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
-			'Custom web development with proven ROI results.',
-		images: SEO_CONFIG.home?.ogImage ? [SEO_CONFIG.home.ogImage] : []
+			'Custom web development with proven ROI results.'
 	},
 	alternates: {
 		canonical:
@@ -112,6 +109,7 @@ const results = [
 export default function HomePage() {
 	return (
 		<main className="min-h-screen bg-background">
+			<JsonLd data={generateLocalBusinessSchema()} />
 			{/* ── HERO ──────────────────────────────────────────── */}
 			<section className="relative overflow-hidden bg-background">
 				<div
