@@ -2,13 +2,19 @@
  * Newsletter Unsubscribe API Route Unit Tests
  *
  * Token-gated unsubscribe: route requires both `email` and a valid HMAC
- * `token` issued at email-send time. We mock both the guard wrapper and
- * the token verifier to isolate the handler logic.
+ * `token` issued at email-send time. We use the REAL unsubscribe-token
+ * module (compute valid + invalid tokens at test-setup) instead of
+ * mocking it — bun:test's `mock.module()` is process-sticky, so a
+ * stub here would bleed into unsubscribe-token.test.ts when the suite
+ * runs in a different file order than the local one.
  */
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
+import { generateUnsubscribeToken } from '@/lib/unsubscribe-token'
 import { cleanupMocks } from '../test-utils'
+
+const TEST_EMAIL = 'user@example.com'
 
 function makeRequest(body: unknown): NextRequest {
 	return new NextRequest('http://localhost:3000/api/newsletter/unsubscribe', {
@@ -20,8 +26,9 @@ function makeRequest(body: unknown): NextRequest {
 
 describe('POST /api/newsletter/unsubscribe', () => {
 	let mockDbUpdate: ReturnType<typeof mock>
+	let validToken: string
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		mockDbUpdate = mock().mockReturnValue({
 			set: mock().mockReturnValue({
 				where: mock().mockResolvedValue([])
@@ -70,14 +77,10 @@ describe('POST /api/newsletter/unsubscribe', () => {
 			eq: mock((col: unknown, val: unknown) => ({ col, val }))
 		}))
 
-		// Default: token is valid. Individual tests can override.
-		mock.module('@/lib/unsubscribe-token', () => ({
-			verifyUnsubscribeToken: mock().mockResolvedValue(true),
-			generateUnsubscribeToken: mock().mockResolvedValue('test-token'),
-			buildUnsubscribeUrl: mock().mockResolvedValue(
-				'https://hudsondigitalsolutions.com/unsubscribe?email=test&token=test-token'
-			)
-		}))
+		// Pre-compute a valid token via the real HMAC helper. emailSchema
+		// will lowercase the request email before the route runs, so the
+		// token must be computed over the lowercased value too.
+		validToken = await generateUnsubscribeToken(TEST_EMAIL)
 	})
 
 	afterEach(() => {
@@ -87,7 +90,7 @@ describe('POST /api/newsletter/unsubscribe', () => {
 	it('returns 200 with success:true when email + valid token are provided', async () => {
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
 		const response = await POST(
-			makeRequest({ email: 'user@example.com', token: 'valid-hmac' })
+			makeRequest({ email: TEST_EMAIL, token: validToken })
 		)
 		const data = await response.json()
 
@@ -97,9 +100,7 @@ describe('POST /api/newsletter/unsubscribe', () => {
 
 	it('calls db.update when token verifies', async () => {
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
-		await POST(
-			makeRequest({ email: 'unsubme@example.com', token: 'valid-hmac' })
-		)
+		await POST(makeRequest({ email: TEST_EMAIL, token: validToken }))
 
 		expect(mockDbUpdate).toHaveBeenCalledTimes(1)
 	})
@@ -107,33 +108,27 @@ describe('POST /api/newsletter/unsubscribe', () => {
 	it('returns 400 for a non-email string', async () => {
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
 		const response = await POST(
-			makeRequest({ email: 'not-an-email', token: 'valid-hmac' })
+			makeRequest({ email: 'not-an-email', token: validToken })
 		)
 		expect(response.status).toBe(400)
 	})
 
 	it('returns 400 when the email field is missing', async () => {
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
-		const response = await POST(makeRequest({ token: 'valid-hmac' }))
+		const response = await POST(makeRequest({ token: validToken }))
 		expect(response.status).toBe(400)
 	})
 
 	it('returns 400 when the token field is missing', async () => {
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
-		const response = await POST(makeRequest({ email: 'user@example.com' }))
+		const response = await POST(makeRequest({ email: TEST_EMAIL }))
 		expect(response.status).toBe(400)
 	})
 
 	it('returns 403 when token does not verify', async () => {
-		mock.module('@/lib/unsubscribe-token', () => ({
-			verifyUnsubscribeToken: mock().mockResolvedValue(false),
-			generateUnsubscribeToken: mock(),
-			buildUnsubscribeUrl: mock()
-		}))
-
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
 		const response = await POST(
-			makeRequest({ email: 'user@example.com', token: 'wrong' })
+			makeRequest({ email: TEST_EMAIL, token: 'definitely-not-the-real-hmac' })
 		)
 
 		expect(response.status).toBe(403)
@@ -153,7 +148,7 @@ describe('POST /api/newsletter/unsubscribe', () => {
 
 		const { POST } = await import('@/app/api/newsletter/unsubscribe/route')
 		const response = await POST(
-			makeRequest({ email: 'user@example.com', token: 'valid-hmac' })
+			makeRequest({ email: TEST_EMAIL, token: validToken })
 		)
 		const data = await response.json()
 
