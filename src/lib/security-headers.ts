@@ -26,8 +26,12 @@ export const SECURITY_HEADERS = {
 	// `</script>` in DB-sourced fields (see src/components/utilities/JsonLd.tsx)
 	// and sanitize-html locks down user-submitted blog HTML. The previous
 	// policy had a wildcard `https:` fallback that allowed every TLS
-	// origin; THAT is now removed. connect-src is locked to self plus the
-	// two Vercel beacons used by @vercel/analytics + @vercel/speed-insights.
+	// origin; THAT is now removed. connect-src covers:
+	//   • 'self' — own API routes, plus @vercel/speed-insights, which
+	//     beacons to /_vercel/speed-insights/vitals (same-origin proxy
+	//     when deployed on Vercel)
+	//   • https://*.vercel-insights.com — @vercel/analytics data endpoint
+	//   • https://*.vercel-scripts.com — script-tag src for both packages
 	'Content-Security-Policy':
 		"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: blob:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https://*.vercel-insights.com https://*.vercel-scripts.com; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'; report-uri /api/csp-reports;",
 

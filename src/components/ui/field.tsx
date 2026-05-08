@@ -239,9 +239,17 @@ function FieldError({
 		return null
 	}
 
+	// `role="alert"` causes screen readers to announce the content
+	// immediately. That's only correct when the content describes an
+	// actual error — when a consumer passes static helper text via
+	// `children`, the alert behaviour is misleading. Apply the role
+	// only when the `errors` prop drove the render.
+	const isErrorMessage = !!errors && errors.length > 0
+	const alertRole = isErrorMessage ? ('alert' as const) : undefined
+
 	return (
 		<div
-			role="alert"
+			role={alertRole}
 			id={id}
 			data-slot="field-error"
 			className={cn('text-destructive text-sm font-normal', className)}
