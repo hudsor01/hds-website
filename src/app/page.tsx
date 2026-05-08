@@ -185,7 +185,7 @@ export default function HomePage() {
 								<div className="w-px h-8 bg-border/40" />
 								<div>
 									<div className="text-xl font-black text-foreground tabular-nums">
-										10+ yrs
+										5+ yrs
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
 										Experience

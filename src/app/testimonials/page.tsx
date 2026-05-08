@@ -27,7 +27,7 @@ const testimonials = [
 		company: 'E-Commerce Plus',
 		role: 'CEO',
 		content:
-			"The team's expertise in Next.js and modern web technologies helped us achieve a 60% improvement in conversion rates.",
+			'The expertise in Next.js and modern web technologies helped us achieve a 60% improvement in conversion rates.',
 		rating: 5,
 		service: 'E-Commerce Platform',
 		highlight: '60% More Sales'
@@ -150,7 +150,7 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								24hr
+								2 hr
 							</div>
 							<div className="text-xs text-muted-foreground">Response Time</div>
 						</div>
