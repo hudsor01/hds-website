@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { TagList } from '@/components/blog/TagList'
 import { Button } from '@/components/ui/button'
@@ -30,18 +31,121 @@ export const metadata: Metadata = {
 	}
 }
 
-export default async function BlogPage() {
-	const [featuredPosts, allPostsResult, tags] = await Promise.all([
-		getFeaturedPosts(3),
-		getPosts({ limit: 10 }),
-		getTags()
-	])
+// Each data-driven section is its own async server component so Suspense
+// can stream the page header while the DB calls resolve. Required by
+// cacheComponents:true — every dynamic data access must sit inside a
+// Suspense boundary or the whole page will block on it.
 
+async function FeaturedSection() {
+	const featuredPosts = await getFeaturedPosts(3)
+	if (featuredPosts.length === 0) {
+		return null
+	}
+	return (
+		<section className="py-section-sm px-4 sm:px-6">
+			<div className="container-wide">
+				<div className="text-center mb-10">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						Editor&apos;s Picks
+					</p>
+					<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+						Featured Articles
+					</h2>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+						Essential reading for ambitious business owners
+					</p>
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					{featuredPosts.map(post => (
+						<BlogPostCard key={post.id} post={post} featured />
+					))}
+				</div>
+			</div>
+		</section>
+	)
+}
+
+async function AllPostsSection() {
+	const allPostsResult = await getPosts({ limit: 10 })
 	const allPosts = allPostsResult.posts
+	return (
+		<>
+			<div className="mb-10">
+				<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+					All Articles
+				</p>
+				<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+					All Articles
+				</h2>
+				<p className="text-lead text-muted-foreground max-w-2xl">
+					Practical guides for business owners who want more from their
+					technology
+				</p>
+			</div>
 
+			{allPosts.length === 0 ? (
+				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+					<p className="text-sm text-muted-foreground leading-relaxed">
+						No articles found. Check back soon for new content!
+					</p>
+				</div>
+			) : (
+				<div className="space-y-6">
+					{allPosts.map(post => (
+						<BlogPostCard key={post.id} post={post} />
+					))}
+				</div>
+			)}
+		</>
+	)
+}
+
+async function TagsSection() {
+	const tags = await getTags()
+	if (tags.length === 0) {
+		return null
+	}
+	return <TagList tags={tags} />
+}
+
+function PostListSkeleton() {
+	return (
+		<div className="space-y-6" aria-hidden="true">
+			{[0, 1, 2].map(i => (
+				<div
+					key={i}
+					className="h-40 rounded-xl border border-border bg-muted/30 animate-pulse"
+				/>
+			))}
+		</div>
+	)
+}
+
+function FeaturedSkeleton() {
+	return (
+		<section className="py-section-sm px-4 sm:px-6">
+			<div className="container-wide">
+				<div
+					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+					aria-hidden="true"
+				>
+					{[0, 1, 2].map(i => (
+						<div
+							key={i}
+							className="aspect-video rounded-xl border border-border bg-muted/30 animate-pulse"
+						/>
+					))}
+				</div>
+			</div>
+		</section>
+	)
+}
+
+export default function BlogPage() {
 	return (
 		<main className="min-h-screen bg-background">
-			{/* Hero Section */}
+			{/* Hero Section — static shell streams immediately. */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
@@ -58,68 +162,24 @@ export default async function BlogPage() {
 				</div>
 			</section>
 
-			{/* Featured Posts */}
-			{featuredPosts.length > 0 && (
-				<section className="py-section-sm px-4 sm:px-6">
-					<div className="container-wide">
-						<div className="text-center mb-10">
-							<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-								Editor&apos;s Picks
-							</p>
-							<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-								Featured Articles
-							</h2>
-							<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-								Essential reading for ambitious business owners
-							</p>
-						</div>
+			{/* Featured Posts — independently suspended. */}
+			<Suspense fallback={<FeaturedSkeleton />}>
+				<FeaturedSection />
+			</Suspense>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{featuredPosts.map(post => (
-								<BlogPostCard key={post.id} post={post} featured />
-							))}
-						</div>
-					</div>
-				</section>
-			)}
-
-			{/* All Posts */}
+			{/* All Posts + Sidebar */}
 			<section className="py-section-sm px-4 sm:px-6">
 				<div className="container-wide">
 					<div className="flex flex-col lg:flex-row gap-10">
 						{/* Main Content */}
 						<div className="flex-1">
-							<div className="mb-10">
-								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-									All Articles
-								</p>
-								<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-									All Articles
-								</h2>
-								<p className="text-lead text-muted-foreground max-w-2xl">
-									Practical guides for business owners who want more from their
-									technology
-								</p>
-							</div>
-
-							{allPosts.length === 0 ? (
-								<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-									<p className="text-sm text-muted-foreground leading-relaxed">
-										No articles found. Check back soon for new content!
-									</p>
-								</div>
-							) : (
-								<div className="space-y-6">
-									{allPosts.map(post => (
-										<BlogPostCard key={post.id} post={post} />
-									))}
-								</div>
-							)}
+							<Suspense fallback={<PostListSkeleton />}>
+								<AllPostsSection />
+							</Suspense>
 						</div>
 
 						{/* Sidebar */}
 						<aside className="w-full lg:w-80 space-y-6">
-							{/* Newsletter Signup */}
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 								<h3 className="text-h3 text-foreground mb-3 text-balance">
 									Stay Updated
@@ -135,10 +195,10 @@ export default async function BlogPage() {
 								</p>
 							</div>
 
-							{/* Topics */}
-							{tags.length > 0 && <TagList tags={tags} />}
+							<Suspense fallback={null}>
+								<TagsSection />
+							</Suspense>
 
-							{/* CTA */}
 							<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
 								<h3 className="text-h3 text-foreground mb-3 text-balance">
 									Ready to grow your business?
