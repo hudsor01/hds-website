@@ -16,3 +16,18 @@ pre-commit:
       priority: 3
       glob: "*.{ts,tsx}"
       run: bun run typecheck
+
+# Pre-push: heavier checks that don't need to gate every commit but
+# must pass before the branch leaves the laptop. The unit suite is
+# fast (~1s) and the production build catches Next.js-specific issues
+# (route classification, CSP shape, edge-runtime constraints) that
+# typecheck alone misses.
+pre-push:
+  parallel: false
+  commands:
+    test:
+      priority: 1
+      run: bun run test:unit
+    build:
+      priority: 2
+      run: bun run build
