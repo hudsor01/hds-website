@@ -35,7 +35,6 @@ const nextConfig: NextConfig = {
 			'@radix-ui/react-accordion',
 			'@radix-ui/react-checkbox',
 			'@radix-ui/react-dialog',
-			'@radix-ui/react-icons',
 			'@radix-ui/react-label',
 			'@radix-ui/react-radio-group',
 			'@radix-ui/react-select',
