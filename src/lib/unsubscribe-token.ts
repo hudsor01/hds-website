@@ -20,16 +20,12 @@ import 'server-only'
 
 import { env } from '@/env'
 
-const SECRET =
-	env.CSRF_SECRET ||
-	(() => {
-		if (env.NODE_ENV === 'production') {
-			throw new Error(
-				'CSRF_SECRET is required in production for unsubscribe-token signing'
-			)
-		}
-		return 'dev-csrf-secret-for-local-development-only'
-	})()
+// Same gating story as src/lib/csrf.ts — env.ts already enforces
+// CSRF_SECRET presence on production (VERCEL_ENV='production') deploys.
+// Don't throw at module load here, otherwise PR preview builds (where
+// NODE_ENV is always 'production' during `next build` but VERCEL_ENV is
+// 'preview') would crash even though env.ts validated successfully.
+const SECRET = env.CSRF_SECRET ?? 'dev-csrf-secret-for-local-development-only'
 
 async function hmacHex(message: string): Promise<string> {
 	const encoder = new TextEncoder()

@@ -9,18 +9,15 @@
 
 import { env } from '@/env'
 
-// T3 env handles validation - CSRF_SECRET is required in production
-// In development, use a fallback secret for convenience
+// CSRF_SECRET is gated by @/env: it's required when VERCEL_ENV is
+// 'production' (see src/env.ts). On local dev and Vercel preview deploys
+// it can be unset — we use a deterministic dev fallback. Don't throw at
+// module load: Next.js evaluates this module during `next build` for
+// every Vercel deploy (including previews) where NODE_ENV is always
+// 'production', so a runtime throw here would crash preview builds even
+// when env.ts is happy.
 const CSRF_SECRET =
-	env.CSRF_SECRET ||
-	(() => {
-		if (env.NODE_ENV === 'production') {
-			throw new Error(
-				'CSRF_SECRET environment variable is required in production'
-			)
-		}
-		return 'dev-csrf-secret-for-local-development-only'
-	})()
+	env.CSRF_SECRET ?? 'dev-csrf-secret-for-local-development-only'
 
 const TOKEN_LENGTH = 18
 const TOKEN_EXPIRY = 60 * 60 * 1000 // 1 hour
