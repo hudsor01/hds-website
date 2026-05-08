@@ -9,9 +9,6 @@ export const SECURITY_HEADERS = {
 	// Control referrer information
 	'Referrer-Policy': 'strict-origin-when-cross-origin',
 
-	// Enable XSS protection
-	'X-XSS-Protection': '1; mode=block',
-
 	// Enforce HTTPS (HSTS)
 	'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
 

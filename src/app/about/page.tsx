@@ -21,7 +21,6 @@ export const metadata: Metadata = {
 	title: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.about?.description || 'Learn about Hudson Digital Solutions',
-	keywords: SEO_CONFIG.about?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.about?.ogTitle ??

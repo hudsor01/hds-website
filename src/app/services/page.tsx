@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 	description:
 		SEO_CONFIG.services?.description ||
 		'Custom web development, integrations, and business automation for growing businesses.',
-	keywords: SEO_CONFIG.services?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.services?.ogTitle ??

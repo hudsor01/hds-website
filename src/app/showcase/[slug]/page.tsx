@@ -50,7 +50,6 @@ export async function generateMetadata({
 	return {
 		title: pageTitle,
 		description: item.description,
-		keywords: `${typeLabel.toLowerCase()}, ${item.industry ?? ''}, ${item.projectType ?? ''}, ${item.technologies?.join(', ') || ''}`,
 		openGraph: {
 			title: pageTitle,
 			description: item.description,

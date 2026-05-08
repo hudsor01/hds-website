@@ -13,7 +13,6 @@ import { WebVitalsReporting } from '@/components/utilities/WebVitalsReporting'
 import { env } from '@/env'
 import { BRAND } from '@/lib/_generated/brand'
 import {
-	generateLocalBusinessSchema,
 	generateOrganizationSchema,
 	generateWebsiteSchema
 } from '@/lib/seo-utils'
@@ -49,8 +48,6 @@ export const metadata: Metadata = {
 		'Hudson Digital Solutions - Websites & Automation for Small Businesses',
 	description:
 		'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently.',
-	keywords:
-		'small business website, website development, business automation, web design, tool integrations, e-commerce website, local business website, Texas web developer, professional website',
 	metadataBase: new URL('https://hudsondigitalsolutions.com'),
 	openGraph: {
 		title:
@@ -59,14 +56,6 @@ export const metadata: Metadata = {
 			'Professional website development and business automation for small businesses. Get online and connect your tools.',
 		url: 'https://hudsondigitalsolutions.com',
 		siteName: 'Hudson Digital Solutions',
-		images: [
-			{
-				url: '/HDS-Logo.webp',
-				width: 1200,
-				height: 630,
-				alt: 'Hudson Digital Solutions'
-			}
-		],
 		locale: 'en_US',
 		type: 'website'
 	},
@@ -75,8 +64,7 @@ export const metadata: Metadata = {
 		title:
 			'Hudson Digital Solutions - Websites & Automation for Small Businesses',
 		description:
-			'Professional website development and business automation for small businesses. Get online and connect your tools.',
-		images: ['/HDS-Logo.webp']
+			'Professional website development and business automation for small businesses. Get online and connect your tools.'
 	},
 	robots: {
 		index: true,
@@ -144,8 +132,9 @@ export default function RootLayout({
 					crossOrigin=""
 				/>
 
-				{/* Favicon and app icons */}
-				<link rel="icon" href="/favicon.ico" sizes="any" />
+				{/* Favicon fallbacks. /icon and /apple-icon are auto-emitted by
+				    src/app/icon.tsx and src/app/apple-icon.tsx (Next.js conventions)
+				    so they don't need to be declared here. */}
 				<link
 					rel="icon"
 					href="/favicon-16x16.png"
@@ -158,11 +147,6 @@ export default function RootLayout({
 					sizes="32x32"
 					type="image/png"
 				/>
-				<link rel="apple-touch-icon" href="/HDS-Logo.webp" />
-				<link rel="apple-touch-icon" sizes="180x180" href="/HDS-Logo.webp" />
-
-				{/* Splash screens for iOS */}
-				<link rel="apple-touch-startup-image" href="/HDS-Logo.webp" />
 
 				{/* Manifest for PWA */}
 				<link rel="manifest" href="/manifest.json" />
@@ -189,7 +173,6 @@ export default function RootLayout({
 				</a>
 				<JsonLd data={generateWebsiteSchema()} />
 				<JsonLd data={generateOrganizationSchema()} />
-				<JsonLd data={generateLocalBusinessSchema()} />
 				<NuqsAdapter>
 					<ClientProviders>
 						<ErrorBoundary>

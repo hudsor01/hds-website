@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 		'Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy',
 	description:
 		"Practical insights on websites, tool integrations, and business automation from Hudson Digital Solutions. Learn how to make technology work harder so you don't have to.",
-	keywords:
-		'web development blog, business strategy, digital marketing, competitive advantage, web performance, Hudson Digital Solutions',
 	openGraph: {
 		title: 'Blog - Hudson Digital Solutions',
 		description:
@@ -20,7 +18,7 @@ export const metadata: Metadata = {
 		url: 'https://hudsondigitalsolutions.com/blog',
 		images: [
 			{
-				url: '/HDS-Logo.jpeg',
+				url: '/HDS-Logo.webp',
 				width: 1200,
 				height: 630,
 				alt: 'Hudson Digital Solutions Blog'
