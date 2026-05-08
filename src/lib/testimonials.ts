@@ -15,6 +15,7 @@ import type {
 	TestimonialRequest
 } from '@/types/testimonials'
 import { db } from './db'
+import { reportError } from './error-tracking'
 import { logger } from './logger'
 import { testimonialRequests, testimonials } from './schemas/schema'
 
@@ -85,13 +86,22 @@ export async function getTestimonialRequestByToken(
 	cacheLife('minutes')
 	cacheTag(`testimonial-token:${token}`)
 
-	const [data] = await db
-		.select()
-		.from(testimonialRequests)
-		.where(eq(testimonialRequests.token, token))
-		.limit(1)
+	try {
+		const [data] = await db
+			.select()
+			.from(testimonialRequests)
+			.where(eq(testimonialRequests.token, token))
+			.limit(1)
 
-	return data ? mapTestimonialRequest(data) : null
+		return data ? mapTestimonialRequest(data) : null
+	} catch (error) {
+		logger.error('Failed to fetch testimonial request by token', error)
+		reportError(error, {
+			module: 'testimonials',
+			op: 'getTestimonialRequestByToken'
+		})
+		return null
+	}
 }
 
 /**
@@ -107,18 +117,29 @@ export async function createTestimonialRequest(
 	const expiresAt = new Date()
 	expiresAt.setDate(expiresAt.getDate() + expiresInDays)
 
-	const [data] = await db
-		.insert(testimonialRequests)
-		.values({
-			token,
-			clientName,
-			clientEmail: clientEmail ?? '',
-			projectName: projectName ?? null,
-			expiresAt
-		})
-		.returning()
+	try {
+		const [data] = await db
+			.insert(testimonialRequests)
+			.values({
+				token,
+				clientName,
+				clientEmail: clientEmail ?? '',
+				projectName: projectName ?? null,
+				expiresAt
+			})
+			.returning()
 
-	return data ? mapTestimonialRequest(data) : null
+		return data ? mapTestimonialRequest(data) : null
+	} catch (error) {
+		logger.error('Failed to create testimonial request', error, {
+			metadata: { clientName, projectName }
+		})
+		reportError(error, {
+			module: 'testimonials',
+			op: 'createTestimonialRequest'
+		})
+		return null
+	}
 }
 
 /**
@@ -129,12 +150,21 @@ export async function getTestimonialRequests(): Promise<TestimonialRequest[]> {
 	cacheLife('minutes')
 	cacheTag('testimonial-requests')
 
-	const data = await db
-		.select()
-		.from(testimonialRequests)
-		.orderBy(desc(testimonialRequests.createdAt))
+	try {
+		const data = await db
+			.select()
+			.from(testimonialRequests)
+			.orderBy(desc(testimonialRequests.createdAt))
 
-	return data.map(mapTestimonialRequest)
+		return data.map(mapTestimonialRequest)
+	} catch (error) {
+		logger.error('Failed to fetch testimonial requests', error)
+		reportError(error, {
+			module: 'testimonials',
+			op: 'getTestimonialRequests'
+		})
+		return []
+	}
 }
 
 /**
@@ -154,6 +184,10 @@ export async function markRequestSubmitted(token: string): Promise<boolean> {
 		logger.error('Failed to mark testimonial request submitted', error, {
 			metadata: { token: `${token.slice(0, 8)}...` }
 		})
+		reportError(error, {
+			module: 'testimonials',
+			op: 'markRequestSubmitted'
+		})
 		return false
 	}
 }
@@ -172,21 +206,30 @@ export async function submitTestimonial(testimonial: {
 	video_url?: string
 	service_type?: string
 }): Promise<Testimonial | null> {
-	const [data] = await db
-		.insert(testimonials)
-		.values({
-			name: testimonial.client_name,
-			company: testimonial.company ?? null,
-			role: testimonial.role ?? null,
-			rating: testimonial.rating,
-			content: testimonial.content,
-			imageUrl: testimonial.photo_url ?? null,
-			videoUrl: testimonial.video_url ?? null,
-			published: false // New testimonials start unpublished
-		})
-		.returning()
+	try {
+		const [data] = await db
+			.insert(testimonials)
+			.values({
+				name: testimonial.client_name,
+				company: testimonial.company ?? null,
+				role: testimonial.role ?? null,
+				rating: testimonial.rating,
+				content: testimonial.content,
+				imageUrl: testimonial.photo_url ?? null,
+				videoUrl: testimonial.video_url ?? null,
+				published: false // New testimonials start unpublished
+			})
+			.returning()
 
-	return data ? mapTestimonial(data) : null
+		return data ? mapTestimonial(data) : null
+	} catch (error) {
+		logger.error('Failed to submit testimonial', error)
+		reportError(error, {
+			module: 'testimonials',
+			op: 'submitTestimonial'
+		})
+		return null
+	}
 }
 
 /**
@@ -197,12 +240,21 @@ export async function getAllTestimonials(): Promise<Testimonial[]> {
 	cacheLife('minutes')
 	cacheTag('testimonials-all')
 
-	const data = await db
-		.select()
-		.from(testimonials)
-		.orderBy(desc(testimonials.createdAt))
+	try {
+		const data = await db
+			.select()
+			.from(testimonials)
+			.orderBy(desc(testimonials.createdAt))
 
-	return data.map(mapTestimonial)
+		return data.map(mapTestimonial)
+	} catch (error) {
+		logger.error('Failed to fetch all testimonials', error)
+		reportError(error, {
+			module: 'testimonials',
+			op: 'getAllTestimonials'
+		})
+		return []
+	}
 }
 
 /**
@@ -213,13 +265,22 @@ export async function getApprovedTestimonials(): Promise<Testimonial[]> {
 	cacheLife('hours')
 	cacheTag('testimonials-approved')
 
-	const data = await db
-		.select()
-		.from(testimonials)
-		.where(eq(testimonials.published, true))
-		.orderBy(desc(testimonials.featured), desc(testimonials.createdAt))
+	try {
+		const data = await db
+			.select()
+			.from(testimonials)
+			.where(eq(testimonials.published, true))
+			.orderBy(desc(testimonials.featured), desc(testimonials.createdAt))
 
-	return data.map(mapTestimonial)
+		return data.map(mapTestimonial)
+	} catch (error) {
+		logger.error('Failed to fetch approved testimonials', error)
+		reportError(error, {
+			module: 'testimonials',
+			op: 'getApprovedTestimonials'
+		})
+		return []
+	}
 }
 
 /**
@@ -243,6 +304,10 @@ export async function updateTestimonialStatus(
 		logger.error('Failed to update testimonial status', error, {
 			metadata: { id }
 		})
+		reportError(error, {
+			module: 'testimonials',
+			op: 'updateTestimonialStatus'
+		})
 		return false
 	}
 }
@@ -258,6 +323,10 @@ export async function deleteTestimonial(id: string): Promise<boolean> {
 		logger.error('Failed to delete testimonial', error, {
 			metadata: { id }
 		})
+		reportError(error, {
+			module: 'testimonials',
+			op: 'deleteTestimonial'
+		})
 		return false
 	}
 }
@@ -272,6 +341,10 @@ export async function deleteTestimonialRequest(id: string): Promise<boolean> {
 	} catch (error) {
 		logger.error('Failed to delete testimonial request', error, {
 			metadata: { id }
+		})
+		reportError(error, {
+			module: 'testimonials',
+			op: 'deleteTestimonialRequest'
 		})
 		return false
 	}

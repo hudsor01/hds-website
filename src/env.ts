@@ -86,7 +86,11 @@ export const env = createEnv({
 
 		// Vercel KV for distributed rate limiting (optional)
 		KV_REST_API_URL: z.string().url().optional(),
-		KV_REST_API_TOKEN: z.string().optional()
+		KV_REST_API_TOKEN: z.string().optional(),
+
+		// Sentry error tracking (optional; no-op when unset)
+		SENTRY_DSN: z.string().url().optional(),
+		SENTRY_AUTH_TOKEN: z.string().optional()
 	},
 
 	/**
@@ -100,7 +104,10 @@ export const env = createEnv({
 			.url()
 			.optional()
 			.default('http://localhost:3000'),
-		NEXT_PUBLIC_SITE_URL: z.string().url().optional()
+		NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+
+		// Sentry browser DSN (optional; no-op when unset)
+		NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional()
 	},
 
 	/**
@@ -125,10 +132,13 @@ export const env = createEnv({
 		DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
 		KV_REST_API_URL: process.env.KV_REST_API_URL,
 		KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+		SENTRY_DSN: process.env.SENTRY_DSN,
+		SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
 
 		// Client
 		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-		NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL
+		NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+		NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN
 	},
 
 	/**
