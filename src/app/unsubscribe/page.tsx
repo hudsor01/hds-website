@@ -9,28 +9,29 @@ export const metadata: Metadata = {
 }
 
 interface UnsubscribePageProps {
-	searchParams: Promise<{ email?: string }>
+	searchParams: Promise<{ email?: string; token?: string }>
 }
 
 export default async function UnsubscribePage({
 	searchParams
 }: UnsubscribePageProps) {
-	const { email = '' } = await searchParams
+	const { email = '', token = '' } = await searchParams
 	const decodedEmail = decodeURIComponent(email)
+	const decodedToken = decodeURIComponent(token)
 
 	return (
-		<main className="min-h-screen bg-background flex items-center justify-center px-4">
+		<div className="min-h-screen bg-background flex items-center justify-center px-4">
 			<div className="w-full max-w-md">
 				<div className="text-center mb-8">
 					<h1 className="text-h3 text-foreground mb-3">Unsubscribe</h1>
 					<p className="text-sm text-muted-foreground leading-relaxed">
-						Enter your email address below to unsubscribe from Hudson Digital
-						Solutions email communications.
+						Confirm you'd like to stop receiving emails from Hudson Digital
+						Solutions.
 					</p>
 				</div>
 
-				<UnsubscribeForm email={decodedEmail} />
+				<UnsubscribeForm email={decodedEmail} token={decodedToken} />
 			</div>
-		</main>
+		</div>
 	)
 }

@@ -72,7 +72,9 @@ describe('Newsletter Subscribe API', () => {
 		const data = await response.json()
 
 		expect(response.status).toBe(400)
-		expect(data.error).toContain('Invalid email')
+		// emailSchema (shared with unsubscribe) emits the canonical Zod
+		// message; older inline schema used "Invalid email address".
+		expect(JSON.stringify(data)).toMatch(/valid email address/i)
 	})
 
 	it('should return 200 with friendly message when email already subscribed', async () => {

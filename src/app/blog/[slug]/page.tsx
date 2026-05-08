@@ -32,7 +32,6 @@ export async function generateMetadata({
 	return {
 		title: `${post.title} - Hudson Digital Solutions`,
 		description: post.excerpt,
-		keywords: post.tags?.map(tag => tag.name)?.join(', '),
 		openGraph: {
 			title: post.title,
 			description: post.excerpt,
@@ -98,7 +97,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 		relatedPosts = related.filter(p => p.id !== post.id).slice(0, 3)
 	}
 
-	const canonicalUrl = `https://hudsondigitalsolutions.com/blog/${post.slug}`
+	const SITE_URL = 'https://hudsondigitalsolutions.com'
+	const canonicalUrl = `${SITE_URL}/blog/${post.slug}`
+
+	const absoluteImage = post.feature_image
+		? post.feature_image.startsWith('http')
+			? post.feature_image
+			: `${SITE_URL}${post.feature_image.startsWith('/') ? '' : '/'}${post.feature_image}`
+		: `${SITE_URL}/HDS-Logo.webp`
 
 	const blogPostingSchema = {
 		'@context': 'https://schema.org',
@@ -106,14 +112,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 		headline: post.title,
 		description: post.excerpt,
 		datePublished: post.published_at,
-		image: post.feature_image ?? undefined,
+		dateModified: post.updated_at ?? post.published_at,
+		image: {
+			'@type': 'ImageObject',
+			url: absoluteImage
+		},
 		author: {
 			'@type': 'Person',
 			name: post.author?.name ?? 'Unknown'
 		},
 		publisher: {
 			'@type': 'Organization',
-			name: BUSINESS_INFO.name
+			name: BUSINESS_INFO.name,
+			logo: {
+				'@type': 'ImageObject',
+				url: `${SITE_URL}/HDS-Logo.webp`
+			}
 		},
 		mainEntityOfPage: {
 			'@type': 'WebPage',
@@ -146,7 +160,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
@@ -278,6 +292,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

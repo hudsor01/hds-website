@@ -138,7 +138,7 @@ export default function FaqClient() {
 		: faqs
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -248,6 +248,6 @@ export default function FaqClient() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

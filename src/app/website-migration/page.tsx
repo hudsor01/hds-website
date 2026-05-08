@@ -20,8 +20,6 @@ export const metadata: Metadata = {
 		'Website Migration Service - Switch Platforms Without Losing Rankings | Hudson Digital Solutions',
 	description:
 		"Stuck on an overpriced website platform you don't own? We migrate your website, recover your domain, and build you a faster site that's 100% yours. Free migration consultation.",
-	keywords:
-		'website migration, switch website platform, website transfer service, move my website, website platform migration, domain transfer help, small business website migration',
 	openGraph: {
 		title: 'Website Migration - Keep Your Rankings, Lose the Fees',
 		description:
@@ -165,7 +163,7 @@ export default function WebsiteMigrationPage() {
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={faqSchema} />
 
 			{/* Hero */}
@@ -465,6 +463,6 @@ export default function WebsiteMigrationPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

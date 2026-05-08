@@ -11,6 +11,7 @@ import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { trackEvent } from '@/lib/analytics'
+import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { SERVICE_TYPES } from '@/types/testimonials'
 
 interface TestimonialFormProps {
@@ -62,7 +63,7 @@ export function TestimonialForm({
 		}
 
 		try {
-			const response = await fetch('/api/testimonials/submit', {
+			const response = await csrfFetch('/api/testimonials/submit', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

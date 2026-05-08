@@ -42,7 +42,7 @@ export async function generateMetadata({
 
 function LoadingFallback() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
@@ -51,7 +51,7 @@ function LoadingFallback() {
 					</p>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }
 
@@ -66,7 +66,7 @@ async function TokenContent({ token }: { token: string }) {
 	// Already submitted
 	if (request.submitted) {
 		return (
-			<main className="min-h-screen bg-background">
+			<div className="min-h-screen bg-background">
 				<section className="relative overflow-hidden bg-background">
 					<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-success-muted flex items-center justify-center">
@@ -81,7 +81,7 @@ async function TokenContent({ token }: { token: string }) {
 						</p>
 					</div>
 				</section>
-			</main>
+			</div>
 		)
 	}
 
@@ -89,7 +89,7 @@ async function TokenContent({ token }: { token: string }) {
 	const isExpired = new Date(request.expires_at) < new Date()
 	if (isExpired) {
 		return (
-			<main className="min-h-screen bg-background">
+			<div className="min-h-screen bg-background">
 				<section className="relative overflow-hidden bg-background">
 					<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 						<div className="w-16 h-16 mx-auto mb-content-block rounded-full bg-warning-muted flex items-center justify-center">
@@ -112,12 +112,12 @@ async function TokenContent({ token }: { token: string }) {
 						</div>
 					</div>
 				</section>
-			</main>
+			</div>
 		)
 	}
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
@@ -154,7 +154,7 @@ async function TokenContent({ token }: { token: string }) {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }
 

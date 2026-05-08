@@ -67,7 +67,18 @@ export function getLocationsByState(): Record<string, LocationData[]> {
 }
 
 /**
- * Generate LocalBusiness schema for a location
+ * Generate LocalBusiness schema for a location page.
+ *
+ * Two address signals at play here:
+ *   1. The business's actual postal address (street + zip) — comes from
+ *      BUSINESS_INFO.location and is the same on every location page.
+ *      Google needs this for rich-result eligibility ("Missing field
+ *      streetAddress / postalCode" warning otherwise).
+ *   2. The geographic area the page targets — that's `addressLocality`
+ *      (the location's city) plus the `areaServed` neighbourhood list.
+ *
+ * We emit both. The PostalAddress carries the canonical street/zip;
+ * areaServed enumerates the neighbourhoods the page is positioned for.
  */
 export function generateLocalBusinessSchema(location: LocationData) {
 	return {
@@ -76,19 +87,19 @@ export function generateLocalBusinessSchema(location: LocationData) {
 		name: 'Hudson Digital Solutions',
 		url: `https://hudsondigitalsolutions.com/locations/${location.slug}`,
 		email: BUSINESS_INFO.email,
+		telephone: BUSINESS_INFO.phone,
 		address: {
 			'@type': 'PostalAddress',
+			streetAddress: BUSINESS_INFO.location.streetAddress,
 			addressLocality: location.city,
 			addressRegion: location.stateCode,
+			postalCode: BUSINESS_INFO.location.postalCode,
 			addressCountry: 'US'
 		},
 		areaServed: location.neighborhoods.map(name => ({
 			'@type': 'City',
 			name
 		})),
-		sameAs: [
-			'https://www.linkedin.com/company/hudson-digital-solutions',
-			'https://twitter.com/hudsondigital'
-		]
+		sameAs: ['https://github.com/hudsor01']
 	}
 }

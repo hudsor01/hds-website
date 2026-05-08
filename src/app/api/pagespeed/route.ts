@@ -12,6 +12,81 @@ const logger = createServerLogger('pagespeed-api')
 const PAGESPEED_API_URL =
 	'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed'
 
+/**
+ * Reject URLs that point at private/internal address space. The pagespeed
+ * tool is meant for public-internet URLs only — defending against SSRF if
+ * Google's API ever changes behavior or if a future caller fetches
+ * server-side themselves.
+ *
+ * Blocks:
+ *  - non-http(s) schemes (file:, gopher:, ftp:, etc.)
+ *  - bare hostnames that are known internal (localhost, *.local)
+ *  - IPv4 in private ranges (10/8, 172.16/12, 192.168/16, 169.254/16, 127/8)
+ *  - IPv6 loopback (::1) and unique-local (fc00::/7)
+ */
+function isPublicHttpUrl(rawUrl: string): boolean {
+	let parsed: URL
+	try {
+		parsed = new URL(rawUrl)
+	} catch {
+		return false
+	}
+	if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+		return false
+	}
+
+	// URL.hostname strips brackets from IPv6 addresses on most engines,
+	// but keep a defensive trim for the rare case where it doesn't.
+	const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '')
+	if (
+		host === 'localhost' ||
+		host.endsWith('.local') ||
+		host.endsWith('.internal') ||
+		host.endsWith('.localhost')
+	) {
+		return false
+	}
+
+	// IPv4 numeric check
+	const ipv4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
+	if (ipv4) {
+		const octets = ipv4.slice(1, 5).map(n => Number(n))
+		if (octets.some(n => n > 255)) {
+			return false
+		}
+		const [a, b] = octets as [number, number, number, number]
+		// 0.0.0.0/8 is the "this host on this network" range — on Linux
+		// it routes to localhost. Block the entire /8.
+		if (a === 0) {
+			return false
+		}
+		if (a === 10 || a === 127 || (a === 169 && b === 254)) {
+			return false
+		}
+		if (a === 172 && b >= 16 && b <= 31) {
+			return false
+		}
+		if (a === 192 && b === 168) {
+			return false
+		}
+	}
+
+	// IPv6: loopback (::1), unique-local (fc00::/7 → fc00–fdff prefixes),
+	// and IPv4-mapped IPv6 (::ffff:a.b.c.d, normalised by URL parser to
+	// `::ffff:` followed by hex). The mapped form bypasses the IPv4 regex
+	// above, so explicitly reject anything starting with `::ffff:`.
+	if (
+		host === '::1' ||
+		host.startsWith('fc') ||
+		host.startsWith('fd') ||
+		host.startsWith('::ffff:')
+	) {
+		return false
+	}
+
+	return true
+}
+
 interface PageSpeedResponse {
 	lighthouseResult: {
 		categories: {
@@ -30,23 +105,24 @@ interface PageSpeedResponse {
 }
 
 async function handlePageSpeed(request: NextRequest) {
-	await connection() // Force dynamic rendering
+	const { searchParams } = new URL(request.url)
+	const url = searchParams.get('url')
+
+	if (!url) {
+		return errorResponse('URL parameter is required', 400)
+	}
+
+	if (!isPublicHttpUrl(url)) {
+		return errorResponse('URL must be a public http(s) address', 400)
+	}
+
+	// connection() forces dynamic rendering; only call it once we know we
+	// have a real URL to fetch. Calling it for invalid input wastes a
+	// dynamic-segment opt-in and (in unit tests) throws because there's
+	// no request scope.
+	await connection()
 
 	try {
-		const { searchParams } = new URL(request.url)
-		const url = searchParams.get('url')
-
-		if (!url) {
-			return errorResponse('URL parameter is required', 400)
-		}
-
-		// Validate URL
-		try {
-			new URL(url)
-		} catch {
-			return errorResponse('Invalid URL format', 400)
-		}
-
 		logger.info('Fetching PageSpeed data', { url })
 
 		// Call PageSpeed Insights API

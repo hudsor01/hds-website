@@ -5,7 +5,6 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
-import { JsonLd } from '@/components/utilities/JsonLd'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
 import { formatCurrency } from '@/lib/utils'
@@ -178,22 +177,6 @@ export function Calculator() {
 
 	return (
 		<main className="min-h-screen bg-background">
-			<JsonLd
-				data={{
-					'@context': 'https://schema.org',
-					'@type': 'WebApplication',
-					name: 'Texas TTL Calculator',
-					description:
-						'Calculate tax, title, license fees and monthly payments for vehicles in Texas',
-					applicationCategory: 'FinanceApplication',
-					operatingSystem: 'All',
-					offers: {
-						'@type': 'Offer',
-						price: '0',
-						priceCurrency: 'USD'
-					}
-				}}
-			/>
 			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
 				{/* Header */}
 				<div className="mb-10">
@@ -302,16 +285,20 @@ export function Calculator() {
 
 						{/* Email Results */}
 						<div className="mb-6">
-							<label className="block text-sm font-medium text-muted-foreground mb-2">
+							<label
+								htmlFor="ttl-email-results"
+								className="block text-sm font-medium text-muted-foreground mb-2"
+							>
 								Email Results
 							</label>
 							<div className="flex gap-2">
 								<input
+									id="ttl-email-results"
 									type="email"
 									placeholder="your@email.com"
 									value={emailInput}
 									onChange={e => setEmailInput(e.target.value)}
-									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus:outline-none focus:ring-2 focus:ring-accent/50"
+									className="flex-1 px-3 py-2 bg-background rounded-lg text-sm text-foreground border border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
 								/>
 								<button
 									onClick={handleEmailResults}

@@ -35,7 +35,7 @@ export function createMockRateLimiter() {
 export function createMockUnifiedRateLimiterClass() {
 	return class MockUnifiedRateLimiter {
 		store = new Map<string, { count: number; resetTime: number }>()
-		cleanupInterval: NodeJS.Timeout | null = null
+		cleanupInterval: ReturnType<typeof setInterval> | null = null
 
 		private buildKey(
 			identifier: string,
@@ -112,7 +112,11 @@ export function createMockUnifiedRateLimiterClass() {
 }
 
 /**
- * Rate limit configurations matching the real module
+ * Rate limit configurations matching the real module. Must mirror every
+ * key in src/lib/rate-limiter.ts::RATE_LIMIT_CONFIGS — the mock class
+ * uses `keyof typeof MOCK_RATE_LIMIT_CONFIGS` as its limit-type
+ * constraint, so a missing key here would silently fall through to the
+ * `default` profile if the real-module mock is ever bypassed.
  */
 export const MOCK_RATE_LIMIT_CONFIGS = {
 	default: { windowMs: 60 * 1000, maxRequests: 100 },
@@ -120,28 +124,34 @@ export const MOCK_RATE_LIMIT_CONFIGS = {
 	contactForm: { windowMs: 15 * 60 * 1000, maxRequests: 3 },
 	contactFormApi: { windowMs: 60 * 1000, maxRequests: 5 },
 	newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
-	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 }
+	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
+	pagespeedApi: { windowMs: 60 * 1000, maxRequests: 30 }
 } as const
 
 /**
- * Create a mock getClientIp function that implements real IP parsing logic
- * This mirrors the real implementation to support tests that verify IP extraction
+ * Create a mock getClientIp function that mirrors the real implementation
+ * (src/lib/request.ts). Trusts x-real-ip first, then the rightmost
+ * x-forwarded-for entry — leftmost is attacker-controlled on Vercel.
  */
 export function createMockGetClientIp() {
 	return (request: {
 		headers: { get: (name: string) => string | null }
 	}): string => {
-		const xff = request.headers.get('x-forwarded-for')
-		if (xff) {
-			const ip = xff.split(',')[0]?.trim()
-			if (ip) {
-				return ip
-			}
-		}
-
 		const realIp = request.headers.get('x-real-ip')
 		if (realIp?.trim()) {
 			return realIp.trim()
+		}
+
+		const xff = request.headers.get('x-forwarded-for')
+		if (xff) {
+			const parts = xff
+				.split(',')
+				.map(p => p.trim())
+				.filter(Boolean)
+			const lastIp = parts.at(-1)
+			if (lastIp) {
+				return lastIp
+			}
 		}
 
 		return '127.0.0.1'
@@ -196,6 +206,21 @@ export function setupApiMocks() {
 
 	mock.module('@/lib/security-headers', () => ({
 		applySecurityHeaders: (response: Response) => response
+	}))
+
+	// Bypass mutation guards (origin + CSRF + rate limit) in unit tests so
+	// handler-level behavior can be exercised without staging a CSRF token
+	// and a same-origin request envelope.
+	mock.module('@/lib/api/guards', () => ({
+		withMutationGuards: (
+			handler: (req: import('next/server').NextRequest) => Promise<Response>
+		) => handler,
+		withMutationGuardsParams: <T>(
+			handler: (
+				req: import('next/server').NextRequest,
+				ctx: T
+			) => Promise<Response>
+		) => handler
 	}))
 
 	// Mock database client for all API tests

@@ -613,6 +613,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 							<thead>
 								<tr style={{ backgroundColor: '#f0f0f0' }}>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -622,6 +623,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Period
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -631,6 +633,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Pay Date
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -640,6 +643,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Hours
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -649,6 +653,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Gross Pay
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -658,6 +663,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Fed Tax
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -667,6 +673,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										SS Tax
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',
@@ -676,6 +683,7 @@ export function AnnualWageSummary({ employeeData }: AnnualWageSummaryProps) {
 										Med Tax
 									</th>
 									<th
+										scope="col"
 										style={{
 											border: '1px solid #000',
 											padding: '8px',

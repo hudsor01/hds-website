@@ -1,13 +1,18 @@
 /**
  * API Route: Submit Testimonial
  * POST /api/testimonials/submit
+ *
+ * Always token-gated — every public submission must come from an admin-
+ * issued testimonial-request link. The token proves the submitter received
+ * an invite (no anonymous public submissions). withMutationGuards adds
+ * same-origin + CSRF + rate-limit on top.
  */
 
 import { revalidateTag } from 'next/cache'
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
 import { TestimonialAdminNotification } from '@/emails/testimonial-admin-notification'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
 	successResponse,
@@ -22,43 +27,33 @@ import {
 	markRequestSubmitted,
 	submitTestimonial
 } from '@/lib/testimonials'
+import { sanitizeEmailHeader } from '@/lib/utils'
 
 async function handleTestimonialSubmit(request: NextRequest) {
 	try {
 		const rawBody = await request.json()
-
-		// Validate request body with Zod
 		const parseResult = testimonialSubmitSchema.safeParse(rawBody)
 		if (!parseResult.success) {
 			return validationErrorResponse(parseResult.error)
 		}
 
 		const body = parseResult.data
-		let requestId = body.request_id
 
-		// If token provided, validate it and mark as submitted
-		if (body.token) {
-			const testimonialRequest = await getTestimonialRequestByToken(body.token)
-
-			if (!testimonialRequest) {
-				return errorResponse('Invalid testimonial link', 400)
-			}
-
-			if (testimonialRequest.submitted) {
-				return errorResponse('This link has already been used', 400)
-			}
-
-			if (new Date(testimonialRequest.expires_at) < new Date()) {
-				return errorResponse('This link has expired', 400)
-			}
-
-			// Set request_id from the validated request
-			requestId = testimonialRequest.id
+		// Token is required by the schema; verify it backs a real, unused,
+		// unexpired request before doing anything else.
+		const testimonialRequest = await getTestimonialRequestByToken(body.token)
+		if (!testimonialRequest) {
+			return errorResponse('Invalid testimonial link', 400)
+		}
+		if (testimonialRequest.submitted) {
+			return errorResponse('This link has already been used', 400)
+		}
+		if (new Date(testimonialRequest.expires_at) < new Date()) {
+			return errorResponse('This link has expired', 400)
 		}
 
-		// Submit the testimonial
 		const testimonial = await submitTestimonial({
-			request_id: requestId,
+			request_id: testimonialRequest.id,
 			client_name: body.client_name,
 			company: body.company,
 			role: body.role,
@@ -73,42 +68,38 @@ async function handleTestimonialSubmit(request: NextRequest) {
 			throw new Error('Failed to save testimonial')
 		}
 
-		// Mark the request as submitted if token was used.
-		// Invalidate the cached token lookup so subsequent requests see the
-		// updated `submitted: true` state. The 'max' profile triggers an
-		// immediate hard purge — using 'minutes' here would be a soft
-		// stale-while-revalidate that lets the prior cached entry continue
-		// to serve concurrent requests within the revalidation window,
-		// defeating the "already submitted" guard.
-		if (body.token) {
-			const marked = await markRequestSubmitted(body.token)
-			if (!marked) {
-				logger.error(
-					'Failed to mark testimonial request as submitted; cache not invalidated',
-					{ token: body.token, testimonialId: testimonial.id }
-				)
-				return errorResponse('Failed to finalize submission', 500)
-			}
-			revalidateTag(`testimonial-token:${body.token}`, 'max')
+		// Hard-purge cache so subsequent requests see `submitted: true`.
+		const marked = await markRequestSubmitted(body.token)
+		if (!marked) {
+			logger.error(
+				'Failed to mark testimonial request as submitted; cache not invalidated',
+				{ metadata: { testimonialId: testimonial.id } }
+			)
+			return errorResponse('Failed to finalize submission', 500)
 		}
+		revalidateTag(`testimonial-token:${body.token}`, 'max')
 
 		logger.info('Testimonial submitted', {
 			component: 'TestimonialAPI',
 			action: 'submit',
-			testimonialId: testimonial.id,
-			rating: body.rating,
-			isPrivateLink: !!body.token
+			metadata: {
+				testimonialId: testimonial.id,
+				rating: body.rating
+			}
 		})
 
-		// Defer admin notification — fire-and-forget; failure logged but
-		// doesn't gate the response.
 		if (isResendConfigured()) {
 			after(async () => {
 				try {
+					// Sanitize the subject — schema .trim() doesn't strip CRLF,
+					// and an attacker-crafted client_name with embedded \r\n
+					// could inject additional headers in the Resend API call.
 					await getResendClient().emails.send({
 						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 						to: BUSINESS_INFO.email,
-						subject: `[Notification] New Testimonial Submitted - ${body.client_name}`,
+						subject: sanitizeEmailHeader(
+							`[Notification] New Testimonial Submitted - ${body.client_name}`
+						),
 						react: (
 							<TestimonialAdminNotification
 								clientName={body.client_name}
@@ -117,7 +108,7 @@ async function handleTestimonialSubmit(request: NextRequest) {
 								rating={body.rating}
 								serviceType={body.service_type}
 								content={body.content}
-								isPrivateLink={!!body.token}
+								isPrivateLink={true}
 							/>
 						)
 					})
@@ -132,14 +123,11 @@ async function handleTestimonialSubmit(request: NextRequest) {
 
 		return successResponse(undefined, 'Testimonial submitted successfully')
 	} catch (error) {
-		logger.error('Failed to submit testimonial', {
-			component: 'TestimonialAPI',
-			action: 'submit',
-			error
-		})
-
+		logger.error('Failed to submit testimonial', error)
 		return errorResponse('Failed to submit testimonial. Please try again.', 500)
 	}
 }
 
-export const POST = withRateLimit(handleTestimonialSubmit, 'contactForm')
+export const POST = withMutationGuards(handleTestimonialSubmit, {
+	rateLimit: 'contactForm'
+})

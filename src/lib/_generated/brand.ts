@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-04-26T06:50:27.404Z
+// Last generated: 2026-05-08T15:44:34.358Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -21,6 +21,7 @@ export const BRAND = {
 	mutedForeground: '#4e5661', // --color-muted-foreground
 	accent: '#ef852e', // --color-accent
 	accentForeground: '#1f1307', // --color-accent-foreground
+	accentText: '#a44100', // --color-accent-text
 	destructive: '#cc272e', // --color-destructive
 	destructiveForeground: '#fcf7f7', // --color-destructive-foreground
 	destructiveLight: '#ffebe8', // --color-destructive-light
@@ -105,6 +106,7 @@ export const BRAND_DARK = {
 	mutedForeground: '#d1cdc3', // --color-muted-foreground (dark)
 	accent: '#f0a556', // --color-accent (dark)
 	accentForeground: '#110904', // --color-accent-foreground (dark)
+	accentText: '#ffbb6d', // --color-accent-text (dark)
 	destructive: '#e85854', // --color-destructive (dark)
 	destructiveForeground: '#fcf7f7', // --color-destructive-foreground (dark)
 	border: '#232933', // --color-border (dark)

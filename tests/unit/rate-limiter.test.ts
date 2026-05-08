@@ -208,7 +208,9 @@ describe('UnifiedRateLimiter', () => {
 })
 
 describe('getClientIp', () => {
-	it('extracts IP from x-forwarded-for header', () => {
+	it('extracts IP from x-forwarded-for header (rightmost = trusted hop)', () => {
+		// Vercel appends the real client IP to X-Forwarded-For; the leftmost
+		// entry is attacker-controlled. Trust the rightmost.
 		const request = {
 			headers: {
 				get: (name: string) => {
@@ -221,7 +223,7 @@ describe('getClientIp', () => {
 		} as unknown as NextRequest
 
 		const ip = getClientIp(request)
-		expect(ip).toBe('203.0.113.1')
+		expect(ip).toBe('198.51.100.1')
 	})
 
 	it('extracts IP from x-real-ip header if x-forwarded-for is absent', () => {
@@ -251,7 +253,7 @@ describe('getClientIp', () => {
 		expect(ip).toBe('127.0.0.1')
 	})
 
-	it('handles x-forwarded-for with whitespace', () => {
+	it('handles x-forwarded-for with whitespace (returns rightmost trimmed)', () => {
 		const request = {
 			headers: {
 				get: (name: string) => {
@@ -264,7 +266,7 @@ describe('getClientIp', () => {
 		} as unknown as NextRequest
 
 		const ip = getClientIp(request)
-		expect(ip).toBe('192.0.2.1')
+		expect(ip).toBe('198.51.100.1')
 	})
 
 	it('handles x-real-ip with whitespace', () => {

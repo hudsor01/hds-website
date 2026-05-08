@@ -13,7 +13,7 @@ const lastUpdated = formatDate(new Date())
 
 export default function PrivacyPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
@@ -285,6 +285,6 @@ export default function PrivacyPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

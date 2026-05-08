@@ -75,7 +75,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 	})
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Header / Breadcrumb */}
 			<div className="border-b border-border bg-background">
 				<div className="container-wide px-4 sm:px-6 py-6">
@@ -212,7 +212,10 @@ export default async function HelpArticlePage({ params }: PageProps) {
 										</div>
 									),
 									th: ({ children }) => (
-										<th className="border border-border bg-muted px-4 py-2 text-left font-semibold">
+										<th
+											scope="col"
+											className="border border-border bg-muted px-4 py-2 text-left font-semibold"
+										>
 											{children}
 										</th>
 									),
@@ -276,6 +279,6 @@ export default async function HelpArticlePage({ params }: PageProps) {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

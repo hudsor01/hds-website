@@ -1,7 +1,6 @@
 import { Clock, Mail } from 'lucide-react'
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export const metadata: Metadata = {
@@ -15,40 +14,53 @@ export const metadata: Metadata = {
 	}
 }
 
-// Load the contact form with client-side rendering
-const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
-	loading: () => <ContactFormSkeleton />
-})
-
-import { ServiceAreaMapWrapper } from '@/components/utilities/ServiceAreaMapWrapper'
-
 function ContactFormSkeleton() {
 	return (
-		<div className="space-y-4 animate-pulse">
-			{/* Name fields */}
+		<div className="space-y-4 animate-pulse" aria-hidden="true">
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<div className="h-12 bg-muted rounded-lg"></div>
-				<div className="h-12 bg-muted rounded-lg"></div>
+				<div className="h-12 bg-muted rounded-lg" />
+				<div className="h-12 bg-muted rounded-lg" />
 			</div>
-			{/* Email */}
-			<div className="h-12 bg-muted rounded-lg"></div>
-			{/* Company */}
-			<div className="h-12 bg-muted rounded-lg"></div>
-			{/* Service select */}
-			<div className="h-12 bg-muted rounded-lg"></div>
-			{/* Budget select */}
-			<div className="h-12 bg-muted rounded-lg"></div>
-			{/* Message textarea */}
-			<div className="h-32 bg-muted rounded-lg"></div>
-			{/* Submit button */}
-			<div className="h-12 bg-muted rounded-lg border border-border"></div>
+			<div className="h-12 bg-muted rounded-lg" />
+			<div className="h-12 bg-muted rounded-lg" />
+			<div className="h-12 bg-muted rounded-lg" />
+			<div className="h-12 bg-muted rounded-lg" />
+			<div className="h-32 bg-muted rounded-lg" />
+			<div className="h-12 bg-muted rounded-lg border border-border" />
 		</div>
 	)
 }
 
+function ServiceMapSkeleton() {
+	return (
+		<div
+			className="aspect-[16/9] max-w-3xl mx-auto rounded-xl bg-muted animate-pulse"
+			aria-hidden="true"
+		/>
+	)
+}
+
+// next/dynamic in a Server Component cannot use `ssr: false` (Next.js 16),
+// so we rely on its module-level code-splitting only — the skeleton fires
+// on the client during chunk download. The previous wrapping <Suspense>
+// was redundant (SSR returned the actual component, so nothing suspended).
+const ContactForm = dynamic(() => import('@/components/forms/ContactForm'), {
+	loading: () => <ContactFormSkeleton />
+})
+
+// react-simple-maps + d3-geo + topojson-client. Code-split via dynamic
+// import; full SSR pass keeps content in HTML for crawlers.
+const ServiceAreaMapWrapper = dynamic(
+	() =>
+		import('@/components/utilities/ServiceAreaMapWrapper').then(
+			m => m.ServiceAreaMapWrapper
+		),
+	{ loading: () => <ServiceMapSkeleton /> }
+)
+
 export default function ContactPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -76,9 +88,7 @@ export default function ContactPage() {
 								</p>
 							</div>
 
-							<Suspense fallback={<ContactFormSkeleton />}>
-								<ContactForm />
-							</Suspense>
+							<ContactForm />
 						</div>
 
 						{/* RIGHT: Contact Info + What Happens Next */}
@@ -198,6 +208,6 @@ export default function ContactPage() {
 					<ServiceAreaMapWrapper className="max-w-3xl mx-auto" />
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

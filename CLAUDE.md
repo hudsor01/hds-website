@@ -31,14 +31,16 @@
 
 ## FILE ORGANIZATION
 
+- `proxy.ts` (project root) - Edge proxy (Next.js 16 rename of middleware.ts). Owns security headers, HTTPS redirect, UA blocklist, cache-control, CORS. NOT CSRF or rate-limit — those moved to `src/lib/api/guards.ts::withMutationGuards` for per-route control. Don't recreate `middleware.ts`.
 - `src/app/` - App Router pages, layouts, API route handlers
-- `src/app/actions/` - Server Actions (currently: `ttl-calculator.ts`)
+- `src/app/actions/` - Server Actions (currently: `ttl-calculator.tsx`)
 - `src/app/api/` - API routes (blog, calculators, contact, csp-reports, health, newsletter, pagespeed, process-emails, rss, testimonials, web-vitals)
 - `src/components/layout/` - `Navbar.tsx` (exported as `NavbarLight`), `Footer.tsx`
 - `src/components/forms/` - `ContactForm`, `NewsletterSignup`, `FormField`, `FormSuccessMessage`
 - `src/components/ui/` - Base primitives (button, card, input, label)
 - `src/components/utilities/` - Cross-cutting components (`Icon`/`IconButton`, `Analytics`, `JsonLd`, `ScrollProgress`)
-- `src/lib/` - Core utilities (partial: `db`, `logger`, `errors`, `analytics`, `seo-utils`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
+- `src/lib/` - Core utilities (partial: `db`, `logger`, `errors`, `analytics`, `seo-utils`, `seo-config`, `csrf`, `rate-limiter`, `resend-client`, `contact-service`, `scheduled-emails`, `email-utils`, `notifications`, `request`, `security-headers`, `attribution`, plus per-domain modules `blog`, `showcase`, `testimonials`, `help-articles`, `paystub-calculator/`, `pdf/`, `ttl-calculator/`)
+- Server-only modules (`db`, `resend-client`, `contact-service`, `scheduled-emails`, `testimonials`) import `'server-only'` to fail-fast on accidental client imports
 - `src/lib/auth/admin.ts` - Bearer-token guard for admin/cron endpoints (no user auth in this app)
 - `src/lib/schemas/` - Drizzle table schemas + Zod schemas; barrel at `schema.ts`
 - `src/lib/constants/` - Domain constants (`business.ts` etc.)

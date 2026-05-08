@@ -14,14 +14,13 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
 	title: SEO_CONFIG.about?.title || 'About Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.about?.description || 'Learn about Hudson Digital Solutions',
-	keywords: SEO_CONFIG.about?.keywords || [],
 	openGraph: {
 		title:
 			SEO_CONFIG.about?.ogTitle ??
@@ -87,7 +86,7 @@ const testimonials = [
 
 export default function AboutPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{SEO_CONFIG.about?.structuredData && (
 				<JsonLd
 					data={SEO_CONFIG.about.structuredData as Record<string, unknown>}
@@ -531,6 +530,6 @@ export default function AboutPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

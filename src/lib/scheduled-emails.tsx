@@ -4,6 +4,8 @@
  * Uses Drizzle ORM with Neon for persistent storage
  */
 
+import 'server-only'
+
 import { and, asc, eq, lt, lte } from 'drizzle-orm'
 import { ScheduledDrip } from '@/emails/scheduled-drip'
 import { env } from '@/env'
@@ -18,6 +20,7 @@ import {
 } from '@/lib/schemas/email'
 import { type ScheduledEmail, scheduledEmails } from '@/lib/schemas/emails'
 import { resendEmailResponseSchema } from '@/lib/schemas/external'
+import { buildUnsubscribeUrl } from '@/lib/unsubscribe-token'
 import type { EmailProcessResult, EmailQueueStats } from '@/types/utils'
 import { BUSINESS_INFO } from './constants/business'
 import { getEmailSequences, replaceTemplateVariables } from './email-utils'
@@ -246,6 +249,9 @@ async function sendScheduledEmail(
 	const processedContent = replaceTemplateVariables(sequence.content, variables)
 
 	try {
+		const unsubscribeUrl = await buildUnsubscribeUrl(
+			scheduledEmail.recipientEmail
+		)
 		const emailResponse = await getResendClient().emails.send({
 			from: `Richard Hudson <${BUSINESS_INFO.email}>`,
 			to: [scheduledEmail.recipientEmail],
@@ -254,7 +260,7 @@ async function sendScheduledEmail(
 				<ScheduledDrip
 					subject={processedSubject}
 					content={processedContent}
-					recipientEmail={scheduledEmail.recipientEmail}
+					unsubscribeUrl={unsubscribeUrl}
 				/>
 			)
 		})

@@ -225,11 +225,7 @@ export default function Footer() {
 											'focus-ring'
 										)}
 										aria-label={`Follow us on ${social.name} (opens in new tab)`}
-										title={`Visit our ${social.name} page (opens in new tab)`}
 									>
-										<span className="sr-only">
-											{social.name} (opens in new tab)
-										</span>
 										{social.icon}
 									</a>
 								))}

@@ -44,15 +44,15 @@ async function checkWithKv(
 	key: string,
 	maxRequests: number,
 	windowSeconds: number
-): Promise<boolean> {
+): Promise<boolean | null> {
 	try {
 		const { kv } = await import('@vercel/kv')
 		const current = await kv.incr(key)
 		await kv.expire(key, windowSeconds) // Always refresh TTL — idempotent
 		return current <= maxRequests
 	} catch {
-		// KV not configured (local dev) — fall through to in-memory
-		return null as unknown as boolean
+		// KV not configured at runtime — caller falls through to in-memory store
+		return null
 	}
 }
 
@@ -63,7 +63,11 @@ async function checkWithKv(
  */
 export class UnifiedRateLimiter {
 	private store: Map<string, RateLimitEntry> = new Map()
-	private cleanupInterval: NodeJS.Timeout | null = null
+	// `ReturnType<typeof setInterval>` is portable across DOM/Node/Edge
+	// — the previous `NodeJS.Timeout` only resolved correctly because
+	// @types/node was implicitly in scope. Edge runtime would have
+	// surfaced this as `any` without that implicit include.
+	private cleanupInterval: ReturnType<typeof setInterval> | null = null
 	private useKv: boolean
 
 	constructor() {

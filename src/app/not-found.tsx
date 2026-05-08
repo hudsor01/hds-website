@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function NotFound() {
 	return (
-		<main className="min-h-screen bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden">
+		<div className="min-h-screen bg-background flex items-center justify-center px-4 sm:px-6 relative overflow-hidden">
 			<div
 				className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
 				aria-hidden="true"
@@ -86,6 +86,6 @@ export default function NotFound() {
 					</div>
 				</div>
 			</div>
-		</main>
+		</div>
 	)
 }

@@ -120,6 +120,7 @@ function mapPost(
 		content: post.content,
 		feature_image: post.featureImage,
 		published_at: post.publishedAt?.toISOString() ?? new Date().toISOString(),
+		updated_at: post.updatedAt?.toISOString() ?? null,
 		reading_time: post.readingTime,
 		featured: post.featured ?? false,
 		tags,

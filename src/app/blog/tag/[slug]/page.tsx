@@ -60,7 +60,7 @@ export default async function TagPage({ params }: TagPageProps) {
 	const posts = await getPostsByTag(tag.slug)
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Back to Blog */}
 			<div className="container-wide px-4 sm:px-6 py-8">
 				<Link
@@ -107,6 +107,6 @@ export default async function TagPage({ params }: TagPageProps) {
 					)}
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

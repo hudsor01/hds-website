@@ -4,6 +4,8 @@
  * Note: Types and constants are in ./testimonials/types.ts for client component compatibility
  */
 
+import 'server-only'
+
 import { randomBytes } from 'node:crypto'
 import { desc, eq } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
@@ -13,6 +15,7 @@ import type {
 	TestimonialRequest
 } from '@/types/testimonials'
 import { db } from './db'
+import { logger } from './logger'
 import { testimonialRequests, testimonials } from './schemas/schema'
 
 export type { ServiceType, Testimonial, TestimonialRequest }
@@ -147,8 +150,10 @@ export async function markRequestSubmitted(token: string): Promise<boolean> {
 			})
 			.where(eq(testimonialRequests.token, token))
 		return true
-	} catch {
-		// DB operation failed — caller receives false to indicate failure
+	} catch (error) {
+		logger.error('Failed to mark testimonial request submitted', error, {
+			metadata: { token: `${token.slice(0, 8)}...` }
+		})
 		return false
 	}
 }
@@ -234,8 +239,10 @@ export async function updateTestimonialStatus(
 			})
 			.where(eq(testimonials.id, id))
 		return true
-	} catch {
-		// DB operation failed — caller receives false to indicate failure
+	} catch (error) {
+		logger.error('Failed to update testimonial status', error, {
+			metadata: { id }
+		})
 		return false
 	}
 }
@@ -247,8 +254,10 @@ export async function deleteTestimonial(id: string): Promise<boolean> {
 	try {
 		await db.delete(testimonials).where(eq(testimonials.id, id))
 		return true
-	} catch {
-		// DB operation failed — caller receives false to indicate failure
+	} catch (error) {
+		logger.error('Failed to delete testimonial', error, {
+			metadata: { id }
+		})
 		return false
 	}
 }
@@ -260,8 +269,10 @@ export async function deleteTestimonialRequest(id: string): Promise<boolean> {
 	try {
 		await db.delete(testimonialRequests).where(eq(testimonialRequests.id, id))
 		return true
-	} catch {
-		// DB operation failed — caller receives false to indicate failure
+	} catch (error) {
+		logger.error('Failed to delete testimonial request', error, {
+			metadata: { id }
+		})
 		return false
 	}
 }
