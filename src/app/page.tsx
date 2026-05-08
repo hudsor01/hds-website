@@ -90,19 +90,19 @@ const results = [
 		Icon: TrendingUp,
 		metric: '40+',
 		label: 'Projects delivered',
-		period: 'Across 3 continents'
+		period: 'And counting'
 	},
 	{
 		Icon: Award,
-		metric: '10+ yrs',
-		label: 'Combined experience',
-		period: 'Experienced developers'
+		metric: '5+ yrs',
+		label: 'Industry experience',
+		period: 'Revenue ops background'
 	},
 	{
 		Icon: Clock,
-		metric: '<24hr',
+		metric: '2 hr',
 		label: 'Response time',
-		period: 'Monday through Friday'
+		period: 'During business hours'
 	}
 ]
 

@@ -36,7 +36,7 @@ async function ShowcaseProjects() {
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
 							{ value: '100%', label: 'Client Satisfaction' },
 							{ value: 'Proven', label: 'ROI Results' },
-							{ value: '24/7', label: 'Support Available' }
+							{ value: '2 hr', label: 'Response Time' }
 						].map((stat, index) => (
 							<div
 								key={index}

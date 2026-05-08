@@ -43,9 +43,9 @@ interface Stat {
 
 const stats: Stat[] = [
 	{ value: '2-4 wks', label: 'Typical Delivery' },
-	{ value: 'Expert', label: 'Development Team' },
+	{ value: 'Expert', label: 'Development' },
 	{ value: 'Proven', label: 'ROI Results' },
-	{ value: '<24hr', label: 'Response Time' }
+	{ value: '2 hr', label: 'Response Time' }
 ]
 
 const testimonials = [

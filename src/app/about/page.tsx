@@ -355,35 +355,27 @@ export default function AboutPage() {
 								build nothing.&quot;
 							</blockquote>
 
-							<div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8 pt-8 border-t border-border">
+							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
 								<div className="text-center">
 									<div className="text-3xl font-black text-accent mb-1">5+</div>
 									<div className="text-sm text-muted-foreground">
-										Years of Experience
+										Years in Rev Ops
 									</div>
 								</div>
 								<div className="text-center">
 									<div className="text-3xl font-black text-accent mb-1">
-										Proven
+										10+
+									</div>
+									<div className="text-sm text-muted-foreground">
+										Businesses Served
+									</div>
+								</div>
+								<div className="text-center">
+									<div className="text-3xl font-black text-accent mb-1">
+										Measurable
 									</div>
 									<div className="text-sm text-muted-foreground">
 										Revenue Impact
-									</div>
-								</div>
-								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
-										Strong
-									</div>
-									<div className="text-sm text-muted-foreground">
-										Avg Client ROI
-									</div>
-								</div>
-								<div className="text-center">
-									<div className="text-3xl font-black text-accent mb-1">
-										Growing
-									</div>
-									<div className="text-sm text-muted-foreground">
-										Businesses Transformed
 									</div>
 								</div>
 							</div>
