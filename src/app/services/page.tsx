@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ProcessSteps } from '@/components/ui/ProcessSteps'
 import { ServicesGrid } from '@/components/ui/ServicesGrid'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
 	title:

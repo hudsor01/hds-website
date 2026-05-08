@@ -16,8 +16,8 @@ import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
 import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
+import { SEO_CONFIG } from '@/lib/seo-config'
 import { generateLocalBusinessSchema } from '@/lib/seo-utils'
-import { SEO_CONFIG } from '@/utils/seo'
 
 export const metadata: Metadata = {
 	title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',

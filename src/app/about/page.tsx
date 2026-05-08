@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 // Next.js 15: SSR meta for SEO/TTFB
 export const metadata: Metadata = {
