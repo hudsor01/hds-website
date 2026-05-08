@@ -112,7 +112,11 @@ export function createMockUnifiedRateLimiterClass() {
 }
 
 /**
- * Rate limit configurations matching the real module
+ * Rate limit configurations matching the real module. Must mirror every
+ * key in src/lib/rate-limiter.ts::RATE_LIMIT_CONFIGS — the mock class
+ * uses `keyof typeof MOCK_RATE_LIMIT_CONFIGS` as its limit-type
+ * constraint, so a missing key here would silently fall through to the
+ * `default` profile if the real-module mock is ever bypassed.
  */
 export const MOCK_RATE_LIMIT_CONFIGS = {
 	default: { windowMs: 60 * 1000, maxRequests: 100 },
@@ -120,7 +124,8 @@ export const MOCK_RATE_LIMIT_CONFIGS = {
 	contactForm: { windowMs: 15 * 60 * 1000, maxRequests: 3 },
 	contactFormApi: { windowMs: 60 * 1000, maxRequests: 5 },
 	newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
-	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 }
+	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
+	pagespeedApi: { windowMs: 60 * 1000, maxRequests: 30 }
 } as const
 
 /**
