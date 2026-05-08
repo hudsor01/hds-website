@@ -24,6 +24,14 @@ function setupEnvMock() {
 // Apply env mock immediately on setup
 setupEnvMock()
 
+// `server-only` throws on any import — that's its whole purpose, to fail
+// fast if a server module is reached from a client bundle. In tests we
+// run server modules under bun:test (a Node-like context) so the package
+// would block legitimate test imports of db, testimonials, scheduled-
+// emails, contact-service, unsubscribe-token, etc. Mock it to a no-op
+// before any module-under-test resolves.
+mock.module('server-only', () => ({}))
+
 // Mock next/cache — `cacheLife()` and `cacheTag()` throw outside the Next.js
 // bundler context (they rely on __NEXT_USE_CACHE which only the bundler sets).
 // In bun:test we just no-op them; the data layer functions still work.
@@ -47,7 +55,12 @@ function setupNextServerMock() {
 	const actual = require('next/server')
 	mock.module('next/server', () => ({
 		...actual,
-		after: () => {}
+		after: () => {},
+		// `connection()` opts a route into dynamic rendering — it throws
+		// "outside a request scope" when called without a Next.js request
+		// context. Tests instantiate routes by direct import, so resolve
+		// to a no-op promise.
+		connection: () => Promise.resolve()
 	}))
 }
 

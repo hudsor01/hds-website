@@ -35,7 +35,9 @@ function isPublicHttpUrl(rawUrl: string): boolean {
 		return false
 	}
 
-	const host = parsed.hostname.toLowerCase()
+	// URL.hostname strips brackets from IPv6 addresses on most engines,
+	// but keep a defensive trim for the rare case where it doesn't.
+	const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '')
 	if (
 		host === 'localhost' ||
 		host.endsWith('.local') ||
@@ -90,20 +92,24 @@ interface PageSpeedResponse {
 }
 
 async function handlePageSpeed(request: NextRequest) {
-	await connection() // Force dynamic rendering
+	const { searchParams } = new URL(request.url)
+	const url = searchParams.get('url')
+
+	if (!url) {
+		return errorResponse('URL parameter is required', 400)
+	}
+
+	if (!isPublicHttpUrl(url)) {
+		return errorResponse('URL must be a public http(s) address', 400)
+	}
+
+	// connection() forces dynamic rendering; only call it once we know we
+	// have a real URL to fetch. Calling it for invalid input wastes a
+	// dynamic-segment opt-in and (in unit tests) throws because there's
+	// no request scope.
+	await connection()
 
 	try {
-		const { searchParams } = new URL(request.url)
-		const url = searchParams.get('url')
-
-		if (!url) {
-			return errorResponse('URL parameter is required', 400)
-		}
-
-		if (!isPublicHttpUrl(url)) {
-			return errorResponse('URL must be a public http(s) address', 400)
-		}
-
 		logger.info('Fetching PageSpeed data', { url })
 
 		// Call PageSpeed Insights API

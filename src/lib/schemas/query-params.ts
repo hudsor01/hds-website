@@ -122,24 +122,28 @@ const optionalUrl = () =>
 /**
  * Admin-issued: create a new testimonial request that produces a token.
  * Used by POST /api/testimonials/requests.
+ *
+ * Empty string is normalised to undefined before validation runs so
+ * forms that submit a blank optional field don't trip the email/length
+ * rules.
  */
+const emptyToUndefined = (val: unknown) =>
+	typeof val === 'string' && val.trim() === '' ? undefined : val
+
 export const createTestimonialRequestSchema = z.object({
 	clientName: z
 		.string()
 		.min(1, 'Client name is required')
 		.max(200, 'Client name too long')
 		.trim(),
-	clientEmail: z
-		.string()
-		.email('Invalid email address')
-		.max(254)
-		.optional()
-		.or(z.literal('').transform(() => undefined)),
-	projectName: z
-		.string()
-		.max(200, 'Project name too long')
-		.optional()
-		.or(z.literal('').transform(() => undefined))
+	clientEmail: z.preprocess(
+		emptyToUndefined,
+		z.string().email('Invalid email address').max(254).optional()
+	),
+	projectName: z.preprocess(
+		emptyToUndefined,
+		z.string().max(200, 'Project name too long').optional()
+	)
 })
 export type CreateTestimonialRequestBody = z.infer<
 	typeof createTestimonialRequestSchema
