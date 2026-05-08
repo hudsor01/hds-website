@@ -57,7 +57,7 @@ export const SECURITY_HEADERS = {
 } as const
 
 // Apply headers to a NextResponse (or any Response). Static — there is
-// no per-request nonce to inject; see middleware.ts and the CSP comment
+// no per-request nonce to inject; see proxy.ts and the CSP comment
 // above for why nonce mode was removed.
 export function applySecurityHeaders(response: Response) {
 	for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
