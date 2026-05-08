@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { useAppForm } from '@/hooks/form-hook'
 import { useNewsletterSubscription } from '@/hooks/use-newsletter-subscription'
 import { newsletterSchema } from '@/lib/schemas/contact'
+import QueryProvider from '@/providers/QueryProvider'
 
 interface NewsletterSignupProps {
 	variant?: 'inline' | 'sidebar' | 'modal' | 'section' | 'compact'
@@ -389,21 +390,29 @@ const LazyNewsletterSignup = lazy(() =>
 	Promise.resolve({ default: NewsletterSignupContent })
 )
 
-// Public API with optional dynamic loading
+// Public API with optional dynamic loading. Wrapped in its own
+// QueryProvider so it carries the TanStack Query bootstrap only on pages
+// that actually render the newsletter signup. See PERF-4.
 export function NewsletterSignup({ dynamic, ...props }: NewsletterSignupProps) {
 	if (dynamic) {
 		return (
-			<Suspense
-				fallback={
-					<div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
-						Loading newsletter form...
-					</div>
-				}
-			>
-				<LazyNewsletterSignup {...props} />
-			</Suspense>
+			<QueryProvider>
+				<Suspense
+					fallback={
+						<div className="rounded-lg border border-border bg-card p-6 text-sm text-muted-foreground">
+							Loading newsletter form...
+						</div>
+					}
+				>
+					<LazyNewsletterSignup {...props} />
+				</Suspense>
+			</QueryProvider>
 		)
 	}
 
-	return <NewsletterSignupContent {...props} />
+	return (
+		<QueryProvider>
+			<NewsletterSignupContent {...props} />
+		</QueryProvider>
+	)
 }

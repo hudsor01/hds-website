@@ -1,6 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import Footer from '@/components/layout/Footer'
@@ -27,13 +27,10 @@ const geistSans = Geist({
 	adjustFontFallback: true
 })
 
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
-	display: 'swap',
-	preload: true,
-	adjustFontFallback: true
-})
+// Geist_Mono used to be loaded globally for ~10 chars total (error digest,
+// home stat counter). Now scoped to the JSON formatter tool layout where
+// monospace is actually meaningful; everything else falls through to
+// `ui-monospace` system font (defined as fallback in globals.css).
 
 export const viewport: Viewport = {
 	width: 'device-width',
@@ -124,13 +121,16 @@ export default function RootLayout({
 					content="Hudson Digital Solutions"
 				/>
 
-				{/* Preconnect to external domains for faster loading */}
-				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link
-					rel="preconnect"
-					href="https://fonts.gstatic.com"
-					crossOrigin=""
-				/>
+				{/*
+					next/font self-hosts Geist + Geist_Mono at build time, so the
+					Google Fonts CDN is never contacted at runtime — the previous
+					preconnect hints to fonts.googleapis.com / fonts.gstatic.com
+					were no-ops. Replaced with dns-prefetch for the two Vercel
+					beacons that Speed Insights + Analytics POST to during page
+					load (~50ms saved on first beacon).
+				*/}
+				<link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
+				<link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
 
 				{/* Favicon fallbacks. /icon and /apple-icon are auto-emitted by
 				    src/app/icon.tsx and src/app/apple-icon.tsx (Next.js conventions)
@@ -162,7 +162,7 @@ export default function RootLayout({
 				<meta name="MobileOptimized" content="320" />
 			</head>
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} antialiased`}
 				suppressHydrationWarning
 			>
 				<a

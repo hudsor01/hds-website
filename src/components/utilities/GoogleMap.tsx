@@ -1,7 +1,3 @@
-'use client'
-
-'use client'
-
 export default function GoogleMap() {
 	return (
 		<div className="w-full">
