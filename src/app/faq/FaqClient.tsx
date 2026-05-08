@@ -49,7 +49,7 @@ const faqs = [
 			{
 				question: 'How often will we communicate during the project?',
 				answer:
-					"We provide weekly progress updates via email or video call. You'll have access to a shared project management board to track progress in real-time. For urgent matters, we're available via Slack or email within 24 hours."
+					"We provide weekly progress updates via email or video call. You'll have access to a shared project management board to track progress in real-time. For urgent matters, we're available via Slack or email within 2 hours during business hours."
 			},
 			{
 				question: 'Can I make changes to the project after it starts?',

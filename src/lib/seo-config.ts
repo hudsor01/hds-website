@@ -38,7 +38,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 		title:
 			'Website Development, Integrations & Business Automation | Hudson Digital Solutions',
 		description:
-			'Professional websites, tool integrations, and business automation for small businesses. Get online, connect your systems, and automate manual work. Experienced developers who understand your business — results in 30-90 days.',
+			'Professional websites, tool integrations, and business automation for small businesses. Get online, connect your systems, and automate manual work. Experienced developer who understands your business — results in 30-90 days.',
 		ogTitle:
 			'Website Development & Business Automation for Small Businesses | Hudson Digital',
 		ogDescription:
@@ -64,20 +64,20 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 
 	about: {
 		title:
-			'Experienced Developers Who Understand Your Business | Hudson Digital Solutions',
+			'Experienced Developer Who Understands Your Business | Hudson Digital Solutions',
 		description:
 			'Experienced web developers who understand business, not just code. We build websites, connect your tools, and automate your work — so you can focus on your customers.',
 		ogTitle:
-			'Experienced Developers Who Understand Your Business | Hudson Digital',
+			'Experienced Developer Who Understands Your Business | Hudson Digital',
 		ogDescription:
-			'Experienced developers with a business background. We build websites and automation that actually move the needle for small businesses.',
+			'Experienced developer with a business background. We build websites and automation that actually move the needle for small businesses.',
 		canonical: `${SITE_URL}/about`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'AboutPage',
 			name: 'About Hudson Digital Solutions',
 			description:
-				'Learn about our expert web development team and our mission to transform businesses through technology'
+				'Learn about our founder and our mission to transform businesses through technology'
 		}
 	},
 

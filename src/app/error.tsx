@@ -45,7 +45,7 @@ export default function Error({
 					</div>
 					<h1 className="text-h3 text-foreground mb-3">Something went wrong</h1>
 					<p className="text-sm text-muted-foreground leading-relaxed mb-4">
-						We encountered an unexpected error. Our team has been notified.
+						We encountered an unexpected error. We&apos;ve been notified.
 					</p>
 					{error.digest && (
 						<p className="text-xs text-muted-foreground mb-4 font-mono">
