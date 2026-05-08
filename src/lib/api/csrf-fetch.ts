@@ -4,7 +4,9 @@
  *
  * Tokens last 1 hour (CSRF_SECRET HMAC w/ expiry). We cache the issued
  * token in module memory so repeated form submissions in the same
- * session don't make N round-trips.
+ * session don't make N round-trips. Concurrent calls with a cold cache
+ * dedupe on a shared inflight promise — first arrival wins, others
+ * await the same fetch.
  *
  * Retry-on-403 is narrowed: only "Invalid or missing CSRF token" body
  * triggers a token refresh + retry. Business-logic 403s (expired
@@ -13,15 +15,26 @@
  */
 
 let cachedToken: string | null = null
+let inflight: Promise<string> | null = null
 
 async function fetchToken(): Promise<string> {
-	const res = await fetch('/api/csrf', { credentials: 'same-origin' })
-	if (!res.ok) {
-		throw new Error('Could not get CSRF token')
+	if (inflight) {
+		return inflight
 	}
-	const { token } = (await res.json()) as { token: string }
-	cachedToken = token
-	return token
+	inflight = (async () => {
+		try {
+			const res = await fetch('/api/csrf', { credentials: 'same-origin' })
+			if (!res.ok) {
+				throw new Error('Could not get CSRF token')
+			}
+			const { token } = (await res.json()) as { token: string }
+			cachedToken = token
+			return token
+		} finally {
+			inflight = null
+		}
+	})()
+	return inflight
 }
 
 async function getToken(): Promise<string> {
