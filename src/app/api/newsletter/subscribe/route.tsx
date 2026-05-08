@@ -19,11 +19,16 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
+import { emailSchema } from '@/lib/schemas/common'
 import { newsletterSubscribers } from '@/lib/schemas/emails'
 import { buildUnsubscribeUrl } from '@/lib/unsubscribe-token'
 
+// emailSchema lower-cases + trims, matching the unsubscribe-side
+// normalisation. Subscribers must be stored in canonical form so the
+// unsubscribe token's HMAC (computed over lower-case email) matches the
+// DB row at click-time.
 const SubscribeSchema = z.object({
-	email: z.string().email('Invalid email address'),
+	email: emailSchema,
 	source: z.string().optional()
 })
 
