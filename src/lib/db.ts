@@ -3,6 +3,8 @@
  * Drizzle ORM with Neon serverless driver for PostgreSQL
  * Works in both Bun and Node.js runtimes (Next.js build compatibility)
  */
+import 'server-only'
+
 import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import { env } from '@/env'

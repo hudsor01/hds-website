@@ -44,15 +44,15 @@ async function checkWithKv(
 	key: string,
 	maxRequests: number,
 	windowSeconds: number
-): Promise<boolean> {
+): Promise<boolean | null> {
 	try {
 		const { kv } = await import('@vercel/kv')
 		const current = await kv.incr(key)
 		await kv.expire(key, windowSeconds) // Always refresh TTL — idempotent
 		return current <= maxRequests
 	} catch {
-		// KV not configured (local dev) — fall through to in-memory
-		return null as unknown as boolean
+		// KV not configured at runtime — caller falls through to in-memory store
+		return null
 	}
 }
 

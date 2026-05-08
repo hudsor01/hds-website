@@ -9,6 +9,8 @@
  * - Welcome emails
  */
 
+import 'server-only'
+
 import { ContactAdminNotification } from '@/emails/contact-admin-notification'
 import { ContactWelcome } from '@/emails/contact-welcome'
 import { BUSINESS_INFO } from '@/lib/constants/business'

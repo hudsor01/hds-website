@@ -4,6 +4,8 @@
  * Uses Drizzle ORM with Neon for persistent storage
  */
 
+import 'server-only'
+
 import { and, asc, eq, lt, lte } from 'drizzle-orm'
 import { ScheduledDrip } from '@/emails/scheduled-drip'
 import { env } from '@/env'

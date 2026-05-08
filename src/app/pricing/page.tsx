@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
-import { SEO_CONFIG } from '@/utils/seo'
+import { SEO_CONFIG } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
 	title:
