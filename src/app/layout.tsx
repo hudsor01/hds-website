@@ -177,9 +177,15 @@ export default function RootLayout({
 					<ClientProviders>
 						<ErrorBoundary>
 							<NavbarLight />
-							<div id="main-content" className="min-h-screen pt-14">
+							{/* The skip-link target is now a real <main> landmark
+							    instead of a wrapping <div>; assistive technology
+							    landmark navigation (NVDA Insert+F7, JAWS R) finds
+							    a single named region per page. Pages must NOT emit
+							    their own <main> — they render content directly into
+							    this slot. WCAG 1.3.6 / Landmark roles. */}
+							<main id="main-content" className="min-h-screen pt-14">
 								{children}
-							</div>
+							</main>
 							<Footer />
 							<ScrollToTop />
 							<Analytics />

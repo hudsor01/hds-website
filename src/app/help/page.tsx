@@ -35,7 +35,7 @@ export default async function HelpCenterPage() {
 	const categories = await getCategoriesWithCounts()
 
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden bg-background">
 				<div
@@ -138,6 +138,6 @@ export default async function HelpCenterPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

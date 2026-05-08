@@ -183,7 +183,7 @@ const faqSchema = {
 
 export default function PricingPage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{SEO_CONFIG.pricing?.structuredData && (
 				<JsonLd
 					data={SEO_CONFIG.pricing.structuredData as Record<string, unknown>}
@@ -413,6 +413,6 @@ export default function PricingPage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

@@ -33,6 +33,12 @@
 	/* Accent - Warm Amber */
 	--color-accent: oklch(0.72 0.16 55);
 	--color-accent-foreground: oklch(0.2 0.03 65);
+	/* Darker variant for accent text on light backgrounds. The standard
+	 * --color-accent at 0.72 lightness only hits ~3:1 contrast on
+	 * --color-background, which fails WCAG 1.4.3 for non-large text. Use
+	 * --color-accent-text wherever the accent is used as small/medium
+	 * non-bold body or label copy. ~5:1 contrast. */
+	--color-accent-text: oklch(0.5 0.16 55);
 
 	/* Semantic colors */
 	--color-destructive: oklch(0.55 0.2 25);
@@ -204,6 +210,10 @@
 	/* Accent - Warm Amber (dark) */
 	--color-accent: oklch(0.78 0.13 65);
 	--color-accent-foreground: oklch(0.15 0.02 65);
+	/* Light tint of accent works for small text on dark backgrounds; the
+	 * usage rule is the same as light mode (small/medium non-bold copy
+	 * uses --color-accent-text instead of --color-accent). */
+	--color-accent-text: oklch(0.85 0.13 65);
 
 	/* Semantic colors (dark) */
 	--color-destructive: oklch(0.65 0.18 25);
@@ -292,13 +302,22 @@ a,
 	border: 0;
 }
 
-/* Reduced motion */
+/* Reduced motion. The duration squash kills timed animations, but a
+ * `transform: translateY(...)` on hover is a position shift that still
+ * fires instantly — same visual jolt, just faster. Suppress the transform
+ * itself on `.hover-lift` and `.card-hover-glow` (and on every hovered
+ * element with a translate) so motion-sensitive users see no movement.
+ * WCAG 2.3.3. */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
 	*::after {
 		animation-duration: 0.01ms !important;
 		transition-duration: 0.01ms !important;
+	}
+	.hover-lift:hover,
+	.card-hover-glow:hover {
+		transform: none !important;
 	}
 }
 

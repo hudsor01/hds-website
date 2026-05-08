@@ -108,7 +108,7 @@ const results = [
 
 export default function HomePage() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			<JsonLd data={generateLocalBusinessSchema()} />
 			{/* ── HERO ──────────────────────────────────────────── */}
 			<section className="relative overflow-hidden bg-background">
@@ -462,6 +462,6 @@ export default function HomePage() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

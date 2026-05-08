@@ -5,7 +5,7 @@
 
 export default function TestimonialsLoading() {
 	return (
-		<main className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background">
 			{/* Hero Skeleton */}
 			<section className="relative overflow-hidden bg-background">
 				<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center animate-pulse">
@@ -46,6 +46,6 @@ export default function TestimonialsLoading() {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	)
 }

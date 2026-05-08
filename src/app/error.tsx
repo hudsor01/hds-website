@@ -24,7 +24,7 @@ export default function Error({
 	}, [error])
 
 	return (
-		<main className="min-h-screen bg-background flex items-center justify-center px-6">
+		<div className="min-h-screen bg-background flex items-center justify-center px-6">
 			<div className="max-w-md w-full text-center">
 				<div className="mb-8">
 					<div className="inline-flex items-center justify-center w-16 h-16 bg-destructive/10 rounded-full mb-6">
@@ -72,6 +72,6 @@ export default function Error({
 					</p>
 				</div>
 			</div>
-		</main>
+		</div>
 	)
 }

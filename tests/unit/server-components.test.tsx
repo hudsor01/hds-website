@@ -61,13 +61,14 @@ describe('Services Page (Server Component)', () => {
 // ================================
 
 describe('Contact Page (Server Component)', () => {
-	it('should render with heading and main content', async () => {
+	it('should render with heading and content sections', async () => {
 		const ContactPage = (await import('@/app/contact/page')).default
 		const { container } = render(<ContactPage />)
 
+		// The <main> landmark is now owned by app/layout.tsx (a single
+		// landmark per page), so the page itself just emits sections of
+		// content. Verify the page renders an h1 + at least one section.
 		expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
-		const main = container.querySelector('main')
-		expect(main).toBeTruthy()
 		expect(container.querySelectorAll('section').length).toBeGreaterThan(0)
 	})
 

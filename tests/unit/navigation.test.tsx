@@ -200,12 +200,14 @@ describe('Navigation Accessibility', () => {
 
 		const links = screen.getAllByRole('link')
 
-		// All links should have text content or aria-label
+		// Each link must have an accessible name — visible text OR aria-label
+		// (or aria-labelledby). Icon-only social buttons rely on aria-label
+		// alone now that the redundant sr-only / title pair was removed.
 		links.forEach(link => {
-			const hasText = link.textContent && link.textContent.trim().length > 0
-			const hasAriaLabel = link.getAttribute('aria-label')
-
-			expect(hasText || hasAriaLabel).toBe(true)
+			const hasText = !!link.textContent && link.textContent.trim().length > 0
+			const hasAriaLabel = !!link.getAttribute('aria-label')
+			const hasLabelledBy = !!link.getAttribute('aria-labelledby')
+			expect(hasText || hasAriaLabel || hasLabelledBy).toBe(true)
 		})
 	})
 })
