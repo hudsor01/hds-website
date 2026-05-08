@@ -1,16 +1,26 @@
 /**
  * Health Check API Route
- * Returns service status and database connectivity check.
+ *
+ * Admin-gated. Returns service status, DB connectivity, build version,
+ * and DB latency. Anonymous callers are 401'd because the response
+ * leaks both the deployed package version (useful for vuln scanning)
+ * and a high-signal availability probe.
  */
 
 import { sql } from 'drizzle-orm'
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
+import { env } from '@/env'
+import { validateAdminAuth } from '@/lib/auth/admin'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 
-export async function GET() {
-	const start = Date.now()
+export async function GET(request: NextRequest) {
+	const authError = validateAdminAuth(request)
+	if (authError) {
+		return authError
+	}
 
+	const start = Date.now()
 	try {
 		await db.execute(sql`SELECT 1`)
 		const duration = Date.now() - start
@@ -20,7 +30,7 @@ export async function GET() {
 			timestamp: new Date().toISOString(),
 			database: 'ok',
 			latency_ms: duration,
-			version: process.env.npm_package_version ?? 'unknown'
+			version: env.npm_package_version ?? 'unknown'
 		})
 	} catch (error) {
 		logger.error('Health check failed', error)

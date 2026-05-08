@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
 import type { ContactFormData } from '@/lib/schemas/contact'
 
@@ -24,7 +25,7 @@ export function useContactFormSubmit() {
 				}
 			})
 
-			const response = await fetch('/api/contact', {
+			const response = await csrfFetch('/api/contact', {
 				method: 'POST',
 				body: form
 			})

@@ -6,7 +6,7 @@
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
 import { z } from 'zod'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
 	successResponse,
@@ -65,4 +65,8 @@ async function handleWebVitals(request: NextRequest) {
 	}
 }
 
-export const POST = withRateLimit(handleWebVitals, 'api')
+// Browser beacons can't carry a CSRF token; fall back to same-origin only.
+export const POST = withMutationGuards(handleWebVitals, {
+	rateLimit: 'api',
+	csrf: false
+})

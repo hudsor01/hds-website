@@ -4,7 +4,7 @@ import { BrandHeading } from './_components/brand-heading'
 import { BrandLayout } from './_components/brand-layout'
 
 interface NewsletterWelcomeProps {
-	email: string
+	unsubscribeUrl: string
 }
 
 const BODY_TEXT_STYLE = {
@@ -20,9 +20,7 @@ const LIST_STYLE = {
 	lineHeight: 1.6
 }
 
-export function NewsletterWelcome({ email }: NewsletterWelcomeProps) {
-	const unsubscribeUrl = `https://hudsondigitalsolutions.com/unsubscribe?email=${encodeURIComponent(email)}`
-
+export function NewsletterWelcome({ unsubscribeUrl }: NewsletterWelcomeProps) {
 	return (
 		<BrandLayout preview="Welcome to Hudson Digital Solutions">
 			<BrandHeading level={1}>Welcome to Our Newsletter!</BrandHeading>

@@ -30,10 +30,12 @@ export async function POST(request: NextRequest) {
 		const parsed = createBlogPostSchema.safeParse(body)
 
 		if (!parsed.success) {
-			return NextResponse.json(
-				{ error: 'Validation failed', details: parsed.error.flatten() },
-				{ status: 400 }
-			)
+			// Log details server-side; expose only a generic message so the
+			// caller cannot enumerate field names / shape.
+			logger.warn('Blog post validation failed', {
+				metadata: { issues: parsed.error.flatten() }
+			})
+			return NextResponse.json({ error: 'Validation failed' }, { status: 400 })
 		}
 
 		const { authorSlug, tagSlugs, ...postData } = parsed.data

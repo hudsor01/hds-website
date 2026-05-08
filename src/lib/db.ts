@@ -2,9 +2,16 @@
  * Database Client
  * Drizzle ORM with Neon serverless driver for PostgreSQL
  * Works in both Bun and Node.js runtimes (Next.js build compatibility)
+ *
+ * Note: this module deliberately does NOT have a `server-only` guard even
+ * though it is server-side. logger.ts dynamically imports it via
+ * `await import('@/lib/db')` from a client-reachable code path, and
+ * `server-only` would force webpack to fail bundling that chunk. The
+ * dynamic import only fires server-side at runtime, but the static guard
+ * cannot tell the difference. The modules that consume db (testimonials,
+ * scheduled-emails, contact-service) carry their own `server-only` import
+ * for the same protection without breaking the logger chain.
  */
-import 'server-only'
-
 import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import { env } from '@/env'

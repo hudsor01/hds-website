@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import { logger } from '@/lib/logger'
 
 // Define expected CSP report fields for validation
@@ -72,4 +72,9 @@ async function handleCspReport(request: NextRequest) {
 	}
 }
 
-export const POST = withRateLimit(handleCspReport, 'api')
+// CSP reports come from the browser; no CSRF token possible. Origin check
+// only — same-origin enforcement keeps cross-site report-floods at bay.
+export const POST = withMutationGuards(handleCspReport, {
+	rateLimit: 'api',
+	csrf: false
+})

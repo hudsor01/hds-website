@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Analytics } from '@/components/utilities/Analytics'
+import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
@@ -92,7 +93,8 @@ async function ProjectContent({ slug }: { slug: string }) {
 		)
 		.slice(0, 3)
 
-	// Schema markup for rich results
+	// Schema markup for rich results — emit via JsonLd which safely escapes
+	// </script> in DB-sourced fields (project.title/description/imageUrl).
 	const schemaMarkup = {
 		'@context': 'https://schema.org',
 		'@type': 'CreativeWork',
@@ -112,11 +114,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 
 	return (
 		<>
-			{/* Schema Markup */}
-			<script
-				type="application/ld+json"
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
-			/>
+			<JsonLd data={schemaMarkup} />
 
 			{/* Hero Section */}
 			<section className="py-section-sm px-4 sm:px-6">

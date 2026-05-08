@@ -5,7 +5,6 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
-import { JsonLd } from '@/components/utilities/JsonLd'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'
 import { formatCurrency } from '@/lib/utils'
@@ -178,22 +177,6 @@ export function Calculator() {
 
 	return (
 		<main className="min-h-screen bg-background">
-			<JsonLd
-				data={{
-					'@context': 'https://schema.org',
-					'@type': 'WebApplication',
-					name: 'Texas TTL Calculator',
-					description:
-						'Calculate tax, title, license fees and monthly payments for vehicles in Texas',
-					applicationCategory: 'FinanceApplication',
-					operatingSystem: 'All',
-					offers: {
-						'@type': 'Offer',
-						price: '0',
-						priceCurrency: 'USD'
-					}
-				}}
-			/>
 			<div className="container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 max-w-6xl mx-auto">
 				{/* Header */}
 				<div className="mb-10">

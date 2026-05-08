@@ -9,7 +9,7 @@ import { after } from 'next/server'
 import { z } from 'zod'
 import { NewsletterAdminNotification } from '@/emails/newsletter-admin-notification'
 import { NewsletterWelcome } from '@/emails/newsletter-welcome'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
 	successResponse,
@@ -20,6 +20,7 @@ import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { newsletterSubscribers } from '@/lib/schemas/emails'
+import { buildUnsubscribeUrl } from '@/lib/unsubscribe-token'
 
 const SubscribeSchema = z.object({
 	email: z.string().email('Invalid email address'),
@@ -83,12 +84,13 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 		// User gets immediate ack; emails arrive a beat later.
 		if (isResendConfigured()) {
 			after(async () => {
+				const unsubscribeUrl = await buildUnsubscribeUrl(email)
 				try {
 					await getResendClient().emails.send({
 						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 						to: email,
 						subject: 'Welcome to Hudson Digital Solutions Newsletter',
-						react: <NewsletterWelcome email={email} />
+						react: <NewsletterWelcome unsubscribeUrl={unsubscribeUrl} />
 					})
 				} catch (emailError) {
 					logger.error('Failed to send welcome email:', emailError)
@@ -119,4 +121,6 @@ async function handleNewsletterSubscribe(request: NextRequest) {
 	}
 }
 
-export const POST = withRateLimit(handleNewsletterSubscribe, 'newsletter')
+export const POST = withMutationGuards(handleNewsletterSubscribe, {
+	rateLimit: 'newsletter'
+})

@@ -2,19 +2,27 @@
  * Health Check API Route Unit Tests
  * Tests for src/app/api/health/route.ts
  *
- * Verifies the response shape on success and the 503 path on DB failure.
- * DB is mocked via mock.module('@/lib/db') in each test case.
+ * Verifies the response shape on success, 503 on DB failure, and the
+ * admin-auth gate. Auth is mocked at module level.
  */
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import { NextRequest } from 'next/server'
 import { cleanupMocks } from '../test-utils'
+
+function authedRequest() {
+	return new NextRequest('http://localhost/api/health', {
+		headers: { authorization: 'Bearer test-admin' }
+	})
+}
 
 describe('GET /api/health', () => {
 	beforeEach(() => {
 		mock.module('@/env', () => ({
 			env: {
 				NODE_ENV: 'test',
-				npm_package_version: '2.5.0'
+				npm_package_version: '2.5.0',
+				ADMIN_SECRET: 'test-admin'
 			}
 		}))
 
@@ -29,6 +37,11 @@ describe('GET /api/health', () => {
 			castError: (error: unknown) =>
 				error instanceof Error ? error : new Error(String(error))
 		}))
+
+		// Auth helper passes through when the test sends a valid bearer.
+		mock.module('@/lib/auth/admin', () => ({
+			validateAdminAuth: () => null
+		}))
 	})
 
 	afterEach(() => {
@@ -36,7 +49,6 @@ describe('GET /api/health', () => {
 	})
 
 	it('returns 200 with correct shape when database is reachable', async () => {
-		// Mock db.execute to resolve successfully; the sql tag comes from real drizzle-orm
 		mock.module('@/lib/db', () => ({
 			db: {
 				execute: mock().mockResolvedValue([{ '?column?': 1 }])
@@ -44,7 +56,7 @@ describe('GET /api/health', () => {
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET()
+		const response = await GET(authedRequest())
 		const data = await response.json()
 
 		expect(response.status).toBe(200)
@@ -64,7 +76,7 @@ describe('GET /api/health', () => {
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET()
+		const response = await GET(authedRequest())
 		const data = await response.json()
 
 		const parsed = new Date(data.timestamp)
@@ -79,14 +91,13 @@ describe('GET /api/health', () => {
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET()
+		const response = await GET(authedRequest())
 		const data = await response.json()
 
 		expect(response.status).toBe(503)
 		expect(data.status).toBe('error')
 		expect(data.database).toBe('error')
 		expect(typeof data.timestamp).toBe('string')
-		// latency_ms should not be present in the error response
 		expect(data.latency_ms).toBeUndefined()
 	})
 
@@ -98,10 +109,24 @@ describe('GET /api/health', () => {
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET()
+		const response = await GET(authedRequest())
 		const data = await response.json()
 
 		const parsed = new Date(data.timestamp)
 		expect(parsed.toISOString()).toBe(data.timestamp)
+	})
+
+	it('rejects requests without valid admin auth', async () => {
+		mock.module('@/lib/auth/admin', () => ({
+			validateAdminAuth: () =>
+				Response.json({ error: 'Unauthorized' }, { status: 401 })
+		}))
+		mock.module('@/lib/db', () => ({
+			db: { execute: mock().mockResolvedValue([{ '?column?': 1 }]) }
+		}))
+
+		const { GET } = await import('@/app/api/health/route')
+		const response = await GET(authedRequest())
+		expect(response.status).toBe(401)
 	})
 })

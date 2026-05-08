@@ -1,14 +1,22 @@
 /**
  * API Route: Testimonial Requests
- * GET /api/testimonials/requests - List all testimonial requests
- * POST /api/testimonials/requests - Create a new testimonial request
+ * GET  /api/testimonials/requests  — list (admin)
+ * POST /api/testimonials/requests  — create (admin)
+ *
+ * Admin auth via Bearer token. CSRF is not applied — n8n/server-to-server
+ * callers can't fetch a CSRF token. The admin secret IS the trust signal.
  */
 
 import type { NextRequest } from 'next/server'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
-import { errorResponse, successResponse } from '@/lib/api/responses'
+import {
+	errorResponse,
+	successResponse,
+	validationErrorResponse
+} from '@/lib/api/responses'
 import { validateAdminAuth } from '@/lib/auth/admin'
 import { logger } from '@/lib/logger'
+import { createTestimonialRequestSchema } from '@/lib/schemas/query-params'
 import {
 	createTestimonialRequest,
 	getTestimonialRequests
@@ -21,23 +29,11 @@ async function handleTestimonialRequestsGet(request: NextRequest) {
 	}
 	try {
 		const requests = await getTestimonialRequests()
-
 		return successResponse({ requests })
 	} catch (error) {
-		logger.error('Error fetching testimonial requests', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialRequestsAPI',
-			action: 'list'
-		})
-
+		logger.error('Error fetching testimonial requests', error)
 		return errorResponse('Failed to fetch requests', 500)
 	}
-}
-
-interface CreateRequestBody {
-	clientName: string
-	clientEmail?: string
-	projectName?: string
 }
 
 export const GET = withRateLimit(handleTestimonialRequestsGet, 'api')
@@ -47,19 +43,20 @@ async function handleTestimonialRequestsPost(request: NextRequest) {
 	if (authError) {
 		return authError
 	}
-	try {
-		const body = (await request.json()) as CreateRequestBody
 
-		if (!body.clientName?.trim()) {
-			return errorResponse('Client name is required', 400)
+	try {
+		const rawBody = await request.json()
+		const parseResult = createTestimonialRequestSchema.safeParse(rawBody)
+		if (!parseResult.success) {
+			return validationErrorResponse(parseResult.error)
 		}
 
+		const { clientName, clientEmail, projectName } = parseResult.data
 		const newRequest = await createTestimonialRequest(
-			body.clientName,
-			body.clientEmail,
-			body.projectName
+			clientName,
+			clientEmail,
+			projectName
 		)
-
 		if (!newRequest) {
 			throw new Error('Failed to create request')
 		}
@@ -67,8 +64,7 @@ async function handleTestimonialRequestsPost(request: NextRequest) {
 		logger.info('Testimonial request created', {
 			component: 'TestimonialRequestsAPI',
 			action: 'create',
-			requestId: newRequest.id,
-			clientName: body.clientName
+			metadata: { requestId: newRequest.id }
 		})
 
 		return successResponse({
@@ -76,12 +72,7 @@ async function handleTestimonialRequestsPost(request: NextRequest) {
 			id: newRequest.id
 		})
 	} catch (error) {
-		logger.error('Error creating testimonial request', {
-			error: error instanceof Error ? error.message : String(error),
-			component: 'TestimonialRequestsAPI',
-			action: 'create'
-		})
-
+		logger.error('Error creating testimonial request', error)
 		return errorResponse('Failed to create request', 500)
 	}
 }
