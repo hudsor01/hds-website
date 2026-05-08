@@ -3,9 +3,13 @@
  * attaches it as `X-CSRF-Token` on the wrapped fetch call.
  *
  * Tokens last 1 hour (CSRF_SECRET HMAC w/ expiry). We cache the issued
- * token in module memory so repeated form submissions in the same session
- * don't make N round-trips. On 403 (token expired or invalid) we clear the
- * cache and retry once with a fresh token.
+ * token in module memory so repeated form submissions in the same
+ * session don't make N round-trips.
+ *
+ * Retry-on-403 is narrowed: only "Invalid or missing CSRF token" body
+ * triggers a token refresh + retry. Business-logic 403s (expired
+ * unsubscribe link, already-submitted testimonial) bubble through as-is
+ * so the caller can show a real message.
  */
 
 let cachedToken: string | null = null
@@ -27,10 +31,27 @@ async function getToken(): Promise<string> {
 	return fetchToken()
 }
 
+const CSRF_REJECTION_MESSAGE = 'Invalid or missing CSRF token'
+
+/** Inspect a 403 body to decide whether the rejection is a CSRF failure
+ *  (not an arbitrary business-logic 403). Reads via `.clone()` so the
+ *  caller can still consume the original body. */
+async function isCsrfRejection(response: Response): Promise<boolean> {
+	if (response.status !== 403) {
+		return false
+	}
+	try {
+		const body = (await response.clone().json()) as { error?: string }
+		return body?.error === CSRF_REJECTION_MESSAGE
+	} catch {
+		return false
+	}
+}
+
 /**
  * Drop-in replacement for `fetch()` that adds an X-CSRF-Token header.
- * Only the first arg form (URL + init) is supported — same shape as the
- * call sites this module replaces.
+ * Only the URL + init form is supported — the call sites this module
+ * replaces all use that shape.
  */
 export async function csrfFetch(
 	url: string,
@@ -45,8 +66,10 @@ export async function csrfFetch(
 		headers
 	})
 
-	// Token expired or invalidated — refresh once and retry.
-	if (response.status === 403 && cachedToken) {
+	// Only refresh + retry on a CSRF-specific 403. Business-logic 403s
+	// (expired unsubscribe link, already-submitted token) pass through
+	// unchanged so the caller's UX message is accurate.
+	if (cachedToken && (await isCsrfRejection(response))) {
 		cachedToken = null
 		headers.set('X-CSRF-Token', await getToken())
 		return fetch(url, {

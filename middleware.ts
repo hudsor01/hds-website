@@ -1,23 +1,26 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { applySecurityHeaders } from '@/lib/security-headers'
 
+/**
+ * Apply security headers (CSP, HSTS, frame-options, etc.) on every request.
+ *
+ * Note: there used to be CSP nonce generation here, but we deliberately
+ * removed it. Wiring nonces requires reading `x-nonce` via `headers()` in
+ * every layout/component that emits a script tag — and `headers()` forces
+ * dynamic rendering, defeating the cacheComponents-driven static
+ * generation across this site. The CSP in security-headers.ts uses
+ * 'self' 'unsafe-inline' instead; inline-script defenses live at the
+ * source level (JsonLd escapes `</script>` and sanitize-html locks down
+ * user-submitted blog HTML).
+ */
 export function middleware(request: NextRequest) {
-  // 1. Generate a per-request nonce for CSP
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-
-  // 2. Pass nonce to layout via request header
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-nonce', nonce)
-
-  // 3. Create response and apply security headers (including nonce in CSP)
-  const response = NextResponse.next({ request: { headers: requestHeaders } })
-  applySecurityHeaders(response, nonce)
-
-  return response
+	const response = NextResponse.next({ request })
+	applySecurityHeaders(response)
+	return response
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)',
-  ],
+	matcher: [
+		'/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)'
+	]
 }

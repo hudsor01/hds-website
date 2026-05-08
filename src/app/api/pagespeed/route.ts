@@ -55,6 +55,11 @@ function isPublicHttpUrl(rawUrl: string): boolean {
 			return false
 		}
 		const [a, b] = octets as [number, number, number, number]
+		// 0.0.0.0/8 is the "this host on this network" range — on Linux
+		// it routes to localhost. Block the entire /8.
+		if (a === 0) {
+			return false
+		}
 		if (a === 10 || a === 127 || (a === 169 && b === 254)) {
 			return false
 		}
@@ -66,8 +71,16 @@ function isPublicHttpUrl(rawUrl: string): boolean {
 		}
 	}
 
-	// IPv6 — Vercel passes hostnames bracketed [::1]
-	if (host === '::1' || host.startsWith('fc') || host.startsWith('fd')) {
+	// IPv6: loopback (::1), unique-local (fc00::/7 → fc00–fdff prefixes),
+	// and IPv4-mapped IPv6 (::ffff:a.b.c.d, normalised by URL parser to
+	// `::ffff:` followed by hex). The mapped form bypasses the IPv4 regex
+	// above, so explicitly reject anything starting with `::ffff:`.
+	if (
+		host === '::1' ||
+		host.startsWith('fc') ||
+		host.startsWith('fd') ||
+		host.startsWith('::ffff:')
+	) {
 		return false
 	}
 

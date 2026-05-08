@@ -27,6 +27,7 @@ import {
 	markRequestSubmitted,
 	submitTestimonial
 } from '@/lib/testimonials'
+import { sanitizeEmailHeader } from '@/lib/utils'
 
 async function handleTestimonialSubmit(request: NextRequest) {
 	try {
@@ -90,10 +91,15 @@ async function handleTestimonialSubmit(request: NextRequest) {
 		if (isResendConfigured()) {
 			after(async () => {
 				try {
+					// Sanitize the subject — schema .trim() doesn't strip CRLF,
+					// and an attacker-crafted client_name with embedded \r\n
+					// could inject additional headers in the Resend API call.
 					await getResendClient().emails.send({
 						from: `Hudson Digital Solutions <noreply@hudsondigitalsolutions.com>`,
 						to: BUSINESS_INFO.email,
-						subject: `[Notification] New Testimonial Submitted - ${body.client_name}`,
+						subject: sanitizeEmailHeader(
+							`[Notification] New Testimonial Submitted - ${body.client_name}`
+						),
 						react: (
 							<TestimonialAdminNotification
 								clientName={body.client_name}

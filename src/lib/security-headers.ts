@@ -14,20 +14,22 @@ export const SECURITY_HEADERS = {
 
 	// Content Security Policy.
 	//
-	// script-src uses `'nonce-{n}' 'strict-dynamic'` so scripts loaded by
-	// an already-trusted (nonce'd) script are also trusted — this is what
-	// lets Vercel Analytics + Speed Insights load without blanket-trusting
-	// every https: origin. We also keep `'unsafe-inline'` as a compatibility
-	// flag: modern browsers ignore it once a nonce is present (per spec),
-	// but it lets older browsers and inert <script type="application/ld+json">
-	// blocks render — the latter is server-rendered structured data that
-	// is never executed and would otherwise force every JSON-LD page to be
-	// dynamic just to inject a per-request nonce.
+	// We DON'T use nonce + strict-dynamic, even though that would be the
+	// strictest pattern — it requires the layout (or every JsonLd
+	// consumer) to read x-nonce via headers() and forward it to script
+	// tags, which forces dynamic rendering for every page. This site
+	// relies on cacheComponents-driven static generation, so we accept a
+	// slightly weaker policy in exchange for keeping the static shell.
 	//
-	// The previous policy used a wildcard `https:` fallback that effectively
-	// allowed every TLS origin and defeated the nonce; that is now removed.
+	// The chosen policy: 'self' 'unsafe-inline' for scripts and styles.
+	// Inline-script defenses live at the source level — JsonLd escapes
+	// `</script>` in DB-sourced fields (see src/components/utilities/JsonLd.tsx)
+	// and sanitize-html locks down user-submitted blog HTML. The previous
+	// policy had a wildcard `https:` fallback that allowed every TLS
+	// origin; THAT is now removed. connect-src is locked to self plus the
+	// two Vercel beacons used by @vercel/analytics + @vercel/speed-insights.
 	'Content-Security-Policy':
-		"default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic' 'unsafe-inline'; style-src 'self' 'nonce-{nonce}' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: blob:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https://*.vercel-insights.com https://*.vercel-scripts.com wss:; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'; report-uri /api/csp-reports;",
+		"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: blob:; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; connect-src 'self' https://*.vercel-insights.com https://*.vercel-scripts.com; worker-src 'self' blob:; child-src 'none'; manifest-src 'self'; report-uri /api/csp-reports;",
 
 	// Cross-origin policies
 	'Cross-Origin-Opener-Policy': 'same-origin',
@@ -50,15 +52,12 @@ export const SECURITY_HEADERS = {
 	].join(', ')
 } as const
 
-// Apply headers to NextResponse with nonce support
-export function applySecurityHeaders(response: Response, nonce?: string) {
-	Object.entries(SECURITY_HEADERS).forEach(([key, value]) => {
-		// Replace nonce placeholder if CSP header and nonce provided
-		if (key === 'Content-Security-Policy' && nonce) {
-			value = value.replace(/{nonce}/g, nonce)
-		}
+// Apply headers to a NextResponse (or any Response). Static — there is
+// no per-request nonce to inject; see middleware.ts and the CSP comment
+// above for why nonce mode was removed.
+export function applySecurityHeaders(response: Response) {
+	for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
 		response.headers.set(key, value)
-	})
-
+	}
 	return response
 }

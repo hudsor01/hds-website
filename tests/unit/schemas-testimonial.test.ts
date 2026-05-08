@@ -32,6 +32,12 @@ describe('testimonialSubmitSchema', () => {
 		expect(
 			testimonialSubmitSchema.safeParse({ ...validSubmit, token: '' }).success
 		).toBe(false)
+		// Whitespace-only tokens used to slip past min(1) and silently
+		// fail the request lookup; the schema now trims first.
+		expect(
+			testimonialSubmitSchema.safeParse({ ...validSubmit, token: '   ' })
+				.success
+		).toBe(false)
 	})
 
 	it('requires content >= 20 chars', () => {

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { trackConversion } from '@/lib/analytics'
+import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
 
 interface ResultItem {
@@ -48,7 +49,7 @@ export function CalculatorResults({
 
 		try {
 			// Store calculator results
-			const response = await fetch('/api/calculators/submit', {
+			const response = await csrfFetch('/api/calculators/submit', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

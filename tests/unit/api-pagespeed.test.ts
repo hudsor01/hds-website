@@ -45,7 +45,7 @@ describe('GET /api/pagespeed (SSRF guard)', () => {
 		}
 	})
 
-	it('rejects localhost / *.local / RFC1918 ranges', async () => {
+	it('rejects localhost / *.local / RFC1918 ranges plus 0.0.0.0/8', async () => {
 		const { GET } = await import('@/app/api/pagespeed/route')
 		for (const url of [
 			'http://localhost/',
@@ -55,19 +55,28 @@ describe('GET /api/pagespeed (SSRF guard)', () => {
 			'http://172.31.1.1/',
 			'http://192.168.1.1/',
 			'http://127.0.0.1/',
-			'http://169.254.169.254/latest/meta-data/'
+			'http://169.254.169.254/latest/meta-data/',
+			// 0.0.0.0/8 routes to localhost on Linux — must not be reachable
+			'http://0.0.0.0/',
+			'http://0.255.255.255/'
 		]) {
 			const res = await GET(makeRequest(url))
 			expect(res.status).toBe(400)
 		}
 	})
 
-	it('rejects IPv6 loopback and unique-local', async () => {
+	it('rejects IPv6 loopback, unique-local, and IPv4-mapped IPv6', async () => {
 		const { GET } = await import('@/app/api/pagespeed/route')
 		for (const url of [
 			'http://[::1]/',
 			'http://[fc00::1]/',
-			'http://[fd12:3456:789a::1]/'
+			'http://[fd12:3456:789a::1]/',
+			// IPv4-mapped IPv6 — URL parser normalises ::ffff:127.0.0.1
+			// to ::ffff:7f00:1, which would have bypassed the IPv4 regex
+			// and the prior "::1 / fc / fd" check. Now blocked outright
+			// by the ::ffff: prefix rule.
+			'http://[::ffff:127.0.0.1]/',
+			'http://[::ffff:0:0]/'
 		]) {
 			const res = await GET(makeRequest(url))
 			expect(res.status).toBe(400)

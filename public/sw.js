@@ -1,18 +1,25 @@
 // Service Worker for Hudson Digital Solutions
 // Version: 1.0.0
 
-const CACHE_NAME = 'hds-v1'
+// Bumped to v2 because the cached asset list changed; the activate
+// handler below already evicts entries with non-matching CACHE_NAME.
+const CACHE_NAME = 'hds-v2'
 const OFFLINE_URL = '/offline.html'
 
-// URLs to cache for offline use
+// URLs to pre-cache for offline use. Icons are served as Next.js
+// ImageResponse routes (/icon0 = 192x192, /icon1 = 512x512) instead of
+// static PNG files in /public; the previous list referenced
+// /icon-192x192.png + /icon-512x512.png which never existed and caused
+// `cache.addAll` to silently 404 every install.
 const STATIC_CACHE_URLS = [
 	'/',
 	'/offline.html',
 	'/manifest.json',
-	'/favicon.ico',
-	'/icon-192x192.png',
-	'/icon-512x512.png'
-	// Next.js static files will be cached dynamically
+	'/favicon-32x32.png',
+	'/favicon-16x16.png',
+	'/icon0',
+	'/icon1'
+	// Other Next.js assets are cached dynamically by the fetch handler.
 ]
 
 // Install event - cache static assets

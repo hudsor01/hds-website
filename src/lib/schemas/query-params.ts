@@ -154,7 +154,9 @@ export const testimonialSubmitSchema = z.object({
 	// signed request link issued by the admin. The token proves the
 	// submitter received an invite — without it, anyone could POST a
 	// testimonial directly into the moderation queue.
-	token: z.string().min(1, 'Submission token is required'),
+	// .trim() + min(1) rejects whitespace-only tokens that would
+	// otherwise silently fail the request lookup.
+	token: z.string().trim().min(1, 'Submission token is required'),
 	client_name: z
 		.string()
 		.min(2, 'Name must be at least 2 characters')
