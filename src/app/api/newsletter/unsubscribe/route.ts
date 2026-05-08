@@ -12,11 +12,17 @@ import { z } from 'zod'
 import { withMutationGuards } from '@/lib/api/guards'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
+import { emailSchema } from '@/lib/schemas/common'
 import { newsletterSubscribers } from '@/lib/schemas/emails'
 import { verifyUnsubscribeToken } from '@/lib/unsubscribe-token'
 
+// emailSchema applies .toLowerCase().trim() — the SAME normalisation
+// generateUnsubscribeToken uses when computing the HMAC. Without this,
+// a mixed-case email in the URL would verify against the token (the
+// HMAC helper normalises) but miss the DB row (stored lowercased at
+// subscribe time, looked up via raw `eq()` here).
 const unsubscribeSchema = z.object({
-	email: z.string().email(),
+	email: emailSchema,
 	token: z.string().min(1, 'Unsubscribe token is required')
 })
 
