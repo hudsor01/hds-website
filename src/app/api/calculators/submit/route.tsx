@@ -8,7 +8,7 @@ import { after } from 'next/server'
 import { z } from 'zod'
 import { CalculatorAdminNotification } from '@/emails/calculator-admin-notification'
 import { CalculatorResults } from '@/emails/calculator-results'
-import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
+import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
 	successResponse,
@@ -272,7 +272,9 @@ async function handleCalculatorSubmit(request: NextRequest) {
 	}
 }
 
-export const POST = withRateLimit(handleCalculatorSubmit, 'contactForm')
+export const POST = withMutationGuards(handleCalculatorSubmit, {
+	rateLimit: 'contactForm'
+})
 
 // Helper functions
 function getCalculatorName(type: string): string {

@@ -44,14 +44,9 @@ export async function proxy(request: NextRequest) {
 	// via cookies. The SDK refreshes tokens transparently when needed.
 	// No manual session refresh is required in middleware.
 
-	// Generate nonce for CSP
-	const nonce = Math.random().toString(36).substring(2, 18)
-
-	// Add security headers using centralized configuration with nonce
-	applySecurityHeaders(response, nonce)
-
-	// Store nonce in header for use in components
-	response.headers.set('X-CSP-Nonce', nonce)
+	// Add centralized security headers (CSP no longer uses a nonce — see
+	// src/lib/security-headers.ts for the rationale).
+	applySecurityHeaders(response)
 
 	// Add performance headers
 	response.headers.set('X-Request-Time', Date.now().toString())

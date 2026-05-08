@@ -22,7 +22,7 @@ import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import { scheduleEmailSequence } from '@/lib/scheduled-emails'
 import type { ContactFormData, LeadScoring } from '@/lib/schemas/contact'
 import { resendEmailResponseSchema } from '@/lib/schemas/external'
-import { detectInjectionAttempt } from '@/lib/utils'
+import { detectInjectionAttempt, sanitizeEmailHeader } from '@/lib/utils'
 
 const EMAIL_CONFIG = {
 	FROM_ADMIN: `${BUSINESS_INFO.displayName} <noreply@hudsondigitalsolutions.com>`,
@@ -89,7 +89,11 @@ export async function sendAdminNotification(
 		const response = await getResendClient().emails.send({
 			from: EMAIL_CONFIG.FROM_ADMIN,
 			to: [EMAIL_CONFIG.TO_ADMIN],
-			subject: `New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`,
+			// Sanitize: firstName/lastName are user-supplied. Zod .trim()
+			// doesn't strip CRLF, so a crafted name could inject headers.
+			subject: sanitizeEmailHeader(
+				`New Project Inquiry - ${data.firstName} ${data.lastName} (Score: ${leadScore})`
+			),
 			react: (
 				<ContactAdminNotification
 					firstName={data.firstName}
