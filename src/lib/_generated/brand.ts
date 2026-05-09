@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-05-08T15:44:34.358Z
+// Last generated: 2026-05-09T20:18:36.380Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -58,37 +58,13 @@ export const BRAND = {
 	textSecondary: '#404855', // --color-text-secondary
 	textMuted: '#5d646f', // --color-text-muted
 	bgOverlay: '#070b14', // --color-bg-overlay
-	backgroundDark: '#03060b', // --color-background-dark
-	foregroundDark: '#edebe5', // --color-foreground-dark
-	cardDark: '#090d15', // --color-card-dark
-	cardForegroundDark: '#edebe5', // --color-card-foreground-dark
-	popoverDark: '#090d15', // --color-popover-dark
-	popoverForegroundDark: '#edebe5', // --color-popover-foreground-dark
-	primaryDark: '#6aa7f4', // --color-primary-dark
-	primaryForegroundDark: '#03060b', // --color-primary-foreground-dark
-	secondaryDark: '#151b24', // --color-secondary-dark
-	secondaryForegroundDark: '#e6e4df', // --color-secondary-foreground-dark
-	mutedDark: '#12161d', // --color-muted-dark
-	mutedForegroundDark: '#d1cdc3', // --color-muted-foreground-dark
-	accentDark: '#f0a556', // --color-accent-dark
-	accentForegroundDark: '#110904', // --color-accent-foreground-dark
-	borderDark: '#232933', // --color-border-dark
-	inputDark: '#0e1218', // --color-input-dark
-	ringDark: '#6aa7f4', // --color-ring-dark
 	surfaceBase: '#fafaf9', // --color-surface-base
 	surfaceRaised: '#fefdfd', // --color-surface-raised
 	surfaceElevated: '#ffffff', // --color-surface-elevated
 	surfaceOverlay: '#f3f5f8', // --color-surface-overlay
 	surfaceSunken: '#f2f0ea', // --color-surface-sunken
-	surfaceBaseDark: '#03060b', // --color-surface-base-dark
-	surfaceRaisedDark: '#090d15', // --color-surface-raised-dark
-	surfaceElevatedDark: '#101620', // --color-surface-elevated-dark
-	surfaceOverlayDark: '#060910', // --color-surface-overlay-dark
-	surfaceSunkenDark: '#020306', // --color-surface-sunken-dark
 	borderSubtle: '#e3e8ef', // --color-border-subtle
 	borderStrong: '#a6afbb', // --color-border-strong
-	borderSubtleDark: '#171b22', // --color-border-subtle-dark
-	borderStrongDark: '#3b4350', // --color-border-strong-dark
 } as const
 
 export const BRAND_DARK = {
