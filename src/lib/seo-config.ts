@@ -78,61 +78,6 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 		}
 	},
 
-	pricing: {
-		title:
-			'Transparent Website Pricing for Small Businesses | Hudson Digital Solutions',
-		description:
-			'Clear, upfront pricing for professional websites and business automation. Three packages starting at $497. No hidden fees, no hourly billing surprises. See exactly what you get.',
-		ogTitle: 'Website Pricing - From $497 | Hudson Digital Solutions',
-		ogDescription:
-			'Three clear packages for small business websites. Starter $497, Professional $997, Premium $1,997. No hidden fees.',
-		canonical: `${SITE_URL}/pricing`,
-		structuredData: {
-			'@context': 'https://schema.org',
-			'@type': 'Service',
-			name: 'Website Development & Business Automation',
-			provider: {
-				'@type': 'LocalBusiness',
-				name: 'Hudson Digital Solutions',
-				url: SITE_URL
-			},
-			areaServed: {
-				'@type': 'Place',
-				name: 'Dallas-Fort Worth, TX'
-			},
-			hasOfferCatalog: {
-				'@type': 'OfferCatalog',
-				name: 'Website Packages',
-				itemListElement: [
-					{
-						'@type': 'Offer',
-						name: 'Starter',
-						price: '497',
-						priceCurrency: 'USD',
-						description:
-							'Professional single-page website with SEO and contact form'
-					},
-					{
-						'@type': 'Offer',
-						name: 'Professional',
-						price: '997',
-						priceCurrency: 'USD',
-						description:
-							'Multi-page website with lead capture, local SEO, and CRM integration'
-					},
-					{
-						'@type': 'Offer',
-						name: 'Premium',
-						price: '1997',
-						priceCurrency: 'USD',
-						description:
-							'Full business system with automation, integrations, and admin dashboard'
-					}
-				]
-			}
-		}
-	},
-
 	contact: {
 		title: 'Book a Free Strategy Call | Hudson Digital Solutions',
 		description: `See exactly where your website is losing customers—and how to fix it. Free 30-minute strategy call with a clear action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Email: ${BUSINESS_INFO.email}`,

@@ -20,7 +20,6 @@ interface NavigationItem {
 // for content discovery.
 const navigation: NavigationItem[] = [
 	{ name: 'Services', href: ROUTES.SERVICES },
-	{ name: 'Pricing', href: ROUTES.PRICING },
 	{ name: 'Showcase', href: ROUTES.SHOWCASE },
 	{ name: 'Tools', href: TOOL_ROUTES.INDEX },
 	{ name: 'Blog', href: ROUTES.BLOG },

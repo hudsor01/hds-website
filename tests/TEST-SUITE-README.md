@@ -99,7 +99,6 @@ bun run test:e2e:fast --grep "mobile-responsiveness"
 - Home (`/`)
 - Services (`/services`)
 - Portfolio (`/portfolio`)
-- Pricing (`/pricing`)
 - Contact (`/contact`)
 - About (`/about`)
 - Blog (`/blog`)

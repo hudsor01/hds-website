@@ -31,7 +31,6 @@ const CRITICAL_PAGES = [
 	{ path: '/', name: 'Home' },
 	{ path: '/services', name: 'Services' },
 	{ path: '/showcase', name: 'Portfolio' },
-	{ path: '/pricing', name: 'Pricing' },
 	{ path: '/contact', name: 'Contact' }
 ]
 
@@ -442,13 +441,7 @@ test.describe('Image Responsiveness', () => {
 })
 
 test.describe('375px Layout Guarantees (T02 — touch-target scoping)', () => {
-	const CRITICAL_PAGES_375 = [
-		'/',
-		'/services',
-		'/showcase',
-		'/pricing',
-		'/contact'
-	]
+	const CRITICAL_PAGES_375 = ['/', '/services', '/showcase', '/contact']
 
 	test.beforeEach(async ({ page }) => {
 		await page.setViewportSize({ width: 375, height: 667 })

@@ -202,53 +202,6 @@ test.describe('User Flow Validation', () => {
 		})
 	})
 
-	test.describe('Pricing Evaluation Flow', () => {
-		test('should view pricing information and navigate to contact', async ({
-			page
-		}) => {
-			await page.goto('/pricing')
-			await page.waitForLoadState('networkidle')
-
-			// Verify pricing page loads
-			await expect(
-				page.locator('h1, h2').filter({ hasText: /pricing|plan/i })
-			).toBeVisible()
-
-			// Look for pricing cards or sections
-			const pricingElements = page.locator(
-				'[class*="glass-card"], [class*="card"], section'
-			)
-			const count = await pricingElements.count()
-			expect(count).toBeGreaterThan(0)
-
-			// Click contact CTA
-			const contactButton = page
-				.locator(
-					'a:has-text("Book a Free Strategy Call"), button:has-text("Book a Free Strategy Call")'
-				)
-				.first()
-			await contactButton.click()
-			await page.waitForURL('**/contact')
-
-			// Should navigate to contact
-			await expect(page).toHaveURL(/.*contact/)
-		})
-
-		test('should compare pricing options', async ({ page }) => {
-			await page.goto('/pricing')
-			await page.waitForLoadState('networkidle')
-
-			// Verify multiple pricing options are visible
-			const pricingCards = page.locator(
-				'[class*="glass-card"], [class*="card"]'
-			)
-			const count = await pricingCards.count()
-
-			// Should have at least 2 pricing options
-			expect(count).toBeGreaterThanOrEqual(2)
-		})
-	})
-
 	test.describe('Portfolio Browsing Flow', () => {
 		test('should browse portfolio projects', async ({ page }) => {
 			await page.goto('/showcase')
