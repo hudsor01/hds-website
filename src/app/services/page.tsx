@@ -42,10 +42,10 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-	{ value: '2-4 wks', label: 'Typical Delivery' },
-	{ value: 'Expert', label: 'Development Team' },
+	{ value: '1-4 wks', label: 'Typical Delivery' },
+	{ value: 'Expert', label: 'Development' },
 	{ value: 'Proven', label: 'ROI Results' },
-	{ value: '<24hr', label: 'Response Time' }
+	{ value: '2 hr', label: 'Response Time' }
 ]
 
 const testimonials = [
@@ -57,7 +57,7 @@ const testimonials = [
 		content:
 			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
 		rating: 5 as const,
-		service: 'Website Development + Automation',
+		service: 'Website Development + Automation (private engagement)',
 		highlight: '2x lead volume'
 	},
 	{
@@ -68,7 +68,7 @@ const testimonials = [
 		content:
 			'We went from manually following up on every quote to having it all run automatically. Game changer.',
 		rating: 5 as const,
-		service: 'Business Automation',
+		service: 'Business Automation (private engagement)',
 		highlight: 'Zero manual follow-ups'
 	}
 ] satisfies Array<{
@@ -109,7 +109,7 @@ export default function ServicesPage() {
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl" trackConversion={true}>
 							<Link href="/contact">
-								Start Your Project
+								Book a Free Strategy Call
 								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</Button>
@@ -258,7 +258,7 @@ export default function ServicesPage() {
 									trackConversion={true}
 								>
 									<Link href="/contact">
-										Start Your Project
+										Book a Free Strategy Call
 										<ArrowRight className="w-5 h-5" />
 									</Link>
 								</Button>
@@ -269,7 +269,7 @@ export default function ServicesPage() {
 									size="xl"
 									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
-									<Link href="#services-list">Explore Services</Link>
+									<Link href="#services-list">View Services</Link>
 								</Button>
 							</div>
 						</div>

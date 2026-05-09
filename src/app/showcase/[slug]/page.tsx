@@ -377,7 +377,7 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Start Your Project
+									Book a Free Strategy Call
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>

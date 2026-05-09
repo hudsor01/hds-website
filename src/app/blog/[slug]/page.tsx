@@ -286,7 +286,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								Let&apos;s build a digital solution that grows your business.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">Get Started Today</Link>
+								<Link href="/contact">Book a Free Strategy Call</Link>
 							</Button>
 						</div>
 					</div>

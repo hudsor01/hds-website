@@ -188,7 +188,7 @@ export default function BlogPage() {
 									Get strategic insights delivered to your inbox.
 								</p>
 								<Button asChild variant="accent" className="w-full">
-									<Link href="/contact">Contact Us to Subscribe</Link>
+									<Link href="/contact">Book a Free Strategy Call</Link>
 								</Button>
 								<p className="text-xs text-muted-foreground mt-3">
 									Strategic insights, no spam.
@@ -208,7 +208,7 @@ export default function BlogPage() {
 								</p>
 								<Button asChild variant="accent" trackConversion={true}>
 									<Link href="/contact">
-										Get Started
+										Book a Free Strategy Call
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>

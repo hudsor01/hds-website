@@ -20,6 +20,14 @@
 		{
 			"source": "/feed",
 			"destination": "/api/rss/feed"
+		},
+		{
+			"source": "/feed.xml",
+			"destination": "/api/rss/feed"
+		},
+		{
+			"source": "/rss.xml",
+			"destination": "/api/rss/feed"
 		}
 	],
 

@@ -11,13 +11,13 @@ import { getShowcaseItems } from '@/lib/showcase'
 // Caching handled at data-layer level (src/lib/showcase.ts uses 'use cache'
 // + cacheLife). Page-level revalidate is incompatible with cacheComponents.
 export const metadata: Metadata = {
-	title: 'Showcase - Our Work | Hudson Digital Solutions',
+	title: 'Showcase | Hudson Digital Solutions',
 	description:
-		'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
+		'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
 	openGraph: {
-		title: 'Showcase - Our Work | Hudson Digital Solutions',
+		title: 'Showcase | Hudson Digital Solutions',
 		description:
-			'Real projects delivering measurable results. From local service businesses to e-commerce shops, see how we help businesses get online and grow.',
+			'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
 		type: 'website'
 	}
 }
@@ -34,9 +34,9 @@ async function ShowcaseProjects() {
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
-							{ value: '100%', label: 'Client Satisfaction' },
+							{ value: 'Avg 90 days', label: 'Time to ROI' },
 							{ value: 'Proven', label: 'ROI Results' },
-							{ value: '24/7', label: 'Support Available' }
+							{ value: '2 hr', label: 'Response Time' }
 						].map((stat, index) => (
 							<div
 								key={index}
@@ -60,10 +60,10 @@ async function ShowcaseProjects() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Work
+							Showcase
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Featured Projects
+							Featured Showcase Entries
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Real projects delivering measurable results for clients across
@@ -115,20 +115,20 @@ export default function ShowcasePage() {
 
 					<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Showcase
+							Showcase
 						</p>
 						<h1 className="text-page-title text-foreground leading-tight">
 							<TypewriterText />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-							From small local businesses to growing e-commerce shops, see how
-							we help businesses get online and grow.
+							Real projects for local service businesses and independent
+							consultants — see how we help businesses get online and grow.
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Start Your Project
+									Book a Free Strategy Call
 									<Rocket className="w-5 h-5" />
 								</Link>
 							</Button>
@@ -190,7 +190,7 @@ export default function ShowcasePage() {
 										trackConversion={true}
 									>
 										<Link href="/contact">
-											Start Your Project
+											Book a Free Strategy Call
 											<Rocket className="w-5 h-5" />
 										</Link>
 									</Button>

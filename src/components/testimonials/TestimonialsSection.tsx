@@ -107,7 +107,7 @@ export function TestimonialsSection({ className }: { className?: string }) {
 								Icon={User}
 								description={`${testimonial.role} at ${testimonial.company}`}
 								href="#"
-								cta="View Case Study"
+								cta="View Showcase"
 								background={
 									<div className="absolute inset-0 bg-background/10 card-padding">
 										{/* Rating Stars */}

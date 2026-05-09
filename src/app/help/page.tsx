@@ -125,8 +125,8 @@ export default async function HelpCenterPage() {
 							Can&apos;t find what you&apos;re looking for?
 						</h2>
 						<p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-							Our team is here to help. Reach out and we&apos;ll get back to you
-							within 24 hours.
+							We&apos;re here to help. Reach out and we&apos;ll get back to you
+							within 2 hours during business hours.
 						</p>
 						<Link
 							href="/contact"

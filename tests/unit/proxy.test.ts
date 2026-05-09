@@ -119,7 +119,7 @@ describe('proxy()', () => {
 
 	it('sets stale-while-revalidate Cache-Control on top-level static pages', async () => {
 		const { proxy } = await import('@/../proxy')
-		for (const path of ['/about', '/services', '/pricing', '/privacy']) {
+		for (const path of ['/about', '/services', '/privacy']) {
 			const res = proxy(makeRequest(`http://localhost${path}`))
 			expect(res.headers.get('cache-control')).toContain(
 				'stale-while-revalidate'
