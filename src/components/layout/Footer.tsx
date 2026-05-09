@@ -55,7 +55,7 @@ const socialLinks = [
 	},
 	{
 		name: 'Twitter',
-		href: 'https://twitter.com/hudsondigital',
+		href: 'https://twitter.com/hudsor01',
 		icon: (
 			<svg
 				className="h-5 w-5"

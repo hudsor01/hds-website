@@ -4,7 +4,6 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { SEOMetaData } from '@/types/seo'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
-const OG_IMAGE = `${SITE_URL}/HDS-Logo.webp`
 const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
 
 /**
@@ -16,7 +15,6 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 		title: 'DFW Web Design & Business Automation | Hudson Digital',
 		description:
 			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
-		ogImage: OG_IMAGE,
 		canonical: SITE_URL,
 		structuredData: {
 			'@context': 'https://schema.org',
