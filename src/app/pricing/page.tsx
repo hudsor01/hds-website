@@ -44,6 +44,7 @@ interface PricingTier {
 	description: string
 	features: string[]
 	cta: string
+	paymentPlan: string
 	popular?: boolean
 }
 
@@ -63,7 +64,8 @@ const tiers: PricingTier[] = [
 			'2 rounds of revisions',
 			'Delivered in 1-2 weeks'
 		],
-		cta: 'Book a Free Strategy Call'
+		cta: 'Book a Free Strategy Call',
+		paymentPlan: '50/50 split available'
 	},
 	{
 		name: 'Professional',
@@ -82,6 +84,7 @@ const tiers: PricingTier[] = [
 			'Delivered in 2-3 weeks'
 		],
 		cta: 'Book a Free Strategy Call',
+		paymentPlan: '50/50 split available',
 		popular: true
 	},
 	{
@@ -100,7 +103,8 @@ const tiers: PricingTier[] = [
 			'Priority support for 30 days',
 			'Delivered in 3-4 weeks'
 		],
-		cta: 'Book a Free Strategy Call'
+		cta: 'Book a Free Strategy Call',
+		paymentPlan: '50/50 split or 3-payment plan'
 	}
 ]
 
@@ -210,6 +214,11 @@ export default function PricingPage() {
 									<span className="text-sm text-muted-foreground ml-1">
 										one-time
 									</span>
+								</div>
+
+								<div className="inline-flex items-center gap-1.5 self-start mb-4 px-2 py-0.5 rounded-md bg-accent/10 text-accent text-xs font-semibold">
+									<Check className="w-3 h-3" aria-hidden="true" />
+									<span>{tier.paymentPlan}</span>
 								</div>
 
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6">
