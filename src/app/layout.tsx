@@ -7,7 +7,6 @@ import Footer from '@/components/layout/Footer'
 import NavbarLight from '@/components/layout/Navbar'
 import { Analytics } from '@/components/utilities/Analytics'
 import { ErrorBoundary } from '@/components/utilities/ErrorBoundary'
-import { ExitIntentModal } from '@/components/utilities/ExitIntentModal'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import ScrollToTop from '@/components/utilities/ScrollToTop'
 import { WebVitalsReporting } from '@/components/utilities/WebVitalsReporting'
@@ -185,7 +184,6 @@ export default function RootLayout({
 							</main>
 							<Footer />
 							<ScrollToTop />
-							<ExitIntentModal />
 							<Analytics />
 							<SpeedInsights />
 							<WebVitalsReporting />

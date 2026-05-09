@@ -2,6 +2,7 @@ import {
 	ArrowRight,
 	Calculator,
 	Check,
+	Clock,
 	Code2,
 	Settings,
 	TrendingUp,
@@ -11,6 +12,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
 import { Button } from '@/components/ui/button'
+import { ExitIntentModal } from '@/components/utilities/ExitIntentModal'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { SEO_CONFIG } from '@/lib/seo-config'
@@ -350,42 +352,87 @@ export default function HomePage() {
 			</section>
 
 			{/* ── CLOSING CTA ────────────────────────────────────── */}
-			<section className="py-section px-4 sm:px-6 bg-surface-raised">
-				<div className="container-wide text-center">
-					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						Let&apos;s talk
-					</p>
-					<h2 className="text-section-title text-foreground mb-comfortable max-w-3xl mx-auto text-balance">
-						Ready to stop running your business manually?
-					</h2>
-
-					<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-						Every week without automation is another week of manual follow-ups,
-						missed leads, and time you won&apos;t get back.
-					</p>
-
-					<div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
-						<Button asChild variant="accent" size="xl" trackConversion={true}>
-							<Link href={ROUTES.CONTACT}>
-								Book a Free Strategy Call
-								<ArrowRight className="w-4 h-4" />
-							</Link>
-						</Button>
-						<Button
-							asChild
-							variant="outline"
-							size="xl"
-							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-						>
-							<Link href={ROUTES.SHOWCASE}>View Showcase</Link>
-						</Button>
+			<section className="relative py-section px-4 sm:px-6 bg-surface-raised overflow-hidden">
+				{/* Soft radial accent for depth — pure CSS, no extra DOM weight */}
+				<div
+					aria-hidden="true"
+					className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,_color-mix(in_oklch,_var(--color-accent)_12%,_transparent),_transparent_70%)]"
+				/>
+				<div className="relative max-w-3xl mx-auto">
+					<div className="text-center">
+						<div className="inline-flex items-center gap-3 mb-4">
+							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
+							<p className="text-xs font-semibold uppercase tracking-widest text-accent">
+								Let&apos;s talk
+							</p>
+							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
+						</div>
+						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
+							Ready to stop running your business manually?
+						</h2>
+						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
+							Every week without automation is another week of manual
+							follow-ups, missed leads, and time you won&apos;t get back.
+						</p>
 					</div>
 
-					<div className="mt-12">
+					{/* Primary CTA card — visually contains the action + trust signals */}
+					<div className="mt-10 rounded-2xl border border-border bg-background p-6 sm:p-8 shadow-sm">
+						<div className="flex flex-col sm:flex-row gap-3 justify-center">
+							<Button asChild variant="accent" size="xl" trackConversion={true}>
+								<Link href={ROUTES.CONTACT}>
+									Book a Free Strategy Call
+									<ArrowRight className="w-4 h-4" />
+								</Link>
+							</Button>
+							<Button
+								asChild
+								variant="outline"
+								size="xl"
+								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+							>
+								<Link href={ROUTES.SHOWCASE}>View Showcase</Link>
+							</Button>
+						</div>
+
+						<ul
+							className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground"
+							role="list"
+						>
+							<li className="flex items-center gap-1.5">
+								<Clock className="w-4 h-4 text-accent" aria-hidden="true" />
+								<span>30-minute call</span>
+							</li>
+							<li className="flex items-center gap-1.5">
+								<Check className="w-4 h-4 text-accent" aria-hidden="true" />
+								<span>No commitment</span>
+							</li>
+							<li className="flex items-center gap-1.5">
+								<Zap className="w-4 h-4 text-accent" aria-hidden="true" />
+								<span>Reply within 2 hours</span>
+							</li>
+						</ul>
+					</div>
+
+					{/* OR divider for the alternative path */}
+					<div
+						aria-hidden="true"
+						className="mt-12 flex items-center gap-4 max-w-md mx-auto"
+					>
+						<span className="h-px flex-1 bg-border" />
+						<span className="text-xs uppercase tracking-widest text-muted-foreground">
+							or
+						</span>
+						<span className="h-px flex-1 bg-border" />
+					</div>
+
+					<div className="mt-8">
 						<NewsletterSignup dynamic variant="compact" />
 					</div>
 				</div>
 			</section>
+
+			<ExitIntentModal />
 		</div>
 	)
 }
