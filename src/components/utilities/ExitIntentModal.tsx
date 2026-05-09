@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NewsletterSignup } from '@/components/forms/NewsletterSignup'
 import {
 	Dialog,
@@ -11,10 +11,22 @@ import {
 } from '@/components/ui/dialog'
 
 const STORAGE_KEY = 'hds-exit-intent-shown'
-const TOP_THRESHOLD_PX = 50
+const MIN_DWELL_MS = 30_000
+const POST_CLICK_SUPPRESS_MS = 2_000
 
+/**
+ * Exit-intent modal scoped to the homepage. Fires once per session when
+ * the cursor truly exits the document via the top edge (clientY <= 0
+ * with relatedTarget=null on a body mouseleave), the user has been on
+ * the page at least 30s, and they haven't clicked anything in the
+ * preceding 2s. The browser cannot distinguish "user is closing the
+ * tab" from "user is moving cursor to the URL bar" — these heuristics
+ * minimize false positives for the second case.
+ */
 export function ExitIntentModal() {
 	const [open, setOpen] = useState(false)
+	const lastClickAtRef = useRef<number>(0)
+	const armedAtRef = useRef<number>(0)
 
 	useEffect(() => {
 		// Skip on touch / coarse-pointer devices — mouseleave at viewport top
@@ -31,33 +43,53 @@ export function ExitIntentModal() {
 			return
 		}
 
-		const handleMouseOut = (event: MouseEvent) => {
-			// Only when the cursor exits via the top edge AND has actually
-			// left the document (relatedTarget=null means it left the window).
-			if (event.clientY < TOP_THRESHOLD_PX && event.relatedTarget === null) {
-				window.sessionStorage.setItem(STORAGE_KEY, '1')
-				setOpen(true)
-			}
+		armedAtRef.current = Date.now()
+
+		const handleClick = () => {
+			lastClickAtRef.current = Date.now()
 		}
 
-		document.addEventListener('mouseout', handleMouseOut)
-		return () => document.removeEventListener('mouseout', handleMouseOut)
+		const handleMouseLeave = (event: MouseEvent) => {
+			// Cursor must have actually crossed the top edge of the viewport,
+			// not merely approached the navbar. clientY is 0 or negative when
+			// the pointer has truly left via the top.
+			if (event.clientY > 0 || event.relatedTarget !== null) {
+				return
+			}
+
+			const now = Date.now()
+			if (now - armedAtRef.current < MIN_DWELL_MS) {
+				return
+			}
+			if (now - lastClickAtRef.current < POST_CLICK_SUPPRESS_MS) {
+				return
+			}
+
+			window.sessionStorage.setItem(STORAGE_KEY, '1')
+			setOpen(true)
+		}
+
+		document.body.addEventListener('mouseleave', handleMouseLeave)
+		document.addEventListener('click', handleClick, { capture: true })
+
+		return () => {
+			document.body.removeEventListener('mouseleave', handleMouseLeave)
+			document.removeEventListener('click', handleClick, { capture: true })
+		}
 	}, [])
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogContent className="sm:max-w-md">
+			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>
-						Wait — one practical playbook before you go.
-					</DialogTitle>
+					<DialogTitle>One practical playbook before you go.</DialogTitle>
 					<DialogDescription>
-						If you&apos;re weighing whether a website is worth the cost, get the
-						short list of decisions that actually move the needle for small
-						businesses. One email, no follow-ups, unsubscribe anytime.
+						The short list of decisions that actually move the needle for small
+						businesses building or rebuilding their website. One email, no
+						follow-ups, unsubscribe anytime.
 					</DialogDescription>
 				</DialogHeader>
-				<NewsletterSignup variant="modal" title="" description="" />
+				<NewsletterSignup variant="compact" title="" description="" />
 			</DialogContent>
 		</Dialog>
 	)
