@@ -82,10 +82,16 @@ async function findMatches(pattern: RegExp): Promise<Violation[]> {
 				continue
 			}
 			for (const m of line.matchAll(pattern)) {
+				// Capture group 1 is structurally required by suffixPattern(),
+				// so it always exists on a successful match. The non-null
+				// assertion documents that invariant rather than masking it
+				// with a fallback that would return a wrong-shape string.
+				// biome-ignore lint/style/noNonNullAssertion: see comment
+				const utility = m[1]!
 				violations.push({
 					file,
 					line: i + 1,
-					match: m[1] ?? m[0],
+					match: utility,
 					content: line.trim()
 				})
 			}
@@ -107,7 +113,8 @@ describe('CSS class hygiene', () => {
 		// shapes Tailwind utilities take in real className strings.
 		const captures = (input: string, suffix: string): string[] => {
 			const re = suffixPattern(suffix)
-			return [...input.matchAll(re)].map(m => m[1] ?? m[0])
+			// biome-ignore lint/style/noNonNullAssertion: capture group is required
+			return [...input.matchAll(re)].map(m => m[1]!)
 		}
 
 		test('captures variant-prefixed utility (hover:text-foo-texter)', () => {
@@ -146,6 +153,24 @@ describe('CSS class hygiene', () => {
 		test('captures `*-dark` with the dark suffix', () => {
 			expect(captures(' hover:bg-foo-dark ', 'dark')).toEqual([
 				'hover:bg-foo-dark'
+			])
+		})
+
+		test('captures utility wrapped in backticks (template literals)', () => {
+			expect(captures('`hover:text-foo-texter`', 'texter')).toEqual([
+				'hover:text-foo-texter'
+			])
+		})
+
+		test('captures utility at the very start of the input', () => {
+			expect(captures('hover:text-foo-texter ', 'texter')).toEqual([
+				'hover:text-foo-texter'
+			])
+		})
+
+		test('captures utility at the very end of the input', () => {
+			expect(captures(' hover:text-foo-texter', 'texter')).toEqual([
+				'hover:text-foo-texter'
 			])
 		})
 	})
