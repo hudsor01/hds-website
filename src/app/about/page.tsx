@@ -11,6 +11,7 @@ import {
 	Zap
 } from 'lucide-react'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -317,6 +318,22 @@ export default function AboutPage() {
 					</div>
 
 					<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
+						<div className="flex flex-col items-center mb-8">
+							<Image
+								src="/images/founder.jpg"
+								alt="Richard Hudson, Founder of Hudson Digital Solutions"
+								width={160}
+								height={160}
+								className="rounded-full border-4 border-accent/20 shadow-lg"
+								priority
+							/>
+							<p className="mt-4 text-base font-bold text-foreground">
+								Richard Hudson
+							</p>
+							<p className="text-sm text-muted-foreground">
+								Founder &amp; Revenue Operations
+							</p>
+						</div>
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
 								Before building for clients, I spent 5+ years as a{' '}
