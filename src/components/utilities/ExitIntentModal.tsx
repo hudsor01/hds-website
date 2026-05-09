@@ -57,6 +57,13 @@ export function ExitIntentModal() {
 				return
 			}
 
+			// Suppress when the document is not focused. Opening DevTools or
+			// alt-tabbing fires mouseleave through the same code path; we
+			// only want true viewport-exit gestures while the page is focused.
+			if (!document.hasFocus()) {
+				return
+			}
+
 			const now = Date.now()
 			if (now - armedAtRef.current < MIN_DWELL_MS) {
 				return
@@ -69,11 +76,17 @@ export function ExitIntentModal() {
 			setOpen(true)
 		}
 
-		document.body.addEventListener('mouseleave', handleMouseLeave)
+		// Listen on <html> rather than <body>. mouseleave on body is
+		// unreliable in Safari for true viewport exits; documentElement
+		// is the direct parent and consistently fires across browsers.
+		document.documentElement.addEventListener('mouseleave', handleMouseLeave)
 		document.addEventListener('click', handleClick, { capture: true })
 
 		return () => {
-			document.body.removeEventListener('mouseleave', handleMouseLeave)
+			document.documentElement.removeEventListener(
+				'mouseleave',
+				handleMouseLeave
+			)
 			document.removeEventListener('click', handleClick, { capture: true })
 		}
 	}, [])
