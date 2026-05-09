@@ -1,6 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import type {
 	PaymentResults,
@@ -30,12 +31,14 @@ export function ComparisonView({
 		<Card className="mb-content-block">
 			<div className="flex items-center justify-between mb-heading">
 				<h2 className="text-h4 text-foreground">Compare Vehicles</h2>
-				<button
+				<Button
+					variant="ghost"
+					size="icon"
 					onClick={() => setComparisonMode(false)}
-					className="text-muted-foreground hover:text-muted-foreground transition-colors"
+					aria-label="Close comparison"
 				>
 					<X className="w-5 h-5" />
-				</button>
+				</Button>
 			</div>
 
 			<div className="overflow-x-auto">
@@ -103,12 +106,15 @@ export function ComparisonView({
 									${vehicle.payment.monthlyPayment.toFixed(2)}
 								</td>
 								<td className="py-3 px-3 text-right">
-									<button
+									<Button
+										variant="ghost"
+										size="icon-sm"
 										onClick={() => removeFromComparison(index)}
-										className="text-destructive hover:text-destructive-texter transition-colors"
+										aria-label={`Remove ${vehicle.name} from comparison`}
+										className="text-destructive hover:text-destructive hover:bg-destructive/10"
 									>
 										<X className="w-4 h-4" />
-									</button>
+									</Button>
 								</td>
 							</tr>
 						))}
@@ -117,12 +123,9 @@ export function ComparisonView({
 			</div>
 
 			<div className="flex gap-tight mt-4">
-				<button
-					onClick={clearComparison}
-					className="px-4 py-2 bg-destructive text-foreground rounded-lg hover:bg-destructive-dark transition-colors"
-				>
+				<Button variant="destructive" onClick={clearComparison}>
 					Clear All
-				</button>
+				</Button>
 			</div>
 		</Card>
 	)

@@ -70,8 +70,8 @@ interface IconButtonProps {
 const iconButtonVariants = {
 	default: 'text-muted-foreground hover:text-foreground',
 	ghost: 'text-muted-foreground hover:text-foreground',
-	primary: 'text-accent hover:text-accent/80',
-	danger: 'text-destructive hover:text-destructive-texter'
+	primary: 'text-accent hover:text-accent-text',
+	danger: 'text-destructive hover:text-destructive-text'
 } as const
 
 const iconButtonSizes = {
