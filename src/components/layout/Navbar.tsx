@@ -13,10 +13,11 @@ interface NavigationItem {
 	href: string
 }
 
-// Contact is intentionally absent — the "Get Started" CTA button on the
-// right side of the navbar is the dedicated conversion path to /contact.
-// A duplicate plain link plus the active-state amber highlight made the
-// nav feel cluttered when on /contact. Blog added for content discovery.
+// Contact is intentionally absent — the "Book a Free Strategy Call" CTA
+// button on the right side of the navbar is the dedicated conversion
+// path to /contact. A duplicate plain link plus the active-state amber
+// highlight made the nav feel cluttered when on /contact. Blog added
+// for content discovery.
 const navigation: NavigationItem[] = [
 	{ name: 'Services', href: ROUTES.SERVICES },
 	{ name: 'Pricing', href: ROUTES.PRICING },
@@ -74,7 +75,12 @@ const Navbar = memo(function Navbar() {
 						>
 							<Rocket className="w-5 h-5 text-accent shrink-0" />
 							<span className="text-sm font-semibold text-foreground whitespace-nowrap tracking-tight">
-								Hudson Digital Solutions
+								<span className="hidden sm:inline">
+									Hudson Digital Solutions
+								</span>
+								<span className="sm:hidden" aria-hidden="true">
+									HDS
+								</span>
 							</span>
 						</Link>
 					</div>
@@ -108,7 +114,7 @@ const Navbar = memo(function Navbar() {
 								onClick={handleNavClick}
 							>
 								<Link href={ROUTES.CONTACT}>
-									Get Started
+									Book a Free Strategy Call
 									<ArrowRight className="w-3.5 h-3.5" />
 								</Link>
 							</Button>

@@ -51,7 +51,7 @@ export default function GlobalNotFound() {
 								href="/showcase"
 								className="text-primary text-sm no-underline"
 							>
-								Portfolio
+								Showcase
 							</Link>
 							<Link href="/about" className="text-primary text-sm no-underline">
 								About Us

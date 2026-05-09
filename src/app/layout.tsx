@@ -35,20 +35,17 @@ const geistSans = Geist({
 export const viewport: Viewport = {
 	width: 'device-width',
 	initialScale: 1,
-	maximumScale: 5,
 	userScalable: true,
 	viewportFit: 'cover'
 }
 
 export const metadata: Metadata = {
-	title:
-		'Hudson Digital Solutions - Websites & Automation for Small Businesses',
+	title: 'DFW Web Design & Business Automation | Hudson Digital',
 	description:
 		'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently.',
 	metadataBase: new URL('https://hudsondigitalsolutions.com'),
 	openGraph: {
-		title:
-			'Hudson Digital Solutions - Websites & Automation for Small Businesses',
+		title: 'DFW Web Design & Business Automation | Hudson Digital',
 		description:
 			'Professional website development and business automation for small businesses. Get online and connect your tools.',
 		url: 'https://hudsondigitalsolutions.com',
@@ -58,8 +55,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title:
-			'Hudson Digital Solutions - Websites & Automation for Small Businesses',
+		title: 'DFW Web Design & Business Automation | Hudson Digital',
 		description:
 			'Professional website development and business automation for small businesses. Get online and connect your tools.'
 	},

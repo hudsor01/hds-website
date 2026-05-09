@@ -282,9 +282,13 @@ body {
 	outline-offset: 2px;
 }
 
-/* WCAG touch targets */
+/* WCAG 2.5.8 minimum touch targets — scoped to standalone interactive
+ * controls only. Inline anchors are excluded so footer text links and
+ * legal links don't get inflated to 44px wide and break mobile layout
+ * at 375px. Standalone link controls that need a 44px tap area opt in
+ * via padding (see Footer social icons p-2.5, Navbar nav links px-3 py-1.5,
+ * mobile menu hamburger min-h/min-w utilities). */
 button,
-a,
 [role='button'] {
 	min-width: 44px;
 	min-height: 44px;

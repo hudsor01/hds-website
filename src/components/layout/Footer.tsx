@@ -1,24 +1,25 @@
 'use client'
 
-import { CheckCircle, Clock, Mail, Rocket } from 'lucide-react'
+import { CheckCircle, Clock, Mail, Phone, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import { useSyncExternalStore } from 'react'
 import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
+
+const CURRENT_YEAR = new Date().getFullYear()
 
 const footerLinks = {
 	solutions: [
 		{ name: 'Website Development', href: ROUTES.SERVICES },
 		{ name: 'Business Automation', href: ROUTES.SERVICES },
 		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
-		{ name: 'View Case Studies', href: ROUTES.SHOWCASE }
+		{ name: 'View Showcase', href: ROUTES.SHOWCASE }
 	],
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
 		{ name: 'Pricing', href: ROUTES.PRICING },
-		{ name: 'Our Process', href: ROUTES.SERVICES },
+		{ name: 'Our Process', href: `${ROUTES.SERVICES}#process` },
 		{ name: 'Contact', href: ROUTES.CONTACT }
 	]
 }
@@ -71,13 +72,6 @@ const socialLinks = [
 // Removed unused animation variants
 
 export default function Footer() {
-	// Use useSyncExternalStore to handle SSR hydration correctly without setState in effect
-	const currentYear = useSyncExternalStore(
-		() => () => {}, // subscribe (no-op - year doesn't change during session)
-		() => new Date().getFullYear(), // getSnapshot (client)
-		() => 2024 // getServerSnapshot (SSR fallback)
-	)
-
 	return (
 		<footer
 			className="relative mt-auto bg-surface-sunken"
@@ -97,10 +91,10 @@ export default function Footer() {
 									<Rocket className="w-7 h-7 text-accent" />
 									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
-								<p className="text-accent small font-semibold mb-subheading">
+								<p className="text-accent text-xs font-semibold mb-subheading">
 									Automate. Integrate. Grow.
 								</p>
-								<p className="small muted">
+								<p className="text-xs text-muted-foreground">
 									We build your website, connect your tools, and automate the
 									work — so you can focus on growing.
 								</p>
@@ -110,15 +104,15 @@ export default function Footer() {
 							<div className="space-y-tight">
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="small">Proven Track Record</span>
+									<span className="text-xs">Proven Track Record</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="small">Proven ROI Results</span>
+									<span className="text-xs">Proven ROI Results</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<Clock className="h-4 w-4 text-accent" />
-									<span className="small">Response within 2 hours</span>
+									<span className="text-xs">Response within 2 hours</span>
 								</div>
 							</div>
 						</div>
@@ -134,7 +128,7 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="muted link-hover transition-smooth small inline-block relative group focus-ring rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
 											>
 												<span>{link.name}</span>
 												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
@@ -156,7 +150,7 @@ export default function Footer() {
 										<li key={link.name}>
 											<Link
 												href={link.href}
-												className="muted link-hover transition-smooth small inline-block relative group focus-ring rounded"
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
 											>
 												<span>{link.name}</span>
 												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
@@ -172,7 +166,7 @@ export default function Footer() {
 							<h4 className="text-foreground font-semibold mb-heading">
 								Ready to Grow Faster?
 							</h4>
-							<p className="small muted mb-heading">
+							<p className="text-xs text-muted-foreground mb-heading">
 								Book your free strategy call and see how we can help you launch
 								and run your business more efficiently.
 							</p>
@@ -193,8 +187,18 @@ export default function Footer() {
 									className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
 								>
 									<Mail className="h-4 w-4" />
-									<span className="small">{BUSINESS_INFO.email}</span>
+									<span className="text-xs">{BUSINESS_INFO.email}</span>
 								</a>
+
+								{BUSINESS_INFO.phone && (
+									<a
+										href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
+										className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+									>
+										<Phone className="h-4 w-4" />
+										<span className="text-xs">{BUSINESS_INFO.phone}</span>
+									</a>
+								)}
 							</div>
 						</div>
 					</div>
@@ -203,8 +207,8 @@ export default function Footer() {
 					<div className="border-t border-white/10 pt-8">
 						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 gap-x-content">
 							{/* Copyright */}
-							<div className="small muted">
-								© {currentYear} Hudson Digital Solutions. All rights reserved.
+							<div className="text-xs text-muted-foreground">
+								© {CURRENT_YEAR} Hudson Digital Solutions. All rights reserved.
 							</div>
 
 							{/* Social Links */}
@@ -232,17 +236,17 @@ export default function Footer() {
 							</div>
 
 							{/* Legal Links */}
-							<div className="flex items-center gap-content small">
+							<div className="flex items-center gap-content text-xs text-muted-foreground">
 								<Link
 									href={ROUTES.PRIVACY}
-									className="link-hover focus-ring rounded px-1"
+									className="hover:text-foreground transition-smooth focus-ring rounded px-1"
 								>
 									Privacy Policy
 								</Link>
-								<span className="text-muted-foreground/50 text-xs">/</span>
+								<span className="text-muted-foreground/50">/</span>
 								<Link
 									href={ROUTES.TERMS}
-									className="link-hover focus-ring rounded px-1"
+									className="hover:text-foreground transition-smooth focus-ring rounded px-1"
 								>
 									Terms of Service
 								</Link>

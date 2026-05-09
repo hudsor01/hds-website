@@ -13,8 +13,7 @@ const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
  */
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
-		title:
-			'Professional Websites & Business Automation for Small Businesses | Hudson Digital Solutions',
+		title: 'DFW Web Design & Business Automation | Hudson Digital',
 		description:
 			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
 		ogImage: OG_IMAGE,

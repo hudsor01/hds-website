@@ -1,11 +1,8 @@
 import {
 	ArrowRight,
-	Award,
 	Calculator,
 	Check,
-	Clock,
 	Code2,
-	Rocket,
 	Settings,
 	TrendingUp,
 	Zap
@@ -58,7 +55,7 @@ const solutions = [
 		title: 'A Website That Works For You',
 		description:
 			'Your digital front door, built to capture leads and represent your business professionally. Mobile-ready, fast, and with an admin panel so you can update it without calling a developer.',
-		stat: '2–4 wks',
+		stat: '1–4 wks',
 		statLabel: 'to launch'
 	},
 	{
@@ -76,33 +73,6 @@ const solutions = [
 			'Follow-up emails, client onboarding, appointment reminders, invoice chasing — all automated. Your business keeps moving even when you step away.',
 		stat: '10+ hrs',
 		statLabel: 'saved per week'
-	}
-]
-
-const results = [
-	{
-		Icon: Rocket,
-		metric: '2–4 wks',
-		label: 'First delivery',
-		period: 'Typical project start'
-	},
-	{
-		Icon: TrendingUp,
-		metric: '40+',
-		label: 'Projects delivered',
-		period: 'And counting'
-	},
-	{
-		Icon: Award,
-		metric: '5+ yrs',
-		label: 'Industry experience',
-		period: 'Revenue ops background'
-	},
-	{
-		Icon: Clock,
-		metric: '2 hr',
-		label: 'Response time',
-		period: 'During business hours'
 	}
 ]
 
@@ -145,7 +115,7 @@ export default function HomePage() {
 									trackConversion={true}
 								>
 									<Link href={ROUTES.CONTACT}>
-										Get a Free Strategy Call
+										Book a Free Strategy Call
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>
@@ -167,7 +137,7 @@ export default function HomePage() {
 							<div className="flex items-center gap-6">
 								<div>
 									<div className="text-xl font-black text-foreground tabular-nums">
-										2–4 wks
+										1–4 wks
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
 										First delivery
@@ -239,15 +209,11 @@ export default function HomePage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							What We Build
+							Our Approach
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							One Partner. Three Phases. End to End.
 						</h2>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Most businesses have a website. Few have the system behind it. We
-							handle all three layers so nothing falls through the cracks.
-						</p>
 					</div>
 
 					<div className="grid md:grid-cols-3 gap-6">
@@ -282,51 +248,9 @@ export default function HomePage() {
 									href={ROUTES.CONTACT}
 									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 								>
-									Get Started
+									Book a Free Strategy Call
 									<ArrowRight className="w-4 h-4" />
 								</Link>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
-
-			{/* ── RESULTS / METRICS ─────────────────────────────── */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Track Record
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							By the Numbers
-						</h2>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Real timelines, real experience, real availability — no agency
-							fluff.
-						</p>
-					</div>
-
-					{/* Metric grid — gap-px trick creates 1px dividers */}
-					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
-						{results.map(result => (
-							<div
-								key={result.metric}
-								className="bg-background px-8 py-10 text-center relative overflow-hidden"
-							>
-								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-								<div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
-									<result.Icon className="w-5 h-5 text-accent" />
-								</div>
-								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-mono tabular-nums">
-									{result.metric}
-								</div>
-								<div className="text-sm font-semibold text-foreground mb-1">
-									{result.label}
-								</div>
-								<div className="text-xs text-muted-foreground">
-									{result.period}
-								</div>
 							</div>
 						))}
 					</div>
@@ -369,14 +293,14 @@ export default function HomePage() {
 							</div>
 						</Link>
 
-						{/* Cost Estimator */}
+						{/* Website Cost Estimator */}
 						<Link href={TOOL_ROUTES.COST_ESTIMATOR} className="group block">
 							<div className="h-full flex flex-col p-8 rounded-xl border border-border hover:border-accent/40 transition-colors">
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Calculator className="w-7 h-7 text-accent" />
 								</div>
 								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
-									Cost Estimator
+									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									Get instant transparent pricing for your project based on
@@ -389,7 +313,7 @@ export default function HomePage() {
 							</div>
 						</Link>
 
-						{/* Performance Analyzer */}
+						{/* Performance Savings Calculator */}
 						<Link
 							href={TOOL_ROUTES.PERFORMANCE_CALCULATOR}
 							className="group block"
@@ -399,7 +323,7 @@ export default function HomePage() {
 									<Zap className="w-7 h-7 text-accent" />
 								</div>
 								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
-									Performance Analyzer
+									Performance Savings Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
 									Discover how much revenue slow load times are costing you
@@ -443,7 +367,7 @@ export default function HomePage() {
 					<div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
 						<Button asChild variant="accent" size="xl" trackConversion={true}>
 							<Link href={ROUTES.CONTACT}>
-								Get a Free Strategy Call
+								Book a Free Strategy Call
 								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</Button>
@@ -453,7 +377,7 @@ export default function HomePage() {
 							size="xl"
 							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 						>
-							<Link href={ROUTES.SHOWCASE}>See What We&apos;ve Built</Link>
+							<Link href={ROUTES.SHOWCASE}>View Showcase</Link>
 						</Button>
 					</div>
 

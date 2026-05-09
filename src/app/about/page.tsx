@@ -4,6 +4,7 @@ import {
 	Code2,
 	Eye,
 	Lightbulb,
+	Phone,
 	Rocket,
 	Settings,
 	ShieldCheck,
@@ -14,6 +15,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
+import { BUSINESS_INFO } from '@/lib/constants/business'
 import { SEO_CONFIG } from '@/lib/seo-config'
 
 // Next.js 15: SSR meta for SEO/TTFB
@@ -59,7 +61,7 @@ const testimonials = [
 		content:
 			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
 		rating: 5 as const,
-		service: 'Website Development + Automation',
+		service: 'Website Development + Automation (private engagement)',
 		highlight: '2x lead volume'
 	},
 	{
@@ -70,7 +72,7 @@ const testimonials = [
 		content:
 			'We went from manually following up on every quote to having it all run automatically. Game changer.',
 		rating: 5 as const,
-		service: 'Business Automation',
+		service: 'Business Automation (private engagement)',
 		highlight: 'Zero manual follow-ups'
 	}
 ] satisfies Array<{
@@ -166,7 +168,7 @@ export default function AboutPage() {
 									<Link href="/services" className="link-primary font-semibold">
 										connected business systems
 									</Link>{' '}
-									backed by analytics, automation, and relentless optimisation.
+									backed by analytics, automation, and relentless optimization.
 									Every page, every integration, every workflow is measured
 									against one metric:{' '}
 									<strong className="text-success-text">
@@ -210,9 +212,13 @@ export default function AboutPage() {
 									<h3 className="text-h3 text-foreground">Our Guarantee</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
-									If your investment doesn&apos;t show measurable ROI within 90
-									days, we keep working for free until it does. Your success is
-									our only metric.
+									If the KPI we agree on at kickoff (typically conversion rate,
+									qualified leads per month, or revenue per visitor)
+									doesn&apos;t improve over its installed-analytics baseline
+									within 90 days, I keep working — up to 3 additional revision
+									rounds covering optimization scope — at no extra cost until it
+									does. Baseline is measured from analytics installed on day one
+									of the engagement.
 								</p>
 							</div>
 						</div>
@@ -246,7 +252,7 @@ export default function AboutPage() {
 								<li>Fast, modern websites</li>
 								<li>Mobile-ready by default</li>
 								<li>Built to convert visitors</li>
-								<li>Optimised for search</li>
+								<li>Optimized for search</li>
 							</ul>
 						</div>
 
@@ -257,7 +263,7 @@ export default function AboutPage() {
 							<h3 className="text-h3 text-foreground mb-3">Analytics</h3>
 							<ul className="text-sm text-muted-foreground space-y-1 leading-relaxed">
 								<li>Revenue Attribution</li>
-								<li>Conversion Optimisation</li>
+								<li>Conversion Optimization</li>
 								<li>A/B Testing</li>
 								<li>Performance Monitoring</li>
 							</ul>
@@ -422,7 +428,7 @@ export default function AboutPage() {
 							<h3 className="text-h3 text-foreground mb-3">Data Driven</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
 								Assumptions kill businesses. Every decision is backed by data,
-								every feature is measured, and every optimisation is validated
+								every feature is measured, and every optimization is validated
 								against real results.
 							</p>
 						</div>
@@ -504,7 +510,7 @@ export default function AboutPage() {
 									trackConversion={true}
 								>
 									<Link href="/contact">
-										Start Your Project
+										Book a Free Strategy Call
 										<ArrowRight className="w-5 h-5" />
 									</Link>
 								</Button>
@@ -515,8 +521,22 @@ export default function AboutPage() {
 									size="xl"
 									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
-									<Link href="/services">Explore Services</Link>
+									<Link href="/services">View Services</Link>
 								</Button>
+
+								{BUSINESS_INFO.phone && (
+									<Button
+										asChild
+										variant="outline"
+										size="xl"
+										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+									>
+										<a href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}>
+											<Phone className="w-5 h-5" />
+											{BUSINESS_INFO.phone}
+										</a>
+									</Button>
+								)}
 							</div>
 						</div>
 					</div>

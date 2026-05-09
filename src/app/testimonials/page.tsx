@@ -125,11 +125,9 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								100%
+								Avg 90 days
 							</div>
-							<div className="text-xs text-muted-foreground">
-								Client Satisfaction
-							</div>
+							<div className="text-xs text-muted-foreground">Time to ROI</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
@@ -256,7 +254,7 @@ export default function TestimonialsPage() {
 									size="xl"
 									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
-									<Link href="/showcase">View Portfolio</Link>
+									<Link href="/showcase">View Showcase</Link>
 								</Button>
 							</div>
 						</div>
