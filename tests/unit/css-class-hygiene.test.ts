@@ -79,10 +79,10 @@ describe('CSS class hygiene', () => {
 		// `grid-pattern-dark` (a custom @utility in globals.css for the dark
 		// grid background pattern). Anything else is a stale reference.
 		const violations = await findViolations(
-			/\b(?:hover|focus|active|dark|sm|md|lg|xl|2xl):[a-z-]+-dark\b/
+			/\b(?:hover|focus|active|dark|sm|md|lg|xl|2xl|before|after|peer[-\w]*|group[-\w]*|@sm|@md|@lg|@xl):[a-z-]+-dark\b/
 		)
 		const filtered = violations.filter(
-			v => !/grid-pattern-dark/.test(v.content)
+			v => !/\bgrid-pattern-dark\b/.test(v.content)
 		)
 		if (filtered.length > 0) {
 			const detail = filtered
