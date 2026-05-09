@@ -89,8 +89,12 @@ function formatViolations(violations: Violation[]): string {
 
 describe('CSS class hygiene', () => {
 	test('no `-texter` suffix typos (intended: `-text`)', async () => {
+		// Capture pattern matches whole utility tokens including variant
+		// prefixes (e.g. `hover:text-foo-texter`). Mirrors the `-dark` test's
+		// char class so colon and `@` separators are not eaten by the
+		// boundary anchors.
 		const pattern = new RegExp(
-			`${CLASS_START}([a-z][a-z-]*-texter)${CLASS_END}`,
+			`${CLASS_START}([a-z@][a-z0-9@:_-]*-texter)${CLASS_END}`,
 			'g'
 		)
 		const violations = await findMatches(pattern)
