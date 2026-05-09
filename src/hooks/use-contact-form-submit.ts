@@ -42,7 +42,7 @@ export function useContactFormSubmit() {
 			if (data.success) {
 				toast.success(
 					data.message ||
-						"Thank you for contacting us. We'll get back to you within 24 hours.",
+						"Thank you for contacting us. We'll get back to you within 2 hours during business hours.",
 					{
 						duration: 5000
 					}

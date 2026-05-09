@@ -326,7 +326,7 @@ async function ProjectContent({ slug }: { slug: string }) {
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Start Your Project
+									Book a Free Strategy Call
 									<ExternalLink className="w-5 h-5" />
 								</Link>
 							</Button>

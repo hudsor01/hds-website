@@ -109,8 +109,8 @@ export function CalculatorResults({
 
 				<Section style={NEXT_STEPS_BOX_STYLE}>
 					<Text style={{ margin: 0, fontSize: '14px', lineHeight: 1.6 }}>
-						<strong>Next Steps:</strong> Our team will review your results and
-						send you personalized recommendations within 24 hours.
+						<strong>Next Steps:</strong> I'll review your results and send you
+						personalized recommendations within 24 hours.
 					</Text>
 				</Section>
 

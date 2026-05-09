@@ -1,4 +1,4 @@
-import { Clock, Mail } from 'lucide-react'
+import { Clock, Mail, Phone } from 'lucide-react'
 import type { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { BUSINESS_INFO } from '@/lib/constants/business'
@@ -163,6 +163,27 @@ export default function ContactPage() {
 											</a>
 										</div>
 									</div>
+									{BUSINESS_INFO.phone && (
+										<div className="flex items-start gap-4">
+											<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+												<Phone
+													className="w-4 h-4 text-accent"
+													aria-hidden="true"
+												/>
+											</div>
+											<div>
+												<p className="font-semibold text-foreground text-sm">
+													Phone
+												</p>
+												<a
+													href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
+													className="text-xs text-muted-foreground hover:text-accent transition-colors"
+												>
+													{BUSINESS_INFO.phone}
+												</a>
+											</div>
+										</div>
+									)}
 									<div className="flex items-start gap-4">
 										<div className="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
 											<Clock
