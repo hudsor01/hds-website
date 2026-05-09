@@ -379,7 +379,7 @@ export default function TestimonialCollectorClient() {
 												</span>
 												{renderStars(testimonial.rating)}
 												{testimonial.featured && (
-													<span className="px-2 py-0.5 text-xs font-medium bg-warning-muted text-warning-texter rounded">
+													<span className="px-2 py-0.5 text-xs font-medium bg-warning-muted text-warning-text rounded">
 														Featured
 													</span>
 												)}
@@ -449,7 +449,7 @@ export default function TestimonialCollectorClient() {
 											}
 											className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded ${
 												testimonial.featured
-													? 'bg-warning-muted text-warning-texter hover:bg-warning-muted'
+													? 'bg-warning-muted text-warning-text hover:bg-warning-muted'
 													: 'bg-secondary text-foreground hover:bg-secondary'
 											}`}
 										>
@@ -460,7 +460,7 @@ export default function TestimonialCollectorClient() {
 											onClick={() =>
 												handleDelete(testimonial.id, 'testimonial')
 											}
-											className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-texter hover:bg-destructive-muted"
+											className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-text hover:bg-destructive-muted"
 										>
 											<Trash2 className="w-3 h-3" /> Delete
 										</button>
@@ -524,7 +524,7 @@ export default function TestimonialCollectorClient() {
 																Expired
 															</span>
 														) : (
-															<span className="px-2 py-0.5 text-xs font-medium bg-info-muted text-info-texter rounded">
+															<span className="px-2 py-0.5 text-xs font-medium bg-info-muted text-info-text rounded">
 																Pending
 															</span>
 														)}
@@ -569,7 +569,7 @@ export default function TestimonialCollectorClient() {
 											<div className="mt-3 flex gap-tight">
 												<button
 													onClick={() => handleDelete(req.id, 'request')}
-													className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-texter hover:bg-destructive-muted"
+													className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded bg-destructive-muted text-destructive-text hover:bg-destructive-muted"
 												>
 													<Trash2 className="w-3 h-3" /> Delete
 												</button>
