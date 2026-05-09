@@ -47,6 +47,19 @@ const CLASS_END = '(?=$|[\\s"\'`])'
 // not the surrounding line, so adjacent violations on the same line still fire.
 const DARK_ALLOWLIST = new Set(['grid-pattern-dark', 'dark:grid-pattern-dark'])
 
+/**
+ * Build the regex that matches a whole Tailwind utility ending in `-${suffix}`,
+ * anchored on class-string boundaries. Single source of truth so the texter and
+ * dark patterns can never drift apart again (which previously caused a HIGH-
+ * severity bug where the texter regex didn't accept variant-prefix `:`).
+ */
+function suffixPattern(suffix: string): RegExp {
+	return new RegExp(
+		`${CLASS_START}([a-z@][a-z0-9@:_-]*-${suffix})${CLASS_END}`,
+		'g'
+	)
+}
+
 interface Violation {
 	file: string
 	line: number
@@ -88,16 +101,57 @@ function formatViolations(violations: Violation[]): string {
 }
 
 describe('CSS class hygiene', () => {
-	test('no `-texter` suffix typos (intended: `-text`)', async () => {
-		// Capture pattern matches whole utility tokens including variant
-		// prefixes (e.g. `hover:text-foo-texter`). Mirrors the `-dark` test's
-		// char class so colon and `@` separators are not eaten by the
-		// boundary anchors.
-		const pattern = new RegExp(
-			`${CLASS_START}([a-z@][a-z0-9@:_-]*-texter)${CLASS_END}`,
-			'g'
-		)
-		const violations = await findMatches(pattern)
+	describe('suffixPattern() regex behavior', () => {
+		// Direct regex assertions so anchor / char-class regressions surface
+		// without requiring a real source-file violation. These mirror the
+		// shapes Tailwind utilities take in real className strings.
+		const captures = (input: string, suffix: string): string[] => {
+			const re = suffixPattern(suffix)
+			return [...input.matchAll(re)].map(m => m[1] ?? m[0])
+		}
+
+		test('captures variant-prefixed utility (hover:text-foo-texter)', () => {
+			expect(captures('hover:text-foo-texter ', 'texter')).toEqual([
+				'hover:text-foo-texter'
+			])
+		})
+
+		test('captures unprefixed utility wrapped in double quotes', () => {
+			expect(captures('"text-foo-texter"', 'texter')).toEqual([
+				'text-foo-texter'
+			])
+		})
+
+		test('captures group-hover prefix (group-hover:bg-info-texter)', () => {
+			expect(captures(' group-hover:bg-info-texter ', 'texter')).toEqual([
+				'group-hover:bg-info-texter'
+			])
+		})
+
+		test('rejects valid -text suffix (no -texter substring)', () => {
+			expect(captures(' hover:bg-info-text ', 'texter')).toEqual([])
+		})
+
+		test('rejects suffix appearing in middle of token', () => {
+			expect(captures(' hover:text-foo-text-extra ', 'texter')).toEqual([])
+		})
+
+		test('captures multiple violations on a single line', () => {
+			expect(captures('"a-texter b-texter"', 'texter')).toEqual([
+				'a-texter',
+				'b-texter'
+			])
+		})
+
+		test('captures `*-dark` with the dark suffix', () => {
+			expect(captures(' hover:bg-foo-dark ', 'dark')).toEqual([
+				'hover:bg-foo-dark'
+			])
+		})
+	})
+
+	test('no `-texter` suffix typos in src/ (intended: `-text`)', async () => {
+		const violations = await findMatches(suffixPattern('texter'))
 		if (violations.length > 0) {
 			throw new Error(
 				`Found ${violations.length} occurrence(s) of "-texter" typo. ` +
@@ -109,16 +163,8 @@ describe('CSS class hygiene', () => {
 		expect(violations).toEqual([])
 	})
 
-	test('no broken `*-dark` utilities outside `grid-pattern-dark`', async () => {
-		// Match an entire utility token that ends in `-dark`, capturing the
-		// utility itself (not the surrounding chars). Variants like
-		// `dark:grid-pattern-dark` are matched as a whole and allowlisted by
-		// the captured string.
-		const pattern = new RegExp(
-			`${CLASS_START}([a-z@][a-z0-9@:_-]*-dark)${CLASS_END}`,
-			'g'
-		)
-		const matches = await findMatches(pattern)
+	test('no broken `*-dark` utilities in src/ outside `grid-pattern-dark`', async () => {
+		const matches = await findMatches(suffixPattern('dark'))
 		const violations = matches.filter(v => !DARK_ALLOWLIST.has(v.match))
 		if (violations.length > 0) {
 			throw new Error(
