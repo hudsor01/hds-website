@@ -10,7 +10,7 @@ import { cleanup } from '@testing-library/react'
  * Create isolated mock instances for common dependencies
  * These should be set up in beforeEach hooks, not at module level
  */
-export function createMockLogger() {
+function createMockLogger() {
 	return {
 		info: mock(),
 		warn: mock(),
@@ -20,7 +20,7 @@ export function createMockLogger() {
 	}
 }
 
-export function createMockRateLimiter() {
+function createMockRateLimiter() {
 	return {
 		checkLimit: mock().mockResolvedValue(true),
 		getLimitInfo: mock().mockResolvedValue({ remaining: 10, isLimited: false }),
@@ -29,10 +29,27 @@ export function createMockRateLimiter() {
 }
 
 /**
- * Create a mock UnifiedRateLimiter class for testing
- * This mock implements actual rate limiting logic to support tests that verify limits
+ * Rate limit configurations matching the real module. Must mirror every
+ * key in src/lib/rate-limiter.ts::RATE_LIMIT_CONFIGS — the mock class
+ * uses `keyof typeof MOCK_RATE_LIMIT_CONFIGS` as its limit-type
+ * constraint, so a missing key here would silently fall through to the
+ * `default` profile if the real-module mock is ever bypassed.
  */
-export function createMockUnifiedRateLimiterClass() {
+const MOCK_RATE_LIMIT_CONFIGS = {
+	default: { windowMs: 60 * 1000, maxRequests: 100 },
+	api: { windowMs: 60 * 1000, maxRequests: 60 },
+	contactForm: { windowMs: 15 * 60 * 1000, maxRequests: 3 },
+	contactFormApi: { windowMs: 60 * 1000, maxRequests: 5 },
+	newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
+	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
+	pagespeedApi: { windowMs: 60 * 1000, maxRequests: 30 }
+} as const
+
+/**
+ * Mock UnifiedRateLimiter class for testing
+ * Implements actual rate limiting logic to support tests that verify limits
+ */
+function createMockUnifiedRateLimiterClass() {
 	return class MockUnifiedRateLimiter {
 		store = new Map<string, { count: number; resetTime: number }>()
 		cleanupInterval: ReturnType<typeof setInterval> | null = null
@@ -54,7 +71,6 @@ export function createMockUnifiedRateLimiterClass() {
 			const entry = this.store.get(key)
 
 			if (!entry || now > entry.resetTime) {
-				// Create new entry or reset expired one
 				this.store.set(key, {
 					count: 1,
 					resetTime: now + config.windowMs
@@ -66,7 +82,6 @@ export function createMockUnifiedRateLimiterClass() {
 				return false
 			}
 
-			// Increment count
 			entry.count++
 			this.store.set(key, entry)
 			return true
@@ -112,28 +127,11 @@ export function createMockUnifiedRateLimiterClass() {
 }
 
 /**
- * Rate limit configurations matching the real module. Must mirror every
- * key in src/lib/rate-limiter.ts::RATE_LIMIT_CONFIGS — the mock class
- * uses `keyof typeof MOCK_RATE_LIMIT_CONFIGS` as its limit-type
- * constraint, so a missing key here would silently fall through to the
- * `default` profile if the real-module mock is ever bypassed.
- */
-export const MOCK_RATE_LIMIT_CONFIGS = {
-	default: { windowMs: 60 * 1000, maxRequests: 100 },
-	api: { windowMs: 60 * 1000, maxRequests: 60 },
-	contactForm: { windowMs: 15 * 60 * 1000, maxRequests: 3 },
-	contactFormApi: { windowMs: 60 * 1000, maxRequests: 5 },
-	newsletter: { windowMs: 60 * 1000, maxRequests: 3 },
-	readOnlyApi: { windowMs: 60 * 1000, maxRequests: 100 },
-	pagespeedApi: { windowMs: 60 * 1000, maxRequests: 30 }
-} as const
-
-/**
- * Create a mock getClientIp function that mirrors the real implementation
+ * Mock getClientIp function that mirrors the real implementation
  * (src/lib/request.ts). Trusts x-real-ip first, then the rightmost
  * x-forwarded-for entry — leftmost is attacker-controlled on Vercel.
  */
-export function createMockGetClientIp() {
+function createMockGetClientIp() {
 	return (request: {
 		headers: { get: (name: string) => string | null }
 	}): string => {
@@ -158,14 +156,6 @@ export function createMockGetClientIp() {
 	}
 }
 
-export function createMockResend() {
-	return mock().mockImplementation(() => ({
-		emails: {
-			send: mock().mockResolvedValue({ data: { id: 'test-email-id' } })
-		}
-	}))
-}
-
 /**
  * Setup common mocks for API route tests
  * Call this in beforeEach hooks
@@ -174,7 +164,6 @@ export function setupApiMocks() {
 	const mockLogger = createMockLogger()
 	const mockRateLimiter = createMockRateLimiter()
 
-	// Set environment variables for database
 	process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 
 	mock.module('@/env', () => ({
@@ -194,8 +183,6 @@ export function setupApiMocks() {
 			error instanceof Error ? error : new Error(String(error))
 	}))
 
-	// Complete rate-limiter mock with all exports
-	// This ensures the mock is complete if other tests try to import the module
 	mock.module('@/lib/rate-limiter', () => ({
 		UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
 		unifiedRateLimiter: mockRateLimiter,
@@ -214,16 +201,9 @@ export function setupApiMocks() {
 	mock.module('@/lib/api/guards', () => ({
 		withMutationGuards: (
 			handler: (req: import('next/server').NextRequest) => Promise<Response>
-		) => handler,
-		withMutationGuardsParams: <T>(
-			handler: (
-				req: import('next/server').NextRequest,
-				ctx: T
-			) => Promise<Response>
 		) => handler
 	}))
 
-	// Mock database client for all API tests
 	mock.module('@/lib/db', () => ({
 		db: {
 			select: mock().mockReturnValue({
@@ -251,7 +231,6 @@ export function setupApiMocks() {
 		}
 	}))
 
-	// Mock Resend client
 	mock.module('@/lib/resend-client', () => ({
 		isResendConfigured: mock().mockReturnValue(true),
 		getResendClient: mock(() => ({
@@ -264,68 +243,6 @@ export function setupApiMocks() {
 	return { mockLogger, mockRateLimiter }
 }
 
-/**
- * Setup common mocks for contact form tests
- * Call this in beforeEach hooks
- */
-export function setupContactFormMocks() {
-	const mockLogger = createMockLogger()
-	const mockRateLimiter = createMockRateLimiter()
-	const mockResend = createMockResend()
-
-	mock.module('@/env', () => ({
-		env: {
-			CSRF_SECRET: 'test-csrf-secret-for-testing-only',
-			RESEND_API_KEY: 'test-resend-key'
-		}
-	}))
-
-	mock.module('@/lib/logger', () => ({
-		createServerLogger: () => mockLogger,
-		castError: (error: unknown) =>
-			error instanceof Error ? error : new Error(String(error)),
-		logger: mockLogger
-	}))
-
-	// Complete rate-limiter mock with all exports
-	mock.module('@/lib/rate-limiter', () => ({
-		UnifiedRateLimiter: createMockUnifiedRateLimiterClass(),
-		getUnifiedRateLimiter: () => mockRateLimiter,
-		RATE_LIMIT_CONFIGS: MOCK_RATE_LIMIT_CONFIGS
-	}))
-	mock.module('@/lib/request', () => ({
-		getClientIp: createMockGetClientIp()
-	}))
-
-	mock.module('@/lib/metrics', () => ({
-		recordContactFormSubmission: mock()
-	}))
-
-	mock.module('@/lib/notifications', () => ({
-		notifyHighValueLead: mock().mockResolvedValue(undefined)
-	}))
-
-	mock.module('@/lib/scheduled-emails', () => ({
-		scheduleEmailSequence: mock().mockResolvedValue(undefined)
-	}))
-
-	mock.module('resend', () => ({
-		Resend: mockResend
-	}))
-
-	mock.module('next/headers', () => ({
-		headers: mock().mockResolvedValue({
-			get: mock().mockReturnValue('127.0.0.1')
-		})
-	}))
-
-	return { mockLogger, mockRateLimiter, mockResend }
-}
-
-/**
- * Setup common mocks for component tests with Next.js
- * Call this in beforeEach hooks
- */
 /**
  * Setup common mocks for component tests with Next.js
  * Call this in beforeEach hooks

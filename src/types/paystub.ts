@@ -35,13 +35,6 @@ export const FILING_STATUSES = [
 	'qualifyingSurvivingSpouse'
 ] as const satisfies FilingStatus[]
 
-export const PAY_FREQUENCIES = [
-	'weekly',
-	'biweekly',
-	'semimonthly',
-	'monthly'
-] as const satisfies PayFrequency[]
-
 export interface TaxBracket {
 	limit: number
 	rate: number

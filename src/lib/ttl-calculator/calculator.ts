@@ -47,7 +47,7 @@ const EV_FEE_ANNUAL = 200 // Electric vehicle fee - updated for 2024
  * Calculate registration fee based on vehicle weight and new vehicle status
  * Optimized for Next.js 16 with memoization-friendly pure function
  */
-export function calculateRegistrationFee(
+function calculateRegistrationFee(
 	isNewVehicle: boolean,
 	vehicleWeight: number
 ): number {
