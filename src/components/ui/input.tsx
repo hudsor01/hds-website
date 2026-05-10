@@ -19,7 +19,7 @@ const inputVariants = cva(
 	}
 )
 
-export type InputProps = InputHTMLAttributes<HTMLInputElement> &
+type InputProps = InputHTMLAttributes<HTMLInputElement> &
 	VariantProps<typeof inputVariants> & {
 		ref?: Ref<HTMLInputElement>
 	}
@@ -42,4 +42,4 @@ function Input({ className, variant, type, ref, ...props }: InputProps) {
 	)
 }
 
-export { Input, inputVariants }
+export { Input }

@@ -536,21 +536,8 @@ function CardTitle({
 	)
 }
 
-function CardDescription({
-	className,
-	...props
-}: HTMLAttributes<HTMLParagraphElement>) {
-	return (
-		<p className={cn('text-sm text-muted-foreground', className)} {...props} />
-	)
-}
-
 function CardContent({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
 	return <div className={cn('pt-0', className)} {...props} />
 }
 
-function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-	return <div className={cn('flex items-center pt-0', className)} {...props} />
-}
-
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
+export { Card, CardContent, CardHeader, CardTitle }
