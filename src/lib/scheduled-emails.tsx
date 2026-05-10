@@ -13,7 +13,6 @@ import { db } from '@/lib/db'
 import { createServerLogger } from '@/lib/logger'
 import { getResendClient, isResendConfigured } from '@/lib/resend-client'
 import {
-	cancelEmailSequenceParamsSchema,
 	type EmailSequenceId,
 	type ScheduleEmailParams,
 	scheduleEmailParamsSchema
@@ -136,7 +135,7 @@ export async function scheduleEmailSequence(
  * Process pending scheduled emails
  * This would typically be called by a cron job or scheduled task
  */
-export async function processPendingEmails(): Promise<void> {
+async function processPendingEmails(): Promise<void> {
 	const now = new Date()
 
 	try {
@@ -322,7 +321,7 @@ async function sendScheduledEmail(
 /**
  * Get statistics about scheduled emails from database
  */
-export async function getEmailQueueStats(): Promise<EmailQueueStats> {
+async function getEmailQueueStats(): Promise<EmailQueueStats> {
 	try {
 		const data = await db
 			.select({ status: scheduledEmails.status })
@@ -352,53 +351,6 @@ export async function getEmailQueueStats(): Promise<EmailQueueStats> {
 			failed: 0,
 			total: 0
 		}
-	}
-}
-
-/**
- * Cancel scheduled emails for a specific recipient
- */
-export async function cancelEmailSequence(
-	recipientEmail: string,
-	sequenceId?: string
-): Promise<void> {
-	// Validate cancellation parameters
-	const validation = cancelEmailSequenceParamsSchema.safeParse({
-		recipientEmail,
-		sequenceId
-	})
-
-	if (!validation.success) {
-		emailLogger.error('Invalid email cancellation parameters', {
-			recipientEmail,
-			sequenceId,
-			errors: validation.error.issues
-		})
-		return
-	}
-
-	try {
-		const conditions = [
-			eq(scheduledEmails.recipientEmail, recipientEmail),
-			eq(scheduledEmails.status, 'pending')
-		]
-
-		if (sequenceId) {
-			conditions.push(eq(scheduledEmails.sequenceId, sequenceId))
-		}
-
-		await db.delete(scheduledEmails).where(and(...conditions))
-
-		emailLogger.info('Email sequence cancelled', {
-			recipientEmail,
-			sequenceId: sequenceId || 'all'
-		})
-	} catch (error) {
-		emailLogger.error('Exception cancelling email sequence', {
-			error: error instanceof Error ? error.message : String(error),
-			recipientEmail,
-			sequenceId
-		})
 	}
 }
 

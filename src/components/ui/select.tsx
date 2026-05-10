@@ -146,27 +146,12 @@ function SelectItem({
 	)
 }
 
-function SelectSeparator({
-	className,
-	...props
-}: ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>) {
-	return (
-		<SelectPrimitive.Separator
-			className={cn('-mx-1 my-1 h-px bg-muted', className)}
-			{...props}
-		/>
-	)
-}
-
 export {
 	Select,
 	SelectContent,
 	SelectGroup,
 	SelectItem,
 	SelectLabel,
-	SelectScrollDownButton,
-	SelectScrollUpButton,
-	SelectSeparator,
 	SelectTrigger,
 	SelectValue
 }

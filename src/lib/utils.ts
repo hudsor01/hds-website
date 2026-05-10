@@ -6,22 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Escape HTML characters to prevent XSS attacks
- */
-export function escapeHtml(text: string): string {
-	if (typeof text !== 'string') {
-		return ''
-	}
-	return text
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#039;')
-		.replace(/\//g, '&#x2F;')
-}
-
-/**
  * Detect potential injection attempts in user input
  * @param input - The input string to check
  * @param context - Optional context indicating how the input will be used (for stricter checks)
@@ -130,66 +114,4 @@ export function formatDate(
 	}
 
 	return dateObj.toLocaleDateString('en-US', options)
-}
-
-/**
- * Sanitize search term for safe use in PostgREST filter queries.
- * Escapes special characters that could break out of ilike patterns
- * or inject additional filter conditions.
- *
- * Security: Prevents PostgREST filter injection by escaping/removing:
- * - SQL wildcards (%, _) - escaped with backslash
- * - PostgREST operators (, . ( )) - removed entirely
- * - Backslashes - escaped first to prevent escape sequence injection
- */
-export function sanitizePostgrestSearch(term: string): string {
-	return term
-		.replace(/\\/g, '\\\\') // Escape backslashes first
-		.replace(/%/g, '\\%') // Escape wildcard %
-		.replace(/_/g, '\\_') // Escape wildcard _
-		.replace(/,/g, '') // Remove commas (PostgREST filter separator)
-		.replace(/\./g, '') // Remove dots (PostgREST operator separator)
-		.replace(/\(/g, '') // Remove open parens (PostgREST grouping)
-		.replace(/\)/g, '') // Remove close parens (PostgREST grouping)
-}
-
-/**
- * Validate that a string is a valid hexadecimal string.
- * Used for signature verification to prevent silent truncation
- * when converting non-hex strings to buffers.
- */
-export function isValidHexString(str: string): boolean {
-	return /^[0-9a-fA-F]*$/.test(str) && str.length % 2 === 0
-}
-
-// ============================================================================
-// Time Range Utilities
-// ============================================================================
-
-/**
- * Supported time range options for analytics queries.
- */
-export type TimeRange = '1h' | '24h' | '7d' | '30d' | '90d'
-
-/**
- * Time range durations in milliseconds.
- * Centralized to avoid duplication across analytics functions.
- */
-export const TIME_RANGE_MS: Record<TimeRange, number> = {
-	'1h': 60 * 60 * 1000,
-	'24h': 24 * 60 * 60 * 1000,
-	'7d': 7 * 24 * 60 * 60 * 1000,
-	'30d': 30 * 24 * 60 * 60 * 1000,
-	'90d': 90 * 24 * 60 * 60 * 1000
-} as const
-
-/**
- * Calculate the start date based on time range (returns Date object).
- * Used when you need a Date object rather than ISO string.
- *
- * @param timeRange - The time range (e.g., '1h', '24h', '7d', '30d')
- */
-export function getStartDateFromRange(timeRange: string): Date {
-	const rangeMs = TIME_RANGE_MS[timeRange as TimeRange] ?? TIME_RANGE_MS['24h']
-	return new Date(Date.now() - rangeMs)
 }

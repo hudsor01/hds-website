@@ -1,5 +1,5 @@
 // Comprehensive security headers for production deployment
-export const SECURITY_HEADERS = {
+const SECURITY_HEADERS = {
 	// Prevent clickjacking attacks
 	'X-Frame-Options': 'DENY',
 

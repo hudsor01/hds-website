@@ -1,9 +1,9 @@
 import type { TaxData } from '@/types/paystub'
 
 // Simplified state tax data by year. Add or adjust per annual releases.
-export type StateTaxBrackets = Record<string, TaxData['federalBrackets']>
+type StateTaxBrackets = Record<string, TaxData['federalBrackets']>
 
-export const stateTaxDataByYear: Record<number, StateTaxBrackets> = {
+const stateTaxDataByYear: Record<number, StateTaxBrackets> = {
 	2024: {
 		CA: {
 			single: [

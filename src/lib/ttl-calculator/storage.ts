@@ -94,15 +94,6 @@ export function saveCalculation(
 }
 
 /**
- * Load a specific calculation by ID
- * Pure function for React Server Components compatibility where possible
- */
-export function loadCalculation(id: string): SavedCalculation | null {
-	const calculations = getSavedCalculations()
-	return calculations.find(calc => calc.id === id) || null
-}
-
-/**
  * Delete a calculation by ID
  * Client-side only with proper error handling
  */
@@ -135,54 +126,5 @@ export function clearAllCalculations(): void {
 		localStorage.removeItem(STORAGE_KEY)
 	} catch (error) {
 		logger.error('Error clearing calculations:', error as Error)
-	}
-}
-
-/**
- * Update the name of a saved calculation
- * Client-side only with validation
- */
-export function updateCalculationName(id: string, newName: string): void {
-	// Check if we're in a browser environment to prevent SSR crashes
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	if (!newName?.trim()) {
-		logger.warn('Cannot update calculation name: new name is empty')
-		return
-	}
-
-	try {
-		const calculations = getSavedCalculations()
-		const updated = calculations.map(calc =>
-			calc.id === id ? { ...calc, name: newName.trim() } : calc
-		)
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-	} catch (error) {
-		logger.error('Error updating calculation name:', error as Error)
-	}
-}
-
-/**
- * Get calculation statistics for analytics
- * Pure function for dashboard components
- */
-export function getCalculationStats(): {
-	total: number
-	oldest: number | null
-	newest: number | null
-} {
-	const calculations = getSavedCalculations()
-
-	if (calculations.length === 0) {
-		return { total: 0, oldest: null, newest: null }
-	}
-
-	const timestamps = calculations.map(calc => calc.timestamp)
-	return {
-		total: calculations.length,
-		oldest: Math.min(...timestamps),
-		newest: Math.max(...timestamps)
 	}
 }

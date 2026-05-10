@@ -5,7 +5,7 @@
 
 import { track as vercelTrack } from '@vercel/analytics'
 import { logger } from '@/lib/logger'
-import type { EventProperties, UserProperties } from '@/types/analytics'
+import type { EventProperties } from '@/types/analytics'
 
 type AnalyticsValue = string | number | boolean | null | undefined
 
@@ -25,21 +25,6 @@ export function trackEvent(
 		vercelTrack(eventName, properties)
 	} catch (error) {
 		logger.warn('Failed to track event:', error)
-	}
-}
-
-/**
- * Identify user (tracked as event since Vercel Analytics doesn't support user identification)
- */
-export function identify(userId: string, properties?: UserProperties): void {
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	try {
-		vercelTrack('user_identified', { userId, ...properties })
-	} catch (error) {
-		logger.warn('Failed to identify user:', error)
 	}
 }
 
@@ -66,28 +51,5 @@ export function trackConversion(
 		})
 	} catch (error) {
 		logger.warn('Failed to track conversion:', error)
-	}
-}
-
-/**
- * Track error event
- * For logging application errors to analytics
- */
-export function trackError(error: Error | string, fatal = false): void {
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	try {
-		const errorMessage = error instanceof Error ? error.message : error
-		const errorStack = error instanceof Error ? error.stack : undefined
-
-		vercelTrack('error', {
-			message: errorMessage,
-			stack: errorStack,
-			fatal
-		})
-	} catch (err) {
-		logger.warn('Failed to track error:', err)
 	}
 }

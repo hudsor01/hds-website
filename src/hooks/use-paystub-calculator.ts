@@ -13,8 +13,11 @@ import {
 import { validatePaystubInputs } from '@/lib/paystub-calculator/validation'
 
 /**
- * Custom hook for Paystub calculator computations
- * Optimized for React 19 with useMemo for expensive calculations
+ * Custom hook for Paystub calculator computations. Wraps the calculation
+ * pipeline (validate -> compute period totals -> compute YTD) in a
+ * useMemo keyed on every input field, so the work re-runs only when an
+ * input actually changes — avoids re-computing on parent re-renders that
+ * leave inputs untouched.
  */
 export function usePaystubCalculator(params: PaystubCalculationParams) {
 	// Destructure params for stable dependency tracking

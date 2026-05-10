@@ -181,7 +181,4 @@ const Navbar = memo(function Navbar() {
 	)
 })
 
-// Backward compatibility exports
-export const NavbarLight = Navbar
-
 export default Navbar
