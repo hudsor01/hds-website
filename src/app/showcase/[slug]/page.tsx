@@ -5,12 +5,12 @@
  * - 'detailed': Case-study-style view (challenge/solution/results narrative)
  */
 
-import { ArrowLeft, ArrowRight, Clock, ExternalLink, Users } from 'lucide-react'
+import { ArrowLeft, Clock, ExternalLink, Users } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { Button } from '@/components/ui/button'
+import { CTASection } from '@/components/utilities/CTASection'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
@@ -359,32 +359,10 @@ async function ShowcaseContent({ slug }: { slug: string }) {
 				</div>
 			</section>
 
-			{/* CTA */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
-						<div
-							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
-							aria-hidden="true"
-						/>
-						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Want Results Like This?
-							</h2>
-							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Let&apos;s discuss how we can help you achieve similar results
-								for your business.
-							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">
-									Book a Free Strategy Call
-									<ArrowRight className="w-4 h-4" />
-								</Link>
-							</Button>
-						</div>
-					</div>
-				</div>
-			</section>
+			<CTASection
+				title="Want Results Like This?"
+				description="Let's discuss how we can help you achieve similar results for your business."
+			/>
 		</>
 	)
 }

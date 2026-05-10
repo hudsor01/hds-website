@@ -143,6 +143,70 @@ function calculateBuyMonthlyPayment(
 }
 
 /**
+ * Build the LeaseComparisonResults shape from already-computed lease + buy
+ * payment values. Both branches of calculateLeaseComparison() previously
+ * duplicated this 23-line sequence (break-even calc, recommendation, return
+ * shape) — extracting it into a single helper prevents the two branches from
+ * drifting and producing inconsistent recommendations.
+ *
+ * Callers are responsible for resolving any defaulting on their numeric
+ * inputs before invoking this helper. The two existing call sites use
+ * different defaulting strategies for `loanPrincipal` / `monthlyRate` /
+ * `loanTermMonths`; preserving each call site's behavior is intentional.
+ */
+function buildLeaseComparisonResult({
+	input,
+	leaseMonthlyPayment,
+	leaseTotalCost,
+	buyMonthlyPayment,
+	buyTotalCost,
+	vehicleValueAtLeaseEnd,
+	loanPrincipal,
+	monthlyRate,
+	loanTermMonths
+}: {
+	input: VehicleInputs
+	leaseMonthlyPayment: number
+	leaseTotalCost: number
+	buyMonthlyPayment: number
+	buyTotalCost: number
+	vehicleValueAtLeaseEnd: number
+	loanPrincipal: number
+	monthlyRate: number
+	loanTermMonths: number
+}): LeaseComparisonResults {
+	const remainingLoanBalance = calculateRemainingLoanBalance(
+		loanPrincipal,
+		monthlyRate,
+		loanTermMonths,
+		input.leaseTerm || 36
+	)
+	const buyEquityAtEndOfLease = vehicleValueAtLeaseEnd - remainingLoanBalance
+	const breakEvenMonth = calculateBreakEvenPoint(
+		leaseMonthlyPayment,
+		buyMonthlyPayment,
+		input.leaseDownPayment || 0,
+		input.downPayment
+	)
+	const recommendation = getLeaseBuyRecommendation({
+		leaseMonthlyPayment,
+		buyMonthlyPayment,
+		leaseTotalCost,
+		buyTotalCost,
+		buyEquityAtEndOfLease,
+		breakEvenMonth,
+		input
+	})
+
+	return {
+		monthlyLeasePayment: leaseMonthlyPayment,
+		totalLeaseCost: leaseTotalCost,
+		purchaseOption: input.residualValue || 0,
+		leaseVsBuy: recommendation
+	}
+}
+
+/**
  * Calculate comprehensive lease vs buy comparison
  * Optimized for React Server Components with pure function approach
  */
@@ -177,41 +241,17 @@ export function calculateLeaseComparison(
 		const buyTotalCost =
 			buyMonthlyPayment * input.loanTermMonths + input.downPayment
 
-		// Calculate equity at end of lease (difference between vehicle value and loan balance)
-		const vehicleValueAtLeaseEnd = estimatedResidual
-		const remainingLoanBalance = calculateRemainingLoanBalance(
-			input.purchasePrice - input.downPayment,
-			input.interestRate / 1200,
-			input.loanTermMonths,
-			input.leaseTerm || 36
-		)
-
-		const buyEquityAtEndOfLease = vehicleValueAtLeaseEnd - remainingLoanBalance
-
-		// Calculate break-even point
-		const breakEvenMonth = calculateBreakEvenPoint(
+		return buildLeaseComparisonResult({
+			input,
 			leaseMonthlyPayment,
-			buyMonthlyPayment,
-			input.leaseDownPayment || 0,
-			input.downPayment
-		)
-
-		const recommendation = getLeaseBuyRecommendation({
-			leaseMonthlyPayment,
-			buyMonthlyPayment,
 			leaseTotalCost,
+			buyMonthlyPayment,
 			buyTotalCost,
-			buyEquityAtEndOfLease,
-			breakEvenMonth,
-			input
+			vehicleValueAtLeaseEnd: estimatedResidual,
+			loanPrincipal: input.purchasePrice - input.downPayment,
+			monthlyRate: input.interestRate / 1200,
+			loanTermMonths: input.loanTermMonths
 		})
-
-		return {
-			monthlyLeasePayment: leaseMonthlyPayment,
-			totalLeaseCost: leaseTotalCost,
-			purchaseOption: input.residualValue || 0,
-			leaseVsBuy: recommendation
-		}
 	} else {
 		// If already in lease mode, calculate actual lease terms
 		const leaseMonthlyPayment = calculateLeasePayment(
@@ -237,38 +277,16 @@ export function calculateLeaseComparison(
 		const buyTotalCost =
 			buyMonthlyPayment * input.loanTermMonths + input.downPayment
 
-		const vehicleValueAtLeaseEnd = input.residualValue
-		const remainingLoanBalance = calculateRemainingLoanBalance(
-			input.purchasePrice - (input.downPayment || 0),
-			(input.interestRate || 6.5) / 1200,
-			input.loanTermMonths || 60,
-			input.leaseTerm || 36
-		)
-
-		const buyEquityAtEndOfLease = vehicleValueAtLeaseEnd - remainingLoanBalance
-
-		const breakEvenMonth = calculateBreakEvenPoint(
+		return buildLeaseComparisonResult({
+			input,
 			leaseMonthlyPayment,
-			buyMonthlyPayment,
-			input.leaseDownPayment || 0,
-			input.downPayment
-		)
-
-		const recommendation = getLeaseBuyRecommendation({
-			leaseMonthlyPayment,
-			buyMonthlyPayment,
 			leaseTotalCost,
+			buyMonthlyPayment,
 			buyTotalCost,
-			buyEquityAtEndOfLease,
-			breakEvenMonth,
-			input
+			vehicleValueAtLeaseEnd: input.residualValue,
+			loanPrincipal: input.purchasePrice - (input.downPayment || 0),
+			monthlyRate: (input.interestRate || 6.5) / 1200,
+			loanTermMonths: input.loanTermMonths || 60
 		})
-
-		return {
-			monthlyLeasePayment: leaseMonthlyPayment,
-			totalLeaseCost: leaseTotalCost,
-			purchaseOption: input.residualValue || 0,
-			leaseVsBuy: recommendation
-		}
 	}
 }
