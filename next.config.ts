@@ -44,7 +44,6 @@ const nextConfig: NextConfig = {
 			'@radix-ui/react-switch',
 			'@radix-ui/react-tabs',
 			'@radix-ui/react-tooltip',
-			'@tanstack/react-table',
 			'@tanstack/react-form',
 			'@tanstack/react-query',
 			'react-markdown'

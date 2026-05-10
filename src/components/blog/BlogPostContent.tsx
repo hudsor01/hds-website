@@ -55,7 +55,7 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 
 	if (!post.content) {
 		return (
-			<div className="prose prose-invert max-w-none">
+			<div className="typography max-w-none">
 				<p className="text-muted-foreground">
 					This post content is coming soon. Check back later for the full
 					article.
@@ -70,7 +70,7 @@ export async function BlogPostContent({ post }: BlogPostContentProps) {
 
 	return (
 		<div
-			className="prose prose-invert max-w-none"
+			className="typography max-w-none"
 			dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 		/>
 	)

@@ -155,3 +155,4 @@ target/
 vendor/
 coverage/
 .cache/
+report/
