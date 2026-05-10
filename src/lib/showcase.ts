@@ -169,58 +169,6 @@ export async function getAllShowcaseSlugs(): Promise<string[]> {
 }
 
 /**
- * Get featured showcase items
- */
-export async function getFeaturedShowcase(limit = 6): Promise<ShowcaseItem[]> {
-	'use cache'
-	cacheLife('hours')
-	cacheTag('showcase-list')
-
-	try {
-		const rows = await db
-			.select()
-			.from(showcase)
-			.where(and(eq(showcase.published, true), eq(showcase.featured, true)))
-			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
-			.limit(limit)
-
-		return rows.map(mapShowcase)
-	} catch (error) {
-		logger.error('Failed to fetch featured showcase', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-		return []
-	}
-}
-
-/**
- * Get showcase items by type (quick = portfolio, detailed = case study)
- */
-export async function getShowcaseByType(
-	type: ShowcaseType
-): Promise<ShowcaseItem[]> {
-	'use cache'
-	cacheLife('hours')
-	cacheTag('showcase-list', `showcase-type:${type}`)
-
-	try {
-		const rows = await db
-			.select()
-			.from(showcase)
-			.where(and(eq(showcase.published, true), eq(showcase.showcaseType, type)))
-			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
-
-		return rows.map(mapShowcase)
-	} catch (error) {
-		logger.error('Failed to fetch showcase by type', {
-			type,
-			error: error instanceof Error ? error.message : String(error)
-		})
-		return []
-	}
-}
-
-/**
  * Check if a showcase item is a detailed case study
  */
 export function isDetailedShowcase(item: ShowcaseItem): boolean {
