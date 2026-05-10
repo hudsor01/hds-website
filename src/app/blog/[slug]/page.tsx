@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react'
+import { Calendar, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,6 +7,7 @@ import { AuthorCard } from '@/components/blog/AuthorCard'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { Button } from '@/components/ui/button'
+import { BackLink } from '@/components/utilities/BackLink'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { getPostBySlug, getPosts, getPostsByTag } from '@/lib/blog'
 import { BUSINESS_INFO } from '@/lib/constants/business'
@@ -164,16 +165,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 			<JsonLd data={blogPostingSchema} />
 			<JsonLd data={breadcrumbSchema} />
 
-			{/* Back to Blog */}
-			<div className="container-wide px-4 sm:px-6 py-8">
-				<Link
-					href="/blog"
-					className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
-				>
-					<ArrowLeft className="w-5 h-5" />
-					Back to Blog
-				</Link>
-			</div>
+			<BackLink href="/blog" label="Back to Blog" />
 
 			{/* Article Header */}
 			<article className="pb-16">

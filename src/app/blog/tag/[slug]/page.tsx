@@ -1,8 +1,7 @@
-import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
+import { BackLink } from '@/components/utilities/BackLink'
 import { getPostsByTag, getTagBySlug, getTags } from '@/lib/blog'
 
 interface TagPageProps {
@@ -61,16 +60,7 @@ export default async function TagPage({ params }: TagPageProps) {
 
 	return (
 		<div className="min-h-screen bg-background">
-			{/* Back to Blog */}
-			<div className="container-wide px-4 sm:px-6 py-8">
-				<Link
-					href="/blog"
-					className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
-				>
-					<ArrowLeft className="w-5 h-5" />
-					Back to Blog
-				</Link>
-			</div>
+			<BackLink href="/blog" label="Back to Blog" />
 
 			{/* Header */}
 			<section className="relative bg-background py-section-sm overflow-hidden">

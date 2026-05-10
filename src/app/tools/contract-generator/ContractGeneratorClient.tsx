@@ -5,11 +5,11 @@
 
 'use client'
 
-import { RotateCcw, Save } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
+import { DraftActions } from '@/components/tools/DraftActions'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { trackEvent } from '@/lib/analytics'
@@ -564,28 +564,11 @@ export default function ContractGeneratorClient() {
 				/>
 			</section>
 
-			{/* Actions */}
-			<section className="flex flex-wrap gap-3 pt-4">
-				<button
-					type="button"
-					onClick={saveDraft}
-					className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-foreground shadow-xs hover:bg-muted"
-				>
-					<Save className="w-4 h-4" />
-					Save Draft
-				</button>
-
-				{hasDraft && (
-					<button
-						type="button"
-						onClick={clearDraft}
-						className="flex items-center gap-tight rounded-md border border-border bg-surface-raised px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-xs hover:bg-muted"
-					>
-						<RotateCcw className="w-4 h-4" />
-						Clear Draft
-					</button>
-				)}
-			</section>
+			<DraftActions
+				hasDraft={hasDraft}
+				onSave={saveDraft}
+				onClear={clearDraft}
+			/>
 
 			{/* Educational Content */}
 			<div className="mt-heading space-y-content border-t border-border pt-8">

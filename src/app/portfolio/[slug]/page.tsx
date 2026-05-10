@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Analytics } from '@/components/utilities/Analytics'
+import { CTASection } from '@/components/utilities/CTASection'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	getAllShowcaseSlugs,
@@ -307,33 +308,15 @@ async function ProjectContent({ slug }: { slug: string }) {
 				</section>
 			)}
 
-			{/* CTA Section */}
-			<section className="py-section px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
-						<div
-							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
-							aria-hidden="true"
-						/>
-						<div className="relative z-10">
-							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to create your{' '}
-								<span className="text-accent">success story?</span>
-							</h2>
-							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Let&apos;s build something amazing together. Get in touch to
-								discuss your project.
-							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">
-									Book a Free Strategy Call
-									<ExternalLink className="w-5 h-5" />
-								</Link>
-							</Button>
-						</div>
-					</div>
-				</div>
-			</section>
+			<CTASection
+				title={
+					<>
+						Ready to create your{' '}
+						<span className="text-accent">success story?</span>
+					</>
+				}
+				description="Let's build something amazing together. Get in touch to discuss your project."
+			/>
 		</>
 	)
 }
