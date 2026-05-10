@@ -94,8 +94,9 @@ export function saveCalculation(
 }
 
 /**
- * Load a specific calculation by ID
- * Pure function for React Server Components compatibility where possible
+ * Load a specific calculation by ID. Pure with respect to the
+ * passed-in id; depends on getSavedCalculations() which reads from
+ * localStorage on the client.
  */
 export function loadCalculation(id: string): SavedCalculation | null {
 	const calculations = getSavedCalculations()
@@ -165,8 +166,8 @@ export function updateCalculationName(id: string, newName: string): void {
 }
 
 /**
- * Get calculation statistics for analytics
- * Pure function for dashboard components
+ * Get calculation statistics. Reads from localStorage via
+ * getSavedCalculations() and aggregates total / oldest / newest.
  */
 export function getCalculationStats(): {
 	total: number

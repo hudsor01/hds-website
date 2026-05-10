@@ -69,8 +69,8 @@ export function calculateRegistrationFee(
 }
 
 /**
- * Calculate Texas Title & License fees
- * Pure function optimized for React Server Components and memoization
+ * Calculate Texas Title & License fees.
+ * Pure: deterministic given the same inputs.
  */
 export function calculateTTL(input: VehicleInputs): TTLResults {
 	const countyData = COUNTY_FEES[input.county] || COUNTY_FEES.Default
@@ -119,8 +119,10 @@ export function calculateTTL(input: VehicleInputs): TTLResults {
 }
 
 /**
- * Calculate monthly payment using standard amortization formula
- * Optimized for performance with early returns and React Server Components compatibility
+ * Calculate monthly payment using standard amortization formula.
+ * Pure. Has two early-return guards: zero loan/term -> all zeros;
+ * zero interest -> simple division (avoids divide-by-zero in the
+ * amortization expression).
  */
 export function calculatePayment(
 	purchasePrice: number,
