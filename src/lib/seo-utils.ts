@@ -67,7 +67,6 @@ export function generateLocalBusinessSchema() {
 		url: SITE_URL,
 		image: LOGO_URL,
 		description: 'Web development and business automation for small businesses',
-		priceRange: '$497 - $5000+',
 		address: {
 			'@type': 'PostalAddress',
 			streetAddress: BUSINESS_INFO.location.streetAddress,
