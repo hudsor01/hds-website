@@ -85,6 +85,7 @@
 		"@types/react-dom": "19.2.3",
 		"cross-env": "10.1.0",
 		"drizzle-kit": "0.31.10",
+		"knip": "6.12.2",
 		"lefthook": "2.1.6",
 		"next": "16.2.4",
 		"playwright": "1.59.1",

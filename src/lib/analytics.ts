@@ -68,26 +68,3 @@ export function trackConversion(
 		logger.warn('Failed to track conversion:', error)
 	}
 }
-
-/**
- * Track error event
- * For logging application errors to analytics
- */
-export function trackError(error: Error | string, fatal = false): void {
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	try {
-		const errorMessage = error instanceof Error ? error.message : error
-		const errorStack = error instanceof Error ? error.stack : undefined
-
-		vercelTrack('error', {
-			message: errorMessage,
-			stack: errorStack,
-			fatal
-		})
-	} catch (err) {
-		logger.warn('Failed to track error:', err)
-	}
-}

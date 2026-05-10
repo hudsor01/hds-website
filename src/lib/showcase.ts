@@ -221,20 +221,6 @@ export async function getShowcaseByType(
 }
 
 /**
- * Get quick portfolio items (showcaseType = 'quick')
- */
-export async function getPortfolioItems(): Promise<ShowcaseItem[]> {
-	return getShowcaseByType('quick')
-}
-
-/**
- * Get detailed case studies (showcaseType = 'detailed')
- */
-export async function getCaseStudies(): Promise<ShowcaseItem[]> {
-	return getShowcaseByType('detailed')
-}
-
-/**
  * Check if a showcase item is a detailed case study
  */
 export function isDetailedShowcase(item: ShowcaseItem): boolean {

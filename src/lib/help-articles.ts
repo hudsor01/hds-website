@@ -3,7 +3,7 @@
  * Functions for managing help center content with Drizzle ORM
  */
 
-import { and, asc, eq, ilike, or } from 'drizzle-orm'
+import { and, asc, eq } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from './db'
 import { reportError } from './error-tracking'
@@ -34,7 +34,7 @@ export interface HelpCategory {
 	articleCount: number
 }
 
-export const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
+const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
 	{
 		slug: 'getting-started',
 		name: 'Getting Started',
@@ -83,7 +83,7 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
 /**
  * Get all published articles
  */
-export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
+async function getAllPublishedArticles(): Promise<HelpArticle[]> {
 	'use cache'
 	cacheLife('hours')
 	cacheTag('help-articles')
@@ -212,55 +212,6 @@ export async function getAdjacentArticles(
 			currentIndex < articles.length - 1
 				? (articles[currentIndex + 1] ?? null)
 				: null
-	}
-}
-
-/**
- * Search articles
- */
-export async function searchArticles(query: string): Promise<HelpArticle[]> {
-	const rawSearch = query.toLowerCase().trim()
-
-	if (!rawSearch || rawSearch.length < 2) {
-		return []
-	}
-
-	// Sanitize search term - remove special characters that could affect queries
-	const searchTerms = rawSearch.replace(/[%_\\]/g, '')
-
-	if (searchTerms.length < 2) {
-		return []
-	}
-
-	const searchPattern = `%${searchTerms}%`
-
-	try {
-		const data = await db
-			.select()
-			.from(helpArticles)
-			.where(
-				and(
-					eq(helpArticles.published, true),
-					or(
-						ilike(helpArticles.title, searchPattern),
-						ilike(helpArticles.content, searchPattern),
-						ilike(helpArticles.excerpt, searchPattern)
-					)
-				)
-			)
-			.orderBy(asc(helpArticles.createdAt))
-			.limit(20)
-
-		return data.map(mapHelpArticle)
-	} catch (error) {
-		logger.error('Failed to search help articles', error, {
-			metadata: { query: searchTerms }
-		})
-		reportError(error, {
-			module: 'help-articles',
-			op: 'searchArticles'
-		})
-		return []
 	}
 }
 

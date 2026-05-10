@@ -1,57 +1,9 @@
 // Native SEO utilities - logic only, no data bloat
 
-import seoKeywords from '@/data/seo-keywords.json'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
 const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
-
-/**
- * Generate meta title with company branding
- */
-export function generateOGTitle(title: string, includeCompany = true): string {
-	return includeCompany ? `${title} - Hudson Digital Solutions` : title
-}
-
-/**
- * Generate Twitter description with character limit
- */
-export function generateTwitterDescription(description: string): string {
-	return description.length > 160
-		? `${description.slice(0, 157)}...`
-		: description
-}
-
-/**
- * Generate URL-friendly slug from text
- */
-export function generateSlug(text: string): string {
-	return text
-		.toLowerCase()
-		.replace(/[^\w\s-]/g, '')
-		.replace(/\s+/g, '-')
-		.replace(/--+/g, '-')
-		.trim()
-}
-
-/**
- * Generate canonical URL
- */
-export function generateCanonicalUrl(path: string): string {
-	return path.startsWith('/') ? `${SITE_URL}${path}` : `${SITE_URL}/${path}`
-}
-
-/**
- * Get relevant keywords for a service
- */
-export function getServiceKeywords(
-	service: keyof typeof seoKeywords.services
-): string[] {
-	return [
-		...seoKeywords.base.slice(0, 5), // Top 5 base keywords only
-		...(seoKeywords.services[service] || [])
-	]
-}
 
 /**
  * Generate schema markup for website
