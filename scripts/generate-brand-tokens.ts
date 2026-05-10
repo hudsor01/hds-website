@@ -55,13 +55,18 @@ export function oklchToHex({ l, c, h }: OklchInput): string {
 	return `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`
 }
 
-function parseOklchValue(raw: string): OklchInput | null {
+function parseOklchValue(raw: string, tokenName?: string): OklchInput | null {
 	// Skip alpha-bearing tokens (oklch(L C H / A) form). Hex can't carry
 	// alpha and the JS mirror is consumed only by PDF/email/meta runtimes
 	// that emit opaque hex anyway — flattening to opaque silently would
 	// produce a colour that doesn't match the CSS, so we drop the token
 	// from the JS mirror entirely and let those consumers fall back.
 	if (raw.indexOf('/') !== -1) {
+		const label = tokenName ? ` (${tokenName})` : ''
+		process.stderr.write(
+			`info${label}: alpha-bearing oklch token skipped from JS mirror — ` +
+				'CSS variable is unaffected.\n'
+		)
 		return null
 	}
 
@@ -130,7 +135,7 @@ function parseThemeBlock(
 			continue
 		}
 		try {
-			const oklch = parseOklchValue(oklchArgs)
+			const oklch = parseOklchValue(oklchArgs, cssName)
 			if (oklch === null) {
 				continue
 			}
