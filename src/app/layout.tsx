@@ -27,11 +27,6 @@ const geistSans = Geist({
 	adjustFontFallback: true
 })
 
-// Geist_Mono used to be loaded globally for ~10 chars total (error digest,
-// home stat counter). Now scoped to the JSON formatter tool layout where
-// monospace is actually meaningful; everything else falls through to
-// `ui-monospace` system font (defined as fallback in globals.css).
-
 export const viewport: Viewport = {
 	width: 'device-width',
 	initialScale: 1,
