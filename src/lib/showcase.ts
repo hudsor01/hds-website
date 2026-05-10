@@ -11,9 +11,6 @@ import { type Showcase, showcase } from './schemas/schema'
 
 const logger = createServerLogger()
 
-// Re-export the type for convenience
-export type { Showcase } from './schemas/schema'
-
 export type ShowcaseType = 'quick' | 'detailed'
 
 export interface ShowcaseItem {

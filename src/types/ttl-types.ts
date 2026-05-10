@@ -76,36 +76,3 @@ export interface VehicleInputs {
 	leaseTerm?: number
 	leaseDownPayment?: number
 }
-
-// Define credit score to interest rate mapping
-export interface CreditScoreRate {
-	min: number
-	max: number
-	typicalRate: number
-	label: string
-}
-
-// Define the schema for the calculator context
-export interface CalculatorContextType {
-	inputs: VehicleInputs
-	results: CalculationResults
-	updateInput: (field: keyof VehicleInputs, value: unknown) => void
-	calculate: () => void
-	savedCalculations: Array<{
-		id: string
-		name: string
-		timestamp: number
-		inputs: VehicleInputs
-		results: CalculationResults
-	}>
-	loadSavedCalculation: (id: string) => void
-	deleteSavedCalculation: (id: string) => void
-	clearAllSaved: () => void
-}
-
-export interface UseCalculationsReturn {
-	inputs: VehicleInputs
-	results: CalculationResults
-	updateInput: (field: keyof VehicleInputs, value: unknown) => void
-	calculate: () => void
-}

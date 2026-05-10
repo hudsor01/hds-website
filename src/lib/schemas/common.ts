@@ -43,16 +43,6 @@ export const messageSchema = z
 	.max(5000, 'Message must be less than 5000 characters')
 	.trim()
 
-// Common response schemas
-export const apiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-	z.object({
-		success: z.boolean(),
-		message: z.string().optional(),
-		data: dataSchema.optional(),
-		error: z.string().optional(),
-		errors: z.record(z.string(), z.array(z.string())).optional()
-	})
-
 // Service options for contact forms
 export const serviceOptionsSchema = z.enum([
 	'web-development',

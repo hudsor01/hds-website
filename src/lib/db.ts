@@ -74,6 +74,3 @@ export const db = hasNoDatabase
 				return Reflect.get(getDb(), prop)
 			}
 		})
-
-// Export schema for type inference
-export { schema }

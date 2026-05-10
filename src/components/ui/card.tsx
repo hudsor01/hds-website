@@ -101,7 +101,7 @@ interface TestimonialCardProps extends Omit<BaseCardProps, 'variant' | 'id'> {
 }
 
 // Discriminated union of all card types
-export type CardProps =
+type CardProps =
 	| BaseCardProps
 	| ServiceCardProps
 	| PricingCardProps

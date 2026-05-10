@@ -1,23 +1,7 @@
 /**
  * Consolidated Paystub-Related Types
- * Includes form data, validation, storage, and state types
  */
 
-// Paystub US States types (includes abbreviation)
-export interface PaystubStateInfo {
-	abbreviation: string
-	name: string
-	code: string
-	hasIncomeTax: boolean
-}
-
-// Paystub form validation types
-export interface PaystubValidationResult {
-	isValid: boolean
-	message?: string
-}
-
-// Paystub core types
 export type FilingStatus =
 	| 'single'
 	| 'marriedJoint'
@@ -35,7 +19,7 @@ export const FILING_STATUSES = [
 	'qualifyingSurvivingSpouse'
 ] as const satisfies FilingStatus[]
 
-export interface TaxBracket {
+interface TaxBracket {
 	limit: number
 	rate: number
 }

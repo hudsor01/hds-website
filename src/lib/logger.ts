@@ -16,7 +16,7 @@ import type {
 	ServerLogger
 } from '@/types/logger'
 
-export type { LogContext, Logger, LogLevel, ServerLogger } from '@/types/logger'
+export type { Logger, ServerLogger } from '@/types/logger'
 
 /**
  * Cast unknown error to Error object
