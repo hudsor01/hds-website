@@ -14,6 +14,12 @@ interface CTASectionProps {
  * Closing CTA card used at the bottom of detail / case-study pages.
  * Title accepts ReactNode so callers can include accent spans
  * (e.g., the success-story page uses <span className="text-accent">…</span>).
+ *
+ * Icon: ArrowRight (w-5 h-5). Pre-consolidation the portfolio slug page
+ * incorrectly used <ExternalLink> for a link that goes to /contact — an
+ * internal route, not an external one. ArrowRight is the canonical
+ * "navigate forward" icon and matches the size used by the size='xl'
+ * button across the rest of the site.
  */
 export function CTASection({
 	title,
