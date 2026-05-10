@@ -4,31 +4,24 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { SEOMetaData } from '@/types/seo'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
-const LOGO_URL = `${SITE_URL}/HDS-Logo.webp`
 
 /**
- * SEO_CONFIG provides static metadata and structured data for each route.
- * Use this in your page's generateMetadata and Head exports.
+ * SEO_CONFIG provides static metadata for each route.
+ * Use this in your page's generateMetadata exports.
+ *
+ * Note: structured data is emitted via <JsonLd /> components on the
+ * pages that need it (e.g., src/app/about/page.tsx wraps the AboutPage
+ * schema below). Only the about route currently consumes its
+ * structuredData field — home/services/contact previously had unused
+ * structuredData blocks (including a price-claiming Service Offer for
+ * /services that never reached Google because no consumer rendered it).
  */
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
 		title: 'DFW Web Design & Business Automation | Hudson Digital',
 		description:
 			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
-		canonical: SITE_URL,
-		structuredData: {
-			'@context': 'https://schema.org',
-			'@type': 'WebSite',
-			name: 'Hudson Digital Solutions',
-			url: SITE_URL,
-			description:
-				'Professional website development and business automation for small businesses',
-			publisher: {
-				'@type': 'Organization',
-				name: 'Hudson Digital Solutions',
-				logo: LOGO_URL
-			}
-		}
+		canonical: SITE_URL
 	},
 
 	services: {
@@ -40,23 +33,7 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Website Development & Business Automation for Small Businesses | Hudson Digital',
 		ogDescription:
 			'Professional websites, tool integrations, and business automation. Get online, connect your tools, and automate manual work. Results in 30-90 days.',
-		canonical: `${SITE_URL}/services`,
-		structuredData: {
-			'@context': 'https://schema.org',
-			'@type': 'Service',
-			name: 'Web Development Services',
-			provider: {
-				'@type': 'Organization',
-				name: 'Hudson Digital Solutions'
-			},
-			description: 'Professional web development and custom software solutions',
-			offers: {
-				'@type': 'Offer',
-				priceCurrency: 'USD',
-				price: '5000',
-				priceValidUntil: '2026-12-31'
-			}
-		}
+		canonical: `${SITE_URL}/services`
 	},
 
 	about: {
@@ -85,13 +62,6 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			'Free Strategy Call - Improve Your Website in 30 Minutes | Hudson Digital',
 		ogDescription:
 			'Free 30-minute strategy call showing exactly where your website is losing customers. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
-		canonical: `${SITE_URL}/contact`,
-		structuredData: {
-			'@context': 'https://schema.org',
-			'@type': 'ContactPage',
-			name: 'Contact Hudson Digital Solutions',
-			description:
-				'Get in touch for your web development and digital strategy needs'
-		}
+		canonical: `${SITE_URL}/contact`
 	}
 } as const
