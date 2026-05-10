@@ -55,23 +55,22 @@ export function oklchToHex({ l, c, h }: OklchInput): string {
 	return `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')}`
 }
 
-function parseOklchValue(raw: string, tokenName?: string): OklchInput {
-	// Drop alpha channel if present (oklch(L C H / A) form). The downstream
-	// consumers (PDF, email, manifest, meta tags) cannot represent alpha in
-	// hex anyway, so we silently strip it but warn so a future maintainer
-	// understands why an opaque value was emitted for an alpha-bearing token.
-	const slashIdx = raw.indexOf('/')
-	const lchPart = slashIdx === -1 ? raw : raw.slice(0, slashIdx)
-	if (slashIdx !== -1) {
-		const alphaPart = raw.slice(slashIdx + 1).trim()
+function parseOklchValue(raw: string, tokenName?: string): OklchInput | null {
+	// Skip alpha-bearing tokens (oklch(L C H / A) form). Hex can't carry
+	// alpha and the JS mirror is consumed only by PDF/email/meta runtimes
+	// that emit opaque hex anyway — flattening to opaque silently would
+	// produce a colour that doesn't match the CSS, so we drop the token
+	// from the JS mirror entirely and let those consumers fall back.
+	if (raw.indexOf('/') !== -1) {
 		const label = tokenName ? ` (${tokenName})` : ''
 		process.stderr.write(
-			`warn${label}: alpha channel /${alphaPart} dropped from "${raw.trim()}" — ` +
-				'consumers (PDF/email/meta) emit opaque hex only.\n'
+			`info${label}: alpha-bearing oklch token skipped from JS mirror — ` +
+				'CSS variable is unaffected.\n'
 		)
+		return null
 	}
 
-	const parts = lchPart.trim().split(/\s+/)
+	const parts = raw.trim().split(/\s+/)
 	const [lRaw, cRaw, hRaw] = parts
 	if (lRaw === undefined || cRaw === undefined || hRaw === undefined) {
 		throw new Error(`Expected "L C H" oklch arguments, got: ${raw}`)
@@ -137,6 +136,9 @@ function parseThemeBlock(
 		}
 		try {
 			const oklch = parseOklchValue(oklchArgs, cssName)
+			if (oklch === null) {
+				continue
+			}
 			const hex = oklchToHex(oklch)
 			const jsName = kebabToCamel(cssName.replace(/^--color-/, ''))
 			tokens.push({ cssName, jsName, hex })

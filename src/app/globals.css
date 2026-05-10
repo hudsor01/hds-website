@@ -1,13 +1,5 @@
 @import 'tailwindcss';
 
-@source '../**/*.{ts,tsx}';
-@source '../../components/**/*.{ts,tsx}';
-
-/*
- * Hudson Digital Solutions - Design System
- * Slate blue primary (trust) + Warm amber accent (action)
- */
-
 @theme {
 	/* Base surfaces */
 	--color-background: oklch(0.985 0.002 90);

@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-05-09T20:18:36.380Z
+// Last generated: 2026-05-10T09:07:56.732Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -57,7 +57,6 @@ export const BRAND = {
 	textPrimary: '#070a10', // --color-text-primary
 	textSecondary: '#404855', // --color-text-secondary
 	textMuted: '#5d646f', // --color-text-muted
-	bgOverlay: '#070b14', // --color-bg-overlay
 	surfaceBase: '#fafaf9', // --color-surface-base
 	surfaceRaised: '#fefdfd', // --color-surface-raised
 	surfaceElevated: '#ffffff', // --color-surface-elevated
@@ -88,7 +87,6 @@ export const BRAND_DARK = {
 	border: '#232933', // --color-border (dark)
 	input: '#0e1218', // --color-input (dark)
 	ring: '#6aa7f4', // --color-ring (dark)
-	bgOverlay: '#010203', // --color-bg-overlay (dark)
 	textInverted: '#080b12', // --color-text-inverted (dark)
 	textPrimary: '#edebe5', // --color-text-primary (dark)
 	textSecondary: '#bab7af', // --color-text-secondary (dark)

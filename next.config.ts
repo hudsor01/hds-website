@@ -28,6 +28,22 @@ const nextConfig: NextConfig = {
 	// Transpile ESM packages for webpack compatibility
 	transpilePackages: ['@react-pdf/renderer'],
 
+	// @sentry/node bundles @prisma/instrumentation and @fastify/otel even
+	// though we use Drizzle/Next.js. Their OTEL hooks use dynamic require()
+	// patterns that webpack can't statically analyse, so it emits "Critical
+	// dependency: request of a dependency is an expression" warnings on
+	// every build. The hooks are no-ops at runtime here. We can't alias the
+	// modules to `false` because Sentry's tracing integration extends
+	// PrismaInstrumentation at module load — silence the warning instead.
+	webpack: config => {
+		config.ignoreWarnings = [
+			...(config.ignoreWarnings ?? []),
+			{ module: /@opentelemetry\/instrumentation/ },
+			{ module: /@prisma\/instrumentation/ }
+		]
+		return config
+	},
+
 	experimental: {
 		optimizePackageImports: [
 			'@heroicons/react',
