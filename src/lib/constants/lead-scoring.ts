@@ -89,12 +89,3 @@ export const NOTIFICATION_PRIORITY_THRESHOLDS = {
  * Leads below this threshold do not generate notifications
  */
 export const NOTIFICATION_MINIMUM_THRESHOLD = 70
-
-/**
- * Type-safe keys for all threshold configurations
- */
-export type LeadScorePointsKey = keyof typeof LEAD_SCORE_POINTS
-export type LeadCategoryThresholdKey = keyof typeof LEAD_CATEGORY_THRESHOLDS
-export type LeadQualityThresholdKey = keyof typeof LEAD_QUALITY_THRESHOLDS
-export type NotificationPriorityThresholdKey =
-	keyof typeof NOTIFICATION_PRIORITY_THRESHOLDS

@@ -16,6 +16,3 @@ export const API_ENDPOINTS = {
 	PAGESPEED: '/api/pagespeed',
 	WEB_VITALS: '/api/web-vitals'
 } as const
-
-// Type exports
-export type ApiEndpoint = (typeof API_ENDPOINTS)[keyof typeof API_ENDPOINTS]

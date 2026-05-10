@@ -1,10 +1,10 @@
 import type { LeaseComparisonResults, VehicleInputs } from '@/types/ttl-types'
 
 /**
- * Calculates the remaining loan balance after a certain number of payments
- * Pure function optimized for React Server Components and memoization
+ * Calculates the remaining loan balance after a certain number of payments.
+ * Pure: same inputs always produce same output.
  */
-export function calculateRemainingLoanBalance(
+function calculateRemainingLoanBalance(
 	principal: number,
 	monthlyInterestRate: number,
 	loanTermMonths: number,
@@ -27,10 +27,11 @@ export function calculateRemainingLoanBalance(
 }
 
 /**
- * Calculates the break-even point between leasing and buying
- * Optimized for performance with early returns
+ * Calculates the break-even point between leasing and buying.
+ * Pure. Returns 0 when buy is at least as cheap as lease per month —
+ * no break-even is possible in that case.
  */
-export function calculateBreakEvenPoint(
+function calculateBreakEvenPoint(
 	leaseMonthlyPayment: number,
 	buyMonthlyPayment: number,
 	leaseDownPayment: number,
@@ -54,10 +55,10 @@ export function calculateBreakEvenPoint(
 }
 
 /**
- * Provides a recommendation between leasing and buying based on financial analysis
- * Pure function for React Server Components compatibility
+ * Provides a recommendation between leasing and buying based on
+ * financial analysis. Pure: deterministic given the same inputs.
  */
-export function getLeaseBuyRecommendation(params: {
+function getLeaseBuyRecommendation(params: {
 	leaseMonthlyPayment: number
 	buyMonthlyPayment: number
 	leaseTotalCost: number
@@ -99,10 +100,10 @@ export function getLeaseBuyRecommendation(params: {
 }
 
 /**
- * Calculate lease payment using standard lease formula
- * Pure function optimized for performance and React Server Components
+ * Calculate lease payment using the standard money-factor formula.
+ * Pure: deterministic given the same inputs.
  */
-export function calculateLeasePayment(
+function calculateLeasePayment(
 	vehiclePrice: number,
 	downPayment: number,
 	leaseTerm: number,
@@ -207,8 +208,8 @@ function buildLeaseComparisonResult({
 }
 
 /**
- * Calculate comprehensive lease vs buy comparison
- * Optimized for React Server Components with pure function approach
+ * Calculate comprehensive lease vs buy comparison. Pure entry point
+ * to the lease/buy decision flow — composes the helpers above.
  */
 export function calculateLeaseComparison(
 	input: VehicleInputs

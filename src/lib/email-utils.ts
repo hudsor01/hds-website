@@ -7,13 +7,6 @@ interface EmailData {
 }
 
 /**
- * Get email template by type
- */
-export function getEmailTemplate(type: keyof typeof emailTemplates) {
-	return emailTemplates[type]
-}
-
-/**
  * Replace template variables with actual data
  */
 export function replaceTemplateVariables(
@@ -24,21 +17,6 @@ export function replaceTemplateVariables(
 		.replace(/\{\{firstName\}\}/g, data.firstName || 'there')
 		.replace(/\{\{company\}\}/g, data.company || 'your business')
 		.replace(/\{\{service\}\}/g, data.service || 'your project')
-}
-
-/**
- * Generate personalized email content
- */
-export function generateEmail(
-	templateType: keyof typeof emailTemplates,
-	data: EmailData
-) {
-	const template = getEmailTemplate(templateType)
-
-	return {
-		subject: replaceTemplateVariables(template.subject, data),
-		content: replaceTemplateVariables(template.content, data)
-	}
 }
 
 /**

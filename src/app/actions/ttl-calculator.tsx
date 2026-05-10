@@ -1,6 +1,6 @@
 'use server'
 
-import { count, eq, gte, isNotNull, sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { TtlCalculatorResults } from '@/emails/ttl-calculator-results'
 import { env } from '@/env'
@@ -328,84 +328,5 @@ export async function emailResults(
 	} catch (error) {
 		logger.error('Error emailing TTL results', error)
 		return { success: false, error: 'An unexpected error occurred' }
-	}
-}
-
-/**
- * Get calculator usage analytics (for admin dashboard)
- */
-export async function getCalculatorAnalytics(): Promise<{
-	totalCalculations: number
-	topCounties: Array<{ county: string; count: number }>
-	avgPurchasePrice: number
-	recentCalculations: number
-}> {
-	try {
-		// Total calculations
-		const totalResult = await db
-			.select({ count: count() })
-			.from(ttlCalculations)
-		const totalCalculations = totalResult[0]?.count ?? 0
-
-		// Top counties
-		const countyData = await db
-			.select({ county: ttlCalculations.county })
-			.from(ttlCalculations)
-			.where(isNotNull(ttlCalculations.county))
-
-		const countyCounts = countyData.reduce<Record<string, number>>(
-			(acc: Record<string, number>, row: { county: string | null }) => {
-				if (row.county) {
-					acc[row.county] = (acc[row.county] || 0) + 1
-				}
-				return acc
-			},
-			{}
-		)
-
-		const topCounties = Object.entries(countyCounts)
-			.sort(([, a], [, b]) => Number(b) - Number(a))
-			.slice(0, 5)
-			.map(([county, countVal]) => ({ county, count: countVal }))
-
-		// Average purchase price
-		const priceData = await db
-			.select({ purchasePrice: ttlCalculations.purchasePrice })
-			.from(ttlCalculations)
-			.where(isNotNull(ttlCalculations.purchasePrice))
-
-		const avgPurchasePrice =
-			priceData.length > 0
-				? priceData.reduce(
-						(sum: number, row: { purchasePrice: number | null }) =>
-							sum + (row.purchasePrice || 0),
-						0
-					) / priceData.length
-				: 0
-
-		// Recent calculations (last 7 days)
-		const sevenDaysAgo = new Date()
-		sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-		const recentResult = await db
-			.select({ count: count() })
-			.from(ttlCalculations)
-			.where(gte(ttlCalculations.createdAt, sevenDaysAgo))
-		const recentCalculations = recentResult[0]?.count ?? 0
-
-		return {
-			totalCalculations,
-			topCounties,
-			avgPurchasePrice: Math.round(avgPurchasePrice),
-			recentCalculations
-		}
-	} catch (error) {
-		logger.error('Error fetching calculator analytics', error)
-		return {
-			totalCalculations: 0,
-			topCounties: [],
-			avgPurchasePrice: 0,
-			recentCalculations: 0
-		}
 	}
 }

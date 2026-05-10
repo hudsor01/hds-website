@@ -1,9 +1,9 @@
-export interface LocationFeature {
+interface LocationFeature {
 	title: string
 	description: string
 }
 
-export interface LocationStats {
+interface LocationStats {
 	businesses: string
 	projects: string
 	satisfaction: string

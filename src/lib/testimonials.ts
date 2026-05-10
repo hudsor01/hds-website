@@ -9,17 +9,13 @@ import 'server-only'
 import { randomBytes } from 'node:crypto'
 import { desc, eq } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
-import type {
-	ServiceType,
-	Testimonial,
-	TestimonialRequest
-} from '@/types/testimonials'
+import type { Testimonial, TestimonialRequest } from '@/types/testimonials'
 import { db } from './db'
 import { reportError } from './error-tracking'
 import { logger } from './logger'
 import { testimonialRequests, testimonials } from './schemas/schema'
 
-export type { ServiceType, Testimonial, TestimonialRequest }
+export type { Testimonial, TestimonialRequest }
 
 // Import schema types for mapping functions
 import type {

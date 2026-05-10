@@ -24,9 +24,6 @@ import {
 	useFormContext
 } from './form-context'
 
-// Re-export useFieldContext for external use
-export { useFieldContext }
-
 // =============================================================================
 // Generic Field Component
 //

@@ -25,5 +25,3 @@ export const createBlogPostSchema = z.object({
 	authorSlug: z.string().min(1, 'Author slug is required'),
 	tagSlugs: z.array(z.string()).optional().default([])
 })
-
-export type CreateBlogPostInput = z.infer<typeof createBlogPostSchema>

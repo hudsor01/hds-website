@@ -50,25 +50,3 @@ export function getResendClient(): Resend {
 export function isResendConfigured(): boolean {
 	return !!env.RESEND_API_KEY
 }
-
-/**
- * Optional: Send email with proper error handling
- * Wraps Resend send with additional error context
- */
-export async function sendEmail(
-	params: Parameters<Resend['emails']['send']>[0]
-) {
-	try {
-		const client = getResendClient()
-		const result = await client.emails.send(params)
-		return { success: true, data: result }
-	} catch (error) {
-		const errorMessage =
-			error instanceof Error ? error.message : 'Unknown error'
-		return {
-			success: false,
-			error: errorMessage,
-			details: error
-		}
-	}
-}

@@ -43,28 +43,6 @@ export const messageSchema = z
 	.max(5000, 'Message must be less than 5000 characters')
 	.trim()
 
-// Common response schemas
-export const apiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-	z.object({
-		success: z.boolean(),
-		message: z.string().optional(),
-		data: dataSchema.optional(),
-		error: z.string().optional(),
-		errors: z.record(z.string(), z.array(z.string())).optional()
-	})
-
-export const paginationSchema = z.object({
-	page: z.coerce.number().int().positive().default(1),
-	limit: z.coerce.number().int().positive().max(100).default(10),
-	total: z.number().int().nonnegative().optional(),
-	totalPages: z.number().int().nonnegative().optional()
-})
-
-export const timestampSchema = z.object({
-	createdAt: z.date().or(z.string().datetime()),
-	updatedAt: z.date().or(z.string().datetime())
-})
-
 // Service options for contact forms
 export const serviceOptionsSchema = z.enum([
 	'web-development',

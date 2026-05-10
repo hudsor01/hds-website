@@ -33,5 +33,3 @@ export const BUSINESS_INFO = {
 		website: 'https://hudsondigitalsolutions.com'
 	}
 } as const
-
-export type BusinessInfo = typeof BUSINESS_INFO

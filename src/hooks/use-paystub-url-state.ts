@@ -31,7 +31,7 @@ const paystubParsers = {
 	state: parseAsString
 }
 
-export interface PaystubUrlState {
+interface PaystubUrlState {
 	name: string | null
 	id: string | null
 	employer: string | null

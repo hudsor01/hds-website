@@ -17,7 +17,7 @@ import { OKLAHOMA_LOCATIONS } from './oklahoma'
 import { TENNESSEE_LOCATIONS } from './tennessee'
 import { TEXAS_LOCATIONS } from './texas'
 
-export type { LocationData, LocationFeature, LocationStats } from './types'
+export type { LocationData } from './types'
 
 import type { LocationData } from './types'
 

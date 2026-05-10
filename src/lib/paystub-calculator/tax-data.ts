@@ -1,7 +1,7 @@
 import type { TaxData } from '@/types/paystub'
 
 // Versioned federal tax data by tax year. Add new entries per IRS releases.
-export const taxDataByYear: Record<number, TaxData> = {
+const taxDataByYear: Record<number, TaxData> = {
 	2024: {
 		ssWageBase: 168600,
 		ssRate: 0.062,

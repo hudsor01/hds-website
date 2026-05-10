@@ -5,7 +5,6 @@ import {
 	MESSAGE_LENGTH_THRESHOLD
 } from '@/lib/constants/lead-scoring'
 import {
-	apiResponseSchema,
 	budgetOptionsSchema,
 	companySchema,
 	emailSchema,
@@ -36,13 +35,9 @@ export const contactFormSchema = z.object({
 // Type inference
 export type ContactFormData = z.infer<typeof contactFormSchema>
 
-// Request schema with CSRF token
-export const contactFormRequestSchema = contactFormSchema.extend({
-	csrfToken: z.string().optional()
-})
-
-// Lead scoring schema
-export const leadScoringSchema = z.object({
+// Lead scoring schema (private — only consumed via the LeadScoring type
+// and scoreLeadFromContactData() below)
+const leadScoringSchema = z.object({
 	score: z.number().min(0).max(100),
 	factors: z.object({
 		hasHighBudget: z.boolean(),
@@ -63,37 +58,12 @@ export const leadScoringSchema = z.object({
 
 export type LeadScoring = z.infer<typeof leadScoringSchema>
 
-// Email sequence configuration
-export const emailSequenceConfigSchema = z.object({
-	sequenceType: leadScoringSchema.shape.sequenceType,
-	recipientEmail: emailSchema,
-	recipientName: z.string(),
-	metadata: z.object({
-		firstName: z.string(),
-		lastName: z.string(),
-		company: z.string().optional(),
-		service: z.string().optional(),
-		budget: z.string().optional(),
-		timeline: z.string().optional(),
-		leadScore: z.number().optional()
-	})
-})
-
 // Newsletter subscription schema
 export const newsletterSchema = z.object({
 	email: emailSchema,
 	firstName: nameSchema.optional(),
 	source: z.string().min(2).default('footer')
 })
-
-// Contact form response
-export const contactFormResponseSchema = apiResponseSchema(
-	z.object({
-		id: z.string().uuid().optional(),
-		message: z.string(),
-		leadScore: z.number().optional()
-	})
-)
 
 export function scoreLeadFromContactData(data: ContactFormData): LeadScoring {
 	const factors = {

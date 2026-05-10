@@ -1,8 +1,8 @@
 import type { TCOResults, VehicleInputs } from '@/types/ttl-types'
 
 /**
- * Calculate Total Cost of Ownership over the ownership period
- * Optimized for React Server Components with pure function approach
+ * Calculate Total Cost of Ownership over the ownership period.
+ * Pure: deterministic given the same inputs.
  */
 export function calculateTCO(input: VehicleInputs): TCOResults {
 	// Calculate total ownership cost over the period
@@ -46,8 +46,9 @@ export function calculateTCO(input: VehicleInputs): TCOResults {
 }
 
 /**
- * Helper function to calculate monthly payment for TCO calculations
- * Pure function optimized for performance
+ * Calculate monthly payment for TCO computation.
+ * Pure. Returns 0 when months=0; uses simple division when interest
+ * rate is 0 to avoid divide-by-zero in the amortization formula.
  */
 function calculateMonthlyPayment(input: VehicleInputs): number {
 	const principal = input.purchasePrice - input.downPayment
@@ -65,10 +66,11 @@ function calculateMonthlyPayment(input: VehicleInputs): number {
 }
 
 /**
- * Calculate annual fuel or energy cost based on vehicle type
- * Optimized for electric vs gas vehicles with sensible defaults
+ * Annual fuel or energy cost based on vehicle type. Pure. Branches on
+ * input.isElectric — EV uses miles-per-kWh and electricity rate; gas
+ * uses MPG and gas price.
  */
-export function calculateAnnualFuelCost(input: VehicleInputs): number {
+function calculateAnnualFuelCost(input: VehicleInputs): number {
 	if (input.isElectric) {
 		// Electric vehicle: miles per year / miles per kWh * electricity rate ($/kWh)
 		const milesPerKwh = 3.5 // Average EV efficiency
@@ -76,23 +78,10 @@ export function calculateAnnualFuelCost(input: VehicleInputs): number {
 			((input.milesPerYear || 12000) / milesPerKwh) *
 			(input.electricityRate || 0.13)
 		)
-	} else {
-		// Gas vehicle: miles per year / mpg * gas price
-		return (
-			((input.milesPerYear || 12000) / (input.mpg || 25)) *
-			(input.gasPrice || 3.0)
-		)
 	}
-}
-
-/**
- * Calculate total fuel cost over ownership period
- * Pure function for React Server Components compatibility
- */
-export function calculateTotalFuelCost(
-	input: VehicleInputs,
-	years: number = 5
-): number {
-	const annualFuelCost = calculateAnnualFuelCost(input)
-	return annualFuelCost * years
+	// Gas vehicle: miles per year / mpg * gas price
+	return (
+		((input.milesPerYear || 12000) / (input.mpg || 25)) *
+		(input.gasPrice || 3.0)
+	)
 }

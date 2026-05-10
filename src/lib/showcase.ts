@@ -11,9 +11,6 @@ import { type Showcase, showcase } from './schemas/schema'
 
 const logger = createServerLogger()
 
-// Re-export the type for convenience
-export type { Showcase } from './schemas/schema'
-
 export type ShowcaseType = 'quick' | 'detailed'
 
 export interface ShowcaseItem {
@@ -166,72 +163,6 @@ export async function getAllShowcaseSlugs(): Promise<string[]> {
 		})
 		return []
 	}
-}
-
-/**
- * Get featured showcase items
- */
-export async function getFeaturedShowcase(limit = 6): Promise<ShowcaseItem[]> {
-	'use cache'
-	cacheLife('hours')
-	cacheTag('showcase-list')
-
-	try {
-		const rows = await db
-			.select()
-			.from(showcase)
-			.where(and(eq(showcase.published, true), eq(showcase.featured, true)))
-			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
-			.limit(limit)
-
-		return rows.map(mapShowcase)
-	} catch (error) {
-		logger.error('Failed to fetch featured showcase', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-		return []
-	}
-}
-
-/**
- * Get showcase items by type (quick = portfolio, detailed = case study)
- */
-export async function getShowcaseByType(
-	type: ShowcaseType
-): Promise<ShowcaseItem[]> {
-	'use cache'
-	cacheLife('hours')
-	cacheTag('showcase-list', `showcase-type:${type}`)
-
-	try {
-		const rows = await db
-			.select()
-			.from(showcase)
-			.where(and(eq(showcase.published, true), eq(showcase.showcaseType, type)))
-			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
-
-		return rows.map(mapShowcase)
-	} catch (error) {
-		logger.error('Failed to fetch showcase by type', {
-			type,
-			error: error instanceof Error ? error.message : String(error)
-		})
-		return []
-	}
-}
-
-/**
- * Get quick portfolio items (showcaseType = 'quick')
- */
-export async function getPortfolioItems(): Promise<ShowcaseItem[]> {
-	return getShowcaseByType('quick')
-}
-
-/**
- * Get detailed case studies (showcaseType = 'detailed')
- */
-export async function getCaseStudies(): Promise<ShowcaseItem[]> {
-	return getShowcaseByType('detailed')
 }
 
 /**

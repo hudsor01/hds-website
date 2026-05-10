@@ -18,5 +18,3 @@ export const TIMEOUTS = {
 	/** Duration for error messages (6 seconds) */
 	TOAST_ERROR: 6000
 } as const
-
-export type TimeoutKey = keyof typeof TIMEOUTS
