@@ -378,17 +378,15 @@ describe('Blog Data Layer', () => {
 	})
 
 	describe('getPosts', () => {
-		test('returns posts with total count', async () => {
+		test('returns posts', async () => {
 			resetMockDb(
 				[makeJoinedRow()], // main query
-				[], // loadTagsForPosts (no tags)
-				[{ id: 'post-1' }] // count query
+				[] // loadTagsForPosts (no tags)
 			)
 
 			const result = await getPosts({ limit: 10, page: 1 })
 
 			expect(result.posts).toHaveLength(1)
-			expect(result.total).toBe(1)
 			expect(result.posts[0]?.slug).toBe('test-post')
 		})
 
@@ -398,7 +396,6 @@ describe('Blog Data Layer', () => {
 			const result = await getPosts()
 
 			expect(result.posts).toEqual([])
-			expect(result.total).toBe(0)
 		})
 	})
 

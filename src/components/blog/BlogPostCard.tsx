@@ -8,9 +8,19 @@ import { formatDate } from '@/lib/utils'
 interface BlogPostCardProps {
 	post: BlogPost
 	featured?: boolean
+	/**
+	 * Set on the LCP-candidate card(s) above the fold (e.g. the first
+	 * 1-2 featured cards on /blog). Passes through to next/image priority
+	 * so the browser preloads the image during the critical path.
+	 */
+	priority?: boolean
 }
 
-export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
+export function BlogPostCard({
+	post,
+	featured = false,
+	priority = false
+}: BlogPostCardProps) {
 	return (
 		<article className={`group ${featured ? 'md:col-span-2' : ''}`}>
 			<Link href={`/blog/${post.slug}`} className="block">
@@ -27,6 +37,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
 								src={post.feature_image}
 								alt={post.title}
 								fill
+								priority={priority}
 								className="object-cover group-hover:scale-105 transition-transform duration-500"
 								sizes={
 									featured

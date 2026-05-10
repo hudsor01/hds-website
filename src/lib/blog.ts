@@ -142,7 +142,7 @@ function mapPost(
 export async function getPosts(options?: {
 	limit?: number
 	page?: number
-}): Promise<{ posts: BlogPost[]; total: number }> {
+}): Promise<{ posts: BlogPost[] }> {
 	const limit = options?.limit ?? 10
 	const page = options?.page ?? 1
 	return getPostsCached(limit, page)
@@ -151,7 +151,7 @@ export async function getPosts(options?: {
 async function getPostsCached(
 	limit: number,
 	page: number
-): Promise<{ posts: BlogPost[]; total: number }> {
+): Promise<{ posts: BlogPost[] }> {
 	'use cache'
 	cacheLife('hours')
 	cacheTag('blog-posts')
@@ -175,19 +175,13 @@ async function getPostsCached(
 			mapPost(r.blog_posts, r.blog_authors, tagsByPost[r.blog_posts.id] ?? [])
 		)
 
-		// Count total published posts
-		const allPublished = await db
-			.select({ id: blogPosts.id })
-			.from(blogPosts)
-			.where(eq(blogPosts.published, true))
-
-		return { posts, total: allPublished.length }
+		return { posts }
 	} catch (error) {
 		logger.error('Failed to fetch blog posts', error, {
 			metadata: { limit, page }
 		})
 		reportError(error, { module: 'blog', op: 'getPosts' })
-		return { posts: [], total: 0 }
+		return { posts: [] }
 	}
 }
 
@@ -266,7 +260,14 @@ export async function getTags(): Promise<BlogTag[]> {
 	cacheTag('blog-tags')
 
 	try {
-		const rows = await db.select().from(blogTags).orderBy(blogTags.name)
+		// Safety bound — tags are user-curated and should never grow past
+		// a few dozen, but cap unbounded reads in case the table is ever
+		// polluted (e.g., n8n importer bug producing duplicate tags).
+		const rows = await db
+			.select()
+			.from(blogTags)
+			.orderBy(blogTags.name)
+			.limit(500)
 		return rows.map(mapTag)
 	} catch (error) {
 		logger.error('Failed to fetch blog tags', error)
