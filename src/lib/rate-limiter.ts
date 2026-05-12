@@ -37,27 +37,33 @@ export const RATE_LIMIT_CONFIGS = {
 export type RateLimitType = keyof typeof RATE_LIMIT_CONFIGS
 
 /**
- * Check rate limit using @vercel/kv when available, falling back to in-memory store.
+ * Check rate limit using Upstash Redis when available, falling back to in-memory store.
  * Returns true if the request is allowed, false if rate limited.
  */
-async function checkWithKv(
+async function checkWithRedis(
 	key: string,
 	maxRequests: number,
 	windowSeconds: number
 ): Promise<boolean | null> {
+	const url = env.KV_REST_API_URL
+	const token = env.KV_REST_API_TOKEN
+	if (!url || !token) {
+		return null
+	}
 	try {
-		const { kv } = await import('@vercel/kv')
-		const current = await kv.incr(key)
-		await kv.expire(key, windowSeconds) // Always refresh TTL — idempotent
+		const { Redis } = await import('@upstash/redis')
+		const redis = new Redis({ url, token })
+		const current = await redis.incr(key)
+		await redis.expire(key, windowSeconds) // Always refresh TTL — idempotent
 		return current <= maxRequests
 	} catch {
-		// KV not configured at runtime — caller falls through to in-memory store
+		// Redis not configured at runtime — caller falls through to in-memory store
 		return null
 	}
 }
 
 /**
- * Distributed rate limiter using @vercel/kv with in-memory fallback.
+ * Distributed rate limiter using Upstash Redis with in-memory fallback.
  * Replaces the previous in-process Map store which did not work across
  * multiple serverless instances.
  */
@@ -76,7 +82,7 @@ export class UnifiedRateLimiter {
 		if (!this.useKv) {
 			this.initializeInMemory()
 		} else {
-			logger.info('Distributed rate limiter initialized (Vercel KV)')
+			logger.info('Distributed rate limiter initialized (Upstash Redis)')
 		}
 	}
 
@@ -115,11 +121,15 @@ export class UnifiedRateLimiter {
 		const windowSeconds = Math.ceil(config.windowMs / 1000)
 
 		if (this.useKv) {
-			const kvResult = await checkWithKv(key, config.maxRequests, windowSeconds)
-			if (kvResult !== null) {
-				return kvResult
+			const redisResult = await checkWithRedis(
+				key,
+				config.maxRequests,
+				windowSeconds
+			)
+			if (redisResult !== null) {
+				return redisResult
 			}
-			// KV failed at runtime — fall through to in-memory
+			// Redis failed at runtime — fall through to in-memory
 		}
 
 		return this._checkLimitInMemory(key, config.maxRequests, config.windowMs)
