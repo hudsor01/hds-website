@@ -179,7 +179,7 @@
 - All env access goes through `src/env.ts` (T3 env). Never read `process.env.X` directly.
 - Schema-required when `VERCEL_ENV === 'production'` (enforced by a `.optional().refine(...)` pair; unset elsewhere): `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`
 - Always defined (have defaults): `BASE_URL` (default `http://localhost:3000`), `NEXT_PUBLIC_BASE_URL` (default `http://localhost:3000`), `NODE_ENV` (default `development`)
-- Truly optional / feature-gated: `RESEND_API_KEY`, `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`
+- Truly optional / feature-gated: `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`
 
 ## DEVELOPMENT COMMANDS
 

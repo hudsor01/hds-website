@@ -45,8 +45,8 @@ async function checkWithRedis(
 	maxRequests: number,
 	windowSeconds: number
 ): Promise<boolean | null> {
-	const url = env.KV_REST_API_URL
-	const token = env.KV_REST_API_TOKEN
+	const url = env.UPSTASH_REDIS_REST_URL
+	const token = env.UPSTASH_REDIS_REST_TOKEN
 	if (!url || !token) {
 		return null
 	}
@@ -74,12 +74,14 @@ export class UnifiedRateLimiter {
 	// @types/node was implicitly in scope. Edge runtime would have
 	// surfaced this as `any` without that implicit include.
 	private cleanupInterval: ReturnType<typeof setInterval> | null = null
-	private useKv: boolean
+	private useRedis: boolean
 
 	constructor() {
-		// Use KV when env vars are present (production/preview), fall back to in-memory
-		this.useKv = !!(env.KV_REST_API_URL && env.KV_REST_API_TOKEN)
-		if (!this.useKv) {
+		// Use Upstash Redis when env vars are present (production/preview), fall back to in-memory
+		this.useRedis = !!(
+			env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
+		)
+		if (!this.useRedis) {
 			this.initializeInMemory()
 		} else {
 			logger.info('Distributed rate limiter initialized (Upstash Redis)')
@@ -120,7 +122,7 @@ export class UnifiedRateLimiter {
 		const key = this.buildKey(identifier, limitType)
 		const windowSeconds = Math.ceil(config.windowMs / 1000)
 
-		if (this.useKv) {
+		if (this.useRedis) {
 			const redisResult = await checkWithRedis(
 				key,
 				config.maxRequests,
