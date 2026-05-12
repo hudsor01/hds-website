@@ -84,7 +84,8 @@ export const env = createEnv({
 				'CRON_SECRET is required in production'
 			),
 
-		// Vercel KV for distributed rate limiting (optional)
+		// Upstash Redis for distributed rate limiting (optional)
+		// Vercel injects these env var names when an Upstash Redis integration is attached.
 		KV_REST_API_URL: z.string().url().optional(),
 		KV_REST_API_TOKEN: z.string().optional(),
 
