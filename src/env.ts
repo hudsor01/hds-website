@@ -85,9 +85,9 @@ export const env = createEnv({
 			),
 
 		// Upstash Redis for distributed rate limiting (optional)
-		// Vercel injects these env var names when an Upstash Redis integration is attached.
-		KV_REST_API_URL: z.string().url().optional(),
-		KV_REST_API_TOKEN: z.string().optional(),
+		// Set automatically when an Upstash Redis integration is attached via Vercel Marketplace.
+		UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+		UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 
 		// Sentry error tracking (optional; no-op when unset)
 		SENTRY_DSN: z.string().url().optional(),
@@ -131,8 +131,8 @@ export const env = createEnv({
 		ADMIN_SECRET: process.env.ADMIN_SECRET,
 		CRON_SECRET: process.env.CRON_SECRET,
 		DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
-		KV_REST_API_URL: process.env.KV_REST_API_URL,
-		KV_REST_API_TOKEN: process.env.KV_REST_API_TOKEN,
+		UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+		UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
 		SENTRY_DSN: process.env.SENTRY_DSN,
 		SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
 
