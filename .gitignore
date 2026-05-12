@@ -121,7 +121,6 @@ public/sitemap.xml
 # Development documentation with sensitive info
 docs/cloudflare-tunnel-config.yml
 docs/docker-compose-grafana.yml
-scripts/generate-sitemap.ts
 scripts/generate-metrics-token.js
 scripts/test-discord-webhook.sh
 .trae/
