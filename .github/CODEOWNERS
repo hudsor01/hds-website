@@ -1,0 +1,4 @@
+# Every PR auto-requests review from @hudsor01.
+# More specific patterns below override this fallback.
+
+*       @hudsor01
