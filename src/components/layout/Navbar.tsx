@@ -13,7 +13,7 @@ interface NavigationItem {
 	href: string
 }
 
-// Contact is intentionally absent — the "Book a Free Strategy Call" CTA
+// Contact is intentionally absent — the "Get My Free Website Plan" CTA
 // button on the right side of the navbar is the dedicated conversion
 // path to /contact. A duplicate plain link plus the active-state amber
 // highlight made the nav feel cluttered when on /contact. Blog added
@@ -113,7 +113,7 @@ const Navbar = memo(function Navbar() {
 								onClick={handleNavClick}
 							>
 								<Link href={ROUTES.CONTACT}>
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<ArrowRight className="w-3.5 h-3.5" />
 								</Link>
 							</Button>
@@ -171,7 +171,7 @@ const Navbar = memo(function Navbar() {
 								className="w-full"
 								onClick={handleNavClick}
 							>
-								<Link href={ROUTES.CONTACT}>Book Free Call</Link>
+								<Link href={ROUTES.CONTACT}>Free Website Plan</Link>
 							</Button>
 						</div>
 					</div>

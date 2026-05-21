@@ -15,21 +15,21 @@ const PROCESS_STEPS = [
 		step: '01',
 		title: 'Discovery',
 		description:
-			'We learn how your business works today — what you do manually, what tools you use, and where time is being lost.',
+			'We learn how your business works — what you do, who your customers are, and what your website needs to do for you.',
 		icon: Search
 	},
 	{
 		step: '02',
 		title: 'Strategy',
 		description:
-			'We map out exactly what to build, connect, or automate — with clear timelines and a plain-English plan you can follow.',
+			'We map out exactly what your website needs — pages, structure, and a plain-English plan with clear timelines.',
 		icon: ClipboardList
 	},
 	{
 		step: '03',
 		title: 'Development',
 		description:
-			'We build your solution quickly and reliably so you can launch with confidence.',
+			'We build your website quickly and reliably so you can launch with confidence.',
 		icon: Zap
 	},
 	{

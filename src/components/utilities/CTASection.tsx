@@ -24,7 +24,7 @@ interface CTASectionProps {
 export function CTASection({
 	title,
 	description,
-	ctaLabel = 'Book a Free Strategy Call',
+	ctaLabel = 'Get My Free Website Plan',
 	ctaHref = '/contact'
 }: CTASectionProps) {
 	return (

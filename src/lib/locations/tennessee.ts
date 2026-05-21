@@ -6,11 +6,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Nashville',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Music City Digital Innovation',
+		tagline: 'Web Design for Nashville Small Businesses',
 		description:
-			'Nashville is more than music -- it is a booming tech hub. We build digital solutions for Music City businesses from Broadway to the Gulch.',
+			'Nashville is more than music -- it is a fast-growing small business town. We design and build fast, mobile-ready websites for Music City shops, studios, and service businesses from Broadway to the Gulch.',
 		metaDescription:
-			'Web development and digital solutions in Nashville, TN. Custom websites and applications for Music City entertainment, healthcare, and tech businesses.',
+			'Web design in Nashville, TN for small businesses. We build fast, mobile-ready websites for Music Row studios and Gulch shops that get found on Google.',
 		neighborhoods: [
 			'Downtown',
 			'The Gulch',
@@ -28,19 +28,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Music & Entertainment',
+				title: 'Local Business Websites',
 				description:
-					'Artist websites, booking platforms, and streaming solutions for Nashville music industry professionals.'
+					'Clean, mobile-first websites for Nashville studios, venues, and music-industry professionals that bring in bookings.'
 			},
 			{
-				title: 'Healthcare IT',
+				title: 'Healthcare Practice Websites',
 				description:
-					'Custom web applications for Nashville healthcare companies and hospital systems.'
+					'We build healthcare and clinic websites in Nashville structured to rank for the searches local patients actually make.'
 			},
 			{
-				title: 'Hospitality & Tourism',
+				title: 'E-Commerce Websites',
 				description:
-					'Restaurant websites, booking systems, and tourism platforms for Nashville businesses.'
+					'Online stores and menu pages for Nashville restaurants and tourism businesses, built to convert visitors into customers.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Memphis',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Bluff City Digital Solutions',
+		tagline: 'Web Design for Memphis Small Businesses',
 		description:
-			'Memphis is the logistics capital of America with FedEx, a legendary music scene, and world-famous BBQ. We build digital solutions for the Bluff City market.',
+			'Memphis is the logistics capital of America with a legendary music scene and world-famous BBQ. We design and build fast, mobile-ready websites for Bluff City small businesses.',
 		metaDescription:
-			'Web development in Memphis, TN. Custom websites, logistics platforms, and digital solutions for Bluff City businesses and companies.',
+			'Web design in Memphis, TN for small businesses. We build fast, mobile-ready websites for Beale Street venues, BBQ joints, and freight companies.',
 		neighborhoods: [
 			'Downtown',
 			'Beale Street',
@@ -71,19 +71,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Logistics & Shipping',
+				title: 'Fast, Modern Websites',
 				description:
-					'Custom web applications for Memphis logistics companies, freight brokers, and FedEx-adjacent businesses.'
+					'Quick-loading websites for Memphis logistics companies and freight brokers that look credible to every shipper.'
 			},
 			{
-				title: 'Music & Entertainment',
+				title: 'Local Business Websites',
 				description:
-					'Artist platforms, venue websites, and booking systems for Memphis music industry and Beale Street businesses.'
+					'Mobile-friendly websites for Beale Street venues, BBQ joints, and Memphis music-industry businesses.'
 			},
 			{
-				title: 'Healthcare Systems',
+				title: 'Healthcare Provider Websites',
 				description:
-					'HIPAA-compliant web solutions for Methodist, St. Jude partners, and Memphis healthcare providers.'
+					'Healthcare provider websites built so Memphis clinics and practices show up when local patients search.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Knoxville',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Marble City Digital Innovation',
+		tagline: 'Web Design for Knoxville Small Businesses',
 		description:
-			'Home to the University of Tennessee and gateway to the Smokies, Knoxville blends academic innovation with outdoor tourism. We build digital solutions for East Tennessee.',
+			'Home to the University of Tennessee and gateway to the Smokies, Knoxville pairs a lively Market Square scene with year-round outdoor tourism. We design and build websites for East Tennessee small businesses.',
 		metaDescription:
-			'Web development in Knoxville, TN. Custom websites, tourism platforms, and digital solutions for East Tennessee businesses and UT community.',
+			'Web design in Knoxville, TN for small businesses. We build mobile-ready websites for Market Square shops, Smoky Mountain tour operators, and Bearden services.',
 		neighborhoods: [
 			'Downtown',
 			'Market Square',
@@ -114,19 +114,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Nuclear & Energy',
+				title: 'Fast, Modern Websites',
 				description:
-					'Secure web solutions for Oak Ridge National Lab contractors and East Tennessee energy companies.'
+					'Professional websites for Oak Ridge contractors and East Tennessee energy firms that load fast and read clearly.'
 			},
 			{
-				title: 'Tourism & Outdoors',
+				title: 'Booking & Contact Forms',
 				description:
-					'Booking platforms and websites for Great Smoky Mountains tourism operators and Knoxville attractions.'
+					'Websites with built-in booking and contact forms for Great Smoky Mountains tour operators and Knoxville attractions.'
 			},
 			{
-				title: 'University & Research',
+				title: 'Local SEO Setup',
 				description:
-					'Web platforms for UT research programs and Knoxville education technology companies.'
+					'Websites for Knoxville businesses near UT, built to rank for the local searches that bring in walk-in customers.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Chattanooga',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Gig City Digital Excellence',
+		tagline: 'Web Design for Chattanooga Small Businesses',
 		description:
-			'Chattanooga pioneered municipal gigabit internet and has become a hub for small businesses and remote workers. We build digital solutions for the Scenic City.',
+			'Chattanooga pioneered municipal gigabit internet and has become a hub for small businesses and remote workers. We design and build fast, mobile-ready websites for the Scenic City.',
 		metaDescription:
-			'Website development and business automation in Chattanooga, TN. We build your website, connect your tools, and automate the work for Gig City businesses.',
+			'Web design in Chattanooga, TN for small businesses. We build fast websites for North Shore shops and outdoor-adventure outfitters in the Gig City.',
 		neighborhoods: [
 			'Downtown',
 			'North Shore',
@@ -157,19 +157,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Website & Automation',
+				title: 'Fast, Modern Websites',
 				description:
-					'Modern websites and automation tools for Chattanooga businesses — take full advantage of Gig City infrastructure.'
+					'Modern websites for Chattanooga small businesses that load instantly and make the most of Gig City speeds.'
 			},
 			{
-				title: 'Outdoor Adventure',
+				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Chattanooga rock climbing, kayaking, hiking, and outdoor adventure companies.'
+					'Websites with easy booking for Chattanooga rock climbing, kayaking, and outdoor adventure companies.'
 			},
 			{
-				title: 'Manufacturing & Logistics',
+				title: 'Mobile-First Design',
 				description:
-					'Custom web applications for Chattanooga automotive manufacturers and Tennessee Valley logistics companies.'
+					'Mobile-first websites for Chattanooga manufacturers and Tennessee Valley businesses that look sharp on any phone.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Clarksville',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Gateway to Tennessee Digital Solutions',
+		tagline: 'Web Design for Clarksville Small Businesses',
 		description:
-			"Tennessee's fifth-largest city and home to Fort Campbell, Clarksville is one of the fastest-growing cities in the state. We build digital solutions for the Gateway City.",
+			'One of the fastest-growing cities in Tennessee and home to Fort Campbell, Clarksville is full of new shops and service businesses. We design and build websites for the Gateway City.',
 		metaDescription:
-			'Web development in Clarksville, TN. Custom websites and digital solutions for Fort Campbell area businesses and Montgomery County companies.',
+			'Web design in Clarksville, TN for small businesses. We build mobile-ready websites for Fort Campbell area shops and veteran-owned businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Exit 4',
@@ -200,19 +200,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Defense',
-				description:
-					'Web solutions for Fort Campbell contractors, military service providers, and veteran-owned businesses.'
-			},
-			{
-				title: 'Real Estate & Growth',
-				description:
-					"Property listing platforms for Clarksville real estate agents serving one of TN's fastest-growing markets."
-			},
-			{
 				title: 'Local Business Websites',
 				description:
-					'Professional websites for Clarksville restaurants, retailers, and service businesses.'
+					'Mobile-ready websites for Fort Campbell area service providers and veteran-owned Clarksville businesses.'
+			},
+			{
+				title: 'Real Estate Websites',
+				description:
+					'Real estate agent websites built to rank in one of the fastest-growing housing markets in Tennessee.'
+			},
+			{
+				title: 'Website Redesigns',
+				description:
+					'Refreshed, modern websites for Clarksville restaurants, retailers, and service businesses that need an upgrade.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		city: 'Murfreesboro',
 		state: 'Tennessee',
 		stateCode: 'TN',
-		tagline: 'Geographic Center Digital Solutions',
+		tagline: 'Web Design for Murfreesboro Small Businesses',
 		description:
-			"Located at the geographic center of Tennessee, Murfreesboro is home to MTSU and one of the state's fastest-growing business communities. We deliver digital solutions for the 'Boro.",
+			"At the geographic center of Tennessee and home to MTSU, Murfreesboro has one of the state's fastest-growing business communities. We design and build websites for the 'Boro.",
 		metaDescription:
-			'Web development in Murfreesboro, TN. Custom websites and digital solutions for Middle Tennessee businesses, MTSU community, and Rutherford County companies.',
+			"Web design in Murfreesboro, TN for small businesses. We build fast websites for MTSU-area studios and Rutherford County retailers near the 'Boro.",
 		neighborhoods: [
 			'Downtown',
 			'Medical Center Area',
@@ -243,19 +243,19 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Music & Recording',
+				title: 'Local Business Websites',
 				description:
-					'Websites for MTSU recording industry graduates, studios, and Murfreesboro music businesses.'
+					'Mobile-friendly websites for MTSU-area recording studios and Murfreesboro music businesses.'
 			},
 			{
-				title: 'Healthcare & Medical',
+				title: 'Medical Practice Websites',
 				description:
-					'Web solutions for Ascension Saint Thomas and Murfreesboro medical providers and clinics.'
+					'Medical practice websites built so Murfreesboro clinics show up when nearby patients search.'
 			},
 			{
-				title: 'Retail & Growth',
+				title: 'E-Commerce Websites',
 				description:
-					"E-commerce and websites for Murfreesboro retailers and businesses in Rutherford County's booming economy."
+					"Online stores for Murfreesboro retailers competing in Rutherford County's booming economy."
 			}
 		]
 	}

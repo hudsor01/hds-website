@@ -11,10 +11,10 @@ const CURRENT_YEAR = new Date().getFullYear()
 
 const footerLinks = {
 	solutions: [
-		{ name: 'Website Development', href: ROUTES.SERVICES },
-		{ name: 'Business Automation', href: ROUTES.SERVICES },
-		{ name: 'Tool Integrations', href: ROUTES.SERVICES },
-		{ name: 'View Showcase', href: ROUTES.SHOWCASE }
+		{ name: 'Website Design & Build', href: ROUTES.SERVICES },
+		{ name: 'Get Found on Google', href: ROUTES.SERVICES },
+		{ name: 'Booking & Payments', href: ROUTES.SERVICES },
+		{ name: 'Recent Work', href: ROUTES.SHOWCASE }
 	],
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
@@ -91,11 +91,11 @@ export default function Footer() {
 									<h3 className="text-h4 text-foreground">HDS</h3>
 								</div>
 								<p className="text-accent text-xs font-semibold mb-subheading">
-									Automate. Integrate. Grow.
+									Professional websites for small businesses.
 								</p>
 								<p className="text-xs text-muted-foreground">
-									We build your website, connect your tools, and automate the
-									work — so you can focus on growing.
+									We build small businesses a professional website that turns
+									the reputation they&apos;ve earned into booked customers.
 								</p>
 							</div>
 
@@ -107,7 +107,7 @@ export default function Footer() {
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="text-xs">Proven ROI Results</span>
+									<span className="text-xs">Launched in Weeks</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<Clock className="h-4 w-4 text-accent" />
@@ -163,11 +163,11 @@ export default function Footer() {
 						{/* CTA Section */}
 						<div className="md:col-span-1">
 							<h4 className="text-foreground font-semibold mb-heading">
-								Ready to Grow Faster?
+								Ready for the Website You&apos;ve Earned?
 							</h4>
 							<p className="text-xs text-muted-foreground mb-heading">
-								Book your free strategy call and see how we can help you launch
-								and run your business more efficiently.
+								Get your free website plan — pages, timeline, and cost, mapped
+								out for your business.
 							</p>
 
 							<div className="space-y-3">
@@ -178,7 +178,7 @@ export default function Footer() {
 									trackConversion={true}
 									className="w-full"
 								>
-									<Link href={ROUTES.CONTACT}>Book a Free Strategy Call</Link>
+									<Link href={ROUTES.CONTACT}>Get My Free Website Plan</Link>
 								</Button>
 
 								<a

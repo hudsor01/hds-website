@@ -6,11 +6,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Atlanta',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Digital Solutions for the Capital of the South',
+		tagline: 'Web Design for Atlanta Small Businesses',
 		description:
-			'Atlanta is a powerhouse of commerce, tech, and culture. We help ATL businesses from Buckhead to Midtown compete with modern web solutions.',
+			'Atlanta is a powerhouse of commerce, tech, and culture. We design and build fast, mobile-ready websites for ATL small businesses from Buckhead to Midtown.',
 		metaDescription:
-			'Website development and business automation in Atlanta, GA. We build your website, connect your tools, and automate the work for Georgia businesses.',
+			'Web design for Atlanta small businesses. We build fast, mobile-ready websites for shops and services from Buckhead to Midtown, built to be found on Google.',
 		neighborhoods: [
 			'Midtown',
 			'Buckhead',
@@ -28,19 +28,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Fintech Solutions',
+				title: 'Local Business Websites',
 				description:
-					'Custom web platforms for Atlanta fintech companies, payment processors, and financial services.'
+					'Modern websites for Atlanta shops and service businesses, built to win customers from Buckhead to Decatur.'
 			},
 			{
-				title: 'Media & Entertainment',
+				title: 'E-Commerce Websites',
 				description:
-					'Websites and digital platforms for Atlanta film, music, and media companies.'
+					'Online stores for ATL retailers and makers, built to sell on any device and load fast for shoppers.'
 			},
 			{
-				title: 'Business Systems',
+				title: 'Local SEO Setup',
 				description:
-					'Websites, integrations, and automation built around how your Atlanta business actually works.'
+					'Websites built to rank in Atlanta search results so nearby customers find your business first.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Savannah',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Hostess City Digital Excellence',
+		tagline: 'Web Design for Savannah Small Businesses',
 		description:
-			'Savannah combines Southern charm with a booming port and tourism industry. We build digital solutions for the Hostess City from River Street to the Historic District.',
+			'Savannah combines Southern charm with a booming port and tourism industry. We design and build websites for Hostess City small businesses from River Street to the Historic District.',
 		metaDescription:
-			'Web development in Savannah, GA. Custom websites and digital solutions for Savannah tourism, port logistics, and historic district businesses.',
+			'Web design for Savannah small businesses. We build websites for River Street shops, Historic District restaurants, and tour companies that draw visitors in.',
 		neighborhoods: [
 			'Historic District',
 			'River Street',
@@ -71,19 +71,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Tourism & Hospitality Sites',
 				description:
-					'Booking platforms and websites for Savannah hotels, restaurants, and tour companies.'
+					'Websites for Savannah hotels, restaurants, and tour companies that turn visitors into bookings.'
 			},
 			{
-				title: 'Port & Logistics',
+				title: 'Mobile-First Design',
 				description:
-					'Custom web applications for Port of Savannah logistics companies and shipping operations.'
+					'Sites that look sharp on phones, so tourists exploring the Historic District can find you on the go.'
 			},
 			{
-				title: 'Art & Design',
+				title: 'E-Commerce Websites',
 				description:
-					'Portfolio websites and e-commerce for SCAD-affiliated artists, designers, and creative businesses.'
+					'Online stores for Starland District artists, makers, and creative businesses to sell beyond the storefront.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Augusta',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Garden City Digital Solutions',
+		tagline: 'Web Design for Augusta Small Businesses',
 		description:
-			'Home to the Masters Tournament and Fort Eisenhower, Augusta is a center for military, healthcare, and cybersecurity. We build digital solutions for the CSRA region.',
+			'Home to the Masters Tournament and Fort Eisenhower, Augusta anchors the CSRA region. We design and build websites for small businesses across the Garden City.',
 		metaDescription:
-			'Web development in Augusta, GA. Custom websites and digital solutions for CSRA businesses, military contractors, and healthcare providers.',
+			'Web design for Augusta small businesses. We build fast websites for CSRA shops, healthcare practices, and Masters Tournament area hospitality companies.',
 		neighborhoods: [
 			'Downtown',
 			'Summerville',
@@ -114,19 +114,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Cybersecurity & Defense',
+				title: 'Healthcare Practice Sites',
 				description:
-					'Secure web solutions for Fort Eisenhower contractors, Army Cyber Command partners, and CSRA defense companies.'
+					'Clean, trustworthy websites for Augusta medical practices and regional healthcare providers.'
 			},
 			{
-				title: 'Healthcare Platforms',
+				title: 'Local Business Websites',
 				description:
-					'HIPAA-compliant web solutions for Augusta University Health and regional medical providers.'
+					'Websites for CSRA shops and service businesses across Martinez, Evans, and downtown Augusta.'
 			},
 			{
-				title: 'Golf & Tourism',
+				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Augusta golf tourism, hotels, and Masters Tournament area hospitality businesses.'
+					'Websites with simple booking and contact forms for Augusta golf tourism and area hospitality businesses.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Columbus',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Fountain City Digital Solutions',
+		tagline: 'Web Design for Columbus Small Businesses',
 		description:
-			"Columbus is Georgia's second-largest metro and home to Fort Moore. We build digital solutions for the Chattahoochee Valley business community.",
+			"Columbus is Georgia's second-largest metro and home to Fort Moore. We design and build websites for small businesses across the Chattahoochee Valley.",
 		metaDescription:
-			'Web development in Columbus, GA. Custom websites and digital solutions for Chattahoochee Valley businesses, military contractors, and manufacturers.',
+			'Web design for Columbus, GA small businesses. We build fast websites for Fountain City shops, service companies, and Chattahoochee Valley businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Midtown',
@@ -157,19 +157,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Defense',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Fort Moore contractors, military service providers, and defense companies.'
+					'Websites for Columbus shops and service businesses from downtown to North Columbus and Phenix City.'
 			},
 			{
-				title: 'Insurance & Finance',
+				title: 'Fast, Modern Websites',
 				description:
-					'Secure web platforms for Columbus insurance companies, Aflac partners, and financial services.'
+					'Quick-loading websites for Chattahoochee Valley businesses, built to keep customers from clicking away.'
 			},
 			{
-				title: 'Manufacturing & Industry',
+				title: 'Local SEO Setup',
 				description:
-					'Custom web applications for Columbus manufacturers and Chattahoochee Valley industrial companies.'
+					'Websites built to show up when Fountain City customers search for nearby services on Google.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Macon',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Heart of Georgia Digital Solutions',
+		tagline: 'Web Design for Macon Small Businesses',
 		description:
-			'Macon sits at the geographic heart of Georgia with a rich musical heritage and growing healthcare sector. We build digital solutions for Middle Georgia businesses.',
+			'Macon sits at the geographic heart of Georgia with a rich musical heritage and growing healthcare sector. We design and build websites for Middle Georgia small businesses.',
 		metaDescription:
-			'Web development in Macon, GA. Custom websites and digital solutions for Middle Georgia businesses, healthcare providers, and cultural organizations.',
+			'Web design for Macon small businesses. We build websites for Middle Georgia healthcare practices, music venues, and shops in the heart of Georgia.',
 		neighborhoods: [
 			'Downtown',
 			'College Hill',
@@ -200,19 +200,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Healthcare & Medical',
+				title: 'Healthcare Practice Sites',
 				description:
-					'Web solutions for Atrium Health Navicent, Mercer Medicine, and Macon healthcare providers.'
+					'Websites for Macon medical practices and Middle Georgia healthcare providers that put patients at ease.'
 			},
 			{
-				title: 'Music & Culture',
+				title: 'Website Redesigns',
 				description:
-					'Websites for Macon music venues, Capricorn Studios heritage, and Middle Georgia cultural organizations.'
+					'Fresh redesigns for Macon music venues and cultural organizations with roots in Capricorn Studios heritage.'
 			},
 			{
-				title: 'Military & Aerospace',
+				title: 'Mobile-First Design',
 				description:
-					'Web platforms for Robins AFB contractors, Warner Robins aerospace companies, and defense suppliers.'
+					'Websites that work flawlessly on phones for shops and services across the heart of Georgia.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		city: 'Athens',
 		state: 'Georgia',
 		stateCode: 'GA',
-		tagline: 'Classic City Digital Innovation',
+		tagline: 'Web Design for Athens Small Businesses',
 		description:
-			'Home to the University of Georgia and a legendary music scene, Athens blends academic excellence with creative culture. We build digital solutions for the Classic City.',
+			'Home to the University of Georgia and a legendary music scene, Athens blends academic excellence with creative culture. We design and build websites for Classic City small businesses.',
 		metaDescription:
-			'Web development in Athens, GA. Custom websites and digital solutions for UGA area businesses and creative companies.',
+			'Web design for Athens, GA small businesses. We build websites for Five Points shops, Classic City restaurants, breweries, and the local music scene.',
 		neighborhoods: [
 			'Downtown',
 			'Five Points',
@@ -243,19 +243,19 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'University & Research',
+				title: 'Restaurant Websites',
 				description:
-					'Web platforms for UGA programs, research labs, and university-affiliated businesses in Athens.'
+					'Websites with menus and online ordering for Athens restaurants, breweries, and the Classic City food scene.'
 			},
 			{
-				title: 'Music & Entertainment',
+				title: 'Local Business Websites',
 				description:
-					'Artist websites, venue platforms, and booking systems for Athens music and entertainment businesses.'
+					'Modern websites for Athens shops and creative businesses across Five Points and Normaltown.'
 			},
 			{
-				title: 'Food & Beverage',
+				title: 'Fast, Modern Websites',
 				description:
-					'Websites and online ordering for Athens restaurants, breweries, and the Classic City food scene.'
+					'Quick, mobile-ready websites for Athens music venues and entertainment businesses that draw a crowd.'
 			}
 		]
 	}

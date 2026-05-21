@@ -10,6 +10,10 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
 import { cleanupMocks } from '../test-utils'
 
+const testEnv = (
+	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
+).__TEST_ENV
+
 const VALID_CRON_SECRET = 'test-cron-secret-that-is-32-chars!!'
 
 function makeRequest(authHeader?: string): NextRequest {
@@ -33,12 +37,12 @@ describe('POST /api/process-emails', () => {
 			message: 'Processed 3 emails, 0 errors'
 		})
 
-		mock.module('@/env', () => ({
-			env: {
-				NODE_ENV: 'test',
-				CRON_SECRET: VALID_CRON_SECRET
-			}
-		}))
+		// Mutate the shared TEST_ENV (from tests/setup.ts) rather than
+		// re-registering @/env. Re-registering with a fresh env object
+		// breaks ESM live bindings for already-loaded consumers (admin.ts)
+		// which causes downstream admin-auth tests to fail in CI.
+		testEnv.NODE_ENV = 'test'
+		testEnv.CRON_SECRET = VALID_CRON_SECRET
 
 		mock.module('@/lib/logger', () => ({
 			logger: {
@@ -89,12 +93,7 @@ describe('POST /api/process-emails', () => {
 	})
 
 	it('returns 503 when CRON_SECRET is not configured', async () => {
-		mock.module('@/env', () => ({
-			env: {
-				NODE_ENV: 'test',
-				CRON_SECRET: undefined
-			}
-		}))
+		testEnv.CRON_SECRET = undefined
 
 		const { POST } = await import('@/app/api/process-emails/route')
 		const response = await POST(makeRequest(`Bearer ${VALID_CRON_SECRET}`))

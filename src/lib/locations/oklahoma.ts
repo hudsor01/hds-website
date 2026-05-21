@@ -6,11 +6,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Oklahoma City',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'OKC Digital Innovation',
+		tagline: 'Web Design for Oklahoma City Small Businesses',
 		description:
-			'Oklahoma City has transformed into a modern metro with a thriving downtown, energy industry, and aerospace sector. We build digital solutions for the OKC market.',
+			'Oklahoma City has transformed into a modern metro with a thriving downtown, a busy Bricktown entertainment district, and strong energy and aerospace employers. We design and build fast, mobile-ready websites that help OKC small businesses get found on Google and win new customers.',
 		metaDescription:
-			'Web development in Oklahoma City, OK. Custom websites, energy sector applications, and digital solutions for OKC businesses.',
+			'Web design for Oklahoma City small businesses. We build fast, mobile-ready websites for shops and services across Bricktown, Midtown, and the OKC metro.',
 		neighborhoods: [
 			'Downtown',
 			'Bricktown',
@@ -28,19 +28,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Energy & Oil Platforms',
+				title: 'Local Business Websites',
 				description:
-					'Custom web applications for Oklahoma City oil and gas companies, pipeline operators, and energy services.'
+					'Clean, mobile-ready websites for Oklahoma City shops, contractors, and service businesses that turn visitors into customers.'
 			},
 			{
-				title: 'Aerospace & Defense',
+				title: 'Website Redesigns',
 				description:
-					'Secure web solutions for Tinker AFB contractors and Oklahoma aerospace companies.'
+					'Modern rebuilds for OKC businesses with dated sites, so your pages load fast and look right on every phone.'
 			},
 			{
-				title: 'Government Solutions',
+				title: 'Local SEO Setup',
 				description:
-					'Web portals and applications for Oklahoma state agencies and municipal services.'
+					'On-page SEO and Google Business setup so OKC customers searching for your services find you first.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Tulsa',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Oil Capital Goes Digital',
+		tagline: 'Web Design for Tulsa Small Businesses',
 		description:
-			'Tulsa is reinventing itself with the Tulsa Remote program and a growing business community. We help Tulsa businesses get online, connect their tools, and grow.',
+			'Tulsa is reinventing itself with the Tulsa Remote program and a fast-growing small business community along Cherry Street and the Blue Dome District. We design and build websites that help Tulsa businesses look professional online and bring in more customers.',
 		metaDescription:
-			'Website development and business automation in Tulsa, OK. We build your website, connect your tools, and automate the work for Tulsa businesses.',
+			'Website design for Tulsa small businesses. We build fast, mobile-friendly sites for the Cherry Street, Brookside, and Blue Dome District business community.',
 		neighborhoods: [
 			'Downtown',
 			'Cherry Street',
@@ -71,19 +71,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Business Automation',
+				title: 'Fast, Modern Websites',
 				description:
-					'Automate manual work — connect your CRM, booking, and tools so your Tulsa business runs itself.'
+					'Quick-loading, professional websites for Tulsa restaurants, shops, and service providers that look great on any device.'
 			},
 			{
-				title: 'Energy Industry Tech',
+				title: 'Booking & Contact Forms',
 				description:
-					'Custom web platforms for Tulsa oil companies, refineries, and energy service providers.'
+					'Websites with simple booking and contact forms so Tulsa customers can reach you or schedule without a phone call.'
 			},
 			{
-				title: 'Nonprofit & Community',
+				title: 'Nonprofit Websites',
 				description:
-					'Websites and donation platforms for Tulsa nonprofits, foundations, and community organizations.'
+					'Clear, easy-to-update websites with donation pages for Tulsa nonprofits, foundations, and community organizations.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Norman',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Sooner State Digital Solutions',
+		tagline: 'Web Design for Norman Small Businesses',
 		description:
-			'Home to the University of Oklahoma, Norman is a center for education, research, and weather science. We build digital solutions for the Norman and south OKC metro.',
+			'Home to the University of Oklahoma, Norman blends a lively Campus Corner district with a steady community of local restaurants and shops. We design and build websites that help Norman small businesses reach students, families, and the wider south OKC metro.',
 		metaDescription:
-			'Website development and business automation in Norman, OK. We build your website, connect your tools, and automate the work for Norman and OU-area businesses.',
+			'Web design for Norman, OK small businesses. We build mobile-ready websites for Campus Corner shops and service businesses near the University of Oklahoma.',
 		neighborhoods: [
 			'Downtown',
 			'Campus Corner',
@@ -114,19 +114,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Education & Research',
+				title: 'Restaurant Websites',
 				description:
-					'Web platforms for OU-affiliated research programs, education technology, and university organizations.'
+					'Mobile-first websites with menus and hours for Norman restaurants and cafes serving the OU community.'
 			},
 			{
-				title: 'Weather & Climate Tech',
+				title: 'Mobile-First Design',
 				description:
-					'Custom web applications for Norman weather research companies and the National Weather Center ecosystem.'
+					'Websites built to look sharp and load fast on phones, where most Norman and Campus Corner customers find you.'
 			},
 			{
-				title: 'Local Business Growth',
+				title: 'Local SEO Setup',
 				description:
-					'Professional websites for Norman restaurants, retailers, and service businesses in the OU community.'
+					'On-page SEO so Norman and Campus Corner businesses show up when local customers search Google.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Broken Arrow',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Rose District Digital Solutions',
+		tagline: 'Web Design for Broken Arrow Small Businesses',
 		description:
-			"Oklahoma's fourth-largest city, Broken Arrow combines suburban growth with a revitalized downtown Rose District. We help BA businesses build their online presence.",
+			"Oklahoma's fourth-largest city, Broken Arrow pairs steady suburban growth with a revitalized downtown Rose District full of shops and restaurants. We design and build websites that help BA small businesses get found online and bring in more local customers.",
 		metaDescription:
-			'Web development in Broken Arrow, OK. Custom websites and digital solutions for Rose District businesses and Tulsa suburb companies.',
+			'Website design for Broken Arrow small businesses. We build fast, mobile-ready sites for Rose District shops and Tulsa-suburb service companies.',
 		neighborhoods: [
 			'Rose District',
 			'North BA',
@@ -157,19 +157,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Manufacturing Tech',
+				title: 'E-Commerce Websites',
 				description:
-					'Custom web solutions for Broken Arrow manufacturers, aerospace parts suppliers, and industrial companies.'
+					'Online stores for Rose District shops and Broken Arrow retailers who want to sell beyond the storefront.'
 			},
 			{
-				title: 'Retail & E-Commerce',
+				title: 'Local Business Websites',
 				description:
-					'Online stores and retail websites for Rose District businesses and Broken Arrow retailers.'
+					'Professional websites for Broken Arrow contractors, manufacturers, and industrial service companies.'
 			},
 			{
-				title: 'Professional Services',
+				title: 'Professional Services Sites',
 				description:
-					'Websites for Broken Arrow attorneys, accountants, medical practices, and professional firms.'
+					'Polished websites for Broken Arrow attorneys, accountants, and medical practices that build client trust.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Edmond',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Where Innovation Meets Community',
+		tagline: 'Web Design for Edmond Small Businesses',
 		description:
-			"Edmond is one of Oklahoma's most affluent and educated communities, with a strong local business culture and proximity to OKC. We deliver premium digital solutions for Edmond.",
+			"Edmond is one of Oklahoma's most affluent and educated communities, with a strong downtown business culture and easy proximity to OKC. We design and build premium websites that help Edmond small businesses present a polished brand and attract local customers.",
 		metaDescription:
-			'Website development and business automation in Edmond, OK. We build your website, connect your tools, and automate the work for Edmond businesses.',
+			'Premium web design for Edmond, OK small businesses. We build modern, mobile-ready websites for downtown Edmond shops, practices, and professional firms.',
 		neighborhoods: [
 			'Downtown Edmond',
 			'UCO Area',
@@ -200,19 +200,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Professional Services',
+				title: 'Professional Services Sites',
 				description:
-					'Premium websites for Edmond law firms, dental practices, financial advisors, and consulting companies.'
+					'Premium websites for Edmond law firms, dental practices, and financial advisors that reflect a high-end brand.'
 			},
 			{
-				title: 'Education Technology',
+				title: 'Website Redesigns',
 				description:
-					'Web platforms for UCO-affiliated programs, private schools, and education businesses in Edmond.'
+					'Modern rebuilds for established Edmond businesses whose current site no longer matches their reputation.'
 			},
 			{
-				title: 'Lifestyle & Retail',
+				title: 'E-Commerce Websites',
 				description:
-					'E-commerce and brand websites for Edmond boutiques, restaurants, and lifestyle businesses.'
+					'Online stores and brand websites for Edmond boutiques, restaurants, and lifestyle businesses.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Lawton',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Southwest Oklahoma Digital Solutions',
+		tagline: 'Web Design for Lawton Small Businesses',
 		description:
-			'Home to Fort Sill and Cameron University, Lawton anchors southwest Oklahoma with military, education, and healthcare industries. We build digital solutions for the Lawton-Fort Sill metro.',
+			'Home to Fort Sill and Cameron University, Lawton anchors southwest Oklahoma with strong military, education, and healthcare communities. We design and build websites that help Lawton small businesses get found online and serve the Lawton-Fort Sill metro.',
 		metaDescription:
-			'Web development in Lawton, OK. Custom websites and digital solutions for Fort Sill area businesses and southwest Oklahoma companies.',
+			'Web design for Lawton, OK small businesses. We build fast, mobile-ready websites for shops, clinics, and service providers near Fort Sill.',
 		neighborhoods: [
 			'Downtown',
 			'East Lawton',
@@ -243,19 +243,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Defense',
+				title: 'Healthcare Websites',
 				description:
-					'Web solutions for Fort Sill contractors, military service providers, and defense companies.'
-			},
-			{
-				title: 'Healthcare Platforms',
-				description:
-					'Websites for Lawton medical centers, clinics, and veteran healthcare services.'
+					'Clear, mobile-ready websites for Lawton clinics, medical practices, and veteran healthcare providers.'
 			},
 			{
 				title: 'Local Business Websites',
 				description:
-					'Professional websites for Lawton restaurants, retailers, and service providers.'
+					'Professional websites for Lawton restaurants, retailers, and service providers serving the Fort Sill community.'
+			},
+			{
+				title: 'Mobile-First Design',
+				description:
+					'Websites built to load fast and look right on phones, where most Lawton customers will find you.'
 			}
 		]
 	},
@@ -264,11 +264,11 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		city: 'Stillwater',
 		state: 'Oklahoma',
 		stateCode: 'OK',
-		tagline: 'Cowboy Country Digital Innovation',
+		tagline: 'Web Design for Stillwater Small Businesses',
 		description:
-			'Home to Oklahoma State University, Stillwater is a center for research, agriculture, and education. We deliver digital solutions for the OSU community and north central Oklahoma.',
+			'Home to Oklahoma State University, Stillwater mixes a busy campus-area economy with agriculture and a tight-knit downtown business community. We design and build websites that help Stillwater small businesses reach the OSU crowd and north central Oklahoma.',
 		metaDescription:
-			'Web development in Stillwater, OK. Custom websites and digital solutions for OSU area businesses and north central Oklahoma companies.',
+			'Web design for Stillwater, OK small businesses. We build mobile-ready websites for downtown shops and service providers serving the OSU community.',
 		neighborhoods: [
 			'Downtown',
 			'Campus Area',
@@ -286,19 +286,19 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'University & Research',
+				title: 'Local Business Websites',
 				description:
-					'Web platforms for OSU research programs, student organizations, and university-affiliated businesses.'
+					'Mobile-ready websites for Stillwater restaurants, entertainment venues, and shops serving the OSU community.'
 			},
 			{
-				title: 'Agriculture Technology',
+				title: 'Fast, Modern Websites',
 				description:
-					'Digital solutions for Stillwater area farms, ranches, and agricultural technology companies.'
+					'Quick-loading websites for Stillwater-area farms, ranches, and agricultural businesses that look great anywhere.'
 			},
 			{
-				title: 'Student & Local Business',
+				title: 'Local SEO Setup',
 				description:
-					'Websites for Stillwater restaurants, entertainment venues, and businesses serving the OSU community.'
+					'On-page SEO and Google Business setup so Stillwater customers find your business when they search.'
 			}
 		]
 	}

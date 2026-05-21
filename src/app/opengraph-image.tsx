@@ -3,7 +3,7 @@ import { BRAND } from '@/lib/_generated/brand'
 
 export const runtime = 'edge'
 export const alt =
-	'Hudson Digital Solutions — Websites & Automation for Small Businesses'
+	'Hudson Digital Solutions — Professional Websites for Small Businesses'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -55,7 +55,7 @@ export default async function OGImage() {
 						maxWidth: 980
 					}}
 				>
-					Websites & Automation for Small Businesses
+					Professional Websites for Small Businesses
 				</div>
 				<div
 					style={{
@@ -66,8 +66,7 @@ export default async function OGImage() {
 						lineHeight: 1.3
 					}}
 				>
-					We build your site, connect your tools, and automate the workflows
-					that eat your time.
+					We build small businesses the website their reputation deserves.
 				</div>
 			</div>
 

@@ -60,10 +60,10 @@ const testimonials = [
 		company: 'Bright Spark Consulting',
 		role: 'Founder',
 		content:
-			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
 		rating: 5 as const,
-		service: 'Website Development + Automation (private engagement)',
-		highlight: '2x lead volume'
+		service: 'Website Design & Development',
+		highlight: '2x inquiries'
 	},
 	{
 		testimonialId: 2 as const,
@@ -71,10 +71,10 @@ const testimonials = [
 		company: 'Gulf Coast Roofing',
 		role: 'Operations Manager',
 		content:
-			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
 		rating: 5 as const,
-		service: 'Business Automation (private engagement)',
-		highlight: 'Zero manual follow-ups'
+		service: 'Website Design & Development',
+		highlight: 'Found on Google'
 	}
 ] satisfies Array<{
 	testimonialId: number
@@ -114,9 +114,9 @@ export default function AboutPage() {
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Where real business experience meets the technical skill to build
-						it. We don&apos;t just build websites — we build the system behind
-						them.
+						Where real business experience meets the skill to build it. We make
+						small businesses a website that does justice to the reputation
+						they&apos;ve already earned.
 					</p>
 				</div>
 			</section>
@@ -129,11 +129,11 @@ export default function AboutPage() {
 							Our Story
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Built from Experience, Driven by Results
+							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Built from experience, driven by results, and focused on your
-							success.
+							We build websites the way a business owner thinks — every choice
+							measured against whether it brings customers in.
 						</p>
 					</div>
 
@@ -151,35 +151,36 @@ export default function AboutPage() {
 								</p>
 								<p>
 									With{' '}
-									<strong className="text-accent">proven revenue impact</strong>{' '}
+									<strong className="text-accent">
+										hands-on revenue experience
+									</strong>{' '}
 									across growing businesses, we discovered something agencies
 									miss:{' '}
 									<strong className="text-info">
-										websites don&apos;t fail because of bad code — they fail
-										because they&apos;re not connected to how the business
-										actually runs
+										websites fail not because of bad code, but because they were
+										never built to bring in customers — just to look nice
 									</strong>
 									.
 								</p>
 								<p>
 									That&apos;s why our clients see{' '}
-									<strong className="text-accent">proven ROI results</strong> in
-									months, not years. We don&apos;t just launch websites. We
-									build{' '}
+									<strong className="text-accent">
+										real, measurable results
+									</strong>{' '}
+									in months, not years. We don&apos;t just launch a{' '}
 									<Link href="/services" className="link-primary font-semibold">
-										connected business systems
+										professional website
 									</Link>{' '}
-									backed by analytics, automation, and relentless optimization.
-									Every page, every integration, every workflow is measured
-									against one metric:{' '}
+									and walk away — every page is built and measured against one
+									question:{' '}
 									<strong className="text-success-text">
-										does this help your business grow?
+										does this help your business get and keep customers?
 									</strong>
 								</p>
 								<p className="text-foreground font-semibold">
-									We&apos;re not another agency promising &quot;beautiful
-									websites.&quot; We&apos;re business builders who happen to
-									write beautiful code.{' '}
+									We&apos;re not another agency selling &quot;beautiful
+									websites&quot; that sit there doing nothing. We build websites
+									that earn their keep.{' '}
 									<Link href="/contact" className="link-primary">
 										Let&apos;s talk about your project
 									</Link>
@@ -198,10 +199,11 @@ export default function AboutPage() {
 									<h3 className="text-h3 text-foreground">Our Mission</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
-									Make great websites and automation accessible to growing
-									businesses. No more choosing between &quot;affordable but
-									mediocre&quot; or &quot;excellent but unaffordable.&quot; Get
-									both.
+									Make a great website accessible to every small business. No
+									small business should have to choose between a site
+									that&apos;s cheap but embarrassing and one that&apos;s great
+									but unaffordable. You get a professional site that brings in
+									customers, at a fair price.
 								</p>
 							</div>
 
@@ -274,12 +276,14 @@ export default function AboutPage() {
 							<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mb-4">
 								<Zap className="w-5 h-5 text-accent" />
 							</div>
-							<h3 className="text-h3 text-foreground mb-3">Operations</h3>
+							<h3 className="text-h3 text-foreground mb-3">
+								Launch &amp; Support
+							</h3>
 							<ul className="text-sm text-muted-foreground space-y-1 leading-relaxed">
-								<li>Process Automation</li>
-								<li>CRM Integration</li>
-								<li>Email Marketing</li>
-								<li>Lead Nurturing</li>
+								<li>Local SEO Setup</li>
+								<li>Content Updates</li>
+								<li>Booking &amp; Payment Setup</li>
+								<li>Customer Follow-Up</li>
 							</ul>
 						</div>
 
@@ -307,13 +311,12 @@ export default function AboutPage() {
 							The Founder
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							The Business Builder Behind the Work
+							The Builder Behind the Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Why trust a former revenue operations professional to build your
-							business system? Because they understand something agencies
-							don&apos;t: every feature must earn its place by saving you time
-							or making you money.
+							website? Because they understand something most agencies
+							don&apos;t: a website is only worth what it brings in.
 						</p>
 					</div>
 
@@ -331,51 +334,47 @@ export default function AboutPage() {
 								Richard Hudson
 							</p>
 							<p className="text-sm text-muted-foreground">
-								Founder &amp; Revenue Operations
+								Founder &amp; Web Designer
 							</p>
 						</div>
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
 							<p className="text-base">
-								Before building for clients, I spent 5+ years as a{' '}
-								<strong className="text-accent">
-									revenue operations professional
-								</strong>{' '}
-								at established companies. I didn&apos;t just build websites — I
-								built the processes behind them that generated{' '}
-								<strong className="text-accent">
-									measurable revenue impact
-								</strong>
-								.
+								Before building for clients, I spent 5+ years in{' '}
+								<strong className="text-accent">revenue operations</strong> at
+								established companies — close enough to the numbers to see
+								exactly which websites{' '}
+								<strong className="text-accent">brought in customers</strong>{' '}
+								and which just looked nice.
 							</p>
 
 							<p className="text-base">
 								Here&apos;s what I learned:{' '}
 								<strong className="text-info">
 									most websites fail not because of bad technology, but because
-									they&apos;re disconnected from how the business actually
-									operates
+									they were never built to bring in customers
 								</strong>
-								. Agencies charge $50K for a beautiful site that no one can
-								manage. We build connected systems that save you hours every
-								week and convert visitors into paying customers.
+								. Agencies charge $50K for a beautiful site the owner can&apos;t
+								even update. I build small businesses a professional website
+								they control — one that turns the reputation they&apos;ve
+								already earned into booked customers.
 							</p>
 
 							<p className="text-base">
-								When I saw how many small business owners were drowning in
-								manual work — copying data between tools, chasing leads by hand,
-								updating spreadsheets — I knew there was a better way. Hudson
-								Digital Solutions exists to fix that:{' '}
+								When I saw how many great local businesses had glowing reviews
+								but no website — or one so dated it cost them customers — I knew
+								where I could help. Hudson Digital Solutions exists to fix
+								exactly that:{' '}
 								<strong className="text-accent">
-									websites, integrations, and automation built around how your
-									business actually works
+									a professional website, built around how your business
+									actually works
 								</strong>
 								.
 							</p>
 
 							<blockquote className="text-base text-foreground font-bold border-l-4 border-accent pl-6 py-4 bg-accent/5">
 								&quot;I don&apos;t care how beautiful your website is if it
-								doesn&apos;t save you time or bring in revenue. Build results or
-								build nothing.&quot;
+								doesn&apos;t bring in customers. Build results or build
+								nothing.&quot;
 							</blockquote>
 
 							<div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 pt-8 border-t border-border">
@@ -418,8 +417,7 @@ export default function AboutPage() {
 							How We Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							The core beliefs that drive every website we build, every tool we
-							connect, and every workflow we automate.
+							The core beliefs behind every website we build.
 						</p>
 					</div>
 
@@ -510,13 +508,15 @@ export default function AboutPage() {
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
 								Ready to build{' '}
-								<span className="text-accent">your business system?</span>
+								<span className="text-accent">
+									the website you&apos;ve earned?
+								</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground max-w-2xl mx-auto mb-10">
-								Stop doing manually what should run automatically. Let&apos;s
-								build a website and system that works for you — even when
-								you&apos;re not.
+								Let&apos;s map out the website your business needs — and build
+								you something that turns the reputation you&apos;ve earned into
+								booked customers.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -527,7 +527,7 @@ export default function AboutPage() {
 									trackConversion={true}
 								>
 									<Link href="/contact">
-										Book a Free Strategy Call
+										Get My Free Website Plan
 										<ArrowRight className="w-5 h-5" />
 									</Link>
 								</Button>
