@@ -3,7 +3,12 @@
  * Tests for src/app/api/health/route.ts
  *
  * Verifies the response shape on success, 503 on DB failure, and the
- * admin-auth gate. Auth is mocked at module level.
+ * admin-auth gate. Uses the real `@/lib/auth/admin` module driven by
+ * TEST_ENV (set in tests/setup.ts and mutated here) so we don't have
+ * to mock.module('@/lib/auth/admin') — per oven-sh/bun#7823,
+ * mock.module() registrations leak across files (mock.restore() does
+ * not unregister them), which caused admin-auth.test.ts to fail when
+ * it ran after this file.
  */
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
@@ -43,11 +48,6 @@ describe('GET /api/health', () => {
 			},
 			castError: (error: unknown) =>
 				error instanceof Error ? error : new Error(String(error))
-		}))
-
-		// Auth helper passes through when the test sends a valid bearer.
-		mock.module('@/lib/auth/admin', () => ({
-			validateAdminAuth: () => null
 		}))
 	})
 
@@ -124,16 +124,17 @@ describe('GET /api/health', () => {
 	})
 
 	it('rejects requests without valid admin auth', async () => {
-		mock.module('@/lib/auth/admin', () => ({
-			validateAdminAuth: () =>
-				Response.json({ error: 'Unauthorized' }, { status: 401 })
-		}))
+		// Real admin.ts: env.ADMIN_SECRET is set; sending a wrong Bearer
+		// triggers a 401. No mock.module('@/lib/auth/admin') needed.
 		mock.module('@/lib/db', () => ({
 			db: { execute: mock().mockResolvedValue([{ '?column?': 1 }]) }
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET(authedRequest())
+		const unauthedRequest = new NextRequest('http://localhost/api/health', {
+			headers: { authorization: 'Bearer completely-wrong-token' }
+		})
+		const response = await GET(unauthedRequest)
 		expect(response.status).toBe(401)
 	})
 })

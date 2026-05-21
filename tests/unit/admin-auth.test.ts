@@ -9,6 +9,10 @@
  * CI when admin.ts loads before this file's beforeEach). We mutate the
  * shared `env` object directly so the live binding inside admin.ts reflects
  * each test's setup.
+ *
+ * Per oven-sh/bun#7823, `mock.module()` registrations leak across test
+ * files (mock.restore() does NOT unregister them). For the real admin.ts
+ * to be visible here, NO other test file may `mock.module('@/lib/auth/admin', ...)`.
  */
 
 import { beforeEach, describe, expect, it } from 'bun:test'
@@ -29,20 +33,7 @@ describe('validateAdminAuth', () => {
 	})
 
 	it('returns null when the correct Bearer token is provided', async () => {
-		const adminMod = await import('@/lib/auth/admin')
-		const envMod = await import('@/env')
-		// DIAGNOSTIC: print actual state visible to admin.ts in CI
-		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
-		console.log('[DIAG] testEnv.ADMIN_SECRET =', testEnv.ADMIN_SECRET)
-		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
-		console.log('[DIAG] envMod.env.ADMIN_SECRET =', envMod.env.ADMIN_SECRET)
-		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
-		console.log(
-			'[DIAG] envMod.env === testEnv? ',
-			(envMod.env as unknown) === testEnv
-		)
-		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
-		console.log('[DIAG] adminMod keys =', Object.keys(adminMod).join(','))
+		const { validateAdminAuth } = await import('@/lib/auth/admin')
 
 		const request = new NextRequest('http://localhost:3000/api/admin/test', {
 			method: 'GET',
@@ -51,7 +42,7 @@ describe('validateAdminAuth', () => {
 			}
 		})
 
-		const result = adminMod.validateAdminAuth(request)
+		const result = validateAdminAuth(request)
 		expect(result).toBeNull()
 	})
 
