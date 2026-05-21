@@ -33,7 +33,7 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 					'Clean, mobile-first websites for Nashville studios, venues, and music-industry professionals that bring in bookings.'
 			},
 			{
-				title: 'Local SEO Setup',
+				title: 'Healthcare Practice Websites',
 				description:
 					'We build healthcare and clinic websites in Nashville structured to rank for the searches local patients actually make.'
 			},
@@ -81,7 +81,7 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 					'Mobile-friendly websites for Beale Street venues, BBQ joints, and Memphis music-industry businesses.'
 			},
 			{
-				title: 'Local SEO Setup',
+				title: 'Healthcare Provider Websites',
 				description:
 					'Healthcare provider websites built so Memphis clinics and practices show up when local patients search.'
 			}
@@ -205,7 +205,7 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 					'Mobile-ready websites for Fort Campbell area service providers and veteran-owned Clarksville businesses.'
 			},
 			{
-				title: 'Local SEO Setup',
+				title: 'Real Estate Websites',
 				description:
 					'Real estate agent websites built to rank in one of the fastest-growing housing markets in Tennessee.'
 			},
@@ -248,7 +248,7 @@ export const TENNESSEE_LOCATIONS: LocationData[] = [
 					'Mobile-friendly websites for MTSU-area recording studios and Murfreesboro music businesses.'
 			},
 			{
-				title: 'Local SEO Setup',
+				title: 'Medical Practice Websites',
 				description:
 					'Medical practice websites built so Murfreesboro clinics show up when nearby patients search.'
 			},
