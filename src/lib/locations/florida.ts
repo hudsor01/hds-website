@@ -6,11 +6,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Miami',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Magic City Digital Excellence',
+		tagline: 'Web Design for Miami Small Businesses',
 		description:
-			'Miami is a global gateway for business, real estate, and international commerce. We build multilingual web solutions for the Magic City market.',
+			'Miami is a global gateway for business, real estate, and international commerce. We design fast, mobile-ready websites for small businesses across the Magic City, from Brickell to Wynwood.',
 		metaDescription:
-			'Web development and digital solutions in Miami, FL. Custom websites, multilingual platforms, and e-commerce for South Florida businesses.',
+			'Web design in Miami, FL for small businesses. Bilingual, mobile-friendly websites built to win customers from Brickell to Coral Gables and rank on Google.',
 		neighborhoods: [
 			'Downtown Miami',
 			'Brickell',
@@ -28,19 +28,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Multilingual Platforms',
+				title: 'Bilingual Websites',
 				description:
-					'English, Spanish, and Portuguese web solutions for Miami international businesses and brands.'
+					'English and Spanish websites that reach the full Miami customer base and read naturally in both languages.'
 			},
 			{
-				title: 'Real Estate & Luxury',
+				title: 'Real Estate Websites',
 				description:
-					'High-end property listing platforms and luxury brand websites for South Florida markets.'
+					'Polished property and brokerage websites that show South Florida listings off and look sharp on every screen.'
 			},
 			{
-				title: 'International Commerce',
+				title: 'E-Commerce Websites',
 				description:
-					'Cross-border e-commerce and trade platforms for Miami import/export businesses.'
+					'Online stores for Miami retailers and brands, built to load fast and turn browsers into buyers.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Tallahassee',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Capital City Digital Solutions',
+		tagline: 'Web Design for Tallahassee Small Businesses',
 		description:
-			"Florida's capital city combines state government, FSU and FAMU, and a growing tech scene. We build digital solutions for the Tallahassee market.",
+			"Florida's capital city blends state government, FSU and FAMU, and a growing local business scene. We build clean, modern websites for Tallahassee small businesses serving that mix.",
 		metaDescription:
-			'Web development in Tallahassee, FL. Custom websites, government portals, and digital solutions for Florida capital city businesses and universities.',
+			'Web design in Tallahassee, FL for small businesses near FSU, FAMU, and the Capitol. Modern, mobile-ready websites built to be found on Google.',
 		neighborhoods: [
 			'Downtown',
 			'Midtown',
@@ -71,19 +71,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Government Solutions',
+				title: 'Local Business Websites',
 				description:
-					'Web portals and applications for Florida state agencies, lobbyists, and Tallahassee municipal services.'
+					'Approachable websites for Tallahassee shops and service providers that explain what you do and how to reach you.'
 			},
 			{
-				title: 'University Platforms',
+				title: 'College Town Websites',
 				description:
-					'Web solutions for FSU and FAMU programs, research institutions, and student-focused businesses.'
+					'Websites for businesses serving FSU and FAMU students and staff, built mobile-first for an on-the-go audience.'
 			},
 			{
-				title: 'Political & Advocacy',
+				title: 'Local SEO Setup',
 				description:
-					'Campaign websites, advocacy platforms, and digital strategy for Tallahassee political organizations.'
+					'Google-friendly websites that help Tallahassee customers find you when they search the capital area.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Jacksonville',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Bold City Digital Solutions',
+		tagline: 'Web Design for Jacksonville Small Businesses',
 		description:
-			'The largest city by area in the contiguous US, Jacksonville is a powerhouse of logistics, finance, and military. We build digital solutions for the Bold City.',
+			'The largest city by area in the contiguous US, Jacksonville is a powerhouse of logistics, finance, and military families. We design websites for Bold City small businesses serving that community.',
 		metaDescription:
-			'Web development in Jacksonville, FL. Custom websites, logistics platforms, and digital solutions for Bold City businesses and Northeast Florida companies.',
+			'Web design in Jacksonville, FL for small businesses. Fast, mobile-ready websites for Bold City logistics, finance, and Navy-area companies.',
 		neighborhoods: [
 			'Downtown',
 			'San Marco',
@@ -114,19 +114,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Logistics & Transportation',
+				title: 'Trade & Service Websites',
 				description:
-					'Custom web applications for JAXPORT logistics companies, trucking firms, and supply chain operators.'
+					'Clear websites for Jacksonville logistics, trucking, and trade firms that show services and bring in quote requests.'
 			},
 			{
-				title: 'Financial Services',
+				title: 'Professional Websites',
 				description:
-					'Secure web platforms for Jacksonville banks, insurance companies, and financial services firms.'
+					'Trustworthy websites for Jacksonville accounting, insurance, and financial services firms that win local clients.'
 			},
 			{
-				title: 'Military & Navy',
+				title: 'Booking & Contact Forms',
 				description:
-					'Web solutions for NAS Jacksonville contractors, Naval Station Mayport providers, and defense companies.'
+					'Websites with simple contact and request forms so NAS Jacksonville and Mayport-area customers can reach you fast.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Tampa',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Tampa Bay Digital Innovation',
+		tagline: 'Web Design for Tampa Small Businesses',
 		description:
-			"Tampa Bay is Florida's tech coast with a booming business community, major port, and world-class healthcare. We build digital solutions for the Tampa Bay market.",
+			"Tampa Bay is Florida's fast-growing coast, with a busy port, world-class healthcare, and a thriving small business community. We design modern websites for Tampa Bay businesses.",
 		metaDescription:
-			'Website development and business automation in Tampa, FL. We build your website, connect your tools, and automate the work for Tampa Bay businesses.',
+			'Web design in Tampa, FL for small businesses. Mobile-ready websites for Ybor City shops, healthcare practices, and Tampa Bay companies built to win customers.',
 		neighborhoods: [
 			'Downtown',
 			'Ybor City',
@@ -157,19 +157,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech & Cybersecurity',
+				title: 'Local Business Websites',
 				description:
-					'Website development and automation for Tampa businesses — from service companies to local retailers.'
+					'Modern websites for Tampa service companies and local retailers, built to look great and bring in customers.'
 			},
 			{
-				title: 'Healthcare & BioScience',
+				title: 'Healthcare Websites',
 				description:
-					'HIPAA-compliant web solutions for Moffitt Cancer Center partners and Tampa Bay healthcare providers.'
+					'Clean, reassuring websites for Tampa Bay clinics, dental offices, and healthcare providers that help patients book.'
 			},
 			{
-				title: 'Port & Maritime',
+				title: 'Mobile-First Design',
 				description:
-					'Custom web applications for Port Tampa Bay shipping companies and cruise line partners.'
+					'Websites that load fast and look sharp on phones, so Channelside and Westshore customers reach you anywhere.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Orlando',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Theme Park Capital Goes Digital',
+		tagline: 'Web Design for Orlando Small Businesses',
 		description:
-			'Beyond the theme parks, Orlando is a center for simulation technology, defense, and a booming tech scene. We build digital solutions for the City Beautiful.',
+			'Beyond the theme parks, Orlando is a hub for hospitality, healthcare, and a booming small business scene. We design websites for City Beautiful businesses from Winter Park to Lake Nona.',
 		metaDescription:
-			'Web development in Orlando, FL. Custom websites, tourism platforms, and digital solutions for Orlando businesses and Central Florida companies.',
+			'Web design in Orlando, FL for small businesses. Mobile-ready websites for tourism, hospitality, and Lake Nona-area companies built to bring in bookings.',
 		neighborhoods: [
 			'Downtown',
 			'Thornton Park',
@@ -200,19 +200,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tourism & Attractions',
+				title: 'Hospitality Websites',
 				description:
-					'Booking platforms and websites for Orlando tourism companies, attractions, and hospitality businesses.'
+					'Inviting websites for Orlando hotels, tours, and attractions that show off the experience and drive bookings.'
 			},
 			{
-				title: 'Simulation & Defense',
+				title: 'Booking & Contact Forms',
 				description:
-					'Custom web solutions for Orlando simulation companies, defense contractors, and Lockheed Martin partners.'
+					'Websites with easy booking and inquiry forms so Dr. Phillips and Kissimmee customers can reserve in a few taps.'
 			},
 			{
-				title: 'Tech & Innovation',
+				title: 'Website Redesigns',
 				description:
-					'Web platforms for Lake Nona tech companies, UCF-area businesses, and Orlando innovation district companies.'
+					'Refreshed, modern websites for Winter Park and Lake Nona businesses ready to leave a dated site behind.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'St. Petersburg',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Sunshine City Digital Excellence',
+		tagline: 'Web Design for St. Petersburg Small Businesses',
 		description:
-			"St. Petersburg has transformed into a vibrant arts, dining, and tech hub. We build digital solutions for the Sunshine City's creative and business communities.",
+			'St. Petersburg has transformed into a vibrant arts, dining, and waterfront destination. We design websites for Sunshine City small businesses in its creative and coastal districts.',
 		metaDescription:
-			'Web development in St. Petersburg, FL. Custom websites, arts platforms, and digital solutions for Sunshine City businesses and creative companies.',
+			'Web design in St. Petersburg, FL for small businesses. Mobile-ready websites for Grand Central galleries, restaurants, and coastal companies.',
 		neighborhoods: [
 			'Downtown',
 			'Grand Central District',
@@ -243,19 +243,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Arts & Museums',
+				title: 'Arts & Gallery Websites',
 				description:
-					'Websites for St. Pete museums, Dali Museum partners, and Sunshine City gallery and arts organizations.'
+					'Visual websites for St. Pete galleries, studios, and arts organizations that put the work front and center.'
 			},
 			{
-				title: 'Marine & Coastal',
+				title: 'Restaurant Websites',
 				description:
-					'Web solutions for St. Petersburg marine science companies, fishing charters, and waterfront businesses.'
+					'Appetizing websites for Grand Central and Edge District eateries, with menus that look great on any phone.'
 			},
 			{
-				title: 'Data & Analytics',
+				title: 'Waterfront Business Websites',
 				description:
-					'Web platforms for St. Petersburg data analytics firms, fintech companies, and innovation corridor businesses.'
+					'Websites for St. Petersburg charters and coastal businesses, built to be found by visitors searching nearby.'
 			}
 		]
 	},
@@ -264,11 +264,11 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		city: 'Fort Lauderdale',
 		state: 'Florida',
 		stateCode: 'FL',
-		tagline: 'Venice of America Digital Solutions',
+		tagline: 'Web Design for Fort Lauderdale Small Businesses',
 		description:
-			'Fort Lauderdale is a hub for marine industry, international trade, and luxury tourism. We build digital solutions for the Venice of America and Broward County.',
+			'Fort Lauderdale is a hub for the marine industry, dining, and luxury tourism. We design websites for small businesses across the Venice of America and greater Broward County.',
 		metaDescription:
-			'Web development in Fort Lauderdale, FL. Custom websites, marine industry platforms, and digital solutions for Broward County businesses.',
+			'Web design in Fort Lauderdale, FL for small businesses. Mobile-ready websites for Las Olas shops, marine-industry firms, and Broward County companies.',
 		neighborhoods: [
 			'Downtown',
 			'Las Olas',
@@ -286,19 +286,19 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Marine & Yachting',
+				title: 'Marine Industry Websites',
 				description:
-					'Websites and booking platforms for Fort Lauderdale yacht brokers, marine suppliers, and boat show exhibitors.'
+					'Sharp websites for Fort Lauderdale yacht brokers, marine suppliers, and boat-show exhibitors that win inquiries.'
 			},
 			{
-				title: 'International Trade',
+				title: 'Luxury Brand Websites',
 				description:
-					'Web platforms for Port Everglades trade companies, customs brokers, and international business services.'
+					'Premium websites for Las Olas hotels, restaurants, and upscale service providers that match a high-end clientele.'
 			},
 			{
-				title: 'Luxury & Hospitality',
+				title: 'Fast, Modern Websites',
 				description:
-					'Premium websites for Fort Lauderdale luxury hotels, restaurants, and upscale service providers.'
+					'Quick-loading, mobile-ready websites for Broward County small businesses built to be found and convert visitors.'
 			}
 		]
 	}

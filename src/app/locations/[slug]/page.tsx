@@ -1,6 +1,6 @@
 /**
  * Location Page
- * Dynamic SEO pages for Texas service areas with LocalBusiness structured data
+ * Dynamic SEO pages for US service areas with LocalBusiness structured data
  */
 
 import { ArrowRight, CheckCircle, MapPin } from 'lucide-react'
@@ -27,10 +27,10 @@ const locationTestimonials = [
 		company: 'Bright Spark Consulting',
 		role: 'Founder',
 		content:
-			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
 		rating: 5 as const,
-		service: 'Website Development + Automation',
-		highlight: '2x lead volume'
+		service: 'Website Design & Development',
+		highlight: '2x inquiries'
 	},
 	{
 		testimonialId: 2 as const,
@@ -38,10 +38,10 @@ const locationTestimonials = [
 		company: 'Gulf Coast Roofing',
 		role: 'Operations Manager',
 		content:
-			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
 		rating: 5 as const,
-		service: 'Business Automation',
-		highlight: 'Zero manual follow-ups'
+		service: 'Website Design & Development',
+		highlight: 'Found on Google'
 	}
 ] satisfies Array<{
 	testimonialId: number
@@ -72,10 +72,10 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `Web Development in ${location.city}, ${location.stateCode} | Hudson Digital Solutions`,
+		title: `Website Design in ${location.city}, ${location.stateCode} | Hudson Digital`,
 		description: location.metaDescription,
 		openGraph: {
-			title: `Web Development in ${location.city}, ${location.stateCode}`,
+			title: `Website Design in ${location.city}, ${location.stateCode}`,
 			description: location.metaDescription
 		},
 		alternates: {
@@ -282,12 +282,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
 								Ready to Grow Your {location.city} Business?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Schedule a free consultation to discuss how we can help your
-								business thrive online.
+								Tell us about your business. We&apos;ll map out the website it
+								needs — pages, timeline, and cost.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<ArrowRight className="h-4 w-4" />
 								</Link>
 							</Button>

@@ -3,28 +3,40 @@
  * Tests for src/app/api/health/route.ts
  *
  * Verifies the response shape on success, 503 on DB failure, and the
- * admin-auth gate. Auth is mocked at module level.
+ * admin-auth gate. Uses the real `@/lib/auth/admin` module driven by
+ * TEST_ENV (set in tests/setup.ts and mutated here) so we don't have
+ * to mock.module('@/lib/auth/admin') — per oven-sh/bun#7823,
+ * mock.module() registrations leak across files (mock.restore() does
+ * not unregister them), which caused admin-auth.test.ts to fail when
+ * it ran after this file.
  */
 
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
 import { cleanupMocks } from '../test-utils'
 
+const testEnv = (
+	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
+).__TEST_ENV
+
+const ADMIN_SECRET = 'test-admin-secret-that-is-32-chars!!'
+
 function authedRequest() {
 	return new NextRequest('http://localhost/api/health', {
-		headers: { authorization: 'Bearer test-admin' }
+		headers: { authorization: `Bearer ${ADMIN_SECRET}` }
 	})
 }
 
 describe('GET /api/health', () => {
 	beforeEach(() => {
-		mock.module('@/env', () => ({
-			env: {
-				NODE_ENV: 'test',
-				npm_package_version: '2.5.0',
-				ADMIN_SECRET: 'test-admin'
-			}
-		}))
+		// Mutate the shared TEST_ENV (from tests/setup.ts) rather than
+		// re-registering @/env. Re-registering with a fresh env object
+		// breaks ESM live bindings for any consumer that already resolved
+		// `import { env } from '@/env'`, which causes downstream tests
+		// (admin-auth) to see stale ADMIN_SECRET values in CI.
+		testEnv.NODE_ENV = 'test'
+		testEnv.npm_package_version = '2.5.0'
+		testEnv.ADMIN_SECRET = ADMIN_SECRET
 
 		mock.module('@/lib/logger', () => ({
 			logger: {
@@ -36,11 +48,6 @@ describe('GET /api/health', () => {
 			},
 			castError: (error: unknown) =>
 				error instanceof Error ? error : new Error(String(error))
-		}))
-
-		// Auth helper passes through when the test sends a valid bearer.
-		mock.module('@/lib/auth/admin', () => ({
-			validateAdminAuth: () => null
 		}))
 	})
 
@@ -117,16 +124,17 @@ describe('GET /api/health', () => {
 	})
 
 	it('rejects requests without valid admin auth', async () => {
-		mock.module('@/lib/auth/admin', () => ({
-			validateAdminAuth: () =>
-				Response.json({ error: 'Unauthorized' }, { status: 401 })
-		}))
+		// Real admin.ts: env.ADMIN_SECRET is set; sending a wrong Bearer
+		// triggers a 401. No mock.module('@/lib/auth/admin') needed.
 		mock.module('@/lib/db', () => ({
 			db: { execute: mock().mockResolvedValue([{ '?column?': 1 }]) }
 		}))
 
 		const { GET } = await import('@/app/api/health/route')
-		const response = await GET(authedRequest())
+		const unauthedRequest = new NextRequest('http://localhost/api/health', {
+			headers: { authorization: 'Bearer completely-wrong-token' }
+		})
+		const response = await GET(unauthedRequest)
 		expect(response.status).toBe(401)
 	})
 })

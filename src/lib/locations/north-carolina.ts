@@ -6,11 +6,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Charlotte',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Queen City Digital Growth',
+		tagline: 'Web Design for Charlotte Small Businesses',
 		description:
-			'As the second-largest financial hub in the US, Charlotte businesses demand top-tier digital solutions. We deliver website development, tool integrations, and business automation for the Queen City.',
+			'From Uptown banking offices to the shops of South End and NoDa, Charlotte is the second-largest financial hub in the US. We design and build fast, mobile-ready websites that help Queen City small businesses win customers and rank on Google.',
 		metaDescription:
-			'Website development and business automation in Charlotte, NC. We build your website, connect your tools, and automate the work for Queen City businesses.',
+			'Web design for Charlotte, NC small businesses. We build fast, mobile-ready websites for Uptown and South End shops that win customers and rank on Google.',
 		neighborhoods: [
 			'Uptown',
 			'South End',
@@ -28,19 +28,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Fintech & Banking',
+				title: 'Local Business Websites',
 				description:
-					'Secure web platforms for Charlotte financial institutions, banks, and financial service businesses.'
+					'Clean, professional websites for Charlotte shops, offices, and service businesses across Uptown and South End.'
 			},
 			{
-				title: 'Website & Business Systems',
+				title: 'Mobile-First Design',
 				description:
-					'Professional websites and connected systems for Charlotte businesses of every size.'
+					'Every Charlotte website is built to look sharp and load fast on the phones your customers actually use.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'Local SEO Setup',
 				description:
-					'Automate manual work — connect your CRM, booking, and tools so your Charlotte business runs itself.'
+					'We set up your site so Queen City customers find your business when they search on Google.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Raleigh',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'City of Oaks Digital Innovation',
+		tagline: 'Web Design for Raleigh Small Businesses',
 		description:
-			"North Carolina's capital and anchor of the Research Triangle, Raleigh is a powerhouse of tech, biotech, and education. We build digital solutions for the Triangle market.",
+			"As North Carolina's capital and anchor of the Research Triangle, Raleigh is full of growing tech, healthcare, and education companies. We design and build fast, mobile-ready websites that help Triangle small businesses bring in customers.",
 		metaDescription:
-			'Website development and business automation in Raleigh, NC. We build your website, connect your tools, and automate the work for Research Triangle businesses.',
+			'Web design for Raleigh, NC small businesses. We build fast, mobile-ready websites for Research Triangle shops and offices that bring in customers.',
 		neighborhoods: [
 			'Downtown',
 			'North Hills',
@@ -71,19 +71,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Website & Automation',
+				title: 'Fast, Modern Websites',
 				description:
-					'Modern websites and automation tools for Raleigh businesses — connect your tools and save hours every week.'
+					'Quick-loading, up-to-date websites for Raleigh small businesses from Downtown to North Hills.'
 			},
 			{
-				title: 'Biotech & Life Sciences',
+				title: 'Website Redesigns',
 				description:
-					'Web solutions for RTP biotech firms, pharmaceutical companies, and life science research organizations.'
+					'We refresh dated Raleigh business websites with modern design that builds trust with Triangle customers.'
 			},
 			{
-				title: 'Government & Education',
+				title: 'Local SEO Setup',
 				description:
-					'Web portals for NC state agencies, NC State University programs, and Raleigh education institutions.'
+					'On-page SEO so Research Triangle customers can find your Raleigh business in Google search.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Greensboro',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Gate City Digital Solutions',
+		tagline: 'Web Design for Greensboro Small Businesses',
 		description:
-			"Greensboro is the Triad's largest city with strengths in manufacturing, education, and transportation. We build digital solutions for Gate City businesses.",
+			"Greensboro is the Triad's largest city, with deep roots in manufacturing, education, and transportation. We design and build fast, mobile-ready websites that help Gate City small businesses reach more customers.",
 		metaDescription:
-			'Web development in Greensboro, NC. Custom websites and digital solutions for Piedmont Triad businesses, manufacturers, and universities.',
+			'Web design for Greensboro, NC small businesses. Mobile-ready website design for Piedmont Triad manufacturers, shops, and university-area businesses.',
 		neighborhoods: [
 			'Downtown',
 			'Fisher Park',
@@ -114,19 +114,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Manufacturing & Textiles',
+				title: 'Manufacturer Websites',
 				description:
-					'Web solutions for Greensboro manufacturing companies, textile firms, and Piedmont Triad industrial businesses.'
+					'Professional websites that showcase what Greensboro manufacturers and Piedmont Triad industrial firms make.'
 			},
 			{
-				title: 'University Partnerships',
+				title: 'Local Business Websites',
 				description:
-					'Web platforms for UNCG, A&T, and Greensboro education programs and student-focused businesses.'
+					'Approachable websites for Greensboro shops, services, and the small businesses near UNCG and A&T.'
 			},
 			{
-				title: 'Logistics & Transportation',
+				title: 'Mobile-First Design',
 				description:
-					'Custom web applications for Greensboro trucking companies, FedEx Ground hub, and logistics providers.'
+					'Greensboro websites built to load fast and look great on every phone, tablet, and laptop.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Durham',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Bull City Digital Innovation',
+		tagline: 'Web Design for Durham Small Businesses',
 		description:
-			'Durham is the innovation engine of the Research Triangle with Duke University, a thriving business community, and world-class healthcare. We build digital solutions for the Bull City.',
+			'Durham is the innovation engine of the Research Triangle, anchored by Duke University and a lively downtown around American Tobacco and Ninth Street. We design and build fast, mobile-ready websites for Bull City small businesses.',
 		metaDescription:
-			'Web development in Durham, NC. Custom websites, biotech platforms, and digital solutions for Research Triangle businesses and Duke community.',
+			'Web design for Durham, NC small businesses. Mobile-ready website design for Bull City shops near Duke, American Tobacco, and Ninth Street.',
 		neighborhoods: [
 			'Downtown',
 			'Brightleaf',
@@ -157,19 +157,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Biotech & Pharma',
+				title: 'Local Business Websites',
 				description:
-					'Web platforms for Durham biotech companies, RTP pharmaceutical firms, and clinical research organizations.'
+					'Modern websites for Durham shops, restaurants, and service businesses around Ninth Street and Brightleaf.'
 			},
 			{
-				title: 'Healthcare Technology',
+				title: 'Fast, Modern Websites',
 				description:
-					'HIPAA-compliant web solutions for Duke Health partners and Durham healthcare technology companies.'
+					'Quick-loading websites that present Bull City businesses professionally to customers and Duke visitors.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'Booking & Contact Forms',
 				description:
-					'Automate manual work — connect your CRM, booking, and tools so your Durham business runs itself.'
+					'Simple booking and contact forms added to your Durham website so customers can reach you easily.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Winston-Salem',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Twin City Digital Solutions',
+		tagline: 'Web Design for Winston-Salem Small Businesses',
 		description:
-			'Winston-Salem has transformed from tobacco and textiles to innovation, healthcare, and arts. We build digital solutions for the Twin City and Innovation Quarter.',
+			'Winston-Salem has grown from tobacco and textiles into a hub for healthcare, the arts, and the Innovation Quarter. We design and build fast, mobile-ready websites that help Twin City small businesses get noticed.',
 		metaDescription:
-			'Web development in Winston-Salem, NC. Custom websites and digital solutions for Innovation Quarter businesses, Wake Forest community, and Triad companies.',
+			'Web design for Winston-Salem, NC small businesses. Mobile-ready website design for Innovation Quarter startups, Twin City shops, and Triad companies.',
 		neighborhoods: [
 			'Downtown',
 			'Innovation Quarter',
@@ -200,19 +200,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Innovation & Biotech',
+				title: 'Fast, Modern Websites',
 				description:
-					'Web platforms for Innovation Quarter companies, Wake Forest Biotech Place, and Winston-Salem health tech firms.'
+					'Up-to-date, quick-loading websites for Innovation Quarter startups and Winston-Salem small businesses.'
 			},
 			{
-				title: 'Arts & Culture',
+				title: 'Creative Business Websites',
 				description:
-					'Websites for Winston-Salem galleries, SECCA, and North Carolina School of the Arts creative businesses.'
+					'Portfolio-style websites for Winston-Salem galleries, artists, and arts-district creative businesses.'
 			},
 			{
-				title: 'Healthcare Systems',
+				title: 'Local SEO Setup',
 				description:
-					'Web solutions for Atrium Health Wake Forest Baptist and Winston-Salem medical providers.'
+					'On-page SEO so Twin City and Triad customers find your Winston-Salem business on Google.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Wilmington',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Port City Digital Solutions',
+		tagline: 'Web Design for Wilmington Small Businesses',
 		description:
-			'Wilmington combines a thriving film industry, port operations, and coastal tourism. We build digital solutions for the Port City and Cape Fear region.',
+			'Wilmington blends a busy film industry, working port, and coastal tourism along the Riverwalk and Wrightsville Beach. We design and build fast, mobile-ready websites that help Port City small businesses draw in customers.',
 		metaDescription:
-			'Web development in Wilmington, NC. Custom websites and digital solutions for Port City businesses, film industry, and coastal tourism.',
+			'Web design for Wilmington, NC small businesses. Mobile-ready website design for Cape Fear coastal tourism, Riverwalk shops, and Port City companies.',
 		neighborhoods: [
 			'Downtown',
 			'Riverwalk',
@@ -243,19 +243,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Film & Production',
+				title: 'E-Commerce Websites',
 				description:
-					'Websites and platforms for Wilmington film studios, production companies, and EUE/Screen Gems partners.'
+					'Online stores for Wilmington shops and Riverwalk retailers so customers can browse and buy from any device.'
 			},
 			{
-				title: 'Coastal Tourism',
+				title: 'Tourism Websites',
 				description:
-					'Booking platforms and websites for Wilmington beach resorts, charter boats, and Cape Fear tourism.'
+					'Eye-catching websites for Wilmington beach resorts, charter boats, and Cape Fear tourism businesses.'
 			},
 			{
-				title: 'Port & Maritime',
+				title: 'Booking & Contact Forms',
 				description:
-					'Web solutions for Port of Wilmington logistics companies and Cape Fear shipping operations.'
+					'Booking and contact forms built into your Wilmington website so coastal visitors can reserve in a click.'
 			}
 		]
 	},
@@ -264,11 +264,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Asheville',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'Mountain City Digital Excellence',
+		tagline: 'Web Design for Asheville Small Businesses',
 		description:
-			'Asheville is a creative mountain city with more breweries per capita than almost anywhere. We build digital solutions for the WNC arts, food, and outdoor community.',
+			'Asheville is a creative mountain city packed with breweries, makers, and the artists of the River Arts District. We design and build fast, mobile-ready websites that help Blue Ridge small businesses stand out.',
 		metaDescription:
-			'Web development in Asheville, NC. Custom websites and digital solutions for Blue Ridge businesses, breweries, and mountain tourism companies.',
+			'Web design for Asheville, NC small businesses. Mobile-ready website design for Blue Ridge breweries, River Arts District makers, and mountain tourism.',
 		neighborhoods: [
 			'Downtown',
 			'River Arts District',
@@ -286,19 +286,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Craft Beverage',
+				title: 'E-Commerce Websites',
 				description:
-					'E-commerce and brand websites for Asheville breweries, cideries, and craft beverage companies.'
+					'Online stores and brand websites for Asheville breweries, cideries, and craft beverage businesses.'
 			},
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Tourism Websites',
 				description:
-					'Booking platforms for Biltmore Estate area hotels, Blue Ridge Parkway tourism, and Asheville experiences.'
+					'Inviting websites for Biltmore-area hotels, Blue Ridge guides, and Asheville hospitality businesses.'
 			},
 			{
-				title: 'Arts & Maker Economy',
+				title: 'Maker & Artist Websites',
 				description:
-					'Portfolio and e-commerce websites for River Arts District artists, makers, and Asheville creative businesses.'
+					'Portfolio and shop websites for River Arts District artists and Asheville makers selling their work.'
 			}
 		]
 	},
@@ -307,11 +307,11 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		city: 'Fayetteville',
 		state: 'North Carolina',
 		stateCode: 'NC',
-		tagline: 'All-American City Digital Solutions',
+		tagline: 'Web Design for Fayetteville Small Businesses',
 		description:
-			'Home to Fort Liberty (formerly Fort Bragg) and one of the most military-connected cities in America, Fayetteville needs digital solutions that serve a unique community.',
+			'Home to Fort Liberty and one of the most military-connected cities in America, Fayetteville is full of veteran-owned shops and service businesses. We design and build fast, mobile-ready websites for this unique community.',
 		metaDescription:
-			'Web development in Fayetteville, NC. Custom websites and digital solutions for Fort Liberty area businesses and Cumberland County companies.',
+			'Web design for Fayetteville, NC small businesses. Mobile-ready website design for Fort Liberty area shops, veteran-owned businesses, and Cumberland County.',
 		neighborhoods: [
 			'Downtown',
 			'Haymount',
@@ -329,19 +329,19 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Defense',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Fort Liberty contractors, special operations support companies, and military service providers.'
+					'Professional websites for Fayetteville service businesses and shops serving the Fort Liberty community.'
 			},
 			{
-				title: 'Veteran-Owned Business',
+				title: 'Veteran-Owned Websites',
 				description:
-					'Websites and e-commerce for Fayetteville veteran-owned businesses, franchises, and service companies.'
+					'Websites and online stores for Fayetteville veteran-owned businesses, franchises, and service companies.'
 			},
 			{
-				title: 'Healthcare & Services',
+				title: 'Mobile-First Design',
 				description:
-					'Web platforms for Cape Fear Valley Health and Fayetteville medical providers serving the military community.'
+					'Fayetteville websites built to load fast and look polished on every phone and tablet.'
 			}
 		]
 	}

@@ -12,10 +12,10 @@ import { getLocationsByState } from '@/lib/locations'
 export const metadata: Metadata = {
 	title: 'Service Locations | Hudson Digital Solutions',
 	description:
-		'Hudson Digital Solutions serves businesses across the US. Find web development services in your city — Texas, Florida, Georgia, Colorado, and more.',
+		'Hudson Digital Solutions builds websites for small businesses across the US. Find professional web design in your city — Texas, Florida, Georgia, and more.',
 	openGraph: {
 		title: 'Service Locations | Hudson Digital Solutions',
-		description: 'Web development services across the US.'
+		description: 'Professional web design for small businesses across the US.'
 	}
 }
 
@@ -47,8 +47,8 @@ export default function LocationsPage() {
 						Serving Businesses Across the US
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						{totalCities} cities across {states.length} states — find web
-						development services near you.
+						{totalCities} cities across {states.length} states — find
+						professional web design near you.
 					</p>
 				</div>
 			</section>

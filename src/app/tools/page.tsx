@@ -342,7 +342,7 @@ export default function ToolsPage() {
 									size="xl"
 									trackConversion={true}
 								>
-									<Link href="/contact">Book a Free Strategy Call</Link>
+									<Link href="/contact">Get My Free Website Plan</Link>
 								</Button>
 								<Button
 									asChild

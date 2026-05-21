@@ -6,11 +6,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Santa Fe',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'City Different, Digital Solutions Distinct',
+		tagline: 'Web Design for Santa Fe Small Businesses',
 		description:
-			"As New Mexico's capital and an international art destination, Santa Fe demands digital experiences as unique as its culture. We build bespoke web solutions for the City Different.",
+			"As New Mexico's capital and an international art destination, Santa Fe demands websites as distinctive as the city itself. We design and build fast, mobile-ready websites for galleries, shops, and small businesses around the Plaza and Canyon Road.",
 		metaDescription:
-			'Web development in Santa Fe, NM. Custom websites for art galleries, government agencies, and tourism businesses in the New Mexico capital.',
+			'Web design for Santa Fe, NM small businesses. Fast, mobile-ready websites for Canyon Road galleries, Plaza shops, and tourism operators.',
 		neighborhoods: [
 			'Downtown Plaza',
 			'Canyon Road',
@@ -28,19 +28,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Art & Gallery Platforms',
+				title: 'Art & Gallery Websites',
 				description:
-					'E-commerce and portfolio websites for Santa Fe art galleries, artists, and the Canyon Road community.'
+					'Portfolio and e-commerce websites that showcase the work of Santa Fe galleries, artists, and the Canyon Road community.'
 			},
 			{
-				title: 'Government Solutions',
+				title: 'E-Commerce Websites',
 				description:
-					'Web portals and applications for New Mexico state government agencies and Santa Fe municipal services.'
+					'Online stores for Railyard boutiques and Plaza shops that turn Santa Fe visitors into paying customers.'
 			},
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Local SEO Setup',
 				description:
-					'Booking platforms and websites for Santa Fe hotels, resorts, and southwestern tourism businesses.'
+					'Websites built so Santa Fe hotels, resorts, and southwestern tourism businesses get found by travelers searching on Google.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Albuquerque',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'Duke City Digital Innovation',
+		tagline: 'Web Design for Albuquerque Small Businesses',
 		description:
-			"New Mexico's largest city, Albuquerque combines Sandia Labs innovation with a vibrant cultural scene. We build digital solutions for Duke City businesses across every sector.",
+			"New Mexico's largest city, Albuquerque pairs Sandia Labs innovation with a vibrant cultural scene. We design and build websites for Duke City small businesses, from Old Town shops to Nob Hill restaurants.",
 		metaDescription:
-			'Website development and business automation in Albuquerque, NM. We build your website, connect your tools, and automate the work for Duke City businesses.',
+			'Web design for Albuquerque, NM small businesses. Mobile-friendly websites for Old Town shops, Nob Hill restaurants, and Duke City service firms.',
 		neighborhoods: [
 			'Downtown',
 			'Old Town',
@@ -71,19 +71,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech & Defense',
+				title: 'Local Business Websites',
 				description:
-					'Custom web applications for Sandia Labs contractors, Kirtland AFB providers, and Albuquerque tech companies.'
+					'Fast, professional websites for Albuquerque shops, restaurants, and service providers across the Duke City.'
 			},
 			{
-				title: 'Film & Media',
+				title: 'Mobile-First Design',
 				description:
-					'Websites and digital platforms for Albuquerque film production companies and Netflix studio partners.'
+					'Websites built to look great on phones for Nob Hill and Old Town businesses where most customers search on the go.'
 			},
 			{
-				title: 'Healthcare Systems',
+				title: 'Booking & Contact Forms',
 				description:
-					'HIPAA-compliant web solutions for UNM Health and Albuquerque medical providers.'
+					'Websites with simple booking and contact forms so Albuquerque medical, film, and tech businesses can capture new leads.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Las Cruces',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'City of the Crosses Digital Growth',
+		tagline: 'Web Design for Las Cruces Small Businesses',
 		description:
-			'Las Cruces anchors southern New Mexico with NMSU, White Sands, and a growing aerospace presence. We build digital solutions for the Mesilla Valley.',
+			'Las Cruces anchors southern New Mexico with NMSU, White Sands, and a growing aerospace presence. We design and build websites for Mesilla Valley small businesses, from chile producers to Main Street shops.',
 		metaDescription:
-			'Web development in Las Cruces, NM. Custom websites and digital solutions for southern New Mexico businesses, aerospace companies, and agriculture.',
+			'Web design for Las Cruces, NM small businesses. Mobile-ready websites for Mesilla Valley farms, chile producers, and shops near NMSU.',
 		neighborhoods: [
 			'Downtown',
 			'Mesilla',
@@ -114,19 +114,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Aerospace & Spaceport',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Spaceport America partners, White Sands contractors, and southern NM aerospace companies.'
+					'Professional websites for Las Cruces shops, contractors, and service businesses across the Mesilla Valley.'
 			},
 			{
-				title: 'University & Research',
+				title: 'E-Commerce Websites',
 				description:
-					'Web platforms for NMSU programs, agricultural research, and education technology in Las Cruces.'
+					'Online stores for Hatch chile growers and local food producers that sell New Mexico products beyond the valley.'
 			},
 			{
-				title: 'Agriculture & Food',
+				title: 'Fast, Modern Websites',
 				description:
-					'Digital platforms for Mesilla Valley farms, chile producers, and New Mexico agricultural businesses.'
+					'Quick-loading, mobile-ready websites for Las Cruces aerospace contractors and NMSU-adjacent businesses.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Rio Rancho',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'City of Vision Digital Solutions',
+		tagline: 'Web Design for Rio Rancho Small Businesses',
 		description:
-			"New Mexico's fastest-growing city, Rio Rancho combines Intel's semiconductor hub with family-friendly suburban living. We build digital solutions for the City of Vision.",
+			"New Mexico's fastest-growing city, Rio Rancho combines the Intel semiconductor corridor with family-friendly suburban living. We design and build websites for Rio Rancho small businesses serving Enchanted Hills and Loma Colorado neighborhoods.",
 		metaDescription:
-			'Web development in Rio Rancho, NM. Custom websites and digital solutions for Rio Rancho tech companies, businesses, and Intel corridor.',
+			'Web design for Rio Rancho, NM small businesses. Mobile-friendly websites for medical practices, contractors, and home service firms.',
 		neighborhoods: [
 			'Downtown',
 			'Enchanted Hills',
@@ -157,19 +157,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tech & Semiconductor',
+				title: 'Local Business Websites',
 				description:
-					'Web applications for Intel corridor companies, semiconductor suppliers, and Rio Rancho tech firms.'
+					'Fast, professional websites for Rio Rancho contractors, real estate agents, and home service businesses.'
 			},
 			{
-				title: 'Healthcare & Wellness',
+				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Rio Rancho medical practices, urgent care clinics, and wellness providers.'
+					'Websites with easy booking and contact forms for Rio Rancho medical practices, urgent care clinics, and wellness providers.'
 			},
 			{
-				title: 'Residential Services',
+				title: 'Website Redesigns',
 				description:
-					'Professional websites for Rio Rancho contractors, real estate agents, and home service businesses.'
+					'Modern, mobile-ready redesigns for Rio Rancho businesses along the growing Intel corridor that have outgrown their old sites.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Roswell',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'Out-of-This-World Digital Solutions',
+		tagline: 'Web Design for Roswell Small Businesses',
 		description:
-			'Famous worldwide and a regional center for agriculture, dairy, and energy, Roswell businesses need digital solutions that stand out. We deliver.',
+			'Famous worldwide and a regional center for agriculture, dairy, and energy, Roswell businesses need websites that stand out. We design and build fast, mobile-ready websites for Roswell shops, restaurants, and tourism operators.',
 		metaDescription:
-			'Web development in Roswell, NM. Custom websites and digital solutions for Roswell businesses, tourism operators, and southeast New Mexico companies.',
+			'Web design for Roswell, NM small businesses. Mobile-ready websites for UFO tourism operators, downtown retailers, and Pecos Valley firms.',
 		neighborhoods: [
 			'Downtown',
 			'North Main',
@@ -200,19 +200,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tourism & Culture',
+				title: 'Tourism Websites',
 				description:
-					'Websites for Roswell UFO tourism, museums, festivals, and southeast New Mexico attractions.'
+					'Eye-catching websites for Roswell UFO attractions, museums, and festivals that turn curious visitors into bookings.'
 			},
 			{
-				title: 'Energy & Agriculture',
+				title: 'Local Business Websites',
 				description:
-					'Digital platforms for Roswell oil companies, dairy farms, and Pecos Valley agricultural businesses.'
+					'Professional websites for Roswell retailers, restaurants, and service businesses on North Main and beyond.'
 			},
 			{
-				title: 'Local Business Growth',
+				title: 'Local SEO Setup',
 				description:
-					'Professional websites for Roswell retailers, restaurants, and service businesses.'
+					'Websites built so Roswell dairy, energy, and Pecos Valley agricultural businesses get found by customers searching online.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		city: 'Farmington',
 		state: 'New Mexico',
 		stateCode: 'NM',
-		tagline: 'Four Corners Digital Solutions',
+		tagline: 'Web Design for Farmington Small Businesses',
 		description:
-			'Gateway to the Four Corners region, Farmington serves as the hub for energy, outdoor recreation, and Native American commerce in northwest New Mexico.',
+			'Gateway to the Four Corners region, Farmington is a hub for energy, outdoor recreation, and regional commerce in northwest New Mexico. We design and build websites for Farmington small businesses serving the San Juan Basin.',
 		metaDescription:
-			'Web development in Farmington, NM. Custom websites and digital solutions for Four Corners businesses, energy companies, and outdoor recreation.',
+			'Web design for Farmington, NM small businesses. Mobile-ready websites for San Juan Basin energy services, outfitters, and Four Corners shops.',
 		neighborhoods: [
 			'Downtown',
 			'East Farmington',
@@ -243,19 +243,19 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Energy & Natural Resources',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Farmington oil, gas, and mining companies in the San Juan Basin.'
+					'Fast, professional websites for Farmington energy services, suppliers, and trades across the San Juan Basin.'
 			},
 			{
-				title: 'Outdoor Recreation',
+				title: 'Outdoor Recreation Websites',
 				description:
-					'Websites for Four Corners outfitters, rafting companies, and outdoor adventure businesses.'
+					'Websites for Four Corners outfitters, rafting companies, and adventure businesses that convert visitors into booked trips.'
 			},
 			{
-				title: 'Cultural Heritage',
+				title: 'Mobile-First Design',
 				description:
-					'Web platforms for Native American businesses, cultural organizations, and regional tourism in the Four Corners.'
+					'Mobile-ready websites for Farmington retailers and regional tourism businesses where customers browse from their phones.'
 			}
 		]
 	}

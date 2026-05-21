@@ -13,45 +13,45 @@ import { Card } from '@/components/ui/card'
 
 const SERVICES = [
 	{
-		title: 'Website Development',
+		title: 'Website Design & Development',
 		description:
-			'Build your digital front door. Custom websites with admin panels so you control your content, mobile-ready and built to convert visitors into customers.',
+			'A professional website built for your business from scratch — clean custom design, mobile-ready, and fast. Comes with an admin panel so you control your content without calling a developer.',
 		features: [
-			'Custom Design & Build',
-			'Admin Panel So You Control Content',
-			'Works With Your Data',
+			'Custom Design Built for Your Brand',
+			'Mobile-Ready on Every Device',
 			'Fast-Loading, Every Time',
-			'Always Reliable, Always Available'
+			'Admin Panel You Control',
+			'Contact & Inquiry Forms Built In'
 		],
 		icon: Code2,
 		gradient: 'bg-muted'
 	},
 	{
-		title: 'Integrations & Connections',
+		title: 'Get Found on Google',
 		description:
-			'We link your website to every tool your business runs on — CRM, payments, calendar, email. Data flows automatically, nothing falls through the cracks.',
+			'A great website only works if customers can find it. We build in the SEO, speed, and local-search details that put your business in front of the people already searching for what you do.',
 		features: [
-			'HubSpot CRM Connection',
-			'Stripe Payment Setup',
-			'Calendar & Booking Systems',
-			'Email Platform Sync',
-			'Outdated Systems Upgraded'
+			'Local SEO Setup',
+			'Google Business Profile Optimization',
+			'Fast Core Web Vitals',
+			'Search-Ready Page Structure',
+			'Indexed & Submitted to Google'
 		],
-		icon: Settings,
+		icon: BarChart3,
 		gradient: 'bg-info/20'
 	},
 	{
-		title: 'Business Automation',
+		title: 'Booking, Payments & Follow-Up',
 		description:
-			'Follow-up emails, onboarding sequences, appointment reminders, invoice chasing. We automate the workflows that eat your time so your business runs without you.',
+			'Once your site is live, we can wire in the extras — let customers book online, take payments, and make sure no inquiry slips through the cracks.',
 		features: [
-			'HubSpot Workflow Automation',
-			'Zapier & n8n Integrations',
-			'Automated Follow-Up Sequences',
-			'Appointment & Reminder Flows',
-			'Invoice & Payment Chasing'
+			'Online Booking & Scheduling',
+			'Stripe Payment Setup',
+			'Calendar Sync',
+			'Automatic Lead Follow-Up',
+			'CRM Connection'
 		],
-		icon: BarChart3,
+		icon: Settings,
 		gradient: 'bg-muted'
 	}
 ]

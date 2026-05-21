@@ -13,11 +13,11 @@ import { getShowcaseItems } from '@/lib/showcase'
 export const metadata: Metadata = {
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
-		'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
+		'Real websites delivering measurable results for small businesses — see how we help local businesses get found online, win customers, and grow.',
 	openGraph: {
 		title: 'Showcase | Hudson Digital Solutions',
 		description:
-			'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
+			'Real websites delivering measurable results for small businesses — see how we help local businesses get found online, win customers, and grow.',
 		type: 'website'
 	}
 }
@@ -34,8 +34,8 @@ async function ShowcaseProjects() {
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
-							{ value: 'Avg 90 days', label: 'Time to ROI' },
-							{ value: 'Proven', label: 'ROI Results' },
+							{ value: '1–4 wks', label: 'First Delivery' },
+							{ value: 'Proven', label: 'Track Record' },
 							{ value: '2 hr', label: 'Response Time' }
 						].map((stat, index) => (
 							<div
@@ -121,14 +121,14 @@ export default function ShowcasePage() {
 							<TypewriterText />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-							Real projects for local service businesses and independent
-							consultants — see how we help businesses get online and grow.
+							Real websites for small businesses — see how we help local
+							businesses get found online, win customers, and grow.
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<Rocket className="w-5 h-5" />
 								</Link>
 							</Button>
@@ -177,9 +177,8 @@ export default function ShowcasePage() {
 								</h2>
 
 								<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-									Join these businesses in transforming your digital presence
-									into a competitive advantage. Let&apos;s build something
-									together.
+									Join these businesses with a website that does justice to what
+									they&apos;ve built. Let&apos;s build yours.
 								</p>
 
 								<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -190,7 +189,7 @@ export default function ShowcasePage() {
 										trackConversion={true}
 									>
 										<Link href="/contact">
-											Book a Free Strategy Call
+											Get My Free Website Plan
 											<Rocket className="w-5 h-5" />
 										</Link>
 									</Button>

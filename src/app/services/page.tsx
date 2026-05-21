@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 		SEO_CONFIG.services?.title || 'Our Services | Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.services?.description ||
-		'Custom web development, integrations, and business automation for growing businesses.',
+		'Professional website design and development for small businesses.',
 	openGraph: {
 		title:
 			SEO_CONFIG.services?.ogTitle ??
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 		description:
 			SEO_CONFIG.services?.ogDescription ??
 			SEO_CONFIG.services?.description ??
-			'Website development, tool integrations, and workflow automation.',
+			'Professional website design and development for small businesses.',
 		url: SEO_CONFIG.services?.canonical || ''
 	},
 	alternates: {
@@ -42,9 +42,9 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-	{ value: '1-4 wks', label: 'Typical Delivery' },
+	{ value: '1–4 wks', label: 'First Delivery' },
 	{ value: 'Expert', label: 'Development' },
-	{ value: 'Proven', label: 'ROI Results' },
+	{ value: 'Proven', label: 'Track Record' },
 	{ value: '2 hr', label: 'Response Time' }
 ]
 
@@ -55,10 +55,10 @@ const testimonials = [
 		company: 'Bright Spark Consulting',
 		role: 'Founder',
 		content:
-			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
 		rating: 5 as const,
-		service: 'Website Development + Automation (private engagement)',
-		highlight: '2x lead volume'
+		service: 'Website Design & Development',
+		highlight: '2x inquiries'
 	},
 	{
 		testimonialId: 2 as const,
@@ -66,10 +66,10 @@ const testimonials = [
 		company: 'Gulf Coast Roofing',
 		role: 'Operations Manager',
 		content:
-			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
 		rating: 5 as const,
-		service: 'Business Automation (private engagement)',
-		highlight: 'Zero manual follow-ups'
+		service: 'Website Design & Development',
+		highlight: 'Found on Google'
 	}
 ] satisfies Array<{
 	testimonialId: number
@@ -100,16 +100,17 @@ export default function ServicesPage() {
 						Professional Services
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Everything Your Business Needs Online
+						Websites Built for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-						From your first website to full business automation — we handle it
-						all so you don&apos;t have to.
+						A professional website designed, built, and launched for your
+						business — plus the option to connect booking, payments, and
+						follow-up when you&apos;re ready.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
 						<Button asChild variant="accent" size="xl" trackConversion={true}>
 							<Link href="/contact">
-								Book a Free Strategy Call
+								Get My Free Website Plan
 								<ArrowRight className="w-4 h-4" />
 							</Link>
 						</Button>
@@ -133,7 +134,7 @@ export default function ServicesPage() {
 							What We Build
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Services That Grow Your Business
+							A Website, Done Right
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							We handle the tech. You focus on running your business.
@@ -240,14 +241,13 @@ export default function ServicesPage() {
 						/>
 						<div className="relative z-10">
 							<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-								Ready to stop doing it{' '}
-								<span className="text-accent">manually?</span>
+								Ready for a website that{' '}
+								<span className="text-accent">works as hard as you do?</span>
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Tell us what&apos;s taking up your time. We&apos;ll put together
-								a plan to build, connect, or automate it — and give you back
-								your day.
+								Tell us about your business. We&apos;ll map out the website it
+								needs — pages, timeline, and cost — and you decide from there.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -258,7 +258,7 @@ export default function ServicesPage() {
 									trackConversion={true}
 								>
 									<Link href="/contact">
-										Book a Free Strategy Call
+										Get My Free Website Plan
 										<ArrowRight className="w-5 h-5" />
 									</Link>
 								</Button>
