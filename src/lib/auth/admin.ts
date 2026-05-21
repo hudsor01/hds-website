@@ -26,6 +26,15 @@ function validateBearerToken(
  * Uses timing-safe comparison to prevent side-channel attacks.
  */
 export function validateAdminAuth(request: NextRequest): NextResponse | null {
+	if (process.env.NODE_ENV === 'test') {
+		// biome-ignore lint/suspicious/noConsole: temporary CI diagnostic
+		console.log(
+			'[DIAG admin.ts] env.ADMIN_SECRET =',
+			env.ADMIN_SECRET,
+			'len=',
+			env.ADMIN_SECRET?.length
+		)
+	}
 	if (!env.ADMIN_SECRET) {
 		return NextResponse.json(
 			{ error: 'Admin authentication not configured' },
