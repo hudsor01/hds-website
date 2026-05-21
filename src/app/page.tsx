@@ -43,38 +43,53 @@ export const metadata: Metadata = {
 	}
 }
 
-const automationItems = [
-	{ trigger: 'Lead submits a form', outcome: 'lands in your CRM instantly' },
-	{ trigger: 'New client signs on', outcome: 'onboarding sequence fires' },
-	{ trigger: 'Booking confirmed', outcome: 'calendar syncs + texts sent' },
-	{ trigger: 'Invoice goes overdue', outcome: 'reminder sequence starts' },
-	{ trigger: 'Every Monday morning', outcome: 'digest report hits your inbox' }
+const websiteOutcomes = [
+	{
+		trigger: 'Someone Googles your business',
+		outcome: 'they find a real website, not a blank space'
+	},
+	{
+		trigger: 'A customer opens it on their phone',
+		outcome: 'it looks sharp on every screen'
+	},
+	{
+		trigger: 'Someone wants to reach you',
+		outcome: 'the inquiry hits your inbox instantly'
+	},
+	{
+		trigger: 'A customer is ready to book',
+		outcome: 'they do it in two taps, any time of day'
+	},
+	{
+		trigger: 'Your hours or prices change',
+		outcome: 'you update the site yourself in minutes'
+	}
 ]
 
 const solutions = [
 	{
 		Icon: Code2,
-		title: 'A Website That Works For You',
+		title: 'A Website That Looks the Part',
 		description:
-			'Your digital front door, built to capture leads and represent your business professionally. Mobile-ready, fast, and with an admin panel so you can update it without calling a developer.',
+			'A clean, professional design that matches the quality of your work — so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
 		stat: '1–4 wks',
 		statLabel: 'to launch'
 	},
 	{
-		Icon: Zap,
-		title: 'All Your Tools, Connected',
+		Icon: TrendingUp,
+		title: 'Found When Customers Search',
 		description:
-			'We link your site to your CRM, payment processor, calendar, and email so data flows automatically. No more copy-pasting between apps or losing leads in the gaps.',
-		stat: '20+',
-		statLabel: 'tools we connect'
+			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for — so your reputation actually gets seen.',
+		stat: '<2s',
+		statLabel: 'page load'
 	},
 	{
 		Icon: Settings,
-		title: 'Workflows That Run Themselves',
+		title: 'Yours to Control',
 		description:
-			'Follow-up emails, client onboarding, appointment reminders, invoice chasing — all automated. Your business keeps moving even when you step away.',
-		stat: '10+ hrs',
-		statLabel: 'saved per week'
+			'A simple admin panel means you change your hours, prices, photos, and text yourself — in minutes, no developer, no waiting, no invoice.',
+		stat: '$0',
+		statLabel: 'to make edits'
 	}
 ]
 
@@ -98,15 +113,15 @@ export default function HomePage() {
 						{/* Left — headline + CTAs */}
 						<div className="lg:col-span-3 flex flex-col gap-8">
 							<h1 className="text-page-title text-foreground leading-tight text-balance">
-								Web Design &amp; Business Automation for Dallas-Fort Worth Small
-								Businesses
+								Your business earned the reviews. Now it needs the website.
 							</h1>
 
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">
-								Most businesses have a website. Few have a system behind it. We
-								build your site, connect your tools, and automate the workflows
-								that eat your time — from first lead to closed deal. One
-								partner, end to end.
+								You&apos;ve got the 5-star ratings and the word-of-mouth. But
+								when someone Googles you, there&apos;s no website to send them
+								to — or one that doesn&apos;t do you justice. We build small
+								businesses a professional website that turns your reputation
+								into booked customers.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3">
@@ -117,7 +132,7 @@ export default function HomePage() {
 									trackConversion={true}
 								>
 									<Link href={ROUTES.CONTACT}>
-										Book a Free Strategy Call
+										Get My Free Website Plan
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>
@@ -128,10 +143,7 @@ export default function HomePage() {
 									trackConversion={true}
 									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
-									<Link href={TOOL_ROUTES.ROI_CALCULATOR}>
-										<Calculator className="w-4 h-4" />
-										Calculate Your Savings
-									</Link>
+									<Link href={ROUTES.SHOWCASE}>See Recent Work</Link>
 								</Button>
 							</div>
 
@@ -166,7 +178,7 @@ export default function HomePage() {
 							</div>
 						</div>
 
-						{/* Right — automation feed */}
+						{/* Right — what your website does */}
 						<div className="lg:col-span-2">
 							<div className="rounded-2xl border border-border/60 bg-surface-raised/40 backdrop-blur-sm overflow-hidden">
 								{/* Header */}
@@ -174,16 +186,16 @@ export default function HomePage() {
 									<div className="flex items-center gap-2 mb-1">
 										<Zap className="w-3.5 h-3.5 text-accent shrink-0" />
 										<span className="text-xs font-semibold text-foreground uppercase tracking-widest">
-											What Gets Automated
+											Everything Your Website Does For You
 										</span>
 									</div>
 									<p className="text-xs text-muted-foreground">
-										After we wire up your stack
+										From the day it goes live
 									</p>
 								</div>
 
-								{/* Automation rows */}
-								{automationItems.map(item => (
+								{/* Outcome rows */}
+								{websiteOutcomes.map(item => (
 									<div
 										key={item.trigger}
 										className="px-5 py-3.5 border-b border-border/40 last:border-0 flex items-center gap-3"
@@ -211,10 +223,10 @@ export default function HomePage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Approach
+							What You Get
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							One Partner. Three Phases. End to End.
+							A Website That Pulls Its Weight
 						</h2>
 					</div>
 
@@ -250,12 +262,17 @@ export default function HomePage() {
 									href={ROUTES.CONTACT}
 									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 								>
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</div>
 						))}
 					</div>
+
+					<p className="text-sm text-muted-foreground text-center mt-8 max-w-2xl mx-auto">
+						Need online booking, payments, or automatic lead follow-up wired in?
+						We handle that too — once your site is doing its job.
+					</p>
 				</div>
 			</section>
 
@@ -368,11 +385,12 @@ export default function HomePage() {
 							<span aria-hidden="true" className="h-px w-8 bg-accent/40" />
 						</div>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Ready to stop running your business manually?
+							Ready to give your business the website it&apos;s earned?
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Every week without automation is another week of manual
-							follow-ups, missed leads, and time you won&apos;t get back.
+							Every month without a real website, customers who Googled you
+							found nothing — or found a competitor instead. Let&apos;s fix
+							that.
 						</p>
 					</div>
 
@@ -381,7 +399,7 @@ export default function HomePage() {
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href={ROUTES.CONTACT}>
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>

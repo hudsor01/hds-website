@@ -55,7 +55,7 @@ export default async function OGImage() {
 						maxWidth: 980
 					}}
 				>
-					Websites & Automation for Small Businesses
+					Professional Websites for Small Businesses
 				</div>
 				<div
 					style={{
@@ -66,8 +66,7 @@ export default async function OGImage() {
 						lineHeight: 1.3
 					}}
 				>
-					We build your site, connect your tools, and automate the workflows
-					that eat your time.
+					We build small businesses the website their reputation deserves.
 				</div>
 			</div>
 

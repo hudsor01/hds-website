@@ -4,13 +4,13 @@ import dynamic from 'next/dynamic'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export const metadata: Metadata = {
-	title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
+	title: 'Get a Free Website Plan | Hudson Digital Solutions',
 	description:
-		"Book a free 30-minute strategy call. We'll talk through your website goals, what's working, and where a better website or automation could make the biggest difference.",
+		"Tell us about your business and we'll map out the website it needs — pages, timeline, and cost — on a free 30-minute call. No sales pitch.",
 	openGraph: {
-		title: 'Contact Us - Free Strategy Call | Hudson Digital Solutions',
+		title: 'Free Website Plan in 30 Minutes | Hudson Digital',
 		description:
-			'Book a free 30-minute strategy call. No sales pitch — just clear next steps for your business.'
+			'A free 30-minute call where we map out the website your business needs — pages, timeline, and price. No sales pitch. Response in 2 hours.'
 	}
 }
 
@@ -77,14 +77,15 @@ export default function ContactPage() {
 						<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 							<div className="mb-8">
 								<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-									Free Strategy Call
+									Free Website Plan
 								</p>
 								<h1 className="text-page-title text-foreground leading-tight text-balance">
-									Book Your Free Strategy Call
+									Get Your Free Website Plan
 								</h1>
 								<p className="mt-4 text-lead text-muted-foreground">
-									See exactly where your website is losing customers — and how
-									to fix it. No sales pitch. No commitment.
+									Tell us about your business. We&apos;ll map out the website it
+									needs — pages, timeline, and cost — on a free 30-minute call.
+									No sales pitch. No commitment.
 								</p>
 							</div>
 
@@ -117,10 +118,10 @@ export default function ContactPage() {
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
-											30-minute strategy call
+											30-minute website call
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											We analyze your needs and identify revenue opportunities
+											We learn your business and map out what your site needs
 										</p>
 									</div>
 								</div>
@@ -131,10 +132,11 @@ export default function ContactPage() {
 									</div>
 									<div>
 										<p className="font-semibold text-foreground text-sm">
-											Get your custom roadmap
+											Get your website plan
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											Detailed plan with ROI projections you can use immediately
+											Pages, timeline, and a clear price — yours to keep, no
+											obligation
 										</p>
 									</div>
 								</div>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 export const metadata: Metadata = {
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
-		'Real client results with proven ROI and high satisfaction. See how Hudson Digital transformed businesses through revenue-focused engineering. Success stories from growing companies.'
+		'Real results from the small businesses we have built websites for — see how a professional website turned local reputations into booked customers.'
 }
 
 const testimonials = [

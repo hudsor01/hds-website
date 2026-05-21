@@ -13,11 +13,11 @@ import { getShowcaseItems } from '@/lib/showcase'
 export const metadata: Metadata = {
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
-		'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
+		'Real websites delivering measurable results for small businesses. See how we help local businesses get online and grow.',
 	openGraph: {
 		title: 'Showcase | Hudson Digital Solutions',
 		description:
-			'Real projects delivering measurable results. From local service businesses to B2B consultants and portfolios, see how we help businesses get online and grow.',
+			'Real websites delivering measurable results for small businesses. See how we help local businesses get online and grow.',
 		type: 'website'
 	}
 }
@@ -128,7 +128,7 @@ export default function ShowcasePage() {
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<Rocket className="w-5 h-5" />
 								</Link>
 							</Button>
@@ -190,7 +190,7 @@ export default function ShowcasePage() {
 										trackConversion={true}
 									>
 										<Link href="/contact">
-											Book a Free Strategy Call
+											Get My Free Website Plan
 											<Rocket className="w-5 h-5" />
 										</Link>
 									</Button>

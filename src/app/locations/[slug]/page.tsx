@@ -287,7 +287,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Book a Free Strategy Call
+									Get My Free Website Plan
 									<ArrowRight className="h-4 w-4" />
 								</Link>
 							</Button>

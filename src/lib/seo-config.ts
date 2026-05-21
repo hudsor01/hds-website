@@ -18,50 +18,48 @@ const SITE_URL = 'https://hudsondigitalsolutions.com'
  */
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
-		title: 'DFW Web Design & Business Automation | Hudson Digital',
+		title: 'Small Business Web Design in Dallas-Fort Worth | Hudson Digital',
 		description:
-			'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently. Get your free strategy call today.',
+			'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned — fast, mobile-ready, built to convert.',
 		canonical: SITE_URL
 	},
 
 	services: {
 		title:
-			'Website Development, Integrations & Business Automation | Hudson Digital Solutions',
+			'Website Design & Development for Small Businesses | Hudson Digital Solutions',
 		description:
-			'Professional websites, tool integrations, and business automation for small businesses. Get online, connect your systems, and automate manual work. Experienced developer who understands your business — results in 30-90 days.',
+			'Professional websites designed and built for small businesses — custom, mobile-ready, fast, and easy to find on Google. Free website plan, no obligation.',
 		ogTitle:
-			'Website Development & Business Automation for Small Businesses | Hudson Digital',
+			'Website Design & Development for Small Businesses | Hudson Digital',
 		ogDescription:
-			'Professional websites, tool integrations, and business automation. Get online, connect your tools, and automate manual work. Results in 30-90 days.',
+			'Professional websites built for small businesses — custom, fast, mobile-ready, built to bring in customers. Launched in weeks.',
 		canonical: `${SITE_URL}/services`
 	},
 
 	about: {
 		title:
-			'Experienced Developer Who Understands Your Business | Hudson Digital Solutions',
+			'Web Designer Who Understands Small Business | Hudson Digital Solutions',
 		description:
-			'Experienced web developers who understand business, not just code. We build websites, connect your tools, and automate your work — so you can focus on your customers.',
-		ogTitle:
-			'Experienced Developer Who Understands Your Business | Hudson Digital',
+			'An experienced web developer with a real business background — building small businesses the professional website their reputation deserves.',
+		ogTitle: 'Web Designer Who Understands Small Business | Hudson Digital',
 		ogDescription:
-			'Experienced developer with a business background. We build websites and automation that actually move the needle for small businesses.',
+			'Experienced developer with a business background, building websites that actually bring in customers for small businesses.',
 		canonical: `${SITE_URL}/about`,
 		structuredData: {
 			'@context': 'https://schema.org',
 			'@type': 'AboutPage',
 			name: 'About Hudson Digital Solutions',
 			description:
-				'Learn about our founder and our mission to transform businesses through technology'
+				'Learn about our founder and our mission: building small businesses the professional website their reputation deserves'
 		}
 	},
 
 	contact: {
-		title: 'Book a Free Strategy Call | Hudson Digital Solutions',
-		description: `See exactly where your website is losing customers—and how to fix it. Free 30-minute strategy call with a clear action plan. No sales pitch. No commitment. Just actionable insights you can use immediately. Response guaranteed within 2 hours. Email: ${BUSINESS_INFO.email}`,
-		ogTitle:
-			'Free Strategy Call - Improve Your Website in 30 Minutes | Hudson Digital',
+		title: 'Get a Free Website Plan | Hudson Digital Solutions',
+		description: `Tell us about your business and we'll map out the website it needs — pages, timeline, and cost — on a free 30-minute call. No sales pitch. Email: ${BUSINESS_INFO.email}`,
+		ogTitle: 'Free Website Plan in 30 Minutes | Hudson Digital',
 		ogDescription:
-			'Free 30-minute strategy call showing exactly where your website is losing customers. No sales pitch. Response in 2 hours. Actionable insights you can use immediately.',
+			'A free 30-minute call where we map out the website your business needs — pages, timeline, and price. No sales pitch. Response in 2 hours.',
 		canonical: `${SITE_URL}/contact`
 	}
 } as const

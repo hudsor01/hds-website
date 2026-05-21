@@ -10,11 +10,11 @@ import FaqClient from './FaqClient'
 export const metadata: Metadata = {
 	title: 'Frequently Asked Questions | Hudson Digital Solutions',
 	description:
-		'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines. Everything you need to know before starting your project.',
+		'Answers to common questions about our website design and development — pricing, process, timelines, and what is included.',
 	openGraph: {
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines.',
+			'Answers to common questions about our website design and development — pricing, process, and timelines.',
 		url: 'https://hudsondigitalsolutions.com/faq',
 		images: [
 			{
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Get answers to common questions about our websites, integrations, automation services, pricing, process, and timelines.',
+			'Answers to common questions about our website design and development — pricing, process, and timelines.',
 		images: ['/HDS-Logo.webp']
 	},
 	alternates: {
@@ -48,7 +48,7 @@ const faqSchema = {
 			name: 'What web development services do you offer?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'We build websites that convert visitors into customers, connect your business tools so data flows automatically, and automate the workflows that cost you time. Think: your website, your CRM, your calendar, your payment processor — all working together without manual effort.'
+				text: 'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
 			}
 		},
 		{

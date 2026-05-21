@@ -35,14 +35,14 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-	title: 'DFW Web Design & Business Automation | Hudson Digital',
+	title: 'Small Business Web Design in Dallas-Fort Worth | Hudson Digital',
 	description:
-		'Professional website development, tool integrations, and business automation for small businesses. Get online, connect your tools, and run your business more efficiently.',
+		'Professional website design and development for small businesses. Fast, mobile-ready websites built to turn visitors into customers.',
 	metadataBase: new URL('https://hudsondigitalsolutions.com'),
 	openGraph: {
-		title: 'DFW Web Design & Business Automation | Hudson Digital',
+		title: 'Small Business Web Design in Dallas-Fort Worth | Hudson Digital',
 		description:
-			'Professional website development and business automation for small businesses. Get online and connect your tools.',
+			'Professional website design and development for small businesses. Fast, mobile-ready, built to bring in customers.',
 		url: 'https://hudsondigitalsolutions.com',
 		siteName: 'Hudson Digital Solutions',
 		locale: 'en_US',
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: 'summary_large_image',
-		title: 'DFW Web Design & Business Automation | Hudson Digital',
+		title: 'Small Business Web Design in Dallas-Fort Worth | Hudson Digital',
 		description:
-			'Professional website development and business automation for small businesses. Get online and connect your tools.'
+			'Professional website design and development for small businesses. Fast, mobile-ready, built to bring in customers.'
 	},
 	robots: {
 		index: true,

@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 	title:
 		'Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy',
 	description:
-		"Practical insights on websites, tool integrations, and business automation from Hudson Digital Solutions. Learn how to make technology work harder so you don't have to.",
+		'Practical insights on websites, getting found on Google, and growing a small business online — from Hudson Digital Solutions.',
 	openGraph: {
 		title: 'Blog - Hudson Digital Solutions',
 		description:
-			'Practical insights on websites, tool integrations, and business automation',
+			'Practical insights on websites, getting found on Google, and growing a small business online.',
 		url: 'https://hudsondigitalsolutions.com/blog',
 		images: [
 			{
@@ -155,9 +155,8 @@ export default function BlogPage() {
 						Business Strategy Blog
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Practical insights on websites, tool integrations, and business
-						automation. Learn how to make technology work harder so you
-						don&apos;t have to.
+						Practical insights on websites, getting found on Google, and growing
+						a small business online.
 					</p>
 				</div>
 			</section>
@@ -188,7 +187,7 @@ export default function BlogPage() {
 									Get strategic insights delivered to your inbox.
 								</p>
 								<Button asChild variant="accent" className="w-full">
-									<Link href="/contact">Book a Free Strategy Call</Link>
+									<Link href="/contact">Get My Free Website Plan</Link>
 								</Button>
 								<p className="text-xs text-muted-foreground mt-3">
 									Strategic insights, no spam.
@@ -201,14 +200,14 @@ export default function BlogPage() {
 
 							<div className="rounded-xl border border-border bg-surface-raised p-8 text-center hover:border-border-strong transition-colors">
 								<h3 className="text-h3 text-foreground mb-3 text-balance">
-									Ready to grow your business?
+									Ready for a better website?
 								</h3>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Let&apos;s build the system that runs it.
+									Let&apos;s build the one your business deserves.
 								</p>
 								<Button asChild variant="accent" trackConversion={true}>
 									<Link href="/contact">
-										Book a Free Strategy Call
+										Get My Free Website Plan
 										<ArrowRight className="w-4 h-4" />
 									</Link>
 								</Button>

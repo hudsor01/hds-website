@@ -19,12 +19,12 @@ const faqs = [
 			{
 				question: 'What web development services do you offer?',
 				answer:
-					'We build websites that convert visitors into customers, connect your business tools so data flows automatically, and automate the workflows that cost you time. Think: your website, your CRM, your calendar, your payment processor — all working together without manual effort.'
+					'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
 			},
 			{
 				question: 'How much does it cost to build a website?',
 				answer:
-					'Every project is scoped to your specific needs, so costs vary based on complexity, integrations, and timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a strategy call — we will walk you through options that fit your budget.'
+					'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call — we will walk you through options that fit your budget.'
 			},
 			{
 				question: 'Do you offer monthly retainer packages?',
@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Projects with custom integrations and automation typically take 3-6 months. We can expedite urgent projects with dedicated resources.'
+					'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Larger sites with custom features and booking or payment setup typically take 3-6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		]
 	},
@@ -99,7 +99,7 @@ const faqs = [
 			{
 				question: 'How do I get started?',
 				answer:
-					"Schedule a free 30-minute consultation call. We'll discuss your business goals, what's working, what isn't, and where automation or a better website could make the biggest difference. After the call, we'll send a detailed proposal with exact pricing and deliverables."
+					"Schedule a free 30-minute website plan call. We'll discuss your business, your customers, and what your website needs to do for you. After the call, we'll send a detailed plan with exact pricing and deliverables."
 			},
 			{
 				question: 'Do you work with new businesses?',
@@ -159,7 +159,7 @@ export default function FaqClient() {
 
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
 						Everything you need to know about working with us — websites,
-						integrations, automation, process, and pricing.
+						pricing, process, and timelines.
 					</p>
 
 					{/* Search */}

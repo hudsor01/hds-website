@@ -15,7 +15,7 @@ export function generateWebsiteSchema() {
 		name: 'Hudson Digital Solutions',
 		url: SITE_URL,
 		description:
-			'Professional website development and business automation for small businesses.'
+			'Professional website design and development for small businesses.'
 	}
 }
 
@@ -31,7 +31,7 @@ export function generateOrganizationSchema() {
 		logo: LOGO_URL,
 		image: LOGO_URL,
 		description:
-			'Professional website development and business automation for small businesses.',
+			'Professional website design and development for small businesses.',
 		foundingDate: '2020',
 		address: {
 			'@type': 'PostalAddress',
@@ -66,7 +66,8 @@ export function generateLocalBusinessSchema() {
 		name: 'Hudson Digital Solutions',
 		url: SITE_URL,
 		image: LOGO_URL,
-		description: 'Web development and business automation for small businesses',
+		description:
+			'Professional website design and development for small businesses',
 		address: {
 			'@type': 'PostalAddress',
 			streetAddress: BUSINESS_INFO.location.streetAddress,
