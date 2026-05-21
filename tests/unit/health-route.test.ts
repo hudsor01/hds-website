@@ -10,21 +10,28 @@ import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import { NextRequest } from 'next/server'
 import { cleanupMocks } from '../test-utils'
 
+const testEnv = (
+	globalThis as unknown as { __TEST_ENV: Record<string, unknown> }
+).__TEST_ENV
+
+const ADMIN_SECRET = 'test-admin-secret-that-is-32-chars!!'
+
 function authedRequest() {
 	return new NextRequest('http://localhost/api/health', {
-		headers: { authorization: 'Bearer test-admin' }
+		headers: { authorization: `Bearer ${ADMIN_SECRET}` }
 	})
 }
 
 describe('GET /api/health', () => {
 	beforeEach(() => {
-		mock.module('@/env', () => ({
-			env: {
-				NODE_ENV: 'test',
-				npm_package_version: '2.5.0',
-				ADMIN_SECRET: 'test-admin'
-			}
-		}))
+		// Mutate the shared TEST_ENV (from tests/setup.ts) rather than
+		// re-registering @/env. Re-registering with a fresh env object
+		// breaks ESM live bindings for any consumer that already resolved
+		// `import { env } from '@/env'`, which causes downstream tests
+		// (admin-auth) to see stale ADMIN_SECRET values in CI.
+		testEnv.NODE_ENV = 'test'
+		testEnv.npm_package_version = '2.5.0'
+		testEnv.ADMIN_SECRET = ADMIN_SECRET
 
 		mock.module('@/lib/logger', () => ({
 			logger: {
