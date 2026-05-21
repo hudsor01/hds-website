@@ -7,19 +7,30 @@ import { afterAll, afterEach, beforeAll, beforeEach, mock } from 'bun:test'
 // This prevents the real env module from validating environment variables
 // which would fail in CI without proper secrets set
 // Store the mock function so we can re-apply it after mock.restore()
+// A single shared `env` object reference so any module that captured it via
+// `import { env } from '@/env'` sees mutations made by per-test setup. The
+// admin-auth tests rely on this to flip ADMIN_SECRET on and off between cases
+// — re-registering `@/env` with a new env object would break already-resolved
+// imports in CI where admin.ts loads before the describe-level beforeEach.
+const TEST_ENV = {
+	NODE_ENV: 'test',
+	CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
+	RESEND_API_KEY: 'test-resend-key',
+	NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
+	npm_package_version: '1.0.0',
+	BASE_URL: 'http://localhost:3000',
+	NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
+	ADMIN_SECRET: 'test-admin-secret-that-is-32-chars!!',
+	CRON_SECRET: 'test-cron-secret-that-is-32-chars!!'
+} as Record<string, unknown>
+
 function setupEnvMock() {
-	mock.module('@/env', () => ({
-		env: {
-			NODE_ENV: 'test',
-			CSRF_SECRET: 'test-csrf-secret-for-testing-only-32chars',
-			RESEND_API_KEY: 'test-resend-key',
-			NEXT_PUBLIC_GA_MEASUREMENT_ID: 'test-ga-id',
-			npm_package_version: '1.0.0',
-			BASE_URL: 'http://localhost:3000',
-			NEXT_PUBLIC_BASE_URL: 'http://localhost:3000'
-		}
-	}))
+	mock.module('@/env', () => ({ env: TEST_ENV }))
 }
+// Exposed on globalThis so individual test files can mutate the live env
+// without re-registering the module mock (which would unbind any prior
+// captured `import { env }` references).
+;(globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV = TEST_ENV
 
 // Apply env mock immediately on setup
 setupEnvMock()
