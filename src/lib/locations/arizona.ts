@@ -164,7 +164,7 @@ export const ARIZONA_LOCATIONS: LocationData[] = [
 			{
 				title: 'Booking & Contact Forms',
 				description:
-					'Websites for Scottsdale resorts, spas, and golf courses with easy booking and enquiry forms built in.'
+					'Websites for Scottsdale resorts, spas, and golf courses with easy booking and inquiry forms built in.'
 			},
 			{
 				title: 'Mobile-First Design',
