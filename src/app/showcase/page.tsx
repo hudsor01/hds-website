@@ -121,8 +121,8 @@ export default function ShowcasePage() {
 							<TypewriterText />
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-							Real projects for local service businesses and independent
-							consultants — see how we help businesses get online and grow.
+							Real websites for small businesses — see how we help local
+							businesses get found online, win customers, and grow.
 						</p>
 
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">

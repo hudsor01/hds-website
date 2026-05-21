@@ -42,7 +42,7 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-	{ value: '1–4 wks', label: 'Typical Delivery' },
+	{ value: '1–4 wks', label: 'First Delivery' },
 	{ value: 'Expert', label: 'Development' },
 	{ value: 'Proven', label: 'Track Record' },
 	{ value: '2 hr', label: 'Response Time' }

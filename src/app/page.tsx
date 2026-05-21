@@ -22,12 +22,12 @@ export const metadata: Metadata = {
 	title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 	description:
 		SEO_CONFIG.home?.description ??
-		'Custom web development with proven ROI results.',
+		'Professional website design for small businesses in Dallas-Fort Worth.',
 	openGraph: {
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
-			'Custom web development with proven ROI results.',
+			'Professional website design for small businesses in Dallas-Fort Worth.',
 		url: SEO_CONFIG.home?.canonical ?? 'https://hudsondigitalsolutions.com'
 	},
 	twitter: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 		title: SEO_CONFIG.home?.title ?? 'Hudson Digital Solutions',
 		description:
 			SEO_CONFIG.home?.description ??
-			'Custom web development with proven ROI results.'
+			'Professional website design for small businesses in Dallas-Fort Worth.'
 	},
 	alternates: {
 		canonical:
@@ -73,7 +73,7 @@ const solutions = [
 		description:
 			'A clean, professional design that matches the quality of your work — so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
 		stat: '1–4 wks',
-		statLabel: 'first delivery'
+		statLabel: 'First Delivery'
 	},
 	{
 		Icon: TrendingUp,
@@ -154,7 +154,7 @@ export default function HomePage() {
 										1–4 wks
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
-										First delivery
+										First Delivery
 									</div>
 								</div>
 								<div className="w-px h-8 bg-border/40" />

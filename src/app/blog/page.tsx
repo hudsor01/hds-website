@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 	description:
 		'Practical insights on websites, getting found on Google, and growing a small business online — from Hudson Digital Solutions.',
 	openGraph: {
-		title: 'Blog - Hudson Digital Solutions',
+		title: 'Small Business Web Design Blog | Hudson Digital',
 		description:
 			'Practical insights on websites, getting found on Google, and growing a small business online — from the team at Hudson Digital Solutions.',
 		url: 'https://hudsondigitalsolutions.com/blog',

@@ -129,7 +129,7 @@ export default function AboutPage() {
 							Our Story
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							Built from Experience, Driven by Results
+							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							We build websites the way a business owner thinks — every choice
