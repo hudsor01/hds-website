@@ -1,6 +1,5 @@
 // Centralized SEO configuration for Next.js App Router
 
-import { BUSINESS_INFO } from '@/lib/constants/business'
 import type { SEOMetaData } from '@/types/seo'
 
 const SITE_URL = 'https://hudsondigitalsolutions.com'
@@ -18,27 +17,24 @@ const SITE_URL = 'https://hudsondigitalsolutions.com'
  */
 export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
-		title: 'Small Business Web Design in Dallas-Fort Worth | Hudson Digital',
+		title: 'Dallas-Fort Worth Web Design | Hudson Digital',
 		description:
 			'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned — fast, mobile-ready, built to convert.',
 		canonical: SITE_URL
 	},
 
 	services: {
-		title:
-			'Website Design & Development for Small Businesses | Hudson Digital Solutions',
+		title: 'Small Business Website Design | Hudson Digital',
 		description:
 			'Professional websites designed and built for small businesses — custom, mobile-ready, fast, and easy to find on Google. Free website plan, no obligation.',
-		ogTitle:
-			'Website Design & Development for Small Businesses | Hudson Digital',
+		ogTitle: 'Website Design for Small Businesses | Hudson Digital',
 		ogDescription:
 			'Professional websites built for small businesses — custom, fast, mobile-ready, built to bring in customers. Launched in weeks.',
 		canonical: `${SITE_URL}/services`
 	},
 
 	about: {
-		title:
-			'Web Designer Who Understands Small Business | Hudson Digital Solutions',
+		title: 'Web Designer Who Understands Small Business | Hudson Digital',
 		description:
 			'An experienced web developer with a real business background — building small businesses the professional website their reputation deserves.',
 		ogTitle: 'Web Designer Who Understands Small Business | Hudson Digital',
@@ -52,14 +48,5 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 			description:
 				'Learn about our founder and our mission: building small businesses the professional website their reputation deserves'
 		}
-	},
-
-	contact: {
-		title: 'Get a Free Website Plan | Hudson Digital Solutions',
-		description: `Tell us about your business and we'll map out the website it needs — pages, timeline, and cost — on a free 30-minute call. No sales pitch. Email: ${BUSINESS_INFO.email}`,
-		ogTitle: 'Free Website Plan in 30 Minutes | Hudson Digital',
-		ogDescription:
-			'A free 30-minute call where we map out the website your business needs — pages, timeline, and price. No sales pitch. Response in 2 hours.',
-		canonical: `${SITE_URL}/contact`
 	}
 } as const

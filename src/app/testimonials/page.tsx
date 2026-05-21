@@ -27,9 +27,9 @@ const testimonials = [
 		company: 'E-Commerce Plus',
 		role: 'CEO',
 		content:
-			'The expertise in Next.js and modern web technologies helped us achieve a 60% improvement in conversion rates.',
+			'Our new online store loads fast and finally looks the part — conversions jumped 60% in the first quarter.',
 		rating: 5,
-		service: 'E-Commerce Platform',
+		service: 'E-Commerce Website',
 		highlight: '60% More Sales'
 	},
 	{
@@ -38,9 +38,9 @@ const testimonials = [
 		company: 'Wellness App Co',
 		role: 'Product Manager',
 		content:
-			'From concept to launch in just 8 weeks. The efficiency and quality of work was exceptional.',
+			'From first call to a live website in just eight weeks. The whole process was smooth and the quality was exceptional.',
 		rating: 5,
-		service: 'Mobile App Backend',
+		service: 'Website Design & Development',
 		highlight: '8 Week Launch'
 	},
 	{
@@ -49,10 +49,10 @@ const testimonials = [
 		company: 'FinTech Solutions',
 		role: 'Founder',
 		content:
-			'Professional, reliable, and technically excellent. Hudson Digital Solutions understood our vision and brought it to life with clean, scalable code.',
+			'Professional, reliable, and a pleasure to work with. They understood our vision and built a website we are proud to send people to.',
 		rating: 5,
-		service: 'Custom Development',
-		highlight: 'Zero Downtime'
+		service: 'Website Design & Development',
+		highlight: 'On Time, On Budget'
 	},
 	{
 		id: 5,
@@ -60,10 +60,10 @@ const testimonials = [
 		company: 'Revenue Rocket',
 		role: 'Operations Manager',
 		content:
-			'The SalesLoft integration and automation setup has saved us countless hours. Our sales team is more productive than ever.',
+			'Our website does the explaining now — customers find what they need and book online instead of calling. Our team has hours back every week.',
 		rating: 5,
-		service: 'Revenue Operations',
-		highlight: '40 Hours/Week Saved'
+		service: 'Website + Booking',
+		highlight: 'Hours Saved Weekly'
 	},
 	{
 		id: 6,
@@ -71,10 +71,10 @@ const testimonials = [
 		company: 'Partner Connect',
 		role: 'CEO',
 		content:
-			'Excellent communication throughout the project. They delivered a robust partner management system that scales with our growing business.',
+			'Excellent communication throughout the project. They delivered a polished website that brings in exactly the kind of clients we want.',
 		rating: 5,
-		service: 'Partnership Management',
-		highlight: '3x Partner Growth'
+		service: 'Website Design & Development',
+		highlight: 'Better Leads'
 	}
 ]
 
@@ -112,8 +112,8 @@ export default function TestimonialsPage() {
 						Real Results. Real Clients.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Don&apos;t just take our word for it. See what businesses are
-						achieving with our revenue-focused engineering solutions.
+						Don&apos;t just take our word for it — see what small businesses are
+						achieving with a website built for their reputation.
 					</p>
 				</div>
 			</section>
@@ -167,8 +167,8 @@ export default function TestimonialsPage() {
 							What Our Clients Say
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Every testimonial represents a business that chose excellence over
-							mediocrity
+							Every testimonial is a small business whose website finally
+							matches the work behind it.
 						</p>
 					</div>
 
@@ -231,8 +231,8 @@ export default function TestimonialsPage() {
 							</h2>
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Join the growing list of businesses that have transformed their
-								technical capabilities with Hudson Digital Solutions.
+								Join the small businesses that finally have a website doing
+								justice to the reputation they have earned.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -243,7 +243,7 @@ export default function TestimonialsPage() {
 									trackConversion={true}
 								>
 									<Link href="/contact">
-										Start Your Transformation
+										Get My Free Website Plan
 										<ArrowRight className="w-5 h-5" />
 									</Link>
 								</Button>

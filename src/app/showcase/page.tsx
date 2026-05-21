@@ -177,9 +177,8 @@ export default function ShowcasePage() {
 								</h2>
 
 								<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-									Join these businesses in transforming your digital presence
-									into a competitive advantage. Let&apos;s build something
-									together.
+									Join these businesses with a website that does justice to what
+									they&apos;ve built. Let&apos;s build yours.
 								</p>
 
 								<div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -60,10 +60,10 @@ const testimonials = [
 		company: 'Bright Spark Consulting',
 		role: 'Founder',
 		content:
-			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
 		rating: 5 as const,
-		service: 'Website Development + Automation (private engagement)',
-		highlight: '2x lead volume'
+		service: 'Website Design & Development',
+		highlight: '2x inquiries'
 	},
 	{
 		testimonialId: 2 as const,
@@ -71,10 +71,10 @@ const testimonials = [
 		company: 'Gulf Coast Roofing',
 		role: 'Operations Manager',
 		content:
-			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
 		rating: 5 as const,
-		service: 'Business Automation (private engagement)',
-		highlight: 'Zero manual follow-ups'
+		service: 'Website Design & Development',
+		highlight: 'Found on Google'
 	}
 ] satisfies Array<{
 	testimonialId: number
@@ -132,8 +132,8 @@ export default function AboutPage() {
 							Built from Experience, Driven by Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Built from experience, driven by results, and focused on your
-							success.
+							We build websites the way a business owner thinks — every choice
+							measured against whether it brings customers in.
 						</p>
 					</div>
 
@@ -162,8 +162,10 @@ export default function AboutPage() {
 								</p>
 								<p>
 									That&apos;s why our clients see{' '}
-									<strong className="text-accent">proven ROI results</strong> in
-									months, not years. We don&apos;t just launch a{' '}
+									<strong className="text-accent">
+										real, measurable results
+									</strong>{' '}
+									in months, not years. We don&apos;t just launch a{' '}
 									<Link href="/services" className="link-primary font-semibold">
 										professional website
 									</Link>{' '}
@@ -196,9 +198,10 @@ export default function AboutPage() {
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
 									Make a great website accessible to every small business. No
-									more choosing between &quot;cheap but embarrassing&quot; and
-									&quot;great but unaffordable&quot; — get a professional site
-									that brings in customers, at a price that makes sense.
+									small business should have to choose between a site
+									that&apos;s cheap but embarrassing and one that&apos;s great
+									but unaffordable. You get a professional site that brings in
+									customers, at a fair price.
 								</p>
 							</div>
 
@@ -329,7 +332,7 @@ export default function AboutPage() {
 								Richard Hudson
 							</p>
 							<p className="text-sm text-muted-foreground">
-								Founder &amp; Revenue Operations
+								Founder &amp; Web Designer
 							</p>
 						</div>
 						<div className="space-y-6 text-sm text-muted-foreground leading-relaxed">

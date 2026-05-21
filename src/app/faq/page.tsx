@@ -10,11 +10,11 @@ import FaqClient from './FaqClient'
 export const metadata: Metadata = {
 	title: 'Frequently Asked Questions | Hudson Digital Solutions',
 	description:
-		'Answers to common questions about our website design and development — pricing, process, timelines, and what is included.',
+		'Answers to common questions about our small business website design and development — pricing, process, timelines, and what is included.',
 	openGraph: {
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Answers to common questions about our website design and development — pricing, process, and timelines.',
+			'Common questions about our small business website design and development — pricing, process, timelines, and what every project includes.',
 		url: 'https://hudsondigitalsolutions.com/faq',
 		images: [
 			{
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Answers to common questions about our website design and development — pricing, process, and timelines.',
+			'Common questions about our small business website design and development — pricing, process, timelines, and what every project includes.',
 		images: ['/HDS-Logo.webp']
 	},
 	alternates: {
@@ -56,7 +56,7 @@ const faqSchema = {
 			name: 'How much does it cost to build a website?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Website costs vary based on complexity. A simple business website starts at $5,000-$10,000. E-commerce sites range from $15,000-$50,000. Custom web applications start at $50,000+.'
+				text: 'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call — we will walk you through options that fit your budget.'
 			}
 		},
 		{
@@ -64,7 +64,7 @@ const faqSchema = {
 			name: 'What is your typical project timeline?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Projects with custom integrations and automation typically take 3-6 months.'
+				text: 'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Larger sites with custom features and booking or payment setup typically take 3-6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		},
 		{
@@ -72,7 +72,7 @@ const faqSchema = {
 			name: 'Do you offer monthly retainer packages?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Yes. We offer ongoing maintenance and support retainers starting at $2,500/month. This includes regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house.'
+				text: 'Yes. We offer ongoing maintenance and support retainers that include regular updates, security patches, performance monitoring, feature additions, and priority support. Perfect for businesses that need continuous support without hiring in-house. Contact us to discuss a package that fits your needs.'
 			}
 		}
 	]

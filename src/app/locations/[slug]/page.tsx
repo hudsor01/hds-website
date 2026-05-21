@@ -27,10 +27,10 @@ const locationTestimonials = [
 		company: 'Bright Spark Consulting',
 		role: 'Founder',
 		content:
-			'Our lead volume doubled in the first month after launch. The automation alone saves us 12 hours a week.',
+			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
 		rating: 5 as const,
-		service: 'Website Development + Automation',
-		highlight: '2x lead volume'
+		service: 'Website Design & Development',
+		highlight: '2x inquiries'
 	},
 	{
 		testimonialId: 2 as const,
@@ -38,10 +38,10 @@ const locationTestimonials = [
 		company: 'Gulf Coast Roofing',
 		role: 'Operations Manager',
 		content:
-			'We went from manually following up on every quote to having it all run automatically. Game changer.',
+			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
 		rating: 5 as const,
-		service: 'Business Automation',
-		highlight: 'Zero manual follow-ups'
+		service: 'Website Design & Development',
+		highlight: 'Found on Google'
 	}
 ] satisfies Array<{
 	testimonialId: number

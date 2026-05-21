@@ -73,15 +73,15 @@ const solutions = [
 		description:
 			'A clean, professional design that matches the quality of your work — so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
 		stat: '1–4 wks',
-		statLabel: 'to launch'
+		statLabel: 'first delivery'
 	},
 	{
 		Icon: TrendingUp,
 		title: 'Found When Customers Search',
 		description:
 			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for — so your reputation actually gets seen.',
-		stat: '<2s',
-		statLabel: 'page load'
+		stat: 'Built in',
+		statLabel: 'local SEO'
 	},
 	{
 		Icon: Settings,
@@ -388,9 +388,9 @@ export default function HomePage() {
 							Ready to give your business the website it&apos;s earned?
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Every month without a real website, customers who Googled you
-							found nothing — or found a competitor instead. Let&apos;s fix
-							that.
+							Every month without a real website is another month of customers
+							Googling you and finding nothing — or finding a competitor
+							instead. Let&apos;s fix that.
 						</p>
 					</div>
 

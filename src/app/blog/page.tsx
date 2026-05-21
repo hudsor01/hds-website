@@ -8,14 +8,13 @@ import { Button } from '@/components/ui/button'
 import { getFeaturedPosts, getPosts, getTags } from '@/lib/blog'
 
 export const metadata: Metadata = {
-	title:
-		'Blog - Hudson Digital Solutions | Web Development Insights & Business Strategy',
+	title: 'Small Business Web Design Blog | Hudson Digital',
 	description:
 		'Practical insights on websites, getting found on Google, and growing a small business online — from Hudson Digital Solutions.',
 	openGraph: {
 		title: 'Blog - Hudson Digital Solutions',
 		description:
-			'Practical insights on websites, getting found on Google, and growing a small business online.',
+			'Practical insights on websites, getting found on Google, and growing a small business online — from the team at Hudson Digital Solutions.',
 		url: 'https://hudsondigitalsolutions.com/blog',
 		images: [
 			{
