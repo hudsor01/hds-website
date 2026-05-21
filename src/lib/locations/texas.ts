@@ -6,11 +6,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Dallas',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Dallas, TX',
+		tagline: 'Web Design for Dallas Small Businesses',
 		description:
-			'From Deep Ellum to Uptown, we help Dallas businesses compete online with a professional website, connected tools, and business automation.',
+			'From Deep Ellum to Uptown, we design and build fast, mobile-ready websites that help Dallas small businesses win new customers and get found on Google.',
 		metaDescription:
-			'Website development and business automation in Dallas, TX. We build your website, connect your tools, and automate the work for North Texas businesses.',
+			'Web design for Dallas small businesses. We build fast, mobile-ready websites for Deep Ellum boutiques and Uptown shops, built to be found on Google.',
 		neighborhoods: [
 			'Downtown Dallas',
 			'Uptown',
@@ -28,19 +28,19 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'E-Commerce Solutions',
+				title: 'E-Commerce Websites',
 				description:
-					'High-performance online stores built for the Dallas market, from local boutiques to regional retailers.'
+					'Online store websites built for the Dallas market, from local boutiques to regional retailers.'
 			},
 			{
-				title: 'Website Development',
+				title: 'Local Business Websites',
 				description:
-					'Fast, modern websites built to convert visitors into customers for Dallas businesses.'
+					'Fast, modern websites built to turn Dallas visitors into paying customers.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'Local SEO Setup',
 				description:
-					'Automate manual work — connect your CRM, booking, and email tools so your business runs itself.'
+					'Every website built to be found on Google when North Texas customers search nearby.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Houston',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Houston, TX',
+		tagline: 'Web Design for Houston Small Businesses',
 		description:
-			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with website development, tool integrations, and business automation.',
+			'Serving the diverse Houston business community from the Energy Corridor to the Medical Center with fast, mobile-ready websites built to bring in more customers.',
 		metaDescription:
-			'Website development and business automation in Houston, TX. We build your website, connect your tools, and automate the work for Houston businesses.',
+			'Web design for Houston small businesses. Mobile-ready websites for Energy Corridor firms and Medical Center clinics, built to bring in more customers.',
 		neighborhoods: [
 			'Downtown Houston',
 			'The Heights',
@@ -71,19 +71,19 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Energy Sector Solutions',
+				title: 'Energy Sector Websites',
 				description:
-					'Custom web applications and portals for Houston energy and oil & gas companies.'
+					'Professional, polished websites for Houston energy and oil and gas companies.'
 			},
 			{
-				title: 'Healthcare Tech',
+				title: 'Healthcare Websites',
 				description:
-					'HIPAA-compliant web solutions for the Texas Medical Center and healthcare providers.'
+					'Clean, trustworthy websites for Texas Medical Center practices and healthcare providers.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'Fast, Modern Websites',
 				description:
-					'Streamline operations with custom software solutions tailored to Houston businesses.'
+					'Quick-loading, mobile-first websites built to bring in customers for Houston businesses.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Austin',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Austin, TX',
+		tagline: 'Web Design for Austin Small Businesses',
 		description:
-			'In the heart of Silicon Hills, we help Austin businesses get online, connect their tools, and automate the work — so they can focus on growing.',
+			'In the heart of Silicon Hills, we design and build fast, mobile-ready websites that help Austin small businesses get found on Google and grow.',
 		metaDescription:
-			'Website development and business automation in Austin, TX. We build your website, connect your tools, and automate the work for Austin businesses.',
+			'Web design for Austin small businesses. Fast, mobile-ready websites for Silicon Hills startups and South Congress shops, built to get found on Google.',
 		neighborhoods: [
 			'Downtown Austin',
 			'South Congress',
@@ -114,14 +114,14 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Website Launch Packages',
+				title: 'Fast Website Launch',
 				description:
 					'Get a professional website live fast — design, copy, and setup handled end to end.'
 			},
 			{
-				title: 'Business Growth Systems',
+				title: 'Mobile-First Design',
 				description:
-					'Automate operations, connect your tools, and build the systems that let you grow without hiring.'
+					'Websites built to look sharp and load quickly on every phone your Austin customers carry.'
 			},
 			{
 				title: 'Creative Agency Sites',
@@ -135,11 +135,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'San Antonio',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in San Antonio, TX',
+		tagline: 'Web Design for San Antonio Small Businesses',
 		description:
-			'From the River Walk to military contractors, we deliver modern web solutions to San Antonio businesses across every industry.',
+			'From the River Walk to the Pearl, we design and build modern, mobile-ready websites for San Antonio small businesses across every industry.',
 		metaDescription:
-			'San Antonio web development and digital solutions. Custom websites and applications for Alamo City businesses and government contractors.',
+			'Web design for San Antonio small businesses. We build modern, mobile-ready websites for River Walk shops and Alamo City service companies.',
 		neighborhoods: [
 			'Downtown',
 			'The Pearl',
@@ -157,19 +157,19 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Government & Defense',
+				title: 'Local Business Websites',
 				description:
-					'Secure web solutions for San Antonio military contractors and government agencies.'
+					'Professional websites for San Antonio service companies and family-owned businesses.'
 			},
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Tourism Websites',
 				description:
 					'Engaging websites for River Walk businesses, hotels, and tourism companies.'
 			},
 			{
-				title: 'Healthcare Systems',
+				title: 'Healthcare Websites',
 				description:
-					'Custom healthcare applications for San Antonio medical providers and clinics.'
+					'Clean, reassuring websites for San Antonio medical providers and clinics.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Fort Worth',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Fort Worth, TX',
+		tagline: 'Web Design for Fort Worth Small Businesses',
 		description:
-			'Combining Fort Worth traditional business values with modern digital solutions. We help Tarrant County businesses thrive online.',
+			'Pairing Fort Worth traditional business values with modern web design, we build mobile-ready websites that help Tarrant County small businesses thrive.',
 		metaDescription:
-			'Fort Worth web development services. Custom websites, e-commerce, and digital solutions for Tarrant County and North Texas businesses.',
+			'Web design for Fort Worth small businesses. Mobile-ready websites for Stockyards retailers and Tarrant County family-owned companies that win customers.',
 		neighborhoods: [
 			'Downtown',
 			'Sundance Square',
@@ -205,14 +205,14 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 					'Professional websites for Fort Worth small businesses and family-owned companies.'
 			},
 			{
-				title: 'E-Commerce Platforms',
+				title: 'E-Commerce Websites',
 				description:
-					'Online stores for Fort Worth retailers, from Western wear to artisan goods.'
+					'Online store websites for Fort Worth retailers, from Western wear to artisan goods.'
 			},
 			{
-				title: 'Manufacturing Tech',
+				title: 'Website Redesigns',
 				description:
-					'Custom web applications for Fort Worth manufacturing and industrial companies.'
+					'Refresh dated websites for Fort Worth manufacturers and industrial companies.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'El Paso',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in El Paso, TX',
+		tagline: 'Web Design for El Paso Small Businesses',
 		description:
-			'Bridging El Paso and the broader Southwest with digital solutions for bilingual businesses, cross-border commerce, and growing Sun City businesses.',
+			'Serving El Paso and the broader Borderland, we design and build bilingual, mobile-ready websites for Sun City small businesses and cross-border retailers.',
 		metaDescription:
-			'Web development and digital solutions in El Paso, TX. Custom websites and bilingual web applications for Sun City and Borderland businesses.',
+			'Web design for El Paso small businesses. We build bilingual, mobile-ready websites for Sun City shops and Borderland retailers, built to get found on Google.',
 		neighborhoods: [
 			'Downtown El Paso',
 			'Westside',
@@ -243,19 +243,19 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Bilingual Web Solutions',
+				title: 'Bilingual Websites',
 				description:
 					'English and Spanish websites for El Paso businesses serving the Borderland community.'
 			},
 			{
-				title: 'Cross-Border Commerce',
+				title: 'E-Commerce Websites',
 				description:
-					'E-commerce platforms supporting US-Mexico trade and international business operations.'
+					'Online store websites for El Paso retailers selling across the US-Mexico region.'
 			},
 			{
-				title: 'Local Business Growth',
+				title: 'Local SEO Setup',
 				description:
-					'Digital marketing and web presence for El Paso small businesses and restaurants.'
+					'Websites built to be found on Google for El Paso restaurants and small businesses.'
 			}
 		]
 	},
@@ -264,11 +264,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Arlington',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Arlington, TX',
+		tagline: 'Web Design for Arlington Small Businesses',
 		description:
-			'Home to AT&T Stadium and Globe Life Field, Arlington is a hub for entertainment and mid-cities businesses that need powerful digital solutions.',
+			'Home to AT&T Stadium and Globe Life Field, Arlington is a hub for entertainment and mid-cities businesses that need fast, mobile-ready websites.',
 		metaDescription:
-			'Professional web development in Arlington, TX. Custom websites, e-commerce, and digital solutions for DFW mid-cities businesses.',
+			'Web design for Arlington small businesses. Mobile-ready websites for Entertainment District venues and DFW mid-cities service providers.',
 		neighborhoods: [
 			'Downtown Arlington',
 			'Entertainment District',
@@ -286,17 +286,17 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Entertainment & Events',
+				title: 'Entertainment Websites',
 				description:
-					'Websites and booking platforms for Arlington entertainment venues and event companies.'
+					'Websites for Arlington entertainment venues and event companies, with booking forms built in.'
 			},
 			{
-				title: 'Restaurant & Hospitality',
+				title: 'Restaurant Websites',
 				description:
-					'Online ordering, reservations, and marketing sites for Arlington restaurants and hotels.'
+					'Mobile-ready websites with menus and contact forms for Arlington restaurants and hotels.'
 			},
 			{
-				title: 'Small Business Web Design',
+				title: 'Small Business Websites',
 				description:
 					'Affordable, high-quality websites for Arlington small businesses and service providers.'
 			}
@@ -307,11 +307,11 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		city: 'Corpus Christi',
 		state: 'Texas',
 		stateCode: 'TX',
-		tagline: 'Web Design & Business Automation in Corpus Christi, TX',
+		tagline: 'Web Design for Corpus Christi Small Businesses',
 		description:
-			'From the Sparkling City by the Sea to the Coastal Bend region, we help Corpus Christi businesses establish a commanding digital presence.',
+			'From the Sparkling City by the Sea across the Coastal Bend, we design and build mobile-ready websites that help Corpus Christi small businesses stand out.',
 		metaDescription:
-			'Web development in Corpus Christi, TX. Custom websites and digital solutions for Coastal Bend tourism, energy, and maritime businesses.',
+			'Web design for Corpus Christi small businesses. Mobile-ready websites for Coastal Bend beach resorts, fishing charters, and tourism operators.',
 		neighborhoods: [
 			'Downtown',
 			'Southside',
@@ -329,17 +329,17 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Tourism Websites',
 				description:
 					'Engaging websites for Corpus Christi beach resorts, fishing charters, and tourism operators.'
 			},
 			{
-				title: 'Energy & Maritime',
+				title: 'Booking & Contact Forms',
 				description:
-					'Custom web applications for Port of Corpus Christi energy and shipping companies.'
+					'Websites with built-in booking and contact forms for Coastal Bend charters and venues.'
 			},
 			{
-				title: 'Local Service Businesses',
+				title: 'Local Business Websites',
 				description:
 					'Professional websites for Coastal Bend contractors, restaurants, and service providers.'
 			}

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: 'Free Website Plan in 30 Minutes | Hudson Digital',
 		description:
-			'A free 30-minute call where we map out the website your business needs — pages, timeline, and price. No sales pitch. Response in 2 hours.'
+			'A free 30-minute call where we map out the website your business needs — pages, timeline, and cost. No sales pitch. Response in 2 hours.'
 	}
 }
 

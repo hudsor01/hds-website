@@ -6,11 +6,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Denver',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Mile High Digital Excellence',
+		tagline: 'Web Design for Denver Small Businesses',
 		description:
-			'Denver is booming with tech talent and outdoor lifestyle brands. We build digital solutions for the Front Range that scale as fast as the city grows.',
+			'Denver is booming with tech talent and outdoor lifestyle brands. We design fast, mobile-ready websites for Front Range small businesses that bring in customers and rank on Google.',
 		metaDescription:
-			'Website development and business automation in Denver, CO. We build your website, connect your tools, and automate the work for Colorado businesses.',
+			'Web design for Denver, CO small businesses. Fast, mobile-ready websites for RiNo shops, Cherry Creek retailers, and outdoor brands that get found on Google.',
 		neighborhoods: [
 			'Downtown Denver',
 			'LoDo',
@@ -28,19 +28,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Outdoor & Lifestyle Brands',
+				title: 'Local Business Websites',
 				description:
-					'E-commerce and brand websites for Denver outdoor recreation and lifestyle companies.'
+					'Fast, mobile-friendly websites for Denver outdoor recreation and lifestyle companies built to turn visitors into customers.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'E-Commerce Websites',
 				description:
-					'Automate manual work — connect your CRM, booking, and tools so your Denver business runs itself.'
+					'Online stores for Denver retailers and brands so locals can browse and buy from any phone or laptop.'
 			},
 			{
-				title: 'Cannabis Industry Tech',
+				title: 'Local SEO Setup',
 				description:
-					'Compliant web solutions for Colorado cannabis dispensaries and ancillary businesses.'
+					'Websites built to be found on Google when Denver customers search for the products and services you offer.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Colorado Springs',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Olympic City Digital Solutions',
+		tagline: 'Web Design for Colorado Springs Small Businesses',
 		description:
-			'Home to the US Olympic Training Center and five military installations, Colorado Springs demands world-class digital solutions. We deliver for the Springs market.',
+			'Home to the US Olympic Training Center and five military installations, Colorado Springs is a busy small-business market. We design clean, modern websites for the Pikes Peak region that win local customers.',
 		metaDescription:
-			'Web development in Colorado Springs, CO. Custom websites, military contractor platforms, and digital solutions for Pikes Peak region businesses.',
+			'Website design for Colorado Springs, CO small businesses. Modern, mobile-ready sites for Old Colorado City shops and Pikes Peak region tourism operators.',
 		neighborhoods: [
 			'Downtown',
 			'Old Colorado City',
@@ -71,19 +71,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Space',
+				title: 'Local Business Websites',
 				description:
-					'Secure web solutions for NORAD, Space Force, Fort Carson, and Colorado Springs defense contractors.'
+					'Professional websites for Fort Carson-area service providers and Colorado Springs small businesses that need to look credible online.'
 			},
 			{
-				title: 'Sports & Olympics',
+				title: 'Booking & Contact Forms',
 				description:
-					'Websites and platforms for US Olympic organizations, athletes, and Colorado Springs sports businesses.'
+					'Websites for Garden of the Gods and Pikes Peak tourism operators with simple booking and contact forms built in.'
 			},
 			{
-				title: 'Tourism & Outdoor',
+				title: 'Mobile-First Design',
 				description:
-					'Booking platforms and websites for Garden of the Gods, Pikes Peak, and Springs tourism operators.'
+					'Websites for Colorado Springs sports and fitness businesses that look sharp on the phones their customers actually use.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Fort Collins',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Choice City Digital Innovation',
+		tagline: 'Web Design for Fort Collins Small Businesses',
 		description:
-			'Fort Collins combines Colorado State University, a world-class craft beer scene, and a thriving tech community. We build digital solutions for the Choice City.',
+			'Fort Collins combines Colorado State University, a world-class craft beer scene, and a thriving small-business community. We design fast, modern websites for the Choice City that bring in local customers.',
 		metaDescription:
-			'Website development and business automation in Fort Collins, CO. We build your website, connect your tools, and automate the work for Northern Colorado businesses.',
+			'Web design for Fort Collins, CO small businesses. Fast, modern websites for Old Town breweries, craft beverage brands, and CSU-area shops that rank on Google.',
 		neighborhoods: [
 			'Downtown',
 			'Old Town',
@@ -114,19 +114,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Craft Beverage Industry',
+				title: 'E-Commerce Websites',
 				description:
-					'E-commerce and brand websites for Fort Collins breweries, distilleries, and craft beverage companies.'
+					'Online stores for Fort Collins breweries, distilleries, and craft beverage brands so customers can order and ship statewide.'
 			},
 			{
-				title: 'Clean Energy Tech',
+				title: 'Website Redesigns',
 				description:
-					'Web platforms for Northern Colorado renewable energy companies, cleantech firms, and sustainability businesses.'
+					'Refreshed, modern websites for Northern Colorado clean energy and sustainability businesses that have outgrown an old site.'
 			},
 			{
-				title: 'University & AgTech',
+				title: 'Local SEO Setup',
 				description:
-					'Web solutions for CSU research programs, agricultural technology, and education companies.'
+					'Websites for CSU-area and agricultural businesses built to show up when Fort Collins customers search on Google.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Boulder',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Innovation at Altitude',
+		tagline: 'Web Design for Boulder Small Businesses',
 		description:
-			'Boulder is a global hub for natural products, aerospace research, and outdoor lifestyle brands. We build websites, tool integrations, and automation for Boulder businesses.',
+			'Boulder is a global hub for natural products, aerospace research, and outdoor lifestyle brands. We design fast, mobile-ready websites for Boulder small businesses that look the part and get found online.',
 		metaDescription:
-			'Website development and business automation in Boulder, CO. We build your website, connect your tools, and automate the work for Boulder businesses.',
+			'Web design for Boulder, CO small businesses. Mobile-ready websites for Pearl Street shops, natural products brands, and outdoor companies that win customers.',
 		neighborhoods: [
 			'Downtown',
 			'Pearl Street',
@@ -157,19 +157,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Natural Products & CPG',
+				title: 'E-Commerce Websites',
 				description:
-					'E-commerce and brand websites for Boulder natural food companies, supplements, and consumer brands.'
+					'Online stores for Boulder natural food, supplement, and consumer brands so shoppers can buy direct from any device.'
 			},
 			{
-				title: 'Space & Aerospace',
+				title: 'Fast, Modern Websites',
 				description:
-					'Web platforms for Ball Aerospace, NIST, and Boulder space technology and research companies.'
+					'Quick-loading, polished websites for Boulder aerospace and research companies that need a credible presence online.'
 			},
 			{
-				title: 'Outdoor & Lifestyle',
+				title: 'Mobile-First Design',
 				description:
-					'Brand websites and D2C platforms for Boulder outdoor gear companies and active lifestyle brands.'
+					'Websites for Boulder outdoor gear and active lifestyle brands designed phone-first for shoppers on the go.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Pueblo',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Steel City Digital Solutions',
+		tagline: 'Web Design for Pueblo Small Businesses',
 		description:
-			'Pueblo combines industrial heritage with a growing cannabis industry and Pueblo Chile tradition. We build digital solutions for southern Colorado businesses.',
+			'Pueblo combines industrial heritage with the famous Pueblo Chile tradition and a growing local business scene. We design clean, mobile-ready websites for southern Colorado small businesses.',
 		metaDescription:
-			'Web development in Pueblo, CO. Custom websites and digital solutions for southern Colorado businesses, steel industry, and agriculture.',
+			'Web design for Pueblo, CO small businesses. Mobile-ready websites for Pueblo Chile growers, Bessemer shops, and steel-town manufacturers that win customers.',
 		neighborhoods: [
 			'Downtown',
 			'Bessemer',
@@ -200,19 +200,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Steel & Manufacturing',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Pueblo steel companies, manufacturers, and southern Colorado industrial businesses.'
+					'Professional websites for Pueblo manufacturers and southern Colorado industrial businesses that need to look established online.'
 			},
 			{
-				title: 'Cannabis Industry',
+				title: 'E-Commerce Websites',
 				description:
-					'Compliant web platforms for Pueblo cannabis cultivators, dispensaries, and ancillary businesses.'
+					'Online stores for Pueblo Chile growers, farms, and food producers so customers can order their products direct.'
 			},
 			{
-				title: 'Agriculture & Chile',
+				title: 'Local SEO Setup',
 				description:
-					'E-commerce and brand websites for Pueblo Chile growers, farms, and agricultural businesses.'
+					'Websites built to rank on Google when Pueblo customers search for the services and products you sell.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		city: 'Aurora',
 		state: 'Colorado',
 		stateCode: 'CO',
-		tagline: 'Gateway City Digital Solutions',
+		tagline: 'Web Design for Aurora Small Businesses',
 		description:
-			"Colorado's third-largest city, Aurora is one of the most diverse cities in the West with a strong healthcare, defense, and aerospace presence.",
+			'As Colorado’s third-largest city, Aurora is one of the most diverse cities in the West, with strong healthcare and small-business activity around the Anschutz Medical Campus. We design modern websites for Aurora businesses.',
 		metaDescription:
-			'Web development in Aurora, CO. Custom websites and digital solutions for Aurora businesses, healthcare providers, and defense contractors.',
+			'Website design for Aurora, CO small businesses. Modern, multilingual-ready websites for Anschutz-area healthcare practices and diverse Gateway City shops.',
 		neighborhoods: [
 			'Original Aurora',
 			'Fitzsimons',
@@ -243,19 +243,19 @@ export const COLORADO_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Healthcare & Biotech',
+				title: 'Local Business Websites',
 				description:
-					'Web solutions for Anschutz Medical Campus, Fitzsimons Innovation Community, and Aurora healthcare companies.'
+					'Professional websites for Anschutz Medical Campus-area healthcare practices and Aurora small businesses.'
 			},
 			{
-				title: 'Defense & Aerospace',
+				title: 'Booking & Contact Forms',
 				description:
-					'Secure web platforms for Buckley Space Force Base contractors and Aurora defense companies.'
+					'Websites for Aurora service providers with easy booking and contact forms so customers can reach you in a click.'
 			},
 			{
-				title: 'Multicultural Business',
+				title: 'Mobile-First Design',
 				description:
-					"Multilingual websites for Aurora's diverse business community, including immigrant-owned businesses and cultural organizations."
+					'Multilingual-ready, mobile-first websites for the diverse Aurora business community, including immigrant-owned shops.'
 			}
 		]
 	}

@@ -1,6 +1,6 @@
 /**
  * Location Page
- * Dynamic SEO pages for Texas service areas with LocalBusiness structured data
+ * Dynamic SEO pages for US service areas with LocalBusiness structured data
  */
 
 import { ArrowRight, CheckCircle, MapPin } from 'lucide-react'
@@ -72,7 +72,7 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `Website Design in ${location.city}, ${location.stateCode} | Hudson Digital Solutions`,
+		title: `Website Design in ${location.city}, ${location.stateCode} | Hudson Digital`,
 		description: location.metaDescription,
 		openGraph: {
 			title: `Website Design in ${location.city}, ${location.stateCode}`,

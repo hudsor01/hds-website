@@ -6,11 +6,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Baton Rouge',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Capital City Digital Solutions',
+		tagline: 'Web Design for Baton Rouge Small Businesses',
 		description:
-			"As Louisiana's capital and home to LSU, Baton Rouge is a center for government, education, and petrochemical industries. We build digital solutions that serve the Red Stick market.",
+			"As Louisiana's capital and home to LSU, Baton Rouge is a center for government, education, and petrochemical industries. We design and build fast, mobile-ready websites that help Red Stick businesses get found and win new customers.",
 		metaDescription:
-			'Web development in Baton Rouge, LA. Custom websites, government portals, and digital solutions for Louisiana capital city businesses.',
+			'Web design for Baton Rouge, LA small businesses. Fast, mobile-ready websites for Red Stick restaurants, retailers, and contractors near LSU and downtown.',
 		neighborhoods: [
 			'Downtown',
 			'Mid City',
@@ -28,19 +28,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Government & Education',
+				title: 'Local Business Websites',
 				description:
-					'Web portals and applications for Baton Rouge government agencies and university programs.'
+					'Clean, modern websites for Baton Rouge restaurants, retailers, and service businesses built to bring in local customers.'
 			},
 			{
-				title: 'Industrial & Energy',
+				title: 'Local SEO Setup',
 				description:
-					'Custom web solutions for petrochemical companies and industrial contractors along the Mississippi corridor.'
+					'We build your site so Baton Rouge customers find you on Google when they search for what you offer along the Mississippi corridor.'
 			},
 			{
-				title: 'Local Business Growth',
+				title: 'Mobile-First Design',
 				description:
-					'Professional websites and digital marketing for Baton Rouge restaurants, retailers, and service businesses.'
+					'Websites that look sharp on phones, the way most Red Stick shoppers and clients browse for local businesses.'
 			}
 		]
 	},
@@ -49,11 +49,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'New Orleans',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Big Easy Digital Innovation',
+		tagline: 'Web Design for New Orleans Small Businesses',
 		description:
-			'New Orleans blends world-famous culture with a growing tech scene. We build digital solutions for NOLA businesses from the French Quarter to the Warehouse District.',
+			'New Orleans blends world-famous culture with a thriving small-business scene. We design and build websites for NOLA shops, restaurants, and makers from the French Quarter to the Warehouse District.',
 		metaDescription:
-			'Web development in New Orleans, LA. Custom websites, tourism platforms, and digital solutions for Big Easy businesses and hospitality companies.',
+			'Web design for New Orleans, LA small businesses. We build fast websites for French Quarter restaurants, Warehouse District shops, and NOLA hospitality.',
 		neighborhoods: [
 			'French Quarter',
 			'Warehouse District',
@@ -71,19 +71,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Tourism & Hospitality',
+				title: 'Restaurant Websites',
 				description:
-					'Booking platforms, restaurant websites, and tourism guides for New Orleans hospitality businesses.'
+					'Menu-forward websites for New Orleans restaurants and bars, with simple contact forms so guests can reach you fast.'
 			},
 			{
-				title: 'Music & Culture',
+				title: 'E-Commerce Websites',
 				description:
-					'Artist portfolios, event platforms, and cultural organization websites for the NOLA creative community.'
+					'Online stores for NOLA artists, makers, and shops that want to sell beyond the French Quarter foot traffic.'
 			},
 			{
-				title: 'Port & Maritime',
+				title: 'Fast, Modern Websites',
 				description:
-					'Custom web applications for Port of New Orleans shipping companies and maritime logistics providers.'
+					'Quick-loading websites for tourism and hospitality businesses so visitors find and book you before the competition.'
 			}
 		]
 	},
@@ -92,11 +92,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Shreveport',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Ark-La-Tex Digital Solutions',
+		tagline: 'Web Design for Shreveport Small Businesses',
 		description:
-			'Serving the tri-state Ark-La-Tex region, we help Shreveport businesses compete online with modern web development and digital strategy.',
+			'Serving the tri-state Ark-La-Tex region, we design and build modern websites that help Shreveport businesses look professional online and compete with bigger names.',
 		metaDescription:
-			'Web development in Shreveport, LA. Custom websites and digital solutions for Ark-La-Tex businesses in northwest Louisiana.',
+			'Web design for Shreveport, LA small businesses. Modern, mobile-ready websites for Ark-La-Tex contractors, clinics, and shops in northwest Louisiana.',
 		neighborhoods: [
 			'Downtown',
 			'South Highlands',
@@ -114,19 +114,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Healthcare Solutions',
+				title: 'Healthcare Websites',
 				description:
-					'Web platforms for Shreveport medical centers, clinics, and healthcare providers.'
+					'Trustworthy, easy-to-navigate websites for Shreveport clinics, medical practices, and healthcare providers.'
 			},
 			{
-				title: 'Gaming & Entertainment',
+				title: 'Website Redesigns',
 				description:
-					'Websites and booking platforms for Shreveport-Bossier casinos and entertainment venues.'
+					'We refresh dated Shreveport-Bossier business sites into fast, modern websites that earn customer trust.'
 			},
 			{
-				title: 'Small Business Web Design',
+				title: 'Local SEO Setup',
 				description:
-					'Professional websites for Shreveport small businesses, contractors, and local service providers.'
+					'Websites built so Ark-La-Tex customers find Shreveport contractors and service providers on Google.'
 			}
 		]
 	},
@@ -135,11 +135,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Lafayette',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Hub City Digital Growth',
+		tagline: 'Web Design for Lafayette Small Businesses',
 		description:
-			'The heart of Cajun Country and a growing tech hub, Lafayette combines rich culture with innovative business. We build digital solutions for Acadiana.',
+			'The heart of Cajun Country and a growing business hub, Lafayette pairs rich culture with ambitious local companies. We design and build websites for businesses across Acadiana.',
 		metaDescription:
-			'Website development and business automation in Lafayette, LA. We build your website, connect your tools, and automate the work for Acadiana businesses.',
+			'Web design for Lafayette, LA small businesses. Fast websites for Acadiana restaurants, festivals, and oilfield service companies in Cajun Country.',
 		neighborhoods: [
 			'Downtown',
 			'River Ranch',
@@ -157,19 +157,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Oil & Gas Tech',
+				title: 'Energy Sector Websites',
 				description:
-					'Custom web applications for Lafayette energy companies, field service providers, and oilfield contractors.'
+					'Professional websites for Lafayette field service providers and oilfield contractors that win new project work.'
 			},
 			{
-				title: 'Business Automation',
+				title: 'Booking & Contact Forms',
 				description:
-					'Automate manual work — connect your CRM, booking, and tools so your Lafayette business runs itself.'
+					'Websites with simple booking and contact forms so Acadiana customers can reach your Lafayette business in a tap.'
 			},
 			{
-				title: 'Cultural & Tourism',
+				title: 'Tourism Websites',
 				description:
-					'Websites for Cajun Country restaurants, festivals, and tourism businesses throughout Acadiana.'
+					'Websites for Cajun Country restaurants, festivals, and tourism businesses that draw visitors throughout Acadiana.'
 			}
 		]
 	},
@@ -178,11 +178,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Lake Charles',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Southwest Louisiana Digital Solutions',
+		tagline: 'Web Design for Lake Charles Small Businesses',
 		description:
-			'Lake Charles is a center for energy, gaming, and outdoor recreation in southwest Louisiana. We build digital solutions for businesses across the Calcasieu region.',
+			'Lake Charles is a center for energy, gaming, and outdoor recreation in southwest Louisiana. We design and build websites for small businesses across the Calcasieu region.',
 		metaDescription:
-			'Web development in Lake Charles, LA. Custom websites and digital solutions for southwest Louisiana energy, gaming, and hospitality businesses.',
+			'Web design for Lake Charles, LA small businesses. Mobile-ready websites for Calcasieu region contractors, restaurants, and outdoor recreation outfitters.',
 		neighborhoods: [
 			'Downtown',
 			'Prien Lake',
@@ -200,19 +200,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Energy Sector',
+				title: 'Energy Sector Websites',
 				description:
-					'Web solutions for Lake Charles LNG terminals, refineries, and petrochemical companies.'
+					'Polished websites for Lake Charles industrial contractors and service companies that support the LNG and refinery sector.'
 			},
 			{
-				title: 'Gaming & Hospitality',
+				title: 'Fast, Modern Websites',
 				description:
-					'Websites and booking systems for Lake Charles casinos, resorts, and entertainment venues.'
+					'Quick-loading websites for Calcasieu restaurants and entertainment venues so guests find you before the weekend rush.'
 			},
 			{
-				title: 'Local Business Presence',
+				title: 'Local Business Websites',
 				description:
-					'Professional websites for Lake Charles contractors, restaurants, and service businesses.'
+					'Professional websites for Lake Charles contractors, shops, and service businesses across southwest Louisiana.'
 			}
 		]
 	},
@@ -221,11 +221,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Monroe',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Northeast Louisiana Digital Growth',
+		tagline: 'Web Design for Monroe Small Businesses',
 		description:
-			'Monroe and the twin cities region anchor northeast Louisiana with healthcare, education, and agriculture. We deliver digital solutions for the Ouachita Valley.',
+			'Monroe and the twin cities region anchor northeast Louisiana with healthcare, education, and agriculture. We design and build websites for small businesses across the Ouachita Valley.',
 		metaDescription:
-			'Web development in Monroe, LA. Custom websites and digital solutions for northeast Louisiana businesses and healthcare providers.',
+			'Web design for Monroe, LA small businesses. Mobile-ready websites for Ouachita Valley clinics, farms, and twin cities shops in northeast Louisiana.',
 		neighborhoods: [
 			'Downtown',
 			'South Monroe',
@@ -243,19 +243,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Healthcare Platforms',
+				title: 'Healthcare Websites',
 				description:
-					'Web solutions for Monroe medical centers, clinics, and healthcare networks serving northeast Louisiana.'
+					'Clear, reassuring websites for Monroe clinics and medical practices serving patients across northeast Louisiana.'
 			},
 			{
-				title: 'Agriculture & Agribusiness',
+				title: 'Agriculture Websites',
 				description:
-					'Digital platforms for northeast Louisiana farms, agricultural suppliers, and agribusiness companies.'
+					'Websites for Ouachita Valley farms and agricultural suppliers that showcase products and bring in new buyers.'
 			},
 			{
-				title: 'Small Business Websites',
+				title: 'Local Business Websites',
 				description:
-					'Affordable, professional websites for Monroe small businesses and local service providers.'
+					'Affordable, professional websites for Monroe small businesses and twin cities service providers.'
 			}
 		]
 	},
@@ -264,11 +264,11 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		city: 'Alexandria',
 		state: 'Louisiana',
 		stateCode: 'LA',
-		tagline: 'Heart of Louisiana Digital Solutions',
+		tagline: 'Web Design for Alexandria Small Businesses',
 		description:
-			'Located at the crossroads of Louisiana, Alexandria serves as the central hub for military, healthcare, and forestry industries. We build digital solutions for the Cenla region.',
+			'Located at the crossroads of Louisiana, Alexandria is the central hub for the military, healthcare, and forestry industries. We design and build websites for small businesses across the Cenla region.',
 		metaDescription:
-			'Web development in Alexandria, LA. Custom websites and digital solutions for central Louisiana businesses, military contractors, and healthcare providers.',
+			'Web design for Alexandria, LA small businesses. Fast websites for Cenla healthcare providers, Fort Johnson-area contractors, and forestry companies.',
 		neighborhoods: [
 			'Downtown',
 			'Garden District',
@@ -286,19 +286,19 @@ export const LOUISIANA_LOCATIONS: LocationData[] = [
 		},
 		features: [
 			{
-				title: 'Military & Defense',
+				title: 'Contractor Websites',
 				description:
-					'Web solutions for Fort Johnson contractors and military service providers in central Louisiana.'
+					'Credible, fast websites for Fort Johnson-area service providers and contractors across central Louisiana.'
 			},
 			{
-				title: 'Healthcare Systems',
+				title: 'Healthcare Websites',
 				description:
-					'Custom web applications for Alexandria hospitals, clinics, and regional healthcare networks.'
+					'Easy-to-navigate websites for Alexandria clinics and medical practices serving the Cenla region.'
 			},
 			{
-				title: 'Forestry & Agriculture',
+				title: 'Mobile-First Design',
 				description:
-					'Digital platforms for central Louisiana timber companies, farms, and agricultural businesses.'
+					'Websites that work flawlessly on phones for central Louisiana timber, farm, and forestry businesses.'
 			}
 		]
 	}
