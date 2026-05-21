@@ -45,7 +45,7 @@ const faqSchema = {
 	mainEntity: [
 		{
 			'@type': 'Question',
-			name: 'What web development services do you offer?',
+			name: 'What website design services do you offer?',
 			acceptedAnswer: {
 				'@type': 'Answer',
 				text: 'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
@@ -64,7 +64,7 @@ const faqSchema = {
 			name: 'What is your typical project timeline?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Larger sites with custom features and booking or payment setup typically take 3-6 months. We can expedite urgent projects with dedicated resources.'
+				text: 'Timelines depend on project scope. Simple websites take 4–6 weeks. E-commerce and booking-enabled sites take 8–12 weeks. Larger sites with custom features and booking or payment setup typically take 3–6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		},
 		{

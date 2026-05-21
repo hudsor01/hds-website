@@ -17,7 +17,7 @@ const faqs = [
 		category: 'Services',
 		questions: [
 			{
-				question: 'What web development services do you offer?',
+				question: 'What website design services do you offer?',
 				answer:
 					'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
 			},
@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Timelines depend on project scope. Simple websites take 4-6 weeks. E-commerce and booking-enabled sites take 8-12 weeks. Larger sites with custom features and booking or payment setup typically take 3-6 months. We can expedite urgent projects with dedicated resources.'
+					'Timelines depend on project scope. Simple websites take 4–6 weeks. E-commerce and booking-enabled sites take 8–12 weeks. Larger sites with custom features and booking or payment setup typically take 3–6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		]
 	},
@@ -235,12 +235,12 @@ export default function FaqClient() {
 								Still Have Questions?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Schedule a free consultation call and we&apos;ll answer all your
-								questions about your project.
+								Get a free website plan — we&apos;ll map out what your site
+								needs and answer every question along the way.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
-									Schedule Free Consultation
+									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</Button>

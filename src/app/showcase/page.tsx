@@ -13,11 +13,11 @@ import { getShowcaseItems } from '@/lib/showcase'
 export const metadata: Metadata = {
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
-		'Real websites delivering measurable results for small businesses. See how we help local businesses get online and grow.',
+		'Real websites delivering measurable results for small businesses — see how we help local businesses get found online, win customers, and grow.',
 	openGraph: {
 		title: 'Showcase | Hudson Digital Solutions',
 		description:
-			'Real websites delivering measurable results for small businesses. See how we help local businesses get online and grow.',
+			'Real websites delivering measurable results for small businesses — see how we help local businesses get found online, win customers, and grow.',
 		type: 'website'
 	}
 }
@@ -34,8 +34,8 @@ async function ShowcaseProjects() {
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
 							{ value: `${items.length}+`, label: 'Projects Delivered' },
-							{ value: 'Avg 90 days', label: 'Time to ROI' },
-							{ value: 'Proven', label: 'ROI Results' },
+							{ value: '1–4 wks', label: 'First Delivery' },
+							{ value: 'Proven', label: 'Track Record' },
 							{ value: '2 hr', label: 'Response Time' }
 						].map((stat, index) => (
 							<div

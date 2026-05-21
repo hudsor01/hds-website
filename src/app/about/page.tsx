@@ -151,7 +151,9 @@ export default function AboutPage() {
 								</p>
 								<p>
 									With{' '}
-									<strong className="text-accent">proven revenue impact</strong>{' '}
+									<strong className="text-accent">
+										hands-on revenue experience
+									</strong>{' '}
 									across growing businesses, we discovered something agencies
 									miss:{' '}
 									<strong className="text-info">

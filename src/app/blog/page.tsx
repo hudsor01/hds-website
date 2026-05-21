@@ -151,7 +151,7 @@ export default function BlogPage() {
 						Practical Insights
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
-						Business Strategy Blog
+						Website Tips for Small Businesses
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
 						Practical insights on websites, getting found on Google, and growing
@@ -180,16 +180,17 @@ export default function BlogPage() {
 						<aside className="w-full lg:w-80 space-y-6">
 							<div className="rounded-xl border border-border bg-surface-raised p-8 hover:border-border-strong transition-colors">
 								<h3 className="text-h3 text-foreground mb-3 text-balance">
-									Stay Updated
+									Curious what a site would cost?
 								</h3>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Get strategic insights delivered to your inbox.
+									Get a free website plan for your business — pages, timeline,
+									and a clear price.
 								</p>
 								<Button asChild variant="accent" className="w-full">
 									<Link href="/contact">Get My Free Website Plan</Link>
 								</Button>
 								<p className="text-xs text-muted-foreground mt-3">
-									Strategic insights, no spam.
+									30-minute call. No commitment.
 								</p>
 							</div>
 

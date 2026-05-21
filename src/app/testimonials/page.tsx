@@ -80,10 +80,15 @@ const testimonials = [
 
 const StarRating = ({ rating }: { rating: number }) => {
 	return (
-		<div className="flex gap-1">
+		<div
+			className="flex gap-1"
+			role="img"
+			aria-label={`Rated ${rating} out of 5 stars`}
+		>
 			{[...Array(5)].map((_, i) => (
 				<Star
 					key={i}
+					aria-hidden="true"
 					className={`w-5 h-5 ${i < rating ? 'text-accent fill-accent' : 'text-muted-foreground'}`}
 				/>
 			))}
@@ -125,9 +130,11 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								Avg 90 days
+								1–4 wks
 							</div>
-							<div className="text-xs text-muted-foreground">Time to ROI</div>
+							<div className="text-xs text-muted-foreground">
+								First Delivery
+							</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
@@ -141,9 +148,9 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								3.5x
+								Proven
 							</div>
-							<div className="text-xs text-muted-foreground">Average ROI</div>
+							<div className="text-xs text-muted-foreground">Track Record</div>
 						</div>
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
@@ -192,7 +199,10 @@ export default function TestimonialsPage() {
 
 								{/* Quote */}
 								<div className="mb-6">
-									<MessageCircle className="w-8 h-8 text-accent/30 mb-3" />
+									<MessageCircle
+										className="w-8 h-8 text-accent/30 mb-3"
+										aria-hidden="true"
+									/>
 									<p className="text-sm text-muted-foreground leading-relaxed">
 										&ldquo;{testimonial.content}&rdquo;
 									</p>

@@ -107,7 +107,7 @@ export default function Footer() {
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<CheckCircle className="h-4 w-4 text-accent" />
-									<span className="text-xs">Proven ROI Results</span>
+									<span className="text-xs">Launched in Weeks</span>
 								</div>
 								<div className="flex items-center gap-tight text-muted-foreground">
 									<Clock className="h-4 w-4 text-accent" />

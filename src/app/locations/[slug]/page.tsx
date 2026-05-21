@@ -72,10 +72,10 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `Web Development in ${location.city}, ${location.stateCode} | Hudson Digital Solutions`,
+		title: `Website Design in ${location.city}, ${location.stateCode} | Hudson Digital Solutions`,
 		description: location.metaDescription,
 		openGraph: {
-			title: `Web Development in ${location.city}, ${location.stateCode}`,
+			title: `Website Design in ${location.city}, ${location.stateCode}`,
 			description: location.metaDescription
 		},
 		alternates: {
@@ -282,8 +282,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
 								Ready to Grow Your {location.city} Business?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Schedule a free consultation to discuss how we can help your
-								business thrive online.
+								Tell us about your business. We&apos;ll map out the website it
+								needs — pages, timeline, and cost.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
