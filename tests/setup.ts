@@ -35,6 +35,14 @@ function setupEnvMock() {
 // Apply env mock immediately on setup
 setupEnvMock()
 
+// Force-load admin.ts at preload time so its ESM live binding to `env`
+// captures TEST_ENV before any test file can re-register `@/env` with a
+// fresh env object. Bun's mock.module() does not re-evaluate already-loaded
+// consumers (oven-sh/bun#7823), so without this preload, admin.ts would
+// bind to whichever test file happened to mock @/env first when a route
+// transitively imported it — leading to flaky admin-auth tests in CI.
+require('@/lib/auth/admin')
+
 // `server-only` throws on any import — that's its whole purpose, to fail
 // fast if a server module is reached from a client bundle. In tests we
 // run server modules under bun:test (a Node-like context) so the package
