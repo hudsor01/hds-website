@@ -29,7 +29,20 @@ describe('validateAdminAuth', () => {
 	})
 
 	it('returns null when the correct Bearer token is provided', async () => {
-		const { validateAdminAuth } = await import('@/lib/auth/admin')
+		const adminMod = await import('@/lib/auth/admin')
+		const envMod = await import('@/env')
+		// DIAGNOSTIC: print actual state visible to admin.ts in CI
+		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
+		console.log('[DIAG] testEnv.ADMIN_SECRET =', testEnv.ADMIN_SECRET)
+		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
+		console.log('[DIAG] envMod.env.ADMIN_SECRET =', envMod.env.ADMIN_SECRET)
+		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
+		console.log(
+			'[DIAG] envMod.env === testEnv? ',
+			(envMod.env as unknown) === testEnv
+		)
+		// biome-ignore lint/suspicious/noConsole: temporary diagnostic
+		console.log('[DIAG] adminMod keys =', Object.keys(adminMod).join(','))
 
 		const request = new NextRequest('http://localhost:3000/api/admin/test', {
 			method: 'GET',
@@ -38,7 +51,7 @@ describe('validateAdminAuth', () => {
 			}
 		})
 
-		const result = validateAdminAuth(request)
+		const result = adminMod.validateAdminAuth(request)
 		expect(result).toBeNull()
 	})
 
