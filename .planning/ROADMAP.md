@@ -3,6 +3,7 @@
 ## Milestone v3.0 — Showcase & conversion polish
 
 > Started 2026-05-21. Site copy was repositioned in v2.x (PR #206). v3.0 focuses on visual storytelling and conversion surfaces.
+> Phase 01 shipped as PR #208 (squashed to `59e5e70` on `main`, 2026-05-22).
 
 ### Phases
 
