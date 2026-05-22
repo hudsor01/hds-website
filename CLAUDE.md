@@ -168,7 +168,7 @@
 - pg_cron runs weekly VACUUM ANALYZE; see `.planning/` for details
 
 **Auth:**
-- No user-auth system in this app
+- User auth: Better Auth, session cookies, see src/lib/auth/. Admin promotion is currently SQL-only - first signup gets it; later admins via UPDATE users SET role='admin' WHERE email='...'.
 - Admin/cron endpoints guarded by Bearer token (`src/lib/auth/admin.ts`) using `ADMIN_SECRET` / `CRON_SECRET`
 
 **Resend (Email):**
@@ -178,7 +178,7 @@
 
 **Env vars:**
 - All env access goes through `src/env.ts` (T3 env). Never read `process.env.X` directly.
-- Schema-required when `VERCEL_ENV === 'production'` (enforced by a `.optional().refine(...)` pair; unset elsewhere): `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`
+- Schema-required when `VERCEL_ENV === 'production'` (enforced by a `.optional().refine(...)` pair; unset elsewhere): `POSTGRES_URL`, `CSRF_SECRET`, `ADMIN_SECRET`, `CRON_SECRET`, `BETTER_AUTH_SECRET`
 - Always defined (have defaults): `BASE_URL` (default `http://localhost:3000`), `NEXT_PUBLIC_BASE_URL` (default `http://localhost:3000`), `NODE_ENV` (default `development`)
 - Truly optional / feature-gated: `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `STIRLING_PDF_URL`, `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `GOOGLE_SITE_VERIFICATION`, `DATABASE_URL_UNPOOLED`, `NEXT_PUBLIC_SITE_URL`
 
