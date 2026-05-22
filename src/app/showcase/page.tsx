@@ -101,7 +101,12 @@ async function ShowcaseProjects() {
 						</div>
 					)}
 
-					{/* Support grid: 1 col mobile, 2 col tablet, 3 col desktop */}
+					{/* Support grid: 1 col mobile, 2 col tablet, 3 col desktop.
+					    featured={false} is forced on every support card — the DB row's
+					    `featured` flag only determines which item bubbles up to the
+					    full-width slot above. Passing `featured: true` through here
+					    would trip card.tsx's `md:col-span-2` + `priority` + the
+					    "Featured" overlay badge on a below-fold support card. */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{supportItems.map(item => (
 							<Card
@@ -114,7 +119,7 @@ async function ShowcaseProjects() {
 								category={item.category ?? item.industry ?? 'Project'}
 								industry={item.industry ?? undefined}
 								showcaseType={item.showcaseType}
-								featured={item.featured}
+								featured={false}
 								stats={item.metrics}
 								tech_stack={item.technologies}
 								externalLink={item.externalLink}
@@ -134,17 +139,17 @@ async function ShowcaseProjects() {
 							aria-hidden="true"
 						/>
 						<div className="relative z-10">
-							<h3 className="text-h3 text-foreground mb-4 text-balance">
+							<h2 className="text-h3 text-foreground mb-4 text-balance">
 								Want your business on this page?
-							</h3>
+							</h2>
 							<p className="text-lead text-muted-foreground mb-8 max-w-xl mx-auto">
-								Free 30 minute call. We map out pages, timeline, and a clear
+								Free 30-minute call. We map out pages, timeline, and a clear
 								price for your website. No sales pitch.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
 									Get My Free Website Plan
-									<Rocket className="w-5 h-5" />
+									<Rocket className="w-5 h-5" aria-hidden="true" />
 								</Link>
 							</Button>
 							<p className="text-xs text-muted-foreground mt-6">
@@ -175,7 +180,7 @@ export default function ShowcasePage() {
 					/>
 
 					<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
+						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Showcase
 						</p>
 						<h1 className="text-page-title text-foreground leading-tight">
@@ -190,7 +195,7 @@ export default function ShowcasePage() {
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">
 									Get My Free Website Plan
-									<Rocket className="w-5 h-5" />
+									<Rocket className="w-5 h-5" aria-hidden="true" />
 								</Link>
 							</Button>
 
@@ -202,7 +207,7 @@ export default function ShowcasePage() {
 							>
 								<Link href="/services">
 									View Services
-									<ExternalLink className="w-5 h-5" />
+									<ExternalLink className="w-5 h-5" aria-hidden="true" />
 								</Link>
 							</Button>
 						</div>
@@ -232,10 +237,14 @@ export default function ShowcasePage() {
 								aria-hidden="true"
 							/>
 							<div className="relative z-10">
-								<h2 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								{/* Demoted to h3 so heading order across showcase is
+								    h1 (hero) > h2 (section header) > h2 (inline CTA) > h3
+								    (closing CTA). The inline CTA precedes this one in DOM
+								    order. */}
+								<h3 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
 									Ready to create your{' '}
 									<span className="text-accent">success story?</span>
-								</h2>
+								</h3>
 
 								<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 									Join these businesses with a website that does justice to what
@@ -251,7 +260,7 @@ export default function ShowcasePage() {
 									>
 										<Link href="/contact">
 											Get My Free Website Plan
-											<Rocket className="w-5 h-5" />
+											<Rocket className="w-5 h-5" aria-hidden="true" />
 										</Link>
 									</Button>
 
@@ -263,7 +272,7 @@ export default function ShowcasePage() {
 									>
 										<Link href="/services">
 											View Services
-											<ExternalLink className="w-5 h-5" />
+											<ExternalLink className="w-5 h-5" aria-hidden="true" />
 										</Link>
 									</Button>
 								</div>

@@ -331,7 +331,7 @@ function Card(props: CardProps) {
 							sizes={
 								featured
 									? '(min-width: 1024px) 60vw, 100vw'
-									: '(min-width: 1024px) 33vw, 100vw'
+									: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
 							}
 							priority={featured}
 						/>
