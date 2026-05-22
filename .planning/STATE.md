@@ -3,21 +3,23 @@
 **Last updated:** 2026-05-21
 **Branch:** `showcase-ui-enhance`
 **Current milestone:** v3.0 (Showcase & conversion polish)
-**Current phase:** `01-showcase-ui-redesign` (planning)
-**Current plan:** none yet
+**Current phase:** `01-showcase-ui-redesign`
+**Current plan:** 01-04 (verification — pending)
 
 ## What just happened
 
-- Bootstrapped `.planning/` scaffold for GSD v1 (PROJECT.md, ROADMAP.md, STATE.md, phases/)
-- v3.0 milestone opened with Phase 01: showcase UI redesign
-- Approved design spec at `docs/superpowers/specs/2026-05-21-showcase-ui-redesign-design.md` (gitignored)
-- 4 real homepage screenshots captured to `public/images/showcase/` via Playwright
+- Plan 01-01 shipped: 4 image-backed rows in Neon `showcase` table (commit 22e84ed).
+- Plan 01-02 shipped: `Card variant="project"` accepts optional `imageUrl` / `imageAlt` (commit ac0dab7).
+- Plan 01-03 shipped: `/showcase` rewritten with featured-first layout, image-led cards, inline mid-scroll CTA. All em/en-dash characters removed. 4 homepage screenshots added under `public/images/showcase/` (commit 1df250f).
+- Phase 01 is 3 of 4 plans complete. Only verification (01-04) remains.
 
 ## Active decisions
 
-- No `.planning/` content gets committed until plans actually exist (start clean)
-- Spec docs live in `docs/superpowers/specs/` (gitignored) for now; can promote to `.planning/` if needed
-- Em/en-dash ban codified in CLAUDE.md as a global copy rule
+- Featured selection uses `items.find(i => i.featured)` so the first featured item by `displayOrder` renders full-width (currently JirahShop).
+- Inline CTA placed inside `ShowcaseProjects` (inside Suspense) so it streams with the project grid; existing closing CTA outside Suspense stays static.
+- Trust signal separators use U+00B7 MIDDLE DOT, never em-dash.
+- All accent body copy on light backgrounds uses `text-accent-text` (WCAG-safe) per globals.css.
+- Em/en-dash ban codified in CLAUDE.md as a global copy rule; enforced per-file on touch (no global sweep).
 
 ## Deferred / known issues
 
@@ -26,4 +28,4 @@
 
 ## Next action
 
-Run `gsd-plan-phase` against `01-showcase-ui-redesign` to convert the spec into a wave-based PLAN.md.
+Run `gsd-execute-plan` against `01-04-PLAN.md` for the verification pass (lint, typecheck, build, em/en-dash grep, human visual smoke on local dev).
