@@ -2,6 +2,7 @@
 
 import { cva } from 'class-variance-authority'
 import { ExternalLink, MessageCircle, Star, X } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType, HTMLAttributes, Ref, SVGProps } from 'react'
 import { Icon } from '@/components/utilities/Icon'
@@ -85,6 +86,8 @@ interface ProjectCardProps extends Omit<BaseCardProps, 'variant'> {
 	stats?: Record<string, string>
 	tech_stack: string[]
 	externalLink?: string | null
+	imageUrl?: string | null
+	imageAlt?: string
 }
 
 // Testimonial Card props
@@ -283,7 +286,7 @@ function Card(props: CardProps) {
 		)
 	}
 
-	// Project Card — content-first layout with accent bar
+	// Project Card, content-first layout with optional image header
 	if ('variant' in props && props.variant === 'project') {
 		const {
 			id: _id,
@@ -295,11 +298,15 @@ function Card(props: CardProps) {
 			featured = false,
 			stats = {},
 			tech_stack,
-			externalLink
+			externalLink,
+			imageUrl,
+			imageAlt
 		} = props as ProjectCardProps
 
 		const metricEntries = Object.entries(stats).slice(0, 3)
 		const isExternal = Boolean(externalLink)
+		const hasImage = Boolean(imageUrl)
+		const resolvedAlt = imageAlt ?? `${title} homepage`
 
 		const cardContent = (
 			<div
@@ -308,34 +315,74 @@ function Card(props: CardProps) {
 					'h-full overflow-hidden'
 				)}
 			>
-				{/* Top accent bar */}
-				<div className="h-1 bg-accent" />
+				{/* Header: image when imageUrl is provided, accent bar otherwise */}
+				{hasImage ? (
+					<div
+						className={cn(
+							'relative w-full overflow-hidden bg-muted',
+							featured ? 'aspect-[4/3]' : 'aspect-video'
+						)}
+					>
+						<Image
+							src={imageUrl as string}
+							alt={resolvedAlt}
+							fill
+							className="object-cover object-top"
+							sizes={
+								featured
+									? '(min-width: 1024px) 60vw, 100vw'
+									: '(min-width: 1024px) 33vw, 100vw'
+							}
+							priority={featured}
+						/>
+						{/* Overlay pills: eyebrow + showcase type + featured */}
+						<div className="absolute top-3 left-3 right-3 flex items-center gap-2 flex-wrap">
+							<span className="px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest text-accent-text bg-card/90 border border-border">
+								{category}
+							</span>
+							{showcaseType && (
+								<span className="px-2 py-0.5 rounded-full text-xs font-semibold text-accent-text bg-card/90 border border-border">
+									{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+								</span>
+							)}
+							{featured && (
+								<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
+									Featured
+								</span>
+							)}
+						</div>
+					</div>
+				) : (
+					<div className="h-1 bg-accent" />
+				)}
 
 				{/* Content */}
 				<div className="card-padding-lg flex flex-col gap-4">
-					{/* Category row: badges + featured tag */}
-					<div className="flex items-center gap-2 flex-wrap">
-						<span className="text-xs font-semibold uppercase tracking-widest text-accent">
-							{category}
-						</span>
-						{showcaseType && (
-							<span
-								className={cn(
-									'px-2 py-0.5 rounded-full text-xs font-semibold border',
-									showcaseType === 'detailed'
-										? 'bg-accent/10 text-accent border-accent/20'
-										: 'bg-muted text-muted-foreground border-border'
-								)}
-							>
-								{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+					{/* Category row: badges + featured tag (suppressed when image overlay carries them) */}
+					{!hasImage && (
+						<div className="flex items-center gap-2 flex-wrap">
+							<span className="text-xs font-semibold uppercase tracking-widest text-accent">
+								{category}
 							</span>
-						)}
-						{featured && (
-							<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
-								Featured
-							</span>
-						)}
-					</div>
+							{showcaseType && (
+								<span
+									className={cn(
+										'px-2 py-0.5 rounded-full text-xs font-semibold border',
+										showcaseType === 'detailed'
+											? 'bg-accent/10 text-accent border-accent/20'
+											: 'bg-muted text-muted-foreground border-border'
+									)}
+								>
+									{showcaseType === 'detailed' ? 'Case Study' : 'Portfolio'}
+								</span>
+							)}
+							{featured && (
+								<span className="ml-auto px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
+									Featured
+								</span>
+							)}
+						</div>
+					)}
 
 					{/* Title */}
 					<h3 className="text-xl lg:text-2xl font-black text-foreground leading-tight group-hover:text-accent transition-colors">
