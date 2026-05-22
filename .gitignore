@@ -157,3 +157,4 @@ vendor/
 coverage/
 .cache/
 report/
+.superpowers/

@@ -1,6 +1,7 @@
 # CLAUDE.md
 
 **NO EMOJIS** - Never use emojis unless explicitly requested. Use Heroicons/Lucide React for UI icons.
+**NO EM/EN DASHES IN USER-FACING TEXT** - Never use em-dash (—, U+2014) or en-dash (–, U+2013) in any string that ships to the browser: JSX text nodes, JSX attribute values that render (alt, title, aria-label, placeholder), `metadata` exports, JSON-LD / structured-data text, error messages shown to users, email templates, and structured DB content (showcase descriptions, etc.). Replace with: comma, period, hyphen (-), "to" (ranges), or rephrase. **Code comments and developer-only strings (test fixture names, log messages) are exempt** — they never reach a user. Applies project-wide.
 **SEARCH FIRST** - This project uses standard patterns. Find an existing example in the codebase before adding new code.
 
 ## CORE PRINCIPLES
