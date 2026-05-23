@@ -7,13 +7,28 @@
  * (input, textarea, select, multi-select) without duplicating accessibility
  * boilerplate.
  *
- * Aria pattern mirrors `GenericField` in `src/hooks/form-hook.tsx`. The
- * child input is responsible for setting:
- *  - `id={htmlFor}`
- *  - `aria-describedby={errorId ?? hintId}`
- *  - `aria-invalid={error ? 'true' : undefined}`
+ * Aria pattern mirrors `GenericField` in `src/hooks/form-hook.tsx`.
+ *
+ * Two child shapes are supported:
+ *
+ *  1. ReactNode -- the caller wires `id`, `aria-describedby`, and
+ *     `aria-invalid` on the child input manually (used by the blog forms,
+ *     where the inputs were authored before the render-prop API existed).
+ *
+ *  2. Render prop `(aria) => ReactNode` -- the FormFieldSet computes the
+ *     aria attributes and hands them to the child via the callback. The
+ *     child spreads `{...aria}` on the underlying `<input>` / `<textarea>` /
+ *     `<select>` and gets `id`, `aria-describedby` (pointing at the error
+ *     OR hint id, whichever exists), and `aria-invalid="true"` when there
+ *     is an error. Used by every useAppForm-based admin form.
  */
 import type { ReactNode } from 'react'
+
+export type FieldRenderProps = {
+	id: string
+	'aria-describedby'?: string
+	'aria-invalid'?: 'true'
+}
 
 interface FormFieldSetProps {
 	label: string
@@ -21,7 +36,7 @@ interface FormFieldSetProps {
 	required?: boolean
 	error?: string
 	hint?: string
-	children: ReactNode
+	children: ReactNode | ((aria: FieldRenderProps) => ReactNode)
 }
 
 export function FormFieldSet({
@@ -34,6 +49,11 @@ export function FormFieldSet({
 }: FormFieldSetProps) {
 	const errorId = error ? `${htmlFor}-error` : undefined
 	const hintId = hint ? `${htmlFor}-hint` : undefined
+	const aria: FieldRenderProps = {
+		id: htmlFor,
+		'aria-describedby': errorId ?? hintId,
+		'aria-invalid': error ? 'true' : undefined
+	}
 	return (
 		<div className="space-y-1.5">
 			<label
@@ -50,7 +70,7 @@ export function FormFieldSet({
 					</>
 				)}
 			</label>
-			{children}
+			{typeof children === 'function' ? children(aria) : children}
 			{hint && (
 				<p id={hintId} className="text-xs text-muted-foreground">
 					{hint}

@@ -171,14 +171,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							required
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="title"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-								required
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+									required
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -192,14 +194,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							hint="Lowercase letters, numbers, hyphens."
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="slug"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-								required
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+									required
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -212,15 +216,17 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							required
 							error={field.state.meta.errors[0]}
 						>
-							<textarea
-								id="description"
-								rows={3}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-								required
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={3}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+									required
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -228,17 +234,19 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="showcaseType">
 					{field => (
 						<FormFieldSet label="Type" htmlFor="showcaseType" required>
-							<select
-								id="showcaseType"
-								className={INPUT_CLS}
-								value={field.state.value ?? 'quick'}
-								onChange={e =>
-									field.handleChange(e.target.value as 'quick' | 'detailed')
-								}
-							>
-								<option value="quick">Quick (portfolio)</option>
-								<option value="detailed">Detailed (case study)</option>
-							</select>
+							{aria => (
+								<select
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? 'quick'}
+									onChange={e =>
+										field.handleChange(e.target.value as 'quick' | 'detailed')
+									}
+								>
+									<option value="quick">Quick (portfolio)</option>
+									<option value="detailed">Detailed (case study)</option>
+								</select>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -250,14 +258,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="longDescription"
 							hint="Markdown allowed. Shown on the detail page."
 						>
-							<textarea
-								id="longDescription"
-								rows={6}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={6}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -265,13 +275,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="clientName">
 					{field => (
 						<FormFieldSet label="Client name" htmlFor="clientName">
-							<input
-								id="clientName"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -279,13 +291,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="industry">
 					{field => (
 						<FormFieldSet label="Industry" htmlFor="industry">
-							<input
-								id="industry"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -293,13 +307,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="projectType">
 					{field => (
 						<FormFieldSet label="Project type" htmlFor="projectType">
-							<input
-								id="projectType"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -307,13 +323,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="category">
 					{field => (
 						<FormFieldSet label="Category" htmlFor="category">
-							<input
-								id="category"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -321,14 +339,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="challenge">
 					{field => (
 						<FormFieldSet label="Challenge" htmlFor="challenge">
-							<textarea
-								id="challenge"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -336,14 +356,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="solution">
 					{field => (
 						<FormFieldSet label="Solution" htmlFor="solution">
-							<textarea
-								id="solution"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -351,14 +373,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="results">
 					{field => (
 						<FormFieldSet label="Results" htmlFor="results">
-							<textarea
-								id="results"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -370,14 +394,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="imageUrl"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="imageUrl"
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="url"
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -389,14 +415,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="ogImageUrl"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="ogImageUrl"
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="url"
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -408,13 +436,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="gradientClass"
 							hint="Tailwind utility classes used for the card background."
 						>
-							<input
-								id="gradientClass"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -426,14 +456,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="externalLink"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="externalLink"
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="url"
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -445,14 +477,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="githubLink"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="githubLink"
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="url"
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -460,14 +494,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="testimonialText">
 					{field => (
 						<FormFieldSet label="Testimonial text" htmlFor="testimonialText">
-							<textarea
-								id="testimonialText"
-								rows={3}
-								className={TEXTAREA_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={3}
+									className={TEXTAREA_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -478,13 +514,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							label="Testimonial author"
 							htmlFor="testimonialAuthor"
 						>
-							<input
-								id="testimonialAuthor"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -492,13 +530,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="testimonialRole">
 					{field => (
 						<FormFieldSet label="Testimonial role" htmlFor="testimonialRole">
-							<input
-								id="testimonialRole"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -510,14 +550,16 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="testimonialVideoUrl"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="testimonialVideoUrl"
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="url"
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -525,13 +567,15 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				<form.AppField name="projectDuration">
 					{field => (
 						<FormFieldSet label="Project duration" htmlFor="projectDuration">
-							<input
-								id="projectDuration"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e => field.handleChange(e.target.value)}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -543,20 +587,22 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="teamSize"
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="teamSize"
-								type="number"
-								min={1}
-								max={1000}
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e =>
-									field.handleChange(
-										e.target.value === '' ? null : Number(e.target.value)
-									)
-								}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="number"
+									min={1}
+									max={1000}
+									className={INPUT_CLS}
+									value={field.state.value ?? ''}
+									onChange={e =>
+										field.handleChange(
+											e.target.value === '' ? null : Number(e.target.value)
+										)
+									}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -568,21 +614,23 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							htmlFor="technologies"
 							hint="One per line."
 						>
-							<textarea
-								id="technologies"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={(field.state.value ?? []).join('\n')}
-								onChange={e =>
-									field.handleChange(
-										e.target.value
-											.split('\n')
-											.map(s => s.trim())
-											.filter(Boolean)
-									)
-								}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={(field.state.value ?? []).join('\n')}
+									onChange={e =>
+										field.handleChange(
+											e.target.value
+												.split('\n')
+												.map(s => s.trim())
+												.filter(Boolean)
+										)
+									}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -595,21 +643,23 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							hint="One URL per line."
 							error={field.state.meta.errors[0]}
 						>
-							<textarea
-								id="galleryImages"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={(field.state.value ?? []).join('\n')}
-								onChange={e =>
-									field.handleChange(
-										e.target.value
-											.split('\n')
-											.map(s => s.trim())
-											.filter(Boolean)
-									)
-								}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={(field.state.value ?? []).join('\n')}
+									onChange={e =>
+										field.handleChange(
+											e.target.value
+												.split('\n')
+												.map(s => s.trim())
+												.filter(Boolean)
+										)
+									}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -622,27 +672,29 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							hint='Example: {"users":"10k","uptime":"99.9%"}'
 							error={field.state.meta.errors[0]}
 						>
-							<textarea
-								id="metrics"
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={JSON.stringify(field.state.value ?? {}, null, 2)}
-								onChange={e => {
-									try {
-										const parsed = JSON.parse(e.target.value)
-										if (
-											parsed &&
-											typeof parsed === 'object' &&
-											!Array.isArray(parsed)
-										) {
-											field.handleChange(parsed as Record<string, string>)
+							{aria => (
+								<textarea
+									{...aria}
+									rows={4}
+									className={TEXTAREA_CLS}
+									value={JSON.stringify(field.state.value ?? {}, null, 2)}
+									onChange={e => {
+										try {
+											const parsed = JSON.parse(e.target.value)
+											if (
+												parsed &&
+												typeof parsed === 'object' &&
+												!Array.isArray(parsed)
+											) {
+												field.handleChange(parsed as Record<string, string>)
+											}
+										} catch {
+											// invalid JSON: ignore until next valid edit
 										}
-									} catch {
-										// invalid JSON: ignore until next valid edit
-									}
-								}}
-								onBlur={field.handleBlur}
-							/>
+									}}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>
@@ -691,15 +743,17 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 							hint="Lower numbers appear first."
 							error={field.state.meta.errors[0]}
 						>
-							<input
-								id="displayOrder"
-								type="number"
-								min={0}
-								className={INPUT_CLS}
-								value={field.state.value ?? 0}
-								onChange={e => field.handleChange(Number(e.target.value))}
-								onBlur={field.handleBlur}
-							/>
+							{aria => (
+								<input
+									{...aria}
+									type="number"
+									min={0}
+									className={INPUT_CLS}
+									value={field.state.value ?? 0}
+									onChange={e => field.handleChange(Number(e.target.value))}
+									onBlur={field.handleBlur}
+								/>
+							)}
 						</FormFieldSet>
 					)}
 				</form.AppField>

@@ -100,14 +100,16 @@ export function CreateTestimonialForm() {
 						required
 						error={field.state.meta.errors[0]}
 					>
-						<input
-							id="name"
-							className={INPUT_CLS}
-							value={field.state.value ?? ''}
-							onChange={e => field.handleChange(e.target.value)}
-							onBlur={field.handleBlur}
-							required
-						/>
+						{aria => (
+							<input
+								{...aria}
+								className={INPUT_CLS}
+								value={field.state.value ?? ''}
+								onChange={e => field.handleChange(e.target.value)}
+								onBlur={field.handleBlur}
+								required
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -120,17 +122,19 @@ export function CreateTestimonialForm() {
 						hint="e.g. CEO, Designer"
 						error={field.state.meta.errors[0]}
 					>
-						<input
-							id="role"
-							className={INPUT_CLS}
-							value={field.state.value ?? ''}
-							onChange={e =>
-								field.handleChange(
-									e.target.value === '' ? null : e.target.value
-								)
-							}
-							onBlur={field.handleBlur}
-						/>
+						{aria => (
+							<input
+								{...aria}
+								className={INPUT_CLS}
+								value={field.state.value ?? ''}
+								onChange={e =>
+									field.handleChange(
+										e.target.value === '' ? null : e.target.value
+									)
+								}
+								onBlur={field.handleBlur}
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -142,17 +146,19 @@ export function CreateTestimonialForm() {
 						htmlFor="company"
 						error={field.state.meta.errors[0]}
 					>
-						<input
-							id="company"
-							className={INPUT_CLS}
-							value={field.state.value ?? ''}
-							onChange={e =>
-								field.handleChange(
-									e.target.value === '' ? null : e.target.value
-								)
-							}
-							onBlur={field.handleBlur}
-						/>
+						{aria => (
+							<input
+								{...aria}
+								className={INPUT_CLS}
+								value={field.state.value ?? ''}
+								onChange={e =>
+									field.handleChange(
+										e.target.value === '' ? null : e.target.value
+									)
+								}
+								onBlur={field.handleBlur}
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -165,15 +171,17 @@ export function CreateTestimonialForm() {
 						required
 						error={field.state.meta.errors[0]}
 					>
-						<textarea
-							id="content"
-							rows={6}
-							className={TEXTAREA_CLS}
-							value={field.state.value ?? ''}
-							onChange={e => field.handleChange(e.target.value)}
-							onBlur={field.handleBlur}
-							required
-						/>
+						{aria => (
+							<textarea
+								{...aria}
+								rows={6}
+								className={TEXTAREA_CLS}
+								value={field.state.value ?? ''}
+								onChange={e => field.handleChange(e.target.value)}
+								onBlur={field.handleBlur}
+								required
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -186,24 +194,28 @@ export function CreateTestimonialForm() {
 						hint="Optional. 1 to 5 stars."
 						error={field.state.meta.errors[0]}
 					>
-						<select
-							id="rating"
-							className={INPUT_CLS}
-							value={field.state.value == null ? '' : String(field.state.value)}
-							onChange={e =>
-								field.handleChange(
-									e.target.value === '' ? null : Number(e.target.value)
-								)
-							}
-							onBlur={field.handleBlur}
-						>
-							<option value="">No rating</option>
-							<option value="5">5</option>
-							<option value="4">4</option>
-							<option value="3">3</option>
-							<option value="2">2</option>
-							<option value="1">1</option>
-						</select>
+						{aria => (
+							<select
+								{...aria}
+								className={INPUT_CLS}
+								value={
+									field.state.value == null ? '' : String(field.state.value)
+								}
+								onChange={e =>
+									field.handleChange(
+										e.target.value === '' ? null : Number(e.target.value)
+									)
+								}
+								onBlur={field.handleBlur}
+							>
+								<option value="">No rating</option>
+								<option value="5">5</option>
+								<option value="4">4</option>
+								<option value="3">3</option>
+								<option value="2">2</option>
+								<option value="1">1</option>
+							</select>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -216,18 +228,20 @@ export function CreateTestimonialForm() {
 						hint="Paste an image URL."
 						error={field.state.meta.errors[0]}
 					>
-						<input
-							id="imageUrl"
-							type="url"
-							className={INPUT_CLS}
-							value={field.state.value ?? ''}
-							onChange={e =>
-								field.handleChange(
-									e.target.value === '' ? null : e.target.value
-								)
-							}
-							onBlur={field.handleBlur}
-						/>
+						{aria => (
+							<input
+								{...aria}
+								type="url"
+								className={INPUT_CLS}
+								value={field.state.value ?? ''}
+								onChange={e =>
+									field.handleChange(
+										e.target.value === '' ? null : e.target.value
+									)
+								}
+								onBlur={field.handleBlur}
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>
@@ -239,18 +253,20 @@ export function CreateTestimonialForm() {
 						htmlFor="videoUrl"
 						error={field.state.meta.errors[0]}
 					>
-						<input
-							id="videoUrl"
-							type="url"
-							className={INPUT_CLS}
-							value={field.state.value ?? ''}
-							onChange={e =>
-								field.handleChange(
-									e.target.value === '' ? null : e.target.value
-								)
-							}
-							onBlur={field.handleBlur}
-						/>
+						{aria => (
+							<input
+								{...aria}
+								type="url"
+								className={INPUT_CLS}
+								value={field.state.value ?? ''}
+								onChange={e =>
+									field.handleChange(
+										e.target.value === '' ? null : e.target.value
+									)
+								}
+								onBlur={field.handleBlur}
+							/>
+						)}
 					</FormFieldSet>
 				)}
 			</form.AppField>

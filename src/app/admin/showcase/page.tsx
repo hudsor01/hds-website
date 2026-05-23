@@ -37,15 +37,30 @@ async function ShowcaseList() {
 		>
 			<div className="overflow-x-auto rounded-xl border border-border bg-surface-raised">
 				<table className="w-full text-sm">
+					<caption className="sr-only">Showcase entries</caption>
 					<thead className="text-left text-xs uppercase tracking-wider text-muted-foreground bg-surface-base">
 						<tr>
-							<th className="px-4 py-3 font-medium">Title</th>
-							<th className="px-4 py-3 font-medium">Slug</th>
-							<th className="px-4 py-3 font-medium">Type</th>
-							<th className="px-4 py-3 font-medium">Featured</th>
-							<th className="px-4 py-3 font-medium">Published</th>
-							<th className="px-4 py-3 font-medium text-right">Order</th>
-							<th className="px-4 py-3 font-medium text-right">Actions</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Title
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Slug
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Type
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Featured
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Published
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium text-right">
+								Order
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium text-right">
+								Actions
+							</th>
 						</tr>
 					</thead>
 					<tbody>

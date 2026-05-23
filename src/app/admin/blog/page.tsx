@@ -57,15 +57,30 @@ async function BlogList() {
 		>
 			<div className="overflow-x-auto rounded-xl border border-border bg-surface-raised">
 				<table className="w-full text-sm">
+					<caption className="sr-only">Blog posts</caption>
 					<thead className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
 						<tr>
-							<th className="px-4 py-3 font-medium">Title</th>
-							<th className="px-4 py-3 font-medium">Slug</th>
-							<th className="px-4 py-3 font-medium">Author</th>
-							<th className="px-4 py-3 font-medium">Featured</th>
-							<th className="px-4 py-3 font-medium">Published</th>
-							<th className="px-4 py-3 font-medium">Published at</th>
-							<th className="px-4 py-3 font-medium text-right">Actions</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Title
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Slug
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Author
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Featured
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Published
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Published at
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium text-right">
+								Actions
+							</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-border">

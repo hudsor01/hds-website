@@ -42,16 +42,33 @@ async function TestimonialsList() {
 		>
 			<div className="overflow-x-auto rounded-xl border border-border bg-surface-raised">
 				<table className="w-full text-sm">
+					<caption className="sr-only">Testimonials</caption>
 					<thead className="text-left text-xs uppercase tracking-wider text-muted-foreground bg-surface-base">
 						<tr>
-							<th className="px-4 py-3 font-medium">Name</th>
-							<th className="px-4 py-3 font-medium">Role</th>
-							<th className="px-4 py-3 font-medium">Company</th>
-							<th className="px-4 py-3 font-medium">Rating</th>
-							<th className="px-4 py-3 font-medium">Featured</th>
-							<th className="px-4 py-3 font-medium">Published</th>
-							<th className="px-4 py-3 font-medium">Created</th>
-							<th className="px-4 py-3 font-medium text-right">Actions</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Name
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Role
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Company
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Rating
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Featured
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Published
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium">
+								Created
+							</th>
+							<th scope="col" className="px-4 py-3 font-medium text-right">
+								Actions
+							</th>
 						</tr>
 					</thead>
 					<tbody>

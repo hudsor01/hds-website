@@ -57,10 +57,10 @@ export async function createBlogPostAction(
 	if (!parsed.success) {
 		return { ok: false, errors: flattenZod(parsed.error) }
 	}
+	let newId: string
 	try {
 		const row = await createBlogPost(parsed.data)
-		revalidatePath('/admin/blog')
-		redirect(`/admin/blog/${row.id}/edit`)
+		newId = row.id
 	} catch (error) {
 		if (isUniqueViolation(error, 'slug')) {
 			return { ok: false, errors: { slug: 'Slug already exists.' } }
@@ -71,6 +71,8 @@ export async function createBlogPostAction(
 			errors: { _form: 'Could not create post. Please try again.' }
 		}
 	}
+	revalidatePath('/admin/blog')
+	redirect(`/admin/blog/${newId}/edit`)
 }
 
 export async function updateBlogPostAction(
@@ -82,13 +84,13 @@ export async function updateBlogPostAction(
 		return { ok: false, errors: flattenZod(parsed.error) }
 	}
 	const { id, ...rest } = parsed.data
+	let newId: string
 	try {
 		const row = await updateBlogPost(id, rest)
 		if (!row) {
 			return { ok: false, errors: { _form: 'Post not found.' } }
 		}
-		revalidatePath('/admin/blog')
-		redirect(`/admin/blog/${row.id}/edit`)
+		newId = row.id
 	} catch (error) {
 		if (isUniqueViolation(error, 'slug')) {
 			return { ok: false, errors: { slug: 'Slug already exists.' } }
@@ -99,6 +101,8 @@ export async function updateBlogPostAction(
 			errors: { _form: 'Could not save post. Please try again.' }
 		}
 	}
+	revalidatePath('/admin/blog')
+	redirect(`/admin/blog/${newId}/edit`)
 }
 
 export async function deleteBlogPostAction(formData: FormData): Promise<void> {
