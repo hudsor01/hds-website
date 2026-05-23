@@ -17,6 +17,7 @@
  * The 403 panel intentionally lives inside this layout (not a separate route)
  * so non-admins cannot bypass it by navigating to a deeper `/admin/...` URL.
  */
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { AccountMenu } from '@/components/auth/AccountMenu'
@@ -64,12 +65,12 @@ export default async function AdminLayout({
 						</a>
 						.
 					</p>
-					<a
+					<Link
 						href="/auth/sign-in"
 						className="inline-block text-sm font-medium text-accent-text hover:underline"
 					>
 						Back to sign in
-					</a>
+					</Link>
 				</div>
 			</div>
 		)

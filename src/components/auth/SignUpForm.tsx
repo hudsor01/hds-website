@@ -46,11 +46,11 @@ export function SignUpForm() {
 		}
 
 		setIsSubmitting(true)
+		// callbackURL omitted: router.push() below handles navigation.
 		const result = await signUp.email({
 			email: parsed.data.email,
 			password: parsed.data.password,
-			name: parsed.data.name ?? parsed.data.email,
-			callbackURL: '/admin'
+			name: parsed.data.name ?? parsed.data.email
 		})
 
 		if (result.error) {

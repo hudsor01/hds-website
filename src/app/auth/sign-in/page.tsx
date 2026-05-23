@@ -12,8 +12,8 @@ import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
 	title: 'Sign in',
-	description:
-		'Sign in to the Hudson Digital Solutions admin console to manage site content, leads, and analytics.'
+	description: 'Sign in to your Hudson Digital Solutions account.',
+	robots: { index: false, follow: false }
 }
 
 export default function SignInPage() {

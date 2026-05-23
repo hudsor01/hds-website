@@ -46,10 +46,13 @@ export function AccountMenu({ email }: AccountMenuProps) {
 	}
 
 	return (
+		// Native <details>/<summary> is a disclosure widget, not an ARIA
+		// menu. We deliberately don't add aria-haspopup="menu" / role="menu"
+		// here because that conflicts with the browser's disclosure semantics
+		// and confuses screen readers. The Sign out control is a plain button.
 		<details className="relative group">
 			<summary
 				aria-label="Account menu"
-				aria-haspopup="menu"
 				className="cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden inline-flex items-center gap-2 rounded-md border border-border bg-surface-raised px-3 py-1.5 text-sm font-medium text-foreground hover:bg-surface-sunken transition-smooth"
 			>
 				<span className="max-w-[12rem] truncate">{email}</span>
@@ -61,7 +64,6 @@ export function AccountMenu({ email }: AccountMenuProps) {
 					aria-hidden="true"
 					className="transition-transform group-open:rotate-180"
 				>
-					<title>Menu indicator</title>
 					<path
 						d="M2.5 4.5L6 8L9.5 4.5"
 						stroke="currentColor"
@@ -71,10 +73,7 @@ export function AccountMenu({ email }: AccountMenuProps) {
 					/>
 				</svg>
 			</summary>
-			<div
-				role="menu"
-				className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-surface-raised p-2 shadow-lg z-modal"
-			>
+			<div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-surface-raised p-2 shadow-lg z-modal">
 				<div className="px-2 py-1.5 text-xs text-muted-foreground">
 					Signed in as
 				</div>
@@ -84,7 +83,6 @@ export function AccountMenu({ email }: AccountMenuProps) {
 				<div className="border-t border-border my-1" />
 				<button
 					type="button"
-					role="menuitem"
 					onClick={handleSignOut}
 					disabled={isSigningOut}
 					aria-busy={isSigningOut}

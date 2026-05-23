@@ -73,12 +73,19 @@ export function proxy(request: NextRequest) {
 	// admin layout (src/app/admin/layout.tsx) validates the session and
 	// enforces the role. This branch keeps unauthenticated traffic out
 	// of the React server-render path and gives bots a quick bounce.
+	//
+	// Better Auth prefixes the cookie with `__Secure-` when baseURL is
+	// https (production). Check both names so the edge guard is active
+	// in production too. 302 is intentional: this is a presence redirect
+	// for browser GET navigation; a 307 would preserve POST method on
+	// any future server-action POSTs under /admin and break them.
 	if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
-		const sessionCookie = request.cookies.get('better-auth.session_token')
+		const sessionCookie =
+			request.cookies.get('better-auth.session_token') ??
+			request.cookies.get('__Secure-better-auth.session_token')
 		if (!sessionCookie) {
 			const signInUrl = new URL('/auth/sign-in', request.url)
-			signInUrl.searchParams.set('from', url.pathname + url.search)
-			return NextResponse.redirect(signInUrl, { status: 307 })
+			return NextResponse.redirect(signInUrl, { status: 302 })
 		}
 	}
 

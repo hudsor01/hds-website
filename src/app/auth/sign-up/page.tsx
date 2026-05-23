@@ -14,8 +14,8 @@ import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
 	title: 'Sign up',
-	description:
-		'Create an admin account for the Hudson Digital Solutions site. The first signup is automatically granted admin access.'
+	description: 'Sign in to your Hudson Digital Solutions account.',
+	robots: { index: false, follow: false }
 }
 
 export default function SignUpPage() {

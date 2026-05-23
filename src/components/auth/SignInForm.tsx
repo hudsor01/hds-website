@@ -42,10 +42,12 @@ export function SignInForm() {
 		}
 
 		setIsSubmitting(true)
+		// callbackURL is intentionally omitted: it sets a server header that
+		// our SPA-style flow does not act on. router.push() below does the
+		// actual navigation.
 		const result = await signIn.email({
 			email: parsed.data.email,
-			password: parsed.data.password,
-			callbackURL: '/admin'
+			password: parsed.data.password
 		})
 
 		if (result.error) {

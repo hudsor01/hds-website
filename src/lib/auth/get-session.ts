@@ -13,10 +13,14 @@
 import 'server-only'
 
 import { headers } from 'next/headers'
+import { cache } from 'react'
 import { auth } from '@/lib/auth'
 
-export async function getSession() {
+// React's per-request cache: two calls inside the same render share one
+// result. Cheap protection against double-fetching when both the layout
+// and a child page call getSession() in the same request.
+export const getSession = cache(async () => {
 	return auth.api.getSession({ headers: await headers() })
-}
+})
 
 export type SessionData = Awaited<ReturnType<typeof getSession>>

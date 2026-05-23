@@ -6,8 +6,10 @@
  * email and role, sign out.
  *
  * The parent layout (`src/app/admin/layout.tsx`) has already enforced session
- * + role, but we re-call `getSession()` here for type narrowing rather than
- * threading the session down. Both calls hit the same in-request cache.
+ * + role. We re-call `getSession()` here for type narrowing rather than
+ * threading the session down. `getSession()` is wrapped in `React.cache`, so
+ * both calls in the same render share one result without a second cookie
+ * parse or DB lookup.
  */
 import { getSession } from '@/lib/auth/get-session'
 
