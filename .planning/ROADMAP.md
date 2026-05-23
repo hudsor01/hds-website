@@ -37,9 +37,29 @@ Plans:
 | # | Slug | Status | Plans | Description |
 |---|---|---|---|---|
 | 02 | `auth-foundation` | complete (5/5) | 5 | Better Auth wired to Neon. Users + sessions + accounts + verifications tables. Sign-in / sign-up pages. `/admin/*` server-component role guard + `proxy.ts` edge cookie short-circuit. AccountMenu primitive. Phase summary at `.planning/phases/02-auth-foundation/02-SUMMARY.md`. |
-| 03 | `admin-shell-and-dashboard` | pending | 0 | Sidebar + layout adapted from Efferd Dashboard 5. `/admin` dashboard page wired to real data (web vitals, PageSpeed history, recent contact submissions). |
+| 03 | `admin-shell-and-dashboard` | planned (0/6) | 6 | Sidebar + topbar + content slot adapted from Efferd Dashboard 5. `/admin/dashboard` wired to real Neon data (web vitals p75, daily visitors, top pages, attribution channels, recent leads). 6 coming-soon stubs for the rest of v4. Spec at `.planning/phases/03-admin-shell-and-dashboard/03-CONTEXT.md`. |
 | 04 | `admin-content-crud` | pending | 0 | `/admin/showcase`, `/admin/blog`, `/admin/testimonials` list + create + edit + delete. Replaces direct-SQL / Neon MCP workflow. |
 | 05 | `admin-ops` | pending | 0 | `/admin/leads` (contact submissions), `/admin/newsletter` (subscribers), `/admin/emails` (scheduled queue health). |
+
+### Phase 03: admin-shell-and-dashboard
+
+**Goal:** Replace the Phase-02 placeholder `/admin` page with a real admin shell (sidebar + topbar + content slot) and a working `/admin/dashboard` rendered from existing Neon tables (`web_vitals`, `page_analytics`, `leads`, `lead_attribution`). 6 coming-soon stubs for the rest of v4's pages.
+
+**Plans:** 6 plans across 4 waves
+
+Plans:
+- [ ] 03-01-PLAN.md — Install recharts; write `src/lib/admin/dashboard-queries.ts` with 5 typed Drizzle query functions (visitors-by-day, top-pages, traffic-sources, web-vitals-p75, recent-leads)
+- [ ] 03-02-PLAN.md — Shell primitives: `src/components/admin/{Sidebar,Topbar,Forbidden}.tsx` (Sidebar is client for usePathname active state, others are server)
+- [ ] 03-03-PLAN.md — Rewrite `src/app/admin/layout.tsx` to compose the new shell; rewrite `src/app/admin/page.tsx` as a redirect to `/admin/dashboard`
+- [ ] 03-04-PLAN.md — `src/app/admin/dashboard/page.tsx` + 5 widgets under `src/components/admin/widgets/` (VisitorsChart, WebVitalsCards, TopPagesTable, TrafficSourcesPie, RecentLeadsPanel)
+- [ ] 03-05-PLAN.md — 6 coming-soon stub pages under `src/app/admin/(coming-soon)/` for showcase, blog, testimonials (Phase 04) and leads, newsletter, emails (Phase 05)
+- [ ] 03-06-PLAN.md — Verification: lint + typecheck + build + em/en-dash sweep + Phase-02 untouched diff + operator smoke checklist
+
+**Wave structure:**
+- Wave 1 (parallel): 03-01 (deps + query lib), 03-02 (shell primitives) — no file overlap
+- Wave 2: 03-03 (layout + redirect, depends on 03-02 primitives)
+- Wave 3 (parallel): 03-04 (dashboard page + widgets, depends on 03-01 for queries and 03-03 for the shell), 03-05 (coming-soon stubs, depends on 03-03 for the layout)
+- Wave 4: 03-06 (verification, depends on 03-04 + 03-05)
 
 ## Earlier milestones (archived)
 
