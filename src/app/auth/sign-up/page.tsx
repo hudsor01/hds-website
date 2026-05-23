@@ -14,7 +14,7 @@ import { Card } from '@/components/ui/card'
 
 export const metadata: Metadata = {
 	title: 'Sign up',
-	description: 'Sign in to your Hudson Digital Solutions account.',
+	description: 'Create your Hudson Digital Solutions account.',
 	robots: { index: false, follow: false }
 }
 
