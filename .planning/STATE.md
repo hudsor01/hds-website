@@ -1,10 +1,10 @@
 # STATE — Current GSD Position
 
 **Last updated:** 2026-05-23
-**Branch:** `main`
+**Branch:** `admin-content-crud`
 **Current milestone:** v4 (Admin Panel)
-**Current phase:** `03-admin-shell-and-dashboard` (complete 6/6, **merged to main as `d88d049` via PR #213**)
-**Current plan:** none (phase closed)
+**Current phase:** `04-admin-content-crud` (planning)
+**Current plan:** none (planning in progress)
 
 ## What just happened
 
