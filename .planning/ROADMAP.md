@@ -1,8 +1,8 @@
 # ROADMAP — Hudson Digital Solutions
 
-## Milestone v3.0 — Showcase & conversion polish
+## Milestone v3 — Showcase & conversion polish
 
-> Started 2026-05-21. Site copy was repositioned in v2.x (PR #206). v3.0 focuses on visual storytelling and conversion surfaces.
+> Started 2026-05-21. Site copy was repositioned in v2 (PR #206). v3 focuses on visual storytelling and conversion surfaces.
 > Phase 01 shipped as PR #208 (squashed to `59e5e70` on `main`, 2026-05-22).
 
 ### Phases
@@ -28,8 +28,21 @@ Plans:
 - Wave 2: 01-03 (page rewrite, depends on data and component)
 - Wave 3: 01-04 (verification, depends on all)
 
+## Milestone v4 — Admin Panel
+
+> Started 2026-05-22. Built around Efferd Dashboard 5 (web analytics) shell. Auth is Better Auth (full sessions/users, users table in Neon). Scope is comprehensive admin: dashboard + content CRUD + leads/ops.
+
+### Phases
+
+| # | Slug | Status | Plans | Description |
+|---|---|---|---|---|
+| 02 | `auth-foundation` | complete (5/5) | 5 | Better Auth wired to Neon. Users + sessions + accounts + verifications tables. Sign-in / sign-up pages. `/admin/*` server-component role guard + `proxy.ts` edge cookie short-circuit. AccountMenu primitive. Phase summary at `.planning/phases/02-auth-foundation/02-SUMMARY.md`. |
+| 03 | `admin-shell-and-dashboard` | pending | 0 | Sidebar + layout adapted from Efferd Dashboard 5. `/admin` dashboard page wired to real data (web vitals, PageSpeed history, recent contact submissions). |
+| 04 | `admin-content-crud` | pending | 0 | `/admin/showcase`, `/admin/blog`, `/admin/testimonials` list + create + edit + delete. Replaces direct-SQL / Neon MCP workflow. |
+| 05 | `admin-ops` | pending | 0 | `/admin/leads` (contact submissions), `/admin/newsletter` (subscribers), `/admin/emails` (scheduled queue health). |
+
 ## Earlier milestones (archived)
 
-- v1.0 — 10 phases, shipped
-- v1.1 — 2/7 phases done, rest deferred
-- v2.0 — 8 phases, shipped (final phase: copy repositioning, PR #206)
+- v1 — initial 10 phases, shipped
+- v1 (later) — 2/7 phases done, rest deferred
+- v2 — 8 phases, shipped (final phase: copy repositioning, PR #206)

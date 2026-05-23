@@ -84,6 +84,22 @@ export const env = createEnv({
 				'CRON_SECRET is required in production'
 			),
 
+		// Better Auth - session-signing secret (required in Vercel production)
+		BETTER_AUTH_SECRET: z
+			.string()
+			.min(32, 'BETTER_AUTH_SECRET must be at least 32 characters')
+			.optional()
+			.refine(
+				val => process.env.VERCEL_ENV !== 'production' || !!val,
+				'BETTER_AUTH_SECRET is required in production'
+			),
+
+		// Better Auth - canonical app URL (optional; falls back to BASE_URL at call site)
+		BETTER_AUTH_URL: z.string().url().optional(),
+
+		// Better Auth - extra trusted origins (optional; comma-separated, parsed at call site)
+		BETTER_AUTH_TRUSTED_ORIGINS: z.string().optional(),
+
 		// Upstash Redis for distributed rate limiting (optional)
 		// Set automatically when an Upstash Redis integration is attached via Vercel Marketplace.
 		UPSTASH_REDIS_REST_URL: z.string().url().optional(),
@@ -130,6 +146,9 @@ export const env = createEnv({
 		npm_package_version: process.env.npm_package_version,
 		ADMIN_SECRET: process.env.ADMIN_SECRET,
 		CRON_SECRET: process.env.CRON_SECRET,
+		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+		BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+		BETTER_AUTH_TRUSTED_ORIGINS: process.env.BETTER_AUTH_TRUSTED_ORIGINS,
 		DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
 		UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
 		UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,

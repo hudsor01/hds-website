@@ -1,41 +1,40 @@
 # STATE — Current GSD Position
 
 **Last updated:** 2026-05-22
-**Branch:** `main`
-**Current milestone:** v3.0 (Showcase & conversion polish)
-**Current phase:** none active — Phase 01 closed and merged
-**Current plan:** none
+**Branch:** `admin-panel-auth`
+**Current milestone:** v4 (Admin Panel)
+**Current phase:** `02-auth-foundation` (complete 5/5)
+**Current plan:** none (phase closed)
 
 ## What just happened
 
-- Phase 01 (`showcase-ui-redesign`) shipped to production:
-  - 4 plans across 3 waves, all executed with atomic commits
-  - 2-iteration code review loop (14 findings to 0 defects)
-  - Squash-merged as `59e5e70` on `2026-05-22T21:50Z` via PR #208
-- Original feature-branch commits: `22e84ed` (data), `ac0dab7` (Card), `1df250f` (page+images), `b25c72c` (planning metadata), `356ad1e` (verification), `983e4d7` (review-fix). All collapsed into the squash commit on main.
-- `/showcase` now renders 1 featured (JirahShop) + 3 support cards (Ink 37, TenantFlow, RevOps) with real homepage screenshots, plus a new mid-scroll CTA between the grid and the closing CTA.
+- Phase 02 (`auth-foundation`) closed. 5 plans, 5 commits on `admin-panel-auth`. Better Auth wired end to end: 4 Neon tables (users/sessions/accounts/verifications), `/auth/sign-in` + `/auth/sign-up`, `/admin` role-guarded layout, AccountMenu primitive, and `proxy.ts` edge cookie short-circuit for anonymous `/admin/*`. First signup auto-promoted to admin; later signups get `role: 'user'` + 403 on `/admin`. All automated gates green (lint, typecheck, build, em/en-dash sweep, admin.ts Bearer guard untouched). Manual 6-step smoke deferred to operator pre-PR.
+- Milestone v4 (Admin Panel) opened earlier. Built around Efferd Dashboard 5 (web analytics) as the shell. Auth = Better Auth (full sessions/users). Scope = comprehensive admin: dashboard + content CRUD + leads/ops.
+- 4 phases queued in ROADMAP: `02-auth-foundation` (complete), `03-admin-shell-and-dashboard` (next), `04-admin-content-crud`, `05-admin-ops`.
+- Milestone v3 closed: Phase 01 (`showcase-ui-redesign`) shipped to main as `59e5e70` via PR #208; planning sync as `60175b3` via PR #209.
 
-## Active decisions (still in force)
+## Active decisions (still in force from v3)
 
-- Featured-first rendering: `items.find(i => i.featured)` picks the lowest-displayOrder featured row for the full-width slot; remaining items render in a 3-col support grid with `featured={false}` forced at the call site so `md:col-span-2` / `priority` / the "Featured" overlay badge never fire on a support card.
-- Inline CTA lives inside `ShowcaseProjects` (under Suspense) so it streams with the grid; closing CTA stays outside Suspense.
+- Featured-first rendering on `/showcase`: `items.find(i => i.featured)` picks the lowest-displayOrder featured row for the full-width slot; support cards force `featured={false}` at the call site.
 - Trust signal separators use U+00B7 MIDDLE DOT, never em-dash.
 - Accent body copy on light backgrounds uses `text-accent-text` (WCAG-safe).
-- Em/en-dash ban (CLAUDE.md) applies to user-facing text only; code comments and developer-only strings are exempt.
+- Em/en-dash ban (CLAUDE.md) applies to user-facing text only.
+- Milestone versions use whole numbers only (v3, v4), never decimals.
+
+## Active decisions (v4)
+
+- Auth library = **Better Auth** (npm `better-auth`). Multi-user sessions, password + OAuth-capable.
+- Users live in Neon Postgres (new `users` + `sessions` tables; managed via Better Auth's Drizzle adapter).
+- Admin gating = middleware-protected `/admin/*` route group. First user signed up gets `role: 'admin'`; later users default to `role: 'user'` and need promotion.
+- Dashboard visual reference = Efferd Dashboard 5 (web analytics layout). Adapt under MIT-friendly assumption (we're copying patterns, not lifting copyrighted code verbatim).
 
 ## Deferred / known issues
 
-- Earlier `v1.0` / `v1.1` / `v2.0` milestones are referenced in user memory but no `.planning/` artifacts remain. Treating those as historical only.
-- 4 location pages (75 cities) shipped in PR #206; no follow-up planned yet.
-- 4 pre-existing em-dashes in `src/components/ui/card.tsx` JSX block comments (lines 392, 397, 413, 427) are out of scope per the v3.0/01 verification (CLAUDE.md exempts code comments).
-- `industry` prop on `ProjectCardProps` is declared but never destructured/rendered. Pre-existing on `main` before phase 01. Candidate for a small cleanup PR if the next phase touches the Card component.
+- Earlier `v1` / `v1` deferred / `v2` milestones are historical (no `.planning/` artifacts remain).
+- 4 location pages (75 cities) shipped in PR #206; no follow-up planned.
+- 4 pre-existing em-dashes in `src/components/ui/card.tsx` JSX block comments — out of scope per v3.0/01 verification.
+- `industry` prop on `ProjectCardProps` is dead surface (pre-existing); candidate for cleanup if v4 phase 04 touches Card again.
 
 ## Next action
 
-Pick the next v3.0 phase. Roadmap currently lists only phase 01 (closed). Candidates surfaced during phase 01:
-- Global em/en-dash sweep across the rest of the site (PR-#206 copy still has scattered em-dashes)
-- `/services` page visual upgrade (currently text-heavy, no imagery)
-- Drop the unused `industry` prop on `ProjectCardProps`
-- Polish the closing CTA on `/showcase` (still uses `text-section-title` despite being demoted to h3)
-
-Run `/gsd-add-phase` to add a phase once direction is chosen.
+Operator runs the 6-step manual smoke checklist in `.planning/phases/02-auth-foundation/02-SUMMARY.md` against `bun run dev`, then opens the PR for `admin-panel-auth` (squash recommended: `feat(auth): Better Auth foundation - users, sessions, /admin role guard, AccountMenu`). After merge, kick off Phase 03 (`admin-shell-and-dashboard`): write `03-CONTEXT.md` (sidebar + Efferd Dashboard 5 layout, real-data wiring for web vitals / PageSpeed history / recent contact submissions) and run `gsd-plan-phase 03-admin-shell-and-dashboard`.
