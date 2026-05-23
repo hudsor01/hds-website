@@ -11,9 +11,15 @@
  * publishedAt and "No author" for an orphaned post. We never render an
  * em-dash / en-dash placeholder per the project-wide dash ban in
  * CLAUDE.md.
+ *
+ * Wrapped in <Suspense> + `await connection()` so the DB read stays out
+ * of any partial prerender step in `next build` (the dashboard page uses
+ * the same pattern).
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { connection } from 'next/server'
+import { Suspense } from 'react'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { listBlogPostsForAdmin } from '@/lib/admin/blog-queries'
@@ -37,7 +43,8 @@ function formatPublishedAt(value: Date | null): string {
 	return dateFormatter.format(value)
 }
 
-export default async function AdminBlogPage() {
+async function BlogList() {
+	await connection()
 	const rows = await listBlogPostsForAdmin()
 
 	return (
@@ -109,5 +116,17 @@ export default async function AdminBlogPage() {
 				</table>
 			</div>
 		</ResourceListPage>
+	)
+}
+
+export default function AdminBlogPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="text-sm text-muted-foreground">Loading blog...</div>
+			}
+		>
+			<BlogList />
+		</Suspense>
 	)
 }

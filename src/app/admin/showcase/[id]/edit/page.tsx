@@ -6,8 +6,10 @@
  * connection()` so the DB read stays out of any partial-prerender step at
  * build time (same pattern as the dashboard page).
  *
- * Next.js 16 `params` is async; we await it once at the page top and pass
- * the resolved id into the loader subtree.
+ * Next.js 16 `params` is async AND is uncached request data. Awaiting it
+ * outside a Suspense boundary blocks the entire route's prerender shell,
+ * which `cacheComponents` flags as an error. We pass the `params` Promise
+ * straight through to the EditLoader subtree and await inside Suspense.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -22,8 +24,22 @@ export const metadata: Metadata = {
 	robots: { index: false, follow: false }
 }
 
-async function EditLoader({ id }: { id: string }) {
+// `cacheComponents` requires at least one sample id so the build can
+// validate dynamic accesses against a real prerender. The placeholder
+// never resolves to a real row (getShowcaseById returns null which
+// triggers notFound()), so the only thing that ships from this prerender
+// is the 404 path -- real ids render on first request via ISR.
+export function generateStaticParams() {
+	return [{ id: '__build_placeholder__' }]
+}
+
+interface EditShowcasePageProps {
+	params: Promise<{ id: string }>
+}
+
+async function EditLoader({ params }: EditShowcasePageProps) {
 	await connection()
+	const { id } = await params
 	const row = await getShowcaseById(id)
 	if (!row) {
 		notFound()
@@ -31,12 +47,7 @@ async function EditLoader({ id }: { id: string }) {
 	return <EditShowcaseForm row={row} />
 }
 
-export default async function EditShowcasePage({
-	params
-}: {
-	params: Promise<{ id: string }>
-}) {
-	const { id } = await params
+export default function EditShowcasePage({ params }: EditShowcasePageProps) {
 	return (
 		<div className="space-y-6">
 			<div>
@@ -55,7 +66,7 @@ export default async function EditShowcasePage({
 					<div className="text-sm text-muted-foreground">Loading...</div>
 				}
 			>
-				<EditLoader id={id} />
+				<EditLoader params={params} />
 			</Suspense>
 		</div>
 	)
