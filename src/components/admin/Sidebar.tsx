@@ -51,14 +51,17 @@ export function Sidebar() {
 		// h-screen sticky top-0 keeps the sidebar pinned while the main slot scrolls;
 		// simpler than a calc-based min-height and works regardless of topbar height.
 		<aside className="hidden md:flex md:flex-col w-60 shrink-0 h-screen sticky top-0 border-r border-sidebar-border bg-sidebar">
-			<div className="text-sm font-semibold text-sidebar-foreground px-4 py-4">
+			<Link
+				href="/admin/dashboard"
+				className="text-sm font-semibold text-sidebar-foreground px-4 py-4 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-smooth"
+			>
 				Hudson Digital
-			</div>
+			</Link>
 			<nav aria-label="Admin navigation">
 				<ul>
 					{NAV_ITEMS.map(item => {
 						const isActive =
-							pathname === item.href || pathname.startsWith(item.href + '/')
+							pathname === item.href || pathname.startsWith(`${item.href}/`)
 						const stateClasses = isActive
 							? 'bg-sidebar-primary text-sidebar-primary-foreground'
 							: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'

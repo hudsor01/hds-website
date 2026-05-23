@@ -52,31 +52,36 @@ export function TrafficSourcesPie({ data }: TrafficSourcesPieProps) {
 					No traffic source data yet.
 				</p>
 			) : (
-				<ResponsiveContainer width="100%" height={240}>
-					<PieChart>
-						<Pie
-							data={chartData}
-							dataKey="count"
-							nameKey="channel"
-							innerRadius={50}
-							outerRadius={90}
-							paddingAngle={2}
-						>
-							{chartData.map((entry, index) => (
-								<Cell
-									key={entry.channel}
-									fill={SLICE_COLORS[index % SLICE_COLORS.length]}
-								/>
-							))}
-						</Pie>
-						<Tooltip />
-						<Legend
-							verticalAlign="bottom"
-							height={36}
-							wrapperStyle={{ fontSize: '0.75rem' }}
-						/>
-					</PieChart>
-				</ResponsiveContainer>
+				<div
+					role="img"
+					aria-label="Traffic sources breakdown over the last 30 days"
+				>
+					<ResponsiveContainer width="100%" height={240}>
+						<PieChart>
+							<Pie
+								data={chartData}
+								dataKey="count"
+								nameKey="channel"
+								innerRadius={50}
+								outerRadius={90}
+								paddingAngle={2}
+							>
+								{chartData.map((entry, index) => (
+									<Cell
+										key={entry.channel}
+										fill={SLICE_COLORS[index % SLICE_COLORS.length]}
+									/>
+								))}
+							</Pie>
+							<Tooltip />
+							<Legend
+								verticalAlign="bottom"
+								height={36}
+								wrapperStyle={{ fontSize: '0.75rem' }}
+							/>
+						</PieChart>
+					</ResponsiveContainer>
+				</div>
 			)}
 		</div>
 	)

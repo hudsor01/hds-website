@@ -27,13 +27,22 @@ export function TopPagesTable({ rows }: TopPagesTableProps) {
 				<table className="w-full text-sm">
 					<thead>
 						<tr>
-							<th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
+							<th
+								scope="col"
+								className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border"
+							>
 								Pathname
 							</th>
-							<th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
+							<th
+								scope="col"
+								className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border"
+							>
 								Pageviews
 							</th>
-							<th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border">
+							<th
+								scope="col"
+								className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wide pb-2 border-b border-border"
+							>
 								Unique visitors
 							</th>
 						</tr>

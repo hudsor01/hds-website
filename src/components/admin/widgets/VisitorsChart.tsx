@@ -26,7 +26,10 @@ const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
 })
 
 function formatTick(value: string): string {
-	const parsed = new Date(value)
+	// `${value}T00:00:00` forces local midnight; `new Date('YYYY-MM-DD')` alone
+	// parses as UTC midnight, which renders as the previous day for every
+	// user west of UTC.
+	const parsed = new Date(`${value}T00:00:00`)
 	if (Number.isNaN(parsed.getTime())) {
 		return value
 	}
@@ -44,39 +47,44 @@ export function VisitorsChart({ data }: VisitorsChartProps) {
 					No traffic data yet.
 				</p>
 			) : (
-				<ResponsiveContainer width="100%" height={280}>
-					<LineChart
-						data={data}
-						margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
-					>
-						<CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-						<XAxis
-							dataKey="date"
-							tick={{ fontSize: 11 }}
-							stroke="var(--color-muted-foreground)"
-							tickFormatter={formatTick}
-						/>
-						<YAxis
-							tick={{ fontSize: 11 }}
-							stroke="var(--color-muted-foreground)"
-							allowDecimals={false}
-						/>
-						<Tooltip
-							contentStyle={{
-								background: 'var(--color-surface-raised)',
-								border: '1px solid var(--color-border)',
-								borderRadius: '0.5rem'
-							}}
-						/>
-						<Line
-							type="monotone"
-							dataKey="pageviews"
-							stroke="var(--color-accent)"
-							strokeWidth={2}
-							dot={false}
-						/>
-					</LineChart>
-				</ResponsiveContainer>
+				<div role="img" aria-label="Daily pageviews over the last 30 days">
+					<ResponsiveContainer width="100%" height={280}>
+						<LineChart
+							data={data}
+							margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+						>
+							<CartesianGrid
+								strokeDasharray="3 3"
+								stroke="var(--color-border)"
+							/>
+							<XAxis
+								dataKey="date"
+								tick={{ fontSize: 11 }}
+								stroke="var(--color-muted-foreground)"
+								tickFormatter={formatTick}
+							/>
+							<YAxis
+								tick={{ fontSize: 11 }}
+								stroke="var(--color-muted-foreground)"
+								allowDecimals={false}
+							/>
+							<Tooltip
+								contentStyle={{
+									background: 'var(--color-surface-raised)',
+									border: '1px solid var(--color-border)',
+									borderRadius: '0.5rem'
+								}}
+							/>
+							<Line
+								type="monotone"
+								dataKey="pageviews"
+								stroke="var(--color-accent)"
+								strokeWidth={2}
+								dot={false}
+							/>
+						</LineChart>
+					</ResponsiveContainer>
+				</div>
 			)}
 		</div>
 	)
