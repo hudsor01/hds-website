@@ -36,7 +36,7 @@ Plans:
 
 | # | Slug | Status | Plans | Description |
 |---|---|---|---|---|
-| 02 | `auth-foundation` | planning | 0 | Better Auth wired to Neon. Users + sessions tables. Sign-in / sign-up pages. `/admin/*` route group + middleware guard. Account menu primitive. Everything downstream depends on this. |
+| 02 | `auth-foundation` | complete (5/5) | 5 | Better Auth wired to Neon. Users + sessions + accounts + verifications tables. Sign-in / sign-up pages. `/admin/*` server-component role guard + `proxy.ts` edge cookie short-circuit. AccountMenu primitive. Phase summary at `.planning/phases/02-auth-foundation/02-SUMMARY.md`. |
 | 03 | `admin-shell-and-dashboard` | pending | 0 | Sidebar + layout adapted from Efferd Dashboard 5. `/admin` dashboard page wired to real data (web vitals, PageSpeed history, recent contact submissions). |
 | 04 | `admin-content-crud` | pending | 0 | `/admin/showcase`, `/admin/blog`, `/admin/testimonials` list + create + edit + delete. Replaces direct-SQL / Neon MCP workflow. |
 | 05 | `admin-ops` | pending | 0 | `/admin/leads` (contact submissions), `/admin/newsletter` (subscribers), `/admin/emails` (scheduled queue health). |

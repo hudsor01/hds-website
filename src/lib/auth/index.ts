@@ -77,7 +77,7 @@ export const auth = betterAuth({
 					} catch (error) {
 						// Never throw out of the hook: a thrown after-hook does not
 						// roll back the user create on Better Auth, but it does surface
-						// as a 500 to the client. The signup itself succeeded — log
+						// as a 500 to the client. The signup itself succeeded - log
 						// and move on so the operator can run the manual UPDATE.
 						logger.error(
 							'First-signup-admin hook failed; promote manually via SQL',

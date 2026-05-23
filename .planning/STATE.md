@@ -3,13 +3,14 @@
 **Last updated:** 2026-05-22
 **Branch:** `admin-panel-auth`
 **Current milestone:** v4 (Admin Panel)
-**Current phase:** `02-auth-foundation` (planning)
-**Current plan:** none yet
+**Current phase:** `02-auth-foundation` (complete 5/5)
+**Current plan:** none (phase closed)
 
 ## What just happened
 
-- Milestone v4 (Admin Panel) opened. Built around Efferd Dashboard 5 (web analytics) as the shell. Auth = Better Auth (full sessions/users). Scope = comprehensive admin: dashboard + content CRUD + leads/ops.
-- 4 phases queued in ROADMAP: `02-auth-foundation` (in progress), `03-admin-shell-and-dashboard`, `04-admin-content-crud`, `05-admin-ops`.
+- Phase 02 (`auth-foundation`) closed. 5 plans, 5 commits on `admin-panel-auth`. Better Auth wired end to end: 4 Neon tables (users/sessions/accounts/verifications), `/auth/sign-in` + `/auth/sign-up`, `/admin` role-guarded layout, AccountMenu primitive, and `proxy.ts` edge cookie short-circuit for anonymous `/admin/*`. First signup auto-promoted to admin; later signups get `role: 'user'` + 403 on `/admin`. All automated gates green (lint, typecheck, build, em/en-dash sweep, admin.ts Bearer guard untouched). Manual 6-step smoke deferred to operator pre-PR.
+- Milestone v4 (Admin Panel) opened earlier. Built around Efferd Dashboard 5 (web analytics) as the shell. Auth = Better Auth (full sessions/users). Scope = comprehensive admin: dashboard + content CRUD + leads/ops.
+- 4 phases queued in ROADMAP: `02-auth-foundation` (complete), `03-admin-shell-and-dashboard` (next), `04-admin-content-crud`, `05-admin-ops`.
 - Milestone v3 closed: Phase 01 (`showcase-ui-redesign`) shipped to main as `59e5e70` via PR #208; planning sync as `60175b3` via PR #209.
 
 ## Active decisions (still in force from v3)
@@ -36,4 +37,4 @@
 
 ## Next action
 
-Write `02-CONTEXT.md` for `auth-foundation` (the design spec for Better Auth setup, users/sessions schema, sign-in/sign-up routes, `/admin` middleware, account menu primitive). Then run `gsd-plan-phase 02-auth-foundation`.
+Operator runs the 6-step manual smoke checklist in `.planning/phases/02-auth-foundation/02-SUMMARY.md` against `bun run dev`, then opens the PR for `admin-panel-auth` (squash recommended: `feat(auth): Better Auth foundation - users, sessions, /admin role guard, AccountMenu`). After merge, kick off Phase 03 (`admin-shell-and-dashboard`): write `03-CONTEXT.md` (sidebar + Efferd Dashboard 5 layout, real-data wiring for web vitals / PageSpeed history / recent contact submissions) and run `gsd-plan-phase 03-admin-shell-and-dashboard`.

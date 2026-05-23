@@ -7,8 +7,10 @@
  *  - User-agent blocklist for known scanners
  *  - Cache-Control and CORS for /api/*
  *  - Performance timing header
+ *  - /admin/* cookie presence check (defense in depth; the
+ *    admin layout server component is the source of truth)
  *
- * Does NOT do CSRF / rate-limit / origin checks any more — those moved to
+ * Does NOT do CSRF / rate-limit / origin checks any more - those moved to
  * `src/lib/api/guards.ts::withMutationGuards` so they can be opted-in
  * per-route. Browser beacons (`/api/web-vitals`, `/api/csp-reports`)
  * legitimately can't carry a CSRF token, so a blanket proxy-level CSRF
@@ -30,7 +32,7 @@ export const config = {
 }
 
 // User-agent fragments associated with vulnerability scanners. Defense
-// in depth — sophisticated attackers spoof UAs trivially, but this
+// in depth - sophisticated attackers spoof UAs trivially, but this
 // catches the noisy crawl traffic.
 const SUSPICIOUS_UA = [
 	/sqlmap/i,
@@ -65,6 +67,19 @@ export function proxy(request: NextRequest) {
 	const userAgent = request.headers.get('user-agent') ?? ''
 	if (SUSPICIOUS_UA.some(pattern => pattern.test(userAgent))) {
 		return new NextResponse('Blocked', { status: 403 })
+	}
+
+	// /admin/* requires a session cookie. Presence-only check; the
+	// admin layout (src/app/admin/layout.tsx) validates the session and
+	// enforces the role. This branch keeps unauthenticated traffic out
+	// of the React server-render path and gives bots a quick bounce.
+	if (url.pathname === '/admin' || url.pathname.startsWith('/admin/')) {
+		const sessionCookie = request.cookies.get('better-auth.session_token')
+		if (!sessionCookie) {
+			const signInUrl = new URL('/auth/sign-in', request.url)
+			signInUrl.searchParams.set('from', url.pathname + url.search)
+			return NextResponse.redirect(signInUrl, { status: 307 })
+		}
 	}
 
 	// Cache-Control for top-level static-ish pages.

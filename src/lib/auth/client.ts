@@ -6,7 +6,7 @@
  * client-side base URL exposed by T3 env.
  *
  * Do NOT add a server-only guard here; this file is intentionally
- * client-safe. Do NOT import from `./index` (the server config) — that
+ * client-safe. Do NOT import from `./index` (the server config) - that
  * module is server-only and pulling it in would poison the client bundle.
  */
 import { createAuthClient } from 'better-auth/react'
