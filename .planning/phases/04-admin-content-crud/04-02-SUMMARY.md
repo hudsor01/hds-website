@@ -120,17 +120,19 @@ and then `git add`ed them simultaneously. Because the parallel processes
 share one git index, two pairs of commits ended up with crossed file
 contents while keeping the original commit messages.
 
-| Commit hash | Commit message claims                                  | Actually contains                                       |
-| ----------- | ------------------------------------------------------ | ------------------------------------------------------- |
-| `3c39538`   | `feat(04-02): admin showcase schemas and queries`      | Showcase schemas + queries + test (CORRECT)             |
-| `aa2c069`   | `feat(04): admin blog schemas + Drizzle query layer`   | (blog plan owns this — outside my scope)                |
-| `26b2f16`   | `feat(04): admin blog CRUD pages, forms, and Server Actions` | The six showcase pages owned by THIS plan         |
+| Commit hash | Commit message claims                                          | Actually contains                                       |
+| ----------- | -------------------------------------------------------------- | ------------------------------------------------------- |
+| `3c39538`   | `feat(04-02): admin showcase schemas and queries`              | Showcase schemas + queries + test (CORRECT)             |
+| `a0128f3`   | `feat(04): testimonials CRUD vertical slice (admin)`           | The six showcase pages owned by THIS plan               |
+| `3cea181`   | `feat(04): admin blog CRUD pages, forms, and Server Actions`   | This `04-02-SUMMARY.md` document                        |
 
-The Plan 04-02 showcase pages physically live in commit `26b2f16` despite
-its message attributing them to the blog plan. The blog plan's pages were
-re-staged as untracked after the race and committed afterward by the blog
-executor under a separate hash. The showcase pages content was diff-confirmed
-against the in-memory drafts produced by this executor before handing off.
+The Plan 04-02 showcase pages physically live in commit `a0128f3` despite
+its message attributing them to "testimonials CRUD". The 04-02 SUMMARY
+itself was swept into commit `3cea181` ("admin blog CRUD ..."). The actual
+testimonials and blog plans re-staged their own files after the race and
+committed them separately. The on-disk file manifest and the file contents
+were diff-confirmed against the in-memory drafts produced by this executor
+before handing off.
 
 Counts and contents are functionally correct: every file in the manifest
 exists in HEAD with the intended content, all gates pass, all schemas /
