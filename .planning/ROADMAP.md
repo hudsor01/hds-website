@@ -39,7 +39,7 @@ Plans:
 | 02 | `auth-foundation` | complete (5/5) | 5 | Better Auth wired to Neon. Users + sessions + accounts + verifications tables. Sign-in / sign-up pages. `/admin/*` server-component role guard + `proxy.ts` edge cookie short-circuit. AccountMenu primitive. Phase summary at `.planning/phases/02-auth-foundation/02-SUMMARY.md`. |
 | 03 | `admin-shell-and-dashboard` | complete (6/6) | 6 | Sidebar + topbar + content slot adapted from Efferd Dashboard 5. `/admin/dashboard` wired to real Neon data (web vitals p75, daily visitors, top pages, attribution channels, recent leads). 6 coming-soon stubs for the rest of v4. Phase summary at `.planning/phases/03-admin-shell-and-dashboard/03-SUMMARY.md`. |
 | 04 | `admin-content-crud` | complete (6/6) | 6 | `/admin/showcase`, `/admin/blog`, `/admin/testimonials` list + create + edit + delete. Replaces direct-SQL / Neon MCP workflow. Spec at `.planning/phases/04-admin-content-crud/04-CONTEXT.md`. Phase summary at `.planning/phases/04-admin-content-crud/04-SUMMARY.md`. |
-| 05 | `admin-ops` | pending | 0 | `/admin/leads` (contact submissions), `/admin/newsletter` (subscribers), `/admin/emails` (scheduled queue health). |
+| 05 | `admin-ops` | planning | 0 | `/admin/leads` (contact submissions + attribution + notes), `/admin/leads/calculator` (calculator submissions), `/admin/newsletter` (subscribers + unsubscribe/GDPR), `/admin/emails` (scheduled queue health + retry/cancel). Spec at `.planning/phases/05-admin-ops/05-CONTEXT.md`. |
 
 ### Phase 03: admin-shell-and-dashboard
 
