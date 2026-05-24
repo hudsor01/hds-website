@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 export const metadata: Metadata = {
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
-		'Real results from the small businesses we have built websites for — see how a professional website turned local reputations into booked customers.'
+		'Real results from the small businesses we have built websites for. See how a professional website turned local reputations into booked customers.'
 }
 
 const testimonials = [
@@ -27,7 +27,7 @@ const testimonials = [
 		company: 'E-Commerce Plus',
 		role: 'CEO',
 		content:
-			'Our new online store loads fast and finally looks the part — conversions jumped 60% in the first quarter.',
+			'Our new online store loads fast and finally looks the part. Conversions jumped 60% in the first quarter.',
 		rating: 5,
 		service: 'E-Commerce Website',
 		highlight: '60% More Sales'
@@ -60,7 +60,7 @@ const testimonials = [
 		company: 'Revenue Rocket',
 		role: 'Operations Manager',
 		content:
-			'Our website does the explaining now — customers find what they need and book online instead of calling. Our team has hours back every week.',
+			'Our website does the explaining now. Customers find what they need and book online instead of calling. Our team has hours back every week.',
 		rating: 5,
 		service: 'Website + Booking',
 		highlight: 'Hours Saved Weekly'
@@ -117,7 +117,7 @@ export default function TestimonialsPage() {
 						Real Results. Real Clients.
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Don&apos;t just take our word for it — see what small businesses are
+						Don&apos;t just take our word for it. See what small businesses are
 						achieving with a website built for their reputation.
 					</p>
 				</div>
@@ -130,7 +130,7 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								1–4 wks
+								1 to 4 wks
 							</div>
 							<div className="text-xs text-muted-foreground">
 								First Delivery

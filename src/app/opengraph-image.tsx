@@ -3,7 +3,7 @@ import { BRAND } from '@/lib/_generated/brand'
 
 export const runtime = 'edge'
 export const alt =
-	'Hudson Digital Solutions — Professional Websites for Small Businesses'
+	'Hudson Digital Solutions: Professional Websites for Small Businesses'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -82,7 +82,7 @@ export default async function OGImage() {
 				}}
 			>
 				<div>hudsondigitalsolutions.com</div>
-				<div>Dallas–Fort Worth · TX</div>
+				<div>Dallas-Fort Worth · TX</div>
 			</div>
 		</div>,
 		{ ...size }

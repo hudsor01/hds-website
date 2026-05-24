@@ -2,10 +2,10 @@
  * Auth route-group layout.
  *
  * Renders the sign-in and sign-up pages inside a centered, chrome-free
- * container. The site Navbar and Footer (which live in the root layout)
- * remain wrapped around this, but the page content here is centered into a
- * narrow column so the form is the only focal point. The root layout already
- * mounts a `<Toaster />` from sonner, so this layout does not duplicate it.
+ * container. The site Navbar and Footer self-suppress on /auth/* via
+ * usePathname, so this layout sits directly inside the root layout
+ * without marketing chrome bleed-through. The root layout mounts the
+ * <Toaster /> from sonner; this layout does not duplicate it.
  */
 import type { ReactNode } from 'react'
 

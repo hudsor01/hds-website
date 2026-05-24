@@ -283,7 +283,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								Tell us about your business. We&apos;ll map out the website it
-								needs — pages, timeline, and cost.
+								needs: pages, timeline, and cost.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">

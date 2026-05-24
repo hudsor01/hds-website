@@ -15,14 +15,14 @@ const PROCESS_STEPS = [
 		step: '01',
 		title: 'Discovery',
 		description:
-			'We learn how your business works — what you do, who your customers are, and what your website needs to do for you.',
+			'We learn how your business works: what you do, who your customers are, and what your website needs to do for you.',
 		icon: Search
 	},
 	{
 		step: '02',
 		title: 'Strategy',
 		description:
-			'We map out exactly what your website needs — pages, structure, and a plain-English plan with clear timelines.',
+			'We map out exactly what your website needs: pages, structure, and a plain-English plan with clear timelines.',
 		icon: ClipboardList
 	},
 	{

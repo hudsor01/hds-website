@@ -167,6 +167,10 @@ export default function RootLayout({
 				<NuqsAdapter>
 					<ClientProviders>
 						<ErrorBoundary>
+							{/* NavbarLight and Footer self-suppress on /admin/* and
+							    /auth/* (via usePathname in each component) so those
+							    route groups can render their own chrome without
+							    marketing nav/footer bleed-through. */}
 							<NavbarLight />
 							{/* The skip-link target is now a real <main> landmark
 							    instead of a wrapping <div>; assistive technology
