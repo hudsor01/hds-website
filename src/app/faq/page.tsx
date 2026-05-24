@@ -10,11 +10,11 @@ import FaqClient from './FaqClient'
 export const metadata: Metadata = {
 	title: 'Frequently Asked Questions | Hudson Digital Solutions',
 	description:
-		'Answers to common questions about our small business website design and development — pricing, process, timelines, and what is included.',
+		'Answers to common questions about our small business website design and development: pricing, process, timelines, and what is included.',
 	openGraph: {
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Common questions about our small business website design and development — pricing, process, timelines, and what every project includes.',
+			'Common questions about our small business website design and development: pricing, process, timelines, and what every project includes.',
 		url: 'https://hudsondigitalsolutions.com/faq',
 		images: [
 			{
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'Frequently Asked Questions | Hudson Digital Solutions',
 		description:
-			'Common questions about our small business website design and development — pricing, process, timelines, and what every project includes.',
+			'Common questions about our small business website design and development: pricing, process, timelines, and what every project includes.',
 		images: ['/HDS-Logo.webp']
 	},
 	alternates: {
@@ -48,7 +48,7 @@ const faqSchema = {
 			name: 'What website design services do you offer?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
+				text: 'We design and build professional websites for small businesses: custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
 			}
 		},
 		{
@@ -56,7 +56,7 @@ const faqSchema = {
 			name: 'How much does it cost to build a website?',
 			acceptedAnswer: {
 				'@type': 'Answer',
-				text: 'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call — we will walk you through options that fit your budget.'
+				text: 'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call. We will walk you through options that fit your budget.'
 			}
 		},
 		{

@@ -6,11 +6,11 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 export const metadata: Metadata = {
 	title: 'Get a Free Website Plan | Hudson Digital Solutions',
 	description:
-		"Tell us about your business and we'll map out the website it needs — pages, timeline, and cost — on a free 30-minute call. No sales pitch.",
+		"Tell us about your business and we'll map out the website it needs (pages, timeline, and cost) on a free 30-minute call. No sales pitch.",
 	openGraph: {
 		title: 'Free Website Plan in 30 Minutes | Hudson Digital',
 		description:
-			'A free 30-minute call where we map out the website your business needs — pages, timeline, and cost. No sales pitch. Response in 2 hours.'
+			'A free 30-minute call where we map out the website your business needs: pages, timeline, and cost. No sales pitch. Response in 2 hours.'
 	}
 }
 
@@ -84,8 +84,8 @@ export default function ContactPage() {
 								</h1>
 								<p className="mt-4 text-lead text-muted-foreground">
 									Tell us about your business. We&apos;ll map out the website it
-									needs — pages, timeline, and cost — on a free 30-minute call.
-									No sales pitch. No commitment.
+									needs (pages, timeline, and cost) on a free 30-minute call. No
+									sales pitch. No commitment.
 								</p>
 							</div>
 
@@ -135,7 +135,7 @@ export default function ContactPage() {
 											Get your website plan
 										</p>
 										<p className="text-xs text-muted-foreground mt-0.5">
-											Pages, timeline, and a clear price — yours to keep, no
+											Pages, timeline, and a clear price, yours to keep, no
 											obligation
 										</p>
 									</div>
@@ -223,7 +223,7 @@ export default function ContactPage() {
 							We Serve Clients Nationwide
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Primarily serving TX, FL, GA, OK and surrounding states — fully
+							Primarily serving TX, FL, GA, OK and surrounding states, fully
 							remote for all projects.
 						</p>
 					</div>

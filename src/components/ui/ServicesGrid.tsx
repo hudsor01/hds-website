@@ -15,7 +15,7 @@ const SERVICES = [
 	{
 		title: 'Website Design & Development',
 		description:
-			'A professional website built for your business from scratch — clean custom design, mobile-ready, and fast. Comes with an admin panel so you control your content without calling a developer.',
+			'A professional website built for your business from scratch: clean custom design, mobile-ready, and fast. Comes with an admin panel so you control your content without calling a developer.',
 		features: [
 			'Custom Design Built for Your Brand',
 			'Mobile-Ready on Every Device',
@@ -43,7 +43,7 @@ const SERVICES = [
 	{
 		title: 'Booking, Payments & Follow-Up',
 		description:
-			'Once your site is live, we can wire in the extras — let customers book online, take payments, and make sure no inquiry slips through the cracks.',
+			'Once your site is live, we can wire in the extras: let customers book online, take payments, and make sure no inquiry slips through the cracks.',
 		features: [
 			'Online Booking & Scheduling',
 			'Stripe Payment Setup',

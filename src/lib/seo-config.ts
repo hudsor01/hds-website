@@ -19,24 +19,24 @@ export const SEO_CONFIG: Record<string, SEOMetaData> = {
 	home: {
 		title: 'Dallas-Fort Worth Web Design | Hudson Digital',
 		description:
-			'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned — fast, mobile-ready, built to convert.',
+			'Professional website design for small businesses in Dallas-Fort Worth. We build the website your business has earned: fast, mobile-ready, built to convert.',
 		canonical: SITE_URL
 	},
 
 	services: {
 		title: 'Small Business Website Design | Hudson Digital',
 		description:
-			'Professional websites designed and built for small businesses — custom, mobile-ready, fast, and easy to find on Google. Free website plan, no obligation.',
+			'Professional websites designed and built for small businesses: custom, mobile-ready, fast, and easy to find on Google. Free website plan, no obligation.',
 		ogTitle: 'Website Design for Small Businesses | Hudson Digital',
 		ogDescription:
-			'Professional websites built for small businesses — custom, fast, mobile-ready, built to bring in customers. Launched in weeks.',
+			'Professional websites built for small businesses: custom, fast, mobile-ready, built to bring in customers. Launched in weeks.',
 		canonical: `${SITE_URL}/services`
 	},
 
 	about: {
 		title: 'Web Designer Who Understands Small Business | Hudson Digital',
 		description:
-			'An experienced web developer with a real business background — building small businesses the professional website their reputation deserves.',
+			'An experienced web developer with a real business background, building small businesses the professional website their reputation deserves.',
 		ogTitle: 'Web Designer Who Understands Small Business | Hudson Digital',
 		ogDescription:
 			'Experienced developer with a business background, building websites that actually bring in customers for small businesses.',

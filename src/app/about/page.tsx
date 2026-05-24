@@ -132,7 +132,7 @@ export default function AboutPage() {
 							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							We build websites the way a business owner thinks — every choice
+							We build websites the way a business owner thinks. Every choice is
 							measured against whether it brings customers in.
 						</p>
 					</div>
@@ -146,8 +146,8 @@ export default function AboutPage() {
 							<div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
 								<p>
 									Most agencies learned web development in bootcamps. We learned
-									it in the trenches of revenue operations — where every
-									decision either moves the business forward or holds it back.
+									it in the trenches of revenue operations, where every decision
+									either moves the business forward or holds it back.
 								</p>
 								<p>
 									With{' '}
@@ -158,7 +158,7 @@ export default function AboutPage() {
 									miss:{' '}
 									<strong className="text-info">
 										websites fail not because of bad code, but because they were
-										never built to bring in customers — just to look nice
+										never built to bring in customers, just to look nice
 									</strong>
 									.
 								</p>
@@ -171,7 +171,7 @@ export default function AboutPage() {
 									<Link href="/services" className="link-primary font-semibold">
 										professional website
 									</Link>{' '}
-									and walk away — every page is built and measured against one
+									and walk away. Every page is built and measured against one
 									question:{' '}
 									<strong className="text-success-text">
 										does this help your business get and keep customers?
@@ -218,8 +218,8 @@ export default function AboutPage() {
 									If the KPI we agree on at kickoff (typically conversion rate,
 									qualified leads per month, or revenue per visitor)
 									doesn&apos;t improve over its installed-analytics baseline
-									within 90 days, I keep working — up to 3 additional revision
-									rounds covering optimization scope — at no extra cost until it
+									within 90 days, I keep working (up to 3 additional revision
+									rounds covering optimization scope) at no extra cost until it
 									does. Baseline is measured from analytics installed on day one
 									of the engagement.
 								</p>
@@ -341,7 +341,7 @@ export default function AboutPage() {
 							<p className="text-base">
 								Before building for clients, I spent 5+ years in{' '}
 								<strong className="text-accent">revenue operations</strong> at
-								established companies — close enough to the numbers to see
+								established companies, close enough to the numbers to see
 								exactly which websites{' '}
 								<strong className="text-accent">brought in customers</strong>{' '}
 								and which just looked nice.
@@ -355,13 +355,13 @@ export default function AboutPage() {
 								</strong>
 								. Agencies charge $50K for a beautiful site the owner can&apos;t
 								even update. I build small businesses a professional website
-								they control — one that turns the reputation they&apos;ve
-								already earned into booked customers.
+								they control, one that turns the reputation they&apos;ve already
+								earned into booked customers.
 							</p>
 
 							<p className="text-base">
 								When I saw how many great local businesses had glowing reviews
-								but no website — or one so dated it cost them customers — I knew
+								but no website (or one so dated it cost them customers), I knew
 								where I could help. Hudson Digital Solutions exists to fix
 								exactly that:{' '}
 								<strong className="text-accent">
@@ -457,7 +457,7 @@ export default function AboutPage() {
 							</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
 								We build for growth. Your website and systems grow with your
-								business — no expensive rebuilds when you scale.
+								business, no expensive rebuilds when you scale.
 							</p>
 						</div>
 					</div>
@@ -514,7 +514,7 @@ export default function AboutPage() {
 							</h2>
 
 							<p className="text-lead text-muted-foreground max-w-2xl mx-auto mb-10">
-								Let&apos;s map out the website your business needs — and build
+								Let&apos;s map out the website your business needs, and build
 								you something that turns the reputation you&apos;ve earned into
 								booked customers.
 							</p>

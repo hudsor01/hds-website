@@ -275,8 +275,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								Ready for the website your business has earned?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Let&apos;s map out what it needs — and build something that
-								turns your reputation into booked customers.
+								Let&apos;s map out what it needs, and build something that turns
+								your reputation into booked customers.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">Get My Free Website Plan</Link>
