@@ -82,7 +82,7 @@ export default async function OGImage() {
 				}}
 			>
 				<div>hudsondigitalsolutions.com</div>
-				<div>Dallas–Fort Worth · TX</div>
+				<div>Dallas-Fort Worth · TX</div>
 			</div>
 		</div>,
 		{ ...size }

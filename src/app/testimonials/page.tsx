@@ -130,7 +130,7 @@ export default function TestimonialsPage() {
 						<div className="bg-background px-8 py-10 text-center relative overflow-hidden">
 							<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
 							<div className="text-4xl font-black text-accent mb-2 tabular-nums">
-								1–4 wks
+								1 to 4 wks
 							</div>
 							<div className="text-xs text-muted-foreground">
 								First Delivery

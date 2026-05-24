@@ -198,7 +198,7 @@ export default function ContactPage() {
 												Business Hours
 											</p>
 											<p className="text-xs text-muted-foreground">
-												Monday – Friday, 9am – 6pm CT
+												Monday to Friday, 9am to 6pm CT
 											</p>
 											<p className="text-xs text-muted-foreground">
 												Response within 2 hours

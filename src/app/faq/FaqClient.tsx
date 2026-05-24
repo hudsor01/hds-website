@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Timelines depend on project scope. Simple websites take 4–6 weeks. E-commerce and booking-enabled sites take 8–12 weeks. Larger sites with custom features and booking or payment setup typically take 3–6 months. We can expedite urgent projects with dedicated resources.'
+					'Timelines depend on project scope. Simple websites take 4 to 6 weeks. E-commerce and booking-enabled sites take 8 to 12 weeks. Larger sites with custom features and booking or payment setup typically take 3 to 6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		]
 	},
