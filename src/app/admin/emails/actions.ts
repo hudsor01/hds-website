@@ -39,9 +39,7 @@ import {
 	retryEmailSchema
 } from '@/lib/schemas/admin-emails'
 
-export type ActionResult =
-	| { ok: true }
-	| { ok: false; errors: Record<string, string> }
+type ActionResult = { ok: true } | { ok: false; errors: Record<string, string> }
 
 function flattenZod(error: ZodError): Record<string, string> {
 	const out: Record<string, string> = {}

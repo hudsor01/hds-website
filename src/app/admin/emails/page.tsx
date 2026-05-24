@@ -64,11 +64,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 	]
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<h1 className="text-2xl font-semibold text-foreground">Emails</h1>
-			</div>
-
+		<>
 			<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 				{EMAIL_STATUSES.map(s => (
 					<div
@@ -155,7 +151,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 					</table>
 				</div>
 			)}
-		</div>
+		</>
 	)
 }
 
@@ -163,12 +159,17 @@ export default function AdminEmailsPage({
 	searchParams
 }: AdminEmailsPageProps) {
 	return (
-		<Suspense
-			fallback={
-				<div className="text-sm text-muted-foreground">Loading emails...</div>
-			}
-		>
-			<EmailsList searchParams={searchParams} />
-		</Suspense>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<h1 className="text-2xl font-semibold text-foreground">Emails</h1>
+			</div>
+			<Suspense
+				fallback={
+					<div className="text-sm text-muted-foreground">Loading emails...</div>
+				}
+			>
+				<EmailsList searchParams={searchParams} />
+			</Suspense>
+		</div>
 	)
 }

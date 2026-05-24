@@ -24,9 +24,9 @@
  * helper because their `Promise<ActionResult>`-returning actions are
  * wrapped in thin `void` shims at the page level. This file does NOT
  * declare either symbol because its actions are `void` natively, leaving
- * no caller. `'use server'` files only allow async function exports, so
- * cross-file sharing would not be possible anyway; a future client-form
- * consumer should re-add the helper inline.
+ * no caller. The local `flattenZod` helper in each sibling file is
+ * duplicated by necessity: it is a VALUE, and `'use server'` files only
+ * allow async function exports, so it cannot be shared across files.
  *
  * Deviation from PLAN 05-02 Task 2 (Rule 1 -- typecheck fix): the plan
  * specified `updateLeadStatusAction` and `addLeadNoteAction` as

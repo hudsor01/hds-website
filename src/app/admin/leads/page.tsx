@@ -52,16 +52,7 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 	const rows = await listLeadsForAdmin(status, 200)
 
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<h1 className="text-2xl font-semibold text-foreground">Leads</h1>
-				<Link
-					href="/admin/leads/calculator"
-					className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
-				>
-					Calculator leads
-				</Link>
-			</div>
+		<>
 			<StatusFilterBar
 				baseHref="/admin/leads"
 				current={status}
@@ -129,18 +120,29 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 					</table>
 				</div>
 			)}
-		</div>
+		</>
 	)
 }
 
 export default function AdminLeadsPage({ searchParams }: AdminLeadsPageProps) {
 	return (
-		<Suspense
-			fallback={
-				<div className="text-sm text-muted-foreground">Loading leads...</div>
-			}
-		>
-			<LeadsList searchParams={searchParams} />
-		</Suspense>
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<h1 className="text-2xl font-semibold text-foreground">Leads</h1>
+				<Link
+					href="/admin/leads/calculator"
+					className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-accent-text border border-border bg-surface-raised hover:bg-surface-base transition-smooth"
+				>
+					Calculator leads
+				</Link>
+			</div>
+			<Suspense
+				fallback={
+					<div className="text-sm text-muted-foreground">Loading leads...</div>
+				}
+			>
+				<LeadsList searchParams={searchParams} />
+			</Suspense>
+		</div>
 	)
 }

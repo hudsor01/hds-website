@@ -57,20 +57,7 @@ async function CalculatorLeadsList({
 		: null
 	const rows = await listCalculatorLeadsForAdmin(quality, 200)
 	return (
-		<div className="space-y-6">
-			<div className="flex items-center justify-between">
-				<div>
-					<Link
-						href="/admin/leads"
-						className="text-sm text-accent-text hover:underline"
-					>
-						Back to leads
-					</Link>
-					<h1 className="text-2xl font-semibold text-foreground mt-2">
-						Calculator leads
-					</h1>
-				</div>
-			</div>
+		<>
 			<StatusFilterBar
 				baseHref="/admin/leads/calculator"
 				current={quality}
@@ -143,7 +130,7 @@ async function CalculatorLeadsList({
 					</table>
 				</div>
 			)}
-		</div>
+		</>
 	)
 }
 
@@ -151,14 +138,29 @@ export default function AdminCalculatorLeadsPage({
 	searchParams
 }: AdminCalculatorLeadsPageProps) {
 	return (
-		<Suspense
-			fallback={
-				<div className="text-sm text-muted-foreground">
-					Loading calculator leads...
+		<div className="space-y-6">
+			<div className="flex items-center justify-between">
+				<div>
+					<Link
+						href="/admin/leads"
+						className="text-sm text-accent-text hover:underline"
+					>
+						Back to leads
+					</Link>
+					<h1 className="text-2xl font-semibold text-foreground mt-2">
+						Calculator leads
+					</h1>
 				</div>
-			}
-		>
-			<CalculatorLeadsList searchParams={searchParams} />
-		</Suspense>
+			</div>
+			<Suspense
+				fallback={
+					<div className="text-sm text-muted-foreground">
+						Loading calculator leads...
+					</div>
+				}
+			>
+				<CalculatorLeadsList searchParams={searchParams} />
+			</Suspense>
+		</div>
 	)
 }
