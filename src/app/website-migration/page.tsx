@@ -49,7 +49,7 @@ const risks = [
 		Icon: Shield,
 		title: 'Your Domain May Not Be Yours',
 		description:
-			'Some providers register your domain under their own account. Getting it transferred can take weeks of back-and-forth — or worse, they hold it hostage.'
+			'Some providers register your domain under their own account. Getting it transferred can take weeks of back-and-forth, or worse, they hold it hostage.'
 	},
 	{
 		Icon: AlertTriangle,
@@ -70,7 +70,7 @@ const migrationSteps: MigrationStep[] = [
 		step: '01',
 		title: 'Free Migration Audit',
 		description:
-			'We review your current setup — website, domain ownership, Google Business Profile, CRM data — and create a migration plan with zero downtime.'
+			'We review your current setup (website, domain ownership, Google Business Profile, CRM data) and create a migration plan with zero downtime.'
 	},
 	{
 		step: '02',
@@ -100,8 +100,8 @@ const comparisons = [
 	},
 	{
 		feature: 'Own your website',
-		managed: 'No — provider owns it',
-		hudson: 'Yes — 100% yours'
+		managed: 'No: provider owns it',
+		hudson: 'Yes: 100% yours'
 	},
 	{
 		feature: 'Own your domain',
@@ -186,7 +186,7 @@ export default function WebsiteMigrationPage() {
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 						Stuck paying hundreds a month for a website you don&apos;t own? We
-						migrate everything to a faster site that&apos;s 100% yours — with
+						migrate everything to a faster site that&apos;s 100% yours, with
 						zero downtime and preserved SEO rankings.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -348,7 +348,7 @@ export default function WebsiteMigrationPage() {
 
 					<div className="grid sm:grid-cols-2 gap-4">
 						{[
-							'A website you own — no monthly hostage fees',
+							'A website you own, no monthly hostage fees',
 							'Your domain registered in your name',
 							'Google Business Profile connected and verified',
 							'Page load under 2 seconds',

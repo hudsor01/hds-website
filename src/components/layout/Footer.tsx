@@ -2,6 +2,7 @@
 
 import { CheckCircle, Clock, Mail, Phone, Rocket } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
@@ -71,6 +72,14 @@ const socialLinks = [
 // Removed unused animation variants
 
 export default function Footer() {
+	const pathname = usePathname()
+	// Self-suppress on /admin/* and /auth/* so those route groups can
+	// render their own chrome without marketing footer bleeding through
+	// from the root layout.
+	if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
+		return null
+	}
+
 	return (
 		<footer
 			className="relative mt-auto bg-surface-sunken"
@@ -166,7 +175,7 @@ export default function Footer() {
 								Ready for the Website You&apos;ve Earned?
 							</h4>
 							<p className="text-xs text-muted-foreground mb-heading">
-								Get your free website plan — pages, timeline, and cost, mapped
+								Get your free website plan: pages, timeline, and cost, mapped
 								out for your business.
 							</p>
 

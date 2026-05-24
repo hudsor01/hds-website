@@ -42,7 +42,7 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-	{ value: '1–4 wks', label: 'First Delivery' },
+	{ value: '1 to 4 wks', label: 'First Delivery' },
 	{ value: 'Expert', label: 'Development' },
 	{ value: 'Proven', label: 'Track Record' },
 	{ value: '2 hr', label: 'Response Time' }
@@ -104,7 +104,7 @@ export default function ServicesPage() {
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 						A professional website designed, built, and launched for your
-						business — plus the option to connect booking, payments, and
+						business. Plus the option to connect booking, payments, and
 						follow-up when you&apos;re ready.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -155,7 +155,7 @@ export default function ServicesPage() {
 							Proven Results
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Small business owners trust us to get it done right and on time —
+							Small business owners trust us to get it done right and on time,
 							without the technical runaround.
 						</p>
 					</div>
@@ -190,7 +190,7 @@ export default function ServicesPage() {
 							Our Process
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Simple, clear steps from first conversation to live and working —
+							Simple, clear steps from first conversation to live and working,
 							no technical jargon required.
 						</p>
 					</div>
@@ -247,7 +247,7 @@ export default function ServicesPage() {
 
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 								Tell us about your business. We&apos;ll map out the website it
-								needs — pages, timeline, and cost — and you decide from there.
+								needs, pages, timeline, and cost, and you decide from there.
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">

@@ -144,7 +144,7 @@ const tools = [
 	{
 		title: 'Invoice Generator',
 		description:
-			'Create professional invoices with line items, totals, and tax — ready to download as PDF.',
+			'Create professional invoices with line items, totals, and tax, ready to download as PDF.',
 		href: TOOL_ROUTES.INVOICE_GENERATOR,
 		Icon: FileText,
 		benefits: [
@@ -157,7 +157,7 @@ const tools = [
 	{
 		title: 'Proposal Generator',
 		description:
-			'Create professional project proposals for clients with scope, timeline, and pricing — PDF included.',
+			'Create professional project proposals for clients with scope, timeline, and pricing. PDF included.',
 		href: TOOL_ROUTES.PROPOSAL_GENERATOR,
 		Icon: Briefcase,
 		benefits: [

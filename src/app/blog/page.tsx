@@ -10,11 +10,11 @@ import { getFeaturedPosts, getPosts, getTags } from '@/lib/blog'
 export const metadata: Metadata = {
 	title: 'Small Business Web Design Blog | Hudson Digital',
 	description:
-		'Practical insights on websites, getting found on Google, and growing a small business online — from Hudson Digital Solutions.',
+		'Practical insights on websites, getting found on Google, and growing a small business online, from Hudson Digital Solutions.',
 	openGraph: {
 		title: 'Small Business Web Design Blog | Hudson Digital',
 		description:
-			'Practical insights on websites, getting found on Google, and growing a small business online — from the team at Hudson Digital Solutions.',
+			'Practical insights on websites, getting found on Google, and growing a small business online, from the team at Hudson Digital Solutions.',
 		url: 'https://hudsondigitalsolutions.com/blog',
 		images: [
 			{
@@ -183,7 +183,7 @@ export default function BlogPage() {
 									Curious what a site would cost?
 								</h3>
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-									Get a free website plan for your business — pages, timeline,
+									Get a free website plan for your business: pages, timeline,
 									and a clear price.
 								</p>
 								<Button asChild variant="accent" className="w-full">

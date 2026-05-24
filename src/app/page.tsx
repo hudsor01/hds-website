@@ -71,15 +71,15 @@ const solutions = [
 		Icon: Code2,
 		title: 'A Website That Looks the Part',
 		description:
-			'A clean, professional design that matches the quality of your work — so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
-		stat: '1–4 wks',
+			'A clean, professional design that matches the quality of your work, so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
+		stat: '1 to 4 wks',
 		statLabel: 'First Delivery'
 	},
 	{
 		Icon: TrendingUp,
 		title: 'Found When Customers Search',
 		description:
-			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for — so your reputation actually gets seen.',
+			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for, so your reputation actually gets seen.',
 		stat: 'Built in',
 		statLabel: 'local SEO'
 	},
@@ -87,7 +87,7 @@ const solutions = [
 		Icon: Settings,
 		title: 'Yours to Control',
 		description:
-			'A simple admin panel means you change your hours, prices, photos, and text yourself — in minutes, no developer, no waiting, no invoice.',
+			'A simple admin panel means you change your hours, prices, photos, and text yourself, in minutes, no developer, no waiting, no invoice.',
 		stat: '$0',
 		statLabel: 'to make edits'
 	}
@@ -119,7 +119,7 @@ export default function HomePage() {
 							<p className="text-lead text-muted-foreground max-w-lg text-balance">
 								You&apos;ve got the 5-star ratings and the word-of-mouth. But
 								when someone Googles you, there&apos;s no website to send them
-								to — or one that doesn&apos;t do you justice. We build small
+								to, or one that doesn&apos;t do you justice. We build small
 								businesses a professional website that turns your reputation
 								into booked customers.
 							</p>
@@ -151,7 +151,7 @@ export default function HomePage() {
 							<div className="flex items-center gap-6">
 								<div>
 									<div className="text-xl font-black text-foreground tabular-nums">
-										1–4 wks
+										1 to 4 wks
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
 										First Delivery
@@ -271,7 +271,7 @@ export default function HomePage() {
 
 					<p className="text-sm text-muted-foreground text-center mt-8 max-w-2xl mx-auto">
 						Need online booking, payments, or automatic lead follow-up wired in?
-						We handle that too — once your site is doing its job.
+						We handle that too, once your site is doing its job.
 					</p>
 				</div>
 			</section>
@@ -389,8 +389,8 @@ export default function HomePage() {
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Every month without a real website is another month of customers
-							Googling you and finding nothing — or finding a competitor
-							instead. Let&apos;s fix that.
+							Googling you and finding nothing, or finding a competitor instead.
+							Let&apos;s fix that.
 						</p>
 					</div>
 

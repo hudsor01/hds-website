@@ -116,7 +116,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			{
 				title: 'Fast Website Launch',
 				description:
-					'Get a professional website live fast — design, copy, and setup handled end to end.'
+					'Get a professional website live fast: design, copy, and setup handled end to end.'
 			},
 			{
 				title: 'Mobile-First Design',

@@ -19,12 +19,12 @@ const faqs = [
 			{
 				question: 'What website design services do you offer?',
 				answer:
-					'We design and build professional websites for small businesses — custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
+					'We design and build professional websites for small businesses: custom design, mobile-ready, fast, and built to be found on Google. Once your site is live, we can also connect booking, payments, and customer follow-up.'
 			},
 			{
 				question: 'How much does it cost to build a website?',
 				answer:
-					'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call — we will walk you through options that fit your budget.'
+					'Every project is scoped to your specific needs, so costs vary based on the number of pages, the features you need, and the timeline. The best way to get a realistic estimate is to use our free Cost Estimator tool or book a free website plan call. We will walk you through options that fit your budget.'
 			},
 			{
 				question: 'Do you offer monthly retainer packages?',
@@ -34,7 +34,7 @@ const faqs = [
 			{
 				question: 'What is your typical project timeline?',
 				answer:
-					'Timelines depend on project scope. Simple websites take 4–6 weeks. E-commerce and booking-enabled sites take 8–12 weeks. Larger sites with custom features and booking or payment setup typically take 3–6 months. We can expedite urgent projects with dedicated resources.'
+					'Timelines depend on project scope. Simple websites take 4 to 6 weeks. E-commerce and booking-enabled sites take 8 to 12 weeks. Larger sites with custom features and booking or payment setup typically take 3 to 6 months. We can expedite urgent projects with dedicated resources.'
 			}
 		]
 	},
@@ -69,7 +69,7 @@ const faqs = [
 			{
 				question: 'What technologies do you use?',
 				answer:
-					"We use modern, proven tools chosen for reliability and speed — not because they're trendy. The specific technology depends on what works best for your business. You don't need to know what's under the hood; you just need it to work."
+					"We use modern, proven tools chosen for reliability and speed, not because they're trendy. The specific technology depends on what works best for your business. You don't need to know what's under the hood; you just need it to work."
 			},
 			{
 				question: 'Will my website be mobile-friendly?',
@@ -84,7 +84,7 @@ const faqs = [
 			{
 				question: 'Can you integrate with my existing systems?',
 				answer:
-					'Yes. We connect whatever tools your business already uses — HubSpot, Salesforce, Stripe, your booking system, your email platform. If it has a connection point, we can link it to your website and your workflows.'
+					'Yes. We connect whatever tools your business already uses: HubSpot, Salesforce, Stripe, your booking system, your email platform. If it has a connection point, we can link it to your website and your workflows.'
 			},
 			{
 				question: 'Do you provide hosting and maintenance?',
@@ -104,7 +104,7 @@ const faqs = [
 			{
 				question: 'Do you work with new businesses?',
 				answer:
-					"Absolutely. We understand fast timelines, tight budgets, and the need for quick wins. We help new businesses get their digital foundation right from day one — so you're not paying to redo it later."
+					"Absolutely. We understand fast timelines, tight budgets, and the need for quick wins. We help new businesses get their digital foundation right from day one, so you're not paying to redo it later."
 			},
 			{
 				question: 'What payment terms do you offer?',
@@ -158,7 +158,7 @@ export default function FaqClient() {
 					</h1>
 
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-8">
-						Everything you need to know about working with us — websites,
+						Everything you need to know about working with us: websites,
 						pricing, process, and timelines.
 					</p>
 
@@ -235,8 +235,8 @@ export default function FaqClient() {
 								Still Have Questions?
 							</h2>
 							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-								Get a free website plan — we&apos;ll map out what your site
-								needs and answer every question along the way.
+								Get a free website plan. We&apos;ll map out what your site needs
+								and answer every question along the way.
 							</p>
 							<Button asChild variant="accent" size="xl" trackConversion={true}>
 								<Link href="/contact">

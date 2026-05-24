@@ -110,8 +110,8 @@ export default function TermsPage() {
 							</h2>
 							<div className="text-sm text-muted-foreground space-y-4 leading-relaxed">
 								<p>
-									The content on this website — including text, graphics, logos,
-									images, and software — is the property of Hudson Digital
+									The content on this website (including text, graphics, logos,
+									images, and software) is the property of Hudson Digital
 									Solutions and is protected by applicable intellectual property
 									laws. You may not reproduce, distribute, or create derivative
 									works without our express written permission.

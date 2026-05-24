@@ -50,6 +50,14 @@ const Navbar = memo(function Navbar() {
 		return () => window.removeEventListener('keydown', handler)
 	}, [mobileMenuOpen])
 
+	// Self-suppress on /admin/* and /auth/* so those route groups can
+	// render their own chrome (admin Topbar, centered auth container)
+	// without marketing nav bleeding through from the root layout.
+	// Early return placed AFTER all hooks to honor Rules of Hooks.
+	if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
+		return null
+	}
+
 	const linkClass = (href: string) =>
 		cn(
 			'px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',

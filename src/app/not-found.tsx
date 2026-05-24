@@ -43,7 +43,7 @@ export default function NotFound() {
 					</h2>
 					<p className="text-lead text-muted-foreground max-w-xl mx-auto">
 						The page you&apos;re looking for has vanished into the digital void.
-						But don&apos;t worry—our navigation system is still operational.
+						But don&apos;t worry, our navigation system is still operational.
 					</p>
 				</div>
 
