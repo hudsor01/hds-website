@@ -13,16 +13,23 @@ export function WebVitalsReporting() {
 		// Store in database for admin dashboard
 		storeWebVital(metric)
 
-		// Log performance issues in development
+		// Log in development at a level that matches the CWV rating so good
+		// metrics show as info and bad metrics surface in warn/error filters.
+		// The Phase 03 dashboard widget uses the same rating thresholds for
+		// its KPI cards (text-success-text / warning / destructive); align
+		// the log level here so dev-console filtering matches.
 		if (process.env.NODE_ENV === 'development') {
-			logger.warn(
-				`[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`,
-				{
-					name: metric.name,
-					value: metric.value,
-					rating: metric.rating
-				}
-			)
+			const log =
+				metric.rating === 'poor'
+					? logger.error
+					: metric.rating === 'needs-improvement'
+						? logger.warn
+						: logger.info
+			log(`[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`, {
+				name: metric.name,
+				value: metric.value,
+				rating: metric.rating
+			})
 		}
 	})
 
