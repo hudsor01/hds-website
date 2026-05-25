@@ -55,7 +55,7 @@
 		"drizzle-orm": "0.45.2",
 		"lucide-react": "1.16.0",
 		"nuqs": "2.8.9",
-		"react-email": "6.1.1",
+		"react-email": "6.3.3",
 		"react-error-boundary": "6.1.1",
 		"react-markdown": "10.1.0",
 		"recharts": "3.8.1",
