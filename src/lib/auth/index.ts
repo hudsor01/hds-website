@@ -34,6 +34,38 @@ const trustedOrigins =
 		.map(value => value.trim())
 		.filter(Boolean) ?? []
 
+/**
+ * Redact `email` (and `recipientEmail`) fields anywhere in a structured log
+ * argument so Better Auth's internal logs (e.g. "User not found" on failed
+ * sign-in) don't write raw addresses into our log sink. Replaces the value
+ * with the literal `[redacted-email]` so the call site is still debuggable
+ * (the field still exists in the object, you just can't read the user).
+ *
+ * Pure, non-recursive on arrays of primitives (no expansion of strings into
+ * char arrays). Recursion is bounded by object depth; we don't need cycle
+ * detection because Better Auth's log args are flat JSON-serializable blobs.
+ */
+function redactEmails(value: unknown): unknown {
+	if (Array.isArray(value)) {
+		return value.map(redactEmails)
+	}
+	if (value && typeof value === 'object') {
+		const out: Record<string, unknown> = {}
+		for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+			if (
+				(key === 'email' || key === 'recipientEmail') &&
+				typeof val === 'string'
+			) {
+				out[key] = '[redacted-email]'
+			} else {
+				out[key] = redactEmails(val)
+			}
+		}
+		return out
+	}
+	return value
+}
+
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: 'pg',
@@ -94,5 +126,29 @@ export const auth = betterAuth({
 			}
 		}
 	},
-	plugins: [nextCookies()]
+	plugins: [nextCookies()],
+	logger: {
+		// Pipe Better Auth's internal log lines through the project logger
+		// (matches CLAUDE.md > Logging: no direct console.* anywhere) and
+		// redact email fields before they hit any log sink. Better Auth's
+		// `log` signature is `(level, message, ...args)` per the upstream
+		// reference docs; `level` is one of debug | info | warn | error.
+		log: (level, message, ...args) => {
+			const redactedArgs = args.map(redactEmails)
+			const metadata =
+				redactedArgs.length === 1 && typeof redactedArgs[0] === 'object'
+					? (redactedArgs[0] as Record<string, unknown>)
+					: { args: redactedArgs }
+			const tag = `[Better Auth] ${message}`
+			if (level === 'error') {
+				logger.error(tag, undefined, { metadata })
+			} else if (level === 'warn') {
+				logger.warn(tag, { metadata })
+			} else if (level === 'info') {
+				logger.info(tag, { metadata })
+			} else {
+				logger.debug(tag, { metadata })
+			}
+		}
+	}
 })

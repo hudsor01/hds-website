@@ -1,19 +1,22 @@
 # STATE — Current GSD Position
 
-**Last updated:** 2026-05-23
-**Branch:** `admin-ops`
-**Current milestone:** v4 (Admin Panel)
-**Current phase:** `05-admin-ops` (complete 7/7, PR not yet open)
-**Current plan:** none — phase complete, awaiting operator smoke + PR
+**Last updated:** 2026-05-25
+**Branch:** `fix/smoke-audit-findings`
+**Current milestone:** v4 (Admin Panel) — **shipped to production**
+**Current phase:** none (v4 complete, post-ship audit polish in flight)
+**Current plan:** none
 
 ## What just happened
 
-- Phase 05 (`admin-ops`) closed. 7 plans across 4 waves, 14 implementation commits on `admin-ops` (bootstrap + Wave 1 + 12 Wave-2 commits + Wave-3 cleanup; 4 of the Wave-2 commits are SUMMARY-only docs). Operator-facing ops surfaces shipped for all 4 surfaces: `/admin/leads` (list with status filter + detail with attribution, notes, status mutations, delete), `/admin/leads/calculator` (list with quality filter + detail with inputs / results / conversion / mark-contacted / mark-converted), `/admin/newsletter` (list + detail with unsubscribe / re-subscribe state machine + GDPR hard delete), `/admin/emails` (list with 4 queue-health stat cards + status filter + detail with retry guard / cancel / delete). Every mutation is a single-button `<form action={...}>` posting to a Server Action that calls `requireAdminSession()` first then validates with Zod then mutates via Drizzle then `revalidatePath` for both list AND detail paths. 2 new shared admin primitives reused across all 4 surfaces: `StatusFilterBar` (server-side `<form method="get">` chip row) + `StatusBadge` (OKLCH token color map). Detail page IS the edit surface (no `/[id]/edit` split). No useAppForm — every form is `<form action={...}>` + hidden id + submit button. No new shared helpers needed; reuse rate from Phase 04 = 100%. Phase 02 / 03 / 04 files plus all public-route, public-API, n8n Bearer, and cron endpoint surfaces are byte-equal to `main` (53/53 protected paths verified). All 13 automated gates + Gate 10b green: lint (353 files, 0 diagnostics) + typecheck + 563 unit tests (unchanged baseline; Phase 05 added no new tests by design) + build (19 admin routes, all `◐` partial prerender, zero `(coming-soon)`) + em/en-dash sweep = 0 + protected-files diff = 53/53 OK + defense-in-depth auth verified (leads=5, calculator=4, newsletter=4, emails=4 `requireAdminSession()` calls) + every mutation calls `revalidatePath` (counts: leads=7, calculator=7, newsletter=7, emails=7) + no `console.*` / `process.env.X` / `any` in any added file + no non-async value exports in any `'use server'` file. 35-step operator manual smoke deferred to operator pre-PR (see `.planning/phases/05-admin-ops/05-07-VERIFICATION.md` for the checklist). Wave 2 ran 4 parallel agents in a single working tree; commit-message attribution got crossed with file contents on one commit (`2445bc1` named "leads Server Actions" actually contains newsletter Task 1 files too) — end state on disk is correct, future readers should verify via `git show <hash> --stat`. Latent `flattenZod` + `ActionResult` non-async runtime export in `leads/actions.ts` was invisible until `next build` could run end-to-end; Wave 3's stub-deletion commit (`cf59c45`) caught and fixed it inline.
-- Phase 04 (`admin-content-crud`) closed earlier; PR not yet opened, deferred to operator. End state: branch `admin-content-crud` complete, awaiting operator smoke and PR.
-- Phase 03 (`admin-shell-and-dashboard`) closed earlier and merged to `main` via PR #213.
-- Phase 02 (`auth-foundation`) closed earlier. Merged into the base for `admin-shell-dashboard`.
-- Milestone v4 (Admin Panel) complete: 4 / 4 phases done. After Phase 04 + Phase 05 PRs merge, v4 ships.
-- Milestone v3 closed: Phase 01 (`showcase-ui-redesign`) shipped to main as `59e5e70` via PR #208.
+- **Phase 05 operator smoke closed at 35/35.** Prod read-only sweep 2026-05-24 (19/19 verifiable on `https://www.hudsondigitalsolutions.com`) + local destructive + fixture-blocked sweep 2026-05-25 (16/16 against `http://localhost:3001`, driven via Claude-in-Chrome MCP). Zero failures. Chrome-bleed check PASS. Console-error gate PASS (only pre-fix "Failed to fetch" entries from before the local env-var fix, none during the smoke). 8 `smoke-*@example.com` fixtures seeded + cleaned via `psql`. Gate 14 closed; the result appended to `.planning/phases/05-admin-ops/05-07-VERIFICATION.md`.
+- **Smoke surfaced 3 post-ship findings** addressed by this branch (`fix/smoke-audit-findings`): (1) Next.js 16 `data-scroll-behavior="smooth"` attribute now set on `<html>` (silences the per-route scroll-restoration warning); (2) WebVitals dev-console logger now picks `info | warn | error` based on the metric's CWV rating instead of always logging at `warn`; (3) Better Auth's internal logger is now piped through the project logger (CLAUDE.md compliance) with a `redactEmails` walker that masks any `email` / `recipientEmail` field before it reaches the log sink.
+- **v4 (Admin Panel) is shipped end-to-end.** 4/4 phases complete on `main`:
+  - Phase 02 (`auth-foundation`) via PR #210 (`54603c1`) — Better Auth + sessions + admin role guard + AccountMenu.
+  - Phase 03 (`admin-shell-and-dashboard`) via PR #213 (`d88d049`) — Sidebar + Topbar + Forbidden + 5 dashboard widgets.
+  - Phase 04 (`admin-content-crud`) via PR #215 (`cf37d1c`) — showcase / blog / testimonials CRUD with Server Actions + TanStack Form.
+  - Phase 05 (`admin-ops`) via PR #217 (`5221269`) — leads / calculator-leads / newsletter / emails ops surfaces with `<form action>` Server Actions, 4 queue-health stat cards on /admin/emails.
+- **PR #218 (`4114d37`) closed the cross-phase chrome bleed + project-wide em/en-dash sweep** that the per-phase review pipeline had missed (NavbarLight + Footer now self-suppress on `/admin/*` and `/auth/*` via `usePathname`; ~80 em/en-dash CLAUDE.md violations fixed across 30 files). Smoke was what surfaced the gap; future review prompts should include a project-wide CLAUDE.md compliance sweep as a separate concern from per-phase scope.
+- Milestone v3 closed: Phase 01 (`showcase-ui-redesign`) shipped via PR #208.
 
 ## Active decisions (still in force from v3)
 
@@ -48,12 +51,10 @@
 
 ## Next action
 
-Operator manual smoke checklist (35 steps in `.planning/phases/05-admin-ops/05-07-VERIFICATION.md`) on local dev, then ship PR for `admin-ops` -> `main`. After merge, v4 milestone (Admin Panel) complete; choose v5 direction.
+Ship this branch (`fix/smoke-audit-findings`) as the smoke-closeout PR, merge, and v4 closes for real. After merge, choose v5 direction. Candidates surfaced during v4:
 
-Recommended PR squash message:
-
-```
-feat(admin): ops - leads, calculator-leads, newsletter, emails with Server Actions
-```
-
-(Phase 04 PR for `admin-content-crud` is also pending — both should ship before v4 closes.)
+- Admin chrome route-group refactor (move `src/app` into `(public)/` + `(admin)/` + `(auth)/` route groups so chrome lives in the group layout instead of via `usePathname` self-suppression).
+- Image-upload UI for showcase / blog / testimonials (admin currently pastes URLs).
+- Rich-text / markdown editor for blog content (admin currently uses a plain `<textarea>`).
+- Pagination + search for any list growing past ~200 rows.
+- Better Auth logger compliance sweep (Phase 05 smoke found Better Auth was logging raw emails; this branch installs a redacting logger adapter, but a future audit could also check for emails leaking through other 3rd-party libraries).

@@ -382,6 +382,21 @@ If all 35 steps pass: write "Operator smoke: PASS (35 / 35)" into this
 file and proceed to PR. If any step fails: write the failure into the
 Operator Smoke section of this file and STOP for triage.
 
+### Operator smoke run — 2026-05-24 + 2026-05-25
+
+**Operator smoke: PASS (35/35), env: prod-read-only + local-destructive**
+
+- Prod read-only sweep (2026-05-24): 19/19 verifiable steps PASS against `https://www.hudsondigitalsolutions.com` on deployed commit `cf37d1c -> 5221269`. 4 read-only steps SKIPPED for missing fixtures (14 no calc rows; 28/29/30 no failed/sent/cancelled emails).
+- Local destructive + fixture-blocked sweep (2026-05-25): 12 destructive + 4 fixture-blocked = 16/16 PASS against `http://localhost:3001` on commit `19bb7d1` (= `4114d37` + local empty redeploy commit). Browser smoke driven via Claude-in-Chrome.
+- Chrome-bleed check: PASS. NavbarLight + Footer correctly suppressed on `/auth/*` and `/admin/*` (validated by PR #218 `4114d37` self-suppression via `usePathname`).
+- Console-error gate (Step 35): PASS. Only pre-smoke "Sign-in failed" entries (from before the local env-var fix) appeared in the buffer. Zero new errors during the smoke run.
+- Pre-existing issues surfaced during the smoke and resolved:
+  - PR #218 (`4114d37`): ~80 em/en-dash CLAUDE.md violations swept from user-facing text; marketing chrome bleed on /admin and /auth.
+  - This PR: Next.js 16 `data-scroll-behavior="smooth"` attribute on `<html>`, WebVitals log level mapped to CWV rating, Better Auth logger piped through project logger with email-field redaction.
+- Cleanup: all 8 `smoke-*@example.com` fixtures deleted post-smoke (4 deleted by the destructive steps themselves, 4 cleaned via DELETE on the four LIKE-pattern queries; final counts = 0 in leads / calculator_leads / newsletter_subscribers / scheduled_emails).
+
+Phase 05 is closed. Milestone v4 (Admin Panel) is complete (4/4 phases shipped).
+
 ## Conclusion
 
 All 13 automated gates + Gate 10b green. Phase 05 is ready for operator
