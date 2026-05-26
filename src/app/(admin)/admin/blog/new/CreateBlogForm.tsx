@@ -16,6 +16,7 @@
 import { useState, useTransition } from 'react'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 import { slugify } from '@/lib/admin/slugify'
 import { createBlogPostAction } from '../actions'
 
@@ -38,7 +39,6 @@ const TEXT_INPUT_CLASS =
 	'block w-full rounded-md border border-border bg-surface-base px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-text focus-visible:ring-offset-2 focus-visible:ring-offset-surface-raised'
 
 const TEXTAREA_CLASS = `${TEXT_INPUT_CLASS} resize-y`
-const CODE_TEXTAREA_CLASS = `${TEXTAREA_CLASS} font-mono`
 
 export function CreateBlogForm({
 	authorOptions,
@@ -166,18 +166,14 @@ export function CreateBlogForm({
 				htmlFor="content"
 				required
 				error={errors.content}
-				hint="Markdown"
+				hint="Rich text"
 			>
-				<textarea
+				<RichTextEditor
 					id="content"
-					name="content"
 					value={content}
-					onChange={e => setContent(e.target.value)}
-					rows={18}
-					required
-					className={CODE_TEXTAREA_CLASS}
-					aria-invalid={errors.content ? 'true' : undefined}
-					aria-describedby={errors.content ? 'content-error' : 'content-hint'}
+					onChange={setContent}
+					ariaDescribedby={errors.content ? 'content-error' : 'content-hint'}
+					ariaInvalid={errors.content ? 'true' : undefined}
 				/>
 			</FormFieldSet>
 
