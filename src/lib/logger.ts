@@ -4,6 +4,7 @@
  */
 
 import { env } from '@/env'
+import { redactSensitive } from '@/lib/log-redact'
 import { errorLogs } from '@/lib/schemas/system'
 import type {
 	ErrorContext,
@@ -98,6 +99,15 @@ async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
 		// Dynamic import — db.ts accesses POSTGRES_URL at module eval time,
 		// which crashes the client. Deferring to call time keeps logger client-safe.
 		const { db } = await import('@/lib/db')
+		// Sink-level PII redaction (Phase 07): the `metadata` jsonb column is
+		// caller-controlled, so run it through the shared redactor before
+		// insert. The dedicated `userEmail` column is masked to the literal
+		// sentinel so the column stays addressable for tooling that queries
+		// it by name but never persists raw addresses.
+		const redactedMetadata = redactSensitive(payload.metadata) as Record<
+			string,
+			unknown
+		> | null
 		await db.insert(errorLogs).values({
 			fingerprint: payload.fingerprint,
 			errorType: payload.error_type,
@@ -109,10 +119,10 @@ async function pushToDatabase(payload: ErrorLogPayload): Promise<void> {
 			route: payload.route,
 			requestId: payload.request_id,
 			userId: payload.user_id,
-			userEmail: payload.user_email,
+			userEmail: payload.user_email ? '[redacted-email]' : null,
 			environment: payload.environment,
 			vercelRegion: payload.vercel_region,
-			metadata: payload.metadata
+			metadata: redactedMetadata
 		})
 	} catch (e) {
 		// Never throw - logging should not break the app
@@ -167,12 +177,22 @@ class BaseLogger implements Logger {
 	}
 
 	private log(level: LogLevel, message: string, data?: unknown): void {
+		// Sink-level PII redaction (Phase 07): every metadata payload runs
+		// through redactSensitive before serialization so callers cannot
+		// accidentally leak emails, credentials, or IPs into stdout / the
+		// error_logs table / external webhook bodies. Field-name-based, not
+		// pattern-based — see src/lib/log-redact.ts for the rules.
+		const redactedData = redactSensitive(data)
+		const redactedContext = redactSensitive({ ...this.context }) as Record<
+			string,
+			unknown
+		>
 		const logData = {
 			timestamp: new Date().toISOString(),
 			level,
 			message,
-			context: { ...this.context },
-			data
+			context: redactedContext,
+			data: redactedData
 		}
 
 		// Only log error and warn levels to console to comply with ESLint rules
