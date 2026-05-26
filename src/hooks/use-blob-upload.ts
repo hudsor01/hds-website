@@ -12,11 +12,13 @@
 // (503) or whether the operator's session expired (401), etc.
 //
 // Detection strategy: on every error, probe the upload endpoint with
-// a tiny payload to read the actual HTTP status. A 503 means
-// `BLOB_READ_WRITE_TOKEN` is unset on the server, so we set
-// `uploadsDisabled` (sticky for the rest of the session) and the
-// component hides the Upload button. Any other status surfaces a
-// generic error and leaves Upload available for a retry.
+// a lightweight GET that returns `{ configured: boolean }`. When
+// `configured` is false, `BLOB_READ_WRITE_TOKEN` is unset on the
+// server, so we set `uploadsDisabled` (sticky for the rest of the
+// session) and the component hides the Upload button. Any other
+// outcome surfaces a generic error and leaves Upload available for a
+// retry. The GET avoids the noise-error path the previous POST
+// `{type: 'probe'}` produced when handleUpload rejected the body.
 //
 // The hook intentionally does not auto-probe on mount; operators in
 // a Blob-configured env should never see a phantom probe request that
@@ -37,15 +39,16 @@ export interface UseBlobUploadResult {
 
 async function probeUploadDisabled(): Promise<boolean> {
 	try {
-		// Send a body the route can parse but that handleUpload will not
-		// produce a successful response for. We only care about the status
-		// code: 503 means BLOB_READ_WRITE_TOKEN is unset.
-		const res = await fetch(UPLOAD_URL, {
-			method: 'POST',
-			headers: { 'content-type': 'application/json' },
-			body: JSON.stringify({ type: 'probe' })
-		})
-		return res.status === 503
+		// GET the lightweight probe endpoint, which returns
+		// { configured: boolean } without invoking handleUpload. A
+		// `configured: false` response means BLOB_READ_WRITE_TOKEN is
+		// unset on the server.
+		const res = await fetch(UPLOAD_URL, { method: 'GET' })
+		if (!res.ok) {
+			return false
+		}
+		const data = (await res.json()) as { configured?: boolean }
+		return data.configured === false
 	} catch {
 		return false
 	}

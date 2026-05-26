@@ -44,6 +44,16 @@ const ALLOWED_CONTENT_TYPES = [
 
 const MAX_BYTES = 8 * 1024 * 1024 // 8 MB
 
+// GET /api/admin/images/upload — lightweight probe endpoint used by the
+// client hook to detect whether Vercel Blob is configured without sending
+// a malformed POST that would trip handleUpload's body validation and
+// produce a noise logger.error entry. Returns 200 with the configured
+// state. Not auth-gated: the configured/unconfigured signal is not
+// sensitive (anyone with the bundled JS can infer the same).
+export function GET(): NextResponse {
+	return NextResponse.json({ configured: Boolean(env.BLOB_READ_WRITE_TOKEN) })
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
 	if (!env.BLOB_READ_WRITE_TOKEN) {
 		return NextResponse.json(

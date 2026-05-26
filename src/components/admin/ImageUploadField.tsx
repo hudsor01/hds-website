@@ -110,7 +110,14 @@ export function ImageUploadField({
 						</div>
 					)}
 
-					<div className="flex flex-wrap items-center gap-2">
+					{/* aria-busy belongs on a wrapping container -- <label> does not
+					    accept it semantically. aria-live="polite" because upload
+					    progress is informational, not urgent. */}
+					<div
+						className="flex flex-wrap items-center gap-2"
+						aria-busy={isUploading}
+						aria-live="polite"
+					>
 						{!uploadsDisabled && (
 							<>
 								<label htmlFor={fileInputId} className={DROP_ZONE_CLS}>

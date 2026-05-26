@@ -100,8 +100,11 @@ export function ImageGalleryField({
 					{values.length > 0 && (
 						<ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
 							{values.map((url, index) => (
+								// key={url} works because Vercel Blob's addRandomSuffix=true guarantees
+								// uploaded URLs are unique; the duplicate-pasted-URL corner case is
+								// acceptable for an internal admin gallery (~5 items max in practice).
 								<li
-									key={`${url}-${index}`}
+									key={url}
 									className="flex flex-col gap-2 rounded-md border border-border p-2"
 								>
 									<div className="relative h-24 w-full overflow-hidden rounded bg-surface-base">
@@ -125,6 +128,7 @@ export function ImageGalleryField({
 											type="button"
 											onClick={() => removeAt(index)}
 											className={REMOVE_BUTTON_CLS}
+											aria-label={`Remove image ${index + 1}`}
 										>
 											Remove
 										</button>
@@ -134,7 +138,14 @@ export function ImageGalleryField({
 						</ul>
 					)}
 
-					<div className="flex flex-wrap items-center gap-2">
+					{/* aria-busy belongs on a wrapping container -- <label> does not
+					    accept it semantically. aria-live="polite" because upload
+					    progress is informational, not urgent. */}
+					<div
+						className="flex flex-wrap items-center gap-2"
+						aria-busy={isUploading}
+						aria-live="polite"
+					>
 						{!uploadsDisabled && (
 							<>
 								<label htmlFor={fileInputId} className={DROP_ZONE_CLS}>
