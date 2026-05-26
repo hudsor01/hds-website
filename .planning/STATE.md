@@ -3,11 +3,12 @@
 **Last updated:** 2026-05-25
 **Branch:** `chrome-route-groups`
 **Current milestone:** v5 (Admin hardening + content authoring)
-**Current phase:** `06-admin-chrome-route-groups` (planning)
-**Current plan:** none (CONTEXT written; planner pending)
+**Current phase:** `06-admin-chrome-route-groups` (complete 4/4 commits, PR not yet open)
+**Current plan:** none (mechanical refactor; no per-plan split)
 
 ## What just happened
 
+- **Phase 06 (`admin-chrome-route-groups`) shipped 4/4 commits on `chrome-route-groups`.** `src/app/` is now split into `(public)/`, `(admin)/admin/`, `(auth)/auth/` route groups. Marketing chrome (NavbarLight + Footer + ScrollToTop) lives in `src/app/(public)/layout.tsx` instead of the root layout; admin and auth pages never inherit it by topology. The `usePathname` early-return in NavbarLight + Footer introduced by PR #218 (`4114d37`) is reverted — the topology-based chrome boundary supersedes the runtime gate. All 4 gates green: lint, typecheck, tests (563/563), build (route table byte-equal to pre-Phase-06 baseline). Phase 02/03/04/05 admin/auth content byte-equal — only file paths moved via `git mv`. Summary at `.planning/phases/06-admin-chrome-route-groups/06-SUMMARY.md`. Commits: `87b1c55`, `d095396`, `467a004`, `a52c85b` (+ this metadata commit).
 - **Phase 05 operator smoke closed at 35/35.** Prod read-only sweep 2026-05-24 (19/19 verifiable on `https://www.hudsondigitalsolutions.com`) + local destructive + fixture-blocked sweep 2026-05-25 (16/16 against `http://localhost:3001`, driven via Claude-in-Chrome MCP). Zero failures. Chrome-bleed check PASS. Console-error gate PASS (only pre-fix "Failed to fetch" entries from before the local env-var fix, none during the smoke). 8 `smoke-*@example.com` fixtures seeded + cleaned via `psql`. Gate 14 closed; the result appended to `.planning/phases/05-admin-ops/05-07-VERIFICATION.md`.
 - **Smoke surfaced 3 post-ship findings** addressed by this branch (`fix/smoke-audit-findings`): (1) Next.js 16 `data-scroll-behavior="smooth"` attribute now set on `<html>` (silences the per-route scroll-restoration warning); (2) WebVitals dev-console logger now picks `info | warn | error` based on the metric's CWV rating instead of always logging at `warn`; (3) Better Auth's internal logger is now piped through the project logger (CLAUDE.md compliance) with a `redactEmails` walker that masks any `email` / `recipientEmail` field before it reaches the log sink.
 - **v4 (Admin Panel) is shipped end-to-end.** 4/4 phases complete on `main`:
@@ -51,10 +52,10 @@
 
 ## Next action
 
-Ship this branch (`fix/smoke-audit-findings`) as the smoke-closeout PR, merge, and v4 closes for real. After merge, choose v5 direction. Candidates surfaced during v4:
+Open the Phase 06 PR (`chrome-route-groups` -> `main`) after operator pre-PR smoke (5-step checklist in `.planning/phases/06-admin-chrome-route-groups/06-SUMMARY.md`). After merge, the next v5 phase is **Phase 07 — `third-party-logger-compliance`**: audit external libraries for log surfaces bypassing `@/lib/logger` and/or writing PII; extend the redacted-logger pattern shipped for Better Auth in PR #221 (`8abaee9`) to anything else found.
 
-- Admin chrome route-group refactor (move `src/app` into `(public)/` + `(admin)/` + `(auth)/` route groups so chrome lives in the group layout instead of via `usePathname` self-suppression).
-- Image-upload UI for showcase / blog / testimonials (admin currently pastes URLs).
-- Rich-text / markdown editor for blog content (admin currently uses a plain `<textarea>`).
-- Pagination + search for any list growing past ~200 rows.
-- Better Auth logger compliance sweep (Phase 05 smoke found Better Auth was logging raw emails; this branch installs a redacting logger adapter, but a future audit could also check for emails leaking through other 3rd-party libraries).
+Remaining v5 candidates after 07:
+
+- Phase 08 — Image-upload UI for showcase / blog / testimonials (admin currently pastes URLs).
+- Phase 09 — Rich-text / markdown editor for blog content (admin currently uses a plain `<textarea>`).
+- Phase 10 — Pagination + search for any list growing past ~200 rows.
