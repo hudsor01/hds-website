@@ -102,6 +102,20 @@ Plans:
 - Wave 3: 05-06 (stub cleanup, depends on all four Wave-2 routes existing)
 - Wave 4: 05-07 (verification, depends on everything)
 
+## Milestone v5 — Admin hardening + content authoring
+
+> Started 2026-05-25. v4 (Admin Panel) is shipped end-to-end and audited. v5 takes the next pass: turn the post-smoke audit findings into architectural cleanup, replace the paste-URL friction with real upload UI, give the blog a proper editor, sweep the 3rd-party logger surface for PII leaks, and stage pagination for any future list growth.
+
+### Phases
+
+| # | Slug | Status | Plans | Description |
+|---|---|---|---|---|
+| 06 | `admin-chrome-route-groups` | planning | 0 | Move `src/app` into `(public)/` + `(admin)/` + `(auth)/` route groups. Marketing chrome (NavbarLight + Footer) lives in the (public) layout instead of the root layout, so admin/auth pages never inherit it. Removes the `usePathname` self-suppression shipped in PR #218 (`4114d37`) as the canonical fix. No UX change; foundation for any future top-level chrome variant. |
+| 07 | `third-party-logger-compliance` | pending | 0 | Audit every external library for log surfaces that bypass `@/lib/logger` and/or write PII (email addresses, IPs, tokens). Extend the redacted-logger pattern shipped for Better Auth in PR #221 (`8abaee9`) to anything else found. Bounded compliance work; sets the bar before scaling. |
+| 08 | `image-upload-ui` | pending | 0 | Wire image hosting (Vercel Blob is the prime candidate given the deploy target) and per-resource upload widgets for `showcase.imageUrl` / `showcase.ogImageUrl` / `showcase.galleryImages[]` / `blog_posts.featureImage` / `testimonials.imageUrl`. Removes the paste-URL friction documented in CONTEXT non-goals of Phases 04 and 05. |
+| 09 | `blog-rich-text-editor` | pending | 0 | Replace the plain `<textarea>` for blog content with a markdown-aware editor (Tiptap or Lexical). Keeps storage as markdown text in `blog_posts.content`; just upgrades the input surface. Public render path untouched. |
+| 10 | `admin-list-pagination` | pending | 0 | Add server-rendered cursor pagination + a text-search filter to the 7 admin list pages. Currently capped at the hard limits set in Phase 04/05 (showcase 50, blog 50, testimonials 50, leads 200, calculator-leads 200, newsletter 200, emails 100). Defensive scoping; activate when any table exceeds the cap in real load. |
+
 ## Earlier milestones (archived)
 
 - v1 — initial 10 phases, shipped

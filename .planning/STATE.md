@@ -1,10 +1,10 @@
 # STATE — Current GSD Position
 
 **Last updated:** 2026-05-25
-**Branch:** `fix/smoke-audit-findings`
-**Current milestone:** v4 (Admin Panel) — **shipped to production**
-**Current phase:** none (v4 complete, post-ship audit polish in flight)
-**Current plan:** none
+**Branch:** `chrome-route-groups`
+**Current milestone:** v5 (Admin hardening + content authoring)
+**Current phase:** `06-admin-chrome-route-groups` (planning)
+**Current plan:** none (CONTEXT written; planner pending)
 
 ## What just happened
 
