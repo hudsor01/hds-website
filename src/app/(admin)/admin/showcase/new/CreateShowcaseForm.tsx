@@ -23,6 +23,8 @@
  */
 import { useState } from 'react'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
+import { ImageGalleryField } from '@/components/admin/ImageGalleryField'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { useAppForm } from '@/hooks/form-hook'
 import { slugify } from '@/lib/admin/slugify'
 import { createShowcaseAction } from '../actions'
@@ -384,43 +386,25 @@ export function CreateShowcaseForm() {
 
 			<form.AppField name="imageUrl">
 				{field => (
-					<FormFieldSet
-						label="Image URL"
+					<ImageUploadField
+						label="Image"
 						htmlFor="imageUrl"
+						value={field.state.value}
+						onChange={next => field.handleChange(next)}
 						error={field.state.meta.errors[0]}
-					>
-						{aria => (
-							<input
-								{...aria}
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
-						)}
-					</FormFieldSet>
+					/>
 				)}
 			</form.AppField>
 
 			<form.AppField name="ogImageUrl">
 				{field => (
-					<FormFieldSet
-						label="OG image URL"
+					<ImageUploadField
+						label="OG image"
 						htmlFor="ogImageUrl"
+						value={field.state.value}
+						onChange={next => field.handleChange(next)}
 						error={field.state.meta.errors[0]}
-					>
-						{aria => (
-							<input
-								{...aria}
-								type="url"
-								className={INPUT_CLS}
-								value={field.state.value ?? ''}
-								onChange={e => field.handleChange(e.target.value)}
-								onBlur={field.handleBlur}
-							/>
-						)}
-					</FormFieldSet>
+					/>
 				)}
 			</form.AppField>
 
@@ -629,30 +613,14 @@ export function CreateShowcaseForm() {
 
 			<form.AppField name="galleryImages">
 				{field => (
-					<FormFieldSet
-						label="Gallery image URLs"
+					<ImageGalleryField
+						label="Gallery images"
 						htmlFor="galleryImages"
-						hint="One URL per line."
+						hint="Upload files or paste URLs."
+						values={field.state.value ?? []}
+						onChange={next => field.handleChange(next)}
 						error={field.state.meta.errors[0]}
-					>
-						{aria => (
-							<textarea
-								{...aria}
-								rows={4}
-								className={TEXTAREA_CLS}
-								value={(field.state.value ?? []).join('\n')}
-								onChange={e =>
-									field.handleChange(
-										e.target.value
-											.split('\n')
-											.map(s => s.trim())
-											.filter(Boolean)
-									)
-								}
-								onBlur={field.handleBlur}
-							/>
-						)}
-					</FormFieldSet>
+					/>
 				)}
 			</form.AppField>
 
