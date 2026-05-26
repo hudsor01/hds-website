@@ -15,6 +15,7 @@
  */
 import { useState, useTransition } from 'react'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { slugify } from '@/lib/admin/slugify'
 import { createBlogPostAction } from '../actions'
 
@@ -180,25 +181,14 @@ export function CreateBlogForm({
 				/>
 			</FormFieldSet>
 
-			<FormFieldSet
-				label="Feature image URL"
+			<ImageUploadField
+				label="Feature image"
 				htmlFor="featureImage"
+				hint="Optional. Upload a file or paste a URL."
+				value={featureImage === '' ? null : featureImage}
+				onChange={next => setFeatureImage(next ?? '')}
 				error={errors.featureImage}
-				hint="Optional. Paste a full https URL."
-			>
-				<input
-					id="featureImage"
-					name="featureImage"
-					type="url"
-					value={featureImage}
-					onChange={e => setFeatureImage(e.target.value)}
-					className={TEXT_INPUT_CLASS}
-					aria-invalid={errors.featureImage ? 'true' : undefined}
-					aria-describedby={
-						errors.featureImage ? 'featureImage-error' : 'featureImage-hint'
-					}
-				/>
-			</FormFieldSet>
+			/>
 
 			<FormFieldSet
 				label="Reading time (minutes)"

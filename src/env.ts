@@ -107,7 +107,13 @@ export const env = createEnv({
 
 		// Sentry error tracking (optional; no-op when unset)
 		SENTRY_DSN: z.string().url().optional(),
-		SENTRY_AUTH_TOKEN: z.string().optional()
+		SENTRY_AUTH_TOKEN: z.string().optional(),
+
+		// Vercel Blob — admin image uploads. Optional everywhere; the
+		// /api/admin/images/upload route returns 503 when unset so the
+		// client UI hides the Upload button and the paste-URL fallback
+		// continues to work.
+		BLOB_READ_WRITE_TOKEN: z.string().optional()
 	},
 
 	/**
@@ -154,6 +160,7 @@ export const env = createEnv({
 		UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
 		SENTRY_DSN: process.env.SENTRY_DSN,
 		SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+		BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 
 		// Client
 		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

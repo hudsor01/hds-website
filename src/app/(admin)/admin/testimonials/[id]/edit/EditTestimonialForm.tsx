@@ -14,6 +14,7 @@
 import { useState } from 'react'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { useAppForm } from '@/hooks/form-hook'
 import type { TestimonialRow } from '@/lib/admin/testimonials-queries'
 import { deleteTestimonialAction, updateTestimonialAction } from '../../actions'
@@ -235,27 +236,14 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 
 				<form.AppField name="imageUrl">
 					{field => (
-						<FormFieldSet
-							label="Image URL"
+						<ImageUploadField
+							label="Image"
 							htmlFor="imageUrl"
-							hint="Paste an image URL."
+							hint="Upload a file or paste a URL."
+							value={field.state.value ?? null}
+							onChange={next => field.handleChange(next)}
 							error={field.state.meta.errors[0]}
-						>
-							{aria => (
-								<input
-									{...aria}
-									type="url"
-									className={INPUT_CLS}
-									value={field.state.value ?? ''}
-									onChange={e =>
-										field.handleChange(
-											e.target.value === '' ? null : e.target.value
-										)
-									}
-									onBlur={field.handleBlur}
-								/>
-							)}
-						</FormFieldSet>
+						/>
 					)}
 				</form.AppField>
 
