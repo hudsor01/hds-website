@@ -2,7 +2,6 @@
 
 import { CheckCircle, Clock, Mail, Phone, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
@@ -71,15 +70,13 @@ const socialLinks = [
 
 // Removed unused animation variants
 
+// Marketing footer — mounted exclusively by src/app/(public)/layout.tsx.
+// Admin (/admin/*) and auth (/auth/*) routes live in their own route
+// groups whose layouts never include this component, so chrome isolation
+// is now solved by route-group topology. The usePathname early-return
+// introduced in PR #218 is removed; this component no longer needs
+// pathname awareness.
 export default function Footer() {
-	const pathname = usePathname()
-	// Self-suppress on /admin/* and /auth/* so those route groups can
-	// render their own chrome without marketing footer bleeding through
-	// from the root layout.
-	if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
-		return null
-	}
-
 	return (
 		<footer
 			className="relative mt-auto bg-surface-sunken"
