@@ -1,13 +1,14 @@
 # STATE — Current GSD Position
 
-**Last updated:** 2026-05-25
-**Branch:** `chrome-route-groups`
+**Last updated:** 2026-05-26
+**Branch:** `logger-compliance`
 **Current milestone:** v5 (Admin hardening + content authoring)
-**Current phase:** `06-admin-chrome-route-groups` (complete 4/4 commits, PR not yet open)
-**Current plan:** none (mechanical refactor; no per-plan split)
+**Current phase:** `07-third-party-logger-compliance` (complete, PR not yet open)
+**Current plan:** none
 
 ## What just happened
 
+- **Phase 07 (`third-party-logger-compliance`) shipped on `logger-compliance`.** Sink-level PII redaction now applies inside `BaseLogger.log` and `pushToDatabase`. New shared module `src/lib/log-redact.ts` exports `redactSensitive` covering 3 categories — emails (`email`, `recipientEmail`, `userEmail` → `[redacted-email]`), credentials (`password`, `secret`, `apiKey`, `token`, `bearerToken`, `refreshToken`, `accessToken` → `[redacted-secret]`), and IPs (`ip`, `ipAddress` → `[redacted-ip]`). Better Auth's logger config in `src/lib/auth/index.ts` now imports the same module instead of its inline `redactEmails` (extracted from PR #221 `8abaee9`). 11 new unit tests (`tests/unit/log-redact.test.ts`) bring the suite to 574/574. Audit identified 5 PII-bearing call sites in `notifications.ts` + `auth/index.ts` — sink redaction covers them all without call-site edits. 3 `console.*` error-boundary exemptions and 4 in-logger console fallbacks remain documented and untouched. SUMMARY at `.planning/phases/07-third-party-logger-compliance/07-SUMMARY.md`.
 - **Phase 06 (`admin-chrome-route-groups`) shipped 4/4 commits on `chrome-route-groups`.** `src/app/` is now split into `(public)/`, `(admin)/admin/`, `(auth)/auth/` route groups. Marketing chrome (NavbarLight + Footer + ScrollToTop) lives in `src/app/(public)/layout.tsx` instead of the root layout; admin and auth pages never inherit it by topology. The `usePathname` early-return in NavbarLight + Footer introduced by PR #218 (`4114d37`) is reverted — the topology-based chrome boundary supersedes the runtime gate. All 4 gates green: lint, typecheck, tests (563/563), build (route table byte-equal to pre-Phase-06 baseline). Phase 02/03/04/05 admin/auth content byte-equal — only file paths moved via `git mv`. Summary at `.planning/phases/06-admin-chrome-route-groups/06-SUMMARY.md`. Commits: `87b1c55`, `d095396`, `467a004`, `a52c85b` (+ this metadata commit).
 - **Phase 05 operator smoke closed at 35/35.** Prod read-only sweep 2026-05-24 (19/19 verifiable on `https://www.hudsondigitalsolutions.com`) + local destructive + fixture-blocked sweep 2026-05-25 (16/16 against `http://localhost:3001`, driven via Claude-in-Chrome MCP). Zero failures. Chrome-bleed check PASS. Console-error gate PASS (only pre-fix "Failed to fetch" entries from before the local env-var fix, none during the smoke). 8 `smoke-*@example.com` fixtures seeded + cleaned via `psql`. Gate 14 closed; the result appended to `.planning/phases/05-admin-ops/05-07-VERIFICATION.md`.
 - **Smoke surfaced 3 post-ship findings** addressed by this branch (`fix/smoke-audit-findings`): (1) Next.js 16 `data-scroll-behavior="smooth"` attribute now set on `<html>` (silences the per-route scroll-restoration warning); (2) WebVitals dev-console logger now picks `info | warn | error` based on the metric's CWV rating instead of always logging at `warn`; (3) Better Auth's internal logger is now piped through the project logger (CLAUDE.md compliance) with a `redactEmails` walker that masks any `email` / `recipientEmail` field before it reaches the log sink.
