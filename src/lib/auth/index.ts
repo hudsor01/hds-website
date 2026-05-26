@@ -26,6 +26,7 @@ import { nextCookies } from 'better-auth/next-js'
 import { count, eq } from 'drizzle-orm'
 import { env } from '@/env'
 import { db } from '@/lib/db'
+import { redactSensitive } from '@/lib/log-redact'
 import { logger } from '@/lib/logger'
 import { accounts, sessions, users, verifications } from '@/lib/schemas/schema'
 
@@ -34,37 +35,13 @@ const trustedOrigins =
 		.map(value => value.trim())
 		.filter(Boolean) ?? []
 
-/**
- * Redact `email` (and `recipientEmail`) fields anywhere in a structured log
- * argument so Better Auth's internal logs (e.g. "User not found" on failed
- * sign-in) don't write raw addresses into our log sink. Replaces the value
- * with the literal `[redacted-email]` so the call site is still debuggable
- * (the field still exists in the object, you just can't read the user).
- *
- * Pure, non-recursive on arrays of primitives (no expansion of strings into
- * char arrays). Recursion is bounded by object depth; we don't need cycle
- * detection because Better Auth's log args are flat JSON-serializable blobs.
- */
-function redactEmails(value: unknown): unknown {
-	if (Array.isArray(value)) {
-		return value.map(redactEmails)
-	}
-	if (value && typeof value === 'object') {
-		const out: Record<string, unknown> = {}
-		for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
-			if (
-				(key === 'email' || key === 'recipientEmail') &&
-				typeof val === 'string'
-			) {
-				out[key] = '[redacted-email]'
-			} else {
-				out[key] = redactEmails(val)
-			}
-		}
-		return out
-	}
-	return value
-}
+// Phase 07 (logger-compliance) extracted the inline `redactEmails` walker
+// that previously lived here into `src/lib/log-redact.ts` so the redaction
+// rules are uniform across every PII-bearing log path. Better Auth's
+// internal logger config below pipes through the shared redactor; the
+// project logger applies the same redactor at its own sink, so a caller
+// passing `{ email: 'foo@bar' }` is masked regardless of which entry
+// point reaches the log.
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -134,7 +111,7 @@ export const auth = betterAuth({
 		// `log` signature is `(level, message, ...args)` per the upstream
 		// reference docs; `level` is one of debug | info | warn | error.
 		log: (level, message, ...args) => {
-			const redactedArgs = args.map(redactEmails)
+			const redactedArgs = args.map(redactSensitive)
 			const metadata =
 				redactedArgs.length === 1 && typeof redactedArgs[0] === 'object'
 					? (redactedArgs[0] as Record<string, unknown>)
