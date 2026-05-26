@@ -319,7 +319,18 @@ export function RichTextEditor({
 
 	const editor = useEditor({
 		extensions: [
-			StarterKit,
+			StarterKit.configure({
+				// Strike (<s>) and HorizontalRule (<hr>) are disabled because
+				// neither tag is in BlogPostContent.tsx's sanitize-html
+				// allowedTags. The toolbar has no buttons for these, but
+				// StarterKit registers them as default input rules
+				// (--- -> hr) and keyboard shortcuts (Cmd+Shift+S -> strike)
+				// that authors can reach inadvertently. Disabling at the
+				// extension level prevents silent editor-to-public-render
+				// diffs.
+				strike: false,
+				horizontalRule: false
+			}),
 			Link.configure({
 				openOnClick: false,
 				HTMLAttributes: {

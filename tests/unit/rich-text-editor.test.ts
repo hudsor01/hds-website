@@ -79,6 +79,19 @@ describe('isWithinAllowedHtmlTags', () => {
 			)
 		).toBe(false)
 	})
+
+	test('ignores tag-like substrings inside attribute values', () => {
+		// Regression: pre-fix, the regex matched `bar` as a tag name because
+		// it saw `<bar` inside the title attribute value. Now attribute
+		// values are stripped before tag detection so only real tag starts
+		// are scanned.
+		expect(
+			isWithinAllowedHtmlTags(
+				'<a title="foo<bar>baz">text</a>',
+				ALLOWED_HTML_TAGS
+			)
+		).toBe(true)
+	})
 })
 
 describe('ALLOWED_HTML_TAGS', () => {
@@ -87,6 +100,13 @@ describe('ALLOWED_HTML_TAGS', () => {
 		// extension upgrade widens this set, the editor allowlist must
 		// widen too -- and so must the sanitize-html allowlist in
 		// BlogPostContent.tsx. This list is intentionally narrow.
+		//
+		// NOTE: StarterKit's `strike` (<s>) and `horizontalRule` (<hr>)
+		// extensions are explicitly disabled in `RichTextEditor.tsx`'s
+		// StarterKit.configure(...) call, so they are absent here by
+		// construction. Neither tag is in BlogPostContent.tsx's
+		// sanitize-html allowedTags, so enabling them would produce a
+		// silent editor-to-public-render diff.
 		const tiptapEmits = [
 			'p',
 			'h1',

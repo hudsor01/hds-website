@@ -25,6 +25,10 @@
  * attributes, since attribute filtering is the sanitizer's job (the editor
  * never produces, e.g., `onclick`). Self-closing tags and unclosed
  * fragments both match the same opening-tag pattern.
+ *
+ * Attribute values are stripped before the tag-name scan so that a `<`
+ * appearing inside a quoted attribute value (e.g.
+ * `<a title="foo<bar>baz">`) does not get matched as an opening tag.
  */
 
 /**
@@ -60,6 +64,10 @@ const OPENING_TAG_PATTERN = /<\s*([a-zA-Z][a-zA-Z0-9-]*)\b/g
  * Returns true iff every opening tag in `html` appears in `allowed`.
  * Comparison is case-insensitive (HTML tag names are case-insensitive).
  * Empty / whitespace-only input returns true (no tags = no violation).
+ *
+ * Attribute values (single- or double-quoted) are stripped before the
+ * tag-name scan so that a `<` inside a quoted attribute value does not
+ * trip the opening-tag pattern as a false negative.
  */
 export function isWithinAllowedHtmlTags(
 	html: string,
@@ -68,19 +76,23 @@ export function isWithinAllowedHtmlTags(
 	if (typeof html !== 'string' || html.length === 0) {
 		return true
 	}
+	// Strip quoted attribute values before tag detection. Attribute values
+	// can legitimately contain `<` (e.g. <a title="foo<bar>baz">) which
+	// would otherwise match the opening-tag regex.
+	const stripped = html.replace(/"[^"]*"/g, '""').replace(/'[^']*'/g, "''")
 	const allowedSet = new Set(allowed.map(t => t.toLowerCase()))
 	OPENING_TAG_PATTERN.lastIndex = 0
-	let match: RegExpExecArray | null = OPENING_TAG_PATTERN.exec(html)
+	let match: RegExpExecArray | null = OPENING_TAG_PATTERN.exec(stripped)
 	while (match !== null) {
 		const captured = match[1]
 		if (captured === undefined) {
-			match = OPENING_TAG_PATTERN.exec(html)
+			match = OPENING_TAG_PATTERN.exec(stripped)
 			continue
 		}
 		if (!allowedSet.has(captured.toLowerCase())) {
 			return false
 		}
-		match = OPENING_TAG_PATTERN.exec(html)
+		match = OPENING_TAG_PATTERN.exec(stripped)
 	}
 	return true
 }
