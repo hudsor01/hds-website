@@ -23,7 +23,7 @@ describe('Services Page (Server Component)', () => {
 	})
 
 	it('should render with heading and sections', async () => {
-		const ServicesPage = (await import('@/app/services/page')).default
+		const ServicesPage = (await import('@/app/(public)/services/page')).default
 		const { container } = render(<ServicesPage />)
 
 		expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('Services Page (Server Component)', () => {
 	})
 
 	it('should render service cards', async () => {
-		const ServicesPage = (await import('@/app/services/page')).default
+		const ServicesPage = (await import('@/app/(public)/services/page')).default
 		render(<ServicesPage />)
 
 		const serviceHeadings = screen.getAllByRole('heading', { level: 3 })
@@ -39,7 +39,7 @@ describe('Services Page (Server Component)', () => {
 	})
 
 	it('should have CTA links', async () => {
-		const ServicesPage = (await import('@/app/services/page')).default
+		const ServicesPage = (await import('@/app/(public)/services/page')).default
 		render(<ServicesPage />)
 
 		const links = screen.getAllByRole('link')
@@ -47,7 +47,7 @@ describe('Services Page (Server Component)', () => {
 	})
 
 	it('should have metadata defined in page for SEO', async () => {
-		const { metadata } = await import('@/app/services/page')
+		const { metadata } = await import('@/app/(public)/services/page')
 
 		expect(metadata).toBeDefined()
 		expect(metadata.title).toBeDefined()
@@ -62,7 +62,7 @@ describe('Services Page (Server Component)', () => {
 
 describe('Contact Page (Server Component)', () => {
 	it('should render with heading and content sections', async () => {
-		const ContactPage = (await import('@/app/contact/page')).default
+		const ContactPage = (await import('@/app/(public)/contact/page')).default
 		const { container } = render(<ContactPage />)
 
 		// The <main> landmark is now owned by app/layout.tsx (a single
@@ -73,7 +73,7 @@ describe('Contact Page (Server Component)', () => {
 	})
 
 	it('should export metadata for SEO', async () => {
-		const { metadata } = await import('@/app/contact/page')
+		const { metadata } = await import('@/app/(public)/contact/page')
 
 		expect(metadata).toBeDefined()
 		expect(metadata.title).toBeDefined()
@@ -91,7 +91,7 @@ describe('Server Component Best Practices', () => {
 		const fs = await import('node:fs/promises')
 		const path = await import('node:path')
 		const content = await fs.readFile(
-			path.resolve(process.cwd(), 'src/app/services/page.tsx'),
+			path.resolve(process.cwd(), 'src/app/(public)/services/page.tsx'),
 			'utf-8'
 		)
 
@@ -104,7 +104,7 @@ describe('Server Component Best Practices', () => {
 		const fs = await import('node:fs/promises')
 		const path = await import('node:path')
 		const content = await fs.readFile(
-			path.resolve(process.cwd(), 'src/app/contact/page.tsx'),
+			path.resolve(process.cwd(), 'src/app/(public)/contact/page.tsx'),
 			'utf-8'
 		)
 
