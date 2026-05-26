@@ -3,7 +3,10 @@
 import { Copy, Mail, Printer, Share2 } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
-import { emailResults, saveCalculation } from '@/app/actions/ttl-calculator'
+import {
+	emailResults,
+	saveCalculation
+} from '@/app/(public)/actions/ttl-calculator'
 import { InputPanel } from '@/components/InputPanel/InputPanel'
 import { TIMEOUTS } from '@/lib/constants/timeouts'
 import { logger } from '@/lib/logger'

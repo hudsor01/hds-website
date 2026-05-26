@@ -50,14 +50,12 @@ const Navbar = memo(function Navbar() {
 		return () => window.removeEventListener('keydown', handler)
 	}, [mobileMenuOpen])
 
-	// Self-suppress on /admin/* and /auth/* so those route groups can
-	// render their own chrome (admin Topbar, centered auth container)
-	// without marketing nav bleeding through from the root layout.
-	// Early return placed AFTER all hooks to honor Rules of Hooks.
-	if (pathname.startsWith('/admin') || pathname.startsWith('/auth')) {
-		return null
-	}
-
+	// Marketing navbar — mounted exclusively by src/app/(public)/layout.tsx.
+	// Admin (/admin/*) and auth (/auth/*) routes live in their own route
+	// groups ((admin)/, (auth)/) whose layouts never include this component,
+	// so the bleed problem is now solved by route-group topology. The
+	// previous usePathname early-return (PR #218) is removed; usePathname
+	// is still needed below for active-state highlighting and aria-current.
 	const linkClass = (href: string) =>
 		cn(
 			'px-3 py-1.5 text-sm font-medium rounded-md transition-smooth',

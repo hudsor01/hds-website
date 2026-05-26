@@ -1,6 +1,6 @@
 /**
  * TTL Calculator Server Action Unit Tests
- * Tests for src/app/actions/ttl-calculator.ts
+ * Tests for src/app/(public)/actions/ttl-calculator.ts
  *
  * Covers:
  * - generateShareCode() characteristics (length, charset, uniqueness) via saveCalculation
@@ -135,7 +135,9 @@ describe('saveCalculation — share code generation', () => {
 	})
 
 	it('returns success:true and a shareCode on valid inputs', async () => {
-		const { saveCalculation } = await import('@/app/actions/ttl-calculator')
+		const { saveCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await saveCalculation(validInputs, validResults)
 
 		expect(result.success).toBe(true)
@@ -143,14 +145,18 @@ describe('saveCalculation — share code generation', () => {
 	})
 
 	it('share code is exactly 8 characters long', async () => {
-		const { saveCalculation } = await import('@/app/actions/ttl-calculator')
+		const { saveCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await saveCalculation(validInputs, validResults)
 
 		expect(result.shareCode).toHaveLength(8)
 	})
 
 	it('share code contains only URL-safe characters (no ambiguous chars)', async () => {
-		const { saveCalculation } = await import('@/app/actions/ttl-calculator')
+		const { saveCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 
 		// The charset excludes 0, O, I, l, 1 to avoid visual confusion
 		const allowedPattern =
@@ -164,7 +170,9 @@ describe('saveCalculation — share code generation', () => {
 	})
 
 	it('generates different share codes on repeated calls (uses crypto, not Math.random)', async () => {
-		const { saveCalculation } = await import('@/app/actions/ttl-calculator')
+		const { saveCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 
 		const codes = new Set<string>()
 		for (let i = 0; i < 10; i++) {
@@ -179,7 +187,9 @@ describe('saveCalculation — share code generation', () => {
 	})
 
 	it('returns error when inputs fail Zod validation', async () => {
-		const { saveCalculation } = await import('@/app/actions/ttl-calculator')
+		const { saveCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 
 		// purchasePrice is missing — should fail Zod
 		const badInputs = { county: 'Travis' } as unknown as VehicleInputs
@@ -222,7 +232,9 @@ describe('loadCalculation — JSONB safeParse validation', () => {
 			})
 		})
 
-		const { loadCalculation } = await import('@/app/actions/ttl-calculator')
+		const { loadCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await loadCalculation('ABCD1234')
 
 		expect(result.success).toBe(true)
@@ -254,7 +266,9 @@ describe('loadCalculation — JSONB safeParse validation', () => {
 			})
 		})
 
-		const { loadCalculation } = await import('@/app/actions/ttl-calculator')
+		const { loadCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await loadCalculation('ABCD1234')
 
 		expect(result.success).toBe(false)
@@ -285,7 +299,9 @@ describe('loadCalculation — JSONB safeParse validation', () => {
 			})
 		})
 
-		const { loadCalculation } = await import('@/app/actions/ttl-calculator')
+		const { loadCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await loadCalculation('ABCD1234')
 
 		expect(result.success).toBe(false)
@@ -303,7 +319,9 @@ describe('loadCalculation — JSONB safeParse validation', () => {
 			})
 		})
 
-		const { loadCalculation } = await import('@/app/actions/ttl-calculator')
+		const { loadCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await loadCalculation('AB') // under min length of 6
 
 		expect(result.success).toBe(false)
@@ -321,7 +339,9 @@ describe('loadCalculation — JSONB safeParse validation', () => {
 			})
 		})
 
-		const { loadCalculation } = await import('@/app/actions/ttl-calculator')
+		const { loadCalculation } = await import(
+			'@/app/(public)/actions/ttl-calculator'
+		)
 		const result = await loadCalculation('ABCDEF12')
 
 		expect(result.success).toBe(false)
