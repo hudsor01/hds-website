@@ -38,7 +38,7 @@ mock.module('next/link', () => ({
 	)
 }))
 
-import HomePage from '@/app/page'
+import HomePage from '@/app/(public)/page'
 
 afterEach(() => {
 	cleanup()

@@ -3,12 +3,9 @@ import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
-import Footer from '@/components/layout/Footer'
-import NavbarLight from '@/components/layout/Navbar'
 import { Analytics } from '@/components/utilities/Analytics'
 import { ErrorBoundary } from '@/components/utilities/ErrorBoundary'
 import { JsonLd } from '@/components/utilities/JsonLd'
-import ScrollToTop from '@/components/utilities/ScrollToTop'
 import { WebVitalsReporting } from '@/components/utilities/WebVitalsReporting'
 import { env } from '@/env'
 import { BRAND } from '@/lib/_generated/brand'
@@ -167,22 +164,19 @@ export default function RootLayout({
 				<NuqsAdapter>
 					<ClientProviders>
 						<ErrorBoundary>
-							{/* NavbarLight and Footer self-suppress on /admin/* and
-							    /auth/* (via usePathname in each component) so those
-							    route groups can render their own chrome without
-							    marketing nav/footer bleed-through. */}
-							<NavbarLight />
-							{/* The skip-link target is now a real <main> landmark
-							    instead of a wrapping <div>; assistive technology
-							    landmark navigation (NVDA Insert+F7, JAWS R) finds
-							    a single named region per page. Pages must NOT emit
-							    their own <main> — they render content directly into
-							    this slot. WCAG 1.3.6 / Landmark roles. */}
-							<main id="main-content" className="min-h-screen pt-14">
-								{children}
-							</main>
-							<Footer />
-							<ScrollToTop />
+							{/* Marketing chrome (NavbarLight + Footer + ScrollToTop)
+							    and the <main id="main-content"> landmark now live in
+							    the route-group layouts under (public), (admin), and
+							    (auth) instead of here. This root layout is the
+							    thinnest possible shell — every page passes through
+							    it, but only the universal mount points (Toaster,
+							    Analytics, SpeedInsights, WebVitalsReporting, the
+							    JsonLd / providers / ErrorBoundary wrap) belong at
+							    this level. Each route group owns its own chrome and
+							    its own <main> landmark; the skip-link target still
+							    resolves via #main-content because every group's
+							    layout emits a <main id="main-content">. */}
+							{children}
 							<Analytics />
 							<SpeedInsights />
 							<WebVitalsReporting />
