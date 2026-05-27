@@ -2,9 +2,10 @@
  * Admin-only Drizzle query layer for the testimonials table.
  *
  * Read side (`listTestimonialsForAdmin`, `getTestimonialById`) returns
- * EVERY row including unpublished, sorted by createdAt DESC for the
- * admin list table. Try/catch returns empty / null so the list page
- * renders an empty-state rather than crashing the whole shell.
+ * EVERY row including unpublished. The list helper is now
+ * cursor-paginated + search-aware (Phase 10 Wave 2); try/catch returns
+ * the empty result shape / null so the list page renders an empty state
+ * rather than crashing the whole shell.
  *
  * Write side (`createTestimonial`, `updateTestimonial`,
  * `toggleTestimonialPublished`) intentionally does NOT touch any
@@ -17,7 +18,14 @@
  */
 import 'server-only'
 
-import { desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, ilike, lt, or, type SQL } from 'drizzle-orm'
+import {
+	type Direction,
+	decodeCursor,
+	encodeCursor,
+	escapeLikePattern,
+	PAGE_SIZE
+} from '@/lib/admin/list-cursor'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -29,16 +37,138 @@ import { deleteTestimonial as deleteTestimonialBase } from '@/lib/testimonials'
 
 export type TestimonialRow = Testimonial
 
-export async function listTestimonialsForAdmin(): Promise<TestimonialRow[]> {
+export type ListTestimonialsOptions = {
+	q?: string
+	cursor?: string
+	direction?: Direction
+}
+
+export type ListTestimonialsResult = {
+	rows: TestimonialRow[]
+	hasMore: boolean
+	prevCursor: string | null
+	nextCursor: string | null
+}
+
+const EMPTY_RESULT: ListTestimonialsResult = {
+	rows: [],
+	hasMore: false,
+	prevCursor: null,
+	nextCursor: null
+}
+
+/**
+ * Cursor-paginated + search-aware admin testimonials list.
+ *
+ * Sort order: `(createdAt DESC, id ASC)` -- newest first, id ASC as a
+ * tiebreaker so the cursor tuple is always unique. Cursor tuple parts:
+ * `[createdAt.toISOString(), id]`.
+ *
+ * Page direction:
+ *  - 'after' (default for fresh requests): forward in display order.
+ *  - 'before': flip every ORDER BY column AND flip every cursor comparator,
+ *    then reverse the result rows back to display order before returning.
+ *
+ * Search columns: `name`, `company`, `content` (case-insensitive ILIKE
+ * with %-bounded pattern; backslash / `%` / `_` escaped via
+ * `escapeLikePattern`).
+ *
+ * Malformed cursor: silently falls back to page 1. DB error: returns the
+ * empty result shape; caller renders the empty state instead of crashing.
+ */
+export async function listTestimonialsForAdmin(
+	opts?: ListTestimonialsOptions
+): Promise<ListTestimonialsResult> {
+	const { q: rawQ, cursor: rawCursor } = opts ?? {}
+	const cursor = decodeCursor(rawCursor)
+	const direction: Direction = cursor?.direction ?? 'after'
+
+	const conditions: SQL[] = []
+
+	const q = (rawQ ?? '').trim()
+	if (q.length > 0) {
+		const pattern = `%${escapeLikePattern(q)}%`
+		const searchClause = or(
+			ilike(testimonials.name, pattern),
+			ilike(testimonials.company, pattern),
+			ilike(testimonials.content, pattern)
+		)
+		if (searchClause) {
+			conditions.push(searchClause)
+		}
+	}
+
+	if (cursor && cursor.parts.length === 2) {
+		const createdAtValue = new Date(cursor.parts[0] ?? '')
+		const idValue = cursor.parts[1] ?? ''
+		if (!Number.isNaN(createdAtValue.getTime()) && idValue.length > 0) {
+			// 2-part cursor expansion for the sort tuple
+			// (createdAt DESC, id ASC). Forward ('after') means STRICTLY
+			// less-than on createdAt (older) OR same-createdAt + greater id;
+			// backward ('before') flips both comparators.
+			const cursorClause =
+				direction === 'after'
+					? or(
+							lt(testimonials.createdAt, createdAtValue),
+							and(
+								eq(testimonials.createdAt, createdAtValue),
+								gt(testimonials.id, idValue)
+							)
+						)
+					: or(
+							gt(testimonials.createdAt, createdAtValue),
+							and(
+								eq(testimonials.createdAt, createdAtValue),
+								lt(testimonials.id, idValue)
+							)
+						)
+			if (cursorClause) {
+				conditions.push(cursorClause)
+			}
+		}
+	}
+
+	const whereClause = conditions.length === 0 ? undefined : and(...conditions)
+
+	const orderBy =
+		direction === 'before'
+			? [asc(testimonials.createdAt), desc(testimonials.id)]
+			: [desc(testimonials.createdAt), asc(testimonials.id)]
+
 	try {
-		return await db
+		const dbRows = await db
 			.select()
 			.from(testimonials)
-			.orderBy(desc(testimonials.createdAt))
+			.where(whereClause)
+			.orderBy(...orderBy)
+			.limit(PAGE_SIZE + 1)
+
+		const hasMore = dbRows.length > PAGE_SIZE
+		let pageRows = hasMore ? dbRows.slice(0, PAGE_SIZE) : dbRows
+		if (direction === 'before') {
+			pageRows = [...pageRows].reverse()
+		}
+
+		const lastRow = pageRows[pageRows.length - 1]
+		const firstRow = pageRows[0]
+
+		const nextCursor =
+			hasMore && lastRow ? encodeCursor('after', cursorPartsFor(lastRow)) : null
+
+		const prevCursor =
+			cursor !== null && firstRow
+				? encodeCursor('before', cursorPartsFor(firstRow))
+				: null
+
+		return { rows: pageRows, hasMore, prevCursor, nextCursor }
 	} catch (error) {
 		logger.error('testimonials-queries.listTestimonialsForAdmin failed', error)
-		return []
+		return EMPTY_RESULT
 	}
+}
+
+function cursorPartsFor(row: TestimonialRow): [Date, string] {
+	return [row.createdAt ?? new Date(0), row.id]
 }
 
 export async function getTestimonialById(
