@@ -30,7 +30,25 @@
  */
 import 'server-only'
 
-import { count, desc, eq } from 'drizzle-orm'
+import {
+	and,
+	asc,
+	count,
+	desc,
+	eq,
+	gt,
+	ilike,
+	lt,
+	or,
+	type SQL
+} from 'drizzle-orm'
+import {
+	type Direction,
+	decodeCursor,
+	encodeCursor,
+	escapeLikePattern,
+	PAGE_SIZE
+} from '@/lib/admin/list-cursor'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { type ScheduledEmail, scheduledEmails } from '@/lib/schemas/schema'
@@ -43,6 +61,31 @@ export const EMAIL_STATUSES = [
 ] as const
 export type EmailStatus = (typeof EMAIL_STATUSES)[number]
 export type QueueCounts = Record<EmailStatus, number>
+
+export type ListScheduledEmailsOptions = {
+	status?: EmailStatus | null
+	q?: string
+	cursor?: string
+	direction?: Direction
+}
+
+export type ListScheduledEmailsResult = {
+	rows: ScheduledEmail[]
+	hasMore: boolean
+	prevCursor: string | null
+	nextCursor: string | null
+}
+
+const EMPTY_RESULT: ListScheduledEmailsResult = {
+	rows: [],
+	hasMore: false,
+	prevCursor: null,
+	nextCursor: null
+}
+
+function cursorPartsFor(row: ScheduledEmail): [Date, string] {
+	return [row.scheduledFor, row.id]
+}
 
 /**
  * Discriminated outcome of `retryScheduledEmail`. The action layer maps:
@@ -90,29 +133,125 @@ export async function getQueueCounts(): Promise<QueueCounts> {
 }
 
 /**
- * Most recent scheduled emails (newest first by `scheduledFor`), optionally
- * filtered to a single status. `status === null` (or undefined) returns rows
- * of every status. Caps at `limit` rows; default 100 matches the cap in
- * CONTEXT.md §5.4 (scheduled_emails grows faster than leads / subscribers,
- * so the cap is tighter). Returns `[]` on query failure so the admin list
- * renders the empty state instead of surfacing an exception.
+ * Cursor-paginated + search-aware admin scheduled-emails list.
+ *
+ * Sort order: `(scheduledFor DESC, id ASC)` -- newest first, id ASC as a
+ * tiebreaker so the cursor tuple is always unique. Cursor tuple parts:
+ * `[scheduledFor.toISOString(), id]`. `scheduledFor` is `.notNull()` in the
+ * schema so there is NO NULLS-LAST sentinel -- straight 2-part cursor like
+ * Plan 10-04 / 10-05.
+ *
+ * Page direction:
+ *  - 'after' (default for fresh requests): forward in display order.
+ *  - 'before': flip every ORDER BY column AND flip every cursor comparator,
+ *    then reverse the result rows back to display order before returning.
+ *
+ * Filters compose via and():
+ *  - `status` (when non-null): `eq(scheduledEmails.status, status)`.
+ *  - `q` (trimmed, non-empty): `or(ilike(recipientEmail), ilike(recipientName),
+ *    ilike(stepId))` with %-bounded pattern and `escapeLikePattern` on the
+ *    input. `recipientName` is nullable -- ILIKE on a NULL column returns
+ *    NULL (false) so those rows are safely filtered out by the OR.
+ *
+ * Malformed cursor: silently falls back to page 1. DB error: returns the
+ * empty result shape; caller renders the empty state instead of crashing.
+ *
+ * NOTE: `getQueueCounts()` is intentionally NOT touched and is still called
+ * by the page WITHOUT arguments so the 4 stat cards stay reflecting the
+ * full queue regardless of status / q / cursor.
  */
 export async function listScheduledEmailsForAdmin(
-	status?: EmailStatus | null,
-	limit: number = 100
-): Promise<ScheduledEmail[]> {
+	opts?: ListScheduledEmailsOptions
+): Promise<ListScheduledEmailsResult> {
+	const { status, q: rawQ, cursor: rawCursor } = opts ?? {}
+	const cursor = decodeCursor(rawCursor)
+	const direction: Direction = cursor?.direction ?? 'after'
+
+	const conditions: SQL[] = []
+
+	if (status != null) {
+		conditions.push(eq(scheduledEmails.status, status))
+	}
+
+	const q = (rawQ ?? '').trim()
+	if (q.length > 0) {
+		const pattern = `%${escapeLikePattern(q)}%`
+		const searchClause = or(
+			ilike(scheduledEmails.recipientEmail, pattern),
+			ilike(scheduledEmails.recipientName, pattern),
+			ilike(scheduledEmails.stepId, pattern)
+		)
+		if (searchClause) {
+			conditions.push(searchClause)
+		}
+	}
+
+	if (cursor && cursor.parts.length === 2) {
+		const scheduledForValue = new Date(cursor.parts[0] ?? '')
+		const idValue = cursor.parts[1] ?? ''
+		if (!Number.isNaN(scheduledForValue.getTime()) && idValue.length > 0) {
+			// 2-part cursor expansion for the sort tuple
+			// (scheduledFor DESC, id ASC). Forward ('after') means STRICTLY
+			// less-than on scheduledFor (older) OR same-scheduledFor +
+			// greater id; backward ('before') flips both comparators.
+			const cursorClause =
+				direction === 'after'
+					? or(
+							lt(scheduledEmails.scheduledFor, scheduledForValue),
+							and(
+								eq(scheduledEmails.scheduledFor, scheduledForValue),
+								gt(scheduledEmails.id, idValue)
+							)
+						)
+					: or(
+							gt(scheduledEmails.scheduledFor, scheduledForValue),
+							and(
+								eq(scheduledEmails.scheduledFor, scheduledForValue),
+								lt(scheduledEmails.id, idValue)
+							)
+						)
+			if (cursorClause) {
+				conditions.push(cursorClause)
+			}
+		}
+	}
+
+	const whereClause = conditions.length === 0 ? undefined : and(...conditions)
+
+	const orderBy =
+		direction === 'before'
+			? [asc(scheduledEmails.scheduledFor), desc(scheduledEmails.id)]
+			: [desc(scheduledEmails.scheduledFor), asc(scheduledEmails.id)]
+
 	try {
-		const baseQuery = db.select().from(scheduledEmails).$dynamic()
-		const filtered =
-			status != null
-				? baseQuery.where(eq(scheduledEmails.status, status))
-				: baseQuery
-		return await filtered
-			.orderBy(desc(scheduledEmails.scheduledFor))
-			.limit(limit)
+		const dbRows = await db
+			.select()
+			.from(scheduledEmails)
+			.where(whereClause)
+			.orderBy(...orderBy)
+			.limit(PAGE_SIZE + 1)
+
+		const hasMore = dbRows.length > PAGE_SIZE
+		let pageRows = hasMore ? dbRows.slice(0, PAGE_SIZE) : dbRows
+		if (direction === 'before') {
+			pageRows = [...pageRows].reverse()
+		}
+
+		const lastRow = pageRows[pageRows.length - 1]
+		const firstRow = pageRows[0]
+
+		const nextCursor =
+			hasMore && lastRow ? encodeCursor('after', cursorPartsFor(lastRow)) : null
+
+		const prevCursor =
+			cursor !== null && firstRow
+				? encodeCursor('before', cursorPartsFor(firstRow))
+				: null
+
+		return { rows: pageRows, hasMore, prevCursor, nextCursor }
 	} catch (error) {
 		logger.error('emails-queries.listScheduledEmailsForAdmin failed', error)
-		return []
+		return EMPTY_RESULT
 	}
 }
 
