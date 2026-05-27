@@ -1,12 +1,28 @@
 /**
  * Admin Leads list page (server component).
  *
- * Most recent 200 leads, newest first, optionally filtered by `?status=`
- * round-trip from the `<StatusFilterBar>` chip row. Every row links to its
- * detail page where mutations live. There is no "New" button (leads are
- * inbound only -- CONTEXT.md §3), and there are no row-level mutation
- * affordances on the list (status changes happen on the detail page so
- * the operator can see attribution and notes before deciding).
+ * Phase 10 Wave 2: cursor-paginated + search-aware. The existing
+ * `<StatusFilterBar>` chip row stays byte-equal and composes alongside the
+ * new `<SearchInput>` (client, nuqs) and shadcn `<Pagination>` (server,
+ * cursor-driven `<Link>`s built via `buildPaginationHref`).
+ *
+ * Param composition matrix:
+ *  - `?status=` round-trips via `<StatusFilterBar>` chip submissions (single
+ *    button per chip; the "All" chip drops the param entirely).
+ *  - `?q=` round-trips via the nuqs `<SearchInput>`. nuqs auto-preserves
+ *    every other query param (including `status`) so `<SearchInput>` does
+ *    NOT need a preservedParams prop.
+ *  - `?cursor=` round-trips via the shadcn `<PaginationPrevious>` /
+ *    `<PaginationNext>` `<Link>` hrefs; `preservedForPagination` carries
+ *    both `status` and `q` when each is active.
+ *  - Switching status via the chip row deliberately drops `q` and `cursor`
+ *    (StatusFilterBar's submit is a plain GET with no hidden inputs); that
+ *    matches CONTEXT.md §4 "Search + filter + cursor compose": status is the
+ *    coarsest filter and resets the page.
+ *
+ * Every row links to its detail page where mutations live. There is no
+ * "New" button (leads are inbound only -- CONTEXT.md §3), and no row-level
+ * mutation affordances on the list.
  *
  * Wrapped in <Suspense> + `await connection()` so the DB read stays out
  * of any partial-prerender step in `next build` -- same pattern as the
@@ -16,12 +32,30 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { SearchInput } from '@/components/admin/SearchInput'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import {
 	StatusFilterBar,
 	type StatusFilterOption
 } from '@/components/admin/StatusFilterBar'
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationNext,
+	PaginationPrevious
+} from '@/components/ui/pagination'
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from '@/components/ui/table'
 import { listLeadsForAdmin } from '@/lib/admin/leads-queries'
+import { buildPaginationHref } from '@/lib/admin/list-cursor'
 import { LEAD_STATUSES, type LeadStatus } from '@/lib/schemas/admin-leads'
 
 export const metadata: Metadata = {
@@ -38,18 +72,30 @@ const FILTER_OPTIONS: StatusFilterOption[] = [
 ]
 
 interface AdminLeadsPageProps {
-	searchParams: Promise<{ status?: string }>
+	searchParams: Promise<{ status?: string; q?: string; cursor?: string }>
 }
 
 async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 	await connection()
-	const { status: rawStatus } = await searchParams
+	const { status: rawStatus, q: rawQ, cursor } = await searchParams
 	const status: LeadStatus | null = (
 		LEAD_STATUSES as readonly string[]
 	).includes(rawStatus ?? '')
 		? (rawStatus as LeadStatus)
 		: null
-	const rows = await listLeadsForAdmin(status, 200)
+	const q = (rawQ ?? '').trim()
+	const { rows, prevCursor, nextCursor } = await listLeadsForAdmin({
+		status,
+		q: q.length > 0 ? q : undefined,
+		cursor
+	})
+	const preservedForPagination: Record<string, string> = {}
+	if (status) {
+		preservedForPagination.status = status
+	}
+	if (q) {
+		preservedForPagination.q = q
+	}
 
 	return (
 		<>
@@ -58,67 +104,108 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 				current={status}
 				options={FILTER_OPTIONS}
 			/>
+			<SearchInput placeholder="Search leads" />
 			{rows.length === 0 ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
-					<p className="text-sm text-muted-foreground">No leads yet.</p>
-				</div>
+				q ? (
+					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+						<p className="text-sm text-muted-foreground">
+							No leads matching <span className="font-mono">{q}</span>.
+						</p>
+						<Link
+							href={status ? `/admin/leads?status=${status}` : '/admin/leads'}
+							className="inline-block mt-3 text-sm font-medium text-accent-text hover:underline"
+						>
+							Clear search
+						</Link>
+					</div>
+				) : (
+					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+						<p className="text-sm text-muted-foreground">No leads yet.</p>
+					</div>
+				)
 			) : (
-				<div className="overflow-x-auto rounded-xl border border-border bg-surface-raised">
-					<table className="w-full text-sm">
-						<caption className="sr-only">Leads</caption>
-						<thead className="text-left text-xs uppercase tracking-wider text-muted-foreground bg-surface-base">
-							<tr>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Name
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Email
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Company
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Source
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Status
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Created
-								</th>
-							</tr>
-						</thead>
-						<tbody>
+				<>
+					<Table>
+						<TableCaption className="sr-only">Leads</TableCaption>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Name</TableHead>
+								<TableHead>Email</TableHead>
+								<TableHead>Company</TableHead>
+								<TableHead>Source</TableHead>
+								<TableHead>Status</TableHead>
+								<TableHead>Created</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
 							{rows.map(r => (
-								<tr key={r.id} className="border-t border-border">
-									<td className="px-4 py-3 text-foreground">
+								<TableRow key={r.id}>
+									<TableCell className="text-foreground">
 										<Link
 											href={`/admin/leads/${r.id}`}
 											className="hover:underline"
 										>
 											{r.name ?? '(no name)'}
 										</Link>
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">{r.email}</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
+										{r.email}
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										{r.company ?? '-'}
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										{r.source ?? '-'}
-									</td>
-									<td className="px-4 py-3">
+									</TableCell>
+									<TableCell>
 										<StatusBadge status={r.status} />
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										{r.createdAt
 											? r.createdAt.toLocaleDateString('en-US')
 											: '-'}
-									</td>
-								</tr>
+									</TableCell>
+								</TableRow>
 							))}
-						</tbody>
-					</table>
-				</div>
+						</TableBody>
+					</Table>
+					<Pagination className="mt-4 justify-between">
+						<PaginationContent>
+							<PaginationItem>
+								{prevCursor === null ? (
+									<PaginationPrevious
+										aria-disabled="true"
+										className="pointer-events-none opacity-50"
+									/>
+								) : (
+									<PaginationPrevious
+										href={buildPaginationHref(
+											'/admin/leads',
+											prevCursor,
+											preservedForPagination
+										)}
+									/>
+								)}
+							</PaginationItem>
+							<PaginationItem>
+								{nextCursor === null ? (
+									<PaginationNext
+										aria-disabled="true"
+										className="pointer-events-none opacity-50"
+									/>
+								) : (
+									<PaginationNext
+										href={buildPaginationHref(
+											'/admin/leads',
+											nextCursor,
+											preservedForPagination
+										)}
+									/>
+								)}
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				</>
 			)}
 		</>
 	)

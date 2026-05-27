@@ -23,7 +23,14 @@
  */
 import 'server-only'
 
-import { asc, desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, ilike, lt, or, type SQL } from 'drizzle-orm'
+import {
+	type Direction,
+	decodeCursor,
+	encodeCursor,
+	escapeLikePattern,
+	PAGE_SIZE
+} from '@/lib/admin/list-cursor'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -34,22 +41,162 @@ import { type Showcase, showcase } from '@/lib/schemas/schema'
 
 export type ShowcaseRow = Showcase
 
+export type ListShowcasesOptions = {
+	q?: string
+	cursor?: string
+	direction?: Direction
+}
+
+export type ListShowcasesResult = {
+	rows: ShowcaseRow[]
+	hasMore: boolean
+	prevCursor: string | null
+	nextCursor: string | null
+}
+
+const EMPTY_RESULT: ListShowcasesResult = {
+	rows: [],
+	hasMore: false,
+	prevCursor: null,
+	nextCursor: null
+}
+
 /**
- * All showcase rows (published + unpublished) sorted to match the public site:
- * lowest `displayOrder` first, then newest `createdAt` for ties. Returns `[]`
- * on query failure so the admin list renders the empty state instead of
- * surfacing an exception.
+ * Cursor-paginated + search-aware admin showcase list.
+ *
+ * Sort order: `(displayOrder ASC, createdAt DESC, id ASC)` -- the existing
+ * public sort plus `id ASC` as a tiebreaker so the cursor tuple is always
+ * unique. Cursor tuple parts: `[displayOrder, createdAt.toISOString(), id]`.
+ *
+ * Page direction:
+ *  - 'after' (default for fresh requests): forward in display order.
+ *  - 'before': flip every ORDER BY column AND flip every cursor comparator,
+ *    then reverse the result rows back to display order before returning.
+ *
+ * Search columns: `title`, `slug` (case-insensitive ILIKE with %-bounded
+ * pattern; backslash / `%` / `_` escaped via `escapeLikePattern`).
+ *
+ * Malformed cursor: silently falls back to page 1. DB error: returns the
+ * empty result shape; caller renders the empty state instead of crashing.
  */
-export async function listShowcasesForAdmin(): Promise<ShowcaseRow[]> {
+export async function listShowcasesForAdmin(
+	opts?: ListShowcasesOptions
+): Promise<ListShowcasesResult> {
+	const { q: rawQ, cursor: rawCursor } = opts ?? {}
+	const cursor = decodeCursor(rawCursor)
+	const direction: Direction = cursor?.direction ?? 'after'
+
+	const conditions: SQL[] = []
+
+	const q = (rawQ ?? '').trim()
+	if (q.length > 0) {
+		const pattern = `%${escapeLikePattern(q)}%`
+		const searchClause = or(
+			ilike(showcase.title, pattern),
+			ilike(showcase.slug, pattern)
+		)
+		if (searchClause) {
+			conditions.push(searchClause)
+		}
+	}
+
+	if (cursor && cursor.parts.length === 3) {
+		const displayOrderValue = Number(cursor.parts[0])
+		const createdAtValue = new Date(cursor.parts[1] ?? '')
+		const idValue = cursor.parts[2] ?? ''
+		if (
+			!Number.isNaN(displayOrderValue) &&
+			!Number.isNaN(createdAtValue.getTime()) &&
+			idValue.length > 0
+		) {
+			// Row-constructor expansion for the mixed-direction sort tuple
+			// (displayOrder ASC, createdAt DESC, id ASC). Forward ('after')
+			// means STRICTLY greater than the cursor in that order; backward
+			// ('before') means STRICTLY less than.
+			const cursorClause =
+				direction === 'after'
+					? or(
+							gt(showcase.displayOrder, displayOrderValue),
+							and(
+								eq(showcase.displayOrder, displayOrderValue),
+								lt(showcase.createdAt, createdAtValue)
+							),
+							and(
+								eq(showcase.displayOrder, displayOrderValue),
+								eq(showcase.createdAt, createdAtValue),
+								gt(showcase.id, idValue)
+							)
+						)
+					: or(
+							lt(showcase.displayOrder, displayOrderValue),
+							and(
+								eq(showcase.displayOrder, displayOrderValue),
+								gt(showcase.createdAt, createdAtValue)
+							),
+							and(
+								eq(showcase.displayOrder, displayOrderValue),
+								eq(showcase.createdAt, createdAtValue),
+								lt(showcase.id, idValue)
+							)
+						)
+			if (cursorClause) {
+				conditions.push(cursorClause)
+			}
+		}
+	}
+
+	const whereClause = conditions.length === 0 ? undefined : and(...conditions)
+
+	const orderBy =
+		direction === 'before'
+			? [
+					desc(showcase.displayOrder),
+					asc(showcase.createdAt),
+					desc(showcase.id)
+				]
+			: [asc(showcase.displayOrder), desc(showcase.createdAt), asc(showcase.id)]
+
 	try {
-		return await db
+		const dbRows = await db
 			.select()
 			.from(showcase)
-			.orderBy(asc(showcase.displayOrder), desc(showcase.createdAt))
+			.where(whereClause)
+			.orderBy(...orderBy)
+			.limit(PAGE_SIZE + 1)
+
+		const hasMore = dbRows.length > PAGE_SIZE
+		let pageRows = hasMore ? dbRows.slice(0, PAGE_SIZE) : dbRows
+		if (direction === 'before') {
+			pageRows = [...pageRows].reverse()
+		}
+
+		const lastRow = pageRows[pageRows.length - 1]
+		const firstRow = pageRows[0]
+
+		// nextCursor: emit after:lastRow whenever there's more data forward OR we
+		// arrived here via backward navigation (which means rows exist after us).
+		const nextCursor =
+			lastRow && (hasMore || direction === 'before')
+				? encodeCursor('after', cursorPartsFor(lastRow))
+				: null
+
+		// prevCursor: emit before:firstRow whenever we navigated past the start
+		// AND we still have more rows backward. If direction was 'before' and
+		// hasMore is false, we ARE at the actual first page; no prev cursor.
+		const prevCursor =
+			cursor !== null && firstRow && (direction !== 'before' || hasMore)
+				? encodeCursor('before', cursorPartsFor(firstRow))
+				: null
+
+		return { rows: pageRows, hasMore, prevCursor, nextCursor }
 	} catch (error) {
 		logger.error('showcase-queries.listShowcasesForAdmin failed', error)
-		return []
+		return EMPTY_RESULT
 	}
+}
+
+function cursorPartsFor(row: ShowcaseRow): [number, Date, string] {
+	return [row.displayOrder ?? 0, row.createdAt ?? new Date(0), row.id]
 }
 
 /**
