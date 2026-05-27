@@ -8,17 +8,23 @@
  * the test adapter from `nuqs/adapters/testing`.
  */
 import { describe, expect, it } from 'bun:test'
-import { render } from '@testing-library/react'
-import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import {
+	NuqsTestingAdapter,
+	type OnUrlUpdateFunction
+} from 'nuqs/adapters/testing'
 import { SearchInput } from '@/components/admin/SearchInput'
 
 function renderWithNuqs(
 	ui: React.ReactElement,
-	{ searchParams }: { searchParams?: string } = {}
+	{
+		searchParams,
+		onUrlUpdate
+	}: { searchParams?: string; onUrlUpdate?: OnUrlUpdateFunction } = {}
 ) {
 	return render(ui, {
 		wrapper: ({ children }) => (
-			<NuqsTestingAdapter searchParams={searchParams}>
+			<NuqsTestingAdapter searchParams={searchParams} onUrlUpdate={onUrlUpdate}>
 				{children}
 			</NuqsTestingAdapter>
 		)
@@ -82,6 +88,42 @@ describe('SearchInput', () => {
 		const { container } = renderWithNuqs(<SearchInput />)
 		const form = container.querySelector('form')
 		expect(form).toBeNull()
+	})
+
+	it('resets ?cursor= when q changes (otherwise search on page 2+ returns 0 results)', async () => {
+		// Regression test for PR #228 round-1 BLOCKING #1: if cursor is
+		// preserved across q changes, a search on page 2+ filters the
+		// AFTER-cursor slice for matches, missing any hits earlier in the
+		// dataset. SearchInput must reset cursor to null in parallel with
+		// setting q so the new search lands on page 1 of the filtered set.
+		// nuqs throttles the q setter by 300ms, so the URL update arrives
+		// after a debounce window -- waitFor handles that.
+		const urlUpdates: Array<{ searchParams: URLSearchParams }> = []
+		const onUrlUpdate: OnUrlUpdateFunction = update => {
+			urlUpdates.push({ searchParams: update.searchParams })
+		}
+		const { container } = renderWithNuqs(<SearchInput />, {
+			searchParams: '?cursor=after%3Aabc&q=oldterm',
+			onUrlUpdate
+		})
+		const input = container.querySelector('input[name="q"]') as HTMLInputElement
+		act(() => {
+			fireEvent.change(input, { target: { value: 'newterm' } })
+		})
+		await waitFor(
+			() => {
+				expect(urlUpdates.length).toBeGreaterThan(0)
+			},
+			{ timeout: 1000 }
+		)
+		// At least one of the URL updates emitted while typing must clear
+		// the cursor param. The final converged URL should have q=newterm
+		// and no cursor.
+		const cleared = urlUpdates.some(u => u.searchParams.get('cursor') === null)
+		expect(cleared).toBe(true)
+		const last = urlUpdates.at(-1)
+		expect(last?.searchParams.get('q')).toBe('newterm')
+		expect(last?.searchParams.get('cursor')).toBeNull()
 	})
 
 	it('contains no em-dash or en-dash characters anywhere', () => {
