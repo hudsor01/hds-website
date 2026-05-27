@@ -109,3 +109,28 @@ export function escapeLikePattern(q: string): string {
 		.replaceAll('%', '\\%')
 		.replaceAll('_', '\\_')
 }
+
+/**
+ * Build a pagination href that carries the given cursor plus every
+ * preservedParams entry (skipping empty-string values). Used by the 7
+ * admin list pages to compose shadcn `<PaginationPrevious href=...>` /
+ * `<PaginationNext href=...>` without each page repeating the same
+ * URLSearchParams ceremony.
+ */
+export function buildPaginationHref(
+	baseHref: string,
+	cursor: string,
+	preservedParams?: Record<string, string>
+): string {
+	const params = new URLSearchParams()
+	params.set('cursor', cursor)
+	if (preservedParams) {
+		for (const [key, value] of Object.entries(preservedParams)) {
+			if (value === '') {
+				continue
+			}
+			params.set(key, value)
+		}
+	}
+	return `${baseHref}?${params.toString()}`
+}

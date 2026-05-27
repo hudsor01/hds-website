@@ -12,10 +12,12 @@ provides:
   - encodeCursor
   - decodeCursor
   - escapeLikePattern
+  - buildPaginationHref
   - SearchInput
   - SearchInputProps
-  - Pagination
-  - PaginationProps
+  - "shadcn ui/table.tsx primitives: Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption"
+  - "shadcn ui/pagination.tsx primitives: Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis"
+  - "buttonVariants + ButtonProps now exported from src/components/ui/button.tsx (was Button only)"
 affects:
   - "Wave 2 query helpers (showcase, blog, testimonials, leads, calculator-leads, newsletter, emails) -- import { PAGE_SIZE, decodeCursor, encodeCursor, escapeLikePattern } from '@/lib/admin/list-cursor'"
   - "Wave 2 list pages -- import { SearchInput } from '@/components/admin/SearchInput' and import { Pagination } from '@/components/admin/Pagination'"
@@ -69,17 +71,55 @@ Built the three shared primitives every Wave 2 plan depends on: a pure cursor co
 
 ### `src/components/admin/SearchInput.tsx`
 
-| Symbol | Shape | Where Wave 2 uses it |
-|---|---|---|
-| `SearchInput` | `(SearchInputProps) => JSX` | Every Wave 2 list page renders one above the table: `<SearchInput baseHref="/admin/leads" q={q} preservedParams={{ status }} />` |
-| `SearchInputProps` | `{ baseHref; q?; placeholder?; preservedParams? }` | Type used at the call site |
-
-### `src/components/admin/Pagination.tsx`
+**Updated 2026-05-27 post-Wave-1: rewritten to use `nuqs` (`useQueryState`) per project canonical URL-state pattern.** The original plan's server-rendered `<form method="get">` was inconsistent with the rest of the project (calculator tools + `use-paystub-url-state` hook all use nuqs).
 
 | Symbol | Shape | Where Wave 2 uses it |
 |---|---|---|
-| `Pagination` | `(PaginationProps) => JSX` | Every Wave 2 list page renders one below the table: `<Pagination baseHref="/admin/leads" prevCursor={prevCursor} nextCursor={nextCursor} preservedParams={{ q, status }} />` |
-| `PaginationProps` | `{ baseHref; prevCursor: string \| null; nextCursor: string \| null; preservedParams? }` | Type used at the call site |
+| `SearchInput` | `(SearchInputProps) => JSX` | Every Wave 2 list page renders one above the table: `<SearchInput placeholder="Search leads" />`. nuqs reads/writes `?q=` directly. |
+| `SearchInputProps` | `{ placeholder?: string }` | Only `placeholder` survived. `baseHref`, `q`, `preservedParams` are gone: URL drives state via nuqs; param preservation is automatic. |
+
+### Pagination — composed directly from shadcn primitives (no project wrapper)
+
+**Updated 2026-05-27 post-Wave-1:** The original plan called for `src/components/admin/Pagination.tsx`. It was built then deleted on the shadcn-first revision. Wave 2 pages now compose shadcn `<Pagination>` primitives directly + use `buildPaginationHref` from `list-cursor.ts` for the URL ceremony.
+
+Canonical Wave 2 pattern (one per list page):
+
+```tsx
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination'
+import { buildPaginationHref } from '@/lib/admin/list-cursor'
+
+const preservedForPagination = { q, status }
+<Pagination className="mt-4 justify-between">
+  <PaginationContent>
+    <PaginationItem>
+      {prevCursor === null ? (
+        <PaginationPrevious aria-disabled="true" className="pointer-events-none opacity-50" />
+      ) : (
+        <PaginationPrevious
+          href={buildPaginationHref('/admin/leads', prevCursor, preservedForPagination)}
+        />
+      )}
+    </PaginationItem>
+    <PaginationItem>
+      {nextCursor === null ? (
+        <PaginationNext aria-disabled="true" className="pointer-events-none opacity-50" />
+      ) : (
+        <PaginationNext
+          href={buildPaginationHref('/admin/leads', nextCursor, preservedForPagination)}
+        />
+      )}
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+`buildPaginationHref(baseHref, cursor, preservedParams?)` lives in `src/lib/admin/list-cursor.ts`. It URL-encodes the cursor via `URLSearchParams.set('cursor', cursor)` and appends every non-empty preservedParams entry as additional query params. Used by every Wave 2 list page so the URL ceremony is not duplicated 7 times.
 
 ## Commits
 
@@ -104,6 +144,31 @@ All 31 cases pass. `bun run lint` exit 0 on 365 files. `bun run typecheck` exit 
 Protected-file diff vs `origin/main` is empty for: `src/lib/auth/admin.ts`, `proxy.ts`, `src/components/admin/StatusFilterBar.tsx`.
 
 ## Deviations from Plan
+
+### [Post-Wave-1 operator override] shadcn primitives over custom Pagination wrapper
+
+**Found during:** PR review (operator asked whether I had surveyed the shadcn/ui ecosystem before writing custom components)
+
+**Issue:** Phase 10 plan called for a project-specific `src/components/admin/Pagination.tsx` wrapper around hand-rolled `<Link>` markup. The project already has shadcn/ui configured (`components.json` present, "new-york" style, 14 primitives under `src/components/ui/`) and the official shadcn registry ships canonical `Table` and `Pagination` primitives. Bypassing them produced visual drift from the rest of the admin UI for no real benefit.
+
+**Fix:**
+- Pulled `src/components/ui/table.tsx` and `src/components/ui/pagination.tsx` from the official shadcn registry (`https://ui.shadcn.com/r/styles/new-york/`).
+- Added `buttonVariants` + `ButtonProps` to the public exports of `src/components/ui/button.tsx` so the shadcn Pagination primitives can compose them.
+- Deleted the custom `src/components/admin/Pagination.tsx` wrapper + its test. Wave 2 pages now compose shadcn `<Pagination><PaginationContent><PaginationItem><PaginationPrevious href=...>...` directly, with hrefs supplied by `buildPaginationHref` (new helper added to `src/lib/admin/list-cursor.ts`). No project-specific wrapper layer.
+
+**Files modified:** `src/components/ui/button.tsx` (added buttonVariants/ButtonProps to exports), `src/components/ui/table.tsx` (new from registry), `src/components/ui/pagination.tsx` (new from registry), `src/lib/admin/list-cursor.ts` (added `buildPaginationHref`), `tests/unit/admin/list-cursor.test.ts` (added 4 cases for the new helper), `.planning/phases/10-admin-list-pagination/10-CONTEXT.md` (file-level changes section rewritten), Wave 2 plan addenda.
+
+**Files deleted:** `src/components/admin/Pagination.tsx`, `tests/unit/admin/pagination.test.tsx`.
+
+### [Post-Wave-1 operator override] SearchInput swapped to nuqs
+
+**Found during:** PR review (operator asked "nuqs?" after Wave 1 shipped)
+
+**Issue:** The plan locked "plain `<form method="get">` + submit button, no client JS." That is inconsistent with the rest of the project: `nuqs` is already mounted at the root layout via `<NuqsAdapter>` and is used by every public calculator route (`ROICalculatorClient`, `MortgageCalculatorClient`, `CostEstimatorClient`) plus `src/hooks/use-paystub-url-state.ts`. The defensive "no client JS" rationale didn't apply: we already pay the nuqs bundle cost on every page.
+
+**Fix:** Rewrote `src/components/admin/SearchInput.tsx` as a `'use client'` component using `useQueryState('q', parseAsString.withDefault('').withOptions({ shallow: false, throttleMs: 300, clearOnDefault: true }))`. URL `?q=` updates 300 ms after the operator stops typing; server re-runs and the table re-renders. Param preservation is automatic (nuqs preserves every other query param). `<Pagination>` stays server-rendered. Tests rewritten using `NuqsTestingAdapter`. Wave 2 plans have a header addendum documenting the new `<SearchInput placeholder="..." />` API.
+
+**Files modified:** `src/components/admin/SearchInput.tsx`, `tests/unit/admin/search-input.test.tsx`, `.planning/phases/10-admin-list-pagination/10-CONTEXT.md` (§4 rewritten), `.planning/phases/10-admin-list-pagination/10-0{2,3,4,5,6,7,8}-PLAN.md` (API addendum at top).
 
 ### [Rule 1 - Bug] Cursor payload encoding
 

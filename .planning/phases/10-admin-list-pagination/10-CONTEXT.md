@@ -45,7 +45,17 @@ Rationale:
 
 ## 4. Text search UX (locked)
 
-**Plain `<form method="get">` with `<input name="q" type="search">` + submit button.** No client JS, no debouncing.
+**`useQueryState` from `nuqs` inside a `'use client'` SearchInput component.** Updated 2026-05-27 from the original "plain `<form method="get">`" decision after PR review noted that `nuqs` is the project's canonical URL-state library (already mounted at the root layout via `NuqsAdapter` and used by every calculator route under `(public)/tools/*`).
+
+Behavior:
+- Operator types into the input; URL `?q=...` updates after a 300 ms throttle (via `withOptions({ throttleMs: 300 })`).
+- `shallow: false` so Next.js re-runs the server component tree and the table re-renders with the new query results. Without this the URL would update but the table would not.
+- `clearOnDefault: true` so typing the input empty removes `?q=` from the URL entirely (no dangling `?q=`), matching the StatusFilterBar "All" chip convention.
+- nuqs preserves every OTHER query param (`status`, `cursor`) on its own; the page does NOT forward preserved-param hidden inputs.
+
+`SearchInput` props: `{ placeholder?: string }`. That is the entire API. `baseHref`, `q`, `preservedParams` from the pre-nuqs draft are gone — the operator URL drives state via nuqs, not props.
+
+The companion `<Pagination>` component stays server-rendered (just `<Link>` elements). Only the input surface needs client interactivity.
 
 **Search columns per surface** (case-insensitive, `ILIKE '%q%'` applied per column, results ORed together):
 
@@ -67,24 +77,26 @@ Rationale:
 
 ## 5. File-level changes
 
-### New files
+### New files (updated 2026-05-27 — shadcn-first revision)
 
 - `src/lib/admin/list-cursor.ts` — pure helpers, `import 'server-only'` for safety:
   - `PAGE_SIZE = 25` constant
   - `type Direction = 'after' | 'before'`
-  - `type Cursor<TKey> = { key: TKey; direction: Direction }`
-  - `encodeCursor(direction: Direction, parts: (string | number | Date)[]): string` — produces URL-safe cursor strings
-  - `decodeCursor(raw: string | undefined): Cursor<string[]> | null` — returns `null` on malformed input
-  - `escapeLikePattern(q: string): string` — escapes `%` and `_` and backslash
-- `src/components/admin/SearchInput.tsx` — server component:
-  - Props: `baseHref`, `q?`, `placeholder?`, `preservedParams?: Record<string, string>` (so the form preserves `?status=...` when submitted)
-  - Markup: `<form method="get" action={baseHref}><input type="search" name="q" defaultValue={q} aria-label="Search" /><button type="submit">Search</button>` + hidden inputs for each `preservedParams` key
-- `src/components/admin/Pagination.tsx` — server component:
-  - Props: `baseHref`, `prevCursor?`, `nextCursor?`, `preservedParams?: Record<string, string>`
-  - Markup: a flex row with `Prev` and `Next` links. Both are `<Link>` elements with the cursor + preserved params embedded. Disabled state renders as plain text instead of a link.
-  - Accessibility: nav landmark with `aria-label="Pagination"`; current "page" is implicit (no explicit page number since cursor pagination doesn't have one).
-- `tests/unit/admin/list-cursor.test.ts` — encode/decode round-trip cases, malformed input returns null, `escapeLikePattern` for `%` / `_` / `\`.
-- `tests/unit/admin/search-input.test.ts` and `tests/unit/admin/pagination.test.ts` — render assertions for the two new server components (preserved params present, disabled state correct, accessible labels correct).
+  - `type Cursor = { direction: Direction; parts: string[] }`
+  - `encodeCursor(direction, parts)` — per-part base64url-encoded, joined by `.` (parts may contain ISO timestamps with `:`)
+  - `decodeCursor(raw)` — returns `null` on malformed input so the page falls back to page 1
+  - `escapeLikePattern(q)` — escapes `%`, `_`, and `\` for SQL LIKE
+  - `buildPaginationHref(baseHref, cursor, preservedParams?)` — composes a pagination URL via `URLSearchParams`; skips empty-string preserved values; used by Wave 2 pages to feed `<PaginationPrevious href=...>` / `<PaginationNext href=...>`
+- `src/components/ui/table.tsx` — shadcn/ui canonical Table primitive set (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption). Pulled from `https://ui.shadcn.com/r/styles/new-york/table.json`.
+- `src/components/ui/pagination.tsx` — shadcn/ui canonical Pagination primitive set (Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis). Pulled from `https://ui.shadcn.com/r/styles/new-york/pagination.json`. Composes `buttonVariants` from `src/components/ui/button.tsx` (re-export added in this phase).
+- `src/components/admin/SearchInput.tsx` — `'use client'` nuqs-driven search input (see §4 for the locked decision). Props: `{ placeholder?: string }` only.
+- `tests/unit/admin/list-cursor.test.ts` — round-trip + malformed-input + escape + `buildPaginationHref` URL-encoding coverage.
+- `tests/unit/admin/search-input.test.tsx` — render assertions for SearchInput via `NuqsTestingAdapter`.
+
+### Files NOT shipped (post-shadcn-first revision)
+
+- `src/components/admin/Pagination.tsx` was built in Wave 1 then deleted on shadcn-first revision -- Wave 2 pages compose shadcn `<Pagination><PaginationContent><PaginationItem><PaginationPrevious href=...>...` directly. No project-specific wrapper. The `buildPaginationHref` helper in `list-cursor.ts` dedupes the per-page URL ceremony.
+- `tests/unit/admin/pagination.test.tsx` deleted alongside the wrapper.
 
 ### Modified files (7 list pages + 7 query helpers)
 

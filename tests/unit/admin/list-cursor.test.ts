@@ -8,6 +8,7 @@
  */
 import { describe, expect, it } from 'bun:test'
 import {
+	buildPaginationHref,
 	decodeCursor,
 	encodeCursor,
 	escapeLikePattern,
@@ -101,5 +102,42 @@ describe('list-cursor: escapeLikePattern', () => {
 
 	it('escapes a mix without double-escaping the backslash', () => {
 		expect(escapeLikePattern('mix 100%_off\\')).toBe('mix 100\\%\\_off\\\\')
+	})
+})
+
+describe('list-cursor: buildPaginationHref', () => {
+	it('builds a baseHref + cursor query string with no preserved params', () => {
+		expect(buildPaginationHref('/admin/leads', 'after:abc')).toBe(
+			'/admin/leads?cursor=after%3Aabc'
+		)
+	})
+
+	it('appends preserved params after the cursor', () => {
+		const href = buildPaginationHref('/admin/leads', 'after:xyz', {
+			q: 'hello world',
+			status: 'new'
+		})
+		expect(href.startsWith('/admin/leads?')).toBe(true)
+		expect(href.includes('cursor=after%3Axyz')).toBe(true)
+		expect(href.includes('status=new')).toBe(true)
+		expect(
+			href.includes('q=hello+world') || href.includes('q=hello%20world')
+		).toBe(true)
+	})
+
+	it('omits preserved params whose value is the empty string', () => {
+		const href = buildPaginationHref('/admin/leads', 'after:xyz', {
+			status: '',
+			q: 'hello'
+		})
+		expect(href.includes('status=')).toBe(false)
+		expect(href.includes('q=hello')).toBe(true)
+	})
+
+	it('URL-encodes special characters in the cursor value', () => {
+		const href = buildPaginationHref('/admin/leads', 'after:a/b+c=d')
+		// `/`, `+`, `=` must all be percent-encoded so the receiving server
+		// reads them as part of the cursor value, not as URL structure.
+		expect(href.includes('cursor=after%3Aa%2Fb%2Bc%3Dd')).toBe(true)
 	})
 })
