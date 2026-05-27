@@ -3,7 +3,7 @@
 **Audit date:** 2026-05-27
 **Audit branch:** `chore/v5-audit`
 **Head at audit:** `9cf7071` (post-PR-#226 merge)
-**Status:** v5 closed with 4/5 phases shipped + 1 cross-phase hotfix. Phase 10 formally deferred (defensive scope; no table exceeds 25% of its hard cap).
+**Status:** v5 audit in flight. 4/5 phases shipped (06-09) + 1 cross-phase hotfix (#226). Phase 10 (`admin-list-pagination`) scoped into this audit cycle on operator override: ships before v5 closes regardless of current row counts. This doc is updated once Phase 10 lands.
 
 ## Scope
 
@@ -133,9 +133,11 @@ Current row counts vs hard caps (queried 2026-05-27 against `neondb`, `pg_stat_u
 | `newsletter_subscribers` | 200 | 23 | 11.5% |
 | `scheduled_emails` | 100 | 2 | 2% |
 
-No table exceeds 25% of its cap. The largest absolute value (`newsletter_subscribers`, 23 rows) is comfortably inside the unbounded-render window.
+No table currently exceeds 25% of its cap. The defensive-only threshold would have deferred Phase 10.
 
-**Decision: Phase 10 is formally deferred.** It stays in ROADMAP as `deferred` with the original activation criteria preserved. Re-activate when (a) any table exceeds 75% of its cap in production, OR (b) operator reports list-render latency on an admin page.
+**Decision: Phase 10 ships in this audit cycle on operator override.** The defensive-only deferral is overridden: Phase 10 is scoped INTO v5 close. Rationale: shipping the pagination + search surface now (a) avoids a future "v5 follow-up" milestone for one phase, (b) front-loads the UX before any of the smaller tables (showcase, blog) need it, and (c) gives the operator a search-by-text capability against ops tables (leads, newsletter, emails) where row counts grow with real traffic and search is the actual need, not pagination.
+
+Phase 10 status is tracked separately below until its PR merges.
 
 ## v5 close
 
@@ -145,7 +147,7 @@ No table exceeds 25% of its cap. The largest absolute value (`newsletter_subscri
 | 07 third-party-logger-compliance | shipped | #223 | sink-level redaction live |
 | 08 image-upload-ui | shipped (code), pending operator | #224 | `BLOB_READ_WRITE_TOKEN` not yet on Vercel |
 | 09 blog-rich-text-editor | shipped | #225 | Tiptap in both blog forms |
-| 10 admin-list-pagination | deferred | -- | row counts all under 25% of cap |
+| 10 admin-list-pagination | in flight | -- | scoped into this audit cycle; this doc updated on merge |
 | -- (cross-phase) admin Loading hotfix | shipped | #226 | postponed-PPR-boundary fix |
 
-v5 is closed. Next milestone (v6) starts from this audit. The 4 process-change recommendations above belong in v6's first phase if v6 happens; otherwise they sit in this doc as the canonical record of what slipped past v5's per-phase gates.
+v5 closes after Phase 10 ships. The 4 process-change recommendations above belong in v6's first phase if v6 happens; otherwise they sit in this doc as the canonical record of what slipped past v5's per-phase gates.

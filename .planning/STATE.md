@@ -1,14 +1,14 @@
 # STATE — Current GSD Position
 
 **Last updated:** 2026-05-27
-**Branch:** `main` (audit branch: `chore/v5-audit`)
-**Current milestone:** v5 closed; v6 not yet scoped
-**Current phase:** none active
-**Current plan:** none
+**Branch:** `main` (audit branch: `chore/v5-audit`; Phase 10 branch TBD)
+**Current milestone:** v5 (closing — Phase 10 scoped in, ships before close)
+**Current phase:** `10-admin-list-pagination` (planning)
+**Current plan:** TBD
 
 ## What just happened
 
-- **v5 milestone closed via audit.** Audit doc at `.planning/milestones/v5-AUDIT.md` (HEAD `9cf7071`). 4/5 phases shipped (06, 07, 08, 09) + 1 cross-phase hotfix (#226). Phase 10 (`admin-list-pagination`) formally deferred: no admin list table exceeds 25% of its hard cap (largest is `newsletter_subscribers` at 23/200 = 11.5%). Re-activate when any table hits 75% of cap OR operator reports list-render latency. The audit recorded 4 process changes for v6+ (cross-phase milestone-close gate, "render visibly" vs "exists in DOM" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps as milestone exit criteria).
+- **v5 audit in flight.** Audit doc at `.planning/milestones/v5-AUDIT.md` (HEAD `9cf7071`). 4/5 phases shipped (06, 07, 08, 09) + 1 cross-phase hotfix (#226). **Phase 10 (`admin-list-pagination`) scoped INTO this audit cycle on operator override** -- the defensive-only "wait for cap" deferral is overridden; Phase 10 ships before v5 closes. Operator rationale: shipping pagination + search now avoids a future single-phase milestone, front-loads the UX, and gives the operator text-search against ops tables (leads, newsletter, emails) where search is the real need. The audit recorded 4 process changes for v6+ (cross-phase milestone-close gate, "render visibly" vs "exists in DOM" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps as milestone exit criteria).
 - **PR #226 (`9cf7071`) shipped: admin edit-page Loading hotfix.** All 7 admin `[id]` edit/detail pages were stuck on `"Loading..."` in prod -- the resolved form HTML was buffered in `<div id="S:N" hidden>` but React's `$RC` inline reveal script never unhid it. Root cause: `generateStaticParams` returned `[{ id: '__build_placeholder__' }]` (required by `cacheComponents`) and the loader called `await connection()` BEFORE checking the placeholder id, so the prerendered shell was a Suspense-streamed dynamic boundary marked `<!--$~-->` (PPR postponed). `$RC` only handles `<!--$?-->` (regular pending suspense). Fix: short-circuit to `notFound()` before `connection()`/DB read in every loader. The 404 prerender path emits no `$~` marker; real ids skip the short-circuit and render fully dynamic with regular `$?` boundaries. New `src/lib/admin/build-placeholder.ts` owns the canonical `BUILD_PLACEHOLDER_ID` constant + root-cause docblock; new `tests/unit/admin/build-placeholder.test.ts` (23 cases) enumerates the admin tree so a future new dynamic route forces coverage. 3 rounds of independent code-reviewer review (BLOCKING/SHOULD-FIX/NIT all addressed) before merge. Live-verified on prod: served HTML now contains only `<!--$?-->` markers, no `<!--$~-->`.
 - **Phase 09 (`blog-rich-text-editor`) shipped via PR #225 (`7778225`).** Replaced the plain `<textarea>` for `blog_posts.content` on `/admin/blog/new` and `/admin/blog/[id]/edit` with a Tiptap-based rich-text editor (StarterKit + Link + Image + the ProseMirror peer dep). New `src/components/admin/RichTextEditor.tsx` (`'use client'`) with toolbar (bold, italic, h1-h3, lists, blockquote, inline code, code block, link via `window.prompt`, image via `window.prompt`, undo, redo, clear); SSR-safe via `immediatelyRender: false` plus a pre-init `aria-busy` shell; ARIA stitched onto the actual contenteditable via Tiptap's `editorProps.attributes` seam. Round-trip contract guarded by `src/components/admin/rich-text-editor-tags.ts` (pure helper `isWithinAllowedHtmlTags`) plus 3 unit tests — editor output is a strict subset of `BlogPostContent.tsx`'s sanitize-html allowedTags. 3 commits: `c678508` (Tiptap deps), `ba4858f` (RichTextEditor + helper + 3 tests), `2b13731` (wire into both forms; hint corrected from `Markdown` to `Rich text`). All gates green: lint, typecheck, 581/581 unit tests (+3), build (199 static pages). Protected files (`BlogPostContent.tsx`, `schemas/blog.ts`, `admin/blog-queries.ts`, `auth/admin.ts`, `proxy.ts`, `src/app/api/**`) byte-equal to origin/main. SUMMARY at `.planning/phases/09-blog-rich-text-editor/09-SUMMARY.md`.
 - **Phase 08 (`image-upload-ui`) shipped on `image-uploads`.** Replaced paste-URL friction on all 6 admin form image fields with a real upload widget backed by Vercel Blob. New canonical pattern: `POST /api/admin/images/upload` (single endpoint using `@vercel/blob/client::handleUpload`) + `useBlobUpload` hook + `ImageUploadField` + `ImageGalleryField`. Paste-URL stays as graceful fallback so the PR ships and works even before the operator wires `BLOB_READ_WRITE_TOKEN` to Vercel (route returns 503; client hides Upload button stickily for the session and shows "Uploads disabled. Paste a URL instead."). 5 commits: `5012223` (dep + env + next.config), `31dff69` (API route), `5de4147` (components + hook), `3005c54` (6 form wires + 4 tests), final metadata commit. All gates green: lint, typecheck, 578/578 unit tests (+4), build (199 static pages). Protected files (`src/lib/auth/admin.ts`, `proxy.ts`) byte-equal to origin/main; `src/app/api/**` byte-equal except the new upload route. Operator step before merge: create Vercel Blob store → `BLOB_READ_WRITE_TOKEN` auto-injects → `vercel env pull .env.local` for dev. SUMMARY at `.planning/phases/08-image-upload-ui/08-SUMMARY.md`.
@@ -57,9 +57,16 @@
 
 ## Next action
 
-**v5 is closed.** No phase is active. Two operator follow-ups remain from the v5 audit:
+**Ship Phase 10 (`admin-list-pagination`)**, then finalize the v5 audit and merge PR #227 as the milestone close.
 
-1. **Wire `BLOB_READ_WRITE_TOKEN` on Vercel** so Phase 08's upload UX is actually reachable on prod. Live prod `GET /api/admin/images/upload` currently returns `{"configured": false}`; the paste-URL fallback is the active code path. Steps: create a Vercel Blob store, link to the `hds-website` project so the token auto-injects, then `vercel env pull .env.local` for dev.
-2. **Watch list-render row counts.** Phase 10 reactivation trigger is any admin list table hitting 75% of its hard cap. Current largest is `newsletter_subscribers` at 23/200 (11.5%). No action needed unless this changes.
+Phase 10 work (queued):
+1. Write `.planning/phases/10-admin-list-pagination/10-CONTEXT.md` (scope: cursor pagination + text-search filter across the 7 admin list pages).
+2. Plan via gsd-planner (or manual PLAN.md) -- decide cursor primitives, search input UX, shared helper module, per-page wave structure.
+3. Execute via gsd-executor agents -- ship per-page changes.
+4. Open Phase 10 PR; iterate via code-reviewer loop until zero findings; merge.
+5. Add a final commit to PR #227 updating the audit doc + STATE + ROADMAP to reflect Phase 10 shipped. Merge PR #227 as v5 close.
 
-No v6 milestone is scoped. When v6 is opened, its first phase should adopt the 4 process changes from `.planning/milestones/v5-AUDIT.md` (cross-phase milestone-close gate, "render visibly" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps tracked as milestone exit criteria).
+Operator follow-up unblocked by audit:
+- **Wire `BLOB_READ_WRITE_TOKEN` on Vercel** so Phase 08's upload UX is actually reachable on prod. Live prod `GET /api/admin/images/upload` currently returns `{"configured": false}`. Steps: create a Vercel Blob store, link to the `hds-website` project so the token auto-injects, then `vercel env pull .env.local` for dev.
+
+No v6 milestone is scoped yet. When v6 is opened, its first phase should adopt the 4 process changes from `.planning/milestones/v5-AUDIT.md`.
