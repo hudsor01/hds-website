@@ -13,11 +13,11 @@
  *                       each note with a delete button
  *   5. Danger        -- `DeleteButton` (cascades to attribution + notes)
  *
- * Wrapped in <Suspense> + `await connection()` so the DB read stays out of
- * any partial-prerender step in `next build`. `generateStaticParams`
- * returns a placeholder id so `cacheComponents` has a sample prerender to
- * validate against; the placeholder resolves to `null` and triggers
- * `notFound()`, real ids render via ISR on first request.
+ * Wrapped in <Suspense> + `await connection()` so the DB read happens
+ * inside a streaming boundary. `generateStaticParams` returns a
+ * placeholder id (required by `cacheComponents`) which the loader
+ * short-circuits to 404 before `connection()`; see
+ * `@/lib/admin/build-placeholder` for the full root-cause analysis.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -26,6 +26,7 @@ import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
+import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
 import { getLeadById } from '@/lib/admin/leads-queries'
 import { LEAD_STATUSES } from '@/lib/schemas/admin-leads'
 import {
@@ -40,13 +41,12 @@ export const metadata: Metadata = {
 	robots: { index: false, follow: false }
 }
 
-// `cacheComponents` requires at least one sample id so the build can
-// validate dynamic accesses against a real prerender. The placeholder
-// never resolves to a real row (getLeadById returns null which triggers
-// notFound()), so the only thing that ships from this prerender is the
-// 404 path -- real ids render on first request via ISR.
+// `cacheComponents` rejects an empty static-params list; the loader
+// short-circuits the placeholder to `notFound()` before `connection()`
+// to avoid a PPR postponed-boundary marker the client can't reveal. See
+// `@/lib/admin/build-placeholder` for the full root-cause analysis.
 export function generateStaticParams() {
-	return [{ id: '__build_placeholder__' }]
+	return [{ id: BUILD_PLACEHOLDER_ID }]
 }
 
 interface AdminLeadDetailPageProps {
@@ -60,8 +60,11 @@ const STATUS_BTN_INACTIVE =
 const STATUS_BTN_ACTIVE = 'text-foreground bg-surface-base'
 
 async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
-	await connection()
 	const { id } = await params
+	if (id === BUILD_PLACEHOLDER_ID) {
+		notFound()
+	}
+	await connection()
 	const detail = await getLeadById(id)
 	if (!detail) {
 		notFound()
