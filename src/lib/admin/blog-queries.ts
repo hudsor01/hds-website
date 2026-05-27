@@ -16,7 +16,28 @@
  */
 import 'server-only'
 
-import { desc, eq, inArray, sql } from 'drizzle-orm'
+import {
+	and,
+	asc,
+	desc,
+	eq,
+	gt,
+	ilike,
+	inArray,
+	isNotNull,
+	isNull,
+	lt,
+	or,
+	type SQL,
+	sql
+} from 'drizzle-orm'
+import {
+	type Direction,
+	decodeCursor,
+	encodeCursor,
+	escapeLikePattern,
+	PAGE_SIZE
+} from '@/lib/admin/list-cursor'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type {
@@ -37,28 +58,243 @@ export type AdminBlogListRow = {
 	tagIds: string[]
 }
 
-export async function listBlogPostsForAdmin(): Promise<AdminBlogListRow[]> {
+export type ListBlogPostsOptions = {
+	q?: string
+	cursor?: string
+	direction?: Direction
+}
+
+export type ListBlogPostsResult = {
+	rows: AdminBlogListRow[]
+	hasMore: boolean
+	prevCursor: string | null
+	nextCursor: string | null
+}
+
+const EMPTY_RESULT: ListBlogPostsResult = {
+	rows: [],
+	hasMore: false,
+	prevCursor: null,
+	nextCursor: null
+}
+
+// NULLS LAST sentinel: an unpublished row (publishedAt = null) sorts AFTER
+// every real timestamp. Encoded as the literal NUL character `\x00` in the
+// cursor tuple so decoders can detect it without ambiguity (a real ISO
+// timestamp never contains NUL, and the cursor codec rejects zero-length
+// parts -- empty string would be silently dropped on decode).
+const NULL_SENTINEL = '\x00'
+
+type CursorParts = [publishedAtIso: string, createdAtIso: string, id: string]
+
+function cursorPartsFor(row: {
+	post: { publishedAt: Date | null; createdAt: Date | null; id: string }
+}): CursorParts {
+	return [
+		row.post.publishedAt?.toISOString() ?? NULL_SENTINEL,
+		row.post.createdAt?.toISOString() ?? new Date(0).toISOString(),
+		row.post.id
+	]
+}
+
+/**
+ * Cursor-paginated + search-aware admin blog list.
+ *
+ * Sort order: `(publishedAt DESC NULLS LAST, createdAt DESC, id ASC)`. The
+ * existing public sort plus `id ASC` as a tiebreaker so the cursor tuple is
+ * always unique. Cursor tuple parts:
+ * `[publishedAt?.toISOString() ?? '\x00', createdAt.toISOString(), id]`. The
+ * `'\x00'` sentinel in parts[0] means "this row had a NULL publishedAt".
+ * We use `\x00` instead of empty string because the cursor codec rejects
+ * zero-length parts (would otherwise be silently dropped on decode).
+ *
+ * Page direction:
+ *  - 'after' (default for fresh requests): forward in display order.
+ *  - 'before': flip every ORDER BY column AND flip every cursor comparator,
+ *    then reverse the result rows back to display order before returning.
+ *
+ * Search columns: `title`, `slug`, `excerpt` (case-insensitive ILIKE with
+ * %-bounded pattern; backslash / `%` / `_` escaped via `escapeLikePattern`).
+ *
+ * Tag lookup: `loadTagIdsForPosts` is invoked with the TRIMMED page slice
+ * (length <= PAGE_SIZE), not the full PAGE_SIZE+1 result -- the dropped
+ * sentinel row never reaches the join table query.
+ *
+ * Malformed cursor: silently falls back to page 1. DB error: returns the
+ * empty result shape; caller renders the empty state instead of crashing.
+ */
+export async function listBlogPostsForAdmin(
+	opts?: ListBlogPostsOptions
+): Promise<ListBlogPostsResult> {
+	const { q: rawQ, cursor: rawCursor } = opts ?? {}
+	const cursor = decodeCursor(rawCursor)
+	const direction: Direction = cursor?.direction ?? 'after'
+
+	const conditions: SQL[] = []
+
+	const q = (rawQ ?? '').trim()
+	if (q.length > 0) {
+		const pattern = `%${escapeLikePattern(q)}%`
+		const searchClause = or(
+			ilike(blogPosts.title, pattern),
+			ilike(blogPosts.slug, pattern),
+			ilike(blogPosts.excerpt, pattern)
+		)
+		if (searchClause) {
+			conditions.push(searchClause)
+		}
+	}
+
+	if (cursor && cursor.parts.length === 3) {
+		const rawPublishedAt = cursor.parts[0] ?? NULL_SENTINEL
+		const createdAtValue = new Date(cursor.parts[1] ?? '')
+		const idValue = cursor.parts[2] ?? ''
+		const publishedAtValue =
+			rawPublishedAt === NULL_SENTINEL ? null : new Date(rawPublishedAt)
+		const publishedAtValid =
+			publishedAtValue === null || !Number.isNaN(publishedAtValue.getTime())
+		if (
+			publishedAtValid &&
+			!Number.isNaN(createdAtValue.getTime()) &&
+			idValue.length > 0
+		) {
+			// Row-constructor expansion for the NULLS-LAST sort tuple
+			// (publishedAt DESC NULLS LAST, createdAt DESC, id ASC).
+			//
+			//  - direction 'after' with a REAL cursor publishedAt: a target row
+			//    is "after" the cursor if its publishedAt is NULL (nulls sort
+			//    after everything), OR strictly less than the cursor pa, OR ties
+			//    on pa and goes by (createdAt DESC, id ASC).
+			//  - direction 'after' with a NULL cursor publishedAt: the cursor is
+			//    already in the null-tail; the target must also be NULL and
+			//    strictly later in (createdAt DESC, id ASC).
+			//  - direction 'before' inverts each branch.
+			let cursorClause: SQL | undefined
+			if (direction === 'after') {
+				if (publishedAtValue !== null) {
+					cursorClause = or(
+						isNull(blogPosts.publishedAt),
+						lt(blogPosts.publishedAt, publishedAtValue),
+						and(
+							eq(blogPosts.publishedAt, publishedAtValue),
+							lt(blogPosts.createdAt, createdAtValue)
+						),
+						and(
+							eq(blogPosts.publishedAt, publishedAtValue),
+							eq(blogPosts.createdAt, createdAtValue),
+							gt(blogPosts.id, idValue)
+						)
+					)
+				} else {
+					cursorClause = and(
+						isNull(blogPosts.publishedAt),
+						or(
+							lt(blogPosts.createdAt, createdAtValue),
+							and(
+								eq(blogPosts.createdAt, createdAtValue),
+								gt(blogPosts.id, idValue)
+							)
+						)
+					)
+				}
+			} else if (publishedAtValue !== null) {
+				cursorClause = or(
+					gt(blogPosts.publishedAt, publishedAtValue),
+					and(
+						eq(blogPosts.publishedAt, publishedAtValue),
+						gt(blogPosts.createdAt, createdAtValue)
+					),
+					and(
+						eq(blogPosts.publishedAt, publishedAtValue),
+						eq(blogPosts.createdAt, createdAtValue),
+						lt(blogPosts.id, idValue)
+					)
+				)
+			} else {
+				// cursor is NULL-tail; "before" means we go back into the
+				// real-publishedAt range OR earlier null rows in (createdAt
+				// DESC, id ASC) flipped. Under display order, any real-pa
+				// row precedes any null-pa row, so isNotNull is the wider
+				// branch and the null-tail sub-predicate handles peers
+				// within the null section.
+				cursorClause = or(
+					isNotNull(blogPosts.publishedAt),
+					and(
+						isNull(blogPosts.publishedAt),
+						or(
+							gt(blogPosts.createdAt, createdAtValue),
+							and(
+								eq(blogPosts.createdAt, createdAtValue),
+								lt(blogPosts.id, idValue)
+							)
+						)
+					)
+				)
+			}
+			if (cursorClause) {
+				conditions.push(cursorClause)
+			}
+		}
+	}
+
+	const whereClause = conditions.length === 0 ? undefined : and(...conditions)
+
+	const orderBy =
+		direction === 'before'
+			? [
+					sql`${blogPosts.publishedAt} asc nulls first`,
+					asc(blogPosts.createdAt),
+					desc(blogPosts.id)
+				]
+			: [
+					sql`${blogPosts.publishedAt} desc nulls last`,
+					desc(blogPosts.createdAt),
+					asc(blogPosts.id)
+				]
+
 	try {
-		const rows = await db
+		const dbRows = await db
 			.select({ post: blogPosts, author: blogAuthors })
 			.from(blogPosts)
 			.leftJoin(blogAuthors, eq(blogPosts.authorId, blogAuthors.id))
-			.orderBy(
-				sql`${blogPosts.publishedAt} desc nulls last`,
-				desc(blogPosts.createdAt)
-			)
+			.where(whereClause)
+			.orderBy(...orderBy)
+			.limit(PAGE_SIZE + 1)
 
-		const postIds = rows.map(r => r.post.id)
-		const tagMap = await loadTagIdsForPosts(postIds)
+		const hasMore = dbRows.length > PAGE_SIZE
+		let pageRows = hasMore ? dbRows.slice(0, PAGE_SIZE) : dbRows
+		if (direction === 'before') {
+			pageRows = [...pageRows].reverse()
+		}
 
-		return rows.map(r => ({
+		// Tag lookup runs over the TRIMMED page slice ids only -- never the
+		// dropped sentinel row at index PAGE_SIZE. This is the contract the
+		// blog-queries.test.ts "tag-id lookup is page-slice scoped" suite
+		// pins down.
+		const pageIds = pageRows.map(r => r.post.id)
+		const tagMap = await loadTagIdsForPosts(pageIds)
+
+		const rows: AdminBlogListRow[] = pageRows.map(r => ({
 			post: r.post,
 			author: r.author,
 			tagIds: tagMap[r.post.id] ?? []
 		}))
+
+		const lastRow = pageRows[pageRows.length - 1]
+		const firstRow = pageRows[0]
+
+		const nextCursor =
+			hasMore && lastRow ? encodeCursor('after', cursorPartsFor(lastRow)) : null
+
+		const prevCursor =
+			cursor !== null && firstRow
+				? encodeCursor('before', cursorPartsFor(firstRow))
+				: null
+
+		return { rows, hasMore, prevCursor, nextCursor }
 	} catch (error) {
 		logger.error('blog-queries.listBlogPostsForAdmin failed', error)
-		return []
+		return EMPTY_RESULT
 	}
 }
 
