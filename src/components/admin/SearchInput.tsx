@@ -57,8 +57,11 @@ const Q_PARSER = parseAsString.withDefault('').withOptions({
 
 // Cursor reset uses the same `shallow: false` so the server re-runs with
 // the cursor stripped at the same time as q updates. `clearOnDefault: true`
-// + `withDefault(null)` means setting cursor to null removes `?cursor=`
-// from the URL rather than leaving a dangling `?cursor=`.
+// + `withDefault('')` means setting cursor to '' removes `?cursor=` from
+// the URL (empty string equals the parser default and is dropped) rather
+// than leaving a dangling `?cursor=`. We treat empty-string and null
+// cursor as the same state ("no cursor"), so the empty-string sentinel is
+// the simplest spelling.
 const CURSOR_RESET_PARSER = parseAsString.withDefault('').withOptions({
 	shallow: false,
 	clearOnDefault: true
