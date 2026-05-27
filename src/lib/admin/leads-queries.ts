@@ -25,7 +25,14 @@
  */
 import 'server-only'
 
-import { desc, eq } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, ilike, lt, or, type SQL } from 'drizzle-orm'
+import {
+	type Direction,
+	decodeCursor,
+	encodeCursor,
+	escapeLikePattern,
+	PAGE_SIZE
+} from '@/lib/admin/list-cursor'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type { LeadStatus } from '@/lib/schemas/admin-leads'
@@ -44,27 +51,140 @@ export type LeadDetail = {
 	notes: LeadNote[]
 }
 
+export type ListLeadsOptions = {
+	status?: LeadStatus | null
+	q?: string
+	cursor?: string
+	direction?: Direction
+}
+
+export type ListLeadsResult = {
+	rows: Lead[]
+	hasMore: boolean
+	prevCursor: string | null
+	nextCursor: string | null
+}
+
+const EMPTY_RESULT: ListLeadsResult = {
+	rows: [],
+	hasMore: false,
+	prevCursor: null,
+	nextCursor: null
+}
+
 /**
- * Most recent leads (newest first), optionally filtered to a single status.
- * `status === null` (or undefined) returns rows of every status. Caps at
- * `limit` rows so a runaway table cannot dominate the page render; the
- * default 200 matches the cap in CONTEXT.md §5.1. Returns `[]` on query
- * failure so the admin list renders the empty state instead of surfacing
- * an exception.
+ * Cursor-paginated + search-aware admin leads list.
+ *
+ * Sort order: `(createdAt DESC, id ASC)` -- newest first, id ASC as a
+ * tiebreaker so the cursor tuple is always unique. Cursor tuple parts:
+ * `[createdAt.toISOString(), id]`.
+ *
+ * Page direction:
+ *  - 'after' (default for fresh requests): forward in display order.
+ *  - 'before': flip every ORDER BY column AND flip every cursor comparator,
+ *    then reverse the result rows back to display order before returning.
+ *
+ * Filters compose via and():
+ *  - `status` (when non-null): `eq(leads.status, status)`.
+ *  - `q` (trimmed, non-empty): `or(ilike(name), ilike(email), ilike(company))`
+ *    with %-bounded pattern and `escapeLikePattern` on the input. `name` and
+ *    `company` are nullable -- ILIKE on a NULL column returns NULL (false)
+ *    so those rows are safely filtered out.
+ *
+ * Malformed cursor: silently falls back to page 1. DB error: returns the
+ * empty result shape; caller renders the empty state instead of crashing.
  */
 export async function listLeadsForAdmin(
-	status?: LeadStatus | null,
-	limit: number = 200
-): Promise<Lead[]> {
+	opts?: ListLeadsOptions
+): Promise<ListLeadsResult> {
+	const { status, q: rawQ, cursor: rawCursor } = opts ?? {}
+	const cursor = decodeCursor(rawCursor)
+	const direction: Direction = cursor?.direction ?? 'after'
+
+	const conditions: SQL[] = []
+
+	if (status != null) {
+		conditions.push(eq(leads.status, status))
+	}
+
+	const q = (rawQ ?? '').trim()
+	if (q.length > 0) {
+		const pattern = `%${escapeLikePattern(q)}%`
+		const searchClause = or(
+			ilike(leads.name, pattern),
+			ilike(leads.email, pattern),
+			ilike(leads.company, pattern)
+		)
+		if (searchClause) {
+			conditions.push(searchClause)
+		}
+	}
+
+	if (cursor && cursor.parts.length === 2) {
+		const createdAtValue = new Date(cursor.parts[0] ?? '')
+		const idValue = cursor.parts[1] ?? ''
+		if (!Number.isNaN(createdAtValue.getTime()) && idValue.length > 0) {
+			// 2-part cursor expansion for the sort tuple
+			// (createdAt DESC, id ASC). Forward ('after') means STRICTLY
+			// less-than on createdAt (older) OR same-createdAt + greater id;
+			// backward ('before') flips both comparators.
+			const cursorClause =
+				direction === 'after'
+					? or(
+							lt(leads.createdAt, createdAtValue),
+							and(eq(leads.createdAt, createdAtValue), gt(leads.id, idValue))
+						)
+					: or(
+							gt(leads.createdAt, createdAtValue),
+							and(eq(leads.createdAt, createdAtValue), lt(leads.id, idValue))
+						)
+			if (cursorClause) {
+				conditions.push(cursorClause)
+			}
+		}
+	}
+
+	const whereClause = conditions.length === 0 ? undefined : and(...conditions)
+
+	const orderBy =
+		direction === 'before'
+			? [asc(leads.createdAt), desc(leads.id)]
+			: [desc(leads.createdAt), asc(leads.id)]
+
 	try {
-		const baseQuery = db.select().from(leads).$dynamic()
-		const filtered =
-			status != null ? baseQuery.where(eq(leads.status, status)) : baseQuery
-		return await filtered.orderBy(desc(leads.createdAt)).limit(limit)
+		const dbRows = await db
+			.select()
+			.from(leads)
+			.where(whereClause)
+			.orderBy(...orderBy)
+			.limit(PAGE_SIZE + 1)
+
+		const hasMore = dbRows.length > PAGE_SIZE
+		let pageRows = hasMore ? dbRows.slice(0, PAGE_SIZE) : dbRows
+		if (direction === 'before') {
+			pageRows = [...pageRows].reverse()
+		}
+
+		const lastRow = pageRows[pageRows.length - 1]
+		const firstRow = pageRows[0]
+
+		const nextCursor =
+			hasMore && lastRow ? encodeCursor('after', cursorPartsFor(lastRow)) : null
+
+		const prevCursor =
+			cursor !== null && firstRow
+				? encodeCursor('before', cursorPartsFor(firstRow))
+				: null
+
+		return { rows: pageRows, hasMore, prevCursor, nextCursor }
 	} catch (error) {
 		logger.error('leads-queries.listLeadsForAdmin failed', error)
-		return []
+		return EMPTY_RESULT
 	}
+}
+
+function cursorPartsFor(row: Lead): [Date, string] {
+	return [row.createdAt ?? new Date(0), row.id]
 }
 
 /**
