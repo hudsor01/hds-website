@@ -1,35 +1,66 @@
 /**
  * Admin Scheduled-Emails list page (server component).
  *
- * Phase 05 §5.4 entry point for the `/admin/emails` surface. Renders:
- *  - 4 queue-health stat cards (pending / sent / failed / cancelled counts)
- *  - A `StatusFilterBar` row of chips that round-trips via `?status=...`
- *  - The most recent 100 scheduled emails by `scheduledFor DESC`
+ * Phase 10 Wave 2: cursor-paginated + search-aware. The existing 4
+ * queue-health stat cards stay UNFILTERED -- `getQueueCounts()` is called
+ * WITHOUT arguments inside `Promise.all` so the cards always reflect the
+ * full queue state regardless of the active `?status=` / `?q=` / `?cursor=`
+ * params. The existing `<StatusFilterBar>` chip row stays byte-equal and
+ * composes alongside the new `<SearchInput>` (client, nuqs) and shadcn
+ * `<Pagination>` (server, cursor-driven `<Link>`s built via
+ * `buildPaginationHref`).
  *
- * Data is loaded with `Promise.all` over `getQueueCounts()` and
- * `listScheduledEmailsForAdmin()` inside a `<Suspense>` boundary, after
- * `await connection()`, so the DB read stays out of any partial-prerender
- * step in `next build` (same pattern as the dashboard page).
+ * Param composition matrix (matches Plan 10-05 / 10-06 / 10-07):
+ *  - `?status=` round-trips via `<StatusFilterBar>` chip submissions (single
+ *    button per chip; the "All" chip drops the param entirely).
+ *  - `?q=` round-trips via the nuqs `<SearchInput>`. nuqs auto-preserves
+ *    every other query param (including `status`) so `<SearchInput>` does
+ *    NOT need a preservedParams prop.
+ *  - `?cursor=` round-trips via the shadcn `<PaginationPrevious>` /
+ *    `<PaginationNext>` `<Link>` hrefs; `preservedForPagination` carries
+ *    both `status` and `q` when each is active.
+ *  - Switching status via the chip row deliberately drops `q` and `cursor`
+ *    (StatusFilterBar's submit is a plain GET with no hidden inputs); the
+ *    stat cards above the bar are unaffected because they are derived from
+ *    the unfiltered `getQueueCounts()` call.
  *
- * The filter chips include per-status counts so the operator still sees
- * queue health at a glance even when the table is filtered. The "All" chip
- * does not get a count (the sum is implicit).
+ * Wrapped in <Suspense> + `await connection()` so the DB read stays out
+ * of any partial-prerender step in `next build` -- same pattern as the
+ * other admin list pages.
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { SearchInput } from '@/components/admin/SearchInput'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import {
 	StatusFilterBar,
 	type StatusFilterOption
 } from '@/components/admin/StatusFilterBar'
 import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationNext,
+	PaginationPrevious
+} from '@/components/ui/pagination'
+import {
+	Table,
+	TableBody,
+	TableCaption,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow
+} from '@/components/ui/table'
+import {
 	EMAIL_STATUSES,
 	type EmailStatus,
 	getQueueCounts,
 	listScheduledEmailsForAdmin
 } from '@/lib/admin/emails-queries'
+import { buildPaginationHref } from '@/lib/admin/list-cursor'
 
 export const metadata: Metadata = {
 	title: 'Admin: Emails',
@@ -37,21 +68,29 @@ export const metadata: Metadata = {
 }
 
 interface AdminEmailsPageProps {
-	searchParams: Promise<{ status?: string }>
+	searchParams: Promise<{ status?: string; q?: string; cursor?: string }>
 }
 
 async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 	await connection()
-	const { status: rawStatus } = await searchParams
+	const { status: rawStatus, q: rawQ, cursor } = await searchParams
 	const status: EmailStatus | null = (
 		EMAIL_STATUSES as readonly string[]
 	).includes(rawStatus ?? '')
 		? (rawStatus as EmailStatus)
 		: null
+	const q = (rawQ ?? '').trim()
 
-	const [counts, rows] = await Promise.all([
+	// CRITICAL: getQueueCounts() is called with NO arguments. The 4 stat
+	// cards reflect the FULL queue regardless of the active status / q /
+	// cursor filters. Only the paginated list helper sees the filters.
+	const [counts, { rows, prevCursor, nextCursor }] = await Promise.all([
 		getQueueCounts(),
-		listScheduledEmailsForAdmin(status, 100)
+		listScheduledEmailsForAdmin({
+			status,
+			q: q.length > 0 ? q : undefined,
+			cursor
+		})
 	])
 
 	const filterOptions: StatusFilterOption[] = [
@@ -62,6 +101,14 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 			count: counts[s]
 		}))
 	]
+
+	const preservedForPagination: Record<string, string> = {}
+	if (status) {
+		preservedForPagination.status = status
+	}
+	if (q) {
+		preservedForPagination.q = q
+	}
 
 	return (
 		<>
@@ -87,69 +134,109 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 				options={filterOptions}
 			/>
 
+			<SearchInput placeholder="Search emails" />
+
 			{rows.length === 0 ? (
-				<div className="rounded-xl border border-border bg-surface-raised p-8 text-center text-sm text-muted-foreground">
-					No scheduled emails.
-				</div>
+				q ? (
+					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
+						<p className="text-sm text-muted-foreground">
+							No emails matching <span className="font-mono">{q}</span>.
+						</p>
+						<Link
+							href={status ? `/admin/emails?status=${status}` : '/admin/emails'}
+							className="inline-block mt-3 text-sm font-medium text-accent-text hover:underline"
+						>
+							Clear search
+						</Link>
+					</div>
+				) : (
+					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center text-sm text-muted-foreground">
+						No scheduled emails.
+					</div>
+				)
 			) : (
-				<div className="overflow-x-auto rounded-xl border border-border bg-surface-raised">
-					<table className="w-full text-sm">
-						<caption className="sr-only">Scheduled emails</caption>
-						<thead className="text-left text-xs uppercase tracking-wider text-muted-foreground bg-surface-base">
-							<tr>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Recipient
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Sequence/Step
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Status
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Scheduled for
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium">
-									Sent at
-								</th>
-								<th scope="col" className="px-4 py-3 font-medium text-right">
-									Retries
-								</th>
-							</tr>
-						</thead>
-						<tbody>
+				<>
+					<Table>
+						<TableCaption className="sr-only">Scheduled emails</TableCaption>
+						<TableHeader>
+							<TableRow>
+								<TableHead>Recipient</TableHead>
+								<TableHead>Sequence/Step</TableHead>
+								<TableHead>Status</TableHead>
+								<TableHead>Scheduled for</TableHead>
+								<TableHead>Sent at</TableHead>
+								<TableHead className="text-right">Retries</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
 							{rows.map(r => (
-								<tr key={r.id} className="border-t border-border">
-									<td className="px-4 py-3 text-foreground">
+								<TableRow key={r.id}>
+									<TableCell className="text-foreground">
 										<Link
 											href={`/admin/emails/${r.id}`}
 											className="hover:underline"
 										>
 											{r.recipientEmail}
 										</Link>
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										<span>{r.sequenceId}</span>
 										<span className="text-muted-foreground"> / </span>
 										<span>{r.stepId}</span>
-									</td>
-									<td className="px-4 py-3">
+									</TableCell>
+									<TableCell>
 										<StatusBadge status={r.status} />
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										{r.scheduledFor.toLocaleString('en-US')}
-									</td>
-									<td className="px-4 py-3 text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-muted-foreground">
 										{r.sentAt?.toLocaleString('en-US') ?? '-'}
-									</td>
-									<td className="px-4 py-3 text-right text-muted-foreground">
+									</TableCell>
+									<TableCell className="text-right text-muted-foreground">
 										{`${r.retryCount}/${r.maxRetries}`}
-									</td>
-								</tr>
+									</TableCell>
+								</TableRow>
 							))}
-						</tbody>
-					</table>
-				</div>
+						</TableBody>
+					</Table>
+					<Pagination className="mt-4 justify-between">
+						<PaginationContent>
+							<PaginationItem>
+								{prevCursor === null ? (
+									<PaginationPrevious
+										aria-disabled="true"
+										className="pointer-events-none opacity-50"
+									/>
+								) : (
+									<PaginationPrevious
+										href={buildPaginationHref(
+											'/admin/emails',
+											prevCursor,
+											preservedForPagination
+										)}
+									/>
+								)}
+							</PaginationItem>
+							<PaginationItem>
+								{nextCursor === null ? (
+									<PaginationNext
+										aria-disabled="true"
+										className="pointer-events-none opacity-50"
+									/>
+								) : (
+									<PaginationNext
+										href={buildPaginationHref(
+											'/admin/emails',
+											nextCursor,
+											preservedForPagination
+										)}
+									/>
+								)}
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				</>
 			)}
 		</>
 	)
