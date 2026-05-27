@@ -3,7 +3,7 @@
 **Audit date:** 2026-05-27
 **Audit branch:** `chore/v5-audit`
 **Head at audit:** `9cf7071` (post-PR-#226 merge)
-**Status:** v5 audit in flight. 4/5 phases shipped (06-09) + 1 cross-phase hotfix (#226). Phase 10 (`admin-list-pagination`) scoped into this audit cycle on operator override: ships before v5 closes regardless of current row counts. This doc is updated once Phase 10 lands.
+**Status:** v5 closed 2026-05-27 (HEAD `870f717` on main). 5/5 phases shipped (06, 07, 08, 09, 10) + 1 cross-phase hotfix (#226). Phase 10 (`admin-list-pagination`) shipped via PR #228 on operator override of the original defensive-only deferral.
 
 ## Scope
 
@@ -135,9 +135,25 @@ Current row counts vs hard caps (queried 2026-05-27 against `neondb`, `pg_stat_u
 
 No table currently exceeds 25% of its cap. The defensive-only threshold would have deferred Phase 10.
 
-**Decision: Phase 10 ships in this audit cycle on operator override.** The defensive-only deferral is overridden: Phase 10 is scoped INTO v5 close. Rationale: shipping the pagination + search surface now (a) avoids a future "v5 follow-up" milestone for one phase, (b) front-loads the UX before any of the smaller tables (showcase, blog) need it, and (c) gives the operator a search-by-text capability against ops tables (leads, newsletter, emails) where row counts grow with real traffic and search is the actual need, not pagination.
+**Decision: Phase 10 shipped in this audit cycle on operator override.** The defensive-only deferral was overridden: Phase 10 was scoped INTO v5 close. Rationale: shipping the pagination + search surface now (a) avoided a future "v5 follow-up" milestone for one phase, (b) front-loaded the UX before any of the smaller tables (showcase, blog) need it, and (c) gave the operator a search-by-text capability against ops tables (leads, newsletter, emails) where row counts grow with real traffic and search is the actual need, not pagination.
 
-Phase 10 status is tracked separately below until its PR merges.
+Phase 10 was shipped via PR #228 (commit `870f717` on main) — see the row below.
+
+### Phase 10 execution notes (post-ship)
+
+20 commits across 3 waves: 1 CONTEXT, 5 Wave-1 (shared primitives), 13 Wave-2 (7 list pairs + their SUMMARYs), 1 Wave-3 (verification + phase SUMMARY). 28 changed source/test files: +5050 / -565. 112 new test cases / 281 new assertions across 8 new test files under `tests/unit/admin/`.
+
+Two post-Wave-1 operator overrides reshaped the implementation mid-flight (both documented in `.planning/phases/10-admin-list-pagination/10-01-SUMMARY.md`):
+
+1. **nuqs swap.** Original plan locked `<form method="get">` SearchInput. Operator pointed out nuqs is the project's canonical URL-state library (root-mounted via `<NuqsAdapter>`, used by every calculator route). SearchInput rewritten as `'use client'` using `useQueryState('q', parseAsString.withDefault('').withOptions({ shallow: false, throttleMs: 300, clearOnDefault: true }))`.
+2. **shadcn-first primitives.** Original plan called for custom `admin/Pagination.tsx` wrapper. Operator pointed out shadcn ships canonical `Table` + `Pagination` primitives. Custom wrapper deleted; Wave 2 pages compose shadcn primitives directly with `buildPaginationHref` from `list-cursor.ts` deduping URL ceremony. Added a `feedback_shadcn_first.md` memory: survey shadcn ecosystem BEFORE writing custom.
+
+Two code-reviewer findings on the first PR push (both fixed pre-merge):
+
+- **BLOCKING:** SearchInput preserved `?cursor=` across q changes. Searching on page 2+ filtered the AFTER-cursor slice for ILIKE matches, missing hits earlier in the dataset. Fix: second `useQueryState('cursor')` + `setCursor('')` in the same `onChange` handler.
+- **SHOULD FIX:** Backward-navigation to page 1 emitted broken Prev/Next button state in all 7 helpers. Fix: gate `nextCursor` on `(hasMore || direction === 'before')` and `prevCursor` on `(direction !== 'before' || hasMore)`. New regression test per helper.
+
+Final state: 3 rounds of code review (round 3 zero findings). 724 tests pass. All 7 CI checks green pre-merge.
 
 ## v5 close
 
@@ -147,7 +163,7 @@ Phase 10 status is tracked separately below until its PR merges.
 | 07 third-party-logger-compliance | shipped | #223 | sink-level redaction live |
 | 08 image-upload-ui | shipped (code), pending operator | #224 | `BLOB_READ_WRITE_TOKEN` not yet on Vercel |
 | 09 blog-rich-text-editor | shipped | #225 | Tiptap in both blog forms |
-| 10 admin-list-pagination | in flight | -- | scoped into this audit cycle; this doc updated on merge |
+| 10 admin-list-pagination | shipped | #228 | cursor + nuqs search + shadcn primitives |
 | -- (cross-phase) admin Loading hotfix | shipped | #226 | postponed-PPR-boundary fix |
 
-v5 closes after Phase 10 ships. The 4 process-change recommendations above belong in v6's first phase if v6 happens; otherwise they sit in this doc as the canonical record of what slipped past v5's per-phase gates.
+v5 is closed. The 4 process-change recommendations above belong in v6's first phase if v6 happens; otherwise they sit in this doc as the canonical record of what slipped past v5's per-phase gates.
