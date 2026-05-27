@@ -233,28 +233,38 @@ describe('listShowcasesForAdmin: cursor + direction', () => {
 	})
 
 	test("'before' cursor reverses ORDER BY and rows come back in display order", async () => {
-		// Simulate a 'before' page: SQL returns rows in REVERSE display order
-		// (newer-than-cursor first under flipped sort). Helper must reverse
-		// them before returning so the caller sees display order.
-		const reversed = [makeRow(3), makeRow(2), makeRow(1)]
+		// Simulate a 'before' page that's NOT page 1: SQL returns PAGE_SIZE + 1
+		// rows in REVERSE display order (newer-than-cursor first under flipped
+		// sort). Helper must reverse them before returning so the caller sees
+		// display order. hasMore=true means there's still more data backward,
+		// so prevCursor must remain emitted.
+		const reversed = Array.from({ length: PAGE_SIZE + 1 }, (_, i) =>
+			makeRow(PAGE_SIZE - i)
+		)
 		state.rowsToReturn = reversed
 
 		const beforeCursor = encodeCursor('before', [
-			'5',
-			'2026-05-15T00:00:00.000Z',
-			'row-05'
+			'99',
+			'2026-12-01T00:00:00.000Z',
+			'row-99'
 		])
 
 		const result = await listShowcasesForAdmin({ cursor: beforeCursor })
 
-		// Rows must be reversed back into display order: row-01, row-02, row-03
+		// Rows must be reversed back into display order (ascending idx)
 		const ids = result.rows.map(r => (r as { id: string }).id)
-		expect(ids).toEqual(['row-01', 'row-02', 'row-03'])
+		const expectedIds = Array.from(
+			{ length: PAGE_SIZE },
+			(_, i) => `row-${String(i + 1).padStart(2, '0')}`
+		)
+		expect(ids).toEqual(expectedIds)
 
-		// prevCursor is set because the caller asked for a cursor and got rows
+		// prevCursor stays set because hasMore=true (more rows backward)
 		expect(result.prevCursor).not.toBeNull()
 		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
 		expect(decodedPrev?.direction).toBe('before')
+		// nextCursor also set because we navigated backward (page exists forward)
+		expect(result.nextCursor).not.toBeNull()
 	})
 
 	test("'after' cursor with PAGE_SIZE+1 result emits both prev (after navigation) and next cursor", async () => {
@@ -273,5 +283,30 @@ describe('listShowcasesForAdmin: cursor + direction', () => {
 		expect(result.hasMore).toBe(true)
 		expect(result.prevCursor).not.toBeNull()
 		expect(result.nextCursor).not.toBeNull()
+	})
+
+	test('emits nextCursor + nulls prevCursor when arriving on page 1 via backward navigation (direction=before, hasMore=false)', async () => {
+		// User clicked Prev on page 2 and ran out of rows -- they ARE on the
+		// real first page now. Before the fix: prevCursor was set to
+		// before:firstRow (broken: clicking it leads to empty page) and
+		// nextCursor was null (broken: user stuck, can't return to page 2).
+		// After the fix: prevCursor=null (correctly at start) and
+		// nextCursor=after:lastRow (so user can navigate forward to page 2).
+		const reversed = [makeRow(3), makeRow(2), makeRow(1)]
+		state.rowsToReturn = reversed
+
+		const beforeCursor = encodeCursor('before', [
+			'5',
+			'2026-05-15T00:00:00.000Z',
+			'row-05'
+		])
+
+		const result = await listShowcasesForAdmin({ cursor: beforeCursor })
+
+		expect(result.hasMore).toBe(false)
+		expect(result.prevCursor).toBeNull()
+		expect(result.nextCursor).not.toBeNull()
+		const decodedNext = decodeCursor(result.nextCursor ?? undefined)
+		expect(decodedNext?.direction).toBe('after')
 	})
 })

@@ -152,11 +152,18 @@ export async function listTestimonialsForAdmin(
 		const lastRow = pageRows[pageRows.length - 1]
 		const firstRow = pageRows[0]
 
+		// nextCursor: emit after:lastRow whenever there's more data forward OR we
+		// arrived here via backward navigation (which means rows exist after us).
 		const nextCursor =
-			hasMore && lastRow ? encodeCursor('after', cursorPartsFor(lastRow)) : null
+			lastRow && (hasMore || direction === 'before')
+				? encodeCursor('after', cursorPartsFor(lastRow))
+				: null
 
+		// prevCursor: emit before:firstRow whenever we navigated past the start
+		// AND we still have more rows backward. If direction was 'before' and
+		// hasMore is false, we ARE at the actual first page; no prev cursor.
 		const prevCursor =
-			cursor !== null && firstRow
+			cursor !== null && firstRow && (direction !== 'before' || hasMore)
 				? encodeCursor('before', cursorPartsFor(firstRow))
 				: null
 

@@ -253,9 +253,37 @@ describe('listScheduledEmailsForAdmin: cursor + direction', () => {
 	})
 
 	test("'before' cursor reverses ORDER BY and rows come back in display order", async () => {
-		// Simulate a 'before' page: SQL returns rows in REVERSE display order
-		// (newer-than-cursor first under flipped sort). Helper must reverse
-		// them before returning so the caller sees display order.
+		// Simulate a 'before' page that's NOT page 1: SQL returns PAGE_SIZE + 1
+		// rows in REVERSE display order. hasMore=true keeps prevCursor emitted.
+		const reversed = Array.from({ length: PAGE_SIZE + 1 }, (_, i) =>
+			makeRow(PAGE_SIZE - i)
+		)
+		state.rowsToReturn = reversed
+
+		const beforeCursor = encodeCursor('before', [
+			'2026-12-01T00:00:00.000Z',
+			'email-99'
+		])
+
+		const result = await listScheduledEmailsForAdmin({ cursor: beforeCursor })
+
+		const ids = result.rows.map(r => (r as { id: string }).id)
+		const expectedIds = Array.from(
+			{ length: PAGE_SIZE },
+			(_, i) => `email-${String(i + 1).padStart(2, '0')}`
+		)
+		expect(ids).toEqual(expectedIds)
+
+		expect(result.prevCursor).not.toBeNull()
+		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
+		expect(decodedPrev?.direction).toBe('before')
+		expect(result.nextCursor).not.toBeNull()
+	})
+
+	test('emits nextCursor + nulls prevCursor when arriving on page 1 via backward navigation (direction=before, hasMore=false)', async () => {
+		// User clicked Prev on page 2 and ran out of rows. Before the fix:
+		// prevCursor=before:firstRow (broken) and nextCursor=null (stuck).
+		// After the fix: prevCursor=null, nextCursor=after:lastRow.
 		const reversed = [makeRow(3), makeRow(2), makeRow(1)]
 		state.rowsToReturn = reversed
 
@@ -266,14 +294,11 @@ describe('listScheduledEmailsForAdmin: cursor + direction', () => {
 
 		const result = await listScheduledEmailsForAdmin({ cursor: beforeCursor })
 
-		// Rows must be reversed back into display order: email-01, email-02, email-03
-		const ids = result.rows.map(r => (r as { id: string }).id)
-		expect(ids).toEqual(['email-01', 'email-02', 'email-03'])
-
-		// prevCursor is set because the caller asked for a cursor and got rows
-		expect(result.prevCursor).not.toBeNull()
-		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
-		expect(decodedPrev?.direction).toBe('before')
+		expect(result.hasMore).toBe(false)
+		expect(result.prevCursor).toBeNull()
+		expect(result.nextCursor).not.toBeNull()
+		const decodedNext = decodeCursor(result.nextCursor ?? undefined)
+		expect(decodedNext?.direction).toBe('after')
 	})
 
 	test("'after' cursor with PAGE_SIZE+1 result emits both prev (after navigation) and next cursor", async () => {

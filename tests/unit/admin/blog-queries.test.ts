@@ -341,9 +341,46 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 	})
 
 	test("'before' cursor reverses ORDER BY and rows come back in display order", async () => {
-		// Simulate a 'before' page: SQL returns rows in REVERSE display order
-		// (newer-than-cursor first under flipped sort). Helper must reverse
-		// them before returning so the caller sees display order.
+		// Simulate a 'before' page that's NOT page 1: SQL returns PAGE_SIZE + 1
+		// rows in REVERSE display order. Helper must reverse them before
+		// returning so the caller sees display order. hasMore=true means more
+		// rows exist backward, so prevCursor must remain emitted.
+		const reversed = Array.from({ length: PAGE_SIZE + 1 }, (_, i) =>
+			makeRow(PAGE_SIZE - i)
+		)
+		state.postRowsToReturn = reversed
+		state.tagRowsToReturn = []
+
+		const beforeCursor = encodeCursor('before', [
+			'2026-12-01T00:00:00.000Z',
+			'2026-12-01T00:00:00.000Z',
+			'post-99'
+		])
+
+		const result = await listBlogPostsForAdmin({ cursor: beforeCursor })
+
+		// Rows must be reversed back into display order (ascending idx)
+		const ids = result.rows.map(r => r.post.id)
+		const expectedIds = Array.from(
+			{ length: PAGE_SIZE },
+			(_, i) => `post-${String(i + 1).padStart(2, '0')}`
+		)
+		expect(ids).toEqual(expectedIds)
+
+		// prevCursor stays set because hasMore=true (more rows backward)
+		expect(result.prevCursor).not.toBeNull()
+		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
+		expect(decodedPrev?.direction).toBe('before')
+		// nextCursor also set because we navigated backward (page exists forward)
+		expect(result.nextCursor).not.toBeNull()
+	})
+
+	test('emits nextCursor + nulls prevCursor when arriving on page 1 via backward navigation (direction=before, hasMore=false)', async () => {
+		// User clicked Prev on page 2 and ran out of rows -- they ARE on the
+		// real first page now. Before the fix: prevCursor was set to
+		// before:firstRow (broken: clicking it leads to empty page) and
+		// nextCursor was null (broken: user stuck, can't return to page 2).
+		// After the fix: prevCursor=null and nextCursor=after:lastRow.
 		const reversed = [makeRow(3), makeRow(2), makeRow(1)]
 		state.postRowsToReturn = reversed
 		state.tagRowsToReturn = []
@@ -356,14 +393,11 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 
 		const result = await listBlogPostsForAdmin({ cursor: beforeCursor })
 
-		// Rows must be reversed back into display order: post-01, post-02, post-03
-		const ids = result.rows.map(r => r.post.id)
-		expect(ids).toEqual(['post-01', 'post-02', 'post-03'])
-
-		// prevCursor is set because the caller asked for a cursor and got rows
-		expect(result.prevCursor).not.toBeNull()
-		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
-		expect(decodedPrev?.direction).toBe('before')
+		expect(result.hasMore).toBe(false)
+		expect(result.prevCursor).toBeNull()
+		expect(result.nextCursor).not.toBeNull()
+		const decodedNext = decodeCursor(result.nextCursor ?? undefined)
+		expect(decodedNext?.direction).toBe('after')
 	})
 
 	test("NULLS-LAST sentinel: a row with publishedAt=null encodes to the '\\x00' sentinel in the cursor tuple", async () => {
