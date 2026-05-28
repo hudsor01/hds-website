@@ -16,6 +16,7 @@
  * so admin-created rows are always reachable from the public read helpers.
  */
 import { z } from 'zod'
+import { formBoolean } from '@/lib/admin/form-boolean'
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -82,8 +83,8 @@ export const createShowcaseSchema = z.object({
 	galleryImages: z.array(z.string().url()).default([]),
 
 	// Booleans / ordering
-	featured: z.coerce.boolean().default(false),
-	published: z.coerce.boolean().default(false),
+	featured: formBoolean.default(false),
+	published: formBoolean.default(false),
 	displayOrder: z.coerce.number().int().min(0).default(0)
 })
 
