@@ -108,7 +108,6 @@ export function CreateTestimonialForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -180,7 +179,6 @@ export function CreateTestimonialForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>

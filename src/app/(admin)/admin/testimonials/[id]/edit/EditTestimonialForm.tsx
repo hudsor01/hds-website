@@ -121,7 +121,6 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -193,7 +192,6 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>

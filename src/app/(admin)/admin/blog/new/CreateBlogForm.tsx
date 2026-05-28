@@ -115,7 +115,6 @@ export function CreateBlogForm({
 					value={title}
 					onChange={e => setTitle(e.target.value)}
 					onBlur={handleTitleBlur}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.title ? 'true' : undefined}
 					aria-describedby={errors.title ? 'title-error' : undefined}
@@ -135,7 +134,6 @@ export function CreateBlogForm({
 					type="text"
 					value={slug}
 					onChange={e => setSlug(e.target.value)}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.slug ? 'true' : undefined}
 					aria-describedby={errors.slug ? 'slug-error' : 'slug-hint'}
@@ -154,7 +152,6 @@ export function CreateBlogForm({
 					value={excerpt}
 					onChange={e => setExcerpt(e.target.value)}
 					rows={3}
-					required
 					className={TEXTAREA_CLASS}
 					aria-invalid={errors.excerpt ? 'true' : undefined}
 					aria-describedby={errors.excerpt ? 'excerpt-error' : undefined}
@@ -218,7 +215,6 @@ export function CreateBlogForm({
 					name="authorId"
 					value={authorId}
 					onChange={e => setAuthorId(e.target.value)}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.authorId ? 'true' : undefined}
 					aria-describedby={errors.authorId ? 'authorId-error' : undefined}

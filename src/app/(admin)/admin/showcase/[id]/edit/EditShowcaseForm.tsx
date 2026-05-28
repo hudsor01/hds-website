@@ -180,7 +180,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -203,7 +202,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -226,7 +224,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>

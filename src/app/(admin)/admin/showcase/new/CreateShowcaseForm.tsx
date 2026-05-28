@@ -175,7 +175,6 @@ export function CreateShowcaseForm() {
 										form.setFieldValue('slug', slugify(field.state.value))
 									}
 								}}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -198,7 +197,6 @@ export function CreateShowcaseForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -221,7 +219,6 @@ export function CreateShowcaseForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
