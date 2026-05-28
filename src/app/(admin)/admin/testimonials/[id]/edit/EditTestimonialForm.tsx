@@ -12,6 +12,7 @@
  * for inputs and `null` for the rating select.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -70,14 +71,17 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 			}
 			const result = await updateTestimonialAction(fd)
 			if (result && !result.ok) {
-				setFormError(result.errors._form ?? 'Could not save. Please try again.')
-				for (const [field, message] of Object.entries(result.errors)) {
+				const formMessage =
+					result.errors._form ?? 'Could not save. Please try again.'
+				setFormError(formMessage)
+				toast.error(formMessage)
+				for (const [field, fieldMessage] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
 					}
 					form.setFieldMeta(field as keyof FormShape, m => ({
 						...m,
-						errors: [message]
+						errors: [fieldMessage]
 					}))
 				}
 			} else if (result?.ok) {
@@ -121,7 +125,6 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -193,7 +196,6 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>

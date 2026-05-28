@@ -14,6 +14,7 @@
  * of an empty string masquerading as a URL.
  */
 import { z } from 'zod'
+import { formBoolean } from '@/lib/admin/form-boolean'
 
 const optionalText = z
 	.string()
@@ -38,8 +39,8 @@ export const createAdminTestimonialSchema = z.object({
 	rating: z.coerce.number().int().min(1).max(5).nullable().optional(),
 	imageUrl: optionalUrl,
 	videoUrl: optionalUrl,
-	featured: z.coerce.boolean().default(false),
-	published: z.coerce.boolean().default(false)
+	featured: formBoolean.default(false),
+	published: formBoolean.default(false)
 })
 
 export const updateAdminTestimonialSchema = createAdminTestimonialSchema.extend(

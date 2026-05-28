@@ -22,6 +22,7 @@
  * branch is never observed here.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import type { z } from 'zod'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -63,16 +64,17 @@ export function CreateTestimonialForm() {
 			}
 			const result = await createTestimonialAction(fd)
 			if (result && !result.ok) {
-				setFormError(
+				const formMessage =
 					result.errors._form ?? 'Could not create. Please try again.'
-				)
-				for (const [field, message] of Object.entries(result.errors)) {
+				setFormError(formMessage)
+				toast.error(formMessage)
+				for (const [field, fieldMessage] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
 					}
 					form.setFieldMeta(field as keyof FormShape, m => ({
 						...m,
-						errors: [message]
+						errors: [fieldMessage]
 					}))
 				}
 			}
@@ -108,7 +110,6 @@ export function CreateTestimonialForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -180,7 +181,6 @@ export function CreateTestimonialForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
