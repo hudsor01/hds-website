@@ -1,6 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
+import { Hanken_Grotesk, JetBrains_Mono, Roboto_Serif } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { Analytics } from '@/components/utilities/Analytics'
@@ -16,12 +16,40 @@ import {
 import ClientProviders from '@/providers/ClientProviders'
 import './globals.css'
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+// Weight inventory across all utility classes (font-normal, font-medium,
+// font-semibold, font-bold, font-black) gives 400/500/600/700/900. Variable
+// fonts subset the binary when `weight` is provided, cutting download size
+// vs. shipping the full wght axis (100-900).
+
+const hankenGrotesk = Hanken_Grotesk({
+	variable: '--font-hanken-grotesk',
 	subsets: ['latin'],
+	weight: ['400', '500', '600', '700', '900'],
 	display: 'swap',
 	preload: true,
 	adjustFontFallback: true
+})
+
+const robotoSerif = Roboto_Serif({
+	variable: '--font-roboto-serif',
+	subsets: ['latin'],
+	weight: ['400', '600', '700', '900'],
+	display: 'swap',
+	preload: true,
+	adjustFontFallback: true
+})
+
+// adjustFontFallback off for mono: the ui-monospace fallback is already
+// metric-compatible with JetBrains Mono and the code blocks that consume
+// it are never above the fold, so the synthesized fallback @font-face
+// is dead weight.
+const jetbrainsMono = JetBrains_Mono({
+	variable: '--font-jetbrains-mono',
+	subsets: ['latin'],
+	weight: ['400'],
+	display: 'swap',
+	preload: false,
+	adjustFontFallback: false
 })
 
 export const viewport: Viewport = {
@@ -110,7 +138,7 @@ export default function RootLayout({
 				/>
 
 				{/*
-					next/font self-hosts Geist + Geist_Mono at build time, so the
+					next/font self-hosts every typeface at build time, so the
 					Google Fonts CDN is never contacted at runtime — the previous
 					preconnect hints to fonts.googleapis.com / fonts.gstatic.com
 					were no-ops. Replaced with dns-prefetch for the two Vercel
@@ -150,7 +178,7 @@ export default function RootLayout({
 				<meta name="MobileOptimized" content="320" />
 			</head>
 			<body
-				className={`${geistSans.variable} antialiased`}
+				className={`${hankenGrotesk.variable} ${robotoSerif.variable} ${jetbrainsMono.variable} antialiased`}
 				suppressHydrationWarning
 			>
 				<a

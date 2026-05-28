@@ -251,7 +251,7 @@ export default function HomePage() {
 									</div>
 								</div>
 
-								<h3 className="text-h3 text-foreground mb-3">
+								<h3 className="text-h4 text-foreground mb-3">
 									{solution.title}
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
@@ -298,7 +298,7 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<TrendingUp className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
 									ROI Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
@@ -318,7 +318,7 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Calculator className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
 									Website Cost Estimator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
@@ -341,7 +341,7 @@ export default function HomePage() {
 								<div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
 									<Zap className="w-7 h-7 text-accent" />
 								</div>
-								<h3 className="text-h3 text-foreground mb-3 group-hover:text-accent transition-colors">
+								<h3 className="text-h4 text-foreground mb-3 group-hover:text-accent transition-colors">
 									Performance Savings Calculator
 								</h3>
 								<p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
