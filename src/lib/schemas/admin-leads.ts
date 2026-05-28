@@ -33,7 +33,6 @@ export const updateLeadStatusSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid lead id.' }),
 	status: z.enum(LEAD_STATUSES, { message: 'Pick a valid status.' })
 })
-export type UpdateLeadStatusInput = z.infer<typeof updateLeadStatusSchema>
 
 export const addLeadNoteSchema = z.object({
 	leadId: z.string().uuid({ message: 'Invalid lead id.' }),
@@ -43,7 +42,6 @@ export const addLeadNoteSchema = z.object({
 		.min(1, 'Note cannot be empty.')
 		.max(4000, 'Note must be under 4000 characters.')
 })
-export type AddLeadNoteInput = z.infer<typeof addLeadNoteSchema>
 
 export const deleteLeadSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid lead id.' })

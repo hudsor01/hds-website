@@ -14,9 +14,7 @@
  */
 import { z } from 'zod'
 
-export const SUBSCRIBER_STATUSES_FOR_SET = ['active', 'unsubscribed'] as const
-export type SubscriberStatusForSet =
-	(typeof SUBSCRIBER_STATUSES_FOR_SET)[number]
+const SUBSCRIBER_STATUSES_FOR_SET = ['active', 'unsubscribed'] as const
 
 // Bounced is observable (set by the email provider webhook) but not
 // operator-settable. If a use case appears, extend SUBSCRIBER_STATUSES_FOR_SET
@@ -32,6 +30,3 @@ export const setStatusSchema = z.object({
 export const deleteSubscriberSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid subscriber id.' })
 })
-
-export type SetStatusInput = z.infer<typeof setStatusSchema>
-export type DeleteSubscriberInput = z.infer<typeof deleteSubscriberSchema>
