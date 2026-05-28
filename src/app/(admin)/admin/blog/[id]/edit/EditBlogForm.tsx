@@ -10,6 +10,7 @@
  * stray submit cannot trigger the delete action.
  */
 import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -84,6 +85,7 @@ export function EditBlogForm({
 			const result = await updateBlogPostAction(formData)
 			if (result && result.ok === false) {
 				setErrors(result.errors)
+				toast.error(result.errors._form ?? 'Could not save. Please try again.')
 			}
 		})
 	}

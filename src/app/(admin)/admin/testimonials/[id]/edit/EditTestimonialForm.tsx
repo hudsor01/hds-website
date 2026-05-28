@@ -12,6 +12,7 @@
  * for inputs and `null` for the rating select.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -70,7 +71,10 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 			}
 			const result = await updateTestimonialAction(fd)
 			if (result && !result.ok) {
-				setFormError(result.errors._form ?? 'Could not save. Please try again.')
+				const message =
+					result.errors._form ?? 'Could not save. Please try again.'
+				setFormError(message)
+				toast.error(message)
 				for (const [field, message] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue

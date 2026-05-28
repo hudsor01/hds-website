@@ -22,6 +22,7 @@
  * branch is never observed here.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import type { z } from 'zod'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -63,9 +64,10 @@ export function CreateTestimonialForm() {
 			}
 			const result = await createTestimonialAction(fd)
 			if (result && !result.ok) {
-				setFormError(
+				const message =
 					result.errors._form ?? 'Could not create. Please try again.'
-				)
+				setFormError(message)
+				toast.error(message)
 				for (const [field, message] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue

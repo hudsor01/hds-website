@@ -22,6 +22,7 @@
  *    here.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageGalleryField } from '@/components/admin/ImageGalleryField'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -124,9 +125,10 @@ export function CreateShowcaseForm() {
 			}
 			const result = await createShowcaseAction(fd)
 			if (result && !result.ok) {
-				setFormError(
+				const message =
 					result.errors._form ?? 'Could not create. Please try again.'
-				)
+				setFormError(message)
+				toast.error(message)
 				for (const [field, message] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue

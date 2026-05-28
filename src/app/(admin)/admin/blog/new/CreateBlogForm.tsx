@@ -14,6 +14,7 @@
  * collects into a string[].
  */
 import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { RichTextEditor } from '@/components/admin/RichTextEditor'
@@ -90,6 +91,9 @@ export function CreateBlogForm({
 			const result = await createBlogPostAction(formData)
 			if (result && result.ok === false) {
 				setErrors(result.errors)
+				toast.error(
+					result.errors._form ?? 'Could not create. Please try again.'
+				)
 			}
 		})
 	}

@@ -18,6 +18,7 @@
  * CreateShowcaseForm (anti-scope-reduction gate from CONTEXT.md 5.1).
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageGalleryField } from '@/components/admin/ImageGalleryField'
@@ -129,7 +130,10 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				return
 			}
 			if (result && !result.ok) {
-				setFormError(result.errors._form ?? 'Could not save. Please try again.')
+				const message =
+					result.errors._form ?? 'Could not save. Please try again.'
+				setFormError(message)
+				toast.error(message)
 				for (const [field, message] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
