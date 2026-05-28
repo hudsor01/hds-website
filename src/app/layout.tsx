@@ -1,6 +1,6 @@
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
+import { Hanken_Grotesk, JetBrains_Mono, Roboto_Serif } from 'next/font/google'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Toaster } from 'sonner'
 import { Analytics } from '@/components/utilities/Analytics'
@@ -16,11 +16,27 @@ import {
 import ClientProviders from '@/providers/ClientProviders'
 import './globals.css'
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const hankenGrotesk = Hanken_Grotesk({
+	variable: '--font-hanken-grotesk',
 	subsets: ['latin'],
 	display: 'swap',
 	preload: true,
+	adjustFontFallback: true
+})
+
+const robotoSerif = Roboto_Serif({
+	variable: '--font-roboto-serif',
+	subsets: ['latin'],
+	display: 'swap',
+	preload: true,
+	adjustFontFallback: true
+})
+
+const jetbrainsMono = JetBrains_Mono({
+	variable: '--font-jetbrains-mono',
+	subsets: ['latin'],
+	display: 'swap',
+	preload: false,
 	adjustFontFallback: true
 })
 
@@ -150,7 +166,7 @@ export default function RootLayout({
 				<meta name="MobileOptimized" content="320" />
 			</head>
 			<body
-				className={`${geistSans.variable} antialiased`}
+				className={`${hankenGrotesk.variable} ${robotoSerif.variable} ${jetbrainsMono.variable} antialiased`}
 				suppressHydrationWarning
 			>
 				<a
