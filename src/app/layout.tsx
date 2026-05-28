@@ -126,7 +126,7 @@ export default function RootLayout({
 				/>
 
 				{/*
-					next/font self-hosts Geist + Geist_Mono at build time, so the
+					next/font self-hosts every typeface at build time, so the
 					Google Fonts CDN is never contacted at runtime — the previous
 					preconnect hints to fonts.googleapis.com / fonts.gstatic.com
 					were no-ops. Replaced with dns-prefetch for the two Vercel

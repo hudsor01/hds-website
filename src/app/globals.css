@@ -254,21 +254,25 @@ body {
 	font-family: var(--font-sans);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-display);
-	font-feature-settings: 'ss01', 'ss02';
-}
+/* `@layer base` so utility classes like `font-sans` (emitted to
+ * `@layer utilities`) can override these element selectors on the
+ * rare opt-out case. Unlayered author rules win against utilities. */
+@layer base {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-display);
+	}
 
-code,
-kbd,
-samp,
-pre {
-	font-family: var(--font-mono);
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: var(--font-mono);
+	}
 }
 
 *:focus-visible {
