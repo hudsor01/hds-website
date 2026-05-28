@@ -7,8 +7,10 @@
  * form factory does not own a checkbox-grid field type and we need fine
  * control over the FormData payload (e.g. boolean checkboxes must be
  * encoded as the literal string 'true' / 'false' so the action's
- * `z.coerce.boolean()` parses them correctly without falling back to
- * defaults). On title blur with an empty slug we fill via `slugify(title)`
+ * `formBoolean` preprocess parses them correctly -- a raw checkbox
+ * would emit "on" only when checked, which `formBoolean` also handles,
+ * but the explicit "true"/"false" pair survives FormData encoding on
+ * both branches). On title blur with an empty slug we fill via `slugify(title)`
  * per CONTEXT.md D-09. Tag selection is a checkbox grid; the action
  * receives `tagIds` as a repeated FormData key which `formDataToObject`
  * collects into a string[].

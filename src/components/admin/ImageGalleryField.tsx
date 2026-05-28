@@ -117,6 +117,16 @@ export function ImageGalleryField({
 			if (!file) {
 				return
 			}
+			// Concurrency guard: drag-drop bypasses the file <input
+			// disabled> attribute. In the gallery, a rapid second drop
+			// during an in-flight upload races on `values` -- the second
+			// onChange call reads stale values (without url1 appended)
+			// and silently overwrites url1 with [...values, url2].
+			// Explicit rejection is the safer contract. See PR #232
+			// round-1 SHOULD-FIX.
+			if (isUploading) {
+				return
+			}
 			setValidationError(null)
 			const invalid = validateImageFile(file)
 			if (invalid) {
@@ -135,7 +145,7 @@ export function ImageGalleryField({
 				fileInputRef.current.value = ''
 			}
 		},
-		[onChange, upload, values]
+		[onChange, upload, values, isUploading]
 	)
 
 	const onDragEnter = useCallback((e: DragEvent<HTMLElement>) => {

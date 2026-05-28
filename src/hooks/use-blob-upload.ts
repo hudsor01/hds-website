@@ -135,6 +135,12 @@ export function useBlobUpload(): UseBlobUploadResult {
 			return null
 		} finally {
 			setIsUploading(false)
+			// Reset progress so the next upload starts the bar at 0
+			// instead of jumping back from the last streamed value.
+			// (The bar is gated on isUploading so this is cosmetic, but
+			// it keeps the state clean for any future caller that reads
+			// progress outside the uploading window.)
+			setProgress(0)
 		}
 	}, [])
 

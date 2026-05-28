@@ -129,6 +129,17 @@ export function ImageUploadField({
 			if (!file) {
 				return
 			}
+			// Concurrency guard: drag-drop bypasses the file <input
+			// disabled> attribute, so a rapid second drop during an
+			// in-flight upload would race -- both handlers would call
+			// onChange, the last URL to resolve wins, and the previous
+			// upload's URL is dropped. Single-field is recoverable (the
+			// operator just sees the wrong image saved), but explicit
+			// rejection is the safer contract. See PR #232 round-1
+			// SHOULD-FIX.
+			if (isUploading) {
+				return
+			}
 			setValidationError(null)
 			const invalid = validateImageFile(file)
 			if (invalid) {
@@ -150,7 +161,7 @@ export function ImageUploadField({
 				fileInputRef.current.value = ''
 			}
 		},
-		[onChange, upload]
+		[onChange, upload, isUploading]
 	)
 
 	const onDragEnter = useCallback((e: DragEvent<HTMLElement>) => {

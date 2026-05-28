@@ -71,17 +71,17 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 			}
 			const result = await updateTestimonialAction(fd)
 			if (result && !result.ok) {
-				const message =
+				const formMessage =
 					result.errors._form ?? 'Could not save. Please try again.'
-				setFormError(message)
-				toast.error(message)
-				for (const [field, message] of Object.entries(result.errors)) {
+				setFormError(formMessage)
+				toast.error(formMessage)
+				for (const [field, fieldMessage] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
 					}
 					form.setFieldMeta(field as keyof FormShape, m => ({
 						...m,
-						errors: [message]
+						errors: [fieldMessage]
 					}))
 				}
 			} else if (result?.ok) {
