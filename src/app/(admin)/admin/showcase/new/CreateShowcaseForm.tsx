@@ -22,6 +22,7 @@
  *    here.
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageGalleryField } from '@/components/admin/ImageGalleryField'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
@@ -124,16 +125,17 @@ export function CreateShowcaseForm() {
 			}
 			const result = await createShowcaseAction(fd)
 			if (result && !result.ok) {
-				setFormError(
+				const formMessage =
 					result.errors._form ?? 'Could not create. Please try again.'
-				)
-				for (const [field, message] of Object.entries(result.errors)) {
+				setFormError(formMessage)
+				toast.error(formMessage)
+				for (const [field, fieldMessage] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
 					}
 					form.setFieldMeta(field as keyof FormShape, m => ({
 						...m,
-						errors: [message]
+						errors: [fieldMessage]
 					}))
 				}
 			}
@@ -175,7 +177,6 @@ export function CreateShowcaseForm() {
 										form.setFieldValue('slug', slugify(field.state.value))
 									}
 								}}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -198,7 +199,6 @@ export function CreateShowcaseForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>
@@ -221,7 +221,6 @@ export function CreateShowcaseForm() {
 								value={field.state.value ?? ''}
 								onChange={e => field.handleChange(e.target.value)}
 								onBlur={field.handleBlur}
-								required
 							/>
 						)}
 					</FormFieldSet>

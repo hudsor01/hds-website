@@ -20,6 +20,7 @@
  *    pre-parsing.
  */
 import { z } from 'zod'
+import { formBoolean } from '@/lib/admin/form-boolean'
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -42,8 +43,8 @@ export const createAdminBlogPostSchema = z.object({
 	content: z.string().min(1),
 	featureImage: optionalUrl,
 	readingTime: z.coerce.number().int().min(1).max(60).default(5),
-	featured: z.coerce.boolean().default(false),
-	published: z.coerce.boolean().default(true),
+	featured: formBoolean.default(false),
+	published: formBoolean.default(true),
 	authorId: z.string().uuid(),
 	tagIds: z.array(z.string().uuid()).default([])
 })

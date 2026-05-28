@@ -7,13 +7,16 @@
  * form factory does not own a checkbox-grid field type and we need fine
  * control over the FormData payload (e.g. boolean checkboxes must be
  * encoded as the literal string 'true' / 'false' so the action's
- * `z.coerce.boolean()` parses them correctly without falling back to
- * defaults). On title blur with an empty slug we fill via `slugify(title)`
+ * `formBoolean` preprocess parses them correctly -- a raw checkbox
+ * would emit "on" only when checked, which `formBoolean` also handles,
+ * but the explicit "true"/"false" pair survives FormData encoding on
+ * both branches). On title blur with an empty slug we fill via `slugify(title)`
  * per CONTEXT.md D-09. Tag selection is a checkbox grid; the action
  * receives `tagIds` as a repeated FormData key which `formDataToObject`
  * collects into a string[].
  */
 import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { RichTextEditor } from '@/components/admin/RichTextEditor'
@@ -90,6 +93,9 @@ export function CreateBlogForm({
 			const result = await createBlogPostAction(formData)
 			if (result && result.ok === false) {
 				setErrors(result.errors)
+				toast.error(
+					result.errors._form ?? 'Could not create. Please try again.'
+				)
 			}
 		})
 	}
@@ -115,7 +121,6 @@ export function CreateBlogForm({
 					value={title}
 					onChange={e => setTitle(e.target.value)}
 					onBlur={handleTitleBlur}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.title ? 'true' : undefined}
 					aria-describedby={errors.title ? 'title-error' : undefined}
@@ -135,7 +140,6 @@ export function CreateBlogForm({
 					type="text"
 					value={slug}
 					onChange={e => setSlug(e.target.value)}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.slug ? 'true' : undefined}
 					aria-describedby={errors.slug ? 'slug-error' : 'slug-hint'}
@@ -154,7 +158,6 @@ export function CreateBlogForm({
 					value={excerpt}
 					onChange={e => setExcerpt(e.target.value)}
 					rows={3}
-					required
 					className={TEXTAREA_CLASS}
 					aria-invalid={errors.excerpt ? 'true' : undefined}
 					aria-describedby={errors.excerpt ? 'excerpt-error' : undefined}
@@ -218,7 +221,6 @@ export function CreateBlogForm({
 					name="authorId"
 					value={authorId}
 					onChange={e => setAuthorId(e.target.value)}
-					required
 					className={TEXT_INPUT_CLASS}
 					aria-invalid={errors.authorId ? 'true' : undefined}
 					aria-describedby={errors.authorId ? 'authorId-error' : undefined}

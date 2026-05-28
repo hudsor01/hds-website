@@ -18,6 +18,7 @@
  * CreateShowcaseForm (anti-scope-reduction gate from CONTEXT.md 5.1).
  */
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageGalleryField } from '@/components/admin/ImageGalleryField'
@@ -129,14 +130,17 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 				return
 			}
 			if (result && !result.ok) {
-				setFormError(result.errors._form ?? 'Could not save. Please try again.')
-				for (const [field, message] of Object.entries(result.errors)) {
+				const formMessage =
+					result.errors._form ?? 'Could not save. Please try again.'
+				setFormError(formMessage)
+				toast.error(formMessage)
+				for (const [field, fieldMessage] of Object.entries(result.errors)) {
 					if (field === '_form') {
 						continue
 					}
 					form.setFieldMeta(field as keyof FormShape, m => ({
 						...m,
-						errors: [message]
+						errors: [fieldMessage]
 					}))
 				}
 			}
@@ -180,7 +184,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -203,7 +206,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
@@ -226,7 +228,6 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 									value={field.state.value ?? ''}
 									onChange={e => field.handleChange(e.target.value)}
 									onBlur={field.handleBlur}
-									required
 								/>
 							)}
 						</FormFieldSet>
