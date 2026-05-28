@@ -241,10 +241,13 @@ body {
 	max-width: 100vw;
 }
 
-/* Assign font CSS custom properties on body so they resolve at the same
- * cascade level as the runtime vars next/font sets on <body>. Defining
- * --font-sans inside an `@theme` block does not emit it to :root unless
- * a `font-sans` utility class is also used in the markup. */
+/* `@theme inline` inlines font tokens into Tailwind utility classes at
+ * build time but does NOT emit `--font-sans` (etc.) as runtime custom
+ * properties on `:root`. Bare `var(--font-sans)` consumers (body rule
+ * below, h1-h6 in @layer base, code in @layer base) therefore need the
+ * var defined at a cascade level where `--font-hanken-grotesk` etc.
+ * are visible — `<body>` is where next/font puts those variables, so
+ * we assign here. */
 body {
 	--font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 	--font-display: var(--font-roboto-serif), Georgia, serif;
