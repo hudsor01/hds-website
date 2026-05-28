@@ -38,7 +38,10 @@ async function ShowcaseProjects() {
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
-							{ value: `${items.length}+`, label: 'Projects Delivered' },
+							// TODO: swap back to `${items.length}+` once the seeded
+							// showcase rows exceed the marketing "40+" claim used on
+							// the homepage hero stat block.
+							{ value: '40+', label: 'Projects Delivered' },
 							{ value: '1-4 wks', label: 'First Delivery' },
 							{ value: 'Proven', label: 'Track Record' },
 							{ value: '2 hr', label: 'Response Time' }
@@ -48,7 +51,7 @@ async function ShowcaseProjects() {
 								className="bg-background px-8 py-10 text-center relative overflow-hidden"
 							>
 								<div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-accent" />
-								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-mono tabular-nums">
+								<div className="text-4xl lg:text-5xl font-black text-accent mb-2 font-sans tabular-nums">
 									{stat.value}
 								</div>
 								<div className="text-sm text-muted-foreground">
