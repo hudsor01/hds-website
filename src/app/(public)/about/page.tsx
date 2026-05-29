@@ -82,13 +82,13 @@ export default function AboutPage() {
 				/>
 				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
 					<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-						About Us
+						About Me
 					</p>
 					<h1 className="text-page-title text-foreground leading-tight text-balance">
 						Built Around Your Business
 					</h1>
 					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6">
-						Where real business experience meets the skill to build it. We make
+						Where real business experience meets the skill to build it. I make
 						small businesses a website that does justice to the reputation
 						they&apos;ve already earned.
 					</p>
@@ -100,13 +100,13 @@ export default function AboutPage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Story
+							My Story
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
 							The Experience Behind Your Website
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							We build websites the way a business owner thinks. Every choice is
+							I build websites the way a business owner thinks. Every choice is
 							measured against whether it brings customers in.
 						</p>
 					</div>
@@ -119,7 +119,7 @@ export default function AboutPage() {
 							</h3>
 							<div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
 								<p>
-									Most agencies learned web development in bootcamps. We learned
+									Most agencies learned web development in bootcamps. I learned
 									it in the trenches of revenue operations, where every decision
 									either moves the business forward or holds it back.
 								</p>
@@ -128,7 +128,7 @@ export default function AboutPage() {
 									<strong className="text-accent">
 										hands-on revenue experience
 									</strong>{' '}
-									across growing businesses, we discovered something agencies
+									across growing businesses, I discovered something agencies
 									miss:{' '}
 									<strong className="text-info">
 										websites fail not because of bad code, but because they were
@@ -137,11 +137,11 @@ export default function AboutPage() {
 									.
 								</p>
 								<p>
-									That&apos;s why our clients see{' '}
+									That&apos;s why my clients see{' '}
 									<strong className="text-accent">
 										real, measurable results
 									</strong>{' '}
-									in months, not years. We don&apos;t just launch a{' '}
+									in months, not years. I don&apos;t just launch a{' '}
 									<Link href="/services" className="link-primary font-semibold">
 										professional website
 									</Link>{' '}
@@ -152,8 +152,8 @@ export default function AboutPage() {
 									</strong>
 								</p>
 								<p className="text-foreground font-semibold">
-									We&apos;re not another agency selling &quot;beautiful
-									websites&quot; that sit there doing nothing. We build websites
+									I&apos;m not another agency selling &quot;beautiful
+									websites&quot; that sit there doing nothing. I build websites
 									that earn their keep.{' '}
 									<Link href="/contact" className="link-primary">
 										Let&apos;s talk about your project
@@ -170,7 +170,7 @@ export default function AboutPage() {
 									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Rocket className="w-5 h-5 text-accent" />
 									</div>
-									<h3 className="text-h3 text-foreground">Our Mission</h3>
+									<h3 className="text-h3 text-foreground">My Mission</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
 									Make a great website accessible to every small business. No
@@ -186,16 +186,16 @@ export default function AboutPage() {
 									<div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
 										<Eye className="w-5 h-5 text-accent" />
 									</div>
-									<h3 className="text-h3 text-foreground">Our Guarantee</h3>
+									<h3 className="text-h3 text-foreground">My Guarantee</h3>
 								</div>
 								<p className="text-sm text-muted-foreground leading-relaxed">
-									If the KPI we agree on at kickoff (typically conversion rate,
-									qualified leads per month, or revenue per visitor)
-									doesn&apos;t improve over its installed-analytics baseline
-									within 90 days, I keep working (up to 3 additional revision
-									rounds covering optimization scope) at no extra cost until it
-									does. Baseline is measured from analytics installed on day one
-									of the engagement.
+									If the KPI I agree to with you at kickoff (typically
+									conversion rate, qualified leads per month, or revenue per
+									visitor) doesn&apos;t improve over its installed-analytics
+									baseline within 90 days, I keep working (up to 3 additional
+									revision rounds covering optimization scope) at no extra cost
+									until it does. Baseline is measured from analytics installed
+									on day one of the engagement.
 								</p>
 							</div>
 						</div>
@@ -208,10 +208,10 @@ export default function AboutPage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Toolkit
+							My Toolkit
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							What We Build With
+							What I Build With
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Proven tools. Modern technology. Everything chosen because it
@@ -289,8 +289,8 @@ export default function AboutPage() {
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
 							Why trust a former revenue operations professional to build your
-							website? Because they understand something most agencies
-							don&apos;t: a website is only worth what it brings in.
+							website? Because I understand something most agencies don&apos;t:
+							a website is only worth what it brings in.
 						</p>
 					</div>
 
@@ -385,13 +385,13 @@ export default function AboutPage() {
 				<div className="container-wide">
 					<div className="text-center mb-10">
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Our Principles
+							My Principles
 						</p>
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							How We Work
+							How I Work
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							The core beliefs behind every website we build.
+							The core beliefs behind every website I build.
 						</p>
 					</div>
 
@@ -404,7 +404,7 @@ export default function AboutPage() {
 								Performance First
 							</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
-								Every millisecond matters. We build for speed because fast sites
+								Every millisecond matters. I build for speed because fast sites
 								convert better, rank higher, and deliver a better experience for
 								your customers.
 							</p>
@@ -430,7 +430,7 @@ export default function AboutPage() {
 								Built to Grow With You
 							</h3>
 							<p className="text-sm text-muted-foreground leading-relaxed">
-								We build for growth. Your website and systems grow with your
+								I build for growth. Your website and systems grow with your
 								business, no expensive rebuilds when you scale.
 							</p>
 						</div>

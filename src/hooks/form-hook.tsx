@@ -46,6 +46,15 @@ interface GenericFieldProps {
 	options?: Array<{ value: string; label: string }>
 	rows?: number
 	required?: boolean
+	/**
+	 * Helper text rendered below the field. Hidden when a validation
+	 * error is present so the error owns the description slot. Audit
+	 * #266: this is the canonical hint pattern used by
+	 * `CalculatorInput` (`src/components/calculators/CalculatorInput.tsx`)
+	 * — keeping both surfaces on the same convention avoids two
+	 * different hint UIs for the same primitive.
+	 */
+	hint?: string
 }
 
 function RequiredMarker() {
@@ -66,16 +75,19 @@ function GenericField({
 	autoComplete,
 	options,
 	rows = 4,
-	required
+	required,
+	hint
 }: GenericFieldProps) {
 	const field = useFieldContext<string>()
 	const fieldId = field.name
 	const errorId = `${fieldId}-error`
+	const hintId = `${fieldId}-hint`
 	const hasError = field.state.meta.errors.length > 0
+	const showHint = !hasError && Boolean(hint)
 
 	const ariaProps = {
 		'aria-invalid': hasError ? ('true' as const) : undefined,
-		'aria-describedby': hasError ? errorId : undefined,
+		'aria-describedby': hasError ? errorId : showHint ? hintId : undefined,
 		'aria-required': required ? ('true' as const) : undefined
 	}
 
@@ -163,6 +175,11 @@ function GenericField({
 				{required && <RequiredMarker />}
 			</FieldLabel>
 			{renderField()}
+			{showHint && (
+				<p id={hintId} className="text-xs text-muted-foreground">
+					{hint}
+				</p>
+			)}
 			<FieldError id={errorId} errors={field.state.meta.errors} />
 		</Field>
 	)
@@ -178,13 +195,15 @@ interface TextFieldProps {
 	placeholder?: string
 	autoComplete?: string
 	required?: boolean
+	hint?: string
 }
 
 function TextField({
 	label,
 	placeholder,
 	autoComplete,
-	required
+	required,
+	hint
 }: TextFieldProps) {
 	return (
 		<GenericField
@@ -193,28 +212,31 @@ function TextField({
 			placeholder={placeholder}
 			autoComplete={autoComplete}
 			required={required}
+			hint={hint}
 		/>
 	)
 }
 
-function EmailField({ label, placeholder, required }: TextFieldProps) {
+function EmailField({ label, placeholder, required, hint }: TextFieldProps) {
 	return (
 		<GenericField
 			type="email"
 			label={label}
 			placeholder={placeholder}
 			required={required}
+			hint={hint}
 		/>
 	)
 }
 
-function PhoneField({ label, placeholder, required }: TextFieldProps) {
+function PhoneField({ label, placeholder, required, hint }: TextFieldProps) {
 	return (
 		<GenericField
 			type="tel"
 			label={label}
 			placeholder={placeholder}
 			required={required}
+			hint={hint}
 		/>
 	)
 }
@@ -224,13 +246,15 @@ interface SelectFieldProps {
 	placeholder?: string
 	options: Array<{ value: string; label: string }>
 	required?: boolean
+	hint?: string
 }
 
 function SelectField({
 	label,
 	placeholder,
 	options,
-	required
+	required,
+	hint
 }: SelectFieldProps) {
 	return (
 		<GenericField
@@ -239,6 +263,7 @@ function SelectField({
 			placeholder={placeholder}
 			options={options}
 			required={required}
+			hint={hint}
 		/>
 	)
 }
@@ -248,13 +273,15 @@ interface TextareaFieldProps {
 	placeholder?: string
 	rows?: number
 	required?: boolean
+	hint?: string
 }
 
 function TextareaField({
 	label,
 	placeholder,
 	rows = 4,
-	required
+	required,
+	hint
 }: TextareaFieldProps) {
 	return (
 		<GenericField
@@ -263,6 +290,7 @@ function TextareaField({
 			placeholder={placeholder}
 			rows={rows}
 			required={required}
+			hint={hint}
 		/>
 	)
 }

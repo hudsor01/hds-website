@@ -83,6 +83,12 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			}}
 			className={`p-2 sm:p-5 md:p-8 w-full rounded-md gap-2 border max-w-3xl mx-auto ${className}`}
 		>
+			{/* Audit #266: standardize on label + helper-text-below. Drop
+			    placeholders that just repeat the label (e.g. "Enter your
+			    first name" under a "First Name" label is noise). Keep
+			    example-style placeholders that show formatting (email,
+			    phone) and hide the dropdown placeholders behind the label
+			    via `Select…`. */}
 			<FieldGroup className="grid md:grid-cols-6 gap-4 mb-6">
 				{/* First Name */}
 				<div className="md:col-span-3">
@@ -90,7 +96,6 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.TextField
 								label="First Name"
-								placeholder="Enter your first name"
 								autoComplete="given-name"
 								required
 							/>
@@ -104,7 +109,6 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.TextField
 								label="Last Name"
-								placeholder="Enter your last name"
 								autoComplete="family-name"
 								required
 							/>
@@ -118,7 +122,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.EmailField
 								label="Email Address"
-								placeholder="Enter your email address"
+								placeholder="name@company.com"
 								required
 							/>
 						)}
@@ -131,7 +135,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.PhoneField
 								label="Phone (Optional)"
-								placeholder="Enter your phone number"
+								placeholder="(555) 123-4567"
 							/>
 						)}
 					</form.AppField>
@@ -143,7 +147,6 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.TextField
 								label="Company (Optional)"
-								placeholder="Enter your company name"
 								autoComplete="organization"
 							/>
 						)}
@@ -184,6 +187,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 								label="Budget Range"
 								options={budgetOptions}
 								placeholder="Select budget range"
+								hint="A rough number is fine. Helps me scope the right plan."
 							/>
 						)}
 					</form.AppField>
@@ -208,9 +212,9 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 						{field => (
 							<field.TextareaField
 								label="Message"
-								placeholder="Tell us about your project..."
 								rows={6}
 								required
+								hint="A few sentences on the business and what you want the new site to do."
 							/>
 						)}
 					</form.AppField>
