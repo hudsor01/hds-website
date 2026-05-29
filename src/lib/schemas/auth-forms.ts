@@ -32,6 +32,3 @@ export const signUpSchema = z.object({
 		.max(100, 'Name must be less than 100 characters')
 		.optional()
 })
-
-export type SignInInput = z.infer<typeof signInSchema>
-export type SignUpInput = z.infer<typeof signUpSchema>

@@ -29,9 +29,3 @@ export const markConvertedSchema = z.object({
 export const deleteCalculatorLeadSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid calculator lead id.' })
 })
-
-export type MarkContactedInput = z.infer<typeof markContactedSchema>
-export type MarkConvertedInput = z.infer<typeof markConvertedSchema>
-export type DeleteCalculatorLeadInput = z.infer<
-	typeof deleteCalculatorLeadSchema
->
