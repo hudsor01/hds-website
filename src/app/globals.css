@@ -283,6 +283,20 @@ body {
 	outline-offset: 2px;
 }
 
+/* `:user-invalid` fires only after the user has interacted with a
+ * required/typed input and the value still fails native HTML5
+ * validation (Chrome / Firefox / Safari support since 2023). Cheap
+ * persistent inline error indicator for the audit-reported "no
+ * required-field highlights" complaint (#245). The `:focus` carve-out
+ * keeps the active field's primary focus ring instead of stacking
+ * red + primary outlines while the user types. */
+input:user-invalid:not(:focus),
+textarea:user-invalid:not(:focus),
+select:user-invalid:not(:focus) {
+	border-color: var(--destructive);
+	box-shadow: 0 0 0 1px var(--destructive);
+}
+
 /* WCAG 2.5.8 minimum touch targets — scoped to standalone interactive
  * controls only. Inline anchors are excluded so footer text links and
  * legal links don't get inflated to 44px wide and break mobile layout
