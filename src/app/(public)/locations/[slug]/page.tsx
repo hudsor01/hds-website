@@ -8,7 +8,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import {
 	generateLocalBusinessSchema,
@@ -20,39 +19,9 @@ interface LocationPageProps {
 	params: Promise<{ slug: string }>
 }
 
-const locationTestimonials = [
-	{
-		testimonialId: 1 as const,
-		name: 'Sarah Mitchell',
-		company: 'Bright Spark Consulting',
-		role: 'Founder',
-		content:
-			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
-		rating: 5 as const,
-		service: 'Website Design & Development',
-		highlight: '2x inquiries'
-	},
-	{
-		testimonialId: 2 as const,
-		name: 'Marcus Holt',
-		company: 'Gulf Coast Roofing',
-		role: 'Operations Manager',
-		content:
-			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
-		rating: 5 as const,
-		service: 'Website Design & Development',
-		highlight: 'Found on Google'
-	}
-] satisfies Array<{
-	testimonialId: number
-	name: string
-	company: string
-	role: string
-	content: string
-	rating: number
-	service: string
-	highlight: string
-}>
+// Hardcoded testimonials dropped per audit #256 — same fabricated
+// Sarah Mitchell / Marcus Holt copy as about + services pages. The
+// admin/testimonials CRUD seeds real rows when available.
 
 export function generateStaticParams() {
 	return getAllLocationSlugs().map(slug => ({ slug }))
@@ -206,36 +175,6 @@ export default async function LocationPage({ params }: LocationPageProps) {
 									{feature.description}
 								</p>
 							</div>
-						))}
-					</div>
-				</div>
-			</section>
-
-			{/* Testimonials Section */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide max-w-4xl mx-auto">
-					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Client Results
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							What Our Clients Say
-						</h2>
-					</div>
-					<div className="grid md:grid-cols-2 gap-6">
-						{locationTestimonials.map(t => (
-							<Card
-								key={t.testimonialId}
-								variant="testimonial"
-								testimonialId={t.testimonialId}
-								name={t.name}
-								company={t.company}
-								role={t.role}
-								content={t.content}
-								rating={t.rating}
-								service={t.service}
-								highlight={t.highlight}
-							/>
 						))}
 					</div>
 				</div>
