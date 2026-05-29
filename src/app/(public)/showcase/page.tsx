@@ -38,9 +38,6 @@ async function ShowcaseProjects() {
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
-							// TODO: swap back to `${items.length}+` once the seeded
-							// showcase rows exceed the marketing "40+" claim used on
-							// the homepage hero stat block.
 							{ value: '40+', label: 'Projects Delivered' },
 							{ value: '1-4 wks', label: 'First Delivery' },
 							{ value: 'Proven', label: 'Track Record' },

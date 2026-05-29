@@ -7,9 +7,10 @@
  */
 
 import { eq } from 'drizzle-orm'
-import { type NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { withMutationGuards } from '@/lib/api/guards'
+import { errorResponse, successResponse } from '@/lib/api/responses'
 import { db } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import { emailSchema } from '@/lib/schemas/common'
@@ -42,10 +43,7 @@ async function handleUnsubscribe(request: NextRequest) {
 		const body = await request.json()
 		const parsed = unsubscribeSchema.safeParse(body)
 		if (!parsed.success) {
-			return NextResponse.json(
-				{ error: 'Email and unsubscribe token are required' },
-				{ status: 400 }
-			)
+			return errorResponse('Email and unsubscribe token are required', 400)
 		}
 
 		const { email, token } = parsed.data
@@ -54,10 +52,7 @@ async function handleUnsubscribe(request: NextRequest) {
 			logger.warn('Unsubscribe token mismatch', {
 				metadata: { email: hashedEmail(email) }
 			})
-			return NextResponse.json(
-				{ error: 'Invalid unsubscribe link' },
-				{ status: 403 }
-			)
+			return errorResponse('Invalid unsubscribe link', 403)
 		}
 
 		await db
@@ -71,10 +66,10 @@ async function handleUnsubscribe(request: NextRequest) {
 		logger.info('Newsletter unsubscribe', {
 			metadata: { email: hashedEmail(email) }
 		})
-		return NextResponse.json({ success: true })
+		return successResponse()
 	} catch (error) {
 		logger.error('Newsletter unsubscribe failed', error)
-		return NextResponse.json({ error: 'Unsubscribe failed' }, { status: 500 })
+		return errorResponse('Unsubscribe failed', 500)
 	}
 }
 

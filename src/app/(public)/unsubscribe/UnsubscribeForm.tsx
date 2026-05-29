@@ -3,6 +3,7 @@
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { csrfFetch } from '@/lib/api/csrf-fetch'
+import { logger } from '@/lib/logger'
 
 interface UnsubscribeFormState {
 	success: boolean
@@ -52,7 +53,8 @@ async function unsubscribeAction(
 		}
 
 		return { success: true, error: null }
-	} catch {
+	} catch (error) {
+		logger.error('unsubscribe fetch failed', { error })
 		return {
 			success: false,
 			error: 'An unexpected error occurred. Please try again.'

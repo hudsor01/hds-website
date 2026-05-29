@@ -56,8 +56,14 @@ describe('POST /api/process-emails', () => {
 				error instanceof Error ? error : new Error(String(error))
 		}))
 
+		// Re-export every name other suites may rely on, not just the
+		// one this test exercises — bun:test's mock.module cache survives
+		// across files, so a partial mock here strips siblings from any
+		// later import of `@/lib/scheduled-emails`.
 		mock.module('@/lib/scheduled-emails', () => ({
-			processEmailsEndpoint: mockProcessEmailsEndpoint
+			processEmailsEndpoint: mockProcessEmailsEndpoint,
+			scheduleEmail: mock().mockResolvedValue(undefined),
+			scheduleEmailSequence: mock().mockResolvedValue(undefined)
 		}))
 	})
 
@@ -119,8 +125,14 @@ describe('POST /api/process-emails', () => {
 			new Error('queue failure')
 		)
 
+		// Re-export every name other suites may rely on, not just the
+		// one this test exercises — bun:test's mock.module cache survives
+		// across files, so a partial mock here strips siblings from any
+		// later import of `@/lib/scheduled-emails`.
 		mock.module('@/lib/scheduled-emails', () => ({
-			processEmailsEndpoint: mockProcessEmailsEndpoint
+			processEmailsEndpoint: mockProcessEmailsEndpoint,
+			scheduleEmail: mock().mockResolvedValue(undefined),
+			scheduleEmailSequence: mock().mockResolvedValue(undefined)
 		}))
 
 		const { POST } = await import('@/app/api/process-emails/route')

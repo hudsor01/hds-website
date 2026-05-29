@@ -13,6 +13,11 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
+import {
+	clearLocalStorageDraft,
+	useLocalStorageDraft,
+	writeLocalStorageDraft
+} from '@/hooks/use-local-storage-draft'
 import { trackEvent } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
@@ -53,31 +58,6 @@ const createEmptyPricingItem = (): ProposalPricingItem => ({
 	description: '',
 	price: 0
 })
-
-// Subscribe to localStorage changes
-const subscribeToStorage = (callback: () => void) => {
-	window.addEventListener('storage', callback)
-	return () => window.removeEventListener('storage', callback)
-}
-
-// Read draft from localStorage
-const getDraftSnapshot = (): ProposalData | null => {
-	try {
-		const saved = localStorage.getItem(STORAGE_KEY)
-		if (saved) {
-			return JSON.parse(saved) as ProposalData
-		}
-	} catch (error) {
-		// Log invalid localStorage data for debugging
-		logger.warn('Failed to parse proposal draft from localStorage', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-	}
-	return null
-}
-
-// Server snapshot always returns null
-const getServerDraftSnapshot = (): ProposalData | null => null
 
 // Empty subscribe for useSyncExternalStore
 const emptySubscribe = () => () => {}
@@ -135,12 +115,8 @@ export default function ProposalGeneratorClient() {
 		getServerDefaultsSnapshot
 	)
 
-	// Load draft from localStorage using useSyncExternalStore
-	const savedDraft = useSyncExternalStore(
-		subscribeToStorage,
-		getDraftSnapshot,
-		getServerDraftSnapshot
-	)
+	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
+	const savedDraft = useLocalStorageDraft<ProposalData>(STORAGE_KEY, 'proposal')
 
 	// Track if we have a draft (derived)
 	const hasDraft = savedDraft !== null
@@ -318,7 +294,7 @@ export default function ProposalGeneratorClient() {
 	}
 
 	const saveDraft = () => {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(proposalData))
+		writeLocalStorageDraft(STORAGE_KEY, proposalData)
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		trackEvent('proposal_draft_saved', {
 			project_name: proposalData.projectName,
@@ -327,7 +303,7 @@ export default function ProposalGeneratorClient() {
 	}
 
 	const clearDraft = () => {
-		localStorage.removeItem(STORAGE_KEY)
+		clearLocalStorageDraft(STORAGE_KEY)
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		setUserModifiedData({})
 		// Reset cached defaults so new ones are generated

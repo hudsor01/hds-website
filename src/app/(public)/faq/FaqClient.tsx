@@ -169,6 +169,7 @@ export default function FaqClient() {
 							<Input
 								type="text"
 								placeholder="Search FAQs..."
+								aria-label="Search FAQs"
 								value={searchQuery}
 								onChange={e => setSearchQuery(e.target.value)}
 								className="pl-12"

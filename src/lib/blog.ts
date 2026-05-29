@@ -3,6 +3,8 @@
  * Database-backed blog using Drizzle ORM + Neon PostgreSQL
  */
 
+import 'server-only'
+
 import { and, desc, eq, inArray } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from '@/lib/db'

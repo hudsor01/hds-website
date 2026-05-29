@@ -601,6 +601,7 @@ export default function TestimonialCollectorClient() {
 											type="text"
 											value={createdLink}
 											readOnly
+											aria-label="Shareable testimonial link"
 											className="flex-1 rounded-md border border-success-muted bg-background px-3 py-2 text-sm text-foreground"
 										/>
 										<button
