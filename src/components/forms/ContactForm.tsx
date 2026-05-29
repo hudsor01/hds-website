@@ -69,6 +69,13 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 
 	return (
 		<form
+			// `method="post"` so a pre-hydration submit (user clicks Submit
+			// before React finishes mounting) at least uses POST and puts the
+			// payload in the body instead of leaking name/email/message into
+			// the URL as query params. The onSubmit handler still owns the
+			// happy path; this is a defense-in-depth fallback against the
+			// audit-reported GET behavior (#237).
+			method="post"
 			onSubmit={e => {
 				e.preventDefault()
 				e.stopPropagation()

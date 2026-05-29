@@ -70,6 +70,7 @@ function NewsletterSignupContent({
 				</p>
 
 				<form
+					method="post"
 					onSubmit={e => {
 						e.preventDefault()
 						e.stopPropagation()
@@ -87,6 +88,7 @@ function NewsletterSignupContent({
 										id="newsletter-email-compact"
 										name="email"
 										type="email"
+										required
 										value={field.state.value}
 										onChange={e => field.handleChange(e.target.value)}
 										onBlur={field.handleBlur}
@@ -177,6 +179,7 @@ function NewsletterSignupContent({
 				</p>
 
 				<form
+					method="post"
 					onSubmit={e => {
 						e.preventDefault()
 						e.stopPropagation()
@@ -194,6 +197,7 @@ function NewsletterSignupContent({
 										id="newsletter-email-section"
 										name="email"
 										type="email"
+										required
 										value={field.state.value}
 										onChange={e => field.handleChange(e.target.value)}
 										onBlur={field.handleBlur}
@@ -291,6 +295,7 @@ function NewsletterSignupContent({
 					<p className="mt-1 text-sm text-muted-foreground">{description}</p>
 
 					<form
+						method="post"
 						onSubmit={e => {
 							e.preventDefault()
 							e.stopPropagation()
@@ -309,6 +314,7 @@ function NewsletterSignupContent({
 											id="newsletter-email"
 											name="email"
 											type="email"
+											required
 											value={field.state.value}
 											onChange={e => field.handleChange(e.target.value)}
 											onBlur={field.handleBlur}
