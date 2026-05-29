@@ -113,7 +113,14 @@ export const env = createEnv({
 		// /api/admin/images/upload route returns 503 when unset so the
 		// client UI hides the Upload button and the paste-URL fallback
 		// continues to work.
-		BLOB_READ_WRITE_TOKEN: z.string().optional()
+		BLOB_READ_WRITE_TOKEN: z.string().optional(),
+
+		// Google PageSpeed Insights API key (optional). The `/api/pagespeed`
+		// route falls back to unauthenticated requests when unset, but that
+		// path is rate-limited to ~5 req/sec across all anonymous traffic
+		// from a region — adding a key gets the project a per-project quota
+		// (25k req/day on the free tier).
+		PAGESPEED_API_KEY: z.string().optional()
 	},
 
 	/**
@@ -161,6 +168,7 @@ export const env = createEnv({
 		SENTRY_DSN: process.env.SENTRY_DSN,
 		SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
 		BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
+		PAGESPEED_API_KEY: process.env.PAGESPEED_API_KEY,
 
 		// Client
 		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

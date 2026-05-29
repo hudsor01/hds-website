@@ -4,6 +4,7 @@
  */
 
 import { connection, type NextRequest } from 'next/server'
+import { env } from '@/env'
 import { withRateLimit } from '@/lib/api/rate-limit-wrapper'
 import { errorResponse, successResponse } from '@/lib/api/responses'
 import { createServerLogger } from '@/lib/logger'
@@ -11,6 +12,13 @@ import { createServerLogger } from '@/lib/logger'
 const logger = createServerLogger('pagespeed-api')
 const PAGESPEED_API_URL =
 	'https://www.googleapis.com/pagespeedinsights/v5/runPagespeed'
+
+// Stay under Vercel Hobby's 10-second function ceiling. PageSpeed Insights
+// can legitimately take 30-60s for slow sites — without an explicit abort
+// the upstream call ran past Vercel's hard timeout, which surfaces to the
+// browser as a generic 500 and to logs as "PageSpeed API error: Object"
+// (audit #236). Fail fast with a useful message instead.
+const PAGESPEED_FETCH_TIMEOUT_MS = 9_000
 
 /**
  * Reject URLs that point at private/internal address space. The pagespeed
@@ -122,25 +130,46 @@ async function handlePageSpeed(request: NextRequest) {
 	// no request scope.
 	await connection()
 
-	try {
-		logger.info('Fetching PageSpeed data', { url })
+	const apiKey = env.PAGESPEED_API_KEY
+	const requestUrl = `${PAGESPEED_API_URL}?url=${encodeURIComponent(url)}&strategy=mobile&category=performance${
+		apiKey ? `&key=${encodeURIComponent(apiKey)}` : ''
+	}`
 
-		// Call PageSpeed Insights API
-		const response = await fetch(
-			`${PAGESPEED_API_URL}?url=${encodeURIComponent(url)}&strategy=mobile&category=performance`,
-			{
-				headers: {
-					'User-Agent': 'Hudson Digital Solutions Website Analyzer'
-				}
-			}
-		)
+	try {
+		logger.info('Fetching PageSpeed data', {
+			url,
+			hasApiKey: Boolean(apiKey)
+		})
+
+		// AbortSignal.timeout() rejects the fetch with a TimeoutError if the
+		// upstream call exceeds the budget. Caught below and translated to a
+		// 504 + a user-readable message that names the failure mode instead
+		// of the generic "Failed to analyze website" the route used to ship.
+		const response = await fetch(requestUrl, {
+			headers: {
+				'User-Agent': 'Hudson Digital Solutions Website Analyzer'
+			},
+			signal: AbortSignal.timeout(PAGESPEED_FETCH_TIMEOUT_MS)
+		})
 
 		if (!response.ok) {
 			logger.error(
 				'PageSpeed API error',
 				new Error(`Status: ${response.status}`)
 			)
-			return errorResponse('Failed to fetch performance data', response.status)
+			// 429 from Google = anonymous rate limit (no key) or per-project
+			// quota exhausted. Surface a different message so the operator
+			// knows to add or rotate PAGESPEED_API_KEY.
+			if (response.status === 429) {
+				return errorResponse(
+					'Rate limit hit on the PageSpeed API. Try again in a minute, or contact us if it keeps happening.',
+					429
+				)
+			}
+			return errorResponse(
+				'PageSpeed could not analyze that URL. Make sure the site is reachable from the public internet and try again.',
+				response.status
+			)
 		}
 
 		const data = (await response.json()) as PageSpeedResponse
@@ -177,10 +206,18 @@ async function handlePageSpeed(request: NextRequest) {
 
 		return successResponse({ metrics })
 	} catch (error) {
-		logger.error(
-			'PageSpeed API error',
-			error instanceof Error ? error : new Error(String(error))
-		)
+		const err = error instanceof Error ? error : new Error(String(error))
+		logger.error('PageSpeed API error', err)
+		// `AbortSignal.timeout()` rejects with a DOMException whose `name`
+		// is "TimeoutError" — distinguishable from generic fetch failures.
+		// Translating it to a 504 with a user-readable message keeps the
+		// tool honest when the upstream is simply slow (audit #236).
+		if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+			return errorResponse(
+				'PageSpeed took too long to analyze that URL. Slow sites can exceed our budget — try again, or run a Lighthouse audit in your browser DevTools instead.',
+				504
+			)
+		}
 		return errorResponse('Failed to analyze website performance', 500)
 	}
 }
