@@ -11,8 +11,12 @@
 import { BarChart3, Code2, Settings } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 
+// Slugs mirror the in-page anchors the Footer's "Solutions" links
+// target (`/services#design-build`, `/services#seo`, `/services#booking`).
+// Keep these in sync with the Footer link list (audit #239).
 const SERVICES = [
 	{
+		anchorId: 'design-build',
 		title: 'Website Design & Development',
 		description:
 			'A professional website built for your business from scratch: clean custom design, mobile-ready, and fast. Comes with an admin panel so you control your content without calling a developer.',
@@ -27,6 +31,7 @@ const SERVICES = [
 		gradient: 'bg-muted'
 	},
 	{
+		anchorId: 'seo',
 		title: 'Get Found on Google',
 		description:
 			'A great website only works if customers can find it. We build in the SEO, speed, and local-search details that put your business in front of the people already searching for what you do.',
@@ -41,6 +46,7 @@ const SERVICES = [
 		gradient: 'bg-info/20'
 	},
 	{
+		anchorId: 'booking',
 		title: 'Booking, Payments & Follow-Up',
 		description:
 			'Once your site is live, we can wire in the extras: let customers book online, take payments, and make sure no inquiry slips through the cracks.',
@@ -59,16 +65,23 @@ const SERVICES = [
 export function ServicesGrid() {
 	return (
 		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-			{SERVICES.map((service, index) => (
-				<Card
-					key={index}
-					variant="service"
-					title={service.title}
-					description={service.description}
-					features={service.features}
-					icon={service.icon}
-					gradient={service.gradient}
-				/>
+			{SERVICES.map(service => (
+				// The `scroll-mt-24` carve-out keeps the in-page anchor jump
+				// from hiding the card behind the sticky nav.
+				<div
+					key={service.anchorId}
+					id={service.anchorId}
+					className="scroll-mt-24"
+				>
+					<Card
+						variant="service"
+						title={service.title}
+						description={service.description}
+						features={service.features}
+						icon={service.icon}
+						gradient={service.gradient}
+					/>
+				</div>
 			))}
 		</div>
 	)
