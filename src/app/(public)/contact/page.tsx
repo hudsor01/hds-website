@@ -219,12 +219,20 @@ export default function ContactPage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
 							Service Area
 						</p>
+						{/* Brand positioning resolved in favor of the canonical
+						    LocalBusiness JSON-LD areaServed ("Dallas-Fort Worth
+						    Metroplex" in seo-utils.ts:61-99) and the canonical
+						    site-wide metadata title ("Dallas-Fort Worth Web Design"
+						    in app/layout.tsx + opengraph-image.tsx). Audit #248
+						    flagged the prior "Nationwide" claim as conflicting with
+						    those signals and with the site's TX-headquartered
+						    address (1301 Cherry Hill Ln, Lewisville, TX 75067). */}
 						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							We Serve Clients Nationwide
+							Dallas-Fort Worth headquarters. Remote across the South.
 						</h2>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Primarily serving TX, FL, GA, OK and surrounding states, fully
-							remote for all projects.
+							Local-first in the DFW metroplex; remote-capable across TX, FL,
+							GA, OK, and the surrounding states.
 						</p>
 					</div>
 
