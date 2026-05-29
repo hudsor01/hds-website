@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
+import { env } from '@/env'
 
 /**
  * Report an error to Sentry, gated on SENTRY_DSN.
@@ -14,7 +15,7 @@ export function reportError(
 	error: unknown,
 	tags: Record<string, string>
 ): void {
-	if (!process.env.SENTRY_DSN) {
+	if (!env.SENTRY_DSN) {
 		return
 	}
 	Sentry.captureException(error, { tags })

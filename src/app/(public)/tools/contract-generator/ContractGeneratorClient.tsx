@@ -12,6 +12,11 @@ import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { DraftActions } from '@/components/tools/DraftActions'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
+import {
+	clearLocalStorageDraft,
+	useLocalStorageDraft,
+	writeLocalStorageDraft
+} from '@/hooks/use-local-storage-draft'
 import { trackEvent } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
@@ -64,31 +69,6 @@ const TEMPLATES: {
 	}
 ]
 
-// Subscribe to localStorage changes
-const subscribeToStorage = (callback: () => void) => {
-	window.addEventListener('storage', callback)
-	return () => window.removeEventListener('storage', callback)
-}
-
-// Read draft from localStorage
-const getDraftSnapshot = (): ContractData | null => {
-	try {
-		const saved = localStorage.getItem(STORAGE_KEY)
-		if (saved) {
-			return JSON.parse(saved) as ContractData
-		}
-	} catch (error) {
-		// Log invalid JSON for debugging, but don't break the app
-		logger.debug('Failed to parse contract draft from localStorage', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-	}
-	return null
-}
-
-// Server snapshot always returns null
-const getServerDraftSnapshot = (): ContractData | null => null
-
 // Empty subscribe for useSyncExternalStore
 const emptySubscribe = () => () => {}
 
@@ -119,12 +99,8 @@ export default function ContractGeneratorClient() {
 		getServerDefaultsSnapshot
 	)
 
-	// Load draft from localStorage using useSyncExternalStore
-	const savedDraft = useSyncExternalStore(
-		subscribeToStorage,
-		getDraftSnapshot,
-		getServerDraftSnapshot
-	)
+	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
+	const savedDraft = useLocalStorageDraft<ContractData>(STORAGE_KEY, 'contract')
 
 	// Track if we have a draft (derived)
 	const hasDraft = savedDraft !== null
@@ -205,7 +181,7 @@ export default function ContractGeneratorClient() {
 	}
 
 	const saveDraft = () => {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(contractData))
+		writeLocalStorageDraft(STORAGE_KEY, contractData)
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		trackEvent('contract_draft_saved', {
 			template: contractData.template
@@ -213,7 +189,7 @@ export default function ContractGeneratorClient() {
 	}
 
 	const clearDraft = () => {
-		localStorage.removeItem(STORAGE_KEY)
+		clearLocalStorageDraft(STORAGE_KEY)
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		setUserModifiedData({})
 		// Reset cached defaults so new ones are generated
