@@ -2,7 +2,6 @@
 
 import { CheckCircle, Clock, Mail, Phone, Rocket } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
@@ -170,34 +169,23 @@ export default function Footer() {
 							</nav>
 						</div>
 
-						{/* CTA Section */}
+						{/* Contact section. Previously titled "Ready for the
+						    Website You've Earned?" + a "Get My Free Plan" button,
+						    which duplicated the closing-CTA card immediately above
+						    in the homepage's last section (audit #272). Repurposed
+						    as a direct-contact panel so the section earns its own
+						    keep — email and phone are the unique value vs. the
+						    form-routing CTA card above. */}
 						<div className="md:col-span-1">
 							<h4 className="text-foreground font-semibold mb-heading">
-								Ready for the Website You&apos;ve Earned?
+								Prefer to reach out directly?
 							</h4>
 							<p className="text-xs text-muted-foreground mb-heading">
-								Get your free website plan: pages, timeline, and cost, mapped
-								out for your business.
+								Email or call. Fastest path to a quote without filling out a
+								form.
 							</p>
 
 							<div className="space-y-3">
-								{/* Shorter copy than the hero/nav CTA ("Get My Free
-								    Website Plan") for two reasons: (a) the footer card
-								    column is ~240px at md and the longer string truncated
-								    to "Get My Free Websit" (audit #244); (b) CTA
-								    saturation — the long form appears multiple times above
-								    this card on the same page, so a tighter footer
-								    variant reduces the repetition. */}
-								<Button
-									asChild
-									variant="default"
-									size="default"
-									trackConversion={true}
-									className="w-full"
-								>
-									<Link href={ROUTES.CONTACT}>Get My Free Plan</Link>
-								</Button>
-
 								{/* `min-w-0` on the flex parent unlocks `truncate` on the
 								    text child. Without it the email (~30 chars) overflows
 								    the 1-of-4 column at narrow desktop widths and pushes
