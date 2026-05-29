@@ -22,8 +22,8 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Richardson'
 		],
 		stats: {
-			businesses: '25+',
-			projects: 'Proven track record',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -65,8 +65,8 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Sugar Land'
 		],
 		stats: {
-			businesses: '30+',
-			projects: '60+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -108,8 +108,8 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Georgetown'
 		],
 		stats: {
-			businesses: '40+',
-			projects: '80+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -151,7 +151,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Boerne'
 		],
 		stats: {
-			businesses: '20+',
+			businesses: '10+',
 			projects: '40+',
 			satisfaction: '100%'
 		},
@@ -194,8 +194,8 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Keller'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '30+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -237,8 +237,8 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 			'Las Cruces'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -281,7 +281,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -324,7 +324,7 @@ export const TEXAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
