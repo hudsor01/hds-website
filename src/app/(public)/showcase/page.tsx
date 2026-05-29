@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { TypewriterText } from '@/components/ui/TypewriterText'
 import { Analytics } from '@/components/utilities/Analytics'
 import { getShowcaseItems } from '@/lib/showcase'
 
@@ -183,8 +182,15 @@ export default function ShowcasePage() {
 						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
 							Showcase
 						</p>
+						{/* The visible heading used to be driven by a looping
+						    typewriter animation (~30 chars, 80ms per char, 2s pause)
+						    that left the H1 mid-state for several seconds — users
+						    landing on the wrong frame read it as truncated or broken
+						    and one early audit even misread it as a missing logo
+						    (audit #243). Static now; the brand "personality" was
+						    costing us comprehension. */}
 						<h1 className="text-page-title text-foreground leading-tight">
-							<TypewriterText />
+							Real Projects. Real Results.
 						</h1>
 						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
 							Real websites for small businesses. See how we help local
