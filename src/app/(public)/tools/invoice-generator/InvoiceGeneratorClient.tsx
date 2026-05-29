@@ -12,6 +12,11 @@ import { CalculatorInput } from '@/components/calculators/CalculatorInput'
 import { ToolPageLayout } from '@/components/layout/ToolPageLayout'
 import { Card } from '@/components/ui/card'
 import { useHydrated } from '@/hooks/use-hydrated'
+import {
+	clearLocalStorageDraft,
+	useLocalStorageDraft,
+	writeLocalStorageDraft
+} from '@/hooks/use-local-storage-draft'
 import { trackEvent } from '@/lib/analytics'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { logger } from '@/lib/logger'
@@ -59,31 +64,6 @@ const createEmptyLineItem = (): InvoiceLineItem => ({
 	amount: 0
 })
 
-// Subscribe to localStorage changes (for cross-tab sync if needed)
-const subscribeToStorage = (callback: () => void) => {
-	window.addEventListener('storage', callback)
-	return () => window.removeEventListener('storage', callback)
-}
-
-// Read draft from localStorage
-const getDraftSnapshot = (): InvoiceData | null => {
-	try {
-		const saved = localStorage.getItem(STORAGE_KEY)
-		if (saved) {
-			return JSON.parse(saved) as InvoiceData
-		}
-	} catch (error) {
-		// Log invalid localStorage data for debugging
-		logger.warn('Failed to parse invoice draft from localStorage', {
-			error: error instanceof Error ? error.message : String(error)
-		})
-	}
-	return null
-}
-
-// Server snapshot always returns null
-const getServerDraftSnapshot = (): InvoiceData | null => null
-
 // Empty subscribe for useSyncExternalStore (no-op)
 const emptySubscribe = () => () => {}
 
@@ -127,12 +107,8 @@ export default function InvoiceGeneratorClient() {
 		getServerDefaultsSnapshot
 	)
 
-	// Load draft from localStorage using useSyncExternalStore
-	const savedDraft = useSyncExternalStore(
-		subscribeToStorage,
-		getDraftSnapshot,
-		getServerDraftSnapshot
-	)
+	// Load draft from localStorage. Hydration-safe via useSyncExternalStore.
+	const savedDraft = useLocalStorageDraft<InvoiceData>(STORAGE_KEY, 'invoice')
 
 	// Track if we have a draft (derived from savedDraft)
 	const hasDraft = savedDraft !== null
@@ -273,7 +249,7 @@ export default function InvoiceGeneratorClient() {
 	}
 
 	const saveDraft = () => {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(invoiceData))
+		writeLocalStorageDraft(STORAGE_KEY, invoiceData)
 		// Dispatch storage event to trigger useSyncExternalStore update
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		trackEvent('invoice_draft_saved', {
@@ -283,7 +259,7 @@ export default function InvoiceGeneratorClient() {
 	}
 
 	const clearDraft = () => {
-		localStorage.removeItem(STORAGE_KEY)
+		clearLocalStorageDraft(STORAGE_KEY)
 		// Dispatch storage event to trigger useSyncExternalStore update
 		window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }))
 		// Reset user modifications and regenerate defaults

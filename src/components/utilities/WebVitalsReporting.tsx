@@ -6,6 +6,7 @@
 'use client'
 
 import { useReportWebVitals } from 'next/web-vitals'
+import { env } from '@/env'
 import { logger } from '@/lib/logger'
 
 export function WebVitalsReporting() {
@@ -18,7 +19,7 @@ export function WebVitalsReporting() {
 		// The Phase 03 dashboard widget uses the same rating thresholds for
 		// its KPI cards (text-success-text / warning / destructive); align
 		// the log level here so dev-console filtering matches.
-		if (process.env.NODE_ENV === 'development') {
+		if (env.NODE_ENV === 'development') {
 			const log =
 				metric.rating === 'poor'
 					? logger.error
@@ -48,7 +49,7 @@ interface WebVitalMetric {
 async function storeWebVital(metric: WebVitalMetric) {
 	try {
 		// Only store in production
-		if (process.env.NODE_ENV !== 'production') {
+		if (env.NODE_ENV !== 'production') {
 			return
 		}
 

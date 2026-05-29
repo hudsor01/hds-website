@@ -8,13 +8,11 @@ import {
 	CreditCard,
 	HelpCircle,
 	Rocket,
-	Search,
 	User,
 	Wrench
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Input } from '@/components/ui/input'
 import { getCategoriesWithCounts } from '@/lib/help-articles'
 
 export const metadata: Metadata = {
@@ -57,16 +55,6 @@ export default async function HelpCenterPage() {
 						Find answers to common questions, learn how to use our tools, and
 						get the support you need.
 					</p>
-
-					{/* Search Bar */}
-					<div className="max-w-xl mx-auto relative">
-						<Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5" />
-						<Input
-							type="search"
-							placeholder="Search for articles..."
-							className="w-full pl-12 pr-4 py-6 bg-surface-raised"
-						/>
-					</div>
 				</div>
 			</section>
 
