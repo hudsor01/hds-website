@@ -338,6 +338,16 @@ button,
 	.card-hover-glow:hover {
 		transform: none !important;
 	}
+	/* Looping decorative carets and idle indicators get hard-stopped
+	 * (rather than just shortened to 0.01ms) so the animation never
+	 * re-fires and CPU work for offscreen pulses is zero. Audit #269
+	 * called out the blink as the most noticeable remaining offender
+	 * after the Showcase H1 typewriter was removed (#243). */
+	.animate-blink,
+	.animate-pulse {
+		animation: none !important;
+		opacity: 1 !important;
+	}
 }
 
 /* Utilities used in components */
