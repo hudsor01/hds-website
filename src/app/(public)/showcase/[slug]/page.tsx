@@ -9,12 +9,12 @@ import { ArrowLeft, Clock, ExternalLink, Users } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import { CTASection } from '@/components/utilities/CTASection'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
-	isDetailedShowcase
+	isDetailedShowcase,
+	type ShowcaseItem
 } from '@/lib/showcase'
 
 // Generate static params for all showcase items
@@ -75,14 +75,10 @@ export async function generateMetadata({
 	}
 }
 
-// Async component for showcase content
-async function ShowcaseContent({ slug }: { slug: string }) {
-	const item = await getShowcaseBySlug(slug)
-
-	if (!item) {
-		notFound()
-	}
-
+// Synchronous: the parent already awaited and notFound()'d on miss,
+// so by the time we render here we know `item` is real. Keeping the
+// extraction in its own function makes the JSX-heavy branch readable.
+function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 	const isDetailed = isDetailedShowcase(item)
 	const metrics = Object.entries(item.metrics).map(([label, value]) => ({
 		label,
@@ -374,6 +370,20 @@ export default async function ShowcaseDetailPage({
 }) {
 	const { slug } = await params
 
+	// Await the DB lookup at the top of the route instead of inside a
+	// child Suspense boundary. Previously the Suspense fallback rendered
+	// a spinner + "Loading project..." for the duration of the Neon
+	// cold start, then notFound() fired, then the 404 page replaced
+	// it — leaving a confusing "loading then broken" flash for any
+	// unknown slug (audit #241). Awaiting here means the 404 path
+	// short-circuits before any UI mounts; the known-slug path still
+	// streams normally because Next.js renders the rest of the route
+	// only after this promise resolves.
+	const item = await getShowcaseBySlug(slug)
+	if (!item) {
+		notFound()
+	}
+
 	return (
 		<div className="min-h-screen bg-background">
 			{/* Back Button */}
@@ -389,19 +399,7 @@ export default async function ShowcaseDetailPage({
 				</div>
 			</div>
 
-			{/* Dynamic content with Suspense */}
-			<Suspense
-				fallback={
-					<div className="container-wide py-section text-center">
-						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
-						<p className="text-muted-foreground text-lg mt-4">
-							Loading project...
-						</p>
-					</div>
-				}
-			>
-				<ShowcaseContent slug={slug} />
-			</Suspense>
+			<ShowcaseContent item={item} />
 		</div>
 	)
 }
