@@ -6,6 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Word-aware truncation. Returns `text` unchanged when it fits inside
+ * `maxChars`; otherwise slices on the last whitespace before the limit
+ * and appends `…`. Prevents the audit-reported mid-word truncation
+ * pattern (e.g. "manually copy-paste informati") visible in blog card
+ * previews under CSS `line-clamp` (audit #255).
+ *
+ * Falls back to a hard slice + ellipsis when the input has no
+ * whitespace inside the budget — e.g. a long URL or hashed string.
+ */
+export function truncateAtWord(text: string, maxChars: number): string {
+	if (text.length <= maxChars) {
+		return text
+	}
+	const head = text.slice(0, maxChars)
+	const lastSpace = head.lastIndexOf(' ')
+	const cut = lastSpace > 0 ? head.slice(0, lastSpace) : head
+	return `${cut.trimEnd()}…`
+}
+
+/**
  * Detect potential injection attempts in user input
  * @param input - The input string to check
  * @param context - Optional context indicating how the input will be used (for stricter checks)

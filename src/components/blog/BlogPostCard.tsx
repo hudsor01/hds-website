@@ -3,7 +3,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import type { BlogPost } from '@/lib/blog'
-import { formatDate } from '@/lib/utils'
+import { formatDate, truncateAtWord } from '@/lib/utils'
+
+// ~2 lines at the card's typography is ~180 chars worst case. Truncating
+// at a word boundary here means CSS `line-clamp-2` becomes a belt-and-
+// suspenders fallback for unusually wide rendering instead of the
+// primary cut, so the preview never ends mid-word (audit #255).
+const EXCERPT_MAX_CHARS = 180
 
 interface BlogPostCardProps {
 	post: BlogPost
@@ -60,7 +66,7 @@ export function BlogPostCard({
 						</h3>
 						{post.excerpt && (
 							<p className="text-muted-foreground line-clamp-2 mb-heading">
-								{post.excerpt}
+								{truncateAtWord(post.excerpt, EXCERPT_MAX_CHARS)}
 							</p>
 						)}
 						<div className="flex flex-wrap gap-content text-sm text-muted-foreground">
