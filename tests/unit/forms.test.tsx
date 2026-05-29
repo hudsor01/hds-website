@@ -65,10 +65,13 @@ describe('ContactForm Component', () => {
 		)
 		renderWithQueryClient(<ContactForm />)
 
-		// Check for all required fields using placeholders
-		expect(screen.getByPlaceholderText(/first name/i)).toBeInTheDocument()
-		expect(screen.getByPlaceholderText(/last name/i)).toBeInTheDocument()
-		expect(screen.getByPlaceholderText(/email address/i)).toBeInTheDocument()
+		// Audit #266: form-hook fields are now keyed to their labels, not
+		// "Enter your X" placeholders. Querying by accessible label is
+		// the canonical Testing Library pattern and remains stable as
+		// placeholder copy changes.
+		expect(screen.getByLabelText(/first name/i)).toBeInTheDocument()
+		expect(screen.getByLabelText(/last name/i)).toBeInTheDocument()
+		expect(screen.getByLabelText(/email address/i)).toBeInTheDocument()
 	})
 
 	it('should render input fields with proper types', async () => {
@@ -77,8 +80,7 @@ describe('ContactForm Component', () => {
 		)
 		renderWithQueryClient(<ContactForm />)
 
-		// Email field should have email type
-		const emailInput = screen.getByPlaceholderText(/email address/i)
+		const emailInput = screen.getByLabelText(/email address/i)
 		expect(emailInput.getAttribute('type')).toBe('email')
 	})
 
@@ -89,9 +91,8 @@ describe('ContactForm Component', () => {
 		const user = userEvent.setup()
 		renderWithQueryClient(<ContactForm />)
 
-		const emailInput = screen.getByPlaceholderText(/email address/i)
+		const emailInput = screen.getByLabelText(/email address/i)
 
-		// Type valid email
 		await user.type(emailInput, 'test@example.com')
 
 		expect(emailInput).toHaveValue('test@example.com')
@@ -148,7 +149,7 @@ describe('ContactForm Component', () => {
 
 		renderWithQueryClient(<ContactForm />)
 
-		const nameInput = screen.getByPlaceholderText(/first name/i)
+		const nameInput = screen.getByLabelText(/first name/i)
 		await user.type(nameInput, 'John')
 		expect(nameInput).toHaveValue('John')
 	})
@@ -159,7 +160,7 @@ describe('ContactForm Component', () => {
 		)
 		renderWithQueryClient(<ContactForm />)
 
-		const nameInput = screen.getByPlaceholderText(/first name/i)
+		const nameInput = screen.getByLabelText(/first name/i)
 		// shadcn Input uses these standard classes
 		expect(nameInput).toHaveClass('rounded-md')
 		expect(nameInput).toHaveClass('border')
