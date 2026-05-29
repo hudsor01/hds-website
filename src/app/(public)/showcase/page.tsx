@@ -1,4 +1,4 @@
-import { ExternalLink, Rocket } from 'lucide-react'
+import { ArrowRight, Rocket } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -207,7 +207,7 @@ export default function ShowcasePage() {
 							>
 								<Link href="/services">
 									View Services
-									<ExternalLink className="w-5 h-5" aria-hidden="true" />
+									<ArrowRight className="w-5 h-5" aria-hidden="true" />
 								</Link>
 							</Button>
 						</div>
@@ -272,7 +272,7 @@ export default function ShowcasePage() {
 									>
 										<Link href="/services">
 											View Services
-											<ExternalLink className="w-5 h-5" aria-hidden="true" />
+											<ArrowRight className="w-5 h-5" aria-hidden="true" />
 										</Link>
 									</Button>
 								</div>
