@@ -181,6 +181,13 @@ export default function Footer() {
 							</p>
 
 							<div className="space-y-3">
+								{/* Shorter copy than the hero/nav CTA ("Get My Free
+								    Website Plan") for two reasons: (a) the footer card
+								    column is ~240px at md and the longer string truncated
+								    to "Get My Free Websit" (audit #244); (b) CTA
+								    saturation — the long form appears multiple times above
+								    this card on the same page, so a tighter footer
+								    variant reduces the repetition. */}
 								<Button
 									asChild
 									variant="default"
@@ -188,24 +195,35 @@ export default function Footer() {
 									trackConversion={true}
 									className="w-full"
 								>
-									<Link href={ROUTES.CONTACT}>Get My Free Website Plan</Link>
+									<Link href={ROUTES.CONTACT}>Get My Free Plan</Link>
 								</Button>
 
+								{/* `min-w-0` on the flex parent unlocks `truncate` on the
+								    text child. Without it the email (~30 chars) overflows
+								    the 1-of-4 column at narrow desktop widths and pushes
+								    "…com" out of the rounded chip (audit #244). */}
 								<a
 									href={`mailto:${BUSINESS_INFO.email}`}
-									className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+									className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
 								>
-									<Mail className="h-4 w-4" />
-									<span className="text-xs">{BUSINESS_INFO.email}</span>
+									<Mail className="h-4 w-4 shrink-0" />
+									<span
+										className="text-xs truncate"
+										title={BUSINESS_INFO.email}
+									>
+										{BUSINESS_INFO.email}
+									</span>
 								</a>
 
 								{BUSINESS_INFO.phone && (
 									<a
 										href={`tel:${BUSINESS_INFO.phone.replace(/\D/g, '')}`}
-										className="flex-center gap-tight w-full px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
+										className="flex-center gap-tight w-full min-w-0 px-4 py-3 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-accent hover:bg-accent/5 transition-smooth focus-ring"
 									>
-										<Phone className="h-4 w-4" />
-										<span className="text-xs">{BUSINESS_INFO.phone}</span>
+										<Phone className="h-4 w-4 shrink-0" />
+										<span className="text-xs truncate">
+											{BUSINESS_INFO.phone}
+										</span>
 									</a>
 								)}
 							</div>
@@ -214,7 +232,10 @@ export default function Footer() {
 
 					{/* Bottom Section */}
 					<div className="border-t border-white/10 pt-8">
-						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 gap-x-content">
+						{/* `flex-wrap` so the three rows (copyright / socials / legal)
+						    can drop to a second line below ~md instead of clipping
+						    "Terms o…" off the right edge (audit #244). */}
+						<div className="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-between gap-y-3 gap-x-content">
 							{/* Copyright */}
 							<div className="text-xs text-muted-foreground">
 								© {CURRENT_YEAR} Hudson Digital Solutions. All rights reserved.
