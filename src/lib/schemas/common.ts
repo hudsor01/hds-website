@@ -1,12 +1,16 @@
 import { z } from 'zod'
 
-// Common validation patterns
+// Common validation patterns. `.email()` covers both empty + malformed
+// input with a single error message — chaining `.min(1, 'required')`
+// before it surfaces both errors at once on an empty submit and reads
+// as buggy in the UI (audit #258). Trim + lowercase happen first so a
+// whitespace-only submission ('   ') normalises to '' and fails
+// `.email()` rather than slipping past the `.min(1)` gate.
 export const emailSchema = z
 	.string()
-	.min(1, 'Email is required')
-	.email('Please enter a valid email address')
-	.toLowerCase()
 	.trim()
+	.toLowerCase()
+	.email('Please enter a valid email address')
 
 export const phoneSchema = z
 	.string()

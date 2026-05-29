@@ -54,6 +54,11 @@ function NewsletterSignupContent({
 				email: value.email,
 				source: variant
 			})
+			// Clear the input after a successful subscribe so the
+			// "Subscribed" badge isn't sitting next to the user's still-
+			// filled-in address — audit #264 noted that pairing reads as
+			// ambiguous ("already subscribed? resubmit?").
+			form.reset()
 		}
 	})
 
