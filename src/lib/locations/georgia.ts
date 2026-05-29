@@ -22,8 +22,8 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Alpharetta'
 		],
 		stats: {
-			businesses: '20+',
-			projects: '35+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -66,7 +66,7 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -109,7 +109,7 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -151,8 +151,8 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Ellerslie'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Centerville'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -237,8 +237,8 @@ export const GEORGIA_LOCATIONS: LocationData[] = [
 			'Oconee County'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [

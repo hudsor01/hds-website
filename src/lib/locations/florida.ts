@@ -22,8 +22,8 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Fort Lauderdale'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -66,7 +66,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -108,8 +108,8 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'St. Augustine'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -151,8 +151,8 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Wesley Chapel'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 			'Sanford'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '20+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -238,7 +238,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -281,7 +281,7 @@ export const FLORIDA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
