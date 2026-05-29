@@ -5,7 +5,7 @@
 
 import 'server-only'
 
-import { and, desc, eq, inArray } from 'drizzle-orm'
+import { and, count, desc, eq, inArray } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { db } from '@/lib/db'
 import { reportError } from '@/lib/error-tracking'
@@ -253,6 +253,54 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 			op: 'getPostBySlug'
 		})
 		return null
+	}
+}
+
+/**
+ * Tags + per-tag count of PUBLISHED posts. Used by `/blog` to render
+ * `Tag (12)`-style chip labels (audit #274). Tags with zero published
+ * posts are still returned so the operator can see them in the UI
+ * even before any post is published against them.
+ */
+export async function getTagsWithCounts(): Promise<
+	Array<BlogTag & { count: number }>
+> {
+	'use cache'
+	cacheLife('days')
+	cacheTag('blog-tags')
+
+	try {
+		const rows = await db
+			.select({
+				id: blogTags.id,
+				slug: blogTags.slug,
+				name: blogTags.name,
+				description: blogTags.description,
+				count: count(blogPosts.id)
+			})
+			.from(blogTags)
+			.leftJoin(blogPostTags, eq(blogPostTags.tagId, blogTags.id))
+			.leftJoin(
+				blogPosts,
+				and(
+					eq(blogPosts.id, blogPostTags.postId),
+					eq(blogPosts.published, true)
+				)
+			)
+			.groupBy(blogTags.id, blogTags.slug, blogTags.name, blogTags.description)
+			.orderBy(blogTags.name)
+			.limit(500)
+		return rows.map(row => ({
+			id: row.id,
+			slug: row.slug,
+			name: row.name,
+			description: row.description ?? undefined,
+			count: Number(row.count)
+		}))
+	} catch (error) {
+		logger.error('Failed to fetch blog tags with counts', error)
+		reportError(error, { module: 'blog', op: 'getTagsWithCounts' })
+		return []
 	}
 }
 

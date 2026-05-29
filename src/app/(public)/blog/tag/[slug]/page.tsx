@@ -1,8 +1,14 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
+import { TagList } from '@/components/blog/TagList'
 import { BackLink } from '@/components/utilities/BackLink'
-import { getPostsByTag, getTagBySlug, getTags } from '@/lib/blog'
+import {
+	getPostsByTag,
+	getTagBySlug,
+	getTags,
+	getTagsWithCounts
+} from '@/lib/blog'
 
 interface TagPageProps {
 	params: Promise<{ slug: string }>
@@ -56,7 +62,11 @@ export default async function TagPage({ params }: TagPageProps) {
 		notFound()
 	}
 
-	const posts = await getPostsByTag(tag.slug)
+	const [posts, allTags] = await Promise.all([
+		getPostsByTag(tag.slug),
+		getTagsWithCounts()
+	])
+	const populatedTags = allTags.filter(t => t.count > 0 || t.slug === tag.slug)
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -75,6 +85,11 @@ export default async function TagPage({ params }: TagPageProps) {
 						<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 							{tag.description}
 						</p>
+					)}
+					{populatedTags.length > 1 && (
+						<div className="mt-comfortable flex justify-center">
+							<TagList tags={populatedTags} activeSlug={tag.slug} />
+						</div>
 					)}
 				</div>
 			</section>

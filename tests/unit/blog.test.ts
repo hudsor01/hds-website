@@ -15,6 +15,7 @@ function createQueryChain(result: unknown[] = []) {
 		'innerJoin',
 		'where',
 		'orderBy',
+		'groupBy',
 		'limit',
 		'offset'
 	]
@@ -82,7 +83,8 @@ mock.module('drizzle-orm', () => ({
 	eq: mock((...args: unknown[]) => args),
 	desc: mock((col: unknown) => col),
 	and: mock((...args: unknown[]) => args),
-	inArray: mock((...args: unknown[]) => args)
+	inArray: mock((...args: unknown[]) => args),
+	count: mock((col: unknown) => ({ __agg: 'count', col }))
 }))
 
 // Import after all mocks
@@ -95,7 +97,8 @@ import {
 	getPostsByAuthor,
 	getPostsByTag,
 	getTagBySlug,
-	getTags
+	getTags,
+	getTagsWithCounts
 } from '@/lib/blog'
 
 // ─── Test Fixtures ──────────────────────────────────────────────────────────
@@ -180,6 +183,54 @@ describe('Blog Data Layer', () => {
 		test('returns empty array when no tags exist', async () => {
 			resetMockDb([])
 			const tags = await getTags()
+			expect(tags).toEqual([])
+		})
+	})
+
+	describe('getTagsWithCounts', () => {
+		test('coerces SQL count to a number and preserves description', async () => {
+			// Drizzle returns counts as bigint-like strings in postgres; the
+			// production query path must normalize them so JSX can render
+			// `({count})` without `NaN` or string concatenation surprises.
+			const rows = [
+				{
+					id: 'tag-1',
+					slug: 'web-dev',
+					name: 'Web Development',
+					description: 'Desc',
+					count: '12'
+				},
+				{
+					id: 'tag-2',
+					slug: 'business',
+					name: 'Business',
+					description: null,
+					count: 0
+				}
+			]
+			resetMockDb(rows)
+
+			const tags = await getTagsWithCounts()
+
+			expect(tags).toHaveLength(2)
+			expect(tags[0]).toEqual({
+				id: 'tag-1',
+				slug: 'web-dev',
+				name: 'Web Development',
+				description: 'Desc',
+				count: 12
+			})
+			expect(tags[1]?.description).toBeUndefined()
+			expect(tags[1]?.count).toBe(0)
+		})
+
+		test('returns empty array on DB error', async () => {
+			selectCallIndex = 0
+			selectResults = []
+			mockSelect.mockImplementationOnce(() => {
+				throw new Error('boom')
+			})
+			const tags = await getTagsWithCounts()
 			expect(tags).toEqual([])
 		})
 	})
