@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
 import { TagList } from '@/components/blog/TagList'
 import { Button } from '@/components/ui/button'
-import { getFeaturedPosts, getPosts, getTags } from '@/lib/blog'
+import { getFeaturedPosts, getPosts, getTagsWithCounts } from '@/lib/blog'
 
 export const metadata: Metadata = {
 	title: 'Small Business Web Design Blog | Hudson Digital',
@@ -101,11 +101,12 @@ async function AllPostsSection() {
 }
 
 async function TagsSection() {
-	const tags = await getTags()
-	if (tags.length === 0) {
+	const tags = await getTagsWithCounts()
+	const populated = tags.filter(tag => tag.count > 0)
+	if (populated.length === 0) {
 		return null
 	}
-	return <TagList tags={tags} />
+	return <TagList tags={populated} />
 }
 
 function PostListSkeleton() {
