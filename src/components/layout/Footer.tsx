@@ -10,10 +10,14 @@ import { cn } from '@/lib/utils'
 const CURRENT_YEAR = new Date().getFullYear()
 
 const footerLinks = {
+	// Anchor IDs (`#design-build`, `#seo`, `#booking`) are owned by the
+	// SERVICES list in `src/components/ui/ServicesGrid.tsx` — keep the
+	// two lists in sync. Audit #239: the labels here used to land on the
+	// services index page with no anchor, leaving operators to scroll.
 	solutions: [
-		{ name: 'Website Design & Build', href: ROUTES.SERVICES },
-		{ name: 'Get Found on Google', href: ROUTES.SERVICES },
-		{ name: 'Booking & Payments', href: ROUTES.SERVICES },
+		{ name: 'Website Design & Build', href: `${ROUTES.SERVICES}#design-build` },
+		{ name: 'Get Found on Google', href: `${ROUTES.SERVICES}#seo` },
+		{ name: 'Booking & Payments', href: `${ROUTES.SERVICES}#booking` },
 		{ name: 'Recent Work', href: ROUTES.SHOWCASE }
 	],
 	company: [
