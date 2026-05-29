@@ -149,7 +149,7 @@ function parseThemeBlock(
 	return tokens
 }
 
-function emit(lightTokens: ParsedToken[], darkTokens: ParsedToken[]): string {
+function emit(lightTokens: ParsedToken[]): string {
 	const ts = new Date().toISOString()
 	const lines: string[] = [
 		'// AUTO-GENERATED FROM src/app/globals.css — DO NOT EDIT MANUALLY.',
@@ -165,23 +165,11 @@ function emit(lightTokens: ParsedToken[], darkTokens: ParsedToken[]): string {
 		lines.push(`\t${t.jsName}: '${t.hex}', // ${t.cssName}`)
 	}
 	lines.push('} as const', '')
-
-	if (darkTokens.length > 0) {
-		lines.push('export const BRAND_DARK = {')
-		for (const t of darkTokens) {
-			lines.push(`\t${t.jsName}: '${t.hex}', // ${t.cssName} (dark)`)
-		}
-		lines.push('} as const', '')
-	}
-
-	lines.push(
-		'export type BrandColor = keyof typeof BRAND',
-		darkTokens.length > 0
-			? 'export type BrandColorDark = keyof typeof BRAND_DARK'
-			: '',
-		''
-	)
-	return lines.filter(l => l !== undefined).join('\n')
+	// BRAND_DARK + BrandColor / BrandColorDark types were emitted previously
+	// but never consumed. Reintroduce here only if a runtime consumer of the
+	// dark palette or a keyof-typed prop surfaces; the dark token mirror is
+	// already covered by the CSS variables under `.dark { ... }`.
+	return lines.join('\n')
 }
 
 function stripTimestamp(content: string): string {
@@ -196,7 +184,7 @@ function main(): void {
 	const lightTokens = parseThemeBlock(css, '@theme')
 	const darkTokens = parseThemeBlock(css, '.dark')
 
-	const newContent = emit(lightTokens, darkTokens)
+	const newContent = emit(lightTokens)
 
 	let existing = ''
 	try {

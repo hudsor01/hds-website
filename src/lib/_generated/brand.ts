@@ -3,7 +3,7 @@
 //
 // Source: src/app/globals.css @theme {} (light) and .dark {} (dark)
 // Conversion: OKLCH -> sRGB hex (Bjorn Ottosson formulas, hand-rolled, no deps)
-// Last generated: 2026-05-10T09:07:56.732Z
+// Last generated: 2026-05-28T23:22:53.977Z
 
 export const BRAND = {
 	background: '#fafaf9', // --color-background
@@ -65,52 +65,3 @@ export const BRAND = {
 	borderSubtle: '#e3e8ef', // --color-border-subtle
 	borderStrong: '#a6afbb', // --color-border-strong
 } as const
-
-export const BRAND_DARK = {
-	background: '#03060b', // --color-background (dark)
-	foreground: '#edebe5', // --color-foreground (dark)
-	card: '#090d15', // --color-card (dark)
-	cardForeground: '#edebe5', // --color-card-foreground (dark)
-	popover: '#090d15', // --color-popover (dark)
-	popoverForeground: '#edebe5', // --color-popover-foreground (dark)
-	primary: '#6aa7f4', // --color-primary (dark)
-	primaryForeground: '#03060b', // --color-primary-foreground (dark)
-	secondary: '#151b24', // --color-secondary (dark)
-	secondaryForeground: '#e6e4df', // --color-secondary-foreground (dark)
-	muted: '#12161d', // --color-muted (dark)
-	mutedForeground: '#d1cdc3', // --color-muted-foreground (dark)
-	accent: '#f0a556', // --color-accent (dark)
-	accentForeground: '#110904', // --color-accent-foreground (dark)
-	accentText: '#ffbb6d', // --color-accent-text (dark)
-	destructive: '#e85854', // --color-destructive (dark)
-	destructiveForeground: '#fcf7f7', // --color-destructive-foreground (dark)
-	border: '#232933', // --color-border (dark)
-	input: '#0e1218', // --color-input (dark)
-	ring: '#6aa7f4', // --color-ring (dark)
-	textInverted: '#080b12', // --color-text-inverted (dark)
-	textPrimary: '#edebe5', // --color-text-primary (dark)
-	textSecondary: '#bab7af', // --color-text-secondary (dark)
-	textMuted: '#918f88', // --color-text-muted (dark)
-	surfaceBase: '#03060b', // --color-surface-base (dark)
-	surfaceRaised: '#090d15', // --color-surface-raised (dark)
-	surfaceElevated: '#101620', // --color-surface-elevated (dark)
-	surfaceOverlay: '#060910', // --color-surface-overlay (dark)
-	surfaceSunken: '#020306', // --color-surface-sunken (dark)
-	borderSubtle: '#171b22', // --color-border-subtle (dark)
-	borderStrong: '#3b4350', // --color-border-strong (dark)
-	destructiveLight: '#310d0c', // --color-destructive-light (dark)
-	destructiveMuted: '#290b0a', // --color-destructive-muted (dark)
-	destructiveText: '#f97770', // --color-destructive-text (dark)
-	successLight: '#002307', // --color-success-light (dark)
-	successMuted: '#001d06', // --color-success-muted (dark)
-	successText: '#4eb068', // --color-success-text (dark)
-	warningLight: '#351f00', // --color-warning-light (dark)
-	warningMuted: '#2b1900', // --color-warning-muted (dark)
-	warningText: '#dca744', // --color-warning-text (dark)
-	infoLight: '#001c34', // --color-info-light (dark)
-	infoMuted: '#00182b', // --color-info-muted (dark)
-	infoText: '#499fe3', // --color-info-text (dark)
-} as const
-
-export type BrandColor = keyof typeof BRAND
-export type BrandColorDark = keyof typeof BRAND_DARK

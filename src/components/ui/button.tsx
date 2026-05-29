@@ -30,11 +30,8 @@ function Button({
 	)
 }
 
-// Re-export from button-variants so existing imports like
-// `import { buttonVariants } from '@/components/ui/button'` keep working
-// AND server components can `import { buttonVariants } from
-// '@/components/ui/button-variants'` to avoid pulling the client Button
-// module into a server render path. See button-variants.ts for the
-// background.
-export type { ButtonProps }
-export { Button, buttonVariants }
+// `ButtonProps` and `buttonVariants` are intentionally NOT re-exported —
+// server components must import them from `@/components/ui/button-variants`
+// to avoid pulling the client Button module into a server render path
+// (see button-variants.ts).
+export { Button }

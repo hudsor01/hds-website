@@ -96,6 +96,9 @@ temp/
 
 # IDE and editor files
 .claude/
+.codex/
+.cursor/
+.gemini/
 .vscode/
 .idea/
 *.swp

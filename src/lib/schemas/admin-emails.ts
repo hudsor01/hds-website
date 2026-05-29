@@ -28,7 +28,3 @@ export const cancelEmailSchema = z.object({
 export const deleteEmailSchema = z.object({
 	id: z.string().uuid({ message: 'Invalid email id.' })
 })
-
-export type RetryEmailInput = z.infer<typeof retryEmailSchema>
-export type CancelEmailInput = z.infer<typeof cancelEmailSchema>
-export type DeleteEmailInput = z.infer<typeof deleteEmailSchema>
