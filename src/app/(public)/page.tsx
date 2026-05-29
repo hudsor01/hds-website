@@ -77,7 +77,7 @@ const solutions = [
 		title: 'A Website That Looks the Part',
 		description:
 			'A clean, professional design that matches the quality of your work, so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
-		stat: '1 to 4 wks',
+		stat: '1-4 wks',
 		statLabel: 'First Delivery',
 		ctaLabel: 'See Recent Work',
 		ctaHref: ROUTES.SHOWCASE
@@ -162,7 +162,7 @@ export default function HomePage() {
 							<div className="flex items-center gap-6">
 								<div>
 									<div className="text-xl font-black text-foreground tabular-nums">
-										1 to 4 wks
+										1-4 wks
 									</div>
 									<div className="text-xs text-muted-foreground mt-0.5">
 										First Delivery
