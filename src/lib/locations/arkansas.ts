@@ -23,7 +23,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -65,8 +65,8 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Lavaca'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -109,7 +109,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -152,7 +152,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Paragould'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -238,7 +238,7 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -280,8 +280,8 @@ export const ARKANSAS_LOCATIONS: LocationData[] = [
 			'Mountain Pine'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [

@@ -23,7 +23,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -65,8 +65,8 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Wake Forest'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -109,7 +109,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -152,7 +152,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Kernersville'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -237,8 +237,8 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Hampstead'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -281,7 +281,7 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -323,8 +323,8 @@ export const NORTH_CAROLINA_LOCATIONS: LocationData[] = [
 			'Sanford'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [

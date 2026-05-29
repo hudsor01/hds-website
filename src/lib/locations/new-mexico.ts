@@ -23,7 +23,7 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '15+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -65,8 +65,8 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Corrales'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -108,8 +108,8 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Hatch'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -151,8 +151,8 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Corrales'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Ruidoso'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -237,8 +237,8 @@ export const NEW_MEXICO_LOCATIONS: LocationData[] = [
 			'Durango'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [

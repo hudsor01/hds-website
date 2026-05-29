@@ -22,8 +22,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Moore'
 		],
 		stats: {
-			businesses: '15+',
-			projects: '25+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -66,7 +66,7 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 		],
 		stats: {
 			businesses: '10+',
-			projects: '20+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -108,8 +108,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Newcastle'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -151,8 +151,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Bixby'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -194,8 +194,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Piedmont'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -237,8 +237,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Medicine Park'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
@@ -280,8 +280,8 @@ export const OKLAHOMA_LOCATIONS: LocationData[] = [
 			'Glencoe'
 		],
 		stats: {
-			businesses: '5+',
-			projects: '10+',
+			businesses: '10+',
+			projects: '40+',
 			satisfaction: '100%'
 		},
 		features: [
