@@ -30,7 +30,12 @@ function makeRequest(body: unknown): NextRequest {
 	})
 }
 
-function mockContactService(opts: { resendConfigured: boolean }) {
+interface MockOpts {
+	resendConfigured: boolean
+	dbInsertThrows?: boolean
+}
+
+function mockContactService(opts: MockOpts) {
 	mock.module('@/lib/contact-service', () => ({
 		checkForSecurityThreats: mock(),
 		prepareEmailVariables: mock().mockReturnValue({
@@ -50,6 +55,26 @@ function mockContactService(opts: { resendConfigured: boolean }) {
 			}
 		}))
 	}))
+	// The per-test db override lives alongside the rest so every mock is
+	// in place before the test body's `await import('@/app/api/contact/route')`
+	// triggers module resolution. Doing the override later would race with
+	// bun:test's module cache.
+	if (opts.dbInsertThrows) {
+		mock.module('@/lib/db', () => ({
+			db: {
+				insert: mock().mockReturnValue({
+					values: mock().mockRejectedValue(new Error('pg connection lost'))
+				}),
+				select: mock().mockReturnValue({
+					from: mock().mockReturnValue({
+						where: mock().mockReturnValue({
+							limit: mock().mockResolvedValue([])
+						})
+					})
+				})
+			}
+		}))
+	}
 }
 
 describe('POST /api/contact', () => {
@@ -119,22 +144,7 @@ describe('POST /api/contact', () => {
 	})
 
 	it('still returns 200 when the leads DB insert throws (logged, not surfaced)', async () => {
-		mockContactService({ resendConfigured: true })
-		// Override db.insert to throw on values()
-		mock.module('@/lib/db', () => ({
-			db: {
-				insert: mock().mockReturnValue({
-					values: mock().mockRejectedValue(new Error('pg connection lost'))
-				}),
-				select: mock().mockReturnValue({
-					from: mock().mockReturnValue({
-						where: mock().mockReturnValue({
-							limit: mock().mockResolvedValue([])
-						})
-					})
-				})
-			}
-		}))
+		mockContactService({ resendConfigured: true, dbInsertThrows: true })
 		const { POST } = await import('@/app/api/contact/route')
 		const res = await POST(makeRequest(VALID_BODY))
 		expect(res.status).toBe(200)

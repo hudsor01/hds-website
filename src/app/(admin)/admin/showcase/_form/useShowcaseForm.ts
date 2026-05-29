@@ -124,6 +124,19 @@ export function useShowcaseForm({
 						errors: [fieldMessage]
 					}))
 				}
+				return
+			}
+			// `result` is undefined. On create the action `redirect()`s on
+			// success (Next.js converts the throw to a transport-level
+			// navigation, so the client awaits resolve to `undefined` while
+			// the page is on its way to the edit screen). Showing a toast
+			// there would flash a "Could not create" message just before
+			// the navigation lands. Edit doesn't redirect — it always
+			// returns `{ ok: true | false }` — so an `undefined` result
+			// there is a genuine anomaly worth surfacing.
+			if (onSuccess) {
+				setFormError(errorFallback)
+				toast.error(errorFallback)
 			}
 		}
 	})

@@ -387,7 +387,6 @@ export function ShowcaseFormFields({
 // near-duplicate AppField blocks to single-line invocations above.
 // ────────────────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface SharedFieldProps {
 	// biome-ignore lint/suspicious/noExplicitAny: TanStack Form instance type
 	form: any
@@ -415,7 +414,11 @@ function TextField({ form, name, label, hint }: SharedFieldProps) {
 							{...aria}
 							className={INPUT_CLS}
 							value={field.state.value ?? ''}
-							onChange={e => field.handleChange(e.target.value)}
+							onChange={e =>
+								field.handleChange(
+									e.target.value === '' ? null : e.target.value
+								)
+							}
 							onBlur={field.handleBlur}
 						/>
 					)}
@@ -451,7 +454,11 @@ function TextareaField({
 							rows={rows}
 							className={TEXTAREA_CLS}
 							value={field.state.value ?? ''}
-							onChange={e => field.handleChange(e.target.value)}
+							onChange={e =>
+								field.handleChange(
+									e.target.value === '' ? null : e.target.value
+								)
+							}
 							onBlur={field.handleBlur}
 						/>
 					)}
@@ -481,7 +488,11 @@ function UrlField({ form, name, label, hint }: SharedFieldProps) {
 							type="url"
 							className={INPUT_CLS}
 							value={field.state.value ?? ''}
-							onChange={e => field.handleChange(e.target.value)}
+							onChange={e =>
+								field.handleChange(
+									e.target.value === '' ? null : e.target.value
+								)
+							}
 							onBlur={field.handleBlur}
 						/>
 					)}
