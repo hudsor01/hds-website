@@ -43,11 +43,17 @@ export const messageSchema = z
 	.max(5000, 'Message must be less than 5000 characters')
 	.trim()
 
-// Service options for contact forms
+// Service options for contact forms. Must mirror the SERVICES catalog
+// in `src/components/ui/ServicesGrid.tsx` — keep enum values, JSON
+// labels in `src/data/form-options.json`, and the cards in sync so a
+// prospect's "Service Interest" picks reflect what we actually pitch
+// (audit #250). Existing leads whose `service` column holds the legacy
+// values ('web-development', 'custom-software', 'consulting') remain
+// in the DB as plain text — the enum gates only new submissions.
 export const serviceOptionsSchema = z.enum([
-	'web-development',
-	'custom-software',
-	'consulting',
+	'website-design',
+	'seo',
+	'booking-payments',
 	'other'
 ])
 
