@@ -120,7 +120,12 @@ export default function JsonFormatterClient() {
 			],
 			contact: {
 				email: BUSINESS_INFO.email,
-				location: 'Texas, USA'
+				// Sample location intentionally fictional — audit #260 caught
+				// a previous "Texas, USA" string clashing with the
+				// "Dallas-Fort Worth Web Design" canonical positioning. A
+				// generic example city keeps the JSON sample from accidentally
+				// encoding brand claims.
+				location: 'Anytown, USA'
 			},
 			stats: {
 				clients: 50,

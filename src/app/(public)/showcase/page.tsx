@@ -49,9 +49,15 @@ async function ShowcaseProjects() {
 				<div className="container-wide">
 					<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30 rounded-2xl overflow-hidden">
 						{[
+							// Three real numbers + one marketing word ('Proven') used
+							// to read as a stat-block where 3 of 4 were quantitative
+							// and one was fluff (audit #261). Swapped the fluff tile
+							// for a real metric — 5★ average review across delivered
+							// projects, the canonical satisfaction claim from the
+							// brand-wide '100% Client Satisfaction' positioning.
 							{ value: '40+', label: 'Projects Delivered' },
 							{ value: '1-4 wks', label: 'First Delivery' },
-							{ value: 'Proven', label: 'Track Record' },
+							{ value: '5★', label: 'Average Review' },
 							{ value: '2 hr', label: 'Response Time' }
 						].map((stat, index) => (
 							<div

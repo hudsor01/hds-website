@@ -8,8 +8,11 @@ export const metadata: Metadata = {
 	robots: 'index, follow'
 }
 
-// Pre-compute date at module load time (safe for RSC)
-const lastUpdated = formatDate(new Date())
+// Hardcoded authored date instead of `formatDate(new Date())` — the
+// runtime form could render a UTC date one day ahead of the user's
+// local date and made "Last updated" appear in the future (audit #273).
+// Update this constant when the policy is actually reviewed.
+const lastUpdated = formatDate(new Date('2026-05-28T00:00:00Z'))
 
 export default function TermsPage() {
 	return (
