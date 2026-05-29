@@ -18,7 +18,9 @@ const footerLinks = {
 		{ name: 'Website Design & Build', href: `${ROUTES.SERVICES}#design-build` },
 		{ name: 'Get Found on Google', href: `${ROUTES.SERVICES}#seo` },
 		{ name: 'Booking & Payments', href: `${ROUTES.SERVICES}#booking` },
-		{ name: 'Recent Work', href: ROUTES.SHOWCASE }
+		// Label changed from "Recent Work" to "Showcase" so it matches
+		// the destination page's tab title and nav label (audit #271).
+		{ name: 'Showcase', href: ROUTES.SHOWCASE }
 	],
 	company: [
 		{ name: 'About Us', href: ROUTES.ABOUT },
