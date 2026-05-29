@@ -30,6 +30,18 @@ async function ShowcaseProjects() {
 		? items.filter(i => i.id !== featuredItem.id)
 		: items
 
+	// Fall back to the canonical convention `/images/showcase/<slug>.jpg`
+	// when the DB row's `imageUrl` is null. The planning doc for phase 01
+	// claims all four featured rows were populated on 2026-05-21, but the
+	// production audit caught ink37-tattoos and tenantflow rendering grey
+	// placeholders — indicating the imageUrl column drifted out of sync
+	// with the on-disk files (audit #253). Keeping this resolver in the
+	// page means a future DB cleanup is the long-term fix; meanwhile any
+	// row whose slug matches a file under `public/images/showcase/`
+	// always renders the image, with or without the DB pointer.
+	const resolveImage = (item: (typeof items)[number]): string | null =>
+		item.imageUrl ?? `/images/showcase/${item.slug}.jpg`
+
 	return (
 		<>
 			{/* Stats Section */}
@@ -95,7 +107,7 @@ async function ShowcaseProjects() {
 								stats={featuredItem.metrics}
 								tech_stack={featuredItem.technologies}
 								externalLink={featuredItem.externalLink}
-								imageUrl={featuredItem.imageUrl}
+								imageUrl={resolveImage(featuredItem)}
 							/>
 						</div>
 					)}
@@ -122,7 +134,7 @@ async function ShowcaseProjects() {
 								stats={item.metrics}
 								tech_stack={item.technologies}
 								externalLink={item.externalLink}
-								imageUrl={item.imageUrl}
+								imageUrl={resolveImage(item)}
 							/>
 						))}
 					</div>
