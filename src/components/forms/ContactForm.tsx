@@ -38,7 +38,7 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			email: '',
 			phone: '',
 			company: '',
-			service: 'web-development',
+			service: 'website-design',
 			bestTimeToContact: 'anytime',
 			budget: 'under-5k',
 			timeline: 'flexible',

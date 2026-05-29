@@ -16,7 +16,7 @@ const VALID_BODY = {
 	email: 'riley@example.com',
 	phone: '555-123-4567',
 	company: 'Riley Co',
-	service: 'web-development',
+	service: 'website-design',
 	budget: '15k-50k',
 	timeline: '1-month',
 	message: 'Looking to refresh the marketing site.'

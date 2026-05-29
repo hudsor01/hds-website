@@ -1,9 +1,9 @@
 {
 	"services": [
-		{ "value": "web-development", "label": "Web Development" },
-		{ "value": "custom-software", "label": "Custom Software" },
-		{ "value": "consulting", "label": "Strategic Consulting" },
-		{ "value": "other", "label": "Other" }
+		{ "value": "website-design", "label": "Website Design & Development" },
+		{ "value": "seo", "label": "Get Found on Google (SEO)" },
+		{ "value": "booking-payments", "label": "Booking, Payments & Follow-Up" },
+		{ "value": "other", "label": "Other / Not sure yet" }
 	],
 	"contactTime": [
 		{ "value": "morning", "label": "Morning (9AM - 12PM)" },

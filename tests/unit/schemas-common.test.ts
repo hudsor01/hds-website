@@ -86,7 +86,16 @@ describe('messageSchema', () => {
 
 describe('option enum schemas', () => {
 	it('reject values outside the allowed set', () => {
-		expect(serviceOptionsSchema.safeParse('web-development').success).toBe(true)
+		expect(serviceOptionsSchema.safeParse('website-design').success).toBe(true)
+		expect(serviceOptionsSchema.safeParse('seo').success).toBe(true)
+		expect(serviceOptionsSchema.safeParse('booking-payments').success).toBe(
+			true
+		)
+		expect(serviceOptionsSchema.safeParse('other').success).toBe(true)
+		// Legacy values are no longer valid for new submissions.
+		expect(serviceOptionsSchema.safeParse('web-development').success).toBe(
+			false
+		)
 		expect(serviceOptionsSchema.safeParse('marketing').success).toBe(false)
 		expect(budgetOptionsSchema.safeParse('5k-15k').success).toBe(true)
 		expect(budgetOptionsSchema.safeParse('1k-2k').success).toBe(false)
