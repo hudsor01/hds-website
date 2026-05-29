@@ -241,6 +241,17 @@ body {
 	max-width: 100vw;
 }
 
+/* Reserve the vertical scrollbar gutter on every page so short pages
+ * (e.g. /tools) and tall pages (e.g. /showcase) render with the same
+ * inline width. Without this, the fixed <nav> centers against the
+ * viewport including the scrollbar on tall pages but excluding it on
+ * short pages, so the active-state pill drifts horizontally between
+ * routes (audit #268). `stable` reserves the space regardless of
+ * whether the page actually overflows. */
+html {
+	scrollbar-gutter: stable;
+}
+
 /* `@theme inline` inlines font tokens into Tailwind utility classes at
  * build time but does NOT emit `--font-sans` (etc.) as runtime custom
  * properties on `:root`. Bare `var(--font-sans)` consumers (body rule
