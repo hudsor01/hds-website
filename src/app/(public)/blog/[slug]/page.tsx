@@ -2,7 +2,7 @@ import { Calendar, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { AuthorCard } from '@/components/blog/AuthorCard'
 import { BlogPostContent } from '@/components/blog/BlogPostContent'
 import { RelatedPosts } from '@/components/blog/RelatedPosts'
@@ -17,11 +17,36 @@ interface BlogPostPageProps {
 	params: Promise<{ slug: string }>
 }
 
+/**
+ * Canonical slug map for posts that exist as duplicates in the DB.
+ * Visiting a key in this map permanently redirects to the value, so
+ * search engines converge on a single URL and inbound links keep
+ * working from either side (audit #249).
+ *
+ * Add an entry here whenever a duplicate post is discovered and the
+ * canonical one is identified. A future cleanup pass can drop the
+ * legacy row from the DB; the redirect is the contract that keeps
+ * old links honest in the meantime.
+ */
+const CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
+	'why-your-business-needs-a-custom-crm-integration-to-unlock-true-efficiency':
+		'why-your-business-needs-a-custom-crm-integration'
+}
+
 export async function generateMetadata({
 	params
 }: BlogPostPageProps): Promise<Metadata> {
 	const { slug } = await params
-	const post = await getPostBySlug(slug)
+
+	// Short-circuit metadata generation for duplicate slugs — the page
+	// component redirects on render, but a crawler-only metadata fetch
+	// (or anything that depends on `generateMetadata` without rendering
+	// the page) would otherwise see the duplicate post's title and
+	// excerpt. Returning the canonical post's metadata keeps the
+	// search-engine signal consistent with the redirect target.
+	const canonical = CANONICAL_SLUG_REDIRECTS[slug]
+	const lookupSlug = canonical ?? slug
+	const post = await getPostBySlug(lookupSlug)
 
 	if (!post) {
 		return {
@@ -83,6 +108,17 @@ export async function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug } = await params
+
+	// Permanent redirect for known-duplicate slugs before any DB work.
+	// `permanentRedirect()` returns a 308 which preserves request method
+	// (the relevant property for any future POST/PUT analytics beacons
+	// against the old URL) and signals to crawlers that the canonical
+	// URL has changed.
+	const canonical = CANONICAL_SLUG_REDIRECTS[slug]
+	if (canonical) {
+		permanentRedirect(`/blog/${canonical}`)
+	}
+
 	const post = await getPostBySlug(slug)
 
 	if (!post) {
