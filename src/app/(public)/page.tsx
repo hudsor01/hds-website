@@ -443,16 +443,20 @@ export default function HomePage() {
 						</ul>
 					</div>
 
-					{/* OR divider for the alternative path */}
+					{/* OR divider — tightened per audit #270. Previously full-
+					    width tracking-widest lines plus generous gap-4 read as
+					    a horizontal rule with a label attached; now narrower
+					    line caps and gap-3 nudge the "or" into reading as the
+					    soft transition between the two CTAs. */}
 					<div
 						aria-hidden="true"
-						className="mt-12 flex items-center gap-4 max-w-md mx-auto"
+						className="mt-10 flex items-center gap-3 max-w-xs mx-auto"
 					>
-						<span className="h-px flex-1 bg-border" />
-						<span className="text-xs uppercase tracking-widest text-muted-foreground">
+						<span className="h-px flex-1 bg-border/60" />
+						<span className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
 							or
 						</span>
-						<span className="h-px flex-1 bg-border" />
+						<span className="h-px flex-1 bg-border/60" />
 					</div>
 
 					<div className="mt-8">
