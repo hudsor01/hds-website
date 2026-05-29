@@ -14,7 +14,6 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { JsonLd } from '@/components/utilities/JsonLd'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 import { SEO_CONFIG } from '@/lib/seo-config'
@@ -53,39 +52,14 @@ export const metadata: Metadata = {
 	}
 }
 
-const testimonials = [
-	{
-		testimonialId: 1 as const,
-		name: 'Sarah Mitchell',
-		company: 'Bright Spark Consulting',
-		role: 'Founder',
-		content:
-			'Within a month of the new site going live, our inquiries had doubled. It finally looks like the company we actually are.',
-		rating: 5 as const,
-		service: 'Website Design & Development',
-		highlight: '2x inquiries'
-	},
-	{
-		testimonialId: 2 as const,
-		name: 'Marcus Holt',
-		company: 'Gulf Coast Roofing',
-		role: 'Operations Manager',
-		content:
-			'We never had a real website before. Now customers find us on Google, see our work, and book a quote straight from the site.',
-		rating: 5 as const,
-		service: 'Website Design & Development',
-		highlight: 'Found on Google'
-	}
-] satisfies Array<{
-	testimonialId: number
-	name: string
-	company: string
-	role: string
-	content: string
-	rating: number
-	service: string
-	highlight: string
-}>
+// Hardcoded "Sarah Mitchell" + "Marcus Holt" testimonials were dropped
+// per audit #256 — they predate the DB-backed admin/testimonials CRUD
+// and were unverifiable (no posted_at, no company URL, no commit
+// history naming them as real clients). The DB schema
+// (`src/lib/schemas/content.ts:15-38`) is the canonical source going
+// forward; the public testimonials section returns when admin seeds
+// real rows. Removing fabricated copy reads more honest than
+// maintaining it.
 
 export default function AboutPage() {
 	return (
@@ -460,39 +434,6 @@ export default function AboutPage() {
 								business, no expensive rebuilds when you scale.
 							</p>
 						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* Testimonials Section */}
-			<section className="py-section-sm px-4 sm:px-6">
-				<div className="container-wide">
-					<div className="text-center mb-10">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-							Client Results
-						</p>
-						<h2 className="text-section-title text-foreground mb-comfortable text-balance">
-							What Our Clients Say
-						</h2>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto">
-							Real businesses. Real results.
-						</p>
-					</div>
-					<div className="grid md:grid-cols-2 gap-6">
-						{testimonials.map(t => (
-							<Card
-								key={t.testimonialId}
-								variant="testimonial"
-								testimonialId={t.testimonialId}
-								name={t.name}
-								company={t.company}
-								role={t.role}
-								content={t.content}
-								rating={t.rating}
-								service={t.service}
-								highlight={t.highlight}
-							/>
-						))}
 					</div>
 				</div>
 			</section>
