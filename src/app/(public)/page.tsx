@@ -66,6 +66,11 @@ const websiteOutcomes = [
 	}
 ]
 
+// Per-card learn-more links replace the previous repetition of the
+// hero / closing "Get My Free Website Plan" CTA inside every card
+// (audit #251 — the long CTA appeared 7+ times on the homepage alone
+// before this change). Each card now nudges toward the matching
+// service section instead of mass-converting.
 const solutions = [
 	{
 		Icon: Code2,
@@ -73,7 +78,9 @@ const solutions = [
 		description:
 			'A clean, professional design that matches the quality of your work, so first-time visitors trust you before they ever call. Mobile-ready and fast on every device.',
 		stat: '1 to 4 wks',
-		statLabel: 'First Delivery'
+		statLabel: 'First Delivery',
+		ctaLabel: 'See Recent Work',
+		ctaHref: ROUTES.SHOWCASE
 	},
 	{
 		Icon: TrendingUp,
@@ -81,7 +88,9 @@ const solutions = [
 		description:
 			'Built to show up when people in your area search for what you do. Proper SEO, fast load times, and the local details Google looks for, so your reputation actually gets seen.',
 		stat: 'Built in',
-		statLabel: 'local SEO'
+		statLabel: 'local SEO',
+		ctaLabel: 'Read Our SEO Approach',
+		ctaHref: `${ROUTES.SERVICES}#seo`
 	},
 	{
 		Icon: Settings,
@@ -89,7 +98,9 @@ const solutions = [
 		description:
 			'A simple admin panel means you change your hours, prices, photos, and text yourself, in minutes, no developer, no waiting, no invoice.',
 		stat: '$0',
-		statLabel: 'to make edits'
+		statLabel: 'to make edits',
+		ctaLabel: "See What's Included",
+		ctaHref: `${ROUTES.SERVICES}#design-build`
 	}
 ]
 
@@ -259,10 +270,10 @@ export default function HomePage() {
 								</p>
 
 								<Link
-									href={ROUTES.CONTACT}
+									href={solution.ctaHref}
 									className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors"
 								>
-									Get My Free Website Plan
+									{solution.ctaLabel}
 									<ArrowRight className="w-4 h-4" />
 								</Link>
 							</div>
