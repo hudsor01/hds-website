@@ -90,8 +90,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		'contract-generator',
 		'performance-calculator',
 		'json-formatter',
-		'meta-tag-generator',
-		'testimonial-collector'
+		'meta-tag-generator'
+		// `testimonial-collector` is intentionally omitted — the tool is
+		// admin-only and was previously discoverable to public users via
+		// this sitemap entry + the tools index card. Audit #242.
 	].map(slug => ({
 		url: `${SITE_URL}/tools/${slug}`,
 		lastModified: BUILD_TIME,

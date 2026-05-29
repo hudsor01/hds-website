@@ -13,7 +13,6 @@ import {
 	FileSignature,
 	FileText,
 	Home,
-	MessageSquare,
 	Receipt,
 	Tags,
 	TrendingUp,
@@ -192,20 +191,13 @@ const tools = [
 			'SEO meta tag preview'
 		],
 		cta: 'Generate Tags'
-	},
-	{
-		title: 'Testimonial Collector',
-		description:
-			'Generate private collection links to gather client testimonials and manage feedback in one place.',
-		href: TOOL_ROUTES.TESTIMONIAL_COLLECTOR,
-		Icon: MessageSquare,
-		benefits: [
-			'Private collection links',
-			'Manage client feedback',
-			'Shareable testimonial forms'
-		],
-		cta: 'Collect Testimonials'
 	}
+	// The Testimonial Collector tool is admin-only — gated behind an
+	// ADMIN_SECRET bearer token. Linking it from the public tools index
+	// surfaced an "Enter admin token" UI to anyone who clicked through
+	// (audit #242). The route is intentionally left in place so an
+	// operator can still hit it directly with the token; removing it
+	// from this listing is the discoverability fix.
 ]
 
 export default function ToolsPage() {
