@@ -55,6 +55,15 @@ interface ShowcaseSubmitResult {
 }
 
 export interface UseShowcaseFormOptions {
+	/**
+	 * `'create'` callers redirect server-side on success, so a `result ===
+	 * undefined` response means the redirect is mid-flight — stay silent.
+	 * `'edit'` callers always return a real `{ ok }` object, so `undefined`
+	 * is a genuine anomaly worth surfacing. Explicit instead of inferring
+	 * from `onSuccess` presence so future callers (e.g. analytics) cannot
+	 * silently change the undefined-result branch.
+	 */
+	mode: 'create' | 'edit'
 	defaultValues: ShowcaseFormShape
 	submitAction: (fd: FormData) => Promise<ShowcaseSubmitResult | undefined>
 	/**
@@ -92,6 +101,7 @@ function packShowcaseFormData(
 }
 
 export function useShowcaseForm({
+	mode,
 	defaultValues,
 	submitAction,
 	extraFormData,
@@ -134,7 +144,7 @@ export function useShowcaseForm({
 			// the navigation lands. Edit doesn't redirect — it always
 			// returns `{ ok: true | false }` — so an `undefined` result
 			// there is a genuine anomaly worth surfacing.
-			if (onSuccess) {
+			if (mode === 'edit') {
 				setFormError(errorFallback)
 				toast.error(errorFallback)
 			}

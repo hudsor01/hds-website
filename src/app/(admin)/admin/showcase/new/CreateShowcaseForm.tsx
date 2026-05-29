@@ -53,6 +53,7 @@ const DEFAULTS: ShowcaseFormShape = {
 
 export function CreateShowcaseForm() {
 	const { form, formError } = useShowcaseForm({
+		mode: 'create',
 		defaultValues: DEFAULTS,
 		submitAction: createShowcaseAction,
 		errorFallback: 'Could not create. Please try again.'

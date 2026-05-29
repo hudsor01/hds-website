@@ -65,6 +65,7 @@ export function EditShowcaseForm({ row }: EditShowcaseFormProps) {
 	const [savedAt, setSavedAt] = useState<number | null>(null)
 
 	const { form, formError } = useShowcaseForm({
+		mode: 'edit',
 		defaultValues: rowToFormShape(row),
 		submitAction: updateShowcaseAction,
 		extraFormData: { id: row.id },
