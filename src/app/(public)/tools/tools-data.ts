@@ -7,6 +7,7 @@ import {
 	FileSignature,
 	FileText,
 	Home,
+	List,
 	Receipt,
 	Tags,
 	TrendingUp,
@@ -228,6 +229,20 @@ export const TOOLS: readonly ToolEntry[] = [
 			'Syntax error detection'
 		],
 		cta: 'Format JSON',
+		category: 'developers'
+	},
+	{
+		title: 'Comma Separator',
+		description:
+			'Convert a column of values into a comma-separated series. Paste a spreadsheet column or any space-separated list and get clean, comma-separated output.',
+		href: TOOL_ROUTES.COMMA_SEPARATOR,
+		Icon: List,
+		benefits: [
+			'Spreadsheet column to comma-separated series',
+			'Optional single or double quotes',
+			'Remove duplicate items'
+		],
+		cta: 'Separate List',
 		category: 'developers'
 	}
 	// The Testimonial Collector tool is admin-only (gated behind an
