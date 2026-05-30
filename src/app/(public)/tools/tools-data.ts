@@ -14,7 +14,9 @@ import {
 } from 'lucide-react'
 import { TOOL_ROUTES } from '@/lib/constants/routes'
 
-export type ToolCategoryId = 'website' | 'business' | 'developers'
+// Not exported: only referenced internally by ToolCategory/ToolEntry below.
+// No external module imports it, so keeping it unexported satisfies knip.
+type ToolCategoryId = 'website' | 'business' | 'developers'
 
 export interface ToolCategory {
 	id: ToolCategoryId
