@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -58,6 +58,11 @@ function isTypingTarget(event: KeyboardEvent): boolean {
 export default function CommandPalette({ entries }: CommandPaletteProps) {
 	const router = useRouter()
 	const [open, setOpen] = useState(false)
+	// The keydown effect has [] deps so it captures `open` once. Mirror the
+	// latest value into a ref so the handler can read current open-state
+	// without re-subscribing the listener on every toggle.
+	const openRef = useRef(open)
+	openRef.current = open
 
 	const grouped = useMemo(() => {
 		const map = new Map<PaletteGroup, PaletteEntry[]>()
@@ -83,7 +88,12 @@ export default function CommandPalette({ entries }: CommandPaletteProps) {
 			if (!event.metaKey && !event.ctrlKey) {
 				return
 			}
-			if (isTypingTarget(event)) {
+			// When the palette is OPEN, Radix has moved focus into the cmdk
+			// search input (a native type="text" input), which the typing
+			// guard would treat as "user is typing" and refuse to toggle.
+			// Only honor the guard while the palette is CLOSED, so page text
+			// fields keep Cmd+K but the open palette can still close itself.
+			if (!openRef.current && isTypingTarget(event)) {
 				return
 			}
 			event.preventDefault()
@@ -121,10 +131,16 @@ export default function CommandPalette({ entries }: CommandPaletteProps) {
 						{items.map(entry => (
 							<CommandItem
 								key={entry.id}
+								// cmdk dedupes/selects by `value`. Showcase entries
+								// carry no description or keywords, so without the
+								// unique id two same-titled items would share a
+								// value (dual-highlight + Enter mis-route). id is
+								// `<kind>:<db-unique-slug>`, so it disambiguates.
 								value={[
 									entry.label,
 									entry.description ?? '',
-									...(entry.keywords ?? [])
+									...(entry.keywords ?? []),
+									entry.id
 								].join(' ')}
 								onSelect={() => handleSelect(entry.href)}
 							>
