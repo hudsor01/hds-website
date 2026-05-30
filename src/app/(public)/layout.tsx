@@ -22,6 +22,8 @@
  * route-group layout owns its own.
  */
 import type { ReactNode } from 'react'
+import { Suspense } from 'react'
+import CommandPaletteData from '@/components/cmdk/CommandPaletteData'
 import Footer from '@/components/layout/Footer'
 import NavbarLight from '@/components/layout/Navbar'
 import ScrollToTop from '@/components/utilities/ScrollToTop'
@@ -30,6 +32,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
 	return (
 		<>
 			<NavbarLight />
+			{/* Global command palette (audit #263). Singleton mount across
+			    the public route group — admin/auth layouts intentionally
+			    omit it. Async server component fetches recent posts +
+			    showcase items behind a Suspense boundary so the rest of
+			    the chrome streams immediately. */}
+			<Suspense fallback={null}>
+				<CommandPaletteData />
+			</Suspense>
 			{/* The skip-link target lives here (a real <main> landmark, not a
 			    wrapping <div>) so assistive technology landmark navigation
 			    (NVDA Insert+F7, JAWS R) finds a single named region per page.
