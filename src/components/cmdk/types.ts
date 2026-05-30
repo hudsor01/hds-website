@@ -22,8 +22,3 @@ export interface PaletteEntry {
 	/** Extra search terms beyond label + description. */
 	readonly keywords?: readonly string[]
 }
-
-export interface PaletteData {
-	readonly staticEntries: readonly PaletteEntry[]
-	readonly dynamicEntries: readonly PaletteEntry[]
-}

@@ -13,6 +13,9 @@ import {
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
+// Not exported: only CommandDialog (below) consumes the root primitive in
+// this codebase. Keeping it internal keeps knip clean (the project prunes
+// unused shadcn surface rather than re-exporting the full registry).
 function Command({
 	className,
 	...props
@@ -147,7 +150,6 @@ function CommandItem({
 }
 
 export {
-	Command,
 	CommandDialog,
 	CommandEmpty,
 	CommandGroup,
