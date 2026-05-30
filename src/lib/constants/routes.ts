@@ -18,7 +18,12 @@ export const ROUTES = {
 	WEBSITE_MIGRATION: '/website-migration',
 	PRIVACY: '/privacy',
 	TERMS: '/terms',
-	BLOG: '/blog'
+	BLOG: '/blog',
+	FAQ: '/faq',
+	HELP: '/help',
+	LOCATIONS: '/locations',
+	SWITCH_FROM_THRYV: '/switch-from-thryv',
+	TESTIMONIALS: '/testimonials'
 } as const
 
 /** Tool pages */

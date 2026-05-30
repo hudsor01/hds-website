@@ -4,6 +4,7 @@ import { ArrowRight, Menu, Rocket, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo, useCallback, useEffect, useState } from 'react'
+import CommandPaletteTrigger from '@/components/cmdk/CommandPaletteTrigger'
 import { Button } from '@/components/ui/button'
 import { ROUTES, TOOL_ROUTES } from '@/lib/constants/routes'
 import { cn } from '@/lib/utils'
@@ -110,6 +111,7 @@ const Navbar = memo(function Navbar() {
 
 					{/* Right — CTAs */}
 					<div className="flex-1 flex items-center justify-end gap-2">
+						<CommandPaletteTrigger />
 						<div className="hidden sm:flex items-center gap-2">
 							<Button
 								asChild
