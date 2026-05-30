@@ -41,6 +41,7 @@ export const TOOL_ROUTES = {
 	PROPOSAL_GENERATOR: '/tools/proposal-generator',
 	JSON_FORMATTER: '/tools/json-formatter',
 	META_TAG_GENERATOR: '/tools/meta-tag-generator',
+	SCHEMA_GENERATOR: '/tools/schema-generator',
 	COMMA_SEPARATOR: '/tools/comma-separator',
 	TESTIMONIAL_COLLECTOR: '/tools/testimonial-collector'
 } as const
