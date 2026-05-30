@@ -8,6 +8,7 @@ import {
 	FileText,
 	Home,
 	List,
+	MapPin,
 	Receipt,
 	Tags,
 	TrendingUp,
@@ -117,6 +118,20 @@ export const TOOLS: readonly ToolEntry[] = [
 			'SEO meta tag preview'
 		],
 		cta: 'Generate Tags',
+		category: 'website'
+	},
+	{
+		title: 'LocalBusiness Schema Generator',
+		description:
+			'Build schema.org LocalBusiness JSON-LD structured data so Google understands your business and shows you in local results.',
+		href: TOOL_ROUTES.SCHEMA_GENERATOR,
+		Icon: MapPin,
+		benefits: [
+			'Valid schema.org JSON-LD',
+			'Address, hours, geo, and social links',
+			'Helps you rank in the local pack'
+		],
+		cta: 'Generate Schema',
 		category: 'website'
 	},
 	{
