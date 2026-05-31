@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
+import { BlogPostCardSkeleton } from '@/components/blog/BlogPostCardSkeleton'
 import { TagList } from '@/components/blog/TagList'
 import { Button } from '@/components/ui/button'
 import { getFeaturedPosts, getPosts, getTagsWithCounts } from '@/lib/blog'
@@ -113,10 +114,7 @@ function PostListSkeleton() {
 	return (
 		<div className="space-y-6" aria-hidden="true">
 			{[0, 1, 2].map(i => (
-				<div
-					key={i}
-					className="h-40 rounded-xl border border-border bg-muted/30 animate-pulse"
-				/>
+				<BlogPostCardSkeleton key={i} />
 			))}
 		</div>
 	)
@@ -131,10 +129,7 @@ function FeaturedSkeleton() {
 					aria-hidden="true"
 				>
 					{[0, 1, 2].map(i => (
-						<div
-							key={i}
-							className="aspect-video rounded-xl border border-border bg-muted/30 animate-pulse"
-						/>
+						<BlogPostCardSkeleton key={i} />
 					))}
 				</div>
 			</div>
