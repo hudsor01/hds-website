@@ -16,18 +16,15 @@ export interface ContactFormResponse {
 export function useContactFormSubmit() {
 	return useMutation<ContactFormResponse, Error, ContactFormData>({
 		mutationFn: async formData => {
-			// Validation handled by TanStack Form + Zod
-			// Convert to FormData for the API
-			const form = new FormData()
-			Object.entries(formData).forEach(([key, value]) => {
-				if (value !== undefined && value !== null) {
-					form.append(key, String(value))
-				}
-			})
-
+			// Validation handled by TanStack Form + Zod. Send JSON, not
+			// multipart FormData: /api/contact parses request.json(), so a
+			// FormData body throws and falls to the generic 500 catch - every
+			// real submission was failing silently. csrfFetch only adds the
+			// X-CSRF-Token header and passes body/headers through untouched.
 			const response = await csrfFetch('/api/contact', {
 				method: 'POST',
-				body: form
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData)
 			})
 
 			const data = await response.json()
