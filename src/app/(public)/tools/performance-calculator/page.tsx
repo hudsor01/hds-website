@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import PerformanceCalculatorClient from './PerformanceCalculatorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/performance-calculator' },
 	title: 'Performance Savings Calculator | Hudson Digital Solutions',
 	description:
 		'Analyze how website load times affect your revenue. Calculate potential savings from performance optimization with our free calculator.',

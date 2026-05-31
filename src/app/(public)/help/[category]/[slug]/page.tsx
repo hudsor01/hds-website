@@ -37,7 +37,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
 	params
 }: PageProps): Promise<Metadata> {
-	const { slug } = await params
+	const { category, slug } = await params
 	const article = await getArticleBySlug(slug)
 
 	if (!article) {
@@ -49,7 +49,8 @@ export async function generateMetadata({
 	return {
 		title: `${article.title} | Help Center | Hudson Digital Solutions`,
 		description:
-			article.excerpt || `Read about ${article.title} in our help center.`
+			article.excerpt || `Read about ${article.title} in our help center.`,
+		alternates: { canonical: `/help/${category}/${slug}` }
 	}
 }
 

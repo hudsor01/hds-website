@@ -93,12 +93,15 @@ export const metadata: Metadata = {
 	verification: {
 		google: env.GOOGLE_SITE_VERIFICATION
 	},
-	alternates: {
-		canonical: 'https://hudsondigitalsolutions.com',
-		languages: {
-			'en-US': 'https://hudsondigitalsolutions.com'
-		}
-	},
+	// No `alternates.canonical` here: Next.js inherits non-title metadata
+	// fields (alternates included) into every child page that does not set
+	// its own. A canonical declared on the root layout therefore cascades
+	// to /showcase, /contact, all /tools/*, /locations, /help/* etc. as a
+	// self-defeating "duplicate of the homepage" signal that drops them
+	// from the index. The homepage sets its own self-canonical in
+	// src/app/(public)/page.tsx; every other indexable route declares its
+	// own. Pages that set none simply emit no canonical and Google
+	// self-canonicalizes to the page URL, which is correct.
 	applicationName: 'Hudson Digital Solutions',
 	authors: [
 		{

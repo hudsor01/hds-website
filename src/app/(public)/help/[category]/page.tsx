@@ -69,7 +69,8 @@ export async function generateMetadata({
 
 	return {
 		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
-		description: categoryInfo.description
+		description: categoryInfo.description,
+		alternates: { canonical: `/help/${category}` }
 	}
 }
 

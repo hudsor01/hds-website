@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import ProposalGeneratorClient from './ProposalGeneratorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/proposal-generator' },
 	title: 'Proposal Generator | Hudson Digital Solutions',
 	description:
 		'Create professional project proposals with PDF download. Free proposal generator with customizable templates for freelancers and agencies.',

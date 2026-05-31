@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { getCategoriesWithCounts } from '@/lib/help-articles'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/help' },
 	title: 'Help Center | Hudson Digital Solutions',
 	description:
 		'Find answers to common questions, learn how to use our tools, and get support from Hudson Digital Solutions.'

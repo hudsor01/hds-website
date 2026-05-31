@@ -10,6 +10,7 @@ import { getShowcaseItems } from '@/lib/showcase'
 // Caching handled at data-layer level (src/lib/showcase.ts uses 'use cache'
 // + cacheLife). Page-level revalidate is incompatible with cacheComponents.
 export const metadata: Metadata = {
+	alternates: { canonical: '/showcase' },
 	title: 'Showcase | Hudson Digital Solutions',
 	description:
 		'Real websites delivering measurable results for small businesses. See how we help local businesses get found online, win customers, and grow.',

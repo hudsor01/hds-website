@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import JsonFormatterClient from './JsonFormatterClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/json-formatter' },
 	title: 'JSON Formatter | Hudson Digital Solutions',
 	description:
 		'Format, validate, and minify JSON data online. Free JSON formatter with syntax highlighting and error detection.',
