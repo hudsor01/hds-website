@@ -28,15 +28,23 @@ export async function generateMetadata({
 	const { token } = await params
 	const request = await getTestimonialRequestByToken(token)
 
+	// Token-gated, single-use flow. Always noindex so shared or leaked
+	// token URLs never enter the index, and keep the description generic so
+	// it cannot expose the client name from the request record.
+	const robots = { index: false, follow: false } as const
+
 	if (!request) {
 		return {
-			title: 'Invalid Link | Hudson Digital Solutions'
+			title: 'Invalid Link | Hudson Digital Solutions',
+			robots
 		}
 	}
 
 	return {
-		title: `Share Your Feedback | Hudson Digital Solutions`,
-		description: `Thank you for working with us, ${request.client_name}! Please share your experience.`
+		title: 'Share Your Feedback | Hudson Digital Solutions',
+		description:
+			'Thank you for working with us. Please share your experience with Hudson Digital Solutions.',
+		robots
 	}
 }
 
