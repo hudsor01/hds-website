@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { ROICalculatorClient } from './ROICalculatorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/roi-calculator' },
 	title: 'ROI Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate how much additional revenue you could generate by improving your website conversion rate. Free ROI calculator for businesses.',

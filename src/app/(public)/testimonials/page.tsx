@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/testimonials' },
 	title: 'Client Testimonials | Hudson Digital Solutions',
 	description:
 		'Real results from the small businesses we have built websites for. See how a professional website turned local reputations into booked customers.'

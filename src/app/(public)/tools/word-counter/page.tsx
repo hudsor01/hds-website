@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import WordCounterClient from './WordCounterClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/word-counter' },
 	title: 'Word & Character Counter | Hudson Digital Solutions',
 	description:
 		'Free word and character counter. Live counts of words, characters, sentences, paragraphs, and reading time for meta descriptions, tweets, and content limits.'

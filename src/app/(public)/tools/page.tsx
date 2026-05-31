@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import ToolsCatalog from './ToolsCatalog'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools' },
 	title: 'Free Business Tools & Calculators | Hudson Digital Solutions',
 	description:
 		'Free interactive tools for business owners and freelancers. Calculate ROI, generate invoices and contracts, format JSON, analyze performance, and more.',
