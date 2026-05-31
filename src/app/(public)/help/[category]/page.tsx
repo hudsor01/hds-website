@@ -63,13 +63,15 @@ export async function generateMetadata({
 
 	if (!categoryInfo) {
 		return {
-			title: 'Category Not Found | Help Center'
+			title: 'Category Not Found | Help Center',
+			description:
+				'This help center category could not be found. Browse the Hudson Digital Solutions help center for guides, tool walkthroughs, and support.'
 		}
 	}
 
 	return {
 		title: `${categoryInfo.name} | Help Center | Hudson Digital Solutions`,
-		description: categoryInfo.description,
+		description: categoryInfo.metaDescription,
 		alternates: { canonical: `/help/${category}` }
 	}
 }

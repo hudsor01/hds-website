@@ -148,14 +148,17 @@ describe('ProjectCard', () => {
 		expect(container.textContent).not.toContain('Portfolio')
 	})
 
-	test('renders external link with target _blank when externalLink provided', () => {
+	// The project card always links to the internal /showcase/[slug] detail
+	// page, even when an externalLink is set. It used to wrap the whole tile
+	// in an external <a target="_blank">, which orphaned every detail page
+	// (and the followed external link it carries) from internal PageRank.
+	test('links to the internal detail page even when externalLink is set', () => {
 		const { container } = render(
 			<Card {...defaultProps} externalLink="https://example.com" />
 		)
 		const link = within(container).getByRole('link')
-		expect(link.getAttribute('href')).toBe('https://example.com')
-		expect(link.getAttribute('target')).toBe('_blank')
-		expect(link.getAttribute('rel')).toBe('noopener noreferrer')
+		expect(link.getAttribute('href')).toBe('/showcase/test-project')
+		expect(link.getAttribute('target')).toBeNull()
 	})
 
 	test('renders internal link without target _blank when no externalLink', () => {

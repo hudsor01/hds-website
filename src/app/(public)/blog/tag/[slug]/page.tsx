@@ -29,7 +29,9 @@ export async function generateMetadata({
 
 	return {
 		title: `${tag.name} - Blog - Hudson Digital Solutions`,
-		description: tag.description || `Articles tagged with ${tag.name}`,
+		description:
+			tag.description ||
+			`Browse Hudson Digital Solutions blog articles tagged ${tag.name}, with practical guides and insights on web design and growing your small business online.`,
 		alternates: {
 			canonical: `https://hudsondigitalsolutions.com/blog/tag/${tag.slug}`
 		}

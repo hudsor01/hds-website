@@ -33,6 +33,28 @@ const CANONICAL_SLUG_REDIRECTS: Record<string, string> = {
 		'why-your-business-needs-a-custom-crm-integration'
 }
 
+const META_DESCRIPTION_MAX = 160
+
+/**
+ * Clamp a post excerpt to the 160-char SEO window, trimming on a word
+ * boundary and appending an ellipsis. Falls back to the provided
+ * template (itself clamped) when the excerpt is missing or blank.
+ */
+function clampDescription(
+	excerpt: string | null | undefined,
+	fallback: string
+): string {
+	const source = excerpt?.trim() || fallback
+	if (source.length <= META_DESCRIPTION_MAX) {
+		return source
+	}
+
+	const truncated = source.slice(0, META_DESCRIPTION_MAX - 3)
+	const lastSpace = truncated.lastIndexOf(' ')
+	const base = lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated
+	return `${base.replace(/[\s.,;:]+$/, '')}...`
+}
+
 export async function generateMetadata({
 	params
 }: BlogPostPageProps): Promise<Metadata> {
@@ -55,12 +77,19 @@ export async function generateMetadata({
 		}
 	}
 
+	// Clamp the excerpt to the 160-char SEO window, breaking on a word
+	// boundary, and fall back to a templated description when missing.
+	const description = clampDescription(
+		post.excerpt,
+		`${post.title}. Read this article on the Hudson Digital Solutions blog for practical web design and small business insights.`
+	)
+
 	return {
 		title: `${post.title} - Hudson Digital Solutions`,
-		description: post.excerpt,
+		description,
 		openGraph: {
 			title: post.title,
-			description: post.excerpt,
+			description,
 			images: post.feature_image
 				? [
 						{
@@ -79,7 +108,7 @@ export async function generateMetadata({
 		twitter: {
 			card: 'summary_large_image',
 			title: post.title,
-			description: post.excerpt,
+			description,
 			images: post.feature_image ? [post.feature_image] : []
 		},
 		alternates: {

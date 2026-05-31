@@ -16,10 +16,9 @@ import { BUSINESS_INFO } from '@/lib/constants/business'
 import { ROUTES } from '@/lib/constants/routes'
 
 export const metadata: Metadata = {
-	title:
-		'Website Migration Service - Switch Platforms Without Losing Rankings | Hudson Digital Solutions',
+	title: 'Website Migration: Keep Your Rankings | Hudson Digital',
 	description:
-		"Stuck on an overpriced website platform you don't own? We migrate your website, recover your domain, and build you a faster site that's 100% yours. Free migration consultation.",
+		'Migrate your website to a platform you own without losing Google rankings. We recover your domain, set up redirects, and build a faster, fully owned site.',
 	openGraph: {
 		title: 'Website Migration - Keep Your Rankings, Lose the Fees',
 		description:

@@ -24,7 +24,9 @@ export async function generateMetadata({
 
 	return {
 		title: `${author.name} - Blog - Hudson Digital Solutions`,
-		description: author.bio || `Articles by ${author.name}`,
+		description:
+			author.bio ||
+			`Read articles, guides, and insights written by ${author.name} on the Hudson Digital Solutions blog, covering web design, small business growth, and more.`,
 		alternates: {
 			canonical: `https://hudsondigitalsolutions.com/blog/author/${author.slug}`
 		}

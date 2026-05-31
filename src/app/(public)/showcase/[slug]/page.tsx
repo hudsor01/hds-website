@@ -5,11 +5,21 @@
  * - 'detailed': Case-study-style view (challenge/solution/results narrative)
  */
 
-import { ArrowLeft, Clock, ExternalLink, Users } from 'lucide-react'
+import { Clock, ExternalLink, Users } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { CTASection } from '@/components/utilities/CTASection'
+import { JsonLd } from '@/components/utilities/JsonLd'
+import { generateBreadcrumbSchema } from '@/lib/seo-utils'
 import {
 	getAllShowcaseSlugs,
 	getShowcaseBySlug,
@@ -214,7 +224,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 													<a
 														href={item.externalLink}
 														target="_blank"
-														rel="noopener noreferrer"
+														rel="noopener"
 														className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
 													>
 														View Live Project
@@ -272,7 +282,7 @@ function ShowcaseContent({ item }: { item: ShowcaseItem }) {
 												<a
 													href={item.externalLink}
 													target="_blank"
-													rel="noopener noreferrer"
+													rel="noopener"
 													className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
 												>
 													View Live Project
@@ -384,22 +394,74 @@ export default async function ShowcaseDetailPage({
 		notFound()
 	}
 
-	return (
-		<div className="min-h-screen bg-background">
-			{/* Back Button */}
-			<div className="py-8 px-4 sm:px-6">
-				<div className="container-wide">
-					<Link
-						href="/showcase"
-						className="inline-flex items-center gap-tight text-accent hover:text-accent/80 transition-colors"
-					>
-						<ArrowLeft className="w-4 h-4" />
-						Back to Showcase
-					</Link>
-				</div>
-			</div>
+	const SITE_URL = 'https://hudsondigitalsolutions.com'
 
-			<ShowcaseContent item={item} />
-		</div>
+	const creativeWork = {
+		'@context': 'https://schema.org',
+		'@type': 'CreativeWork',
+		name: item.title,
+		description: item.description,
+		image: item.ogImageUrl ?? item.imageUrl ?? undefined,
+		author: {
+			'@type': 'Organization',
+			name: 'Hudson Digital Solutions',
+			url: SITE_URL
+		},
+		datePublished: (item.publishedAt ?? item.createdAt)?.toISOString(),
+		dateModified: item.updatedAt?.toISOString(),
+		url: `${SITE_URL}/showcase/${slug}`
+	}
+
+	const breadcrumb = generateBreadcrumbSchema([
+		{ name: 'Home', url: SITE_URL },
+		{ name: 'Showcase', url: `${SITE_URL}/showcase` },
+		{ name: item.title, url: `${SITE_URL}/showcase/${slug}` }
+	])
+
+	return (
+		<>
+			<JsonLd data={creativeWork} />
+			<JsonLd data={breadcrumb} />
+			<div className="min-h-screen bg-background">
+				{/* Breadcrumb */}
+				<div className="py-8 px-4 sm:px-6">
+					<div className="container-wide">
+						<Breadcrumb>
+							<BreadcrumbList>
+								<BreadcrumbItem>
+									<BreadcrumbLink asChild>
+										<Link
+											href="/"
+											className="text-muted-foreground hover:text-foreground transition-colors"
+										>
+											Home
+										</Link>
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbLink asChild>
+										<Link
+											href="/showcase"
+											className="text-muted-foreground hover:text-foreground transition-colors"
+										>
+											Showcase
+										</Link>
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbPage className="text-foreground">
+										{item.title}
+									</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
+					</div>
+				</div>
+
+				<ShowcaseContent item={item} />
+			</div>
+		</>
 	)
 }

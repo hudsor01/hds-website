@@ -30,6 +30,7 @@ export interface HelpCategory {
 	slug: string
 	name: string
 	description: string
+	metaDescription: string
 	icon: string
 	articleCount: number
 }
@@ -39,30 +40,40 @@ const HELP_CATEGORIES: Omit<HelpCategory, 'articleCount'>[] = [
 		slug: 'getting-started',
 		name: 'Getting Started',
 		description: 'New to Hudson Digital Solutions? Start here.',
+		metaDescription:
+			'New to Hudson Digital Solutions? Start here for setup walkthroughs, first steps, and the essentials you need to get up and running quickly and with confidence.',
 		icon: 'Rocket'
 	},
 	{
 		slug: 'tools',
 		name: 'Tools & Calculators',
 		description: 'Learn how to use our free tools.',
+		metaDescription:
+			'Learn how to use the free Hudson Digital Solutions tools and calculators with clear, step-by-step guides covering inputs, results, and common questions.',
 		icon: 'Wrench'
 	},
 	{
 		slug: 'billing',
 		name: 'Billing & Payments',
 		description: 'Payment methods, invoices, and billing questions.',
+		metaDescription:
+			'Find answers about Hudson Digital Solutions billing and payments, including payment methods, invoices, receipts, refunds, and updating your details.',
 		icon: 'CreditCard'
 	},
 	{
 		slug: 'account',
 		name: 'Account & Settings',
 		description: 'Manage your account and preferences.',
+		metaDescription:
+			'Manage your Hudson Digital Solutions account and settings, from updating your profile and email preferences to security, notifications, and unsubscribe options.',
 		icon: 'User'
 	},
 	{
 		slug: 'faq',
 		name: 'FAQs',
 		description: 'Frequently asked questions.',
+		metaDescription:
+			'Browse frequently asked questions about Hudson Digital Solutions, covering our services, web design process, pricing, timelines, and how to get started.',
 		icon: 'HelpCircle'
 	}
 ]
@@ -81,9 +92,10 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
 })
 
 /**
- * Get all published articles
+ * Get all published articles. Exported so the sitemap can enumerate
+ * every /help/[category]/[slug] URL from a single source of truth.
  */
-async function getAllPublishedArticles(): Promise<HelpArticle[]> {
+export async function getAllPublishedArticles(): Promise<HelpArticle[]> {
 	'use cache'
 	cacheLife('hours')
 	cacheTag('help-articles')

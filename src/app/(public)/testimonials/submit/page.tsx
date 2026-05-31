@@ -9,7 +9,10 @@ import { TestimonialForm } from '@/components/testimonials/TestimonialForm'
 export const metadata: Metadata = {
 	title: 'Submit a Testimonial | Hudson Digital Solutions',
 	description:
-		'Share your experience working with Hudson Digital Solutions. Your feedback helps us improve and helps others make informed decisions.'
+		'Share your experience working with Hudson Digital Solutions. Your feedback helps us improve and helps others make informed decisions.',
+	// Transactional form with no informational content. Keep it out of the
+	// index (mirrors /unsubscribe and /auth/*) but let it pass link equity.
+	robots: { index: false, follow: true }
 }
 
 export default function PublicTestimonialPage() {
