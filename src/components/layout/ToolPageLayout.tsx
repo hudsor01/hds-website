@@ -2,9 +2,21 @@
 
 import type { LucideIcon } from 'lucide-react'
 import { Copy, Download, Printer, RotateCcw } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { ReactElement, ReactNode } from 'react'
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { JsonLd } from '@/components/utilities/JsonLd'
+import { generateBreadcrumbSchema } from '@/lib/seo-utils'
 import { cn } from '@/lib/utils'
 
 // ---------------------------------------------------------------------------
@@ -41,6 +53,8 @@ const ICON_MAP: Record<ActionType, LucideIcon> = {
 	print: Printer,
 	reset: RotateCcw
 }
+
+const SITE_URL = 'https://hudsondigitalsolutions.com'
 
 // ---------------------------------------------------------------------------
 // Sub-components
@@ -129,6 +143,13 @@ export function ToolPageLayout({
 	actions,
 	className
 }: ToolPageLayoutProps): ReactElement {
+	const pathname = usePathname()
+	const breadcrumbSchema = generateBreadcrumbSchema([
+		{ name: 'Home', url: SITE_URL },
+		{ name: 'Tools', url: `${SITE_URL}/tools` },
+		{ name: title, url: `${SITE_URL}${pathname}` }
+	])
+
 	return (
 		<main className="min-h-screen bg-background">
 			<div
@@ -137,6 +158,41 @@ export function ToolPageLayout({
 					className
 				)}
 			>
+				<JsonLd data={breadcrumbSchema} />
+
+				{/* Breadcrumb */}
+				<Breadcrumb className="mb-6">
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href="/"
+									className="text-muted-foreground hover:text-foreground transition-colors"
+								>
+									Home
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link
+									href="/tools"
+									className="text-muted-foreground hover:text-foreground transition-colors"
+								>
+									Tools
+								</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage className="text-foreground">
+								{title}
+							</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+
 				{/* Header */}
 				<div className="mb-10">
 					<h1 className="mb-3 text-h1 text-foreground leading-tight">
