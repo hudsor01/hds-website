@@ -123,6 +123,17 @@ export default function TimeCardCalculatorClient() {
 								placeholder="0"
 							/>
 						</div>
+						<label className="mt-2 flex items-center gap-tight text-xs text-muted-foreground">
+							<input
+								type="checkbox"
+								checked={row.overnight}
+								onChange={event =>
+									updateRow(row.id, { overnight: event.target.checked })
+								}
+								className="rounded border-border text-accent focus:ring-accent"
+							/>
+							Overnight shift (clock-out is the next day)
+						</label>
 					</div>
 				))}
 				<button
