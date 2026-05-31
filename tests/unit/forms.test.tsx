@@ -27,12 +27,19 @@ process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
 
 describe('ContactForm Component', () => {
 	beforeEach(() => {
-		// Mock next/navigation
+		// Mock next/navigation. Include the full surface (usePathname,
+		// useSearchParams) even though this suite only uses useRouter: bun's
+		// mock.module is global and, on the CI bun version, is not cleared by
+		// mock.restore() between files, so an incomplete mock here leaks and
+		// breaks any later test that renders a usePathname consumer (Navbar,
+		// ToolPageLayout) with "usePathname not found in next/navigation".
 		mock.module('next/navigation', () => ({
 			useRouter: () => ({
 				push: mock(),
 				refresh: mock()
-			})
+			}),
+			usePathname: () => '/',
+			useSearchParams: () => new URLSearchParams()
 		}))
 
 		// Mock database client

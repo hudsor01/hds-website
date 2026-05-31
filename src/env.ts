@@ -10,15 +10,22 @@ import { z } from 'zod'
 
 export const env = createEnv({
 	/**
+	 * Shared environment variables
+	 * Available on both the server and the client. NODE_ENV lives here so
+	 * client components (e.g. WebVitalsReporting) can read it without
+	 * tripping the T3 "server-side variable on the client" guard.
+	 */
+	shared: {
+		NODE_ENV: z
+			.enum(['development', 'test', 'production'])
+			.default('development')
+	},
+
+	/**
 	 * Server-side environment variables
 	 * These are only available on the server and never sent to the client
 	 */
 	server: {
-		// Node environment
-		NODE_ENV: z
-			.enum(['development', 'test', 'production'])
-			.default('development'),
-
 		// Database - Neon/Drizzle (optional for CI/preview builds, required in production)
 		POSTGRES_URL: z
 			.string()
