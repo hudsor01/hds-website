@@ -63,7 +63,9 @@ function mockContactService(opts: MockOpts) {
 		mock.module('@/lib/db', () => ({
 			db: {
 				insert: mock().mockReturnValue({
-					values: mock().mockRejectedValue(new Error('pg connection lost'))
+					values: mock().mockReturnValue({
+						returning: mock().mockRejectedValue(new Error('pg connection lost'))
+					})
 				}),
 				select: mock().mockReturnValue({
 					from: mock().mockReturnValue({
