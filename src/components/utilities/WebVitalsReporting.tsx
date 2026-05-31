@@ -14,23 +14,25 @@ export function WebVitalsReporting() {
 		// Store in database for admin dashboard
 		storeWebVital(metric)
 
-		// Log in development at a level that matches the CWV rating so good
-		// metrics show as info and bad metrics surface in warn/error filters.
-		// The Phase 03 dashboard widget uses the same rating thresholds for
-		// its KPI cards (text-success-text / warning / destructive); align
-		// the log level here so dev-console filtering matches.
+		// Log in development so good metrics show as info and sub-par metrics
+		// surface in the warn filter. Call the logger methods directly rather
+		// than extracting one into a local: `const log = logger.error` detaches
+		// the method from `logger`, so `this` is undefined and `this.log(...)`
+		// throws on the client. Warn (not error) is used for poor metrics too,
+		// since a web vital is not an application error and should not write to
+		// the error_logs table that logger.error feeds.
 		if (env.NODE_ENV === 'development') {
-			const log =
-				metric.rating === 'poor'
-					? logger.error
-					: metric.rating === 'needs-improvement'
-						? logger.warn
-						: logger.info
-			log(`[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`, {
+			const message = `[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`
+			const data = {
 				name: metric.name,
 				value: metric.value,
 				rating: metric.rating
-			})
+			}
+			if (metric.rating === 'good') {
+				logger.info(message, data)
+			} else {
+				logger.warn(message, data)
+			}
 		}
 	})
 
