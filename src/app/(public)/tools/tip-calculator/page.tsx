@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import TipCalculatorClient from './TipCalculatorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/tip-calculator' },
 	title: 'Tip Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate tip amounts and split bills among multiple people. Free tip calculator with customizable percentages and per-person breakdown.',

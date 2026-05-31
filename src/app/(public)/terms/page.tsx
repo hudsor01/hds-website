@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/terms' },
 	title: 'Terms of Service | Hudson Digital Solutions',
 	description:
 		'Read the Terms of Service for Hudson Digital Solutions. Understand your rights and obligations when using our website and services.',

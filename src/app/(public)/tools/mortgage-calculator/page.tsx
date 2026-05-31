@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { MortgageCalculatorClient } from './MortgageCalculatorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/mortgage-calculator' },
 	title: 'Mortgage Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate your monthly mortgage payment including principal, interest, taxes, insurance, and PMI. Free mortgage calculator.',

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/privacy' },
 	title: 'Privacy Policy | Hudson Digital Solutions',
 	description:
 		'Learn how Hudson Digital Solutions collects, uses, and protects your personal information. Our commitment to your privacy and data security.',

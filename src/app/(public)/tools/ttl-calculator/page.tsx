@@ -12,6 +12,7 @@ import { Calculator } from '@/components/calculators/Calculator'
 import { JsonLd } from '@/components/utilities/JsonLd'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/ttl-calculator' },
 	title: 'Texas TTL Calculator | Hudson Digital Solutions',
 	description:
 		'Calculate tax, title, license fees and monthly payments for vehicles in Texas. Free online calculator for car buyers and dealers.',
