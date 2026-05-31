@@ -386,10 +386,12 @@ test.describe('Authentication & Authorization', () => {
     expect(response.status()).toBe(401)
   })
 
-  test('should protect email queue stats from unauthorized access', async ({ request }) => {
+  test('should protect the email queue endpoint from unauthorized access', async ({ request }) => {
     const response = await request.get('/api/process-emails')
 
-    expect(response.status()).toBe(401)
+    // 401 when CRON_SECRET is configured, 503 when it is not - either way
+    // the unauthenticated request never reaches the processing logic.
+    expect([401, 503]).toContain(response.status())
   })
 
   test('should validate Bearer token format', async ({ request }) => {
