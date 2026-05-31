@@ -1,7 +1,7 @@
 'use client'
 
 import { cva } from 'class-variance-authority'
-import { ExternalLink, MessageCircle, Star, X } from 'lucide-react'
+import { ArrowRight, MessageCircle, Star, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType, HTMLAttributes, Ref, SVGProps } from 'react'
@@ -298,13 +298,11 @@ function Card(props: CardProps) {
 			featured = false,
 			stats = {},
 			tech_stack,
-			externalLink,
 			imageUrl,
 			imageAlt
 		} = props as ProjectCardProps
 
 		const metricEntries = Object.entries(stats).slice(0, 3)
-		const isExternal = Boolean(externalLink)
 		const hasImage = Boolean(imageUrl)
 		const resolvedAlt = imageAlt ?? `${title} homepage`
 
@@ -427,7 +425,7 @@ function Card(props: CardProps) {
 					{/* View link hint — visible on hover */}
 					<div className="flex items-center gap-1.5 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity">
 						View Project
-						<ExternalLink className="w-4 h-4" aria-hidden="true" />
+						<ArrowRight className="w-4 h-4" aria-hidden="true" />
 					</div>
 				</div>
 			</div>
@@ -438,23 +436,15 @@ function Card(props: CardProps) {
 				ref={ref}
 				className={cn('group relative', featured && 'md:col-span-2', className)}
 			>
-				{isExternal ? (
-					<a
-						href={externalLink as string}
-						aria-label={`View project: ${title}`}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						{cardContent}
-					</a>
-				) : (
-					<Link
-						href={`/showcase/${slug}`}
-						aria-label={`View project: ${title}`}
-					>
-						{cardContent}
-					</Link>
-				)}
+				{/* Always link to the internal /showcase/[slug] detail page. The
+				    card used to wrap the whole tile in an external <a> whenever
+				    externalLink was set - and every showcase row has one - so the
+				    list never linked to any detail page, orphaning them (and the
+				    followed richardwhudsonjr.com link they carry) from internal
+				    PageRank. Users reach the live site from the detail page. */}
+				<Link href={`/showcase/${slug}`} aria-label={`View project: ${title}`}>
+					{cardContent}
+				</Link>
 			</div>
 		)
 	}

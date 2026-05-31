@@ -1,5 +1,10 @@
 import type { MetadataRoute } from 'next'
-import { type BlogPost, getPosts } from '@/lib/blog'
+import { TOOLS } from '@/app/(public)/tools/tools-data'
+import { type BlogPost, getAuthors, getPosts, getTags } from '@/lib/blog'
+import {
+	getAllCategorySlugs,
+	getAllPublishedArticles
+} from '@/lib/help-articles'
 import { getAllLocationSlugs } from '@/lib/locations'
 import { getShowcaseItems } from '@/lib/showcase'
 
@@ -40,17 +45,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			changeFrequency: 'monthly',
 			priority: 0.9
 		},
+		// High-intent commercial landing page. /switch-from-thryv 301s here
+		// so it is intentionally absent from the sitemap.
+		{
+			url: `${SITE_URL}/website-migration`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'monthly',
+			priority: 0.8
+		},
 		{
 			url: `${SITE_URL}/faq`,
 			lastModified: BUILD_TIME,
 			changeFrequency: 'monthly',
 			priority: 0.7
-		},
-		{
-			url: `${SITE_URL}/privacy`,
-			lastModified: BUILD_TIME,
-			changeFrequency: 'yearly',
-			priority: 0.3
 		},
 		{
 			url: `${SITE_URL}/blog`,
@@ -75,27 +82,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			lastModified: BUILD_TIME,
 			changeFrequency: 'weekly',
 			priority: 0.7
+		},
+		{
+			url: `${SITE_URL}/help`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'monthly',
+			priority: 0.6
+		},
+		{
+			url: `${SITE_URL}/privacy`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'yearly',
+			priority: 0.3
+		},
+		{
+			url: `${SITE_URL}/terms`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'yearly',
+			priority: 0.3
 		}
 	]
 
-	const toolPages: MetadataRoute.Sitemap = [
-		'ttl-calculator',
-		'mortgage-calculator',
-		'roi-calculator',
-		'tip-calculator',
-		'cost-estimator',
-		'invoice-generator',
-		'paystub-calculator',
-		'proposal-generator',
-		'contract-generator',
-		'performance-calculator',
-		'json-formatter',
-		'meta-tag-generator'
-		// `testimonial-collector` is intentionally omitted — the tool is
-		// admin-only and was previously discoverable to public users via
-		// this sitemap entry + the tools index card. Audit #242.
-	].map(slug => ({
-		url: `${SITE_URL}/tools/${slug}`,
+	// Derived from the TOOLS registry (single source of truth) so new tools
+	// appear in the sitemap automatically and the admin-only
+	// testimonial-collector stays excluded (TOOLS omits it). Audit #242.
+	const toolPages: MetadataRoute.Sitemap = TOOLS.map(tool => ({
+		url: `${SITE_URL}${tool.href}`,
 		lastModified: BUILD_TIME,
 		changeFrequency: 'monthly' as const,
 		priority: 0.7
@@ -109,6 +121,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			priority: 0.7
 		})
 	)
+
+	const helpCategoryPages: MetadataRoute.Sitemap = getAllCategorySlugs().map(
+		slug => ({
+			url: `${SITE_URL}/help/${slug}`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'monthly',
+			priority: 0.5
+		})
+	)
+
+	let helpArticlePages: MetadataRoute.Sitemap = []
+	try {
+		const articles = await getAllPublishedArticles()
+		helpArticlePages = articles.map(article => ({
+			url: `${SITE_URL}/help/${article.category}/${article.slug}`,
+			lastModified: article.updated_at
+				? new Date(article.updated_at)
+				: BUILD_TIME,
+			changeFrequency: 'monthly' as const,
+			priority: 0.5
+		}))
+	} catch {
+		// DB unavailable at build time — help articles omitted from sitemap
+	}
 
 	let showcasePages: MetadataRoute.Sitemap = []
 	try {
@@ -138,11 +174,41 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		// DB unavailable at build time — blog pages omitted from sitemap
 	}
 
+	let tagPages: MetadataRoute.Sitemap = []
+	try {
+		const tags = await getTags()
+		tagPages = tags.map(tag => ({
+			url: `${SITE_URL}/blog/tag/${tag.slug}`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'weekly' as const,
+			priority: 0.5
+		}))
+	} catch {
+		// DB unavailable at build time — blog tag pages omitted from sitemap
+	}
+
+	let authorPages: MetadataRoute.Sitemap = []
+	try {
+		const authors = await getAuthors()
+		authorPages = authors.map(author => ({
+			url: `${SITE_URL}/blog/author/${author.slug}`,
+			lastModified: BUILD_TIME,
+			changeFrequency: 'weekly' as const,
+			priority: 0.5
+		}))
+	} catch {
+		// DB unavailable at build time — blog author pages omitted from sitemap
+	}
+
 	return [
 		...staticPages,
 		...toolPages,
 		...locationPages,
+		...helpCategoryPages,
+		...helpArticlePages,
 		...showcasePages,
-		...blogPages
+		...blogPages,
+		...tagPages,
+		...authorPages
 	]
 }

@@ -18,7 +18,7 @@ import { getCategoriesWithCounts } from '@/lib/help-articles'
 export const metadata: Metadata = {
 	title: 'Help Center | Hudson Digital Solutions',
 	description:
-		'Find answers to common questions, learn how to use our tools, and get support from Hudson Digital Solutions.'
+		'Browse the Hudson Digital Solutions help center for answers to common questions, step-by-step guides for our free tools, billing details, and account support.'
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {

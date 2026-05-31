@@ -17,6 +17,7 @@ const footerLinks = {
 		{ name: 'Website Design & Build', href: `${ROUTES.SERVICES}#design-build` },
 		{ name: 'Get Found on Google', href: `${ROUTES.SERVICES}#seo` },
 		{ name: 'Booking & Payments', href: `${ROUTES.SERVICES}#booking` },
+		{ name: 'Website Migration', href: ROUTES.WEBSITE_MIGRATION },
 		// Label changed from "Recent Work" to "Showcase" so it matches
 		// the destination page's tab title and nav label (audit #271).
 		{ name: 'Showcase', href: ROUTES.SHOWCASE }
@@ -25,6 +26,17 @@ const footerLinks = {
 		{ name: 'About Us', href: ROUTES.ABOUT },
 		{ name: 'Our Process', href: `${ROUTES.SERVICES}#process` },
 		{ name: 'Contact', href: ROUTES.CONTACT }
+	],
+	// Resources column added so the hub pages that no other nav/footer
+	// surface links to - Service Areas, FAQ, Help Center, Testimonials -
+	// have a durable crawlable inbound link instead of being reachable
+	// only via the sitemap or the JS-only command palette.
+	resources: [
+		{ name: 'Blog', href: ROUTES.BLOG },
+		{ name: 'Service Areas', href: ROUTES.LOCATIONS },
+		{ name: 'FAQ', href: ROUTES.FAQ },
+		{ name: 'Help Center', href: ROUTES.HELP },
+		{ name: 'Testimonials', href: ROUTES.TESTIMONIALS }
 	]
 }
 
@@ -93,7 +105,7 @@ export default function Footer() {
 
 			<div className="relative">
 				<div className="container-wide sm:px-6 lg:px-8 pt-12 pb-6">
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-sections mb-8">
+					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-sections mb-8">
 						{/* Brand Section */}
 						<div className="md:col-span-1">
 							<div className="mb-content-block">
@@ -157,6 +169,28 @@ export default function Footer() {
 								</h4>
 								<ul className="space-y-tight" role="list">
 									{footerLinks.company.map(link => (
+										<li key={link.name}>
+											<Link
+												href={link.href}
+												className="text-muted-foreground hover:text-foreground transition-smooth text-xs inline-block relative group focus-ring rounded"
+											>
+												<span>{link.name}</span>
+												<span className="absolute bottom-0 left-0 w-0 h-px bg-accent transition-smooth group-hover:w-full" />
+											</Link>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
+
+						{/* Resources Links */}
+						<div className="md:col-span-1">
+							<nav aria-label="Resources navigation">
+								<h4 className="text-foreground font-semibold mb-heading">
+									Resources
+								</h4>
+								<ul className="space-y-tight" role="list">
+									{footerLinks.resources.map(link => (
 										<li key={link.name}>
 											<Link
 												href={link.href}
