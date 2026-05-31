@@ -36,11 +36,6 @@
 			"source": "/portfolio",
 			"destination": "/services",
 			"permanent": true
-		},
-		{
-			"source": "/portfolio/:slug",
-			"destination": "/showcase/:slug",
-			"permanent": true
 		}
 	],
 
