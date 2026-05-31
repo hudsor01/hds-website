@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Analytics } from '@/components/utilities/Analytics'
 import { getShowcaseItems } from '@/lib/showcase'
 
 // Caching handled at data-layer level (src/lib/showcase.ts uses 'use cache'
@@ -183,129 +182,126 @@ async function ShowcaseProjects() {
 
 export default function ShowcasePage() {
 	return (
-		<>
-			<Analytics />
-			<div className="min-h-screen bg-background">
-				{/* Hero Section */}
-				<section className="relative overflow-hidden bg-background">
-					<div
-						className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
-						aria-hidden="true"
-					/>
-					<div
-						className="hero-spotlight absolute inset-0 pointer-events-none"
-						aria-hidden="true"
-					/>
+		<div className="min-h-screen bg-background">
+			{/* Hero Section */}
+			<section className="relative overflow-hidden bg-background">
+				<div
+					className="absolute inset-0 grid-pattern-subtle dark:grid-pattern-dark pointer-events-none"
+					aria-hidden="true"
+				/>
+				<div
+					className="hero-spotlight absolute inset-0 pointer-events-none"
+					aria-hidden="true"
+				/>
 
-					<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
-						<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
-							Showcase
-						</p>
-						{/* The visible heading used to be driven by a looping
+				<div className="relative z-10 container-wide px-4 sm:px-6 pt-28 pb-16 sm:pt-32 sm:pb-20 text-center">
+					<p className="text-xs font-semibold uppercase tracking-widest text-accent-text mb-3">
+						Showcase
+					</p>
+					{/* The visible heading used to be driven by a looping
 						    typewriter animation (~30 chars, 80ms per char, 2s pause)
 						    that left the H1 mid-state for several seconds — users
 						    landing on the wrong frame read it as truncated or broken
 						    and one early audit even misread it as a missing logo
 						    (audit #243). Static now; the brand "personality" was
 						    costing us comprehension. */}
-						<h1 className="text-page-title text-foreground leading-tight">
-							Real Projects. Real Results.
-						</h1>
-						<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
-							Real websites for small businesses. See how we help local
-							businesses get found online, win customers, and grow.
-						</p>
+					<h1 className="text-page-title text-foreground leading-tight">
+						Real Projects. Real Results.
+					</h1>
+					<p className="text-lead text-muted-foreground max-w-2xl mx-auto mt-6 mb-10">
+						Real websites for small businesses. See how we help local businesses
+						get found online, win customers, and grow.
+					</p>
 
-						<div className="flex flex-col sm:flex-row gap-3 justify-center">
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
-								<Link href="/contact">
-									Get My Free Website Plan
-									<Rocket className="w-5 h-5" aria-hidden="true" />
-								</Link>
-							</Button>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center">
+						<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Link href="/contact">
+								Get My Free Website Plan
+								<Rocket className="w-5 h-5" aria-hidden="true" />
+							</Link>
+						</Button>
 
-							<Button
-								asChild
-								variant="outline"
-								size="xl"
-								className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-							>
-								<Link href="/services">
-									View Services
-									<ArrowRight className="w-5 h-5" aria-hidden="true" />
-								</Link>
-							</Button>
-						</div>
+						<Button
+							asChild
+							variant="outline"
+							size="xl"
+							className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+						>
+							<Link href="/services">
+								View Services
+								<ArrowRight className="w-5 h-5" aria-hidden="true" />
+							</Link>
+						</Button>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				{/* Dynamic content with Suspense */}
-				<Suspense
-					fallback={
-						<div className="container-wide py-section-sm px-4 text-center">
-							<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
-							<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
-								Loading projects...
-							</p>
-						</div>
-					}
-				>
-					<ShowcaseProjects />
-				</Suspense>
+			{/* Dynamic content with Suspense */}
+			<Suspense
+				fallback={
+					<div className="container-wide py-section-sm px-4 text-center">
+						<div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-border border-t-accent" />
+						<p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+							Loading projects...
+						</p>
+					</div>
+				}
+			>
+				<ShowcaseProjects />
+			</Suspense>
 
-				{/* CTA Section */}
-				<section className="py-section px-4 sm:px-6">
-					<div className="container-wide">
-						<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
-							<div
-								className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
-								aria-hidden="true"
-							/>
-							<div className="relative z-10">
-								{/* Demoted to h3 so heading order across showcase is
+			{/* CTA Section */}
+			<section className="py-section px-4 sm:px-6">
+				<div className="container-wide">
+					<div className="relative overflow-hidden rounded-2xl border border-border bg-surface-raised p-10 md:p-16 text-center">
+						<div
+							className="hero-spotlight absolute inset-0 opacity-60 pointer-events-none"
+							aria-hidden="true"
+						/>
+						<div className="relative z-10">
+							{/* Demoted to h3 so heading order across showcase is
 								    h1 (hero) > h2 (section header) > h2 (inline CTA) > h3
 								    (closing CTA). The inline CTA precedes this one in DOM
 								    order. */}
-								<h3 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
-									Ready to create your{' '}
-									<span className="text-accent">success story?</span>
-								</h3>
+							<h3 className="text-section-title text-foreground mb-6 max-w-3xl mx-auto text-balance">
+								Ready to create your{' '}
+								<span className="text-accent">success story?</span>
+							</h3>
 
-								<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
-									Join these businesses with a website that does justice to what
-									they&apos;ve built. Let&apos;s build yours.
-								</p>
+							<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
+								Join these businesses with a website that does justice to what
+								they&apos;ve built. Let&apos;s build yours.
+							</p>
 
-								<div className="flex flex-col sm:flex-row gap-3 justify-center">
-									<Button
-										asChild
-										variant="accent"
-										size="xl"
-										trackConversion={true}
-									>
-										<Link href="/contact">
-											Get My Free Website Plan
-											<Rocket className="w-5 h-5" aria-hidden="true" />
-										</Link>
-									</Button>
+							<div className="flex flex-col sm:flex-row gap-3 justify-center">
+								<Button
+									asChild
+									variant="accent"
+									size="xl"
+									trackConversion={true}
+								>
+									<Link href="/contact">
+										Get My Free Website Plan
+										<Rocket className="w-5 h-5" aria-hidden="true" />
+									</Link>
+								</Button>
 
-									<Button
-										asChild
-										variant="outline"
-										size="xl"
-										className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
-									>
-										<Link href="/services">
-											View Services
-											<ArrowRight className="w-5 h-5" aria-hidden="true" />
-										</Link>
-									</Button>
-								</div>
+								<Button
+									asChild
+									variant="outline"
+									size="xl"
+									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
+								>
+									<Link href="/services">
+										View Services
+										<ArrowRight className="w-5 h-5" aria-hidden="true" />
+									</Link>
+								</Button>
 							</div>
 						</div>
 					</div>
-				</section>
-			</div>
-		</>
+				</div>
+			</section>
+		</div>
 	)
 }

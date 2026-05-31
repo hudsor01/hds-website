@@ -26,7 +26,7 @@ export type LocalBusinessType =
 	| 'FinancialService'
 	| 'EntertainmentBusiness'
 
-export interface SchemaAddressInput {
+interface SchemaAddressInput {
 	street?: string
 	city?: string
 	region?: string
@@ -34,12 +34,12 @@ export interface SchemaAddressInput {
 	country?: string
 }
 
-export interface SchemaGeoInput {
+interface SchemaGeoInput {
 	latitude?: string
 	longitude?: string
 }
 
-export interface OpeningHoursInput {
+interface OpeningHoursInput {
 	days: readonly string[]
 	opens: string
 	closes: string
