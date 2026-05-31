@@ -1,7 +1,9 @@
 import {
 	Briefcase,
 	Calculator,
+	CalendarClock,
 	Car,
+	Clock,
 	Code2,
 	DollarSign,
 	FileSignature,
@@ -9,9 +11,11 @@ import {
 	Home,
 	List,
 	MapPin,
+	Percent,
 	Receipt,
 	Tags,
 	TrendingUp,
+	Type,
 	Zap
 } from 'lucide-react'
 import { TOOL_ROUTES } from '@/lib/constants/routes'
@@ -191,6 +195,48 @@ export const TOOLS: readonly ToolEntry[] = [
 		category: 'business'
 	},
 	{
+		title: 'Profit Margin & Markup Calculator',
+		description:
+			'Enter your cost and selling price to get gross margin, markup, and profit, or find the price for a target margin.',
+		href: TOOL_ROUTES.PROFIT_MARGIN_CALCULATOR,
+		Icon: Percent,
+		benefits: [
+			'Gross margin and markup',
+			'Profit per sale',
+			'Price for a target margin'
+		],
+		cta: 'Calculate Margin',
+		category: 'business'
+	},
+	{
+		title: 'Invoice Late Fee Calculator',
+		description:
+			'Work out the late fee and total owed on an overdue invoice, using a flat fee or a percentage rate per day, week, or month.',
+		href: TOOL_ROUTES.INVOICE_LATE_FEE_CALCULATOR,
+		Icon: CalendarClock,
+		benefits: [
+			'Flat or percentage fees',
+			'Daily, weekly, or monthly rates',
+			'Grace-period support'
+		],
+		cta: 'Calculate Late Fee',
+		category: 'business'
+	},
+	{
+		title: 'Time Card Calculator',
+		description:
+			'Add clock-in and clock-out times with breaks to total hours, split overtime, and calculate gross pay.',
+		href: TOOL_ROUTES.TIME_CARD_CALCULATOR,
+		Icon: Clock,
+		benefits: [
+			'Total daily and weekly hours',
+			'Overtime split at 1.5x',
+			'Optional gross pay'
+		],
+		cta: 'Total My Hours',
+		category: 'business'
+	},
+	{
 		title: 'Contract Generator',
 		description:
 			'Create professional contracts ready for signature with customizable terms and PDF download.',
@@ -258,6 +304,20 @@ export const TOOLS: readonly ToolEntry[] = [
 			'Remove duplicate items'
 		],
 		cta: 'Separate List',
+		category: 'developers'
+	},
+	{
+		title: 'Word & Character Counter',
+		description:
+			'Count words, characters, sentences, paragraphs, and reading time as you type. Handy for meta descriptions, tweets, and content limits.',
+		href: TOOL_ROUTES.WORD_COUNTER,
+		Icon: Type,
+		benefits: [
+			'Live word and character counts',
+			'Sentence and paragraph counts',
+			'Reading-time estimate'
+		],
+		cta: 'Count Words',
 		category: 'developers'
 	}
 	// The Testimonial Collector tool is admin-only (gated behind an

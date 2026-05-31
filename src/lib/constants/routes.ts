@@ -36,6 +36,9 @@ export const TOOL_ROUTES = {
 	PERFORMANCE_CALCULATOR: '/tools/performance-calculator',
 	TIP_CALCULATOR: '/tools/tip-calculator',
 	PAYSTUB_CALCULATOR: '/tools/paystub-calculator',
+	PROFIT_MARGIN_CALCULATOR: '/tools/profit-margin-calculator',
+	INVOICE_LATE_FEE_CALCULATOR: '/tools/invoice-late-fee-calculator',
+	TIME_CARD_CALCULATOR: '/tools/time-card-calculator',
 	CONTRACT_GENERATOR: '/tools/contract-generator',
 	INVOICE_GENERATOR: '/tools/invoice-generator',
 	PROPOSAL_GENERATOR: '/tools/proposal-generator',
@@ -43,5 +46,6 @@ export const TOOL_ROUTES = {
 	META_TAG_GENERATOR: '/tools/meta-tag-generator',
 	SCHEMA_GENERATOR: '/tools/schema-generator',
 	COMMA_SEPARATOR: '/tools/comma-separator',
+	WORD_COUNTER: '/tools/word-counter',
 	TESTIMONIAL_COLLECTOR: '/tools/testimonial-collector'
 } as const
