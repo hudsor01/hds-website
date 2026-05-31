@@ -104,9 +104,11 @@ function readStore(): Attribution | undefined {
 			window.localStorage.removeItem(STORAGE_KEY)
 			return undefined
 		}
-		// Expire after the TTL, matching what a 90-day cookie would do.
+		// Expire after the TTL, matching what a 90-day cookie would do. A
+		// missing timestamp is treated as expired too (compact() always writes
+		// one, so this only sheds tampered / old-shape records).
 		const last = result.data.lastTouchAt
-		if (last && Date.now() - Date.parse(last) > TTL_MS) {
+		if (!last || Date.now() - Date.parse(last) > TTL_MS) {
 			window.localStorage.removeItem(STORAGE_KEY)
 			return undefined
 		}

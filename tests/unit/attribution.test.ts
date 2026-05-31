@@ -19,6 +19,14 @@ describe('deriveChannel', () => {
 		expect(deriveChannel({ fbclid: 'abc' })).toBe('paid_social')
 	})
 
+	it('resolves priority when multiple signals co-occur', () => {
+		expect(deriveChannel({ gclid: 'G', fbclid: 'F' })).toBe('paid_search')
+		expect(deriveChannel({ gclid: 'G', utmMedium: 'email' })).toBe(
+			'paid_search'
+		)
+		expect(deriveChannel({ fbclid: 'F', utmMedium: 'cpc' })).toBe('paid_social')
+	})
+
 	it('collapses an unrecognized utm medium to "other" but keeps known ones', () => {
 		expect(deriveChannel({ utmMedium: 'cpc' })).toBe('cpc')
 		expect(deriveChannel({ utmMedium: 'email' })).toBe('email')
@@ -143,5 +151,11 @@ describe('getAttribution (localStorage read + TTL)', () => {
 	it('returns undefined for a corrupt (non-JSON) record without throwing', () => {
 		window.localStorage.setItem(STORAGE_KEY, 'not-json{{{')
 		expect(getAttribution()).toBeUndefined()
+	})
+
+	it('evicts a record with no lastTouchAt (treated as expired)', () => {
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ gclid: 'X' }))
+		expect(getAttribution()).toBeUndefined()
+		expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull()
 	})
 })

@@ -93,8 +93,17 @@ export default function PrivacyPage() {
 									<li>Measure the effectiveness of our marketing campaigns</li>
 								</ul>
 								<p>
-									You can control cookie settings through our cookie consent
-									banner or your browser settings.
+									For marketing attribution we store the source of your visit
+									(such as the campaign, referrer, or ad click ID) in your
+									browser's local storage for up to 90 days and attach it to a
+									contact form submission. We do not sell or share it with third
+									parties.
+								</p>
+								<p>
+									You can clear or block this data at any time through your
+									browser settings, for example by clearing site data or
+									disabling cookies and local storage. We do not currently use a
+									cookie consent banner.
 								</p>
 							</div>
 						</section>
