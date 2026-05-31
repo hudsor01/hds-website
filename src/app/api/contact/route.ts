@@ -48,7 +48,8 @@ async function handleContactPost(request: NextRequest) {
 		// Step 3: Security check (monitoring only)
 		checkForSecurityThreats(data, clientIP, logger)
 
-		// Step 3b: Save to leads table + record the marketing touchpoint.
+		// Step 3b: Save to leads table.
+		let leadId: string | undefined
 		try {
 			const [inserted] = await db
 				.insert(leads)
@@ -68,12 +69,22 @@ async function handleContactPost(request: NextRequest) {
 					}
 				})
 				.returning({ id: leads.id })
+			leadId = inserted?.id
+		} catch (dbError) {
+			// Log but do not fail the request if DB insert fails
+			logger.error('Failed to save contact lead to database', dbError)
+		}
 
-			// Normalized touchpoint for the admin Touchpoints view + reporting.
-			if (inserted?.id && data.attribution) {
-				const attr = data.attribution
+		// Step 3c: Record the normalized marketing touchpoint for the admin
+		// Touchpoints view + reporting. Its own try/catch: neon-http commits
+		// each insert independently, so a touchpoint-write failure must not be
+		// logged as "lead not saved" - the lead row above already exists, and
+		// the full attribution is also stored on leads.metadata.
+		if (leadId && data.attribution) {
+			const attr = data.attribution
+			try {
 				await db.insert(leadAttribution).values({
-					leadId: inserted.id,
+					leadId,
 					touchpoint: 'conversion',
 					channel: deriveChannel(attr),
 					source: attr.utmSource ?? null,
@@ -88,10 +99,13 @@ async function handleContactPost(request: NextRequest) {
 					isLastTouch: true,
 					attributionWeight: '1'
 				})
+			} catch (dbError) {
+				logger.error(
+					'Failed to write lead_attribution row; lead was saved',
+					dbError,
+					{ metadata: { leadId } }
+				)
 			}
-		} catch (dbError) {
-			// Log but do not fail the request if DB insert fails
-			logger.error('Failed to save contact lead to database', dbError)
 		}
 
 		// Step 4: Calculate lead score and prepare email data

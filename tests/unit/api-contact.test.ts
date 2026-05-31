@@ -151,4 +151,116 @@ describe('POST /api/contact', () => {
 		const res = await POST(makeRequest(VALID_BODY))
 		expect(res.status).toBe(200)
 	})
+
+	const ATTRIBUTION = {
+		utmSource: 'google',
+		utmMedium: 'cpc',
+		utmCampaign: 'dfw-web-design',
+		gclid: 'GCLID123',
+		landingPage: '/services',
+		firstTouchAt: '2026-01-01T00:00:00.000Z',
+		lastTouchAt: '2026-01-01T00:00:00.000Z'
+	}
+
+	const selectStub = () =>
+		mock().mockReturnValue({
+			from: mock().mockReturnValue({
+				where: mock().mockReturnValue({
+					limit: mock().mockResolvedValue([])
+				})
+			})
+		})
+
+	it('persists attribution to leads.metadata and writes a lead_attribution row', async () => {
+		mockContactService({ resendConfigured: true })
+		const valuesCalls: Record<string, unknown>[] = []
+		mock.module('@/lib/db', () => ({
+			db: {
+				insert: mock(() => ({
+					values: mock((v: Record<string, unknown>) => {
+						valuesCalls.push(v)
+						return { returning: mock().mockResolvedValue([{ id: 'lead-uuid' }]) }
+					})
+				})),
+				select: selectStub()
+			}
+		}))
+
+		const { POST } = await import('@/app/api/contact/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, attribution: ATTRIBUTION })
+		)
+
+		expect(res.status).toBe(200)
+		expect(valuesCalls).toHaveLength(2)
+
+		const leadsValues = valuesCalls[0] as Record<string, unknown>
+		const touch = valuesCalls[1] as Record<string, unknown>
+		const meta = leadsValues.metadata as {
+			attribution: { gclid: string; utmSource: string }
+		}
+		expect(meta.attribution.gclid).toBe('GCLID123')
+		expect(meta.attribution.utmSource).toBe('google')
+
+		expect(touch.leadId).toBe('lead-uuid')
+		expect(touch.touchpoint).toBe('conversion')
+		expect(touch.channel).toBe('paid_search')
+		expect(touch.source).toBe('google')
+		expect(touch.campaign).toBe('dfw-web-design')
+	})
+
+	it('skips the lead_attribution insert when no lead id is returned', async () => {
+		mockContactService({ resendConfigured: true })
+		const valuesCalls: unknown[] = []
+		mock.module('@/lib/db', () => ({
+			db: {
+				insert: mock(() => ({
+					values: mock((v: unknown) => {
+						valuesCalls.push(v)
+						return { returning: mock().mockResolvedValue([]) }
+					})
+				})),
+				select: selectStub()
+			}
+		}))
+
+		const { POST } = await import('@/app/api/contact/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, attribution: ATTRIBUTION })
+		)
+
+		expect(res.status).toBe(200)
+		// Only the leads insert ran; no touchpoint row without a lead id.
+		expect(valuesCalls).toHaveLength(1)
+	})
+
+	it('still returns 200 when the lead_attribution insert throws (lead already saved)', async () => {
+		mockContactService({ resendConfigured: true })
+		let insertCall = 0
+		mock.module('@/lib/db', () => ({
+			db: {
+				insert: mock(() => {
+					insertCall++
+					if (insertCall === 1) {
+						return {
+							values: mock().mockReturnValue({
+								returning: mock().mockResolvedValue([{ id: 'lead-uuid' }])
+							})
+						}
+					}
+					return {
+						values: mock().mockRejectedValue(new Error('touchpoint write failed'))
+					}
+				}),
+				select: selectStub()
+			}
+		}))
+
+		const { POST } = await import('@/app/api/contact/route')
+		const res = await POST(
+			makeRequest({ ...VALID_BODY, attribution: ATTRIBUTION })
+		)
+
+		expect(res.status).toBe(200)
+	})
 })

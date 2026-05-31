@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'bun:test'
+import { beforeEach, describe, expect, it } from 'bun:test'
 import {
 	buildAttributionTouch,
-	deriveChannel
+	deriveChannel,
+	getAttribution
 } from '@/lib/attribution'
 
 const NOW = '2026-01-01T00:00:00.000Z'
+const STORAGE_KEY = 'hds_attr'
 
 describe('deriveChannel', () => {
 	it('classifies Google click IDs as paid_search', () => {
@@ -15,6 +17,13 @@ describe('deriveChannel', () => {
 
 	it('classifies fbclid as paid_social', () => {
 		expect(deriveChannel({ fbclid: 'abc' })).toBe('paid_social')
+	})
+
+	it('collapses an unrecognized utm medium to "other" but keeps known ones', () => {
+		expect(deriveChannel({ utmMedium: 'cpc' })).toBe('cpc')
+		expect(deriveChannel({ utmMedium: 'email' })).toBe('email')
+		// Crafted / misconfigured medium must not fragment channel reporting.
+		expect(deriveChannel({ utmMedium: 'totally-made-up-value' })).toBe('other')
 	})
 
 	it('falls back to utm medium, then referral, then direct', () => {
@@ -85,5 +94,54 @@ describe('buildAttributionTouch', () => {
 		expect(touch?.gclid).toBe('SECONDCLICK')
 		expect(touch?.firstTouchAt).toBe(NOW)
 		expect(touch?.lastTouchAt).toBe(later)
+	})
+})
+
+// The write glue (captureAttribution reading window.location) is verified in
+// the browser; here we cover the localStorage read path + TTL/eviction, which
+// happy-dom (registered in tests/setup.ts) supports.
+describe('getAttribution (localStorage read + TTL)', () => {
+	beforeEach(() => {
+		window.localStorage.clear()
+	})
+
+	it('returns undefined when nothing is stored', () => {
+		expect(getAttribution()).toBeUndefined()
+	})
+
+	it('reads back a stored, in-window record', () => {
+		// Recent timestamp so it is inside the 90-day TTL regardless of run date.
+		const recent = new Date().toISOString()
+		window.localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ utmSource: 'google', gclid: 'X', lastTouchAt: recent })
+		)
+		const attr = getAttribution()
+		expect(attr?.utmSource).toBe('google')
+		expect(attr?.gclid).toBe('X')
+	})
+
+	it('evicts and returns undefined past the 90-day TTL', () => {
+		const old = new Date(Date.now() - 91 * 24 * 60 * 60 * 1000).toISOString()
+		window.localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ gclid: 'X', lastTouchAt: old })
+		)
+		expect(getAttribution()).toBeUndefined()
+		expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull()
+	})
+
+	it('evicts a record with a non-ISO timestamp (schema rejects it)', () => {
+		window.localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify({ gclid: 'X', lastTouchAt: 'not-a-date' })
+		)
+		expect(getAttribution()).toBeUndefined()
+		expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull()
+	})
+
+	it('returns undefined for a corrupt (non-JSON) record without throwing', () => {
+		window.localStorage.setItem(STORAGE_KEY, 'not-json{{{')
+		expect(getAttribution()).toBeUndefined()
 	})
 })

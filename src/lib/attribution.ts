@@ -39,8 +39,10 @@ export const attributionSchema = z.object({
 	gbraid: STR,
 	referrer: STR,
 	landingPage: STR,
-	firstTouchAt: STR,
-	lastTouchAt: STR
+	// ISO 8601 so a corrupt/non-date value fails validation (and is evicted)
+	// rather than silently defeating the TTL via a NaN comparison.
+	firstTouchAt: z.iso.datetime().optional(),
+	lastTouchAt: z.iso.datetime().optional()
 })
 
 export type Attribution = z.infer<typeof attributionSchema>
@@ -79,7 +81,9 @@ function externalReferrer(): string | undefined {
 	}
 	try {
 		const ref = new URL(document.referrer)
-		return ref.host === window.location.host ? undefined : document.referrer
+		// Origin only: the host is the marketing signal; the path/query can
+		// carry PII (inbox search strings, CRM deal URLs) we must not store.
+		return ref.host === window.location.host ? undefined : ref.origin
 	} catch {
 		return undefined
 	}
@@ -96,6 +100,8 @@ function readStore(): Attribution | undefined {
 		}
 		const result = attributionSchema.safeParse(JSON.parse(raw))
 		if (!result.success) {
+			// Corrupt/old-shape record: evict so the next visit recaptures.
+			window.localStorage.removeItem(STORAGE_KEY)
 			return undefined
 		}
 		// Expire after the TTL, matching what a 90-day cookie would do.
@@ -187,6 +193,25 @@ export function getAttribution(): Attribution | undefined {
 	return readStore()
 }
 
+// Allowlist of recognized utm_medium values. An arbitrary client-supplied
+// medium is collapsed to 'other' so a crafted or misconfigured campaign
+// cannot fragment the channel grouping that feeds the admin reporting.
+const KNOWN_MEDIUMS = new Set([
+	'cpc',
+	'ppc',
+	'paid',
+	'cpm',
+	'email',
+	'social',
+	'paid-social',
+	'affiliate',
+	'referral',
+	'organic',
+	'display',
+	'video',
+	'sms'
+])
+
 /**
  * Map an attribution touch to a coarse channel for the admin Touchpoints
  * view / reporting. A click ID is the strongest paid signal.
@@ -199,7 +224,9 @@ export function deriveChannel(attribution: Attribution): string {
 		return 'paid_social'
 	}
 	if (attribution.utmMedium) {
-		return attribution.utmMedium
+		return KNOWN_MEDIUMS.has(attribution.utmMedium)
+			? attribution.utmMedium
+			: 'other'
 	}
 	if (attribution.referrer) {
 		return 'referral'
