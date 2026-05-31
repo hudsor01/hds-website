@@ -142,15 +142,18 @@ test.describe('Email Queue Processing - Response Format', () => {
   })
 })
 
-test.describe('Email Queue Processing - GET Endpoint (Stats)', () => {
-  test('should get queue stats without authorization', async ({ request }) => {
+test.describe('Email Queue Processing - GET Endpoint (Cron)', () => {
+  // Vercel native cron invokes the route with GET, so GET must process the
+  // queue exactly like POST. The old GET stats endpoint was removed; these
+  // assertions track the processing contract: { success, processed, errors }.
+  test('GET without authorization is rejected', async ({ request }) => {
     const response = await request.get(API_ENDPOINT)
 
-    // Should require authentication
-    expect(response.status()).toBe(401)
+    // 401 when CRON_SECRET is configured, 503 when it is not.
+    expect([401, 503]).toContain(response.status())
   })
 
-  test('should get queue stats with valid authorization', async ({ request }) => {
+  test('GET with valid authorization processes the queue', async ({ request }) => {
     const cronSecret = process.env.CRON_SECRET || 'test-cron-secret'
 
     const response = await request.get(API_ENDPOINT, {
@@ -159,34 +162,15 @@ test.describe('Email Queue Processing - GET Endpoint (Stats)', () => {
       }
     })
 
-    if (response.ok()) {
-      const data = await response.json()
-
-      expect(data).toHaveProperty('stats')
-      expect(data).toHaveProperty('timestamp')
-
-      // Stats should contain queue information
-      expect(typeof data.stats).toBe('object')
-    }
-  })
-
-  test('should return current timestamp in stats', async ({ request }) => {
-    const cronSecret = process.env.CRON_SECRET || 'test-cron-secret'
-
-    const response = await request.get(API_ENDPOINT, {
-      headers: {
-        'Authorization': `Bearer ${cronSecret}`
-      }
-    })
+    // 200/500 when the secret matches, 401/503 when it is absent or wrong here.
+    expect([200, 500, 401, 503]).toContain(response.status())
 
     if (response.ok()) {
       const data = await response.json()
 
-      const timestamp = new Date(data.timestamp)
-      const now = new Date()
-
-      // Timestamp should be within last 10 seconds
-      expect(now.getTime() - timestamp.getTime()).toBeLessThan(10000)
+      expect(data).toHaveProperty('success')
+      expect(data).toHaveProperty('processed')
+      expect(data).toHaveProperty('errors')
     }
   })
 })
