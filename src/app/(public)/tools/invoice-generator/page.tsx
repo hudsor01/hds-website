@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import InvoiceGeneratorClient from './InvoiceGeneratorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/invoice-generator' },
 	title: 'Invoice Generator | Hudson Digital Solutions',
 	description:
 		'Create professional invoices with PDF download. Free invoice generator with customizable line items, tax calculations, and branding.',

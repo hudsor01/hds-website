@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import ContractGeneratorClient from './ContractGeneratorClient'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/tools/contract-generator' },
 	title: 'Contract Generator | Hudson Digital Solutions',
 	description:
 		'Create professional contracts with PDF download. Free contract generator with customizable clauses, terms, and legal templates.',

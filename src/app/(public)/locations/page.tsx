@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { getLocationsByState } from '@/lib/locations'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/locations' },
 	title: 'Service Locations | Hudson Digital Solutions',
 	description:
 		'Hudson Digital Solutions builds websites for small businesses across the US. Find professional web design in your city: Texas, Florida, Georgia, and more.',

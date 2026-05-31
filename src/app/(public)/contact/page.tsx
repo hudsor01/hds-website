@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { BUSINESS_INFO } from '@/lib/constants/business'
 
 export const metadata: Metadata = {
+	alternates: { canonical: '/contact' },
 	title: 'Get a Free Website Plan | Hudson Digital Solutions',
 	description:
 		"Tell us about your business and we'll map out the website it needs (pages, timeline, and cost) on a free 30-minute call. No sales pitch.",
