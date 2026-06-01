@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { trackConversion } from '@/lib/analytics'
 import { csrfFetch } from '@/lib/api/csrf-fetch'
 import { logger } from '@/lib/logger'
 import type { ContactFormData } from '@/lib/schemas/contact'
@@ -49,6 +50,11 @@ export function useContactFormSubmit() {
 					userFlow: 'lead_generation',
 					conversionEvent: 'contact_form_completed',
 					businessValue: 'high'
+				})
+				// Real lead conversion: Vercel Analytics today + a GA4/GTM
+				// generate_lead dataLayer event for ad-platform attribution.
+				trackConversion('generate_lead', undefined, undefined, {
+					source: 'contact-form'
 				})
 			} else {
 				toast.error(data.error || 'An error occurred. Please try again.', {
