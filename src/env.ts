@@ -127,7 +127,19 @@ export const env = createEnv({
 		// path is rate-limited to ~5 req/sec across all anonymous traffic
 		// from a region — adding a key gets the project a per-project quota
 		// (25k req/day on the free tier).
-		PAGESPEED_API_KEY: z.string().optional()
+		PAGESPEED_API_KEY: z.string().optional(),
+
+		// Google Ads offline conversion upload (Enhanced Conversions for Leads
+		// via the Data Manager API). All optional; sendAdConversion() no-ops
+		// unless all three are set. GOOGLE_ADS_SA_JSON is the full service
+		// account JSON (client_email + private_key); GOOGLE_ADS_CUSTOMER_ID is
+		// the operating Google Ads account; GOOGLE_ADS_CONVERSION_ACTION_ID is
+		// the conversion action's id (productDestinationId). LOGIN_CUSTOMER_ID
+		// is only needed when calling through a manager (MCC) account.
+		GOOGLE_ADS_CUSTOMER_ID: z.string().optional(),
+		GOOGLE_ADS_CONVERSION_ACTION_ID: z.string().optional(),
+		GOOGLE_ADS_LOGIN_CUSTOMER_ID: z.string().optional(),
+		GOOGLE_ADS_SA_JSON: z.string().optional()
 	},
 
 	/**
@@ -176,6 +188,11 @@ export const env = createEnv({
 		SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
 		BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 		PAGESPEED_API_KEY: process.env.PAGESPEED_API_KEY,
+		GOOGLE_ADS_CUSTOMER_ID: process.env.GOOGLE_ADS_CUSTOMER_ID,
+		GOOGLE_ADS_CONVERSION_ACTION_ID:
+			process.env.GOOGLE_ADS_CONVERSION_ACTION_ID,
+		GOOGLE_ADS_LOGIN_CUSTOMER_ID: process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID,
+		GOOGLE_ADS_SA_JSON: process.env.GOOGLE_ADS_SA_JSON,
 
 		// Client
 		NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
