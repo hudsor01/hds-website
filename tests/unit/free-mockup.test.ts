@@ -10,6 +10,7 @@ import {
 	buildFreeMockupPayload,
 	type FreeMockupFormValues
 } from '@/lib/free-mockup'
+import { contactFormSchema } from '@/lib/schemas/contact'
 
 const BASE: FreeMockupFormValues = {
 	firstName: 'Maria',
@@ -67,5 +68,34 @@ describe('buildFreeMockupPayload', () => {
 		const attribution = { gclid: 'GCLID_1', utmSource: 'google' } as Attribution
 		const out = buildFreeMockupPayload(BASE, attribution)
 		expect(out.attribution).toEqual(attribution)
+	})
+})
+
+describe('buildFreeMockupPayload output satisfies contactFormSchema', () => {
+	it('produces a payload the /api/contact pipeline accepts', () => {
+		const result = contactFormSchema.safeParse(
+			buildFreeMockupPayload(
+				{ ...BASE, currentSite: 'mariastacos.com', phone: '555-123-4567' },
+				undefined
+			)
+		)
+		expect(result.success).toBe(true)
+	})
+
+	it('validates with the smallest valid inputs (2-char names, blank optionals)', () => {
+		const result = contactFormSchema.safeParse(
+			buildFreeMockupPayload(
+				{
+					firstName: 'Al',
+					lastName: 'Bo',
+					email: 'al@bo.co',
+					businessName: 'Al Co',
+					currentSite: '',
+					phone: ''
+				},
+				undefined
+			)
+		)
+		expect(result.success).toBe(true)
 	})
 })

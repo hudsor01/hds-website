@@ -6,6 +6,7 @@
  * the two no-op gates (unconfigured, and no Google click ID) that keep the
  * upload from firing for non-Google leads.
  */
+import { generateKeyPairSync } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 import type { Attribution } from '@/lib/attribution'
 import {
@@ -246,5 +247,154 @@ describe('sendAdConversion (no-op gates)', () => {
 			attribution: { fbclid: 'FB' } as Attribution
 		})
 		expect(fetchSpy).not.toHaveBeenCalled()
+	})
+
+	it('does nothing (and never throws) when SA JSON is not valid JSON', async () => {
+		if (env) {
+			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
+			env.GOOGLE_ADS_CONVERSION_ACTION_ID = '987654321'
+			env.GOOGLE_ADS_SA_JSON = 'not-json{'
+		}
+		await sendAdConversion({
+			leadId: 'l1',
+			email: 'test@example.com',
+			attribution: { gclid: 'G' } as Attribution
+		})
+		expect(fetchSpy).not.toHaveBeenCalled()
+	})
+
+	it('does nothing when SA JSON is missing a private_key', async () => {
+		if (env) {
+			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
+			env.GOOGLE_ADS_CONVERSION_ACTION_ID = '987654321'
+			env.GOOGLE_ADS_SA_JSON = JSON.stringify({
+				client_email: 'svc@example.iam.gserviceaccount.com'
+			})
+		}
+		await sendAdConversion({
+			leadId: 'l1',
+			email: 'test@example.com',
+			attribution: { gclid: 'G' } as Attribution
+		})
+		expect(fetchSpy).not.toHaveBeenCalled()
+	})
+})
+
+describe('sendAdConversion (live upload path)', () => {
+	const env = (globalThis as { __TEST_ENV?: Record<string, unknown> }).__TEST_ENV
+	// A real RSA keypair so createSign('RSA-SHA256') can sign the JWT. The
+	// OAuth response is mocked, so the token is never actually verified.
+	const { privateKey } = generateKeyPairSync('rsa', {
+		modulusLength: 2048,
+		publicKeyEncoding: { type: 'spki', format: 'pem' },
+		privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+	})
+	let originalFetch: typeof globalThis.fetch
+
+	beforeEach(() => {
+		originalFetch = globalThis.fetch
+		if (env) {
+			env.GOOGLE_ADS_CUSTOMER_ID = '1234567890'
+			env.GOOGLE_ADS_CONVERSION_ACTION_ID = '987654321'
+			env.GOOGLE_ADS_SA_JSON = JSON.stringify({
+				client_email: 'svc@example.iam.gserviceaccount.com',
+				private_key: privateKey
+			})
+		}
+	})
+
+	afterEach(() => {
+		globalThis.fetch = originalFetch
+		if (env) {
+			delete env.GOOGLE_ADS_CUSTOMER_ID
+			delete env.GOOGLE_ADS_CONVERSION_ACTION_ID
+			delete env.GOOGLE_ADS_SA_JSON
+		}
+	})
+
+	it('mints a token and POSTs the conversion with a Bearer header', async () => {
+		const calls: { url: string; auth: string | null }[] = []
+		globalThis.fetch = mock(
+			(input: RequestInfo | URL, init?: RequestInit) => {
+				const url = String(input)
+				calls.push({
+					url,
+					auth: new Headers(init?.headers).get('authorization')
+				})
+				if (url.includes('oauth2.googleapis.com')) {
+					return Promise.resolve(
+						new Response(
+							JSON.stringify({ access_token: 'tok_abc', expires_in: 3600 }),
+							{ status: 200 }
+						)
+					)
+				}
+				return Promise.resolve(
+					new Response(JSON.stringify({ requestId: 'req_1' }), { status: 200 })
+				)
+			}
+		) as unknown as typeof globalThis.fetch
+
+		await sendAdConversion({
+			leadId: 'lead-1',
+			email: 'test@example.com',
+			attribution: { gclid: 'GCLID_LIVE' } as Attribution
+		})
+
+		// Assert OUTSIDE the mock: assertions thrown inside fetch would be
+		// swallowed by sendAdConversion's never-throws catch and falsely pass.
+		const oauth = calls.find(c => c.url.includes('oauth2.googleapis.com'))
+		const ingest = calls.find(c => c.url.includes('datamanager.googleapis.com'))
+		expect(oauth).toBeDefined()
+		expect(ingest).toBeDefined()
+		expect(ingest?.auth).toBe('Bearer tok_abc')
+	})
+
+	it('never throws when the upload fails (protects the after() block)', async () => {
+		globalThis.fetch = mock((input: RequestInfo | URL) => {
+			const url = String(input)
+			if (url.includes('oauth2.googleapis.com')) {
+				return Promise.resolve(
+					new Response(
+						JSON.stringify({ access_token: 'tok_abc', expires_in: 3600 }),
+						{ status: 200 }
+					)
+				)
+			}
+			return Promise.reject(new Error('network down'))
+		}) as unknown as typeof globalThis.fetch
+
+		await expect(
+			sendAdConversion({
+				leadId: 'lead-2',
+				email: 'test@example.com',
+				attribution: { gclid: 'GCLID_LIVE' } as Attribution
+			})
+		).resolves.toBeUndefined()
+	})
+
+	it('never throws when the ingest API returns a non-2xx status', async () => {
+		globalThis.fetch = mock((input: RequestInfo | URL) => {
+			const url = String(input)
+			if (url.includes('oauth2.googleapis.com')) {
+				return Promise.resolve(
+					new Response(
+						JSON.stringify({ access_token: 'tok_abc', expires_in: 3600 }),
+						{ status: 200 }
+					)
+				)
+			}
+			return Promise.resolve(
+				new Response(JSON.stringify({ error: 'bad request' }), { status: 400 })
+			)
+		}) as unknown as typeof globalThis.fetch
+
+		await expect(
+			sendAdConversion({
+				leadId: 'lead-3',
+				email: 'test@example.com',
+				attribution: { gclid: 'GCLID_LIVE' } as Attribution
+			})
+		).resolves.toBeUndefined()
 	})
 })
