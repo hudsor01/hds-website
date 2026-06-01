@@ -7,6 +7,12 @@ import { track as vercelTrack } from '@vercel/analytics'
 import { logger } from '@/lib/logger'
 import type { EventProperties } from '@/types/analytics'
 
+declare global {
+	interface Window {
+		dataLayer?: Record<string, unknown>[]
+	}
+}
+
 type AnalyticsValue = string | number | boolean | null | undefined
 
 /**
@@ -52,4 +58,26 @@ export function trackConversion(
 	} catch (error) {
 		logger.warn('Failed to track conversion:', error)
 	}
+
+	// Also push a GA4/GTM-standard event to the dataLayer, so a Google Ads /
+	// Meta pixel added later via a tag manager fires with zero code change.
+	pushToDataLayer(conversionType, value, currency, properties)
+}
+
+function pushToDataLayer(
+	event: string,
+	value?: number,
+	currency = 'USD',
+	properties?: Record<string, AnalyticsValue>
+): void {
+	if (typeof window === 'undefined') {
+		return
+	}
+
+	window.dataLayer = window.dataLayer ?? []
+	window.dataLayer.push({
+		event,
+		...(value !== undefined ? { value, currency } : {}),
+		...properties
+	})
 }
