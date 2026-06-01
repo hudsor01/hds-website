@@ -48,6 +48,12 @@ async function handleContactPost(request: NextRequest) {
 		// Step 3: Security check (monitoring only)
 		checkForSecurityThreats(data, clientIP, logger)
 
+		// Lead score is computed up front: it drives both the persisted row
+		// and the follow-up email sequence below.
+		const leadScoring = scoreLeadFromContactData(data)
+		const leadScore = leadScoring.score
+		const sequenceId = leadScoring.sequenceType
+
 		// Step 3b: Save to leads table.
 		let leadId: string | undefined
 		try {
@@ -56,8 +62,11 @@ async function handleContactPost(request: NextRequest) {
 				.values({
 					email: data.email,
 					name: `${data.firstName} ${data.lastName}`.trim(),
+					phone: data.phone ?? null,
+					company: data.company ?? null,
 					source: 'contact-form',
 					status: 'new',
+					score: leadScore,
 					metadata: {
 						service: data.service,
 						budget: data.budget,
@@ -108,10 +117,7 @@ async function handleContactPost(request: NextRequest) {
 			}
 		}
 
-		// Step 4: Calculate lead score and prepare email data
-		const leadScoring = scoreLeadFromContactData(data)
-		const leadScore = leadScoring.score
-		const sequenceId = leadScoring.sequenceType
+		// Step 4: Prepare email data (lead score computed above).
 		const emailVariables = prepareEmailVariables(data)
 
 		// Step 5: Defer all email sends + lead notifications + follow-up
