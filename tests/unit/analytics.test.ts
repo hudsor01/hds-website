@@ -29,4 +29,18 @@ describe('trackConversion -> dataLayer', () => {
 		expect('value' in last).toBe(false)
 		expect('currency' in last).toBe(false)
 	})
+
+	it('strips PII before pushing to the dataLayer (3rd-party sink)', () => {
+		trackConversion('generate_lead', undefined, undefined, {
+			email: 'jane@example.com',
+			phone: '555-0100',
+			name: 'Jane Doe',
+			source: 'contact-form'
+		})
+		const last = (window.dataLayer ?? []).at(-1) as Record<string, unknown>
+		expect(last.email).toBeUndefined()
+		expect(last.phone).toBeUndefined()
+		expect(last.name).toBeUndefined()
+		expect(last.source).toBe('contact-form')
+	})
 })

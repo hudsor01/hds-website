@@ -15,6 +15,35 @@ declare global {
 
 type AnalyticsValue = string | number | boolean | null | undefined
 
+// Property keys never forwarded to an analytics sink. The dataLayer is read
+// by third-party tag managers / ad pixels, and Vercel Analytics is not a PII
+// store either, so these are stripped centrally before any send.
+const PII_KEYS = new Set([
+	'email',
+	'phone',
+	'telephone',
+	'name',
+	'firstname',
+	'lastname',
+	'fullname',
+	'address'
+])
+
+function stripPii(
+	properties?: Record<string, AnalyticsValue>
+): Record<string, AnalyticsValue> {
+	if (!properties) {
+		return {}
+	}
+	const out: Record<string, AnalyticsValue> = {}
+	for (const [key, val] of Object.entries(properties)) {
+		if (!PII_KEYS.has(key.toLowerCase())) {
+			out[key] = val
+		}
+	}
+	return out
+}
+
 /**
  * Track custom event
  * Used for general event tracking (page views, user actions, etc.)
@@ -48,12 +77,14 @@ export function trackConversion(
 		return
 	}
 
+	const safeProperties = stripPii(properties)
+
 	try {
 		vercelTrack('conversion', {
 			conversionType,
 			value,
 			currency,
-			...properties
+			...safeProperties
 		})
 	} catch (error) {
 		logger.warn('Failed to track conversion:', error)
@@ -61,7 +92,7 @@ export function trackConversion(
 
 	// Also push a GA4/GTM-standard event to the dataLayer, so a Google Ads /
 	// Meta pixel added later via a tag manager fires with zero code change.
-	pushToDataLayer(conversionType, value, currency, properties)
+	pushToDataLayer(conversionType, value, currency, safeProperties)
 }
 
 function pushToDataLayer(
