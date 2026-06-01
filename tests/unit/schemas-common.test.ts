@@ -61,10 +61,20 @@ describe('nameSchema', () => {
 		expect(nameSchema.safeParse('Jo').success).toBe(true)
 	})
 
-	it('rejects digits, single chars, > 50 chars', () => {
+	it('rejects digits, single chars, markup, and > 50 chars', () => {
 		expect(nameSchema.safeParse('John1').success).toBe(false)
 		expect(nameSchema.safeParse('A').success).toBe(false)
 		expect(nameSchema.safeParse('A'.repeat(51)).success).toBe(false)
+		expect(nameSchema.safeParse('a<b').success).toBe(false)
+	})
+
+	it('accepts accented and non-Latin names and the curly apostrophe', () => {
+		expect(nameSchema.safeParse('José').success).toBe(true)
+		expect(nameSchema.safeParse('Peña').success).toBe(true)
+		expect(nameSchema.safeParse('Nguyễn').success).toBe(true)
+		expect(nameSchema.safeParse('Renée').success).toBe(true)
+		// iOS auto-converts a straight ' to the typographic apostrophe (U+2019)
+		expect(nameSchema.safeParse('O’Brien').success).toBe(true)
 	})
 })
 

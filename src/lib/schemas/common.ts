@@ -29,8 +29,12 @@ export const nameSchema = z
 	.string()
 	.min(2, 'Name must be at least 2 characters')
 	.max(50, 'Name must be less than 50 characters')
+	// Unicode-aware: \p{L} (any letter) + \p{M} (combining marks) so accented
+	// names (José, Peña, Nguyễn) and the mobile-autocorrected curly apostrophe
+	// (’) validate instead of being rejected. Still rejects digits and symbols,
+	// preserving the original anti-garbage intent.
 	.regex(
-		/^[a-zA-Z\s\-']+$/,
+		/^[\p{L}\p{M}\s\-'’]+$/u,
 		'Name can only contain letters, spaces, hyphens, and apostrophes'
 	)
 	.trim()
