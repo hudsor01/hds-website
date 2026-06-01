@@ -11,6 +11,7 @@ import {
 	type FreeMockupFormValues
 } from '@/lib/free-mockup'
 import { contactFormSchema } from '@/lib/schemas/contact'
+import { freeMockupFormSchema } from '@/lib/schemas/free-mockup'
 
 const BASE: FreeMockupFormValues = {
 	firstName: 'Maria',
@@ -97,5 +98,39 @@ describe('buildFreeMockupPayload output satisfies contactFormSchema', () => {
 			)
 		)
 		expect(result.success).toBe(true)
+	})
+})
+
+describe('freeMockupFormSchema (client validation)', () => {
+	const VALID = {
+		firstName: 'Maria',
+		lastName: 'Lopez',
+		email: 'maria@tacos.com',
+		businessName: "Maria's Tacos",
+		currentSite: '',
+		phone: ''
+	}
+
+	it('accepts valid input, accented names, and blank optionals', () => {
+		expect(freeMockupFormSchema.safeParse(VALID).success).toBe(true)
+		expect(
+			freeMockupFormSchema.safeParse({
+				...VALID,
+				firstName: 'José',
+				businessName: 'Peña Tacos'
+			}).success
+		).toBe(true)
+	})
+
+	it('requires a business name', () => {
+		expect(
+			freeMockupFormSchema.safeParse({ ...VALID, businessName: '' }).success
+		).toBe(false)
+	})
+
+	it('rejects an invalid email', () => {
+		expect(
+			freeMockupFormSchema.safeParse({ ...VALID, email: 'nope' }).success
+		).toBe(false)
 	})
 })

@@ -1,5 +1,6 @@
 'use client'
 
+import { revalidateLogic } from '@tanstack/react-form'
 import { useState } from 'react'
 import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
 import { FieldGroup } from '@/components/ui/field'
@@ -7,6 +8,7 @@ import { useAppForm } from '@/hooks/form-hook'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import { getAttribution } from '@/lib/attribution'
 import { buildFreeMockupPayload } from '@/lib/free-mockup'
+import { freeMockupFormSchema } from '@/lib/schemas/free-mockup'
 import QueryProvider from '@/providers/QueryProvider'
 
 export default function FreeMockupForm(props: { className?: string }) {
@@ -32,6 +34,13 @@ function FreeMockupFormInner({ className = '' }: { className?: string }) {
 			currentSite: '',
 			phone: ''
 		},
+		// Reward early, punish late: first error on blur, then revalidate on
+		// change once the form has been submitted. Canonical TanStack pattern.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
+		validators: { onDynamic: freeMockupFormSchema },
 		onSubmit: async ({ value }) => {
 			// Attach the persisted marketing attribution so an ad-driven lead
 			// carries its gclid into the lead -> sendAdConversion pipeline.

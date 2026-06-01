@@ -20,6 +20,18 @@ export const phoneSchema = z
 	.optional()
 	.or(z.literal(''))
 
+// Client-form phone field: a present string (empty or a valid phone). Unlike
+// phoneSchema it is NOT .optional(), so its input type is `string` — required by
+// TanStack Form's onDynamic validators, whose field value is a string with a ''
+// default. Same format rules; the server still validates with phoneSchema.
+export const phoneFieldSchema = z
+	.string()
+	.trim()
+	.regex(/^[\d\s\-+()]+$/, 'Please enter a valid phone number')
+	.min(10, 'Phone number must be at least 10 characters')
+	.max(20, 'Phone number must be less than 20 characters')
+	.or(z.literal(''))
+
 export const urlSchema = z
 	.string()
 	.url('Please enter a valid URL')
