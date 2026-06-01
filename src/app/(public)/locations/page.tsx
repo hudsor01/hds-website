@@ -100,7 +100,7 @@ export default function LocationsPage() {
 								We work with clients remotely across the entire US. Get in touch
 								to discuss your project.
 							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
 									Contact Us
 									<ArrowRight className="w-4 h-4" />
