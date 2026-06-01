@@ -190,7 +190,7 @@ export default async function HelpCategoryPage({ params }: PageProps) {
 						<p className="text-sm text-muted-foreground mb-4">
 							Need more help with {categoryInfo.name.toLowerCase()}?
 						</p>
-						<Button asChild variant="accent" trackConversion={true}>
+						<Button asChild variant="accent">
 							<Link href="/contact">
 								Contact Support
 								<ArrowRight className="size-4" />

@@ -343,7 +343,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 								Let&apos;s map out what it needs, and build something that turns
 								your reputation into booked customers.
 							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">Get My Free Website Plan</Link>
 							</Button>
 						</div>

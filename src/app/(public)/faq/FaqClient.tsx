@@ -239,7 +239,7 @@ export default function FaqClient() {
 								Get a free website plan. We&apos;ll map out what your site needs
 								and answer every question along the way.
 							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
 									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />

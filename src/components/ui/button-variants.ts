@@ -65,6 +65,4 @@ export interface ButtonProps
 	extends React.ComponentProps<'button'>,
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean
-	/** Track this button click as a conversion event (handled by Vercel Analytics) */
-	trackConversion?: boolean
 }

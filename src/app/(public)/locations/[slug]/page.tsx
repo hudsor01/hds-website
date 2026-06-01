@@ -224,7 +224,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
 								Tell us about your business. We&apos;ll map out the website it
 								needs: pages, timeline, and cost.
 							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
 									Get My Free Website Plan
 									<ArrowRight className="h-4 w-4" />

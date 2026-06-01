@@ -189,7 +189,7 @@ export default function WebsiteMigrationPage() {
 						zero downtime and preserved SEO rankings.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
-						<Button asChild variant="accent" size="xl" trackConversion={true}>
+						<Button asChild variant="accent" size="xl">
 							<Link href={ROUTES.CONTACT}>
 								Free Migration Consultation
 								<ArrowRight className="w-4 h-4" />
@@ -432,12 +432,7 @@ export default function WebsiteMigrationPage() {
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
+								<Button asChild variant="accent" size="xl">
 									<Link href={ROUTES.CONTACT}>
 										Book Free Migration Audit
 										<ArrowRight className="w-5 h-5" />

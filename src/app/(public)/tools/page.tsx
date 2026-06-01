@@ -107,12 +107,7 @@ export default function ToolsPage() {
 								reality. Schedule a free consultation to discuss your project.
 							</p>
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
+								<Button asChild variant="accent" size="xl">
 									<Link href="/contact">Get My Free Website Plan</Link>
 								</Button>
 								<Button

@@ -117,7 +117,6 @@ const Navbar = memo(function Navbar() {
 								asChild
 								variant="default"
 								size="sm"
-								trackConversion={true}
 								onClick={handleNavClick}
 							>
 								<Link href={ROUTES.CONTACT}>
@@ -175,7 +174,6 @@ const Navbar = memo(function Navbar() {
 								asChild
 								variant="default"
 								size="sm"
-								trackConversion={true}
 								className="w-full"
 								onClick={handleNavClick}
 							>

@@ -201,7 +201,7 @@ export default function BlogPage() {
 								<p className="text-sm text-muted-foreground mb-6 leading-relaxed">
 									Let&apos;s build the one your business deserves.
 								</p>
-								<Button asChild variant="accent" trackConversion={true}>
+								<Button asChild variant="accent">
 									<Link href="/contact">
 										Get My Free Website Plan
 										<ArrowRight className="w-4 h-4" />

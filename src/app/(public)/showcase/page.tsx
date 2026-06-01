@@ -163,7 +163,7 @@ async function ShowcaseProjects() {
 								Free 30-minute call. We map out pages, timeline, and a clear
 								price for your website. No sales pitch.
 							</p>
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href="/contact">
 									Get My Free Website Plan
 									<Rocket className="w-5 h-5" aria-hidden="true" />
@@ -214,7 +214,7 @@ export default function ShowcasePage() {
 					</p>
 
 					<div className="flex flex-col sm:flex-row gap-3 justify-center">
-						<Button asChild variant="accent" size="xl" trackConversion={true}>
+						<Button asChild variant="accent" size="xl">
 							<Link href="/contact">
 								Get My Free Website Plan
 								<Rocket className="w-5 h-5" aria-hidden="true" />
@@ -274,12 +274,7 @@ export default function ShowcasePage() {
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
+								<Button asChild variant="accent" size="xl">
 									<Link href="/contact">
 										Get My Free Website Plan
 										<Rocket className="w-5 h-5" aria-hidden="true" />
