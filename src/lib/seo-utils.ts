@@ -49,7 +49,7 @@ export function generateOrganizationSchema() {
 			url: `${SITE_URL}/contact`,
 			availableLanguage: ['English']
 		},
-		sameAs: ['https://github.com/hudsor01']
+		sameAs: [BUSINESS_INFO.links.facebook]
 	}
 }
 
@@ -94,7 +94,8 @@ export function generateLocalBusinessSchema() {
 		areaServed: {
 			'@type': 'AdministrativeArea',
 			name: 'Dallas-Fort Worth Metroplex'
-		}
+		},
+		sameAs: [BUSINESS_INFO.links.facebook]
 	}
 }
 

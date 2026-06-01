@@ -11,6 +11,7 @@ import {
 	emailSchema,
 	messageSchema,
 	nameSchema,
+	phoneFieldSchema,
 	phoneSchema,
 	serviceOptionsSchema,
 	timelineOptionsSchema
@@ -34,6 +35,27 @@ export const contactFormSchema = z.object({
 	// Marketing attribution captured client-side (UTM + ad click IDs +
 	// referrer + landing page); persisted on the lead for ad measurement.
 	attribution: attributionSchema.optional()
+})
+
+// Client-side validation schema for the contact form. Mirrors contactFormSchema
+// for the fields that need user-facing validation, but every field is a present
+// string (the form's '' defaults) so it satisfies TanStack Form's onDynamic
+// validator input-type constraint. The server still validates with the
+// canonical contactFormSchema above.
+export const contactFormClientSchema = z.object({
+	firstName: nameSchema,
+	lastName: nameSchema,
+	email: emailSchema,
+	phone: phoneFieldSchema,
+	company: z
+		.string()
+		.trim()
+		.max(100, 'Company name must be less than 100 characters'),
+	service: z.string(),
+	bestTimeToContact: z.string(),
+	budget: z.string(),
+	timeline: z.string(),
+	message: messageSchema
 })
 
 // Type inference

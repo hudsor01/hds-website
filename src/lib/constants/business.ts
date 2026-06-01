@@ -30,6 +30,7 @@ export const BUSINESS_INFO = {
 
 	/** Social media and web presence */
 	links: {
-		website: 'https://hudsondigitalsolutions.com'
+		website: 'https://hudsondigitalsolutions.com',
+		facebook: 'https://www.facebook.com/hudsondigitalsolutions'
 	}
 } as const

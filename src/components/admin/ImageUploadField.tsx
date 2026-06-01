@@ -45,7 +45,10 @@ import {
 	useRef,
 	useState
 } from 'react'
-import { FormFieldSet } from '@/components/admin/FormFieldSet'
+import {
+	type FieldErrorLike,
+	FormFieldSet
+} from '@/components/admin/FormFieldSet'
 import { UploadProgressBar } from '@/components/admin/UploadProgressBar'
 import { useBlobUpload } from '@/hooks/use-blob-upload'
 import {
@@ -62,7 +65,7 @@ interface ImageUploadFieldProps {
 	onChange: (next: string | null) => void
 	required?: boolean
 	hint?: string
-	error?: string
+	error?: FieldErrorLike
 }
 
 const URL_INPUT_CLS =

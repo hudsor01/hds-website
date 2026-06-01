@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { after } from 'next/server'
+import { sendAdConversion } from '@/lib/ad-conversions'
 import { withMutationGuards } from '@/lib/api/guards'
 import {
 	errorResponse,
@@ -116,6 +117,19 @@ async function handleContactPost(request: NextRequest) {
 				)
 			}
 		}
+
+		// Step 3d: Report the lead to Google Ads after the response is sent.
+		// Self-guarding: a no-op unless GOOGLE_ADS_* creds are set and the lead
+		// carries a Google click ID, so it is safe to register unconditionally
+		// (independent of the email branch below) and never throws.
+		after(() =>
+			sendAdConversion({
+				leadId,
+				email: data.email,
+				phone: data.phone,
+				attribution: data.attribution
+			})
+		)
 
 		// Step 4: Prepare email data (lead score computed above).
 		const emailVariables = prepareEmailVariables(data)

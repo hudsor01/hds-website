@@ -92,5 +92,46 @@ export const updateShowcaseSchema = createShowcaseSchema.extend({
 	id: z.string().uuid()
 })
 
+// Client-side validation schema for the showcase create/edit forms. Unlike
+// createShowcaseSchema (which parses coerced FormData with defaults and
+// transforms), this mirrors the in-memory ShowcaseFormShape exactly — real
+// arrays/records/nulls, no defaults — so its input type satisfies TanStack
+// Form's onDynamic validator. It enforces the four required columns; the
+// server still validates with createShowcaseSchema as the source of truth.
+export const showcaseFormClientSchema = z.object({
+	slug: z
+		.string()
+		.min(1, 'Slug is required')
+		.regex(slugRegex, 'Slug must be lowercase alphanumeric with hyphens'),
+	title: z.string().min(1, 'Title is required'),
+	description: z.string().min(1, 'Description is required'),
+	showcaseType: z.enum(['quick', 'detailed']),
+	longDescription: z.string().nullable(),
+	clientName: z.string().nullable(),
+	industry: z.string().nullable(),
+	projectType: z.string().nullable(),
+	category: z.string().nullable(),
+	challenge: z.string().nullable(),
+	solution: z.string().nullable(),
+	results: z.string().nullable(),
+	imageUrl: z.string().nullable(),
+	ogImageUrl: z.string().nullable(),
+	gradientClass: z.string().nullable(),
+	externalLink: z.string().nullable(),
+	githubLink: z.string().nullable(),
+	testimonialText: z.string().nullable(),
+	testimonialAuthor: z.string().nullable(),
+	testimonialRole: z.string().nullable(),
+	testimonialVideoUrl: z.string().nullable(),
+	projectDuration: z.string().nullable(),
+	teamSize: z.number().nullable(),
+	technologies: z.array(z.string()),
+	metrics: z.record(z.string(), z.string()),
+	galleryImages: z.array(z.string()),
+	featured: z.boolean(),
+	published: z.boolean(),
+	displayOrder: z.number()
+})
+
 export type CreateShowcaseInput = z.infer<typeof createShowcaseSchema>
 export type UpdateShowcaseInput = z.infer<typeof updateShowcaseSchema>

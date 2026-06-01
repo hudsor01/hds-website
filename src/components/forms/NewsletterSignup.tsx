@@ -1,5 +1,6 @@
 'use client'
 
+import { revalidateLogic } from '@tanstack/react-form'
 import { Check, Mail } from 'lucide-react'
 import { lazy, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
@@ -41,8 +42,14 @@ function NewsletterSignupContent({
 		defaultValues: {
 			email: ''
 		},
+		// Reward early, punish late: first error on blur, then revalidate on
+		// change once the form has been submitted. Canonical TanStack pattern.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
 		validators: {
-			onSubmit: newsletterSchema
+			onDynamic: newsletterSchema
 		},
 		onSubmit: async ({ value }) => {
 			// Guard against empty email (should be caught by validation, but double-check)
