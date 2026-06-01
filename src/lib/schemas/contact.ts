@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { attributionSchema } from '@/lib/attribution'
 import {
 	LEAD_CATEGORY_THRESHOLDS,
 	LEAD_SCORE_POINTS,
@@ -29,7 +30,10 @@ export const contactFormSchema = z.object({
 	message: messageSchema,
 	// Anti-spam fields
 	honeypot: z.string().max(0, 'Invalid submission').optional(),
-	timestamp: z.number().optional()
+	timestamp: z.number().optional(),
+	// Marketing attribution captured client-side (UTM + ad click IDs +
+	// referrer + landing page); persisted on the lead for ad measurement.
+	attribution: attributionSchema.optional()
 })
 
 // Type inference
