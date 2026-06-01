@@ -6,6 +6,7 @@ import {
 	successResponse,
 	validationErrorResponse
 } from '@/lib/api/responses'
+import { deriveChannel } from '@/lib/attribution'
 import {
 	checkForSecurityThreats,
 	prepareEmailVariables,
@@ -22,7 +23,7 @@ import {
 	contactFormSchema,
 	scoreLeadFromContactData
 } from '@/lib/schemas/contact'
-import { leads } from '@/lib/schemas/leads'
+import { leadAttribution, leads } from '@/lib/schemas/leads'
 
 async function handleContactPost(request: NextRequest) {
 	const logContext = { component: 'contact-form', timestamp: Date.now() }
@@ -47,23 +48,64 @@ async function handleContactPost(request: NextRequest) {
 		// Step 3: Security check (monitoring only)
 		checkForSecurityThreats(data, clientIP, logger)
 
-		// Step 3b: Save to leads table
+		// Step 3b: Save to leads table.
+		let leadId: string | undefined
 		try {
-			await db.insert(leads).values({
-				email: data.email,
-				name: `${data.firstName} ${data.lastName}`.trim(),
-				source: 'contact-form',
-				status: 'new',
-				metadata: {
-					service: data.service,
-					budget: data.budget,
-					timeline: data.timeline,
-					message: data.message
-				}
-			})
+			const [inserted] = await db
+				.insert(leads)
+				.values({
+					email: data.email,
+					name: `${data.firstName} ${data.lastName}`.trim(),
+					source: 'contact-form',
+					status: 'new',
+					metadata: {
+						service: data.service,
+						budget: data.budget,
+						timeline: data.timeline,
+						message: data.message,
+						// Full attribution (incl. gclid/fbclid) for offline
+						// conversion export back to the ad platform.
+						attribution: data.attribution ?? null
+					}
+				})
+				.returning({ id: leads.id })
+			leadId = inserted?.id
 		} catch (dbError) {
 			// Log but do not fail the request if DB insert fails
 			logger.error('Failed to save contact lead to database', dbError)
+		}
+
+		// Step 3c: Record the normalized marketing touchpoint for the admin
+		// Touchpoints view + reporting. Its own try/catch: neon-http commits
+		// each insert independently, so a touchpoint-write failure must not be
+		// logged as "lead not saved" - the lead row above already exists, and
+		// the full attribution is also stored on leads.metadata.
+		if (leadId && data.attribution) {
+			const attr = data.attribution
+			try {
+				await db.insert(leadAttribution).values({
+					leadId,
+					touchpoint: 'conversion',
+					channel: deriveChannel(attr),
+					source: attr.utmSource ?? null,
+					medium: attr.utmMedium ?? null,
+					campaign: attr.utmCampaign ?? null,
+					content: attr.utmContent ?? null,
+					term: attr.utmTerm ?? null,
+					referrer: attr.referrer ?? null,
+					landingPage: attr.landingPage ?? null,
+					touchpointOrder: 1,
+					isFirstTouch: true,
+					isLastTouch: true,
+					attributionWeight: '1'
+				})
+			} catch (dbError) {
+				logger.error(
+					'Failed to write lead_attribution row; lead was saved',
+					dbError,
+					{ metadata: { leadId } }
+				)
+			}
 		}
 
 		// Step 4: Calculate lead score and prepare email data

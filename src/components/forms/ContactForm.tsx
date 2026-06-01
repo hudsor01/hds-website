@@ -6,6 +6,7 @@ import { FieldGroup } from '@/components/ui/field'
 import formOptions from '@/data/form-options.json'
 import { useAppForm } from '@/hooks/form-hook'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
+import { getAttribution } from '@/lib/attribution'
 import type { ContactFormData } from '@/lib/schemas/contact'
 import QueryProvider from '@/providers/QueryProvider'
 
@@ -45,7 +46,12 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			message: ''
 		},
 		onSubmit: async ({ value }) => {
-			await mutation.mutateAsync(value as ContactFormData)
+			// Attach the persisted marketing attribution so the lead is
+			// traceable to the campaign/click that produced it.
+			await mutation.mutateAsync({
+				...value,
+				attribution: getAttribution()
+			} as ContactFormData)
 			setShowSuccess(true)
 		}
 	})

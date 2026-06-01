@@ -26,11 +26,13 @@ import { Suspense } from 'react'
 import CommandPaletteData from '@/components/cmdk/CommandPaletteData'
 import Footer from '@/components/layout/Footer'
 import NavbarLight from '@/components/layout/Navbar'
+import { AttributionTracker } from '@/components/utilities/AttributionTracker'
 import ScrollToTop from '@/components/utilities/ScrollToTop'
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
 	return (
 		<>
+			<AttributionTracker />
 			<NavbarLight />
 			{/* Global command palette (audit #263). Singleton mount across
 			    the public route group — admin/auth layouts intentionally
