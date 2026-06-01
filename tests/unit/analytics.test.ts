@@ -1,5 +1,28 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
-import { trackConversion } from '@/lib/analytics'
+import { stripPii, trackConversion } from '@/lib/analytics'
+
+describe('stripPii', () => {
+	it('drops PII keys (case-insensitive) and keeps everything else', () => {
+		const out = stripPii({
+			email: 'jane@example.com',
+			Phone: '555-0100',
+			firstName: 'Jane',
+			address: '1 Main St',
+			source: 'newsletter',
+			count: 3
+		})
+		expect(out.email).toBeUndefined()
+		expect(out.Phone).toBeUndefined()
+		expect(out.firstName).toBeUndefined()
+		expect(out.address).toBeUndefined()
+		expect(out.source).toBe('newsletter')
+		expect(out.count).toBe(3)
+	})
+
+	it('returns an empty object for undefined input', () => {
+		expect(stripPii(undefined)).toEqual({})
+	})
+})
 
 // No module mock: trackConversion's Vercel Analytics call is wrapped in
 // try/catch and inert outside a Vercel-instrumented page, and we assert only

@@ -29,11 +29,11 @@ const PII_KEYS = new Set([
 	'address'
 ])
 
-function stripPii(
-	properties?: Record<string, AnalyticsValue>
-): Record<string, AnalyticsValue> {
+export function stripPii<T extends Record<string, AnalyticsValue>>(
+	properties?: T
+): T {
 	if (!properties) {
-		return {}
+		return {} as T
 	}
 	const out: Record<string, AnalyticsValue> = {}
 	for (const [key, val] of Object.entries(properties)) {
@@ -41,7 +41,7 @@ function stripPii(
 			out[key] = val
 		}
 	}
-	return out
+	return out as T
 }
 
 /**
@@ -57,7 +57,9 @@ export function trackEvent(
 	}
 
 	try {
-		vercelTrack(eventName, properties)
+		// Strip PII before the analytics sink: callers like the newsletter
+		// signup pass an email, which must not be forwarded to Vercel.
+		vercelTrack(eventName, stripPii(properties))
 	} catch (error) {
 		logger.warn('Failed to track event:', error)
 	}
