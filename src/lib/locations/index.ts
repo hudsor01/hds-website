@@ -100,6 +100,6 @@ export function generateLocalBusinessSchema(location: LocationData) {
 			'@type': 'City',
 			name
 		})),
-		sameAs: ['https://github.com/hudsor01']
+		sameAs: [BUSINESS_INFO.links.facebook]
 	}
 }

@@ -30,11 +30,22 @@ export type FieldRenderProps = {
 	'aria-invalid'?: 'true'
 }
 
+// Accepts a plain string (server-action errors set via setFieldMeta) or a
+// validation issue object (TanStack Form onDynamic / Standard Schema errors).
+export type FieldErrorLike = string | { message?: string } | null | undefined
+
+function errorText(error: FieldErrorLike): string | undefined {
+	if (!error) {
+		return undefined
+	}
+	return typeof error === 'string' ? error : error.message
+}
+
 interface FormFieldSetProps {
 	label: string
 	htmlFor: string
 	required?: boolean
-	error?: string
+	error?: FieldErrorLike
 	hint?: string
 	children: ReactNode | ((aria: FieldRenderProps) => ReactNode)
 }
@@ -47,12 +58,13 @@ export function FormFieldSet({
 	hint,
 	children
 }: FormFieldSetProps) {
-	const errorId = error ? `${htmlFor}-error` : undefined
+	const message = errorText(error)
+	const errorId = message ? `${htmlFor}-error` : undefined
 	const hintId = hint ? `${htmlFor}-hint` : undefined
 	const aria: FieldRenderProps = {
 		id: htmlFor,
 		'aria-describedby': errorId ?? hintId,
-		'aria-invalid': error ? 'true' : undefined
+		'aria-invalid': message ? 'true' : undefined
 	}
 	return (
 		<div className="space-y-1.5">
@@ -76,9 +88,9 @@ export function FormFieldSet({
 					{hint}
 				</p>
 			)}
-			{error && (
+			{message && (
 				<p id={errorId} role="alert" className="text-xs text-destructive">
-					{error}
+					{message}
 				</p>
 			)}
 		</div>

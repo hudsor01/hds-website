@@ -21,13 +21,14 @@
  * `redirect()`s into the edit page (server-side throw) so the success
  * branch is never observed here.
  */
+import { revalidateLogic } from '@tanstack/react-form'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { z } from 'zod'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { useAppForm } from '@/hooks/form-hook'
-import type { createAdminTestimonialSchema } from '@/lib/schemas/admin-testimonials'
+import { createAdminTestimonialSchema } from '@/lib/schemas/admin-testimonials'
 import { createTestimonialAction } from '../actions'
 
 type FormShape = z.input<typeof createAdminTestimonialSchema>
@@ -53,6 +54,13 @@ export function CreateTestimonialForm() {
 
 	const form = useAppForm({
 		defaultValues: DEFAULTS,
+		// Reward early, punish late: errors on blur, then revalidate on change
+		// after a submit attempt. Server action still validates on submit.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
+		validators: { onDynamic: createAdminTestimonialSchema },
 		onSubmit: async ({ value }) => {
 			setFormError(null)
 			const fd = new FormData()

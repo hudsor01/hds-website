@@ -13,9 +13,11 @@
  * sees the missing key, not an empty string that bypasses
  * `optionalText.transform(v => v.trim() === '' ? null : v)`.
  */
+import { revalidateLogic } from '@tanstack/react-form'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useAppForm } from '@/hooks/form-hook'
+import { showcaseFormClientSchema } from '@/lib/schemas/admin-showcase'
 
 export type ShowcaseFormShape = {
 	slug: string
@@ -112,6 +114,13 @@ export function useShowcaseForm({
 
 	const form = useAppForm({
 		defaultValues,
+		// Reward early, punish late: errors on blur, then revalidate on change
+		// after a submit attempt. Server action still validates on submit.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
+		validators: { onDynamic: showcaseFormClientSchema },
 		onSubmit: async ({ value }) => {
 			setFormError(null)
 			const fd = packShowcaseFormData(value, extraFormData)

@@ -11,31 +11,25 @@
  * Defaults read straight from the row; null columns become empty strings
  * for inputs and `null` for the rating select.
  */
+import { revalidateLogic } from '@tanstack/react-form'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import type { z } from 'zod'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { FormFieldSet } from '@/components/admin/FormFieldSet'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { useAppForm } from '@/hooks/form-hook'
 import type { TestimonialRow } from '@/lib/admin/testimonials-queries'
+import { updateAdminTestimonialSchema } from '@/lib/schemas/admin-testimonials'
 import { deleteTestimonialAction, updateTestimonialAction } from '../../actions'
 
 interface EditTestimonialFormProps {
 	row: TestimonialRow
 }
 
-interface FormShape {
-	id: string
-	name: string
-	content: string
-	role: string | null
-	company: string | null
-	rating: number | null
-	imageUrl: string | null
-	videoUrl: string | null
-	featured: boolean
-	published: boolean
-}
+// Mirror the schema's input shape so the onDynamic validator's input type
+// matches the form values exactly (createAdminTestimonialSchema extended with id).
+type FormShape = z.input<typeof updateAdminTestimonialSchema>
 
 const INPUT_CLS =
 	'w-full px-3 py-2 rounded-md border border-border bg-background text-foreground'
@@ -60,6 +54,13 @@ export function EditTestimonialForm({ row }: EditTestimonialFormProps) {
 
 	const form = useAppForm({
 		defaultValues: defaults,
+		// Reward early, punish late: errors on blur, then revalidate on change
+		// after a submit attempt. Server action still validates on submit.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
+		validators: { onDynamic: updateAdminTestimonialSchema },
 		onSubmit: async ({ value }) => {
 			setFormError(null)
 			const fd = new FormData()

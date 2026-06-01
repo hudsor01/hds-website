@@ -1,5 +1,6 @@
 'use client'
 
+import { revalidateLogic } from '@tanstack/react-form'
 import { useState } from 'react'
 import { FormSuccessMessage } from '@/components/forms/FormSuccessMessage'
 import { FieldGroup } from '@/components/ui/field'
@@ -7,7 +8,10 @@ import formOptions from '@/data/form-options.json'
 import { useAppForm } from '@/hooks/form-hook'
 import { useContactFormSubmit } from '@/hooks/use-contact-form-submit'
 import { getAttribution } from '@/lib/attribution'
-import type { ContactFormData } from '@/lib/schemas/contact'
+import {
+	type ContactFormData,
+	contactFormClientSchema
+} from '@/lib/schemas/contact'
 import QueryProvider from '@/providers/QueryProvider'
 
 // Module-level constants — these arrays are deserialized once at import
@@ -45,6 +49,13 @@ function ContactFormInner({ className = '' }: { className?: string }) {
 			timeline: 'flexible',
 			message: ''
 		},
+		// Reward early, punish late: first error on blur, then revalidate on
+		// change once the form has been submitted. Canonical TanStack pattern.
+		validationLogic: revalidateLogic({
+			mode: 'blur',
+			modeAfterSubmission: 'change'
+		}),
+		validators: { onDynamic: contactFormClientSchema },
 		onSubmit: async ({ value }) => {
 			// Attach the persisted marketing attribution so the lead is
 			// traceable to the campaign/click that produced it.
