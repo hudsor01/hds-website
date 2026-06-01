@@ -42,7 +42,7 @@ export function CTASection({
 						<p className="text-lead text-muted-foreground mb-10 max-w-2xl mx-auto">
 							{description}
 						</p>
-						<Button asChild variant="accent" size="xl" trackConversion={true}>
+						<Button asChild variant="accent" size="xl">
 							<Link href={ctaHref}>
 								{ctaLabel}
 								<ArrowRight className="w-5 h-5" />

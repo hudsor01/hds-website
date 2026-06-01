@@ -291,7 +291,7 @@ describe('Card Component (Glass Variants)', () => {
 describe('Button Component (CTA Pattern)', () => {
 	it('should render as link with asChild', () => {
 		render(
-			<Button asChild variant="default" size="default" trackConversion={true}>
+			<Button asChild variant="default" size="default">
 				<Link href="/test">
 					Test CTA
 					<ArrowRight className="w-4 h-4" />
@@ -306,7 +306,7 @@ describe('Button Component (CTA Pattern)', () => {
 
 	it('should render different variants', () => {
 		const { rerender } = render(
-			<Button asChild variant="default" size="default" trackConversion={true}>
+			<Button asChild variant="default" size="default">
 				<Link href="/test">
 					Primary
 					<ArrowRight className="w-4 h-4" />
@@ -317,7 +317,7 @@ describe('Button Component (CTA Pattern)', () => {
 		expect(link).toHaveClass('bg-primary')
 
 		rerender(
-			<Button asChild variant="outline" size="default" trackConversion={true}>
+			<Button asChild variant="outline" size="default">
 				<Link href="/test">
 					Secondary
 					<ArrowRight className="w-4 h-4" />
@@ -330,7 +330,7 @@ describe('Button Component (CTA Pattern)', () => {
 
 	it('should show arrow by default', () => {
 		const { container } = render(
-			<Button asChild variant="default" size="default" trackConversion={true}>
+			<Button asChild variant="default" size="default">
 				<Link href="/test">
 					With Arrow
 					<ArrowRight className="w-4 h-4" />
@@ -344,7 +344,7 @@ describe('Button Component (CTA Pattern)', () => {
 
 	it('should hide arrow when not included', () => {
 		const { container } = render(
-			<Button asChild variant="default" size="default" trackConversion={true}>
+			<Button asChild variant="default" size="default">
 				<Link href="/test">No Arrow</Link>
 			</Button>
 		)
@@ -355,7 +355,7 @@ describe('Button Component (CTA Pattern)', () => {
 
 	it('should handle external links', () => {
 		render(
-			<Button asChild variant="default" size="default" trackConversion={true}>
+			<Button asChild variant="default" size="default">
 				<a
 					href="https://external.com"
 					target="_blank"

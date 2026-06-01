@@ -136,12 +136,7 @@ export default function HomePage() {
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
+								<Button asChild variant="accent" size="xl">
 									<Link href={ROUTES.CONTACT}>
 										Get My Free Website Plan
 										<ArrowRight className="w-4 h-4" />
@@ -151,7 +146,6 @@ export default function HomePage() {
 									asChild
 									variant="outline"
 									size="xl"
-									trackConversion={true}
 									className="border-2 border-foreground/25 hover:border-accent dark:border-foreground/20"
 								>
 									<Link href={ROUTES.SHOWCASE}>See Recent Work</Link>
@@ -408,7 +402,7 @@ export default function HomePage() {
 					{/* Primary CTA card — visually contains the action + trust signals */}
 					<div className="mt-10 rounded-2xl border border-border bg-background p-6 sm:p-8 shadow-sm">
 						<div className="flex flex-col sm:flex-row gap-3 justify-center">
-							<Button asChild variant="accent" size="xl" trackConversion={true}>
+							<Button asChild variant="accent" size="xl">
 								<Link href={ROUTES.CONTACT}>
 									Get My Free Website Plan
 									<ArrowRight className="w-4 h-4" />

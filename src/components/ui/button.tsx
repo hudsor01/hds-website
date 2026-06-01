@@ -13,8 +13,6 @@ function Button({
 	variant,
 	size,
 	asChild = false,
-	// trackConversion prop kept for API compatibility, tracking handled by Vercel Analytics
-	trackConversion: _trackConversion,
 	...props
 }: ButtonProps) {
 	const Comp = asChild ? Slot : 'button'

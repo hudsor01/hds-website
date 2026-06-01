@@ -247,12 +247,7 @@ export default function TestimonialsPage() {
 							</p>
 
 							<div className="flex flex-col sm:flex-row gap-3 justify-center">
-								<Button
-									asChild
-									variant="accent"
-									size="xl"
-									trackConversion={true}
-								>
+								<Button asChild variant="accent" size="xl">
 									<Link href="/contact">
 										Get My Free Website Plan
 										<ArrowRight className="w-5 h-5" />

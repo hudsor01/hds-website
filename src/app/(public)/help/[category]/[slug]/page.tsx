@@ -271,7 +271,7 @@ export default async function HelpArticlePage({ params }: PageProps) {
 						<p className="text-sm text-muted-foreground mb-4">
 							Was this article helpful? Need more assistance?
 						</p>
-						<Button asChild variant="accent" trackConversion={true}>
+						<Button asChild variant="accent">
 							<Link href="/contact">
 								Contact Support
 								<ArrowRight className="size-4" />

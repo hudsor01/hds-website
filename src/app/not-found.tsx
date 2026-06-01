@@ -71,7 +71,7 @@ export default function NotFound() {
 					</div>
 
 					<div className="flex flex-wrap justify-center gap-4 mb-10">
-						<Button asChild variant="accent" size="xl" trackConversion={false}>
+						<Button asChild variant="accent" size="xl">
 							<Link href="/">
 								<Home className="w-5 h-5" />
 								Return Home
