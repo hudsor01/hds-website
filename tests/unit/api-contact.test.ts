@@ -202,6 +202,11 @@ describe('POST /api/contact', () => {
 		expect(meta.attribution.gclid).toBe('GCLID123')
 		expect(meta.attribution.utmSource).toBe('google')
 
+		// Lead fields that were previously dropped are now persisted.
+		expect(leadsValues.phone).toBe('555-123-4567')
+		expect(leadsValues.company).toBe('Riley Co')
+		expect(typeof leadsValues.score).toBe('number')
+
 		expect(touch.leadId).toBe('lead-uuid')
 		expect(touch.touchpoint).toBe('conversion')
 		expect(touch.channel).toBe('paid_search')
