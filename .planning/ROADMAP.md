@@ -300,7 +300,7 @@ Plans:
 
 Plans:
 
-- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+- [ ] 16-01-PLAN.md — NOOP-02 regression tests (db mock proxy, reportError Sentry gate, Slack/Discord via notifyHighValueLead public seam; verify existing sendAdConversion no-op block) + NOOP-01 reconcile v6-AUDIT-FINDINGS.md Section 2 to origin/main + full gate
 
 ### v6 Progress
 
