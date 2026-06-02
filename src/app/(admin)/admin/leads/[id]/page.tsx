@@ -28,6 +28,7 @@ import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getLeadById } from '@/lib/admin/leads-queries'
 import { LEAD_STATUSES } from '@/lib/schemas/admin-leads'
 import {
@@ -66,14 +67,14 @@ async function LeadDetailLoader({ params }: AdminLeadDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const result = await getLeadById(id)
-	if (result.status === 'not-found') {
+	const routing = routeDetailResult(await getLeadById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (result.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="lead" />
 	}
-	const { lead, attribution, notes } = result.data
+	const { lead, attribution, notes } = routing.data
 
 	return (
 		<div className="space-y-6">
