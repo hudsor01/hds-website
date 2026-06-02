@@ -1,17 +1,16 @@
 /**
  * Tests for the admin dashboard widget queries (`src/lib/admin/dashboard-queries.ts`).
  *
- * WAVE 1 SCAFFOLD (Phase 13, plan 01): this file is created now so that plan 08
- * (Wave 2) only EXTENDS it - the file is owned by plan 08 thereafter. Today it
- * contains the chainable-db-mock harness (copied from `leads-queries.test.ts`)
- * plus ONE placeholder smoke test so the file is green and committable. The
- * real per-widget found-empty / error regression cases are added in plan 08.
+ * WAVE 1 SCAFFOLD (Phase 13, plan 01) -> POPULATED in plan 08 (Wave 2). The
+ * harness (chainable-db-mock copied from `leads-queries.test.ts`) is owned by
+ * plan 08; the Wave-1 placeholder smoke test has been replaced with the real
+ * per-widget found-empty / error regression cases below.
  *
  * ---------------------------------------------------------------------------
- * PLAN 08 MUST COVER (ADMINERR-02): for each of the FIVE widget queries below,
- * assert the catch path yields the failure variant (`{ ok: false, error: true }`)
- * - NOT the current `[]` - and that a zero-row read yields `ok` with empty data.
- * Mock the db to throw via `state.shouldThrow = true`.
+ * COVERAGE (ADMINERR-02): for each of the FIVE widget queries below, assert the
+ * catch path yields the failure variant (`{ ok: false, error: true }`) - NOT
+ * the old `[]` - and that a zero-row read yields `ok` with empty data. The db
+ * is mocked to throw via `state.shouldThrow = true`.
  *
  *   1. getVisitorsByDay   - .where().groupBy(dayExpr).orderBy(dayExpr)
  *   2. getTopPages        - .where().groupBy(pathname).orderBy(desc).limit(n)
@@ -96,6 +95,7 @@ import {
 	getVisitorsByDay,
 	getWebVitalsP75
 } from '@/lib/admin/dashboard-queries'
+import { logger } from '@/lib/logger'
 
 beforeEach(() => {
 	resetState()
@@ -105,19 +105,122 @@ beforeEach(() => {
 	setupDbMock()
 })
 
-describe('dashboard-queries: scaffold smoke', () => {
-	test('the module exports all five widget queries and they are callable', async () => {
-		expect(typeof getVisitorsByDay).toBe('function')
-		expect(typeof getTopPages).toBe('function')
-		expect(typeof getTrafficSources).toBe('function')
-		expect(typeof getWebVitalsP75).toBe('function')
-		expect(typeof getRecentLeads).toBe('function')
+// Each widget query is exercised twice: a thrown DB call must yield the failure
+// variant (`{ ok: false, error: true }`) and log once via `logger.error`; a
+// zero-row read must yield `ok` with empty `data` - the distinction that lets a
+// widget tell "DB down" from "no data yet".
 
-		// getRecentLeads exercises the .orderBy().limit() chain (no where/groupBy);
-		// the thenable mock resolves it to the empty rows fixture.
+describe('getVisitorsByDay: error vs ok-empty', () => {
+	test('returns the error variant + logs once when the query throws', async () => {
+		state.shouldThrow = true
+
+		const result = await getVisitorsByDay(30)
+
+		expect(result).toEqual({ ok: false, error: true })
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test('returns ok with empty data when the query yields zero rows', async () => {
 		state.rowsToReturn = []
-		const rows = await getRecentLeads(10)
-		expect(Array.isArray(rows)).toBe(true)
-		expect(rows).toEqual([])
+
+		const result = await getVisitorsByDay(30)
+
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual([])
+	})
+})
+
+describe('getTopPages: error vs ok-empty', () => {
+	test('returns the error variant + logs once when the query throws', async () => {
+		state.shouldThrow = true
+
+		const result = await getTopPages(10, 30)
+
+		expect(result).toEqual({ ok: false, error: true })
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test('returns ok with empty data when the query yields zero rows', async () => {
+		state.rowsToReturn = []
+
+		const result = await getTopPages(10, 30)
+
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual([])
+	})
+})
+
+describe('getTrafficSources: error vs ok-empty', () => {
+	test('returns the error variant + logs once when the query throws', async () => {
+		state.shouldThrow = true
+
+		const result = await getTrafficSources(30)
+
+		expect(result).toEqual({ ok: false, error: true })
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test('returns ok with empty data when the query yields zero rows', async () => {
+		state.rowsToReturn = []
+
+		const result = await getTrafficSources(30)
+
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual([])
+	})
+})
+
+describe('getWebVitalsP75: error vs ok-empty', () => {
+	test('returns the error variant + logs once when the query throws', async () => {
+		state.shouldThrow = true
+
+		const result = await getWebVitalsP75(7)
+
+		expect(result).toEqual({ ok: false, error: true })
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test('returns ok with empty data when the query yields zero rows', async () => {
+		state.rowsToReturn = []
+
+		const result = await getWebVitalsP75(7)
+
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual([])
+	})
+})
+
+describe('getRecentLeads: error vs ok-empty', () => {
+	test('returns the error variant + logs once when the query throws', async () => {
+		state.shouldThrow = true
+
+		const result = await getRecentLeads(10)
+
+		expect(result).toEqual({ ok: false, error: true })
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test('returns ok with empty data when the query yields zero rows', async () => {
+		state.rowsToReturn = []
+
+		const result = await getRecentLeads(10)
+
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual([])
 	})
 })
