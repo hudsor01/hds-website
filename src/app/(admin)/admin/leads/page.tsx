@@ -32,6 +32,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import {
@@ -84,11 +85,15 @@ async function LeadsList({ searchParams }: AdminLeadsPageProps) {
 		? (rawStatus as LeadStatus)
 		: null
 	const q = (rawQ ?? '').trim()
-	const { rows, prevCursor, nextCursor } = await listLeadsForAdmin({
+	const result = await listLeadsForAdmin({
 		status,
 		q: q.length > 0 ? q : undefined,
 		cursor
 	})
+	if (!result.ok) {
+		return <AdminErrorState resource="leads" />
+	}
+	const { rows, prevCursor, nextCursor } = result.data
 	const preservedForPagination: Record<string, string> = {}
 	if (status) {
 		preservedForPagination.status = status
