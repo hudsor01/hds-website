@@ -12,7 +12,7 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 
 - [x] **PAYSTUB-01**: A user can only select states for which the paystub calculator actually computes income tax; selecting a state never silently yields a confident $0 when that state levies income tax. (Findings #1, #2 — `state-tax-data.ts`, `state-tax-calculations.ts`, `states-utils.ts`, `PaystubForm.tsx`)
 - [x] **PAYSTUB-02**: The federal tax year selector only offers years backed by real data (target year 2025); a selected year never silently falls back to a different year's figures. The dead "2023" item and the stale "2024" entry are removed; the data table is keyed 2025 with official values and the default `taxYear` is 2025. (Finding #4 — `tax-data.ts`, `PaystubForm.tsx`, `use-paystub-form.ts`)
-- [ ] **PAYSTUB-03**: Year validation rejects years not present in the tax-data table (range derived from the data, not hardcoded), with a unit test covering the rejected/fallback case. (Finding #4)
+- [x] **PAYSTUB-03**: Year validation rejects years not present in the tax-data table (range derived from the data, not hardcoded), with a unit test covering the rejected/fallback case. (Finding #4)
 - [x] **PAYSTUB-04**: The redundant flat-0 TX/FL/WA entries are removed from the income-tax bracket table (those states already live in the no-income-tax group). (Finding #1)
 
 ### Paystub tax data correctness
@@ -74,7 +74,7 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 |-------------|-------|--------|
 | PAYSTUB-01 | Phase 11 | Complete |
 | PAYSTUB-02 | Phase 11 | Complete |
-| PAYSTUB-03 | Phase 11 | Pending |
+| PAYSTUB-03 | Phase 11 | Complete |
 | PAYSTUB-04 | Phase 11 | Complete |
 | PAYSTUB-05 | Phase 11 | Complete |
 | PAYSTUB-06 | Phase 11 | Complete |
