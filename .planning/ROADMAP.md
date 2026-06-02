@@ -216,10 +216,19 @@ Plans:
   4. Admin detail pages (`get*ById`) show an error state on DB failure instead of a misleading 404 (ADMINERR-04).
 
 **Notes**: This implements the milestone decision "full error states everywhere" and **supersedes** the v4 locked decision ("each admin query wraps in try/catch and returns [] on failure"). The single shared data seam is `src/lib/admin/*-queries.ts`; pages and widgets consume it and never import `db` directly. `get*ById` detail-page error must NOT degrade to a 404.
-**Plans**: 1 plan
+**Plans**: 10 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+- [ ] 13-01-PLAN.md — Shared primitives: AdminQueryResult/AdminDetailResult types + AdminErrorState component + dashboard-queries test scaffold
+- [ ] 13-02-PLAN.md — leads: list error state + getLeadById 3-way detail
+- [ ] 13-03-PLAN.md — calculator-leads: list error state + getCalculatorLeadById 3-way detail
+- [ ] 13-04-PLAN.md — newsletter: list error state + getSubscriberById 3-way detail
+- [ ] 13-05-PLAN.md — showcase: list + getShowcaseById 3-way detail + 2 internal write-helper callers
+- [ ] 13-06-PLAN.md — testimonials: list + getTestimonialById 3-way detail + 1 internal write-helper caller
+- [ ] 13-07-PLAN.md — blog: list + getBlogPostForAdmin 3-way detail + 2 internal write-helper callers
+- [ ] 13-08-PLAN.md — dashboard widgets: 5 widget queries + per-widget error cards (ADMINERR-02)
+- [ ] 13-09-PLAN.md — emails: queue-counts error variant (ADMINERR-03) + list + getScheduledEmailById 3-way + retry caller
+- [ ] 13-10-PLAN.md — phase gate: lint + typecheck + test:unit + build + invariant grep
 **UI hint**: yes
 
 ### Phase 14: admin-page-title
