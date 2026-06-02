@@ -197,7 +197,10 @@ Plans:
   3. No `alert()` remains in `ErrorBoundary.tsx` (it is the only `alert()` in the codebase); any user feedback uses a Sonner toast per project convention.
 
 **Notes**: ErrorBoundary wraps the root layout, so this is live in production. Finding #3, file `src/components/utilities/ErrorBoundary.tsx`.
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 **UI hint**: yes
 
 ### Phase 13: admin-error-observability
@@ -213,7 +216,10 @@ Plans:
   4. Admin detail pages (`get*ById`) show an error state on DB failure instead of a misleading 404 (ADMINERR-04).
 
 **Notes**: This implements the milestone decision "full error states everywhere" and **supersedes** the v4 locked decision ("each admin query wraps in try/catch and returns [] on failure"). The single shared data seam is `src/lib/admin/*-queries.ts`; pages and widgets consume it and never import `db` directly. `get*ById` detail-page error must NOT degrade to a 404.
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 **UI hint**: yes
 
 ### Phase 14: admin-page-title
@@ -228,7 +234,10 @@ Plans:
   3. The chosen approach is the most-performant canonical Next.js 16 option, decided during plan-phase research (native metadata/title template vs per-page heading).
 
 **Notes**: RESEARCH-REQUIRED during plan-phase: decide native Next.js 16 metadata/title template vs per-page heading by the most-performant canonical option. ADMINUX-01, file `src/app/(admin)/admin/layout.tsx`.
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 **UI hint**: yes
 
 ### Phase 15: dead-code-cleanup
@@ -243,7 +252,10 @@ Plans:
   3. Each remaining cleanup-bucket no-op is resolved by call-site check: unused logger `group`/`groupEnd`/`table` methods removed if no callers (else documented); `contact-welcome` `PARAGRAPH_STYLE.whiteSpace` removed or justified; `ttl-calculator` always-0 `processingFees` verified and removed or given a clear comment (CLEAN-03).
 
 **Notes**: Findings #5, #6 + the CLEANUP bucket. No DDL: `order_index` references a column that never existed. Files: `notifications.ts`, `help-articles.ts`, `schemas/content.ts` (reference only), `logger.ts`, `emails/contact-welcome.tsx`, `ttl-calculator/calculator.ts`.
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 
 ### Phase 16: intentional-noop-confirmation
 
@@ -257,7 +269,10 @@ Plans:
   3. No KEEP-disposition finding remains without an explicit recorded rationale; the next audit can map each back to a documented decision.
 
 **Notes**: 50 intentional findings; NOOP-02 covers a meaningful subset. This phase changes documentation and tests, not the env-gated behavior itself (those are verified correct-by-design graceful degradation).
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
 
 ### v6 Progress
 
