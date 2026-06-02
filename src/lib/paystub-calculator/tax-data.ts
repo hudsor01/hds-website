@@ -66,6 +66,15 @@ const taxDataByYear: Record<number, TaxData> = {
 	}
 }
 
+// Single source of truth for the selectable / valid tax-year set, derived from
+// the data table (not a parallel literal). Consumed by 11-03 validation and the
+// 11-04 form dropdown so the year surface can never drift from backed data.
+export function getSupportedTaxYears(): number[] {
+	return Object.keys(taxDataByYear)
+		.map(Number)
+		.sort((a, b) => b - a)
+}
+
 export function getTaxDataForYear(year?: number): TaxData {
 	const currentYear = new Date().getFullYear()
 	const targetYear = year ?? currentYear
