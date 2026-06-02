@@ -282,7 +282,7 @@ Plans:
 
 Plans:
 
-- [ ] 12-01-PLAN.md — Error-report Zod schema + POST /api/error-report route + ErrorBoundary fetch/Sonner rewiring + unit tests + phase gate
+- [ ] 15-01-PLAN.md — Delete dangling JSDoc, phantom order_index, logger no-ops (two files); keep+document whiteSpace; remove vestigial processingFees (5 sites incl. test); full gate
 
 ### Phase 16: intentional-noop-confirmation
 
