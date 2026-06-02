@@ -20,7 +20,6 @@ export interface HelpArticle {
 	title: string
 	content: string
 	excerpt: string | null
-	order_index: number
 	published: boolean
 	created_at: string
 	updated_at: string
@@ -85,7 +84,6 @@ const mapHelpArticle = (row: HelpArticleRow): HelpArticle => ({
 	title: row.title,
 	content: row.content,
 	excerpt: row.excerpt,
-	order_index: 0,
 	published: row.published ?? false,
 	created_at: row.createdAt?.toISOString() ?? new Date().toISOString(),
 	updated_at: row.updatedAt?.toISOString() ?? new Date().toISOString()
