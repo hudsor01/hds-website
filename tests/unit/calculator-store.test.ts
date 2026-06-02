@@ -49,7 +49,6 @@ describe('Calculator Store', () => {
 				salesTax: 2100,
 				titleFee: 33,
 				registrationFees: 75,
-				processingFees: 50,
 				evFee: 0,
 				emissions: 25,
 				totalTTL: 2283

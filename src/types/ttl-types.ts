@@ -3,7 +3,6 @@ export interface TTLResults {
 	salesTax: number
 	titleFee: number
 	registrationFees: number
-	processingFees: number
 	evFee: number
 	emissions: number
 	totalTTL: number
