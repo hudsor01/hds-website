@@ -6,6 +6,10 @@ import {
 	loadFormData,
 	saveFormData
 } from '@/lib/paystub-calculator/storage'
+import {
+	isSupportedStateCode,
+	isSupportedTaxYear
+} from '@/lib/paystub-calculator/supported-inputs'
 import type { FilingStatus, PaystubData } from '@/types/paystub'
 
 interface UsePaystubPersistenceProps {
@@ -55,12 +59,19 @@ export function usePaystubPersistence({
 			hoursPerPeriod: savedData.hoursPerPeriod || prev.hoursPerPeriod,
 			filingStatus:
 				(savedData.filingStatus as FilingStatus) || prev.filingStatus,
-			taxYear: savedData.taxYear || prev.taxYear
+			// Clamp a stale persisted year (e.g. a returning user with taxYear:2024)
+			// to a supported year rather than carrying it into the calculation, which
+			// would dead-end on an unbacked year (HIGH).
+			taxYear:
+				savedData.taxYear != null && isSupportedTaxYear(savedData.taxYear)
+					? savedData.taxYear
+					: prev.taxYear
 		}))
 
-		// Restore selected state if saved
-		if (savedData.state) {
-			setSelectedState(savedData.state)
+		// Restore selected state only when supported; a stale unsupported code is
+		// dropped so it never reaches calculateStateTax's defensive $0 twin (MEDIUM).
+		if (savedData.state && isSupportedStateCode(savedData.state)) {
+			setSelectedState(savedData.state.toUpperCase())
 		}
 
 		hasLoadedRef.current = true
