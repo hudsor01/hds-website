@@ -43,6 +43,16 @@ setupEnvMock()
 // transitively imported it — leading to flaky admin-auth tests in CI.
 require('@/lib/auth/admin')
 
+// Capture the genuine `@/lib/db` export (the createMockDb proxy, since TEST_ENV
+// omits POSTGRES_URL) at preload time, before any test file registers
+// `mock.module('@/lib/db', ...)`. Several suites (blog, showcase, api-*) stub
+// `@/lib/db`, and Bun's mock.module() registrations persist for the whole run
+// and are NOT cleared by mock.restore() (oven-sh/bun#7823) — so a later
+// `import { db } from '@/lib/db'` can never reach the real module once a
+// sibling has mocked it. Exposing the real reference here lets db.test.ts
+// assert the genuine no-op contract regardless of suite ordering.
+;(globalThis as { __REAL_DB__?: unknown }).__REAL_DB__ = require('@/lib/db').db
+
 // `server-only` throws on any import — that's its whole purpose, to fail
 // fast if a server module is reached from a client bundle. In tests we
 // run server modules under bun:test (a Node-like context) so the package
