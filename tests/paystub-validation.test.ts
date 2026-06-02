@@ -20,7 +20,7 @@ describe('calculatePaystubTotals validation', () => {
 			hourlyRate: 25,
 			hoursPerPeriod: 80,
 			filingStatus: 'single' as const,
-			taxYear: 2024,
+			taxYear: 2025,
 			state: 'TX',
 			payFrequency: 'biweekly' as const
 		}
@@ -68,5 +68,26 @@ describe('calculatePaystubTotals validation', () => {
 		expect(() => calculatePaystubTotals(invalidParams)).toThrow(
 			/Invalid paystub inputs/
 		)
+	})
+
+	it('rejects a tax year with no backing data', () => {
+		// PAYSTUB-03: a year not in getSupportedTaxYears() (e.g. a stale shared URL
+		// carrying 2024) must fail validation instead of silently falling back.
+		if (!validBase) {
+			return
+		}
+		const invalidParams = { ...validBase, taxYear: 2024 }
+		const validation = validatePaystubInputs(invalidParams)
+
+		expect(validation.isValid).toBe(false)
+		expect(validation.errors.taxYear).toBeDefined()
+	})
+
+	it('accepts the supported tax year 2025', () => {
+		// PAYSTUB-03: the only backed year passes the membership check.
+		if (!validBase) {
+			return
+		}
+		expect(validatePaystubInputs(validBase).isValid).toBe(true)
 	})
 })

@@ -7,4 +7,5 @@ export interface FormErrors {
 	employeeName?: string
 	hourlyRate?: string
 	hoursPerPeriod?: string
+	taxYear?: string
 }

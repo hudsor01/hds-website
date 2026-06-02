@@ -85,6 +85,12 @@ export function usePaystubValidation({
 			if (validationResult.errors.employeeName) {
 				combinedErrors.employeeName = validationResult.errors.employeeName
 			}
+			// Forward the tax-year error so an unbacked year (e.g. a stale shared URL
+			// that slipped past the restore clamp) surfaces at the Tax Year field
+			// rather than only in a generic toast (defense-in-depth).
+			if (validationResult.errors.taxYear) {
+				combinedErrors.taxYear = validationResult.errors.taxYear
+			}
 		}
 
 		setFormErrors(combinedErrors)
