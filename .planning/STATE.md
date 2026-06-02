@@ -3,28 +3,29 @@ gsd_state_version: 1.0
 milestone: v6
 milestone_name: Audit Remediation
 current_phase: 11
-current_plan: 3
-status: executing
-last_updated: "2026-06-02T15:31:52.537Z"
+current_plan: 4
+status: verifying
+last_updated: "2026-06-02T15:39:41.670Z"
 last_activity: 2026-06-02
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
-  percent: 75
+  completed_plans: 4
+  percent: 17
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-02
 **Branch:** `main`
-**Current milestone:** v6 Audit Remediation (planning — roadmap created, Phases 11-16)
-**Current phase:** 11
-**Current plan:** 4
+**Current milestone:** v6 Audit Remediation (Phase 11 complete, 4/4 plans; Phases 12-16 ahead)
+**Current phase:** 11 (verifying — all 4 plans complete)
+**Current plan:** 4 of 4 (complete)
 
 ## What just happened
 
+- **Phase 11 Plan 04 (`Form + URL hardening + estimate copy + full gate`) complete — FINAL plan of Phase 11 (3 commits: `c3d2cb3`, `49df6d6`, `5fb9f6a` + docs `4b85cb0`).** Wired the data-derived helpers into the form UI and hardened the URL-restore path. **PAYSTUB-02 (UI):** `PaystubForm.tsx` Tax Year `<SelectContent>` now maps `getSupportedTaxYears()` (only 2025); removed the hardcoded `<SelectItem value="2024">` + `value="2023">`; `INITIAL_PAYSTUB.taxYear` `2024` -> `2025` (`use-paystub-form.ts`). State `<Select>` unchanged (auto-narrows to CA/NY/IL/PA/MA via 11-03's derived `getIncomeTaxStates()`). **PAYSTUB-10:** `use-paystub-generator.ts` builds a module-scope `SUPPORTED_STATE_CODES = new Set([...getIncomeTaxStates(), ...getNoIncomeTaxStates()].map(s => s.value))` and the URL-restore effect now uppercases the restored `?state=` and calls `setSelectedState` only when the code is in the set — a stale shared `?state=AL` is dropped (never reaching `calculateStateTax`'s defensive $0); supported no-tax codes like TX still restore. The `taxYear` restore line is unchanged (11-03's tightened `validatePaystubInputs` is the year gate). **PAYSTUB-09:** hero `description` (`PaystubCalculatorClient.tsx`), `metadata.description` + `openGraph.description` + docblock (`page.tsx`) reframed as a 2025 estimate, dropping "accurate" and the universal-coverage framing; `metadata.description` is 146 chars (gate-asserted in the 120-160 SEO range); both copy files dash-free. Added one non-breaking e2e smoke in `e2e/tools.spec.ts` (existing paystub describe) asserting the Tax Year dropdown offers only 2025 (no 2023/2024). **Full phase gate PASSED:** `bun run lint` clean (407 files), `bun run typecheck` clean, `bun run build` compiled successfully (4.0s; `/tools/paystub-calculator` static), `bun run test:unit` 953 pass / 21 fail — the 21 are exactly the documented pre-existing `homepage.test.tsx` + `navigation.test.tsx` cross-file RTL pollution (35 pass / 0 fail in isolation, 0 net-new), and the paystub suite (`state-tax-calculations`, `paystub-validation`, `paystub-federal-tax`, `z-paystub-calculator`, `pay-periods-generation`, `csv-export`) is 37 pass / 0 fail. T-11-07/-08/-09 all mitigated. PAYSTUB-02 (already complete from Wave 1), PAYSTUB-09, PAYSTUB-10 marked complete. **Phase 11 is now 4/4 plans complete; status `verifying`.** SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-04-SUMMARY.md`.
 - **Phase 11 Plan 03 (`Derivations + validation + tests`) complete (4 commits: `897a0d3`, `aa90b06`, `dd796b0`, `948a38e`).** Closed the two Wave-1 code drift bugs and made the full paystub unit matrix GREEN against the 2025 data. **PAYSTUB-01:** `getIncomeTaxStates()` (`states-utils.ts`) now filters `statesData.states` by a module-scope `Set(getSupportedIncomeTaxStateCodes())` (single source of truth) instead of the independent "all states minus NO_INCOME_TAX_CODES" allow-list — the dropdown is exactly CA/IL/MA/NY/PA and can never drift from the bracket data; `NO_INCOME_TAX_CODES` + `getNoIncomeTaxStates()` left untouched (the `selectedState || 'TX'` default depends on TX staying a no-tax code, RESEARCH Pitfall 2). **PAYSTUB-03:** `validatePaystubInputs()` (`validation.ts`) replaced the hardcoded `2020..currentYear+5` range with a `getSupportedTaxYears().includes(params.taxYear)` membership check + a dash-free dynamic error message; a stale `?year=2024` now produces `errors.taxYear` instead of silently flowing to `getTaxDataForYear`'s Math.max fallback (mitigates T-11-05). `calculateStateTax`'s defensive `return 0` re-commented as a UI-unreachable fallback for stale shared URLs (behavior unchanged, mitigates T-11-06 framing). **Tests:** recomputed the two MA assertions from flat 0.0535 (107/267.5) to flat 0.05 (100/250); added bidirectional dropdown<->data parity + exact-set (CA/IL/MA/NY/PA); added 2025 surtax goldens MA 5674.00 / CA 6650.00 / NY 109000.00 (toBeCloseTo, not `> 0`); new `tests/paystub-federal-tax.test.ts` locks getSupportedTaxYears()==[2025], federal single golden 5914.00, the 11925 ceiling, SS cap 10918.20/378.20 (proves 176100 not 168600), and the documented getTaxDataForYear fallback; `paystub-validation` validBase fixture to 2025 + rejected-2024/accepted-2025 cases; re-keyed all four `z-paystub-calculator` fixtures to 2025. **Rule 1 deviation:** also re-keyed the `pay-periods-generation.test.ts` baseParams fixture 2024 -> 2025 (commit `948a38e`) — it was not in `files_modified` but broke as a direct consequence of the Task 1 validator tightening (same re-key as z-paystub), so it's an in-scope auto-fix. All paystub test files GREEN (36 pass / 0 fail); lint + typecheck clean; pre-commit hooks passed all 4 commits. PAYSTUB-03 marked complete (-01/-05/-06/-07/-08 already complete from Wave 1). **Known out-of-scope:** the full `bun run test:unit` shows 21 pre-existing failures in `tests/unit/homepage.test.tsx` + `tests/unit/navigation.test.tsx` (Footer/HomePage/Navbar/Navigation structural assertions) — verified pre-existing at the pre-11-03 tree `2d3eaf00` (21 fail), they pass in isolation (35 pass) and only fail under full-suite ordering (cross-file test pollution), 0 net new failures from 11-03 (953 pass vs 946 baseline). Logged to `.planning/phases/11-paystub-tax-accuracy/deferred-items.md`, not fixed (SCOPE BOUNDARY). SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-03-SUMMARY.md`.
 - **Phase 11 Plan 02 (`State tax-data 2025`) complete (1 commit: `5ee659b`).** Re-keyed `src/lib/paystub-calculator/state-tax-data.ts` from 2024 to official 2025. CA: full FTB Schedules X/Y/Z for all five filing statuses with the 1% Mental Health Services surtax over $1,000,000 inserted as a top band (effective 13.3%) per schedule, every array strictly ascending. NY: official 2025 DTF IT-201-I including the 9.65% (to 5,000,000) / 10.3% (to 25,000,000) / 10.9% (over) high-income brackets for all five statuses; MFJ/QSS use the corrected 2025 5.25% ceiling 27,900 and 5.5% ceiling 161,550 (superseding the stale 27,950/43,000). MA: a local `massachusettsBrackets()` two-band builder (5.0% up to 1,083,150, then 9.0% over) for all five statuses, replacing the stale `flatBrackets(0.0535)` (not `flatBrackets`, which can only emit one Infinity band). Deleted the redundant `TX/FL/WA flatBrackets(0)` rows (already in `NO_INCOME_TAX_CODES`); IL `0.0495` and PA `0.0307` unchanged. Surtaxes encoded as additional top brackets so `calculateStateTax` needs no new math path (CONTEXT.md:51,68). Added exported `getSupportedIncomeTaxStateCodes()` deriving the selectable income-tax state set from `Object.values(stateTaxDataByYear)` keys — runtime-verified to return exactly CA, NY, IL, PA, MA — as the single source of truth for the 11-03 dropdown and 11-04 URL-state intersect (no parallel allow-list). PAYSTUB-04, -06, -07, -08, -01 source marked complete. typecheck green; pre-commit hooks passed. Test files NOT touched (owned by 11-03; existing MA assertions at the old 0.0535 rate expected RED until 11-03 recomputes them — designed Wave-1 boundary). SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-02-SUMMARY.md`.
 - **Phase 11 Plan 01 (`Federal tax-data 2025`) complete (2 commits: `0f8c800`, `5cd20f3`).** Re-keyed `src/lib/paystub-calculator/tax-data.ts` to the official 2025 IRS federal brackets (Rev. Proc. 2024-40) for all five filing schedules: single/MFS share the first six limits but diverge at the 35% ceiling (626350 vs 375800 - RESEARCH Pitfall 7), HoH 32% ceiling is 250500 (not 250525), QSS = MFJ. Social Security wage base raised 168600 to 176100 (SSA 2025 COLA); SS rate, Medicare rate, additional-Medicare rate + thresholds unchanged (statutory). Deleted the stale 2024 entry and the `JSON.parse(JSON.stringify(...))` 2025 deep-clone placeholder; the re-keyed entry is now the single real source. Moved `getTaxDataForYear`'s baseline guard from `taxDataByYear[2024]` to `[2025]` (and the throw message); kept the `Math.max(...availableYears)` fallback as documented defense-in-depth (unreachable from the UI once 11-03 validation lands). Added exported `getSupportedTaxYears()` deriving the year set from `Object.keys(taxDataByYear)` (returns `[2025]`, runtime-verified) as the single source of truth for 11-03 validation and the 11-04 dropdown - no parallel literal. Federal calc consumer for 11-03 golden tests: `calculateFederalTax` (`tax-calculations.ts:4`), SS via `calculateSocialSecurity` (line 76). Test files NOT touched here (owned by 11-03; federal golden assertions expected RED at the Wave-1 boundary by design). PAYSTUB-02 + PAYSTUB-05 marked complete. typecheck green; pre-commit hooks passed both commits. SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-01-SUMMARY.md`.
@@ -82,7 +83,7 @@ progress:
 
 | # | Slug | Severity | Requirements | Status |
 |---|---|---|---|---|
-| 11 | `paystub-tax-accuracy` | HIGH | PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04 | executing (Plan 3/4 complete) |
+| 11 | `paystub-tax-accuracy` | HIGH | PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04 | verifying (4/4 plans complete) |
 | 12 | `errorboundary-report-path` | MEDIUM | ERR-01 | not started |
 | 13 | `admin-error-observability` | DECIDE | ADMINERR-01, ADMINERR-02, ADMINERR-03, ADMINERR-04 | not started |
 | 14 | `admin-page-title` | DECIDE (research) | ADMINUX-01 | not started |
@@ -93,7 +94,7 @@ Phase details + success criteria in `.planning/ROADMAP.md` (Milestone v6 section
 
 ## Next action
 
-**Execute Phase 11 Plan 04 (the final plan):** the last plan in Phase 11 — PaystubForm year dropdown rendered from `getSupportedTaxYears()`, "estimate" copy reframe (PAYSTUB-09), and URL-state hardening (PAYSTUB-10: intersect a restored `?state=` against `getSupportedIncomeTaxStateCodes()` so a stale `?state=AL` never silently computes $0; the `?year=` gate is already tightened in 11-03). Wave-2 data + tests are GREEN (36 paystub tests pass). 11-04 can reference the rejected/accepted-year test names recorded in `11-03-SUMMARY.md`.
+**Verify Phase 11 (`paystub-tax-accuracy`) — all 4 plans complete.** Plan 04 shipped the form/URL/copy hardening and ran the full gate (lint + typecheck + build green; paystub suite 37/37 green; only the 21 documented pre-existing homepage/navigation pollution failures remain, 0 net-new). Next: run the phase verifier, then move to Phase 12 (`errorboundary-report-path`, MEDIUM, ERR-01).
 
 Carry into v6 planning:
 
@@ -108,7 +109,7 @@ Operator follow-up still outstanding (independent of v6):
 
 ## Current Position
 
-Phase: 11 (paystub-tax-accuracy) — EXECUTING
-Plan: 4 of 4 (Plans 01, 02, 03 complete)
-Status: Ready to execute
+Phase: 11 (paystub-tax-accuracy) — VERIFYING
+Plan: 4 of 4 (Plans 01, 02, 03, 04 complete)
+Status: Phase complete — ready for verification
 Last activity: 2026-06-02

@@ -23,8 +23,8 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 - [x] **PAYSTUB-06**: CA brackets use official 2025 FTB values for all schedules, including the 1% Mental Health Services surtax on income over $1,000,000. (CA FTB 2025 schedules)
 - [x] **PAYSTUB-07**: NY brackets use official 2025 DTF values for all schedules, including the 9.65% / 10.3% / 10.9% high-income brackets. (NY DTF IT-201-I 2025)
 - [x] **PAYSTUB-08**: MA rate is the flat 5.0% (replacing the stale `0.0535`), including the 4% surtax on income over $1,083,150 (2025 threshold). (Mass.gov DOR 2025)
-- [ ] **PAYSTUB-09**: The paystub UI describes its output as an "estimate", not "accurate" tax. Methodology taxes gross with no W-4 / standard deduction / pre-tax deductions / credits, so it is not real withholding (IRS Pub 15-T); copy must not over-promise and must be em/en-dash free. (Methodology finding)
-- [ ] **PAYSTUB-10**: A stale or shared URL state code (e.g. `?state=AL`, persisted via nuqs) cannot reach the defensive `$0` path. The URL-restored state is intersected with the supported state codes so an unsupported value resolves to a supported default / clear signal, never a silent $0. (nuqs passes parseable values through unchanged; validation is the only gate.)
+- [x] **PAYSTUB-09**: The paystub UI describes its output as an "estimate", not "accurate" tax. Methodology taxes gross with no W-4 / standard deduction / pre-tax deductions / credits, so it is not real withholding (IRS Pub 15-T); copy must not over-promise and must be em/en-dash free. (Methodology finding)
+- [x] **PAYSTUB-10**: A stale or shared URL state code (e.g. `?state=AL`, persisted via nuqs) cannot reach the defensive `$0` path. The URL-restored state is intersected with the supported state codes so an unsupported value resolves to a supported default / clear signal, never a silent $0. (nuqs passes parseable values through unchanged; validation is the only gate.)
 
 ### Error reporting
 
@@ -80,8 +80,8 @@ Every requirement traces to an audit finding. Genuine stubs are FIX; intentional
 | PAYSTUB-06 | Phase 11 | Complete |
 | PAYSTUB-07 | Phase 11 | Complete |
 | PAYSTUB-08 | Phase 11 | Complete |
-| PAYSTUB-09 | Phase 11 | Pending |
-| PAYSTUB-10 | Phase 11 | Pending |
+| PAYSTUB-09 | Phase 11 | Complete |
+| PAYSTUB-10 | Phase 11 | Complete |
 | ERR-01 | Phase 12 | Pending |
 | ADMINERR-01 | Phase 13 | Pending |
 | ADMINERR-02 | Phase 13 | Pending |
