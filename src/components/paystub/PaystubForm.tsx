@@ -194,7 +194,13 @@ export function PaystubForm({
 								}))
 							}
 						>
-							<SelectTrigger id="taxYear">
+							<SelectTrigger
+								id="taxYear"
+								aria-invalid={!!formErrors.taxYear}
+								className={
+									formErrors.taxYear ? 'border-destructive border-2' : undefined
+								}
+							>
 								<SelectValue placeholder="Select year" />
 							</SelectTrigger>
 							<SelectContent>
@@ -205,6 +211,11 @@ export function PaystubForm({
 								))}
 							</SelectContent>
 						</Select>
+						{formErrors.taxYear && (
+							<p className="text-destructive text-xs" role="alert">
+								{formErrors.taxYear}
+							</p>
+						)}
 					</div>
 
 					<div className="space-y-tight">

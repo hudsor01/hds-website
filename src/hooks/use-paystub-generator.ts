@@ -2,23 +2,15 @@
 
 import { useEffect, useRef } from 'react'
 import {
-	getIncomeTaxStates,
-	getNoIncomeTaxStates
-} from '@/lib/paystub-calculator/states-utils'
+	isSupportedStateCode,
+	isSupportedTaxYear
+} from '@/lib/paystub-calculator/supported-inputs'
 import { usePaystubCalculations } from './use-paystub-calculations'
 import { usePaystubForm } from './use-paystub-form'
 import { usePaystubPersistence } from './use-paystub-persistence'
 import { usePaystubUI } from './use-paystub-ui'
 import { usePaystubUrlState } from './use-paystub-url-state'
 import { usePaystubValidation } from './use-paystub-validation'
-
-// PAYSTUB-10: the full supported-state allow-list (income-tax + no-income-tax codes).
-// nuqs passes a shared ?state=AL through unchanged, so the URL-restore path must
-// intersect against this set; an unsupported code is dropped rather than applied,
-// so it can never reach calculateStateTax's defensive $0 and present a silent zero.
-const SUPPORTED_STATE_CODES = new Set(
-	[...getIncomeTaxStates(), ...getNoIncomeTaxStates()].map(state => state.value)
-)
 
 export function usePaystubGenerator() {
 	const formState = usePaystubForm()
@@ -79,16 +71,21 @@ export function usePaystubGenerator() {
 			hourlyRate: urlState.rate ?? prev.hourlyRate,
 			hoursPerPeriod: urlState.hours ?? prev.hoursPerPeriod,
 			filingStatus: urlState.status ?? prev.filingStatus,
-			taxYear: urlState.year ?? prev.taxYear
+			// Clamp a restored year to the supported set; a stale shared ?year=2024
+			// (HIGH/LOW asymmetry: nuqs passes it through unchanged) falls back to the
+			// form default rather than feeding an unbacked year into the calculation.
+			taxYear:
+				urlState.year != null && isSupportedTaxYear(urlState.year)
+					? urlState.year
+					: prev.taxYear
 		}))
 
 		if (urlState.state) {
-			const restoredStateCode = urlState.state.toUpperCase()
 			// Only restore a supported code; drop unsupported values (e.g. AL) so a
 			// stale shared URL never feeds an unsupported state into the calculation
 			// and never produces a defensive silent $0 (PAYSTUB-10).
-			if (SUPPORTED_STATE_CODES.has(restoredStateCode)) {
-				formState.setSelectedState(restoredStateCode)
+			if (isSupportedStateCode(urlState.state)) {
+				formState.setSelectedState(urlState.state.toUpperCase())
 			}
 		}
 
