@@ -41,6 +41,10 @@ interface MockState {
 	// Toggle which next select() call mode we are in (post-list vs tag-lookup).
 	selectMode: 'post-list' | 'tag-lookup'
 	shouldThrow: boolean
+	// Independent throw switch for the tag-lookup chain (second select()), so a
+	// case can simulate the post select succeeding but `loadTagIdsForPosts`
+	// throwing. `shouldThrow` only rejects the post-list chain.
+	tagThrow: boolean
 	// Rows returned by the `db.update(...).set(...).where(...).returning()`
 	// chain that `toggleBlogPostPublished` runs (and the `tx.update(...)` chain
 	// inside `updateBlogPost`'s transaction).
@@ -57,6 +61,7 @@ const state: MockState = {
 	tagLookupIds: undefined,
 	selectMode: 'post-list',
 	shouldThrow: false,
+	tagThrow: false,
 	updateRowsToReturn: []
 }
 
@@ -70,6 +75,7 @@ function resetState(): void {
 	state.tagLookupIds = undefined
 	state.selectMode = 'post-list'
 	state.shouldThrow = false
+	state.tagThrow = false
 	state.updateRowsToReturn = []
 }
 
@@ -130,7 +136,12 @@ function buildPostListChain(): unknown {
 function buildTagLookupChain(): unknown {
 	const chain = {
 		from: () => chain,
-		where: () => Promise.resolve(state.tagRowsToReturn)
+		where: () => {
+			if (state.tagThrow) {
+				return Promise.reject(new Error('tag lookup db down'))
+			}
+			return Promise.resolve(state.tagRowsToReturn)
+		}
 	}
 	return chain
 }
@@ -532,6 +543,20 @@ describe('getBlogPostForAdmin: 3-way detail result', () => {
 		const result = await getBlogPostForAdmin('post-00')
 
 		expect(result.status).toBe('error')
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+
+	test("returns 'error' (not not-found/404) when the post select succeeds but the tag lookup throws", async () => {
+		// The tag-id lookup is part of the detail read: the post row is found,
+		// but `loadTagIdsForPosts` throws. This must still yield the error
+		// variant -- a partial read failure is never a misleading 404.
+		state.postRowsToReturn = [makeRow(0, { id: 'post-00' })]
+		state.tagThrow = true
+
+		const result = await getBlogPostForAdmin('post-00')
+
+		expect(result.status).toBe('error')
+		expect(result.status).not.toBe('not-found')
 		expect(logger.error).toHaveBeenCalledTimes(1)
 	})
 })
