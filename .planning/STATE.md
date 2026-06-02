@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v6
 milestone_name: Audit Remediation
 status: planning
-last_updated: "2026-06-02T04:02:02.992Z"
+last_updated: "2026-06-02T05:00:00.000Z"
 last_activity: 2026-06-02
 progress:
-  total_phases: 0
+  total_phases: 6
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -15,14 +15,15 @@ progress:
 
 # STATE — Current GSD Position
 
-**Last updated:** 2026-06-01
+**Last updated:** 2026-06-02
 **Branch:** `main`
-**Current milestone:** v6 Audit Remediation (planning)
-**Current phase:** none active (defining requirements)
+**Current milestone:** v6 Audit Remediation (planning — roadmap created, Phases 11-16)
+**Current phase:** none active (roadmap created; next is plan-phase 11)
 **Current plan:** none
 
 ## What just happened
 
+- **v6 roadmap created: 6 phases (11 to 16), 15/15 requirements mapped.** Ordered by severity/impact: Phase 11 `paystub-tax-accuracy` (HIGH, PAYSTUB-01..04) first, then Phase 12 `errorboundary-report-path` (MEDIUM, ERR-01), Phase 13 `admin-error-observability` (DECIDE, ADMINERR-01..04 — implements "full error states everywhere", supersedes the v4 return-[]-on-failure lock; `get*ById` failure must NOT become a 404), Phase 14 `admin-page-title` (DECIDE, ADMINUX-01 — RESEARCH-REQUIRED: canonical Next.js 16 metadata/title-template vs per-page heading, chosen at plan-phase), Phase 15 `dead-code-cleanup` (LOW, CLEAN-01..03), and Phase 16 `intentional-noop-confirmation` (DOC, NOOP-01..02) last. Phases appended to `.planning/ROADMAP.md`; REQUIREMENTS.md Traceability filled in (15/15 mapped, 0 unmapped). paystub fix scopes selectable states to supported data (NOT 37 new states = deferred PAYSTUB-F1) and updates the `state-tax-calculations` test that codified silent-$0 as "graceful".
 - **v6 milestone started: Audit Remediation.** Driven by a full no-op/stub audit (8-lane parallel finder sweep across all 402 source files, each candidate adversarially verified). 87 candidates resolved to 6 genuine stubs, 50 intentional no-ops, 31 dismissed false positives. Canonical findings at `.planning/v6-AUDIT-FINDINGS.md`. Operator decisions: (1) admin DB-error handling moves to **full error states everywhere** (visible failure-vs-empty distinction across all admin list/widget/queue/detail queries), which **supersedes the v4 locked decision** "each query wraps in try/catch and returns [] on failure"; (2) admin `pageTitle` resolution to be chosen by researching the canonical, most-performant Next.js 16 approach during that phase's planning. Phase numbering continues from v5 (last phase 10), so v6 starts at Phase 11.
 - **v5 milestone closed.** All 5 phases shipped (06, 07, 08, 09, 10) + 1 cross-phase hotfix (#226). Audit doc at `.planning/milestones/v5-AUDIT.md` is the canonical record. Pending PR #227 merge applies the planning sync to main.
 - **Phase 10 (`admin-list-pagination`) shipped via PR #228 (`870f717`).** Cursor pagination + ILIKE text search across all 7 admin list pages. 20 commits across 3 waves (Wave 1 shared primitives, Wave 2 per-page implementation, Wave 3 verification). 28 changed files (+5050/-565). 112 new test cases / 281 assertions; total suite 724/724 pass. Two post-Wave-1 operator overrides reshaped the implementation: nuqs swap (canonical URL-state library) replaced the original `<form method="get">` plan; shadcn-first primitives (`@/components/ui/table.tsx` + `@/components/ui/pagination.tsx` from the official registry) replaced a custom `admin/Pagination.tsx` wrapper. Two code-reviewer findings on first push (cursor reset on q change + Prev/Next state on backward-nav-to-page-1) fixed pre-merge; 3 review rounds, final zero findings. New `feedback_shadcn_first.md` memory: survey shadcn ecosystem BEFORE writing custom.
@@ -72,19 +73,37 @@ progress:
 - Wave 2 commit-message attribution race recurred in Phase 05 (commit `2445bc1` named "leads Server Actions" actually also contains newsletter Task 1 files). End state is correct; future readers should verify via `git show <hash> --stat`. Mitigation for next parallel-agent phase: stage per-resource into separate sub-working-trees, or serialize commits behind a single coordinator.
 - `'use server'` non-async runtime exports are invisible to lint + typecheck — only `next build` catches them. Latent `flattenZod` + `ActionResult` runtime value export in leads/actions.ts went unnoticed until Wave 3 ran the full build. Mitigation: add `bun run build` to the per-task verification command when a future plan ships new `actions.ts` files with shared helpers.
 
+## v6 phase list (Phases 11-16)
+
+| # | Slug | Severity | Requirements | Status |
+|---|---|---|---|---|
+| 11 | `paystub-tax-accuracy` | HIGH | PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04 | not started |
+| 12 | `errorboundary-report-path` | MEDIUM | ERR-01 | not started |
+| 13 | `admin-error-observability` | DECIDE | ADMINERR-01, ADMINERR-02, ADMINERR-03, ADMINERR-04 | not started |
+| 14 | `admin-page-title` | DECIDE (research) | ADMINUX-01 | not started |
+| 15 | `dead-code-cleanup` | LOW | CLEAN-01, CLEAN-02, CLEAN-03 | not started |
+| 16 | `intentional-noop-confirmation` | DOC | NOOP-01, NOOP-02 | not started |
+
+Phase details + success criteria in `.planning/ROADMAP.md` (Milestone v6 section).
+
 ## Next action
 
-**Merge PR #227** (audit doc + STATE/ROADMAP sync) to close v5 on main. After that:
+**Plan Phase 11 (`paystub-tax-accuracy`):** `/gsd:plan-phase 11`. It is the HIGH-severity head of v6 (wrong financial output). Scope: restrict the state dropdown to states with real bracket data, remove the dead 2023 year toggle, derive year validation from `Object.keys(taxDataByYear)`, drop redundant flat-0 TX/FL/WA entries, and update the `state-tax-calculations` test that codifies silent-$0 as "graceful". Do NOT add 37 states of bracket data (deferred PAYSTUB-F1).
 
-Operator follow-up unblocked by audit (one item still outstanding):
+Carry into v6 planning:
 
-- **Wire `BLOB_READ_WRITE_TOKEN` on Vercel** so Phase 08's upload UX is actually reachable on prod. Live prod `GET /api/admin/images/upload` currently returns `{"configured": false}`. Steps: create a Vercel Blob store, link to the `hds-website` project so the token auto-injects, then `vercel env pull .env.local` for dev.
+- **Phase 14 (`admin-page-title`) is RESEARCH-REQUIRED at plan-phase:** choose native Next.js 16 metadata/title template vs per-page heading by the most-performant canonical option.
+- **Phase 13 (`admin-error-observability`) supersedes the v4 lock:** "full error states everywhere" across the shared `src/lib/admin/*-queries.ts` seam; `get*ById` failure must NOT degrade to a 404.
+- Adopt the 4 v5-audit process changes (`.planning/milestones/v5-AUDIT.md`): cross-phase milestone-close gate, "render visibly" vs "exists in DOM" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps as milestone exit criteria. Plus `feedback_shadcn_first.md`: survey shadcn/ui ecosystem BEFORE writing custom UI/helpers.
 
-No v6 milestone is scoped yet. When v6 is opened, its first phase should adopt the 4 process changes from `.planning/milestones/v5-AUDIT.md` (cross-phase milestone-close gate, "render visibly" vs "exists in DOM" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps as milestone exit criteria), plus the new `feedback_shadcn_first.md` lesson: survey shadcn/ui ecosystem (registries + existing primitives + configured registries in `components.json`) BEFORE writing any custom UI component or helper.
+Operator follow-up still outstanding (independent of v6):
+
+- **Merge PR #227** (audit doc + STATE/ROADMAP sync) to close v5 on main.
+- **Wire `BLOB_READ_WRITE_TOKEN` on Vercel** so Phase 08's upload UX is reachable on prod. Live prod `GET /api/admin/images/upload` returns `{"configured": false}`. Steps: create a Vercel Blob store, link to the `hds-website` project so the token auto-injects, then `vercel env pull .env.local` for dev.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started (v6 roadmap created, Phases 11-16; next is plan-phase 11)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-02 — Milestone v6 started
+Status: Roadmap created, awaiting phase planning
+Last activity: 2026-06-02 — v6 roadmap created (6 phases, 15/15 requirements mapped)
