@@ -10,7 +10,12 @@ export const calculateStateTax = (
 ) => {
 	const stateBrackets = getStateTaxBrackets(state, year)
 	if (!stateBrackets) {
-		return 0 // Unknown state -> assume no income tax
+		// Defensive fallback for input the UI can no longer produce: the state
+		// dropdown is derived from getSupportedIncomeTaxStateCodes, so a state without
+		// bracket data is unreachable through normal use. Returning 0 keeps a stale
+		// shared URL (?state=AL) from crashing the per-period useMemo calc. State-side
+		// stale-URL rejection lands in 11-04.
+		return 0
 	}
 
 	const brackets = stateBrackets[filingStatus].length
