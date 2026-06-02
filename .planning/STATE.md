@@ -1,13 +1,29 @@
+---
+gsd_state_version: 1.0
+milestone: v6
+milestone_name: Audit Remediation
+status: planning
+last_updated: "2026-06-02T04:02:02.992Z"
+last_activity: 2026-06-02
+progress:
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+---
+
 # STATE — Current GSD Position
 
-**Last updated:** 2026-05-27
-**Branch:** `main` (audit branch: `chore/v5-audit` — pending merge)
-**Current milestone:** v5 closed
-**Current phase:** none active
+**Last updated:** 2026-06-01
+**Branch:** `main`
+**Current milestone:** v6 Audit Remediation (planning)
+**Current phase:** none active (defining requirements)
 **Current plan:** none
 
 ## What just happened
 
+- **v6 milestone started: Audit Remediation.** Driven by a full no-op/stub audit (8-lane parallel finder sweep across all 402 source files, each candidate adversarially verified). 87 candidates resolved to 6 genuine stubs, 50 intentional no-ops, 31 dismissed false positives. Canonical findings at `.planning/v6-AUDIT-FINDINGS.md`. Operator decisions: (1) admin DB-error handling moves to **full error states everywhere** (visible failure-vs-empty distinction across all admin list/widget/queue/detail queries), which **supersedes the v4 locked decision** "each query wraps in try/catch and returns [] on failure"; (2) admin `pageTitle` resolution to be chosen by researching the canonical, most-performant Next.js 16 approach during that phase's planning. Phase numbering continues from v5 (last phase 10), so v6 starts at Phase 11.
 - **v5 milestone closed.** All 5 phases shipped (06, 07, 08, 09, 10) + 1 cross-phase hotfix (#226). Audit doc at `.planning/milestones/v5-AUDIT.md` is the canonical record. Pending PR #227 merge applies the planning sync to main.
 - **Phase 10 (`admin-list-pagination`) shipped via PR #228 (`870f717`).** Cursor pagination + ILIKE text search across all 7 admin list pages. 20 commits across 3 waves (Wave 1 shared primitives, Wave 2 per-page implementation, Wave 3 verification). 28 changed files (+5050/-565). 112 new test cases / 281 assertions; total suite 724/724 pass. Two post-Wave-1 operator overrides reshaped the implementation: nuqs swap (canonical URL-state library) replaced the original `<form method="get">` plan; shadcn-first primitives (`@/components/ui/table.tsx` + `@/components/ui/pagination.tsx` from the official registry) replaced a custom `admin/Pagination.tsx` wrapper. Two code-reviewer findings on first push (cursor reset on q change + Prev/Next state on backward-nav-to-page-1) fixed pre-merge; 3 review rounds, final zero findings. New `feedback_shadcn_first.md` memory: survey shadcn ecosystem BEFORE writing custom.
 - **PR #226 (`9cf7071`) shipped: admin edit-page Loading hotfix.** All 7 admin `[id]` edit/detail pages were stuck on `"Loading..."` in prod -- the resolved form HTML was buffered in `<div id="S:N" hidden>` but React's `$RC` inline reveal script never unhid it. Root cause: `generateStaticParams` returned `[{ id: '__build_placeholder__' }]` (required by `cacheComponents`) and the loader called `await connection()` BEFORE checking the placeholder id, so the prerendered shell was a Suspense-streamed dynamic boundary marked `<!--$~-->` (PPR postponed). `$RC` only handles `<!--$?-->` (regular pending suspense). Fix: short-circuit to `notFound()` before `connection()`/DB read in every loader. The 404 prerender path emits no `$~` marker; real ids skip the short-circuit and render fully dynamic with regular `$?` boundaries. New `src/lib/admin/build-placeholder.ts` owns the canonical `BUILD_PLACEHOLDER_ID` constant + root-cause docblock; new `tests/unit/admin/build-placeholder.test.ts` (23 cases) enumerates the admin tree so a future new dynamic route forces coverage. 3 rounds of independent code-reviewer review (BLOCKING/SHOULD-FIX/NIT all addressed) before merge. Live-verified on prod: served HTML now contains only `<!--$?-->` markers, no `<!--$~-->`.
@@ -61,6 +77,14 @@
 **Merge PR #227** (audit doc + STATE/ROADMAP sync) to close v5 on main. After that:
 
 Operator follow-up unblocked by audit (one item still outstanding):
+
 - **Wire `BLOB_READ_WRITE_TOKEN` on Vercel** so Phase 08's upload UX is actually reachable on prod. Live prod `GET /api/admin/images/upload` currently returns `{"configured": false}`. Steps: create a Vercel Blob store, link to the `hds-website` project so the token auto-injects, then `vercel env pull .env.local` for dev.
 
 No v6 milestone is scoped yet. When v6 is opened, its first phase should adopt the 4 process changes from `.planning/milestones/v5-AUDIT.md` (cross-phase milestone-close gate, "render visibly" vs "exists in DOM" verification, live-prod HTML-marker checks for cacheComponents routes, operator steps as milestone exit criteria), plus the new `feedback_shadcn_first.md` lesson: survey shadcn/ui ecosystem (registries + existing primitives + configured registries in `components.json`) BEFORE writing any custom UI component or helper.
+
+## Current Position
+
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-06-02 — Milestone v6 started
