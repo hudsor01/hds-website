@@ -18,6 +18,7 @@ import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getTestimonialById } from '@/lib/admin/testimonials-queries'
 import { EditTestimonialForm } from './EditTestimonialForm'
 
@@ -44,14 +45,14 @@ async function EditLoader({ params }: EditTestimonialPageProps) {
 		notFound()
 	}
 	await connection()
-	const result = await getTestimonialById(id)
-	if (result.status === 'not-found') {
+	const routing = routeDetailResult(await getTestimonialById(id))
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (result.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="testimonial" />
 	}
-	return <EditTestimonialForm row={result.data} />
+	return <EditTestimonialForm row={routing.data} />
 }
 
 export default function EditTestimonialPage({

@@ -20,6 +20,7 @@ import { Suspense } from 'react'
 import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { getBlogPostForAdmin } from '@/lib/admin/blog-queries'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
+import { routeDetailResult } from '@/lib/admin/detail-result-routing'
 import { getAuthors, getTags } from '@/lib/blog'
 import { EditBlogForm } from './EditBlogForm'
 
@@ -51,13 +52,14 @@ async function EditLoader({ params }: EditBlogPostPageProps) {
 		getAuthors(),
 		getTags()
 	])
-	if (postResult.status === 'not-found') {
+	const routing = routeDetailResult(postResult)
+	if (routing.kind === 'not-found') {
 		notFound()
 	}
-	if (postResult.status === 'error') {
+	if (routing.kind === 'error') {
 		return <AdminErrorState resource="blog post" />
 	}
-	const post = postResult.data
+	const post = routing.data
 	return (
 		<EditBlogForm
 			row={post}
