@@ -15,9 +15,11 @@ import {
 	XAxis,
 	YAxis
 } from 'recharts'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import type { AdminQueryResult } from '@/lib/admin/query-result'
 
 type VisitorsChartProps = {
-	data: Array<{ date: string; pageviews: number }>
+	result: AdminQueryResult<Array<{ date: string; pageviews: number }>>
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
@@ -36,13 +38,15 @@ function formatTick(value: string): string {
 	return DATE_FORMATTER.format(parsed)
 }
 
-export function VisitorsChart({ data }: VisitorsChartProps) {
+export function VisitorsChart({ result }: VisitorsChartProps) {
 	return (
 		<div className="rounded-xl border border-border bg-surface-raised p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">
 				Visitors (last 30 days)
 			</h2>
-			{data.length === 0 ? (
+			{!result.ok ? (
+				<AdminErrorState inline resource="traffic data" />
+			) : result.data.length === 0 ? (
 				<p className="text-sm text-muted-foreground text-center py-12">
 					No traffic data yet.
 				</p>
@@ -50,7 +54,7 @@ export function VisitorsChart({ data }: VisitorsChartProps) {
 				<div role="img" aria-label="Daily pageviews over the last 30 days">
 					<ResponsiveContainer width="100%" height={280}>
 						<LineChart
-							data={data}
+							data={result.data}
 							margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
 						>
 							<CartesianGrid
