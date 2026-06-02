@@ -1,17 +1,26 @@
 /**
- * Tests for `listBlogPostsForAdmin` after the Phase 10 Wave 2 rewrite.
+ * Tests for the blog admin read layer after the Phase 13 Wave 2 migration.
  *
- * The helper now accepts an options object `{ q?, cursor?, direction? }`
- * and returns `{ rows, hasMore, prevCursor, nextCursor }`. We test the
- * CONTRACT and CONTROL FLOW here (PAGE_SIZE+1 read, hasMore detection,
+ * `listBlogPostsForAdmin` now returns `AdminQueryResult<ListBlogPostsResult>`
+ * (the `catch` returns `err()`, zero rows return `ok({...})`), and
+ * `getBlogPostForAdmin` returns the 3-way `AdminDetailResult<AdminBlogListRow>`
+ * (`found` / `not-found` / `error`; a throw in EITHER the post select OR the
+ * `loadTagIdsForPosts` await yields the error variant). The two internal
+ * write-helper callers (`updateBlogPost`, `toggleBlogPostPublished`) narrow the
+ * detail result locally and KEEP their existing `null`-on-absent contract,
+ * which the write-helper cases below pin.
+ *
+ * We test the CONTRACT and CONTROL FLOW (PAGE_SIZE+1 read, hasMore detection,
  * cursor encoding, before-direction row reversal, malformed-cursor safety,
- * DB-error safe default, search-WHERE composition, and the critical
- * "tag-id lookup runs over the trimmed page slice only").
+ * DB-error error-variant, search-WHERE composition, the critical "tag-id
+ * lookup runs over the trimmed page slice only", the 3-way detail, and the
+ * write-helper null-on-absent contract).
  *
- * Mock pattern mirrors `tests/unit/admin/showcase-queries.test.ts`: a
- * chainable mock that captures the `.where()` argument so we can assert
- * composition shape, and a configurable resolution stage so we can stage
- * different row counts and tag-lookup id-lists per case.
+ * Mock pattern: a chainable post-list select mock that captures the `.where()`
+ * argument and flips into a tag-lookup chain on the second `select()`, plus a
+ * stubbed `db.update()` chain and a `db.transaction()` stub so the write
+ * helpers (`toggleBlogPostPublished` via `db.update`, `updateBlogPost` via
+ * `db.transaction`) can run their full lookup+write path against one harness.
  */
 import { beforeEach, describe, expect, mock, test } from 'bun:test'
 
@@ -32,6 +41,10 @@ interface MockState {
 	// Toggle which next select() call mode we are in (post-list vs tag-lookup).
 	selectMode: 'post-list' | 'tag-lookup'
 	shouldThrow: boolean
+	// Rows returned by the `db.update(...).set(...).where(...).returning()`
+	// chain that `toggleBlogPostPublished` runs (and the `tx.update(...)` chain
+	// inside `updateBlogPost`'s transaction).
+	updateRowsToReturn: unknown[]
 }
 
 const state: MockState = {
@@ -43,7 +56,8 @@ const state: MockState = {
 	tagRowsToReturn: [],
 	tagLookupIds: undefined,
 	selectMode: 'post-list',
-	shouldThrow: false
+	shouldThrow: false,
+	updateRowsToReturn: []
 }
 
 function resetState(): void {
@@ -56,6 +70,7 @@ function resetState(): void {
 	state.tagLookupIds = undefined
 	state.selectMode = 'post-list'
 	state.shouldThrow = false
+	state.updateRowsToReturn = []
 }
 
 // drizzle-orm's `inArray(column, values)` is mocked so we can capture the
@@ -120,7 +135,41 @@ function buildTagLookupChain(): unknown {
 	return chain
 }
 
+// UPDATE chain used by `toggleBlogPostPublished` (`db.update`) and by the
+// `tx.update(...)` call inside `updateBlogPost`'s transaction:
+// `update(t).set(v).where(c).returning()` resolves to `state.updateRowsToReturn`.
+function buildUpdateChain(): unknown {
+	const chain = {
+		set: () => chain,
+		where: () => chain,
+		returning: () => Promise.resolve(state.updateRowsToReturn)
+	}
+	return chain
+}
+
+// DELETE / INSERT chains used inside `updateBlogPost`'s transaction for the
+// tag-set replacement. They resolve to nothing meaningful; only their presence
+// matters so the transaction body runs to completion.
+function buildDeleteChain(): unknown {
+	const chain = {
+		where: () => Promise.resolve(undefined)
+	}
+	return chain
+}
+
+function buildInsertChain(): unknown {
+	const chain = {
+		values: () => Promise.resolve(undefined)
+	}
+	return chain
+}
+
 function setupDbMock(): void {
+	const tx = {
+		update: () => buildUpdateChain(),
+		delete: () => buildDeleteChain(),
+		insert: () => buildInsertChain()
+	}
 	mock.module('@/lib/db', () => ({
 		db: {
 			select: () => {
@@ -131,7 +180,9 @@ function setupDbMock(): void {
 					return buildPostListChain()
 				}
 				return buildTagLookupChain()
-			}
+			},
+			update: () => buildUpdateChain(),
+			transaction: (fn: (txArg: unknown) => unknown) => fn(tx)
 		}
 	}))
 }
@@ -143,7 +194,12 @@ setupDbMock()
 // real too -- drizzle column refs are just objects, and the helper only
 // passes them to the mocked drizzle operators.
 
-import { listBlogPostsForAdmin } from '@/lib/admin/blog-queries'
+import {
+	getBlogPostForAdmin,
+	listBlogPostsForAdmin,
+	toggleBlogPostPublished,
+	updateBlogPost
+} from '@/lib/admin/blog-queries'
 import { decodeCursor, encodeCursor, PAGE_SIZE } from '@/lib/admin/list-cursor'
 import { logger } from '@/lib/logger'
 
@@ -211,15 +267,19 @@ describe('listBlogPostsForAdmin: page-size + hasMore', () => {
 
 		expect(state.limitArg).toBe(PAGE_SIZE + 1)
 		expect(state.leftJoinCalled).toBe(true)
-		expect(result.rows.length).toBe(PAGE_SIZE)
-		expect(result.hasMore).toBe(true)
-		expect(result.prevCursor).toBeNull()
-		expect(result.nextCursor).not.toBeNull()
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(PAGE_SIZE)
+		expect(result.data.hasMore).toBe(true)
+		expect(result.data.prevCursor).toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
 
 		// nextCursor must encode the LAST RETURNED row (index PAGE_SIZE - 1),
 		// NOT the sentinel row that was dropped.
 		const lastReturned = allRows[PAGE_SIZE - 1] as MakeRowResult
-		const decoded = decodeCursor(result.nextCursor ?? undefined)
+		const decoded = decodeCursor(result.data.nextCursor ?? undefined)
 		expect(decoded).not.toBeNull()
 		expect(decoded?.direction).toBe('after')
 		expect(decoded?.parts).toEqual([
@@ -235,19 +295,27 @@ describe('listBlogPostsForAdmin: page-size + hasMore', () => {
 
 		const result = await listBlogPostsForAdmin()
 
-		expect(result.rows.length).toBe(3)
-		expect(result.hasMore).toBe(false)
-		expect(result.nextCursor).toBeNull()
-		expect(result.prevCursor).toBeNull()
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(3)
+		expect(result.data.hasMore).toBe(false)
+		expect(result.data.nextCursor).toBeNull()
+		expect(result.data.prevCursor).toBeNull()
 	})
 
-	test('returns empty shape when DB yields zero rows', async () => {
+	test('returns ok with empty rows when DB yields zero rows (distinct from error)', async () => {
 		state.postRowsToReturn = []
 		state.tagRowsToReturn = []
 
 		const result = await listBlogPostsForAdmin()
 
-		expect(result).toEqual({
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data).toEqual({
 			rows: [],
 			hasMore: false,
 			prevCursor: null,
@@ -278,17 +346,12 @@ describe('listBlogPostsForAdmin: tag-id lookup is page-slice scoped', () => {
 })
 
 describe('listBlogPostsForAdmin: DB error safety', () => {
-	test('returns empty result + logs error when the post-list query throws', async () => {
+	test('returns the error variant (not an empty result) + logs once when the post-list query throws', async () => {
 		state.shouldThrow = true
 
 		const result = await listBlogPostsForAdmin()
 
-		expect(result).toEqual({
-			rows: [],
-			hasMore: false,
-			prevCursor: null,
-			nextCursor: null
-		})
+		expect(result).toEqual({ ok: false, error: true })
 		expect(logger.error).toHaveBeenCalledTimes(1)
 	})
 })
@@ -333,11 +396,15 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 
 		const result = await listBlogPostsForAdmin({ cursor: 'not-a-cursor' })
 
-		expect(result.rows.length).toBe(1)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.rows.length).toBe(1)
 		// page 1 fall-back: WHERE is undefined (no cursor predicate)
 		expect(state.whereArg).toBeUndefined()
 		// prevCursor stays null because the malformed cursor was discarded
-		expect(result.prevCursor).toBeNull()
+		expect(result.data.prevCursor).toBeNull()
 	})
 
 	test("'before' cursor reverses ORDER BY and rows come back in display order", async () => {
@@ -359,8 +426,12 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 
 		const result = await listBlogPostsForAdmin({ cursor: beforeCursor })
 
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
 		// Rows must be reversed back into display order (ascending idx)
-		const ids = result.rows.map(r => r.post.id)
+		const ids = result.data.rows.map(r => r.post.id)
 		const expectedIds = Array.from(
 			{ length: PAGE_SIZE },
 			(_, i) => `post-${String(i + 1).padStart(2, '0')}`
@@ -368,11 +439,11 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 		expect(ids).toEqual(expectedIds)
 
 		// prevCursor stays set because hasMore=true (more rows backward)
-		expect(result.prevCursor).not.toBeNull()
-		const decodedPrev = decodeCursor(result.prevCursor ?? undefined)
+		expect(result.data.prevCursor).not.toBeNull()
+		const decodedPrev = decodeCursor(result.data.prevCursor ?? undefined)
 		expect(decodedPrev?.direction).toBe('before')
 		// nextCursor also set because we navigated backward (page exists forward)
-		expect(result.nextCursor).not.toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
 	})
 
 	test('emits nextCursor + nulls prevCursor when arriving on page 1 via backward navigation (direction=before, hasMore=false)', async () => {
@@ -393,10 +464,14 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 
 		const result = await listBlogPostsForAdmin({ cursor: beforeCursor })
 
-		expect(result.hasMore).toBe(false)
-		expect(result.prevCursor).toBeNull()
-		expect(result.nextCursor).not.toBeNull()
-		const decodedNext = decodeCursor(result.nextCursor ?? undefined)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.hasMore).toBe(false)
+		expect(result.data.prevCursor).toBeNull()
+		expect(result.data.nextCursor).not.toBeNull()
+		const decodedNext = decodeCursor(result.data.nextCursor ?? undefined)
 		expect(decodedNext?.direction).toBe('after')
 	})
 
@@ -417,8 +492,138 @@ describe('listBlogPostsForAdmin: cursor + direction', () => {
 
 		const result = await listBlogPostsForAdmin()
 
-		expect(result.nextCursor).not.toBeNull()
-		const decoded = decodeCursor(result.nextCursor ?? undefined)
+		expect(result.ok).toBe(true)
+		if (!result.ok) {
+			throw new Error('expected ok result')
+		}
+		expect(result.data.nextCursor).not.toBeNull()
+		const decoded = decodeCursor(result.data.nextCursor ?? undefined)
 		expect(decoded?.parts[0]).toBe('\x00')
+	})
+})
+
+describe('getBlogPostForAdmin: 3-way detail result', () => {
+	test("returns 'found' with the row when it exists", async () => {
+		state.postRowsToReturn = [makeRow(0, { id: 'post-00' })]
+		state.tagRowsToReturn = [{ postId: 'post-00', tagId: 'tag-1' }]
+
+		const result = await getBlogPostForAdmin('post-00')
+
+		expect(result.status).toBe('found')
+		if (result.status !== 'found') {
+			throw new Error('expected found result')
+		}
+		expect(result.data.post.id).toBe('post-00')
+		expect(result.data.tagIds).toEqual(['tag-1'])
+	})
+
+	test("returns 'not-found' when no row exists", async () => {
+		state.postRowsToReturn = []
+		state.tagRowsToReturn = []
+
+		const result = await getBlogPostForAdmin('missing')
+
+		expect(result.status).toBe('not-found')
+	})
+
+	test("returns 'error' + logs once when the post select throws", async () => {
+		state.shouldThrow = true
+
+		const result = await getBlogPostForAdmin('post-00')
+
+		expect(result.status).toBe('error')
+		expect(logger.error).toHaveBeenCalledTimes(1)
+	})
+})
+
+describe('write helpers keep their null-on-absent contract after the get*ById migration', () => {
+	test('updateBlogPost returns the updated row when the row exists', async () => {
+		state.postRowsToReturn = [makeRow(0, { id: 'post-00' })]
+		state.tagRowsToReturn = []
+		const updated = makeRow(0, { id: 'post-00' })
+		state.updateRowsToReturn = [updated.post]
+
+		const row = await updateBlogPost('post-00', {
+			title: 'Updated',
+			slug: 'updated',
+			excerpt: 'desc',
+			content: 'body',
+			readingTime: 1,
+			featured: false,
+			published: true,
+			authorId: 'author-0',
+			tagIds: []
+		} as Parameters<typeof updateBlogPost>[1])
+
+		expect(row).not.toBeNull()
+		expect((row as { id: string }).id).toBe('post-00')
+	})
+
+	test('updateBlogPost returns null when the row does not exist', async () => {
+		state.postRowsToReturn = []
+		state.tagRowsToReturn = []
+
+		const row = await updateBlogPost('missing', {
+			title: 'Updated',
+			slug: 'updated',
+			excerpt: 'desc',
+			content: 'body',
+			readingTime: 1,
+			featured: false,
+			published: true,
+			authorId: 'author-0',
+			tagIds: []
+		} as Parameters<typeof updateBlogPost>[1])
+
+		expect(row).toBeNull()
+	})
+
+	test('updateBlogPost returns null when the lookup query throws (error narrowed to null)', async () => {
+		state.shouldThrow = true
+
+		const row = await updateBlogPost('post-00', {
+			title: 'Updated',
+			slug: 'updated',
+			excerpt: 'desc',
+			content: 'body',
+			readingTime: 1,
+			featured: false,
+			published: true,
+			authorId: 'author-0',
+			tagIds: []
+		} as Parameters<typeof updateBlogPost>[1])
+
+		expect(row).toBeNull()
+	})
+
+	test('toggleBlogPostPublished flips published + returns the updated row when it exists', async () => {
+		state.postRowsToReturn = [
+			makeRow(0, { id: 'post-00', publishedAt: null })
+		]
+		state.tagRowsToReturn = []
+		const toggled = makeRow(0, { id: 'post-00' })
+		state.updateRowsToReturn = [toggled.post]
+
+		const row = await toggleBlogPostPublished('post-00')
+
+		expect(row).not.toBeNull()
+		expect((row as { id: string }).id).toBe('post-00')
+	})
+
+	test('toggleBlogPostPublished returns null when the row does not exist', async () => {
+		state.postRowsToReturn = []
+		state.tagRowsToReturn = []
+
+		const row = await toggleBlogPostPublished('missing')
+
+		expect(row).toBeNull()
+	})
+
+	test('toggleBlogPostPublished returns null when the lookup query throws (error narrowed to null)', async () => {
+		state.shouldThrow = true
+
+		const row = await toggleBlogPostPublished('post-00')
+
+		expect(row).toBeNull()
 	})
 })
