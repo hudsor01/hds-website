@@ -171,7 +171,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 11-03-PLAN.md — Derivations + validation + tests: derive getIncomeTaxStates() from the data, replace the hardcoded year range with getSupportedTaxYears() membership, re-document the defensive guard, write the parity/exact-set/federal-golden/SS-cap/surtax tests and the rejected-2024/accepted-2025 tests (recompute MA to 0.05)
+- [x] 11-03-PLAN.md — Derivations + validation + tests: derive getIncomeTaxStates() from the data, replace the hardcoded year range with getSupportedTaxYears() membership, re-document the defensive guard, write the parity/exact-set/federal-golden/SS-cap/surtax tests and the rejected-2024/accepted-2025 tests (recompute MA to 0.05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
