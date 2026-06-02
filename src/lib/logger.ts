@@ -317,20 +317,6 @@ class BaseLogger implements Logger {
 			}
 		}
 	}
-
-	group(_label: string): void {
-		// No-op - console.group not allowed by ESLint rules
-		// Could implement custom grouping if needed
-	}
-
-	groupEnd(): void {
-		// No-op - console.groupEnd not allowed by ESLint rules
-	}
-
-	table(_data: unknown): void {
-		// No-op - console.table not allowed by ESLint rules
-		// Could implement custom table display if needed
-	}
 }
 
 /**

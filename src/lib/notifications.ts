@@ -384,7 +384,3 @@ export async function notifyHighValueLead(
 		})
 	}
 }
-
-/**
- * Test notification endpoints
- */
