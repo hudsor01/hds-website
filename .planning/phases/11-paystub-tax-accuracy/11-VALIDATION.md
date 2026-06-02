@@ -1,8 +1,8 @@
 ---
 phase: 11
 slug: paystub-tax-accuracy
-status: draft
-nyquist_compliant: false
+status: approved
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-06-01
 ---
@@ -43,7 +43,7 @@ Plan/task IDs filled in by the planner; this maps each requirement to its observ
 |-------------|-------------------------|-----------|-------------------|--------|
 | PAYSTUB-01 | `getIncomeTaxStates()` returns exactly the state codes present in `stateTaxDataByYear` (CA, NY, IL, PA, MA); no income-tax state without bracket data is selectable | unit (bidirectional parity) | `bun test tests/state-tax-calculations.test.ts` | ⬜ pending |
 | PAYSTUB-02 | Year dropdown offers only years backed by real data (2024); no `2023` item; selecting a year never yields another year's figures | unit + build | `bun run test:unit` | ⬜ pending |
-| PAYSTUB-03 | `validatePaystubInputs` rejects a tax year not present in `taxDataByYear` (derived range, not hardcoded `2020..currentYear+5`) | unit (rejected-year case) | `bun test tests/z-paystub-calculator.test.ts` | ⬜ pending |
+| PAYSTUB-03 | `validatePaystubInputs` rejects a tax year not present in `taxDataByYear` (derived range, not hardcoded `2020..currentYear+5`) | unit (rejected-year + accepted-year case) | `bun test tests/paystub-validation.test.ts` | ⬜ pending |
 | PAYSTUB-04 | `stateTaxDataByYear` no longer contains TX/FL/WA flat-0 entries; those codes resolve via the no-income-tax group only | unit + source assertion | `bun test tests/state-tax-calculations.test.ts` | ⬜ pending |
 
 ---
@@ -66,11 +66,11 @@ Plan/task IDs filled in by the planner; this maps each requirement to its observ
 
 ## Validation Sign-Off
 
-- [ ] All tasks have automated verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references (bidirectional parity test added)
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 20s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have automated verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references (bidirectional parity test added in 11-01 Task 2)
+- [x] No watch-mode flags
+- [x] Feedback latency < 20s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved 2026-06-01 (gsd-plan-checker VERIFICATION PASSED; W-1 corrected)
