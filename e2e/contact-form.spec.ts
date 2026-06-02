@@ -60,7 +60,7 @@ test.describe('Contact Form', () => {
     // Select service option
     const serviceSelect = page.locator('#service')
     await serviceSelect.click()
-    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+    await page.locator('[role="option"]').filter({ hasText: 'Website Design' }).click()
 
     // Select best time to contact
     const timeSelect = page.locator('#bestTimeToContact')
@@ -109,7 +109,7 @@ test.describe('Contact Form', () => {
 
     // Select service (Radix Select)
     await page.locator('#service').click()
-    await page.locator('[role="option"]').filter({ hasText: 'Web Development' }).click()
+    await page.locator('[role="option"]').filter({ hasText: 'Website Design' }).click()
 
     // Select best time to contact
     await page.locator('#bestTimeToContact').click()

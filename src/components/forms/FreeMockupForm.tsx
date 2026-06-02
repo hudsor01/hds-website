@@ -34,10 +34,12 @@ function FreeMockupFormInner({ className = '' }: { className?: string }) {
 			currentSite: '',
 			phone: ''
 		},
-		// Reward early, punish late: first error on blur, then revalidate on
-		// change once the form has been submitted. Canonical TanStack pattern.
+		// Reward early, punish late: validate on submit (surfaces all errors at
+		// once), then revalidate on change so they clear as the user fixes them.
+		// Requires noValidate on the form so the browser's native required-check
+		// does not block the submit event before handleSubmit runs.
 		validationLogic: revalidateLogic({
-			mode: 'blur',
+			mode: 'submit',
 			modeAfterSubmission: 'change'
 		}),
 		validators: { onDynamic: freeMockupFormSchema },
@@ -73,6 +75,10 @@ function FreeMockupFormInner({ className = '' }: { className?: string }) {
 			// method="post" so a pre-hydration submit uses POST and keeps the
 			// payload out of the URL (mirrors ContactForm, audit #237).
 			method="post"
+			// noValidate hands validation to TanStack + Zod: without it the
+			// browser's native `required` check blocks the submit event before
+			// handleSubmit runs, so our inline FieldError errors never show.
+			noValidate
 			onSubmit={e => {
 				e.preventDefault()
 				e.stopPropagation()
