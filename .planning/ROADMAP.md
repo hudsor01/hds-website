@@ -139,7 +139,7 @@ Plans:
 
 | # | Slug | Status | Plans | Severity | Description |
 |---|---|---|---|---|---|
-| 11 | `paystub-tax-accuracy` | not started | 4 | HIGH | Stop the paystub calculator from emitting a confident, wrong financial output. Restrict the state dropdown to states with real bracket data (PAYSTUB-01), remove the dead 2023 and stale 2024 year toggles and re-key to OFFICIAL 2025 (PAYSTUB-02), derive year validation from the data table (PAYSTUB-03), drop redundant flat-0 TX/FL/WA bracket entries (PAYSTUB-04), correct federal + CA + NY + MA to official 2025 values incl. the >$1M CA/MA surtaxes (PAYSTUB-05..08), reframe copy as a 2025 estimate (PAYSTUB-09), and harden stale shared URLs (PAYSTUB-10). Findings #1, #2, #4 + the 2025-clone note + official-source data correction. |
+| 11 | `paystub-tax-accuracy` | in progress (1/4 plans) | 4 | HIGH | Stop the paystub calculator from emitting a confident, wrong financial output. Restrict the state dropdown to states with real bracket data (PAYSTUB-01), remove the dead 2023 and stale 2024 year toggles and re-key to OFFICIAL 2025 (PAYSTUB-02), derive year validation from the data table (PAYSTUB-03), drop redundant flat-0 TX/FL/WA bracket entries (PAYSTUB-04), correct federal + CA + NY + MA to official 2025 values incl. the >$1M CA/MA surtaxes (PAYSTUB-05..08), reframe copy as a 2025 estimate (PAYSTUB-09), and harden stale shared URLs (PAYSTUB-10). Findings #1, #2, #4 + the 2025-clone note + official-source data correction. |
 | 12 | `errorboundary-report-path` | not started | TBD | MEDIUM | The root-layout ErrorBoundary "Report Error" action either transmits a real report or is removed; never claims a report was filed when nothing was sent. No `alert()`; Sonner toast if feedback is shown. Finding #3 (ERR-01). |
 | 13 | `admin-error-observability` | not started | TBD | DECIDE | Admin list pages, dashboard widgets, the `/admin/emails` queue-health counts, and `get*ById` detail pages distinguish "query failed" from "no data" with a visible error state. Supersedes the v4 locked return-`[]`-on-failure decision. `get*ById` failure must NOT degrade to a 404. ADMINERR-01..04. |
 | 14 | `admin-page-title` | not started | TBD | DECIDE | Resolve the hardcoded-but-dynamic-looking `pageTitle="Admin"` prop in `(admin)/admin/layout.tsx`. Canonical approach (native Next.js 16 metadata/title template vs per-page heading) is research-required during plan-phase. ADMINUX-01. |
@@ -166,7 +166,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 11-01-PLAN.md — Federal tax-data 2025: re-key `tax-data.ts` to official 2025 IRS brackets (all statuses), SS wage base 176100, delete the 2024 entry + 2025 clone, move the baseline guard to 2025, export getSupportedTaxYears()
+- [x] 11-01-PLAN.md — Federal tax-data 2025: re-key `tax-data.ts` to official 2025 IRS brackets (all statuses), SS wage base 176100, delete the 2024 entry + 2025 clone, move the baseline guard to 2025, export getSupportedTaxYears()
 - [ ] 11-02-PLAN.md — State tax-data 2025: re-key `state-tax-data.ts` to official 2025 CA/NY/MA (CA MHS + MA 4% surtaxes as top brackets, NY 9.65/10.3/10.9), delete TX/FL/WA flat-0, keep IL/PA, export getSupportedIncomeTaxStateCodes()
 
 **Wave 2** *(blocked on Wave 1 completion)*

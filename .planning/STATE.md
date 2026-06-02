@@ -2,17 +2,17 @@
 gsd_state_version: 1.0
 milestone: v6
 milestone_name: Audit Remediation
-current_phase: none active (roadmap created; next is plan-phase 11)
-current_plan: none
+current_phase: 11
+current_plan: 2
 status: executing
-last_updated: "2026-06-02T05:39:26.253Z"
-last_activity: 2026-06-02 -- Phase 11 planning complete
+last_updated: "2026-06-02T15:16:57.947Z"
+last_activity: 2026-06-02
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 25
 ---
 
 # STATE — Current GSD Position
@@ -20,11 +20,12 @@ progress:
 **Last updated:** 2026-06-02
 **Branch:** `main`
 **Current milestone:** v6 Audit Remediation (planning — roadmap created, Phases 11-16)
-**Current phase:** none active (roadmap created; next is plan-phase 11)
-**Current plan:** none
+**Current phase:** 11
+**Current plan:** 2
 
 ## What just happened
 
+- **Phase 11 Plan 01 (`Federal tax-data 2025`) complete (2 commits: `0f8c800`, `5cd20f3`).** Re-keyed `src/lib/paystub-calculator/tax-data.ts` to the official 2025 IRS federal brackets (Rev. Proc. 2024-40) for all five filing schedules: single/MFS share the first six limits but diverge at the 35% ceiling (626350 vs 375800 - RESEARCH Pitfall 7), HoH 32% ceiling is 250500 (not 250525), QSS = MFJ. Social Security wage base raised 168600 to 176100 (SSA 2025 COLA); SS rate, Medicare rate, additional-Medicare rate + thresholds unchanged (statutory). Deleted the stale 2024 entry and the `JSON.parse(JSON.stringify(...))` 2025 deep-clone placeholder; the re-keyed entry is now the single real source. Moved `getTaxDataForYear`'s baseline guard from `taxDataByYear[2024]` to `[2025]` (and the throw message); kept the `Math.max(...availableYears)` fallback as documented defense-in-depth (unreachable from the UI once 11-03 validation lands). Added exported `getSupportedTaxYears()` deriving the year set from `Object.keys(taxDataByYear)` (returns `[2025]`, runtime-verified) as the single source of truth for 11-03 validation and the 11-04 dropdown - no parallel literal. Federal calc consumer for 11-03 golden tests: `calculateFederalTax` (`tax-calculations.ts:4`), SS via `calculateSocialSecurity` (line 76). Test files NOT touched here (owned by 11-03; federal golden assertions expected RED at the Wave-1 boundary by design). PAYSTUB-02 + PAYSTUB-05 marked complete. typecheck green; pre-commit hooks passed both commits. SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-01-SUMMARY.md`.
 - **v6 roadmap created: 6 phases (11 to 16), 15/15 requirements mapped.** Ordered by severity/impact: Phase 11 `paystub-tax-accuracy` (HIGH, PAYSTUB-01..04) first, then Phase 12 `errorboundary-report-path` (MEDIUM, ERR-01), Phase 13 `admin-error-observability` (DECIDE, ADMINERR-01..04 — implements "full error states everywhere", supersedes the v4 return-[]-on-failure lock; `get*ById` failure must NOT become a 404), Phase 14 `admin-page-title` (DECIDE, ADMINUX-01 — RESEARCH-REQUIRED: canonical Next.js 16 metadata/title-template vs per-page heading, chosen at plan-phase), Phase 15 `dead-code-cleanup` (LOW, CLEAN-01..03), and Phase 16 `intentional-noop-confirmation` (DOC, NOOP-01..02) last. Phases appended to `.planning/ROADMAP.md`; REQUIREMENTS.md Traceability filled in (15/15 mapped, 0 unmapped). paystub fix scopes selectable states to supported data (NOT 37 new states = deferred PAYSTUB-F1) and updates the `state-tax-calculations` test that codified silent-$0 as "graceful".
 - **v6 milestone started: Audit Remediation.** Driven by a full no-op/stub audit (8-lane parallel finder sweep across all 402 source files, each candidate adversarially verified). 87 candidates resolved to 6 genuine stubs, 50 intentional no-ops, 31 dismissed false positives. Canonical findings at `.planning/v6-AUDIT-FINDINGS.md`. Operator decisions: (1) admin DB-error handling moves to **full error states everywhere** (visible failure-vs-empty distinction across all admin list/widget/queue/detail queries), which **supersedes the v4 locked decision** "each query wraps in try/catch and returns [] on failure"; (2) admin `pageTitle` resolution to be chosen by researching the canonical, most-performant Next.js 16 approach during that phase's planning. Phase numbering continues from v5 (last phase 10), so v6 starts at Phase 11.
 - **v5 milestone closed.** All 5 phases shipped (06, 07, 08, 09, 10) + 1 cross-phase hotfix (#226). Audit doc at `.planning/milestones/v5-AUDIT.md` is the canonical record. Pending PR #227 merge applies the planning sync to main.
@@ -79,7 +80,7 @@ progress:
 
 | # | Slug | Severity | Requirements | Status |
 |---|---|---|---|---|
-| 11 | `paystub-tax-accuracy` | HIGH | PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04 | not started |
+| 11 | `paystub-tax-accuracy` | HIGH | PAYSTUB-01, PAYSTUB-02, PAYSTUB-03, PAYSTUB-04 | executing (Plan 1/4 complete) |
 | 12 | `errorboundary-report-path` | MEDIUM | ERR-01 | not started |
 | 13 | `admin-error-observability` | DECIDE | ADMINERR-01, ADMINERR-02, ADMINERR-03, ADMINERR-04 | not started |
 | 14 | `admin-page-title` | DECIDE (research) | ADMINUX-01 | not started |
@@ -105,7 +106,7 @@ Operator follow-up still outstanding (independent of v6):
 
 ## Current Position
 
-Phase: Not started (v6 roadmap created, Phases 11-16; next is plan-phase 11)
-Plan: —
+Phase: 11 (paystub-tax-accuracy) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-06-02 -- Phase 11 planning complete
+Last activity: 2026-06-02
