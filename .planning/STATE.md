@@ -1,30 +1,29 @@
 ---
 gsd_state_version: 1.0
-milestone: v6
-milestone_name: Audit Remediation
-current_phase: none (milestone closed)
-current_plan: none
-status: closed
-last_updated: "2026-06-02T23:45:00.000Z"
-last_activity: 2026-06-02 -- v6 milestone closed (audit PASSED)
+milestone: v7
+milestone_name: Stability and Maintenance
+status: planning
+last_updated: "2026-06-02T23:55:38.524Z"
+last_activity: 2026-06-02
 progress:
-  total_phases: 6
-  completed_phases: 6
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # STATE — Current GSD Position
 
 **Last updated:** 2026-06-02
 **Branch:** `main`
-**Current milestone:** v6 Audit Remediation — CLOSED (audit PASSED)
-**Current phase:** none (milestone closed)
+**Current milestone:** v7 Stability and Maintenance — PLANNING
+**Current phase:** none yet (roadmap pending: phases 17 test-isolation, 18 dependency-currency)
 **Current plan:** none
 
 ## What just happened
 
+- **v7 milestone STARTED — Stability and Maintenance.** Two concerns to resolve canonically: (1) the ~21 homepage/navigation/Footer RTL test failures that only appear under full-suite ordering — root-cause + fix bun's process-global `mock.module` leak so `bun test tests/` is order-independent and 0-fail (not patch/skip the symptom); add a guard against reintroduction. (2) the 5 open Dependabot PRs (#327 dev-deps group of 5, #328 better-auth 1.6.12->1.6.13, #329 tiptap extension-link 3.24.0, #330 tiptap extension-image 3.24.0, #331 tiptap starter-kit 3.24.0) — review, verify (auth flows for better-auth; blog rich-text editor for the Tiptap bumps), merge the safe ones. **Sequence locked: test-isolation (Phase 17) BEFORE dependency-currency (Phase 18)** — the dep PRs' CI Test job hits the same pollution (#331 is failing with 4 Test-job failures), so a clean suite makes their CI trustworthy. v6 REQUIREMENTS archived to `.planning/milestones/v6-REQUIREMENTS.md`; fresh v7 REQUIREMENTS written (TEST-01/02, DEP-01/02/03). PROJECT.md "Current Milestone" -> v7. Roadmapper to APPEND phases 17-18 to the 320-line ROADMAP (do NOT truncate v3-v6 history). Backed by project memory `feedback_bun_mock_module_global_pollution.md`.
 - **v6 milestone CLOSED — Audit Remediation complete.** All 6 phases shipped to `origin/main` and merged CI-green: Phase 11 paystub-tax-accuracy (PR #332 + test-hardening #336), 12 errorboundary-report-path (#333), 13 admin-error-observability (#334 + #336), 14 admin-page-title (#337), 15 dead-code-cleanup (#338), 16 intentional-noop-confirmation (#339). Milestone audit verdict **PASSED, 21/21 requirements satisfied** — canonical record at `.planning/milestones/v6-AUDIT.md`. Original audit intent fully delivered: 6 genuine stubs fixed (incl. the official-2025 tax-table correction surfaced by research), both DECIDE items resolved (full admin error states; pageTitle removed), CLEANUP done, 50 intentional no-ops confirmed + key ones test-locked, 31 false positives dismissed. Closed lightly per the v5 convention (no skill-archival / no ROADMAP collapse / no tag — v5 wasn't tagged either; the AUDIT doc is the record). **Open follow-ups (not v6 gaps):** local `main` code reconcile is pending (`git merge origin/main` is gated in this env — operator runs it; the v6 .planning doc-trail was reconciled onto main); ~21 pre-existing homepage/navigation RTL test-pollution failures (latent bun mock.module issue, logged); 5 open Dependabot PRs (#327-331).
 - **Phase 11 Plan 04 (`Form + URL hardening + estimate copy + full gate`) complete — FINAL plan of Phase 11 (3 commits: `c3d2cb3`, `49df6d6`, `5fb9f6a` + docs `4b85cb0`).** Wired the data-derived helpers into the form UI and hardened the URL-restore path. **PAYSTUB-02 (UI):** `PaystubForm.tsx` Tax Year `<SelectContent>` now maps `getSupportedTaxYears()` (only 2025); removed the hardcoded `<SelectItem value="2024">` + `value="2023">`; `INITIAL_PAYSTUB.taxYear` `2024` -> `2025` (`use-paystub-form.ts`). State `<Select>` unchanged (auto-narrows to CA/NY/IL/PA/MA via 11-03's derived `getIncomeTaxStates()`). **PAYSTUB-10:** `use-paystub-generator.ts` builds a module-scope `SUPPORTED_STATE_CODES = new Set([...getIncomeTaxStates(), ...getNoIncomeTaxStates()].map(s => s.value))` and the URL-restore effect now uppercases the restored `?state=` and calls `setSelectedState` only when the code is in the set — a stale shared `?state=AL` is dropped (never reaching `calculateStateTax`'s defensive $0); supported no-tax codes like TX still restore. The `taxYear` restore line is unchanged (11-03's tightened `validatePaystubInputs` is the year gate). **PAYSTUB-09:** hero `description` (`PaystubCalculatorClient.tsx`), `metadata.description` + `openGraph.description` + docblock (`page.tsx`) reframed as a 2025 estimate, dropping "accurate" and the universal-coverage framing; `metadata.description` is 146 chars (gate-asserted in the 120-160 SEO range); both copy files dash-free. Added one non-breaking e2e smoke in `e2e/tools.spec.ts` (existing paystub describe) asserting the Tax Year dropdown offers only 2025 (no 2023/2024). **Full phase gate PASSED:** `bun run lint` clean (407 files), `bun run typecheck` clean, `bun run build` compiled successfully (4.0s; `/tools/paystub-calculator` static), `bun run test:unit` 953 pass / 21 fail — the 21 are exactly the documented pre-existing `homepage.test.tsx` + `navigation.test.tsx` cross-file RTL pollution (35 pass / 0 fail in isolation, 0 net-new), and the paystub suite (`state-tax-calculations`, `paystub-validation`, `paystub-federal-tax`, `z-paystub-calculator`, `pay-periods-generation`, `csv-export`) is 37 pass / 0 fail. T-11-07/-08/-09 all mitigated. PAYSTUB-02 (already complete from Wave 1), PAYSTUB-09, PAYSTUB-10 marked complete. **Phase 11 is now 4/4 plans complete; status `verifying`.** SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-04-SUMMARY.md`.
 - **Phase 11 Plan 03 (`Derivations + validation + tests`) complete (4 commits: `897a0d3`, `aa90b06`, `dd796b0`, `948a38e`).** Closed the two Wave-1 code drift bugs and made the full paystub unit matrix GREEN against the 2025 data. **PAYSTUB-01:** `getIncomeTaxStates()` (`states-utils.ts`) now filters `statesData.states` by a module-scope `Set(getSupportedIncomeTaxStateCodes())` (single source of truth) instead of the independent "all states minus NO_INCOME_TAX_CODES" allow-list — the dropdown is exactly CA/IL/MA/NY/PA and can never drift from the bracket data; `NO_INCOME_TAX_CODES` + `getNoIncomeTaxStates()` left untouched (the `selectedState || 'TX'` default depends on TX staying a no-tax code, RESEARCH Pitfall 2). **PAYSTUB-03:** `validatePaystubInputs()` (`validation.ts`) replaced the hardcoded `2020..currentYear+5` range with a `getSupportedTaxYears().includes(params.taxYear)` membership check + a dash-free dynamic error message; a stale `?year=2024` now produces `errors.taxYear` instead of silently flowing to `getTaxDataForYear`'s Math.max fallback (mitigates T-11-05). `calculateStateTax`'s defensive `return 0` re-commented as a UI-unreachable fallback for stale shared URLs (behavior unchanged, mitigates T-11-06 framing). **Tests:** recomputed the two MA assertions from flat 0.0535 (107/267.5) to flat 0.05 (100/250); added bidirectional dropdown<->data parity + exact-set (CA/IL/MA/NY/PA); added 2025 surtax goldens MA 5674.00 / CA 6650.00 / NY 109000.00 (toBeCloseTo, not `> 0`); new `tests/paystub-federal-tax.test.ts` locks getSupportedTaxYears()==[2025], federal single golden 5914.00, the 11925 ceiling, SS cap 10918.20/378.20 (proves 176100 not 168600), and the documented getTaxDataForYear fallback; `paystub-validation` validBase fixture to 2025 + rejected-2024/accepted-2025 cases; re-keyed all four `z-paystub-calculator` fixtures to 2025. **Rule 1 deviation:** also re-keyed the `pay-periods-generation.test.ts` baseParams fixture 2024 -> 2025 (commit `948a38e`) — it was not in `files_modified` but broke as a direct consequence of the Task 1 validator tightening (same re-key as z-paystub), so it's an in-scope auto-fix. All paystub test files GREEN (36 pass / 0 fail); lint + typecheck clean; pre-commit hooks passed all 4 commits. PAYSTUB-03 marked complete (-01/-05/-06/-07/-08 already complete from Wave 1). **Known out-of-scope:** the full `bun run test:unit` shows 21 pre-existing failures in `tests/unit/homepage.test.tsx` + `tests/unit/navigation.test.tsx` (Footer/HomePage/Navbar/Navigation structural assertions) — verified pre-existing at the pre-11-03 tree `2d3eaf00` (21 fail), they pass in isolation (35 pass) and only fail under full-suite ordering (cross-file test pollution), 0 net new failures from 11-03 (953 pass vs 946 baseline). Logged to `.planning/phases/11-paystub-tax-accuracy/deferred-items.md`, not fixed (SCOPE BOUNDARY). SUMMARY at `.planning/phases/11-paystub-tax-accuracy/11-03-SUMMARY.md`.
@@ -110,7 +109,7 @@ Operator follow-up still outstanding (independent of v6):
 
 ## Current Position
 
-Phase: 11 — COMPLETE
-Plan: 4 of 4 (Plans 01, 02, 03, 04 complete)
-Status: Ready to execute
-Last activity: 2026-06-02 -- Phase 15 planning complete
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-06-02 — Milestone v7 started

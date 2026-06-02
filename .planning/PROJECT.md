@@ -23,24 +23,21 @@ The marketing site for Hudson Digital Solutions: a one-developer web design & bu
 - Site-wide CTA: `Get My Free Website Plan`
 - Banned in copy: em-dash (—), en-dash (–). Replace with comma, period, hyphen, or `to` for ranges. Codified in `CLAUDE.md`.
 
-## Current Milestone: v6 Audit Remediation
+## Current Milestone: v7 Stability & Maintenance
 
-**Goal:** Canonically correct every finding from the no-op/stub audit so the codebase contains no functionality that silently fails to do what its name, signature, or UI copy promises.
+**Goal:** Make the test suite trustworthy and the dependencies current, so CI is a reliable signal and the project stays on supported library versions.
 
 **Target features:**
-- Paystub calculator tells the truth about tax accuracy (no silent $0 state tax for unsupported states; no dead year toggle).
-- The "Report Error" action either reports or is removed, and never claims a report was filed when none was sent.
-- Dead/dangling code removed (phantom fields, dangling stub comments, unused no-op methods).
-- Admin pages distinguish a real DB failure from genuinely-empty data with a visible error state.
-- Every intentional no-op is recorded as verified-intentional so future audits recognize it.
-
-**Source of truth:** `.planning/v6-AUDIT-FINDINGS.md` (full findings + dispositions).
+- The full `bun test tests/` run is order-independent and matches isolated runs (0 fail). The ~21 homepage/navigation/Footer RTL failures are eliminated by root-causing and fixing bun's process-global `mock.module` leak, not by patching the symptom; a guard prevents reintroduction.
+- The 5 open Dependabot PRs are reviewed, verified (auth flows for better-auth; the blog rich-text editor for the Tiptap bumps), and the safe ones merged onto current `main`.
 
 **Milestone decisions:**
-- **Admin DB-error handling: full error states everywhere.** This supersedes the v4 locked decision ("each admin query wraps in try/catch and returns [] on failure"). Admin list/widget/queue/detail surfaces must distinguish "query failed" from "no data".
-- **Admin pageTitle:** approach (native Next.js 16 metadata/title template vs per-page heading) to be chosen by researching the most-performant canonical option during that phase's planning.
+- **Fix the root cause, not the symptom:** the test-pollution is a bun `mock.module` global-registry leak (un-cleared by `mock.restore()`) — fix the leaking tests so the suite is order-independent; do not suppress/skip the failing tests.
+- **Sequence:** test-isolation first, then dependency currency — the dep PRs' CI Test job hits the same pollution (e.g. #331 is failing), so a clean suite makes their CI trustworthy.
 
-> **Prior milestone:** v3.0 - Showcase & conversion polish (shipped). v4 (Admin Panel) and v5 (admin pagination, logger compliance, route groups) shipped after. See `.planning/ROADMAP.md` and `.planning/STATE.md` for full history.
+**Source of truth:** the bun mock.module lesson in project memory (`feedback_bun_mock_module_global_pollution.md`) + the v6 deferred-items log.
+
+> **Prior milestones:** v6 Audit Remediation closed (audit PASSED, `.planning/milestones/v6-AUDIT.md`). v3 / v4 / v5 shipped earlier. See `.planning/ROADMAP.md` + `.planning/STATE.md` for full history.
 
 ## What's in scope for GSD work
 
