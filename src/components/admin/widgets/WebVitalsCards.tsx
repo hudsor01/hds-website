@@ -5,9 +5,13 @@
  * Each value is color-coded by the canonical CWV threshold rules (same
  * thresholds the /api/web-vitals route uses to assign a rating on ingest).
  */
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
+import type { AdminQueryResult } from '@/lib/admin/query-result'
 
 type WebVitalsCardsProps = {
-	rows: Array<{ name: string; p75: number; sampleCount: number }>
+	result: AdminQueryResult<
+		Array<{ name: string; p75: number; sampleCount: number }>
+	>
 }
 
 type Rating = 'good' | 'needs-improvement' | 'poor'
@@ -59,7 +63,20 @@ function ratingClass(rating: Rating): string {
 	return 'text-destructive-text'
 }
 
-export function WebVitalsCards({ rows }: WebVitalsCardsProps) {
+export function WebVitalsCards({ result }: WebVitalsCardsProps) {
+	if (!result.ok) {
+		return (
+			<div className="rounded-xl border border-border bg-surface-raised p-6">
+				<h2 className="text-sm font-semibold text-foreground mb-4">
+					Web Vitals (last 7 days)
+				</h2>
+				<AdminErrorState inline resource="web vitals" />
+			</div>
+		)
+	}
+
+	const rows = result.data
+
 	return (
 		<div className="rounded-xl border border-border bg-surface-raised p-6">
 			<h2 className="text-sm font-semibold text-foreground mb-4">

@@ -20,6 +20,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { DeleteButton } from '@/components/admin/DeleteButton'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import { BUILD_PLACEHOLDER_ID } from '@/lib/admin/build-placeholder'
@@ -74,10 +75,14 @@ async function SubscriberLoader({ params }: SubscriberDetailPageProps) {
 		notFound()
 	}
 	await connection()
-	const row = await getSubscriberById(id)
-	if (!row) {
+	const result = await getSubscriberById(id)
+	if (result.status === 'not-found') {
 		notFound()
 	}
+	if (result.status === 'error') {
+		return <AdminErrorState resource="subscriber" />
+	}
+	const row = result.data
 	return (
 		<div className="space-y-8">
 			<div>

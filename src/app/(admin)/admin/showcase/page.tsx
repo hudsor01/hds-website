@@ -21,6 +21,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
@@ -57,10 +58,14 @@ async function ShowcaseList({ searchParams }: AdminShowcasePageProps) {
 	await connection()
 	const { q: rawQ, cursor } = await searchParams
 	const q = (rawQ ?? '').trim()
-	const { rows, prevCursor, nextCursor } = await listShowcasesForAdmin({
+	const result = await listShowcasesForAdmin({
 		q: q.length > 0 ? q : undefined,
 		cursor
 	})
+	if (!result.ok) {
+		return <AdminErrorState resource="showcase entries" />
+	}
+	const { rows, prevCursor, nextCursor } = result.data
 	const preservedForPagination: Record<string, string> =
 		q.length > 0 ? { q } : {}
 

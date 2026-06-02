@@ -3,12 +3,20 @@
  *
  * Phase 10 Wave 2: cursor-paginated + search-aware. The existing 4
  * queue-health stat cards stay UNFILTERED -- `getQueueCounts()` is called
- * WITHOUT arguments inside `Promise.all` so the cards always reflect the
- * full queue state regardless of the active `?status=` / `?q=` / `?cursor=`
- * params. The existing `<StatusFilterBar>` chip row stays byte-equal and
- * composes alongside the new `<SearchInput>` (client, nuqs) and shadcn
- * `<Pagination>` (server, cursor-driven `<Link>`s built via
- * `buildPaginationHref`).
+ * WITHOUT arguments inside `Promise.all` so the cards reflect the full queue
+ * state regardless of the active `?status=` / `?q=` / `?cursor=` params. The
+ * existing `<StatusFilterBar>` chip row composes alongside the
+ * `<SearchInput>` (client, nuqs) and shadcn `<Pagination>` (server,
+ * cursor-driven `<Link>`s built via `buildPaginationHref`).
+ *
+ * Phase 13 (ADMINERR-01 / ADMINERR-03): both reads now return INDEPENDENT
+ * `AdminQueryResult`s. On a `getQueueCounts` failure the page renders ONE
+ * grid-spanning `<AdminErrorState>` in place of the four cards (never four
+ * falsely-healthy "0" cards), and the chip row omits the per-status count
+ * badges; on a list failure it renders a separate `<AdminErrorState>` in the
+ * list region. Each result is narrowed on its own so a counts failure does
+ * not blank the list and a list failure does not blank the counts. Both
+ * failures are RETURNED variants, so the shared `Promise.all` never rejects.
  *
  * Param composition matrix (matches Plan 10-05 / 10-06 / 10-07):
  *  - `?status=` round-trips via `<StatusFilterBar>` chip submissions (single
@@ -32,6 +40,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { StatusBadge } from '@/components/admin/StatusBadge'
 import {
@@ -83,8 +92,10 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 
 	// CRITICAL: getQueueCounts() is called with NO arguments. The 4 stat
 	// cards reflect the FULL queue regardless of the active status / q /
-	// cursor filters. Only the paginated list helper sees the filters.
-	const [counts, { rows, prevCursor, nextCursor }] = await Promise.all([
+	// cursor filters. Only the paginated list helper sees the filters. Both
+	// reads return INDEPENDENT AdminQueryResults; neither throws, so the
+	// Promise.all always resolves and each is narrowed on its own below.
+	const [counts, list] = await Promise.all([
 		getQueueCounts(),
 		listScheduledEmailsForAdmin({
 			status,
@@ -93,12 +104,15 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 		})
 	])
 
+	// Chip count badges only when the counts read succeeded. On a counts
+	// failure the chips render without per-status badges rather than reading
+	// off the error variant.
 	const filterOptions: StatusFilterOption[] = [
 		{ value: null, label: 'All' },
 		...EMAIL_STATUSES.map(s => ({
 			value: s,
 			label: s.charAt(0).toUpperCase() + s.slice(1),
-			count: counts[s]
+			...(counts.ok ? { count: counts.data[s] } : {})
 		}))
 	]
 
@@ -112,21 +126,25 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-				{EMAIL_STATUSES.map(s => (
-					<div
-						key={s}
-						className="rounded-xl border border-border bg-surface-raised p-4"
-					>
-						<div className="text-xs uppercase tracking-wider text-muted-foreground">
-							{s}
+			{counts.ok ? (
+				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+					{EMAIL_STATUSES.map(s => (
+						<div
+							key={s}
+							className="rounded-xl border border-border bg-surface-raised p-4"
+						>
+							<div className="text-xs uppercase tracking-wider text-muted-foreground">
+								{s}
+							</div>
+							<div className="text-2xl font-semibold text-foreground mt-1">
+								{counts.data[s].toLocaleString('en-US')}
+							</div>
 						</div>
-						<div className="text-2xl font-semibold text-foreground mt-1">
-							{counts[s].toLocaleString('en-US')}
-						</div>
-					</div>
-				))}
-			</div>
+					))}
+				</div>
+			) : (
+				<AdminErrorState inline resource="queue health" />
+			)}
 
 			<StatusFilterBar
 				baseHref="/admin/emails"
@@ -136,7 +154,9 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 
 			<SearchInput placeholder="Search emails" />
 
-			{rows.length === 0 ? (
+			{!list.ok ? (
+				<AdminErrorState resource="scheduled emails" />
+			) : list.data.rows.length === 0 ? (
 				q ? (
 					<div className="rounded-xl border border-border bg-surface-raised p-8 text-center">
 						<p className="text-sm text-muted-foreground">
@@ -169,7 +189,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{rows.map(r => (
+							{list.data.rows.map(r => (
 								<TableRow key={r.id}>
 									<TableCell className="text-foreground">
 										<Link
@@ -203,7 +223,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 					<Pagination className="mt-4 justify-between">
 						<PaginationContent>
 							<PaginationItem>
-								{prevCursor === null ? (
+								{list.data.prevCursor === null ? (
 									<PaginationPrevious
 										aria-disabled="true"
 										className="pointer-events-none opacity-50"
@@ -212,14 +232,14 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 									<PaginationPrevious
 										href={buildPaginationHref(
 											'/admin/emails',
-											prevCursor,
+											list.data.prevCursor,
 											preservedForPagination
 										)}
 									/>
 								)}
 							</PaginationItem>
 							<PaginationItem>
-								{nextCursor === null ? (
+								{list.data.nextCursor === null ? (
 									<PaginationNext
 										aria-disabled="true"
 										className="pointer-events-none opacity-50"
@@ -228,7 +248,7 @@ async function EmailsList({ searchParams }: AdminEmailsPageProps) {
 									<PaginationNext
 										href={buildPaginationHref(
 											'/admin/emails',
-											nextCursor,
+											list.data.nextCursor,
 											preservedForPagination
 										)}
 									/>

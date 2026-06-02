@@ -20,6 +20,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { AdminErrorState } from '@/components/admin/AdminErrorState'
 import { PublishToggle } from '@/components/admin/PublishToggle'
 import { ResourceListPage } from '@/components/admin/ResourceListPage'
 import { SearchInput } from '@/components/admin/SearchInput'
@@ -62,10 +63,14 @@ async function TestimonialsList({ searchParams }: AdminTestimonialsPageProps) {
 	await connection()
 	const { q: rawQ, cursor } = await searchParams
 	const q = (rawQ ?? '').trim()
-	const { rows, prevCursor, nextCursor } = await listTestimonialsForAdmin({
+	const result = await listTestimonialsForAdmin({
 		q: q.length > 0 ? q : undefined,
 		cursor
 	})
+	if (!result.ok) {
+		return <AdminErrorState resource="testimonials" />
+	}
+	const { rows, prevCursor, nextCursor } = result.data
 	const preservedForPagination: Record<string, string> =
 		q.length > 0 ? { q } : {}
 
