@@ -26,7 +26,7 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 40,
 				hoursPerPeriod: 80,
 				filingStatus: 'single',
-				taxYear: 2024,
+				taxYear: 2025,
 				payPeriods: [],
 				totals: {
 					hours: 0,
@@ -91,7 +91,7 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 25,
 				hoursPerPeriod: 45, // Regular hours
 				filingStatus: 'single',
-				taxYear: 2024,
+				taxYear: 2025,
 				payPeriods: [],
 				totals: {
 					hours: 0,
@@ -138,7 +138,7 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 0,
 				hoursPerPeriod: 0,
 				filingStatus: 'single',
-				taxYear: 2024,
+				taxYear: 2025,
 				payPeriods: [],
 				totals: {
 					hours: 0,
@@ -186,7 +186,7 @@ describe('Paystub Calculator Hooks', () => {
 				hourlyRate: 25,
 				hoursPerPeriod: 40,
 				filingStatus: 'single',
-				taxYear: 2024,
+				taxYear: 2025,
 				payPeriods: [],
 				totals: {
 					hours: 0,
