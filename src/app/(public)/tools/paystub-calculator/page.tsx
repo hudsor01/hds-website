@@ -1,6 +1,6 @@
 /**
  * Paystub Calculator
- * Generate detailed payroll breakdowns with federal and state tax calculations
+ * Estimate 2025 payroll tax breakdowns with federal and state income tax
  */
 
 import type { Metadata } from 'next'
@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 	alternates: { canonical: '/tools/paystub-calculator' },
 	title: 'Paystub Calculator | Hudson Digital Solutions',
 	description:
-		'Generate detailed payroll breakdowns with federal and state tax calculations. Free paystub calculator for employers and employees.',
+		'Estimate 2025 payroll tax breakdowns with our free paystub calculator. Federal tax for all filers and state income tax for CA, NY, IL, PA, and MA.',
 	openGraph: {
 		title: 'Paystub Calculator',
-		description: 'Generate detailed payroll breakdowns with tax calculations.'
+		description:
+			'Estimate 2025 payroll tax breakdowns with our free paystub calculator.'
 	}
 }
 
